@@ -170,13 +170,13 @@
 <div class="main">
     <ul class="nav clear">
         {volist name="mbx" id="vo"}
-        <li><a href="{:Url('/home/Addressbook/index')}" data-pid="{$vo.id}">{$vo.name}</a></li>
+        <li><a href="{:Url('/index/Addressbook/index')}" data-pid="{$vo.id}">{$vo.name}</a></li>
         {/volist}
     </ul>
     <ul class="lists">
         {volist name="list" id="li"}
              <li>
-                 <a href="{:Url('/home/Addressbook/userinfo/userid/'.$li.userid)}">
+                 <a href="{:Url('/index/Addressbook/userinfo/userid/'.$li.userid)}">
                      {eq name="li->avatar" value=''}
                      <img src="/index/images/addressbook/pb.png" alt="头像">
                      {else/}
