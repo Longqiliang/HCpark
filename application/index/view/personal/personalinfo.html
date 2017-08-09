@@ -1,0 +1,90 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/common/rem.css">
+<link rel="stylesheet" href="/index/css/personal/index.css">
+<style>
+    .head-info{
+        line-height: 36px;
+    }
+</style>
+{/block}
+
+
+{block name="body"}
+<div class="content">
+    <ul class="list default-list">
+        <li>
+            <a href="javascript:;" class="item-pull-right" id="checkImg">
+                <p class="head-info">
+                    头像
+                    <span class="ft-right">
+                      {eq name="info.header" value=""}
+                        <img src="{$info.avatar}"  class="head-img">
+                       {else/}
+                         <img src="{$info.header}"  class="head-img">
+                        {/eq}
+                    </span>
+                </p>
+            </a>
+        </li>
+    </ul>
+    <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg">
+    <ul class="list default-list">
+        <li><a href="javascript:;"><p>姓名 <span class="ft-right">{$info.name}</span> </p></a></li>
+        <li><a href="javascript:;"><p>性别 <span class="ft-right">{$info.sex}</span></p></a></li>
+        <li><a href="javascript:;"><p>电话 <span class="ft-right">{$info.mobile}</span></p></a></li>
+        <li><a href="javascript:;"><p>单位 <span class="ft-right">{$info.department}</span></p></a></li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $(function () {
+        $("#checkImg").on('click',function () {
+            $("#upImg").click();
+        });
+        $("#upImg").off("change").on("change",function () {
+            var img = $(this)[0].files[0];
+            if(img){
+               var newSize = (img.size/1024).toFixed(2);
+               if(newSize <= 10240){
+                    var formData = new FormData();
+                   formData.append("picture",img);
+                   $.ajax({
+                       type:"post",
+                       url:"{:Url('File/uploadPicture')}",
+                       data:formData,
+                       processData : false,
+                       contentType : false,
+                       success:function(data){
+                           var msg = $.parseJSON(data);
+
+                           if(msg.code == 1){
+                                var path = msg.data.path;
+                                $(".head-img").attr('src',path);
+                                $.ajax({
+                                    url:"setHeader",
+                                    type:'post',
+                                    data:{header:path},
+                                    dataType:'json',
+                                    success: function () {
+
+                                    }
+                                })
+                           } else {
+                               warning({msg:'上传失败'});
+                               return;
+                           }
+                       }
+                   });
+               }
+            }
+        })
+
+    })
+</script>
+{/block}
+
+

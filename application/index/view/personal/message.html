@@ -1,0 +1,103 @@
+{extend name="public/common"}
+{block name="style"}
+<title>我的服务</title>
+<link rel="stylesheet" href="/index/css/personal/message.css">
+<link rel="stylesheet" href="/index/css/common/tip.css">
+{/block}
+{block name="body"}
+<ul class="msg-lists">
+    <li  class="clear">
+        <div style="background-image: url('/1.jpg')" class="msg-img"></div>
+        <div class="msg-text">
+            <div class="msg-title"><span class="msg-title-text">新闻速递</span> <span class="fr msg-time">2017-8-8 8:30</span> </div>
+            <div class="msg-info">希垦科技园区物业管理委员会第一次会议召开希垦科技园区物业管理委员会第一次会议召开</div>
+        </div>
+        <!--<a href=""></a>-->
+    </li>
+</ul>
+<!--加载更多-->
+<div class="tip"></div>
+<div class="loading hidden">
+    <div class="typing_loader"></div>
+</div>
+{/block}
+{block name="script"}
+<!--<script src="/index/js/reset.js"></script>-->
+<script>
+    $("title").html('我的消息');
+    var scrollNow = true;//判断下拉请求是否执行中.false为正在请求
+    $(function(){
+        //tab初始化和数据存储
+        var lists = $('.msg-lists');
+        //上拉加载
+        var len = lists.find('li').length;
+        if(len >= 6){
+            $('.tip' ).text('上拉加载更多');
+        }
+        loadScroll();
+    });
+    function loadScroll(type){
+        $(window ).off("scroll" ).on("scroll",function(){
+            var lists = $('.msg-lists');
+            var dh = $(document).height();
+            var end = $(window).height() + $(window ).scrollTop();
+            var len = lists.find('li').length;
+            var tip = $(".tip");
+            var loading = $('.loading');
+            if(dh == end && scrollNow){
+                scrollNow = false;//请求执行中
+                $.ajax({
+                    type:"post",
+                    url: "{:Url('')}",
+                    data:{
+                        length:len
+                    },
+                    beforeSend: function(XMLHttpRequest){
+                        tip.hide();
+                        loading.toggleClass('hidden');
+                    },
+                    success:function(data){
+                        console.log(data)
+                        loading.toggleClass('hidden');
+                        tip.show();
+                        if(data.code == 1){
+                            console.log(data.data);
+                            addLists(data,type);
+                            var dataLen =data.data.length;
+                            if(dataLen == 6){
+                                tip.text('上拉加载更多');
+                            }
+                        }else{
+                            tip.text('没有更多了');
+                            $(window ).off("scroll");
+                        }
+                        scrollNow = true;//请求结束
+                    }
+                })
+            }
+        })
+    }
+    function timeChange(time) {
+        var newTime=new Date(time*1000);
+        return newTime.getFullYear()+"-"+newTime.getMonth()+"-"+newTime.getDate();
+    }
+    function addLists(data){
+        var html = '';
+        var lists = data.data;
+        var len = lists.length;
+        for(var i = 0; i< len;i++){
+            html += '<li  class="clear">'+
+                        '<div style="background-image: url('+lists.path+')" class="msg-img"></div>'+
+                            '<div class="msg-text">'+
+                            '<div class="msg-title">' +
+                                '<span class="msg-title-text">'+lists.title+'</span> ' +
+                                '<span class="fr msg-time">'+timeChange(lists.time)+'</span> ' +
+                            '</div>'+
+                            '<div class="msg-info">'+lists.info+'</div>'+
+                        '</div>'+
+                     '</li>';
+        }
+        $('.msg-lists').append(html);
+    }
+</script>
+{/block}

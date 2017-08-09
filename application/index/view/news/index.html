@@ -1,0 +1,242 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/static/swiper/swiper.min.css">
+<link rel="stylesheet" href="/index/css/common/rem.css">
+<style type="text/css">
+    *,ul,p,ul li{
+        padding: 0;
+        margin: 0;
+    }
+    ul li{
+        list-style: none;
+    }
+    body{
+        width: 100%;
+    }
+    #banner{
+        width: 100%;
+        height: 50vw;
+    }
+    .swiper-wrapper,.swiper-slide,.swiper-slide img{
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide{
+        position: relative;
+    }
+    .swiper-slide p{
+        width: calc(100% - 20px);
+        background: rgba(3,3,3,0.5);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 99;
+        color: #fff;
+        padding: 2px 0 2px 20px;
+    }
+    .swiper-slide a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 99;
+    }
+    .body{
+        width: 100%;
+        padding-top: 1.6vw;
+    }
+    .body ul li{
+        width: 100%;
+        height: 23.2vw;
+        overflow: hidden;
+        border-bottom: 1px solid #f1f1f1;
+        position: relative;
+    }
+    .body ul li .img-box{
+        width: 32vw;
+        height: 100%;
+        float: left;
+    }
+    .body ul li .img-box img{
+        width: 24vw;
+        height: 17.6vw;
+        margin: 2.67vw 4vw;
+        border-radius: 1.067vw;
+    }
+    .body ul li .content-box{
+        width: 66vw;
+        height: 100%;
+        float: left;
+        position: relative;
+    }
+    .body ul li .content-box p{
+        font-size: 1.4rem;
+        color: #333;
+        margin: 2.66vw 4vw 0 0;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+    .body ul li .content-box>span{
+        color: #999;
+        font-size: 1.1rem;
+        position: absolute;
+        bottom: 2.667vw;
+    }
+    .body ul li .content-box>span.readed{
+        padding-left: 2em;
+        background: url('/index/images/news/view.png') left center no-repeat;
+        background-size: 1.6em 1em;
+    }
+    /*.body ul li .content-box span:nth-child(2)>img{*/
+        /*width: 1.5rem;*/
+        /*margin-right: 6px;*/
+        /*position: relative;*/
+        /*top: 1px;*/
+    /*}*/
+    .body ul li .content-box span:last-child{
+        right: 4vw;
+    }
+    .body ul li a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div>
+    <div id="banner" class="swiper-container">
+        <div class="swiper-wrapper">
+            {volist name="banners" id="banner"}
+            <div class="swiper-slide">
+                <img src="{$banner->front_cover}">
+                <p>{$banner->title}</p>
+                <a href="{:Url('News/detail?id='.$banner->id)}"></a>
+            </div>
+            {/volist}
+        </div>
+    </div>
+    <div class="body">
+        <ul>
+            {volist name="list" id="news"}
+            <li>
+                <div class="img-box">
+                    <img src="{$news->front_cover}">
+                </div>
+                <div class="content-box">
+                    <p>{$news->title}</p>
+                    <span class="readed"><img src="">{$news->views}</span>
+                    <span>{$news->create_time|date='Y-m-d',###}</span>
+                </div>
+                <a href="{:Url('News/detail?id='.$news->id)}"></a>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+</div>
+<!--加载更多-->
+<div class="tip"></div>
+<div class="loading hidden">
+    <div class="typing_loader"></div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript" src="/static/swiper/swiper.min.js"></script>
+<script>
+    $("title").html('新闻速递');
+    var scrollNow = true;
+    $(function(){
+        var mySwiper = $('#banner').swiper({
+            mode:'horizontal',
+            loop: true,
+            autoplay: 3000,
+            autoplayDisableOnInteraction: false
+        });
+
+    });
+    $(function(){
+        var ntc = $('.body>ul');
+        //上拉加载
+        var len = ntc.find('li').length;
+        if(len >= 5){
+            $('.tip' ).text('上拉加载更多');
+        }
+        loadScroll();
+    });
+    function loadScroll(){
+        $(window ).off("scroll" ).on("scroll",function(){
+            var dh = $(document).height();
+            var end = $(window).height() + $(window ).scrollTop();
+            var len = $(".body>ul>li").length;
+            var tip = $(".tip");
+            var loading = $('.loading');
+            if(dh == end && scrollNow){
+                scrollNow = false;//请求执行中
+                $.ajax({
+                    type:"post",
+                    url: "{:Url('News/getMoreList')}",
+                    data:{
+                        type:1,
+                        length:len
+                    },
+                    beforeSend: function(XMLHttpRequest){
+                        tip.hide();
+                        loading.toggleClass('hidden');
+                    },
+                    success:function(data){
+                        loading.toggleClass('hidden');
+                        tip.show();
+                        if(data.code == 1){
+                            addLists(data);
+                            var dataLen =data.data.length;
+                            if(dataLen == 5){
+                                tip.text('上拉加载更多');
+                            }
+                        }else{
+                            tip.text('没有更多了');
+                            $(window ).off("scroll");
+                        }
+                        scrollNow = true;//请求结束
+                    }
+                })
+            }
+        })
+    }
+    function addLists(data){
+        var html = '';
+        var lists = data.data;
+        var len = lists.length;
+        for(var i = 0; i< len;i++){
+            var list = lists[i];
+
+            html +=
+             '<li>'+
+                '<div class="img-box">'+
+                    '<img src="'+list.front_cover+'">'+
+                '</div>'+
+                '<div class="content-box">'+
+                    '<p>'+list.title+'</p>'+
+                    '<span class="readed"><img src="">'+list.views+'</span>'+
+                    '<span>'+timeChange(list.create_time)+'</span>'+
+                '</div>'+
+                '<a href="/home/news/detail/id/'+list.id+'"></a>'+
+            '</li>';
+        }
+        $(".body>ul").append(html);
+    }
+    //    时间戳转换
+    function timeChange(time) {
+        var time = new Date(parseInt(time)*1000);
+        return time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate();
+    }
+</script>
+{/block}

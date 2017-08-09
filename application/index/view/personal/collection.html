@@ -1,0 +1,272 @@
+{extend name="public/common"}
+{block name="style"}
+    <title>我的收藏</title>
+    <link rel="stylesheet" href="/index/css/personal/collection.css">
+    <link rel="stylesheet" href="/index/css/common/tip.css">
+{/block}
+{block name="body"}
+    <!--tab-->
+    <div class="tabs clear">
+        <div class="tab"><span>新闻速递</span></div>
+        <div class="tab"><span>园区通告</span></div>
+        <div class="tab"><span>好文分享</span></div>
+        <div class="tab"><span>政策法规</span></div>
+    </div>
+    <!--切换列表-->
+    <div class="content">
+        <!--新闻速递-->
+        <div class="notices hidden">
+            <div class="notice new">
+                {volist name="list1" id="vo1"}
+                <a href="{:Url('News/detail?id='.$vo1['id'])}" class="news list clear">
+                    <div class="news-img fl" style="background: url('{$vo1.image}') no-repeat center center; background-size: cover;">
+                    </div>
+                    <div class="list-right news-info fl">
+                        <div class="title ">{$vo1.title}</div>
+                        <div class="clear time">
+                            <span class="fl ">{$vo1.create_time|date='Y-m-d',###}</span>
+                            {gt name="$vo1.views" value="9999"}
+                            <span class="fr readed">9999+</span>
+                            {else/}
+                            <span class="fr readed">{$vo1.views}</span>
+                            {/gt}
+                        </div>
+                    </div>
+                </a>
+                {/volist}
+
+            </div>
+        </div>
+        <!--园区通告-->
+        <div class="notices hidden">
+            <div class="notice notify">
+                {volist name="list2" id="vo2"}
+                <a href="{:Url('News/detail?id='.$vo2['id'])}" class="list clear">
+                    <div class="list-right">
+                        <div class="title ">{$vo2.title}</div>
+                        <div class="clear time">
+                            <span class="fl source">{$vo2.source}</span>
+                            <span class="fl ">{$vo2.create_time|date='Y-m-d',###}</span>
+                            {gt name="$vo2.views" value="9999"}
+                            <span class="fr readed">9999+</span>
+                            {else/}
+                            <span class="fr readed">{$vo2.views}</span>
+                            {/gt}
+                        </div>
+                    </div>
+                </a>
+                {/volist}
+            </div>
+        </div>
+        <!--好文分享-->
+        <div class="notices hidden">
+            <div class="notice article">
+                {volist name="list3" id="vo3"}
+                <a href="{:Url('News/detail?id='.$vo3['id'])}" class="list clear">
+                    <div class="list-right">
+                        <div class="title ">{$vo3.title}</div>
+                        <div class="clear time">
+                            <span class="fl source">{$vo3.source}</span>
+                            <span class="fl ">{$vo3.create_time|date='Y-m-d',###}</span>
+                            {gt name="$vo3.views" value="9999"}
+                            <span class="fr readed">9999+</span>
+                            {else/}
+                            <span class="fr readed">{$vo3.views}</span>
+                            {/gt}
+                        </div>
+                    </div>
+                </a>
+                {/volist}
+            </div>
+        </div>
+        <!--政策法规-->
+        <div class="notices hidden">
+            <div class="notice policy">
+                {volist name="list4" id="vo4"}
+                <a href="{:Url('Policy/detail?id='.$vo4['id'])}" class="list clear">
+                    <div class="list-right">
+                        <div class="title ">{$vo4.title}</div>
+                        <div class="clear time">
+                            <span class="fl source">{$vo4.source}</span>
+                            <span class="fl ">{$vo4.create_time|date='Y-m-d',###}</span>
+                            {gt name="$vo4.views" value="9999"}
+                            <span class="fr readed">9999+</span>
+                            {else/}
+                            <span class="fr readed">{$vo4.views}</span>
+                            {/gt}
+                        </div>
+                    </div>
+                </a>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <!--加载更多-->
+    <div class="tip"></div>
+    <div class="loading hidden">
+        <div class="typing_loader"></div>
+    </div>
+{/block}
+{block name="script"}
+<script src="/index/js/reset.js"></script>
+<script>
+    $("title").html('我的收藏');
+    var scrollNow = true;//判断下拉请求是否执行中.false为正在请求
+//  $(function(){
+//      //轮播
+//      var mySwiper = new Swiper('.swiper-container', {
+//          autoplay: 3000,
+//          loop:true,
+//          autoplayDisableOnInteraction:false
+//      })
+//  });
+  $(function(){
+      //tab初始化和数据存储
+      var ntc = $('.notices');
+      var c =  parseInt(window.location.href.split("collection/c/")[1]);
+      var co = getCookie("type");
+      if(co == 11 || co == 12 || co == 13 || co == 14){
+          c = co - 10;
+      }
+      $('.tabs>.tab').eq(c-1).find('span').addClass('active');
+      ntc.eq(c-1).removeClass('hidden');
+      //上拉加载
+	var len = ntc.eq(c-1 ).find('.notice:last .list').length;
+	if(len >= 5){
+		$('.tip' ).text('上拉加载更多');
+	}
+	loadScroll(c);
+      //tab切换
+      $('.tabs>.tab ').on('click',function(){
+          var ntc = $('.notices');
+          var eq = $(this ).index();
+          $(this ).siblings('.tab' ).find('span' ).removeClass('active');
+          $(this ).find('span' ).addClass('active');
+          ntc.eq(eq ).siblings('.notices' ).addClass('hidden');
+          ntc.eq(eq).removeClass('hidden');
+          var len = ntc.eq(eq ).find('.notice:last .list').length;
+		if(len >= 5){
+			$('.tip' ).text('上拉加载更多');
+		}else{
+            $('.tip' ).text('');
+        }
+		loadScroll(eq+1);
+          //使用示例
+          setCookie("type",eq+11);
+      });
+      //安卓4.4tab兼容
+      var u = navigator.userAgent;
+      var isAnd = !u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      if(isAnd){
+          var num = u.substr(u.indexOf('Android') + 8, 3);
+          if(num <= 4.4){
+              var tabw = $('.tabs').width()/4 -2;
+              $('.tabs>.tab').width(tabw);
+          }
+      }
+      isOut();
+  });
+  function loadScroll(type){
+      $(window ).off("scroll" ).on("scroll",function(){
+          var ntc = $('.notices');
+          var dh = $(document).height();
+          var end = $(window).height() + $(window ).scrollTop();
+          var len = ntc.eq(type-1).find('.notice:last .list').length;
+          var tip = $(".tip");
+          var loading = $('.loading');
+          if(dh == end && scrollNow){
+              scrollNow = false;//请求执行中
+              $.ajax({
+                  type:"post",
+                  url: "{:Url('Personal/listmore')}",
+                  data:{
+                      length:len,
+                      type : type
+                  },
+                  beforeSend: function(XMLHttpRequest){
+                      tip.hide();
+                      loading.toggleClass('hidden');
+                  },
+                  success:function(data){
+                      loading.toggleClass('hidden');
+                      tip.show();
+                      if(data.code == 1){
+                          addLists(data,type);
+                          var dataLen =data.data.length;
+                          if(data.data.length == 5){
+                              tip.text('上拉加载更多');
+                          }
+                      }else{
+                          tip.text('没有更多了');
+                          $(window ).off("scroll");
+                      }
+                      scrollNow = true;//请求结束
+                  }
+              })
+          }
+      })
+  }
+  function addLists(data,t){
+      var type;
+      var html = '';
+      var lists = data.data;
+      var len = lists.length;
+      if ( t == 1){
+          type = 'new';
+      }else if( t == 2){
+          type = 'notify';
+      }else if( t == 3){
+          type = 'article';
+      }else{
+          type = 'policy'
+      }
+
+      for(var i = 0; i< len;i++){
+          var list = lists[i];
+          var a = '';
+//          if(t == 1){
+////              rule没有封面图
+//               a='<div class="fl">'+
+//                      '<img src="'+list.path+'" alt="图片">'+
+//                      '</div>';
+//          }
+          if( t == 1 ){
+              html += '<a href="/home/news/detail/id/'+ list.id+'.html" class="news list clear">'+
+              '<div class="news-img fl" style="background: url('+list.image+') no-repeat center center; background-size: cover;">'+
+              '</div>'+
+              '<div class="list-right news-info fl">'
+          }else if( t == 4 ){
+              html += '<a href="/home/Policy/detail/id/'+ list.id+'.html" class="list clear">'+
+              '<div class="list-right">'
+          }else {
+              html += '<a href="/home/news/detail/id/'+ list.id+'.html" class="list clear">'+
+              '<div class="list-right">'
+          }
+          html +=
+                  '<div class="title ">'+list.title+'</div>'+
+                  '<div class="clear time">'+
+                  '<span class="fl">'+timeChange(list.create_time)+'</span>'+
+                  '<span class="fr readed">'+(list.views>9999?'9999+':list.views)+'</span>'+
+                  '</div>'+
+                  '</div>'+
+                  '</a>'
+      }
+      $('.'+type).append(html);
+  }
+//    时间戳转换
+    function timeChange(time) {
+        var time = new Date(parseInt(time)*1000);
+        return time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate();
+    }
+  //退出清理tab缓存
+  function isOut(){
+      pushHistory();
+      setTimeout(function(){
+          window.addEventListener("popstate", function(e) {
+              delCookie("type");
+              window.history.go(-1);
+          }, false);
+      },200)
+  }
+</script>
+{/block}

@@ -1,0 +1,53 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/common/rem.css">
+<link rel="stylesheet" href="/index/css/personal/index.css">
+{/block}
+
+
+{block name="body"}
+<div class="banner">
+    {eq name="userinfo.header" value=""}
+    <img src="{$userinfo.avatar}" alt="背景图" class="banner-img">
+    <div class="banner-backdrop"></div>
+    <div class="user-info">
+        <div class="user-photo">
+            <a href="{:Url('Personal/personalinfo')}">
+                <img src="{$userinfo.avatar}" alt="用户头像">
+            </a>
+        </div>
+        <div class="user-name">
+            <h3>{$userinfo.name}</h3>
+        </div>
+    </div>
+    {else/}
+    <img src="{$userinfo.header}" alt="背景图" class="banner-img">
+    <div class="banner-backdrop"></div>
+    <div class="user-info">
+        <div class="user-photo">
+            <a href="{:Url('Personal/personalinfo')}">
+                <img src="{$userinfo.header}" alt="用户头像">
+            </a>
+        </div>
+        <div class="user-name">
+            <h3>{$userinfo.name}</h3>
+        </div>
+    </div>
+    {/eq}
+</div>
+<div class="content">
+    <ul class="list">
+        <li><a href="{:Url('Personal/party')}" class="item-pull-right"><span class="icon icon-party"></span><p>党员信息</p></a></li>
+    </ul>
+    <ul class="list">
+        <li><a href="{:Url('Personal/message')}" class="item-pull-right"><span class="icon icon-message"></span><p>我的消息</p></a></li>
+        <li><a href="{:Url('Personal/service?c=1')}" class="item-pull-right"><span class="icon icon-service"></span><p>我的服务</p></a></li>
+        <li><a href="{:Url('Personal/collection?c=1')}" class="item-pull-right"><span class="icon icon-collect"></span><p>我的收藏</p></a></li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+
+{/block}

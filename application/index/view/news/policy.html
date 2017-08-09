@@ -1,0 +1,181 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/common/tip.css">
+
+<style type="text/css">
+    *,ul,p,ul li{
+        padding: 0;
+        margin: 0;
+    }
+    ul li{
+        list-style: none;
+    }
+    body{
+        width: 100%;
+    }
+    .swiper-container{
+        width: 100%;
+        height: 50vw;
+    }
+    .swiper-container img{
+        width: 100%;
+        height: 100%;
+    }
+    .body{
+        width: 100%;
+    }
+    .body ul li{
+        width: 100%;
+        height:22.93vw;
+        overflow: hidden;
+        border-bottom: 1px solid #e5e5e5;
+        position: relative;
+    }
+    .body ul li .content-box{
+        height: 100%;
+        padding-left: 3.2vw;
+        padding-right:3.2vw;
+        position: relative;
+    }
+    .body ul li .content-box p{
+        padding-top: 2.66vw;
+        font-size: 1.4rem;
+        color: #333;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+    .body ul li .content-box>span{
+        color: #999;
+        font-size: 1.1rem;
+        position: absolute;
+        bottom: 2.66vw;
+    }
+    .body ul li .content-box span:last-child>img{
+        width: 4vw;
+        margin-right: 5.6vw;
+        position: relative;
+        top: 1px;
+    }
+    .body ul li .content-box span:last-child{
+        right: 4vw;
+    }
+    .body ul li a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div class="swiper-container" id="banner-1">
+    <img src="/index/images/feedback/policy.jpg">
+</div>
+<div class="page">
+    <div class="body">
+        <ul>
+            {volist name="listFile" id="news"}
+            <li>
+                <div class="content-box">
+                    <p>{$news->title}</p>
+                    <span>{$news->create_time|date='Y-m-d',###}</span>
+                    <span><img src="/index/images/news/view.png">{$news->views}</span>
+                </div>
+                <a href="{:Url('News/detail?id='.$news->id)}"></a>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+</div>
+<!--加载更多-->
+<div class="tip"></div>
+<div class="loading hidden">
+    <div class="typing_loader"></div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $("title").html("园区通告");
+    var scrollNow=true;
+$(function(){
+    var ntc = $('.body>ul');
+    //上拉加载
+    var len = ntc.find('li').length;
+    if(len >= 5){
+        $('.tip' ).text('上拉加载更多');
+    }
+    loadScroll();
+});
+function loadScroll(){
+    var ntc = $('.body>ul');
+    $(window ).off("scroll" ).on("scroll",function(){
+        var dh = $(document).height();
+        var end = $(window).height() + $(window ).scrollTop();
+        var len = ntc.find('li').length;
+        var tip = $(".tip");
+        var loading = $('.loading');
+        if(dh == end && scrollNow){
+            scrollNow = false;//请求执行中
+            $.ajax({
+                type:"post",
+                url: "{:Url('News/getMoreList')}",
+                data:{
+                    type:2,
+                    length:len
+                },
+                beforeSend: function(XMLHttpRequest){
+                    tip.hide();
+                    loading.toggleClass('hidden');
+                },
+                success:function(data){
+                    loading.toggleClass('hidden');
+                    tip.show();
+                    if(data.code == 2){
+                        addLists(data);
+                        var dataLen =data.data.length;
+                        if(dataLen == 6){
+                            tip.text('上拉加载更多');
+                        }
+                    }else{
+                        tip.text('没有更多了');
+                        $(window ).off("scroll");
+                    }
+                    scrollNow = true;//请求结束
+                }
+            })
+        }
+    })
+}
+function addLists(data){
+    var html = '';
+    var lists = data.data;
+    var len = lists.length;
+    for(var i = 0; i< len;i++){
+        var list = lists[i];
+
+        html +=
+                '<li>'+
+                    '<div class="content-box">'+
+                        '<p>'+list.title+'</p>'+
+                        '<span>'+timeChange(list.create_time)+'</span>'+
+                        '<span><img src="/index/images/news/view.png">'+list.views+'</span>'+
+                    '</div>'+
+                    '<a href="/home/news/detail/id/'+list.id+'"></a>'+
+                '</li>';
+    }
+    $(".body>ul").append(html);
+}
+//    时间戳转换
+function timeChange(time) {
+    var time = new Date(parseInt(time)*1000);
+    return time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate();
+}
+</script>
+{/block}

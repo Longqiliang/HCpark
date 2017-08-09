@@ -1,0 +1,205 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/common/rem.css">
+<link rel="stylesheet" href="/index/css/personal/index.css">
+{/block}
+
+
+{block name="body"}
+<div class="content" id="app">
+    <ul class="list default-list">
+        <li>
+            <a href="javascript:;" >
+                <p class="head-info">所属党支部 <span class="ft-right">
+                    <input type="text" placeholder="请输入党支部名称" v-model="party_branch"></span>
+                </p>
+            </a>
+        </li>
+    </ul>
+    <ul class="list default-list">
+        <li>
+            <a href="javascript:;">
+                <p>党员姓名 <span class="ft-right">
+                     <input type="text" placeholder="请输入党员姓名" value="" v-model="name"></span>
+                </p>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:;">
+                <p>年龄 <span class="ft-right">
+                    <input type="number" placeholder="请输入年龄" v-model.number="age"></span>
+                </p>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:;">
+                <p>学历 
+                    <span class="ft-right select" @click="educationShow"  v-bind:class="[education ? 'txt-center' : '', '']">
+                    {{statusEducation}} <i class="subscript"></i>
+                    </span>
+                </p>
+                <ul class="model-list select-education" @click="checkEducation"  >
+                    <li data-state="1">本科以下</li>
+                    <li data-state="2">本科</li>
+                    <li data-state="3">硕士</li>
+                    <li data-state="4">博士</li>
+                </ul>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <p>性别
+                    <span class="ft-right select" @click="sexShow" v-bind:class="[sex ? 'txt-center' : '', '']">
+                    {{statusSex}}<i class="subscript"></i>
+                    </span>
+                </p>
+                <ul class="model-list select-sex" @click="checkSex">
+                    <li data-state="1">男</li>
+                    <li data-state="2">女</li>
+                </ul>
+            </a>
+        </li>
+    </ul>
+    <div class="model-bg" @click="bgClose"></div>
+    <button class="btn " @click="submitBtn">提交</button>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/vue/vue.min.js"></script>
+<script>
+    var data = {$data};
+    console.log(data);
+    var defaultData = {
+        age:'',
+        party_branch:'',
+        name:'',
+        education:'',
+        sex:''
+    };
+    if(!data){
+        data = defaultData;
+    }else{
+        data = $.extend(defaultData,data.data)
+    }
+   var vm = new Vue({
+       el:'#app',
+       data:data,
+       computed: {
+           sexClass: function () {
+               if(this.sex){
+                   return {
+                       sexActive:true
+                   };
+               }
+
+           },
+
+           statusSex: function () {
+               if (!this.sex) {
+                   return '请选择性别';
+               }
+               switch (this.sex){
+                   case 1:
+                       return '男';
+                       break;
+                   case 2:
+                       return '女';
+                       break;
+               }
+           },
+           statusEducation: function () {
+               if (!this.education) {
+                   return '请选择学历';
+               }
+               switch (this.education){
+                   case 1:
+                       return '本科以下';
+                       break;
+                   case 2:
+                       return '本科';
+                       break;
+                   case 3:
+                       return '硕士';
+                       break;
+                   case 4:
+                       return '博士';
+                       break;
+               }
+           }
+       },
+        methods:{
+            bgClose: function () {
+                $(".select-sex").fadeOut();
+                $(".select-education").fadeOut();
+                $(".model-bg").fadeOut();
+            },
+            educationShow: function () {
+                $(".model-bg").fadeIn('fast',function () {
+                    $(".select-education").slideDown("fast");
+                });
+            },
+            checkEducation: function (event) {
+                $(".select-education").fadeOut();
+                $(".model-bg").fadeOut();
+                var state =event.target.getAttribute("data-state");
+                if(state){
+                    this.education = parseInt(state);
+                }
+            },
+            sexShow: function () {
+                $(".model-bg").fadeIn('fast',function () {
+                    $(".select-sex").slideDown("fast");
+                });
+            },
+            checkSex: function () {
+                $(".select-sex").fadeOut();
+                $(".model-bg").fadeOut();
+                var state =event.target.getAttribute("data-state");
+                if(state){
+                    this.sex = parseInt(state);
+                }
+            },
+            submitBtn: function () {
+                var data =  JSON.parse(JSON.stringify(this.$data));
+                if(!data.party_branch){
+                    $.toast('请填写党支部名称',{ duration:'short' });
+                    return;
+                }
+                if(!data.age){
+                    $.toast('请填写年龄',{ duration:'short' });
+                    return;
+                }
+                if(!data.education){
+                    $.toast('请选择学历',{ duration:'short' });
+                    return;
+                }
+                if(!data.sex){
+                    $.toast('请选择性别',{ duration:'short' });
+                    return;
+                }
+
+                $.ajax({
+                    url:'party',
+                    type:"POST",
+                    data:data,
+                    dataType:'json',
+                    success: function (res) {
+                        console.log(res);
+                        if(res.code == 1){
+                            swal("","保存成功!", "success");
+                        }else if(res.code == 0){
+                            swal("","信息未修改，请勿重复提交!","warning");
+                        }
+                    },
+                    error:function (err) {
+                        console.log(err)
+                    }
+                })
+            }
+        }
+    });
+
+</script>
+{/block}
