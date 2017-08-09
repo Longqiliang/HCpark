@@ -127,7 +127,7 @@ class Feedback extends Base
                 //var_dump($weObj->errCode.'|'.$weObj->errMsg);
                 if ($msg['errcode'] == 0 ) {
 
-                    return  $this->success('回复成功',$msg);
+                    return  $this->success('回复成功','replylist',$msg);
                 } else {
                     return   $this->error('推送失败',$msg);
                 }
