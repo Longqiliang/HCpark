@@ -66,6 +66,7 @@ class Member extends Model
             'username'        => $user['nickname'],
             'header'          => $user['header'],
             'last_login_time' => $user['last_login_time'],
+            'park_id'         => $user['park_id'],
         );
 
         $access = AuthGroupAccess::where('uid='.$user['id'])->find();
