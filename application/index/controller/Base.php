@@ -18,7 +18,7 @@ use app\admin\model\Config as ConfigModel;
 class Base extends Controller
 {
     protected function _initialize(){
-        session('userId', '18969030101');//测试
+        session('userId', '15706844655');//测试
 //        session('thirdUserId', '1001');
 
         /* 读取数据库中的配置 */

@@ -5,6 +5,9 @@
 <link href="/admin/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 <!-- Gritter -->
 <link href="/admin/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+<link href="/admin/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+
 {/block}
 
 {block name="page-header"}
@@ -66,6 +69,64 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>同步微信用户通讯录</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">config option 1</a></li>
+                            <li><a href="#">config option 2</a></li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="text-center p-lg">
+                        <button class="ladda-button btn-user btn btn-info" data-style="slide-left">
+                            <span class="ladda-label">1、同步用户</span><span class="ladda-spinner"></span>
+                        </button>
+                        <button class="ladda-button btn-dep btn btn-warning" data-style="slide-left">
+                            <span class="ladda-label">2、同步部门</span><span class="ladda-spinner"></span>
+                        </button>
+                        <button class="ladda-button btn-tag btn btn-info" data-style="slide-left">
+                            <span class="ladda-label">3、同步标签</span><span class="ladda-spinner"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
@@ -144,7 +205,13 @@
 <script src="/admin/js/plugins/peity/jquery.peity.min.js"></script>
 <script src="/admin/js/demo/peity-demo.js"></script>
 <script src="/admin/js/plugins/easypiechart/jquery.easypiechart.js"></script>
-<script>
+
+<!--同步-->
+<script src="/admin/js/plugins/ladda/spin.min.js"></script>
+<script src="/admin/js/plugins/ladda/ladda.min.js"></script>
+<script src="/admin/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script type="text/javascript">
+
     /* 插件块关闭操作 */
     $(".title-opt .wm-slide").each(function(){
         $(this).click(function(){
@@ -282,6 +349,30 @@
         };
 
     });
+
+
+    $(document).ready(function (){
+        var user = $( '.btn-user' ).ladda();
+        user.click(function(){
+            user.ladda( 'start' );
+            $.get('syncUser').then(function () { user.ladda('stop'); });
+        });
+
+        var dep = $( '.btn-dep' ).ladda();
+        dep.click(function(){
+            dep.ladda( 'start' );
+            $.get('syncDepartment').then(function () { dep.ladda('stop'); });
+        });
+
+        var tag = $( '.btn-tag' ).ladda();
+        tag.click(function(){
+            tag.ladda( 'start' );
+            $.get('syncTag').then(function () { tag.ladda('stop'); });
+        });
+
+    });
+
+
     highlight_subnav("{:Url('Index/index')}");
 </script>
 {/block}

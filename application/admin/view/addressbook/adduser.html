@@ -1,0 +1,192 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/admin/css/plugins/viewer/viewer.min.css" rel="stylesheet"/>
+<style type="text/css">
+    .front_cover_img {height: 40px; width: 40px; margin-top: 4px}
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <div class="pull-right tooltip-demo">
+                <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
+                <!--target-form="form-horizontal" data-edit="content">-->
+                <!--<i class="fa fa-pencil"></i> 保存草稿-->
+                <!--</button>-->
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
+            <h2>添加用户</h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizontal" method="post">
+                    <div class="modal-body">
+                        <div class="form-group"><label class="col-sm-2 control-label">微信号</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="输入微信号" class="form-control" required="" name="userid">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">昵称</label>
+                            <div class="col-sm-10">
+                                <input type="email" placeholder="网络昵称" class="form-control" name="name">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">性别</label>
+                            <div class="col-sm-10">
+                                男　<input type="radio"   name="gender" value="1">　　
+                                女　<input type="radio"   name="gender" value="2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">头像:</label>
+                            <div class="col-sm-10">
+                                <input id="input-file" type="file" class="file">
+                                <sapn>
+                                    <a id="front_cover"  {empty name="goods.images"}style="display:none;"{/empty}>图片预览
+                                    <img class="front_cover_img" src=""/>
+                                    </a>
+                                </sapn>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">手机</label>
+                            <div class="col-sm-10">
+                                <input type="number" placeholder="请输入手机号" class="form-control" name="mobile">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-10">
+                                <input type="email" placeholder="用户邮箱，用于找回密码等安全操作" class="form-control" required="" name="email">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">部门</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="请输入用户所在部门" class="form-control" required="" name="department">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">职位</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="请输入用户人员职位" class="form-control" required="" name="position">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">上级领导</label>
+                            <div class="col-sm-10">
+                                是　<input type="radio"   name="isleader" value="1">　　
+                                否　<input type="radio"   name="isleader" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">人员编号</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="请输入用户人员编号" class="form-control" required="" name="tagid">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">人员编号</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="请输入用户人员编号" class="form-control" required="" name="tagid">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">扩展属性</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="请输入用户其他属性" class="form-control" required="" name="extattr">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">激活状态</label>
+                            <div class="col-sm-10">
+                                已激活　<input type="radio"   name="status" value="1">　
+                                未激活　<input type="radio"   name="status" value="2">　
+                                已禁用　<input type="radio"   name="status" value="4">
+                            </div>
+                        </div>
+
+
+
+
+
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<!--图片预览-->
+<script src="/admin/js/plugins/viewer/viewer.min.js"></script>
+<script>
+    highlight_subnav("{:Url('Goods/index')}");
+    $(document).ready(function () {
+        //图片预览
+        var viewer = new Viewer(document.getElementById('front_cover'));
+
+        $('.summernote').summernote({
+            lang: 'zh-CN',
+            height: 300,
+            minHeight: 210,
+            callbacks: {
+                onImageUpload: function (files) { //the onImageUpload API
+                    img = sendFile(files[0]);
+                }
+            }
+        });
+
+        function sendFile(file) {
+            var data = new FormData();
+            data.append("file_data", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "{:Url('Upload/picture')}",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var data = $.parseJSON(response);
+                    $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+                }
+            });
+        }
+
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+    });
+
+    $("#input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $("input[name='images']").val(response.data);
+            $("#front_cover").show();
+            $("#front_cover img").attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+
+
+</script>
+{/block}
+
+
+
+

@@ -1,0 +1,242 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    body{
+        background: #ffffff;
+    }
+
+
+    .search{
+        background: #f0eff5;
+        padding:2.133vw 4vw;
+        border-bottom: 1px solid #f0eff5;
+    }
+    .search>.searchBox{
+        border-radius: 5px;
+        height:7.467vw;
+        background: #ffffff;
+        text-align: center;
+
+    }
+    .search>.unBtn{
+        display: none;
+    }
+    .search>.searchBox>.searchInput{
+        display: none;
+    }
+    .search>.searchBox>.searchText{
+        display: inline-block;
+        font-size:1.4rem;
+        color: #999;
+        padding-left:6.4vw;
+        min-width: 1px;
+        line-height: 7.467vw;
+        height:7.467vw;
+        background: url("/index/images/addressbook/search.png") 0 50% no-repeat;
+        background-size: 4.8vw 4.8vw;
+    }
+    .search.isClick{
+        background: #ffffff;
+        border-bottom: 1px solid #f1f1f1;
+        display: flex;
+    }
+    .search.isClick>.searchBox{
+        background: #f0eff5;
+        padding-left: 2.667vw;
+        width:74vw;
+        display: flex;
+        align-items: center;
+    }
+    .search.isClick>.searchBox>.searchText{
+        display: inline-block;
+    }
+    .search.isClick>.searchBox>.searchText>.searchText_c{
+        display: none;
+    }
+    .search.isClick .searchInput{
+        background: #f0eff5;
+        display: inline-block;
+        height:6.4vw;
+        width:61.33vw;
+    }
+    .search.isClick>.unBtn{
+        margin-left: 5.333vw;
+        display: block;
+        box-sizing: border-box;
+        width:13.333vw;
+        height:7.467vw;
+        border-radius: 5px;
+        border:1px solid #5d9cec;
+        color: #5d9cec;
+        text-align: center;
+        line-height: 6.933vw;
+        font-size: 1.4rem;
+    }
+    .main>.nav{
+        padding:2.667vw 4vw;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .main>.nav>li{
+        float: left;
+        padding: 1.333vw 0;
+    }
+    .main>.nav>li>a{
+        display: block;
+        line-height: 5.867vw;
+        color: #666;
+        font-size: 1.4rem;
+    }
+    .main>.nav>li:first-child a{
+        color:#5d9cec;
+        font-size: 1.6rem;
+    }
+    .main>.nav>li:not(:last-child)>a:after{
+        display: inline;
+        content: '';
+        padding:1px 2.133vw;
+        background: url("/index/images/addressbook/right.png") center center no-repeat;
+        background-size:1.6vw 3.2vw;
+    }
+
+
+     .lists>li{
+        box-sizing: border-box;
+        font-size: 1.4rem;
+        color: #666;
+    }
+     .lists a{
+        padding-left: 4vw;
+        display: flex;
+        align-items: center;
+        height:14.4vw;
+        font-size: 1.4rem;
+        color: #333;
+        line-height: 14.4vw;
+        box-sizing: border-box;
+        justify-content: space-between;
+    }
+     .lists a img{
+        width:8vw;
+        height:8vw;
+        margin-right: 5.33vw;
+    }
+     .lists a div{
+        border-bottom: 1px solid #f1f1f1;
+        width:82.66vw;
+    }
+     .lists a .fr{
+        box-sizing: border-box;
+        width:13.33vw;
+        height:14.4vw;
+        text-align: right;
+        margin-right: 4vw;
+        color: #999;
+        background: url("/index/images/addressbook/right.png") right center no-repeat;
+        background-size: 1.6vw 3.2vw;
+    }
+
+    
+    .onloading{
+        line-height: 2;
+        text-align: center;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    .hidden{
+        display: none;
+    }
+</style>
+{/block}
+{block name="body"}
+<div class="search ">
+    <div class="searchBox">
+        <div class="searchText"><span class="searchText_c">搜索</span></div>
+        <input type="text" class="searchInput">
+    </div>
+    <div class="unBtn">取消</div>
+</div>
+
+<!--搜索返回列表-->
+<ul class="result_box lists hidden">
+    <li><a href=""><img src="/index/images/addressbook/pb.png" alt="头像"><div>哈哈 <span class="fr"></span></div></a></li>
+</ul>
+
+<!--加载等待-->
+<div class="onloading hidden">
+    加载中...
+</div>
+<div class="main">
+    <ul class="nav clear">
+        {volist name="mbx" id="vo"}
+        <li><a href="{:Url('/home/Addressbook/index')}" data-pid="{$vo.id}">{$vo.name}</a></li>
+        {/volist}
+    </ul>
+    <ul class="lists">
+        {volist name="list" id="li"}
+             <li>
+                 <a href="{:Url('/home/Addressbook/userinfo/userid/'.$li.userid)}">
+                     {eq name="li->avatar" value=''}
+                     <img src="/index/images/addressbook/pb.png" alt="头像">
+                     {else/}
+                     <img src="{$li.avatar}" alt="头像">
+                     {/eq}
+                     <div> {$li.name}<span class="fr"></span></div>
+                 </a>
+             </li>
+        {/volist}
+    </ul>
+</div>
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+//        创建导航的sessionStorage
+        function addToSession(){
+            var list=$(".nav>li>a");
+            var pid=[];
+            for(var i=0,len=list.length;i<len;i++){
+                var val=list.eq(i).attr('data-pid');
+                pid.push(val);
+            }
+            sessionStorage.setItem('nav-pid',pid);
+        }
+        addToSession();
+
+        function onInput() {
+            $(".searchBox").off('click').on('click',function(){
+                $(".search").addClass('isClick');
+                $(this).off('click').find('.searchInput').focus();
+                $('.main').addClass('hidden');
+            })
+        }
+        function offInput(){
+            $(".search").removeClass("isClick");
+            $('.main').removeClass('hidden')
+        }
+        //点击输入
+        onInput();
+        //取消输入
+        $(".search .unBtn").on('click',function(){
+            offInput();
+            onInput()
+        });
+        var a='{//$list}';
+        var html='';
+        for(var i=0;i<a.length;i++){
+            html+= '<li>'+
+                    '<a href="/home/Addressbook/userinfo/userid/'+a[i].userid+'">';
+            if( a[i].avatar==''){
+                html+='<img src="/index/images/addressbook/pb.png" alt="头像">';
+            }else{
+                html+='<img src="'+a[i].avatar+'" alt="头像">'}
+            html+= '<div>'+ a[i].name+'<span class="fr"></span></div>'+
+                    '</a>'+
+                    '</li>';
+        };
+//        $('.lists').append(html)
+
+    })
+</script>
+{/block}

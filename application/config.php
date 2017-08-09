@@ -53,11 +53,47 @@ return [
     ],
 
     // 微信公众号
-    'pay' => [
-        'appid' => 'ww61224724ee102fbc',
-        'agentid' => '3010046',
-        'appsecret' => 'GcDM17DNMifgH7nMCGQ53qADpyyb9beSGvGGoWaK1HI'
+    /* 企业配置
+        *  同步通讯录
+        */
+    'party' => array(
+        'login' => 'http://xk.0519ztnet.com/index/wechat/login',
+//        'token' => 'RMRUYhgJh7C',
+//        'encodingaeskey' => 'XO7KtGSIpsnGPR24x3UmfTnLXSmEfogGhmRqUkoefNj',
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'pgdv-joifw5SlO7UCsUT8bISF7SA6tFk0ERTg_dkU4g',
+        'agentid' => 1000004
+    ),
+    'news' => [
+        "AppDesc"=>"新闻",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'JKhsF4Xp7MNlF7SK4twq1i5ZKHEcxpXsSPtL8qF2kv4',
+        'agentid' => 1000005
     ],
+    'feedback' => [
+        "AppDesc"=>"意见反馈",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'PJPyUUO1sTesUoyR9hhukvGVUZzQnMUDlFZNk16tcAU',
+        'agentid' => 1000006
+    ],
+
+
+    'reply' => array(
+        'AppDesc'=>"意见回复",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'aKasEURFVx7QvZVOux4wsd6McsyJGC0iXEKun1KbpNM',
+        'agentid' => 1000007
+    ),
+    'addressbook' => array(
+        "AppDesc"=>"通讯录",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => '4Y_vfF2ovs1Bc_UmMsvLEZh3XQxczHdgOAUSzghr2BA',
+        'agentid' => 1000004
+    ),
+
+
+
+
     'weixinpay'       => [
         'appid'       => 'ww61224724ee102fbc', // 微信支付appid
         'mchid'       => '1486387062', // 微信支付mchid 商户收款账号
@@ -81,5 +117,5 @@ return [
         'force_client_ids'      =>  ['game_1259'],
         'allow_client_ids'      =>  ['game_1259'],
     ],
-
+    'app_debug'=>true
 ];

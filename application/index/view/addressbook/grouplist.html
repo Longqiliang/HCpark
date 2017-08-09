@@ -1,0 +1,174 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    body{
+        background: #ffffff;
+    }
+    .search{
+        background: #f0eff5;
+        padding:8px 15px;
+        border-bottom: 1px solid #f0eff5;
+    }
+    .search>.searchBox{
+        border-radius: 5px;
+        height:28px;
+        background: #ffffff;
+        text-align: center;
+
+    }
+    .search>.unBtn{
+        display: none;
+    }
+    .search>.searchBox>.searchInput{
+        display: none;
+    }
+    .search>.searchBox>.searchText{
+        display: inline-block;
+        font-size:1.4rem;
+        color: #999;
+        padding-left:24px;
+        min-width: 1px;
+        line-height: 28px;
+        height:28px;
+        background: url("/index/images/addressbook/search.png") 0 50% no-repeat;
+        background-size: 18px 18px;
+    }
+    .search.isClick{
+        background: #ffffff;
+        border-bottom: 1px solid #f1f1f1;
+        display: flex;
+    }
+    .search.isClick>.searchBox{
+        background: #f0eff5;
+        padding-left: 10px;
+        width:74vw;
+        display: flex;
+        align-items: center;
+    }
+    .search.isClick>.searchBox>.searchText{
+        display: inline-block;
+    }
+    .search.isClick>.searchBox>.searchText>.searchText_c{
+        display: none;
+    }
+    .search.isClick .searchInput{
+        background: #f0eff5;
+        display: inline-block;
+        height:24px;
+        width:61.33vw;
+    }
+    .search.isClick>.unBtn{
+        margin-left: 20px;
+        display: block;
+        box-sizing: border-box;
+        width:50px;
+        height:28px;
+        border-radius: 5px;
+        border:1px solid #5d9cec;
+        color: #5d9cec;
+        text-align: center;
+        line-height: 26px;
+        font-size: 1.4rem;
+    }
+    .main>.nav{
+        padding:10px 15px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .main>.nav>li{
+        float: left;
+        padding: 5px 0;
+    }
+    .main>.nav>li>a{
+        display: block;
+        line-height: 22px;
+        color: #666;
+        font-size: 1.5rem;
+    }
+    .main>.nav>li:first-child a{
+        color:#5d9cec;
+        font-size: 1.7rem;
+    }
+    .main>.nav>li:not(:last-child)>a:after{
+        display: inline;
+        content: '';
+        padding:1px 8px;
+        background: url("/index/images/addressbook/right.png") center center no-repeat;
+        background-size: 6px 12px;
+    }
+
+
+    .main .lists>li{
+        box-sizing: border-box;
+        font-size: 1.4rem;
+        color: #666;
+    }
+    .main .list a{
+        padding-left: 15px;
+        display: block;
+        height:54px;
+        font-size: 1.4rem;
+        color: #333;
+        line-height: 54px;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .main .list a>.fr{
+        box-sizing: border-box;
+        width:50px;
+        text-align: right;
+        padding-right:15px;
+        margin-right: 15px;
+        color: #999;
+        background: url("/index/images/addressbook/right.png") right center no-repeat;
+        background-size: 6px 12px;
+    }
+
+
+</style>
+{/block}
+{block name="body"}
+<div class="search ">
+    <div class="searchBox">
+        <div class="searchText"><span class="searchText_c">搜索</span></div>
+        <input type="text" class="searchInput">
+    </div>
+    <div class="unBtn">取消</div>
+</div>
+
+
+<div class="main">
+    <ul class="nav clear">
+        <li><a href="{:Url('Addressbook/index')}">智新泽地园区</a></li>
+        <li><a href="{:Url('Addressbook/index')}">希垦科技园</a></li>
+        <li><a href="{:Url('Addressbook/index')}">运营团队</a></li>
+    </ul>
+    <ul class="list">
+        <li><a href="">总经理 <span class="fr">1</span></a></li>
+    </ul>
+</div>
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        function onInput() {
+            $(".searchBox").off('click').on('click',function(){
+                $(".search").addClass('isClick');
+                $(this).off('click').find('.searchInput').focus();
+                $('.main').addClass('hidden');
+            })
+        }
+        function offInput(){
+            $(".search").removeClass("isClick");
+            $('.main').removeClass('hidden')
+        }
+        //点击输入
+        onInput();
+        //取消输入
+        $(".search .unBtn").on('click',function(){
+            offInput();
+            onInput()
+        });
+    })
+</script>
+{/block}

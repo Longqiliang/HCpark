@@ -23,7 +23,7 @@ class Index extends Admin {
     // 同步用户
     public function syncUser() {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $weObj = new TPWechat(config('sync'));
+        $weObj = new TPWechat(config('party'));
 
         // 更新部门信息
         $department = $weObj->getDepartment();
@@ -54,7 +54,7 @@ class Index extends Admin {
     // 获取部门
     public function syncDepartment() {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $weObj = new TPWechat(config('sync'));
+        $weObj = new TPWechat(config('party'));
         // 更新部门信息
         $department = $weObj->getDepartment();
 
@@ -72,7 +72,7 @@ class Index extends Admin {
     // 同步标签
     public function syncTag() {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $weObj = new TPWechat(config('sync'));
+        $weObj = new TPWechat(config('party'));
         $list = $weObj->getTagList();
 
         // 更新所有标签

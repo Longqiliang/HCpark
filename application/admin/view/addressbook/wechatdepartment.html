@@ -1,0 +1,163 @@
+{extend name="base/common"}
+
+{block name="style"}
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>部门管理</h2>
+        <ol class="breadcrumb">
+            <li><a href="{:Url('index')}">Wechat_department</a></li>
+            <li class="active"><strong>Index</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>智新泽地园区</h5>
+                    <div class="ibox-tools">
+                        <a data-toggle="modal" class="btn btn-primary btn-xs" href="#modal-form" onclick="addUser()"><i class="fa fa-star"></i> 添加</a>
+                    </div>
+                </div>
+                <div id="modal-form" class="modal fade" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form class="form-horizontal from-add-user" method="post" action="{:Url('User/add')}">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h3 class="modal-title text-center">新增用户</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group"><label class="col-sm-2 control-label">用户名</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" placeholder="输入用户名" class="form-control" required="" name="username">
+                                        </div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">昵称</label>
+                                        <div class="col-sm-10">
+                                            <input type="email" placeholder="网络昵称" class="form-control" name="nickname">
+                                        </div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">邮箱</label>
+                                        <div class="col-sm-10">
+                                            <input type="email" placeholder="用户邮箱，用于找回密码等安全操作" class="form-control" required="" name="email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">密码</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" placeholder="至少6位数字或字母" class="form-control" required="" name="password">
+                                        </div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">确认密码</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" placeholder="确认密码" class="form-control" required="" name="rePassword">
+                                        </div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">用户组</label>
+                                        <div class="col-sm-10 checkbox-inline">
+
+                                            <label><input class="auth_groups i-checks" type="radio" name="group_id" value="666" {eq name="666" value="2"}checked{/eq}> 666</label>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                                    <button type="submit" class="btn btn-primary ajax-post" target-form="from-add-user">保存</button>
+                                </div><input type="hidden" name="id" value="">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>部门ID</th>
+                                <th>部门名称</th>
+                                <th>部门父ID</th>
+                                <th>排序</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="info" id="vo"}
+                            <tr>
+                                <td>{$vo.id}</td>
+                                <td><a href="{:Url('WechatDepartment/index?id='.$vo.id)}">{$vo.name}</a></td>
+                                <td>{$vo.parentid}</td>
+                                <td>{$vo.order}</td>
+                                <td><a href="{:Url('WechatUser/edit?'.$vo.id)}">编辑</a>&nbsp;<a href="{:Url('WechatUser/delete?'.$vo.id)}">删除</a></td>
+                            </tr>
+                            {/volist}
+
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="page">{$info->render()}</div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+    function editUser(uid) {
+        $.ajax({
+            type: "get",
+            url: "{:Url('User/edit')}",
+            data: {id:uid},
+            success: function(response){
+                var useForm = $(".form-horizontal");
+                useForm[0].reset();
+                useForm.find("input[name='id']").attr("disabled", false);
+                useForm.find("input[name='id']").val(response.data.id);
+                useForm.find("input[name='username']").val(response.data.username);
+                useForm.find("input[name='username']").attr("disabled", true);
+                useForm.find("input[name='email']").val(response.data.email);
+                useForm.find("input[name='nickname']").val(response.data.nickname);
+
+                var groupCheck = useForm.find("input[name='group_id'][value="+response.data.group_id+"]");
+                groupCheck.iCheck('check');
+                groupCheck.attr("checked",true);
+                $(".modal-title").html("编辑用户");
+                useForm.attr('action', "{:Url('User/edit')}");
+            }
+        });
+    }
+    function addUser() {
+        $(".modal-title").html("新增用户");
+        var useForm = $(".form-horizontal");
+        useForm[0].reset();
+        useForm.attr('action', "{:Url('User/add')}");
+        useForm.find("input[name='username']").attr("disabled", false);
+        useForm.find("input[name='id']").attr("disabled", true);
+    }
+    highlight_subnav("{:Url('wechat_department/index')}");
+</script>
+{/block}

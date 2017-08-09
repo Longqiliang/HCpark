@@ -1,0 +1,98 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+body{
+    background: #f0eff5;
+}
+    .header{
+        margin:2.667vw 0;
+        padding:2.667vw 4vw;
+        background: #ffffff;
+    }
+    .head_img{
+        width: 19.733vw;
+        height:19.733vw;
+        margin-right: 5.33vw;
+    }
+    .head_info .name{
+        color: #333;
+        font-size: 1.7rem;
+    }
+.head_info li{
+    width:66vw;
+
+}
+.head_info .sex{
+    padding:2vw;
+    margin-left: 5px;
+}
+.head_info .sex.boy{
+    background: url("/index/images/addressbook/pb.png") 50% 43% no-repeat;
+    background-size: 4vw 4vw;
+}
+.head_info .sex.girl{
+    background: url("/index/images/addressbook/pg.png") 50% 43% no-repeat;
+    background-size: 4vw 4vw;
+}
+    .head_info li:not(:first-child){
+        color: #999;
+        font-size: 1.4rem;
+        margin-top: 1.33vw;
+    }
+    .main>li{
+        box-sizing: border-box;
+        padding:2.667vw 4vw;
+        border-bottom: 1px solid #f1f1f1;
+        background: #ffffff;
+    }
+    .main>li>span:first-child{
+        color: #333;
+        font-size: 1.5rem;
+        margin-right: 26.67vw;
+    }
+    .main>li>span:last-child{
+        color: #999;
+        font-size: 1.4rem;
+    }
+.main>li a{
+    font-size: 1.4rem;
+    color: #5d9cec;
+}
+</style>
+{/block}
+{block name="body"}
+<div class="header clear">
+    {eq name='info.avatar' value=""}
+        <img src="/index/images/addressbook/pb.png" class="head_img fl" alt="头像">
+    {else/}
+        <img src="{$info.avatar}" class="head_img fl" alt="头像">
+    {/eq}
+    <ul class="head_info fl">
+        <li>
+            <span class="name">{$info.name}</span>
+            {eq name='info.gender' value='1'}
+            <span class="sex boy"></span>
+            {else/}
+            <span class="sex girl"></span>
+            {/eq}
+        </li>
+        <li>
+            <span>微信号：{$info.userid}</span>
+        </li>
+        <li>
+            <!--<span>企业微信号：bllhahaha</span>-->
+        </li>
+    </ul>
+</div>
+
+<ul class="main">
+    <li><span>手机</span><a href="tel:{$info.mobile}">{$info.mobile}</a></li>
+    <li><span>部门</span><a href="{:Url('/index/Addressbook/userlist/'.$info->departmentName->id)}">{$info->departmentName->name}</a></li>
+</ul>
+{/block}
+{block name="script"}
+<script>
+    console.log({$info})
+</script>
+{/block}

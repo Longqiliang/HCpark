@@ -1,0 +1,119 @@
+{extend name="base/common"}
+
+{block name="style"}
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>用户管理</h2>
+        <ol class="breadcrumb">
+            <li><a href="index.html">Wechat_use</a></li>
+            <li class="active"><strong>Index</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <form method="get" action="index.html" class="pull-left mail-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-sm" name="search_user" placeholder="搜索用户名" >
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-sm btn-primary">搜索</button>
+                            </div>
+                        </div>　　　　
+                    </form>
+                    <form method="get" action="index.html" class="pull-left mail-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" name="search_department" placeholder="搜索部门" >
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-sm btn-primary">搜索</button>
+                        </div>
+                    </div>
+                </form>
+                    <div class="ibox-tools">
+                        <a href="{:Url('index')}" class="btn btn-white btn-sm">返回</a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>用户ID</th>
+                                <th>用户名</th>
+                                <th>电话</th>
+                                <th>性别</th>
+                                <th>部门</th>
+                                <th>激活状态</th>
+
+
+                                <th>职位</th>
+                                <th>拓展属性</th>
+                                <th>创建时间</th>
+                                <th>是否关注</th>
+                                <th>部门排序值</th>
+                                <th>邮箱</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="info" id="vo"}
+                            <tr>
+                                <td>{$vo.userid}</td>
+                                <td>{$vo.name}</td>
+                                <td>{$vo.mobile}</td>
+
+                                <td>{$vo.gender}</td>
+                                <td>{$vo.dname}</td>
+                                <td>{$vo.status}</td>
+                                <td>{$vo.position}</td>
+                                <td>
+                                    {volist name="vo.extattr" id="vo1"}
+                                    {$vo1->name.':'.$vo1->value}
+                                    {/volist}
+                                </td>
+                                <td>{$vo.create_time}</td>
+                                <td>{$vo.wxplugin_status}</td>
+                                <td>{$vo.order}</td>
+                                <td>{$vo.email}</td>
+                            </tr>
+                            {/volist}
+
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="20">
+                                    <div class="page">{$page}</div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+    highlight_subnav("{:Url('wechat_use/index')}");
+</script>
+{/block}
