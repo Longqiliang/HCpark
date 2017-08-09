@@ -11,7 +11,7 @@
  Target Server Version : 50719
  File Encoding         : utf-8
 
- Date: 08/09/2017 13:24:01 PM
+ Date: 08/09/2017 13:55:46 PM
 */
 
 SET NAMES utf8mb4;
@@ -171,6 +171,7 @@ CREATE TABLE `tb_feedback` (
   `reply_content` text,
   `reply_user` varchar(200) DEFAULT NULL,
   `reply_time` int(11) DEFAULT NULL,
+  `park_id` int(11) DEFAULT NULL,
   `status` tinyint(4) DEFAULT '0' COMMENT '0未回复。1已回复',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='反馈';
@@ -353,6 +354,7 @@ CREATE TABLE `tb_news` (
   `update_time` int(11) DEFAULT '0',
   `create_user` int(11) DEFAULT '0',
   `is_send` tinyint(4) DEFAULT '0' COMMENT '是否推送',
+  `park_id` int(11) DEFAULT NULL,
   `status` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`id`) USING BTREE,
@@ -426,6 +428,7 @@ CREATE TABLE `tb_union` (
   `address` varchar(255) DEFAULT NULL,
   `office_time_start` time DEFAULT NULL,
   `office_time_end` time DEFAULT NULL,
+  `park_id` int(11) DEFAULT NULL,
   `status` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工会';
