@@ -87,7 +87,7 @@
         <ul>
             {volist name="list" id="feedback"}
             <li>
-                {switch $feedback->reply}
+                {switch $feedback->status}
                 {case value="0"}
                 <img src="/index/images/feedback/reply.png">
                 {/case}
