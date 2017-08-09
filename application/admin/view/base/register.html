@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{$Think.config.web_site_title} | 注册</title>
+    <link href="/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/admin/css/animate.css" rel="stylesheet">
+    <link href="/admin/css/style.css" rel="stylesheet">
+    <style type="text/css">
+        .check-tips { color: #ff0000; margin-top: 10px; }
+        .login-logo { width: 150px; }
+    </style>
+</head>
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen   animated fadeInDown">
+        <div>
+            <div>
+                <img src="/home/images/home/video.png" class="login-logo">
+            </div>
+            <h3>注册 {$Think.config.web_site_title}</h3>
+            <p>在这里创建一个新的帐号</p>
+            <form class="m-t" role="form" action="{:Url('register')}">
+                <!--<div class="form-group">-->
+                    <!--<input type="text" class="form-control" placeholder="用户名" required="" name="name">-->
+                <!--</div>-->
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="邮箱" required="" name="email">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="密码" required="" name="password">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="确认密码" required="" name="password2">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="手机（选填）"  name="mobile">
+                </div>
+                <div class="form-group">
+                    <div class="checkbox i-checks"><label><input type="checkbox" required=""><i></i></label>同意的条款和政策</div>
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">注册</button>
+
+                <div class="check-tips"></div>
+                <p class="text-muted text-center"><small>已经拥有帐号?</small></p>
+                <a class="btn btn-sm btn-white btn-block" href="{:Url('login')}">登入</a>
+            </form>
+            <p class="m-t"> <small>杭州灵煽科技网络有限公司 &copy; 2016-2017</small> </p>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="/admin/js/jquery-2.1.1.js"></script>
+    <script src="/admin/js/bootstrap.min.js"></script>
+    <!-- iCheck -->
+    <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+        });
+        $("form").submit(function(){
+            var self = $(this);
+            $.post(self.attr("action"), self.serialize(), success, "json");
+            return false;
+
+            function success(data){
+                if(data.code){
+                    alert('恭喜您，注册成功！');
+                    window.location.href = data.url;
+                } else {
+                    self.find(".check-tips").text(data.msg);
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>

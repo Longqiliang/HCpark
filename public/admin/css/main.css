@@ -1,0 +1,88 @@
+/* uploadify插件上传按钮 */
+.uploadify-button {
+    color: #fff;
+    background-color: #27ae60;
+}
+
+/* 列表分页 */
+.page {
+    /*margin: 10px 0;*/
+    *zoom: 1;
+    float:right;
+}
+.page:before,
+.page:after {
+    display: table;
+    content: "";
+}
+.page:after {
+    clear:both;
+}
+.table_no_bottom{
+    margin-bottom: 0;
+}
+.page a,
+.page span {
+    float: left;
+    margin-left: -1px;
+    padding: 0 14px;
+    height: 30px;
+    line-height: 30px;
+    color: #000;
+    border-top: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    /*background-color: #4bbd00;*/
+}
+.page a:hover {
+    text-decoration: none;
+    background-color: #387C0B;
+}
+.page .current {
+    border-top: 1px solid #387C0B;
+}
+.page .next,
+.page .prev {
+    font-family: "宋体";
+    font-weight: bold;
+}
+.page .rows {
+    border-right: 1px solid #CCCCCC;
+}
+.page a,
+.page span {
+    color: #686868;
+    border: 1px solid #CCCCCC;
+}
+.page a:hover
+{
+    background: #E1E1E1;
+}
+.page .current {
+    border-top: 3px solid #1ab394;
+    /*height: 28px;*/
+    line-height: 26px;
+}
+
+.radio + .radio {
+    margin-left: 15px;
+}
+.checkbox, .radio {
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+}
+.checkbox input,
+.radio input {
+    margin-right: 5px;
+    *margin-right: 1px;
+    vertical-align: -1px;
+}
+
+.ibox-title .ibox-buttons {
+    margin-top: -2px;
+    float: left;
+}
+/* 新分页 */
+.pager { margin: 0 }
+.pagination { margin: 0}
+.pager li>a, .pager li>span {border-radius: 3px}

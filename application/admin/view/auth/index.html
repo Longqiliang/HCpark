@@ -1,0 +1,144 @@
+{extend name="base/common"}
+
+{block name="style"}
+
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>用户管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index.html">Admin</a>
+            </li>
+            <li class="active">
+                <strong>Auth</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>管理组列表</h5>
+                    <div class="ibox-tools">
+                        <a data-toggle="modal" class="btn btn-primary btn-xs" href="#modal-form" onclick="addAuth()"><i class="fa fa-star"></i> 添加组</a>
+                    </div>
+                </div>
+                <div id="modal-form" class="modal fade" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form class="form-horizontal from-add-auth" method="post" action="{:Url('Auth/createGroup')}">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title">新增权限组</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">用户组</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" required="" name="title">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">描述</label>
+                                        <div class="col-sm-10">
+                                            <textarea type="text" class="form-control" name="description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                                    <button type="submit" class="btn btn-primary ajax-post" target-form="from-add-auth">保存</button>
+                                </div><input type="hidden" name="id" value="">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                <th>用户组</th>
+                                <th>描述</th>
+                                <th>授权</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="_list" id="vo"}
+                            <tr>
+                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                <td>{$vo.title}</td>
+                                <td>{:mb_strimwidth($vo['description'],0,60,"...","utf-8")}</td>
+                                <td>
+                                    <a href="{:Url('Auth/access?group_id='.$vo['id'])}" >访问授权</a>
+                                    <a href="{:Url('Auth/user?group_id='.$vo['id'])}" >成员授权</a>
+                                </td>
+                                <td>
+                                    {eq name="vo.status" value="1"}
+                                    <a href="{:Url('Auth/changeStatus?method=forbidGroup&id='.$vo.id)}" class="ajax-get">{$vo.status_text}</a>
+                                    {else /}
+                                    <a href="{:Url('Auth/changeStatus?method=resumeGroup&id='.$vo.id)}" class="ajax-get">{$vo.status_text}</a>
+                                    {/eq}
+                                </td>
+                                <td>
+                                    <a data-toggle="modal" class="authorize"  href="#modal-form" onclick="editAuth('{$vo.id}')">编辑</a>
+                                    <a href="{:Url('Auth/changeStatus?method=deleteGroup&id='.$vo['id'])}" class="confirm ajax-get">删除</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(document).ready(function(){
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+});
+function editAuth(id) {
+    $.ajax({
+        type: "get",
+        url: "{:Url('Auth/createGroup')}",
+        data: {id:id},
+        success: function(response){
+            var useForm = $(".form-horizontal");
+            useForm[0].reset();
+            useForm.find("input[name='id']").attr("disabled", false);
+            useForm.find("input[name='id']").val(response.data.id);
+            useForm.find("input[name='title']").val(response.data.title);
+            useForm.find("textarea").html(response.data.description);
+            $(".modal-title").html("编辑用户组");
+            useForm.attr('action', "{:Url('Auth/editGroup')}");
+        }
+    });
+}
+function addAuth() {
+    $(".modal-title").html("新增用户组");
+    var useForm = $(".form-horizontal");
+    useForm[0].reset();
+    useForm.action = "{:Url('Auth/createGroup')}";
+    useForm.find("input[name='id']").attr("disabled", true);
+}
+</script>
+{/block}

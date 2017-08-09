@@ -1,0 +1,184 @@
+{extend name="base/common"}
+
+{block name="style"}
+
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>菜单管理</h2>
+        <ol class="breadcrumb">
+            <li><a href="index.html">Admin</a></li>
+            <li class="active"><strong>Menu</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{eq name="pid" value=""}顶级菜单列表 {else/}{$data.title}{/eq}</h5>
+                    <div class="ibox-tools">
+                        {neq name="pid" value=""}
+                            <a href="javascript:window.history.go(-1);" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="" data-original-title="返回"><i class="fa fa-reply"></i> 返回上一级</a>
+                        {/neq}
+                        <a data-toggle="modal" class="btn btn-xs btn-primary" href="#modal-form" onclick="addMenu({$pid|default=0})">添加菜单</a>
+                        <a class="btn btn-xs btn-primary" href="{:Url('sort',array('pid'=>$pid),'')}" >排序</a>
+                    </div>
+                </div>
+                <div id="modal-form" class="modal fade" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form class="form-horizontal" method="post" action="{:Url('Menu/add')}">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h3 class="modal-title text-center">添加菜单</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group"><label class="col-sm-2 control-label">标题</label>
+                                        <div class="col-sm-10"><input type="text" placeholder="用于后台显示的配置标题" class="form-control" required="" name="title"></div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">图标</label>
+                                        <div class="col-sm-10"><input type="text" placeholder="Font Awesome" class="form-control" name="icon"></div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">排序</label>
+                                        <div class="col-sm-10"><input type="number" class="form-control" required="" name="sort" value="0"></div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">链接</label>
+                                        <div class="col-sm-10"><input type="text" placeholder="U函数解析的URL或者外链" class="form-control" required="" name="url"></div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">上级菜单</label>
+                                        <div class="col-sm-10"><select class="form-control m-b" name="pid">
+                                            {volist name="Menus" id="menu"}
+                                            <option value="{$menu.id}">{$menu.title_show}</option>
+                                            {/volist}
+                                        </select></div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">分组</label>
+                                        <div class="col-sm-10"><input type="text" placeholder="用于左侧分组二级菜单" class="form-control" name="group"></div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">仅开发者可见</label>
+                                        <div class="col-sm-10"><div class="i-checks">
+                                            <label><input type="radio" value="1" name="is_dev"> <i></i> 是 </label>
+                                            <label><input type="radio" checked="" value="0" name="is_dev"> <i></i> 否 </label>
+                                        </div></div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">是否隐藏</label>
+                                        <div class="col-sm-10"><div class="i-checks">
+                                            <label><input type="radio" value="1" name="hide"> <i></i> 是 </label>
+                                            <label><input type="radio" checked="" value="0" name="hide"> <i></i> 否 </label>
+                                        </div></div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">说明</label>
+                                        <div class="col-sm-10"><input type="text" placeholder="菜单详细说明" class="form-control" name="tip"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary ajax-post" type="submit" target-form="form-horizontal">添加</button>
+                                    <input type="hidden" name="id" value="">
+                                    <input type="hidden" name="level" value="">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input class="i-checks check-all" type="checkbox"></th>
+                                <th>ID</th>
+                                <th>名称</th>
+                                <th>上级菜单</th>
+                                <th>分组</th>
+                                <th>URL </th>
+                                <th>排序</th>
+                                <th>仅开发者模式显示</th>
+                                <th>隐藏</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="vo"}
+                            <tr class="menu_{$vo.id}">
+                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                <td>{$vo.id}</td>
+                                <td><a href="{:Url('index?pid='.$vo['id'])}">{$vo.title}</a></td>
+                                <td>{$vo.up_title|default='无'}</td>
+                                <td>{$vo.group}</td>
+                                <td>{$vo.url}</td>
+                                <td>{$vo.sort}</td>
+                                <td>
+                                    <a href="{:Url('toogleDev',array('id'=>$vo['id'],'value'=>abs($vo['is_dev']-1)))}" class="ajax-get">
+                                        {$vo.is_dev_text}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{:Url('toogleHide',array('id'=>$vo['id'],'value'=>abs($vo['hide']-1)))}" class="ajax-get">
+                                        {$vo.hide_text}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a data-toggle="modal" title="编辑" href="#modal-form" onclick="editMenu({$vo.id})">编辑</a>
+                                    <a href="{:Url('del?id='.$vo['id'])}" class="confirm ajax-del" title="删除">删除</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    function addMenu(pid) {
+        $(".tt").html("新增菜单");
+        $(".form-horizontal")[0].reset();
+        $("select[name='pid']").val(pid);
+    }
+    function editMenu(menuId) {
+        $.ajax({
+            type: "get",
+            url: "{:Url('Menu/getInfo')}",
+            data: {id:menuId},
+            //dataType: "json",
+            success: function(response){
+                var data = JSON.parse(response);
+                $(".tt").html("编辑菜单");
+                $("input[name='id']").val(data.id);
+                $("input[name='title']").val(data.title);
+                $("input[name='icon']").val(data.icon);
+                $("input[name='sort']").val(data.sort);
+                $("input[name='url']").val(data.url);
+                $("input[name='group']").val(data.group);
+                $("input[name='tip']").val(data.tip);
+                $("input[name='hide'][value="+data.hide+"]").iCheck('check');
+                $("input[name='is_dev'][value="+data.is_dev+"]").iCheck('check');
+                $("input[name='hide'][value="+data.hide+"]").attr("checked", true);
+                $("input[name='is_dev'][value="+data.is_dev+"]").attr("checked", true);
+                $("select[name='pid']").val(data.pid);
+                $(".form-horizontal").attr('action', '{:Url("Menu/edit")}');
+            }
+        })
+    }
+
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+    });
+</script>
+{/block}

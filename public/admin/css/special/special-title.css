@@ -1,0 +1,9 @@
+#title{counter-reset:flag;padding:0;margin:0;}
+#title li{float:left;width:25%;text-align:center;color:#c1c1c1;font-size:16px;font-weight:600;}
+#title li .yy_box{height:60px;padding-top:28px;}
+#title li .yy_box .yy_bj{height:5px;background:#e1e1e1;}
+#title li .yy_box .yy_bj .yy_num{display:inline-block;width:35px;height:35px;border-radius:50%;margin:0 auto;background:#e1e1e1;text-align:center;line-height:35px;color:#666;position:relative;top:-14px;}
+#title li .yy_box .yy_bj .yy_num:before{content:counter(flag);counter-increment:flag;font-size:16px;font-weight:600;}
+#title li.li_show{color:#1AB394;}
+#title li.li_show .yy_bj{background:#1AB394;}
+#title li.li_show .yy_bj .yy_num{background:#1AB394;color:#fff;}

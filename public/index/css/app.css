@@ -1,0 +1,31 @@
+[v-cloak] {
+    display: none;
+}
+
+.title {
+    /*margin: 20px 15px 10px;*/
+    color: #6d6d72;
+    font-size: 15px;
+}
+
+.left-image { border-radius: 50%; margin-left: 20px; width: 32px; height: auto}
+.item-after {
+    margin-right: 22px;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: #8095a8;
+}
+
+
+.mui-popup-input input {
+    height: 30px;
+}
+
+.prompt-text {
+    margin: 4px auto;
+}
+
+

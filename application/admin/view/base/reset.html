@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{$Think.config.web_site_title} | 重置密码</title>
+    <link href="/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/admin/css/animate.css" rel="stylesheet">
+    <link href="/admin/css/style.css" rel="stylesheet">
+    <link href="/admin/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="passwordBox animated fadeInDown">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox-content">
+                <h2 class="font-bold">重置密码</h2>
+                <p>输入你的新密码完成设置。</p>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form class="form-password m-t" role="form" action="{:Url('Base/reset')}" method="post">
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="输入新密码" required="" name="password">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="确认新密码" required="" name="rePassword">
+                            </div>
+                            <button type="submit" class="btn btn-primary block full-width m-b ajax-post" target-form="form-password">重设密码</button>
+                            <input type="hidden" name="code" value="{$code}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <strong>Copyright</strong> {$Think.config.web_company_name} &copy; 2016-2017
+        </div>
+    </div>
+    <script src="/admin/js/jquery-2.1.1.js"></script>
+    <script src="/admin/js/plugins/toastr/toastr.min.js"></script>
+    <script src="/admin/js/common.js"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+{extend name="base/common"}
+
+{block name="style"}
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>升级补丁</h2>
+        <ol class="breadcrumb">
+            <li><a href="index.html">Update</a></li>
+            <li class="active"><strong>index</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>补丁列表</h5>
+                    <div class="ibox-tools">
+                        <a class="btn btn-primary btn-xs confirm ajax-get" href="{:Url('Update/createVersion')}"><i class="fa fa-star"></i> 创建补丁</a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input class="i-checks check-all" type="checkbox"></th>
+                                <th>ID</th>
+                                <th>分支</th>
+                                <th>版本号</th>
+                                <th>git版本号 </th>
+                                <th>增量补丁</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="vo"}
+                            <tr>
+                                <td><input type="checkbox" class="i-checks ids" name="input[]"></td>
+                                <td>{$i}</td>
+                                <td>{$vo.branch}</td>
+                                <td>{$vo.version}</td>
+                                <td>{$vo.git_version}</td>
+                                <td><a href="/{$vo.path}">{$vo.path}</a></td>
+                                <td>{$vo.create_time|time_format}</td>
+                                <td>
+                                    <a href="{:Url('Update/del',['id'=>$vo.id])}" class="confirm ajax-del">删除</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="page">{$list->render()}</div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+</script>
+{/block}

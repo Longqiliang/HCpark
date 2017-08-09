@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="../assets/css/mui.min.css">
+    <!--<link rel="stylesheet" href="../assets/js/weui/css/weui.min.css" />-->
+    <!--App自定义的css-->
+    <link rel="stylesheet" href="../assets/css/app.css" />
+    <style>
+
+    </style>
+</head>
+<body>
+<header id="header" class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-left">
+        <span class="mui-icon mui-icon-left-nav"></span>个人信息
+    </a>
+    <a class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">确定</a>
+</header>
+<div class="mui-content">
+
+
+</div>
+<nav class="mui-bar mui-bar-tab">
+    <a class="mui-tab-item mui-active" href="../home/index.html">
+        <span class="mui-icon mui-icon-home"></span>
+        <span class="mui-tab-label">主页</span>
+    </a>
+    <a class="mui-tab-item" href="../user/index.html">
+        <span class="mui-icon mui-icon-contact"></span>
+        <span class="mui-tab-label">个人</span>
+    </a>
+</nav>
+</body>
+<script src="../assets/js/mui/mui.min.js"></script>
+<script src="../assets/js/vue.js"></script>
+<script src="../assets/js/vue-resource.js"></script>
+
+<script src="../assets/js/common.js"></script>
+<script>
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    var main = new Vue({
+        el: '#main',
+        data: {
+            apiUrl: apiBaseUrl + '/home/homeUser',
+        },
+        emulateJSON: true,
+        mounted: function() {
+//            this.getCustomers()
+        },
+        methods: {
+            getCustomers: function() {
+                this.$http.get(this.apiUrl)
+                    .then(function(response) {
+
+
+                    })
+
+            }
+        }
+    });
+</script>
+</html>

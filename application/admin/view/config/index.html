@@ -1,0 +1,133 @@
+{extend name="base/common"}
+
+{block name="style"}
+
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-10">
+		<h2>配置管理 [
+			<a href="{:Url('index')}"><strong>全部</strong></a>
+			{foreach name="group" item="vo"}
+			{neq name="group_id" value="$key"}
+				<a href="{:Url('index?group='.$key)}">{$vo}</a>{else/}<strong>{$vo}</strong>{/neq}&nbsp;
+			{/foreach} ]</h2>
+		<ol class="breadcrumb">
+			<li><a href="index.html">Admin</a></li>
+			<li class="active"><strong>Config</strong></li>
+		</ol>
+	</div>
+	<div class="col-lg-2"></div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<div class="ibox-tools">
+						<div class="ibox-buttons">
+                            <button class="btn btn-white btn-xs">删除</button>
+							<button class="btn btn-white btn-xs list_sort" url="{:Url('sort?group='.input('group'),'','')}">排序</button>
+                            <a class="btn btn-primary btn-xs " href="{:Url('add')}">新增</a>
+                        </div>
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-wrench"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-user">
+							<li><a href="#">config option 1</a></li>
+							<li><a href="#">config option 2</a></li>
+						</ul>
+						<a class="close-link">
+							<i class="fa fa-times"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+							<tr>
+								<th><input class="i-checks check-all" type="checkbox"></th>
+								<th>ID</th>
+								<th>名称</th>
+								<th>标题</th>
+								<th>分组</th>
+								<th>类型</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+							<tbody>
+							{volist name="list" id="config"}
+							<tr>
+								<td><input type="checkbox" class="i-checks ids" name="ids[]"></td>
+								<td>{$config.id}</td>
+								<td><a href="{:Url('edit?id='.$config['id'])}">{$config.name}</a></td>
+								<td>{$config.title}</td>
+								<td>{$config.group|get_config_group}</td>
+								<td>{$config.type|get_config_type}</td>
+								<td>
+									<a title="编辑" href="{:Url('edit?id='.$config['id'])}">编辑</a>
+									<a class="confirm ajax-get" title="删除" href="{:Url('del?id='.$config['id'])}">删除</a>
+								</td>
+							</tr>
+							{/volist}
+							</tbody>
+							<tfoot>
+							<tr>
+								<td colspan="7">
+									<div class="page">{$list->render()}</div>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function(){
+	$('.i-checks').iCheck({
+		checkboxClass: 'icheckbox_square-green',
+		radioClass: 'iradio_square-green',
+	});
+	$(".check-all").on("ifChanged",function(){
+		$("tbody").find(".ids").iCheck("toggle");
+	});
+
+	$("#action_add").click(function(){
+		window.location.href = $(this).attr('url');
+	});
+
+	//点击排序
+	$('.list_sort').click(function(){
+		var url = $(this).attr('url');
+		var ids = $('.ids:checked');
+		var param = '';
+		if(ids.length > 0){
+			var str = new Array();
+			ids.each(function(){
+				str.push($(this).val());
+			});
+			param = str.join(',');
+		}
+
+		if(url != undefined && url != ''){
+			window.location.href = url + '/ids/' + param;
+		}
+	});
+});
+</script>
+{/block}

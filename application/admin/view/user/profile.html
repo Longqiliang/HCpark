@@ -1,0 +1,195 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/admin/css/plugins/cropper/cropper.min.css"  rel="stylesheet"/>
+<style>
+    .tabs-container{
+        padding-bottom: 25px;
+    }
+    @media screen and (max-width:1050px) {
+        .img-pre{
+            position: absolute;
+            margin-left: 300px;
+            margin-top: 10px;
+            top:0;
+        }
+        .image-crop{
+            height: 150px;
+            float: left;
+            left: 0;
+        }
+        .image-crop-tips{
+            display: none;
+        }
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>个人信息</h2>
+        <ol class="breadcrumb">
+            <li><a href="index.html">User</a></li>
+            <li class="active"><strong>profile</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-laptop"></i> 基本资料</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-2">修改密码</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content" style="border-top: none">
+                                    <div class="row">
+                                        <div class="image-crop col-xs-5 col-lg-offset-3">
+                                            <img src="/admin/images/pepole.png">
+                                        </div>
+                                        <div class="img-pre" style="float: left">
+                                            <h4 style="margin-top: 0">头像预览：</h4>
+                                            <div class="img-preview img-preview-sm" style="width: 128px;height: 128px;margin-bottom: 5px"></div>
+                                            <div class="pre_tips" style="color: red;height: 18px"></div>
+                                            <div class="btn-group">
+                                                <label title="Upload image file" for="inputImage" class="btn btn-primary" style="margin-right: 10px">
+                                                    <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
+                                                    上传新头像
+                                                </label>
+                                                <label title="Donload image" id="download" class="btn btn-primary">保存新头像</label>
+                                            </div>
+                                            <p class="image-crop-tips">选择一张你喜爱的图片作为头像</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ibox float-e-margins" style="margin-bottom: 0">
+                                <div class="ibox-content" style="padding-bottom: 0">
+                                    <form action="{:Url('User/update')}" method="post" class="form-horizontal update-base">
+                                        <div class="form-group"><label class="col-sm-2 control-label">用户名</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" value="{$member.username}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group"><label class="col-sm-2 control-label">昵称</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" placeholder="网络昵称" class="form-control" name="nickname" value="{$member.nickname}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"><label class="col-sm-2 control-label">邮箱</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" placeholder="用户邮箱，用于找回密码等安全操作" class="form-control" required="" name="email"  value="{$member.email}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"><label class="col-sm-2 control-label">手机号码</label>
+                                            <div class="col-sm-10">
+                                                <input type="number" placeholder="手机号码" class="form-control" name="mobile"  value="{$member.mobile}">
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <div class="col-sm-4 col-sm-offset-2">
+                                                <button class="btn btn-white" type="button" onclick="javascript:window.history.go(-1);">返回</button>
+                                                <button class="btn btn-primary ajax-post" type="submit" target-form="update-base">保存</button>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="id" value="{$member.id}">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <form action="{:Url('User/updatePassword')}" method="post" class="form-horizontal update-password">
+                                <div class="form-group"><label class="col-sm-2 control-label">旧密码</label>
+                                    <div class="col-sm-10"><input type="password" class="form-control" name="oldPassword"></div>
+                                </div>
+                                <div class="form-group"><label class="col-sm-2 control-label">新密码</label>
+                                    <div class="col-sm-10"><input type="password" class="form-control" name="newPassword"></div>
+                                </div>
+                                <div class="form-group"><label class="col-sm-2 control-label">确认密码</label>
+                                    <div class="col-sm-10"><input type="password" class="form-control" name="rePassword"></div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2">
+                                        <button class="btn btn-white" type="button" onclick="javascript:window.history.go(-1);">返回</button>
+                                        <button class="btn btn-primary ajax-post" type="submit" target-form="update-password">保存</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/admin/js/plugins/cropper/cropper.min.js"></script>
+<script>
+    //上传新头像
+
+    var $image = $(".image-crop > img")
+    $($image).cropper({
+        aspectRatio: 100/100,
+        preview: ".img-preview",
+        done: function(data) {
+            // Output the result data for cropping image.
+        }
+    });
+
+    var $inputImage = $("#inputImage");
+    if (window.FileReader) {
+        $inputImage.change(function() {
+            var fileReader = new FileReader(), files = this.files, file;
+            if (!files.length) { return; }
+            file = files[0];
+            if (/^image\/\w+$/.test(file.type)) {
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+                    $inputImage.val("");
+                    $image.cropper("reset", true).cropper("replace", this.result);
+                };
+            } else {
+                showMessage("Please choose an image file.");
+            }
+        });
+    } else {
+        $inputImage.addClass("hide");
+    }
+
+    //完成上传头像
+    $("#download").click(function() {
+        var pic_url=$image.cropper("getDataURL")
+        $.ajax({
+            type:'POST',
+            url:'updateHeader',
+            data: {imageStr:pic_url},
+            success:function(response) {
+                if(response.code == 1) {
+                    $('.pre_tips').html(response.msg)
+                } else {
+                    $('.pre_tips').html(response.msg)
+                }
+            }
+        })
+    });
+    highlight_subnav("{:Url('Index/index')}");
+</script>
+{/block}

@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{$Think.config.web_site_title} | 超级后台</title>
+    <!-- CSS Files -->
+    <link href="/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <style type="text/css">
+        .profile-element { text-align: center; }
+        .img-circle {  width:48px; }
+        .label small{
+            font-size: 12px !important;
+        }
+    </style>
+
+    <!-- iCheck -->
+    <link href="/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="/admin/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <!-- Toastr style -->
+    <link href="/admin/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <!-- CSS Files -->
+    <link href="/admin/css/animate.css" rel="stylesheet">
+    <link href="/admin/css/style.css" rel="stylesheet">
+    <link href="/admin/css/main.css" rel="stylesheet">
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/jquery-migrate-3.0.0.min.js"></script>
+    {block name="style"}{/block}
+</head>
+<body>
+<div id="wrapper">
+    <!-- 左侧系统菜单栏 -->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <div class="nav-header">
+                    <div class="dropdown profile-element">
+                        <span>{eq name="$user_auth.header" value=""}<img alt="image" class="img-circle" src="/admin/images/profile_small.jpg" />{else/}<img alt="image" style="width: 48px;height: 48px;" class="img-circle" src="{$user_auth.header}" />{/eq}</span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{$user_auth['username']}</strong></span>
+                            <span class="text-muted text-xs block">{$user_auth['group_name']}<b class="caret"></b></span> </span> </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li><a href="{:Url('User/profile')}">个人信息</a></li>
+                            <li><a href="{:Url('Message/index')}">消息中心</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{:Url('Base/logout')}">退出</a></li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">VAN+</div>
+                </div>
+                {volist name="__MENU__" id="menu"}
+                {empty name="menu.child" }
+                {eq name="menu.id" value="$subMenu.id"}<li class="active">{else/}<li>{/eq}
+                <a href="{:Url($menu['url'])}"><i class="fa {$menu.icon}"></i><span class="nav-label">{$menu.title}</span></a></li>
+                {else /}
+                {eq name="subMenu.pid" value="$menu.id"}<li class="active">{else /}<li>{/eq}
+                <a href="{:Url($menu['url'])}"><i class="fa {$menu.icon}"></i> <span class="nav-label">{$menu.title}</span>
+                    {eq name="menu.url" value="admin/Message/index"}
+                    <span class="label label-warning pull-right">{$messageTotal}</span>
+                    {else/}
+                    <span class="fa arrow"></span>
+                    {/eq}
+                </a>
+                <ul class="nav nav-second-level collapse {eq name='subMenu.pid' value='$menu.id'}in{/eq}">
+                    {volist name="menu.child" id="child"}
+                    {eq name="subMenu.id" value="$child.id"}<li class="active">{else/}<li>{/eq}
+                    <a href="{:Url($child.url)}">{$child.title}</a></li>
+                    {/volist}
+                </ul></li>
+                {/empty}
+                {/volist}
+                <li class="special_link">
+                    <a href="http://www.youku.com" target="_blank"><i class="fa fa-video-camera"></i> <span class="nav-label">优酷平台</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- 右侧主体内容 -->
+    <div id="page-wrapper" class="gray-bg">
+        <!-- 中间头部 -->
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    <form role="search" class="navbar-form-custom" action="{:Url('Index/search')}">
+                        <div class="form-group">
+                            <input type="text" placeholder="搜索内容" class="form-control" name="top-search" id="top-search">
+                        </div>
+                    </form>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message">欢迎使用{$Think.config.web_site_title}</span>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-envelope"></i><span class="label label-warning">{$messageTotal}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{:Url('Base/logout')}"><i class="fa fa-sign-out"></i> 退出</a>
+                    </li>
+                    <li>
+                        <a class="right-sidebar-toggle"><i class="fa fa-tasks"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- 页面路径 -->
+        {block name="page-header"}{/block}
+        <!-- 中间主体内容 -->
+        {block name="main"}{/block}
+        <!-- 底部信息 -->
+        <div class="footer">
+            <div class="pull-right">版本 <strong>{$Think.config.web_version}</strong></div>
+            <div><strong>Copyright</strong> {$Think.config.web_company_name} &copy; 2016-2017</div>
+        </div>
+    </div>
+    <!-- 右侧工具栏 -->
+</div>
+<!-- Mainly scripts -->
+<script src="/admin/js/bootstrap.min.js"></script>
+<script src="/admin/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/admin/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="/admin/js/inspinia.js"></script>
+<script src="/admin/js/plugins/pace/pace.min.js"></script>
+<script src="/admin/js/common.js"></script>
+<!-- Toastr script -->
+<script src="/admin/js/plugins/toastr/toastr.min.js"></script>
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/admin/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+{block name="script"}{/block}
+</body>
+</html>

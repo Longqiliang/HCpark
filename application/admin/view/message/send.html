@@ -1,0 +1,113 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<style type="text/css">
+    .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <div class="pull-right tooltip-demo">
+                <button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"
+                        target-form="form-horizontal" data-edit="content">
+                    <i class="fa fa-pencil"></i> 保存草稿
+                </button>
+                <a href="{:Url('index')}" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
+            <h2>发送消息</h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizontal" method="post">
+            <div class="mail-body">
+                <div class="form-group"><label class="col-sm-2 control-label">标题:</label>
+                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="消息的标题" name="title" value='{$message.title}'></div>
+                </div>
+                <div class="form-group"><label class="col-sm-2 control-label">发送类型:</label>
+                    <div class="col-sm-10">
+                        {volist name="Think.config.message_type" id="type"}
+                        <label class="checkbox-inline i-checks">
+                            <input type="radio" value="{$key}" name="type"
+                                   {empty name="message" }{eq name="i" value="1"}checked{/eq}{/empty}
+                                   {eq name="i" value="$message.type"}checked{/eq}>{$type}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+                <!--<div class="form-group"><label class="col-sm-2 control-label">收件人:</label>-->
+                    <!--<div class="col-sm-10"><input type="text" class="form-control" placeholder="默认所有人" name="receive_id" value=""></div>-->
+                <!--</div>-->
+                <input type="hidden" name="content">
+                <input type="hidden" name="id" value="{$message.id}">
+                <input type="hidden" name="receive_id" value="0">
+            </div>
+            <div class="mail-text h-200">
+                <div class="summernote">{$message.content}</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="mail-body text-right tooltip-demo">
+                <button url="{:Url('send')}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
+                        data-toggle="tooltip" data-placement="top" data-edit="content">
+                    <i class="fa fa-reply"></i> 发送
+                </button>
+                <button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"
+                        target-form="form-horizontal" data-edit="content">
+                    <i class="fa fa-pencil"></i> 保存草稿
+                </button>
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
+            <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script>
+$(document).ready(function () {
+    $('.summernote').summernote({
+        lang: 'zh-CN',
+        height: 300,
+        minHeight: 210,
+        callbacks: {
+            onImageUpload: function (files) { //the onImageUpload API
+                img = sendFile(files[0]);
+            }
+        }
+    });
+
+    function sendFile(file) {
+        var data = new FormData();
+        data.append("file_data", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: "{:Url('Upload/picture')}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                var data = $.parseJSON(response);
+                $(".summernote").summernote('insertImage', data.data.path, 'image name'); // the insertImage API
+            }
+        });
+    }
+
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
+});
+</script>
+{/block}

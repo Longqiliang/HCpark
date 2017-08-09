@@ -1,0 +1,73 @@
+{extend name="base/common"}
+
+{block name="style"}
+
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <form method="get" action="index.html" class="pull-right mail-search">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索标题">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
+                    </div>
+                </div>
+            </form>
+            <h2>收件箱 ({$list->total()})</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <div class="btn-group pull-right">{$list->render()}</div>
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post confirm" url="{:Url('delete')}"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i> </button>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-exclamation"></i> </button>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"><i class="fa fa-refresh"></i> 刷新</button>
+            </div>
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr class="{eq name='vo.is_view' value='1'}read{else /}unread{/eq}">
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="input[]">
+                    </td>
+                    <td class="mail-ontact">
+                        <a href="{:Url('view','id='.$vo.id)}">
+                            {eq name='vo.is_view' value='0'}<i class="fa fa-circle text-info"></i>{/eq}
+                            {eq name="vo.send_id" value="0"} 系统消息{else /} {$vo.send_id}{/eq}
+                        </a>
+                    </td>
+                    <td class="mail-subject"><a href="{:Url('view','id='.$vo.id)}">{$vo.title}</a></td>
+                    <td class="">{notempty name="vo.attachment_id"}<i class="fa fa-paperclip pull-right"></i>{/notempty}</td>
+                    <td class="text-right mail-date">{$vo.send_time|time_format}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(document).ready(function(){
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+    $(".check-all").on("ifChanged",function(){
+        $("tbody").find(".ids").iCheck("toggle");
+    });
+});
+</script>
+{/block}

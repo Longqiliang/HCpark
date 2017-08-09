@@ -1,0 +1,38 @@
+.mail-container{
+    position: relative;
+    width: 620px;
+    font-family: 微软雅黑;
+    font-size: 14px;
+    margin: 0 auto;
+}
+.mail-content{
+    width: 100%;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+
+}
+.mail-content a{
+    color: #82b95e;
+    text-decoration: none;
+}
+.mail-url{
+    word-break: break-all;
+    width: 600px;
+    background-color: #82b95e;
+    border-radius: 2px;
+    padding: 10px 4px;
+}
+.mail-container .logo{
+    height: 40px;
+    font-size: 30px;
+    line-height: 30px;
+}
+.mail-container .logo span{
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 36px;
+}
+.font-email {
+    color: #999
+}

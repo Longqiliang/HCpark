@@ -1,0 +1,93 @@
+{extend name="base/common"}
+
+{block name="style"}
+
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>用户管理</h2>
+        <ol class="breadcrumb">
+            <li><a href="index.html">Action</a></li>
+            <li class="active"><strong>log</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>行为日志</h5>
+                    <div class="ibox-tools">
+                        <button class="btn btn-danger btn-xs ajax-post confirm" href="{:Url('remove')}" data-original-title="清空"
+                                data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i> 清空</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input class="i-checks check-all" type="checkbox"></th>
+                                <th>编号</th>
+                                <th>行为名称</th>
+                                <th>执行者</th>
+                                <th>备注</th>
+                                <th>IP地址</th>
+                                <th>执行时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="vo"}
+                            <tr>
+                                <td><input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}"></td>
+                                <td>{$vo.id}</td>
+                                <td>{$vo.action_name}</td>
+                                <td>{$vo.username}</td>
+                                <td>{$vo.remark}</td>
+                                <td>{$vo.action_ip|long2ip}</td>
+                                <td><span>{$vo.create_time|time_format}</span></td>
+                                <td>
+                                    <a class="confirm ajax-get" href="{:Url('Action/remove?ids='.$vo['id'])}">删除</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="8">
+                                    <div class="page">{$list->render()}</div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function(){
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
+    $(".check-all").on("ifChanged",function(){
+        $("tbody").find(".ids").iCheck("toggle");
+    });
+});
+</script>
+{/block}
+
+

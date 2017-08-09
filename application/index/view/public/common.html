@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="/index/css/mui.min.css">
+    <link rel="stylesheet" href="/index/css/iconfont.css" />
+    <!--<link rel="stylesheet" href="../assets/js/weui/css/weui.min.css" />-->
+    <!--App自定义的css-->
+    <link rel="stylesheet" href="/index/css/app.css" />
+    <script src="/index/js/mui/mui.min.js"></script>
+    <script src="/index/js/vue.min.js"></script>
+    <script src="/index/js/vue-resource.min.js"></script>
+    <script src="/static/sweetalert/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="/static/sweetalert/sweetalert.css">
+    <link rel="stylesheet" href="/index/css/common/reset.css">
+    <link rel="stylesheet" href="/index/css/common/rem.css">
+    <!--<script src="/index/js/common.js"></script>-->
+    {block name="style"}网页样式{/block}
+</head>
+<body ontouchstart="" onmouseover="">
+<!-- 主体 -->
+{block name="body"}页面主体{/block}
+<!-- /主体 -->
+
+<!-- 底部 -->
+<footer class="footer">
+    <div class="container">
+
+    </div>
+</footer>
+<!-- 用于加载js代码 -->
+{block name="script"}底部JS代码{/block}
+<!-- 用于加载统计代码等隐藏元素 -->
+<div class="hidden">
+    <block name="hidden"></block>
+</div>
+<!-- /底部 -->
+</body>
+</html>

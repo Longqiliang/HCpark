@@ -1,0 +1,179 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style type="text/css">
+	select[size] {
+		height: 300px;
+		width: 270px;
+	}
+	.ibox-content{
+		height:500px;
+	}
+	.sort_option {
+		float: left;
+		margin-right: 16px;
+	}
+	.sort_bottom {
+		 margin-top: 155px;
+	}
+	.sort_btn button {
+		display: block;
+		margin-bottom: 15px;
+	}
+	.btn {
+		color: #edffd1;
+		background-color: #1cc09f;
+	}
+	.btn {
+		display: inline-block;
+		margin-right: 5px;
+		padding: 6px 16px;
+		font-size: 14px;
+		line-height: 18px;
+		color: #fff;
+		text-align: center;
+		vertical-align: middle;
+		cursor: pointer;
+		border: 0 none;
+		background-color: #1cc09f;
+	}
+
+	.submit-btn {
+		color: #fff;
+		background-color: #CC3900;
+	}
+	.submit-btn, .btn-return {
+		padding: 10px 50px;
+		color: #fff;
+		font-weight: bold;
+		border-color: transparent;
+	}
+</style>
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-10">
+		<h2>
+			配置排序 [ <a href="{$Think.cookie.__forward__}">返回列表</a> ]
+		</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a href="{$Think.cookie.__forward__}">Config</a>
+			</li>
+			<li class="active">
+				<strong>Sort</strong>
+			</li>
+		</ol>
+	</div>
+	<div class="col-lg-2">
+
+	</div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="ibox-content">
+		<div class="sort">
+			<form action="{:Url('sort')}" method="post">
+				<div class="sort_center">
+					<div class="sort_option">
+						<select value="" size="8">
+							{volist name="list" id="vo"}
+								<option class="ids" title="{$vo.title}" value="{$vo.id}">{$vo.title}</option>
+							{/volist}
+						</select>
+					</div>
+					<div class="sort_btn">
+						<button class="top btn" type="button">第 一</button>
+						<button class="up btn" type="button">上 移</button>
+						<button class="down btn" type="button">下 移</button>
+						<button class="bottom btn" type="button">最 后</button>
+					</div>
+				</div>
+				<div class="sort_bottom">
+					<input type="hidden" name="ids">
+					<button class="sort_confirm btn submit-btn" type="button">确 定</button>
+					<button class="sort_cancel btn btn-return " type="button" url="{$Think.cookie.__forward__}">返 回</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+	$(function(){
+		sort();
+		$(".top").click(function(){
+			rest();
+			$("option:selected").prependTo("select");
+			sort();
+		})
+		$(".bottom").click(function(){
+			rest();
+			$("option:selected").appendTo("select");
+			sort();
+		})
+		$(".up").click(function(){
+			rest();
+			$("option:selected").after($("option:selected").prev());
+			sort();
+		})
+		$(".down").click(function(){
+			rest();
+			$("option:selected").before($("option:selected").next());
+			sort();
+		})
+		$(".search").click(function(){
+			var v = $("input").val();
+			$("option:contains("+v+")").attr('selected','selected');
+		})
+		function sort(){
+			$('option').text(function(){return ($(this).index()+1)+'.'+$(this).text()});
+		}
+
+		//重置所有option文字。
+		function rest(){
+			$('option').text(function(){
+				return $(this).text().split('.')[1]
+			});
+		}
+
+		//获取排序并提交
+		$('.sort_confirm').click(function(){
+			var arr = new Array();
+			$('.ids').each(function(){
+				arr.push($(this).val());
+			});
+			$('input[name=ids]').val(arr.join(','));
+			$.post(
+				$('form').attr('action'),
+				{
+				'ids' :  arr.join(',')
+				},
+				function(data){
+					if (data.status) {
+						swal(data.info, "页面即将自动跳转!", "success");
+					}else{
+						swal(data.info,"请重试!", "error");
+					}
+					setTimeout(function(){
+						if (data.status) {
+							$('.sort_cancel').click();
+						}
+					},1500);
+				},
+				'json'
+			);
+		});
+
+		//点击取消按钮
+		$('.sort_cancel').click(function(){
+			window.location.href = $(this).attr('url');
+		});
+	})
+</script>
+{/block}

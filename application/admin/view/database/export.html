@@ -1,0 +1,175 @@
+{extend name="base/common"}
+
+{block name="style"}
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>备份数据</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index.html">Database</a>
+            </li>
+            <li class="active">
+                <strong>export</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="ibox-tools">
+                        <div class="ibox-buttons">
+                            <a class="btn btn-primary btn-xs" id="export" href="javascript:;" autocomplete="off">立即备份</a>
+                            <a class="btn btn-primary btn-xs" id="optimize" href="{:Url('optimize')}">优化表</a>
+                            <a class="btn btn-primary btn-xs" id="repair" href="{:Url('repair')}">修复表</a>
+                        </div>
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">筛选条件</a>
+                            </li>
+                            <li><a href="#">筛选条件</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <form id="export-form" method="post" action="{:Url('export')}">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input class="i-checks check-all" checked="chedked" type="checkbox"></th><th>表名</th>
+                                <th width="120">数据量</th>
+                                <th width="120">数据大小</th>
+                                <th width="160">创建时间</th>
+                                <th width="160">备份状态</th>
+                                <th width="120">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="table"}
+                                <tr>
+                                    <td class="num">
+                                        <input class="i-checks ids" checked="chedked" type="checkbox" name="tables[]" value="{$table.name}">
+                                    </td>
+                                    <td>{$table.name}</td>
+                                    <td>{$table.rows}</td>
+                                    <td>{$table.data_length|format_bytes}</td>
+                                    <td>{$table.create_time}</td>
+                                    <td class="bf">未备份</td>
+                                    <td class="action">
+                                        <a class="ajax-get no-refresh" href="{:Url('optimize?tables='.$table['name'])}">优化表</a>&nbsp;
+                                        <a class="ajax-get no-refresh" href="{:Url('repair?tables='.$table['name'])}">修复表</a>
+                                    </td>
+                                </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function(){
+    $("#action_add").click(function(){
+        window.location.href = $(this).attr('url');
+    });
+
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+
+    $(".check-all").on("ifChanged",function(){
+        $("tbody").find(".ids").iCheck("toggle");
+    });
+});
+</script>
+<script>
+(function($){
+    var $form = $("#export-form"), $export = $("#export"), tables,
+    $optimize = $("#optimize"), $repair = $("#repair");
+
+    $optimize.add($repair).click(function(){
+        $.post(this.href, $form.serialize(), function(response){
+            if(response.code){
+                swal(response.msg,'alert-success','success');
+            } else {
+                swal(response.msg,'alert-error','error');
+            }
+        }, "json");
+        return false;
+    });
+
+    $export.click(function(){
+        $export.parent().children().addClass("disabled");
+        $export.html("正在发送备份请求...");
+        $.post($form.attr("action"), $form.serialize(), function(response){
+                if(response.code){
+                    tables = response.data.tables;
+                    $export.html(response.msg + "开始备份，请不要关闭本页面！");
+                    backup(response.data.tab);
+                    window.onbeforeunload = function(){ return "正在备份数据库，请不要关闭！" }
+                } else {
+                    swal(response.msg,'alert-error',"error");
+                    $export.parent().children().removeClass("disabled");
+                    $export.html("立即备份");
+                }
+            },
+            "json"
+        );
+        return false;
+    });
+
+    function backup(tab, status){
+        status && showmsg(tab.id, "开始备份...(0%)");
+        $.post($form.attr("action"), tab, function(response){
+            if(response.code){
+                showmsg(tab.id, response.msg);
+                if(!$.isPlainObject(response.data.tab)){
+                    $export.parent().children().removeClass("disabled");
+                    $export.html("备份完成，点击重新备份");
+                    window.onbeforeunload = function(){ return null }
+                    return;
+                }
+                backup(response.data.tab, tab.id != response.data.tab.id);
+            } else {
+                swal(response.msg,'alert-error',"error");
+                $export.parent().children().removeClass("disabled");
+                $export.html("立即备份");
+            }
+        }, "json");
+    }
+
+    function showmsg(id, msg){
+        $form.find("input[value=" + tables[id] + "]").closest("tr").find(".bf").html(msg);
+    }
+})(jQuery);
+</script>
+{/block}
