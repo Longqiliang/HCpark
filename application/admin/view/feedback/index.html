@@ -1,0 +1,126 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style>
+    .mail-box .mail-ontact{
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+    .mail-box .mail-subject{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+    .mail-subject-div{
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-box .mail-main{
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-date{
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+    @media only screen and (max-width: 550px){
+        .mail-date{
+            display: none;
+        }
+    }
+    .list_banner {width: 80px}
+    .list_type {width: 80px}
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <form method="get" action="index.html" class="pull-right mail-search">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索标题">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
+                    </div>
+                </div>
+            </form>
+            <h2>意见反馈 ({$list->total()})</h2>
+
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>主题</th>
+                    <th>反馈内容</th>
+                    <th>回复内容</th>
+                    <th>反馈人</th>
+                    <th>反馈时间</th>
+                    <th>是否回复</th>
+                    <th>回复用户</th>
+                    <th>回复时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.title}</td>
+                    <td>{$vo.content}</td>
+                    <td>{$vo.reply}</td>
+                    <td>{$vo.create_user}</td>
+                    <td>{$vo.create_time|time_format}</td>
+                    {eq name="vo.status" value="0"}
+                    <td><span class="label label-info">未回复</span></td><td></td>
+                    {else/}
+                    <td><span class="label label-primary">已回复</span></td>
+                    <td>{$vo.reply_user}</td>
+                    {/eq}
+                    <td>{$vo.reply_time|time_format}</td>
+                    <td>
+                        <a href="{:Url('detail','id='.$vo['id'])}">详情</a>
+                        <a href="{:Url('reply','id='.$vo['id'])}">回复</a>
+                        <a href="{:Url('del','id='.$vo['id'])}">删除</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+</script>
+{/block}

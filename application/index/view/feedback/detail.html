@@ -1,0 +1,129 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/common/rem.css">
+<style type="text/css">
+    *,ul,li,p{
+        margin: 0;
+        padding: 0;
+    }
+    .body{
+        width: 100%;
+    }
+    .question{
+        width: 100%;
+    }
+    .question p,.reply p{
+        padding-left: 4vw;
+        line-height: 9.333vw;
+        background: #f4f4f4;
+    }
+    .question ul li{
+        width: 100%;
+        list-style: none;
+        border-bottom: 1px solid #e5e5e5;
+        overflow: hidden;
+    }
+    .question ul li:last-child{
+        border: none;
+    }
+    .question ul li .title{
+        width: 26.67vw;
+        line-height: 13vw;
+        float: left;
+        text-align: right;
+        font-size: 1.5rem;
+    }
+    .question ul li .title>.nbsp{
+        padding:0 1em;
+    }
+    .question ul li .content{
+        width: 73.3vw;
+        min-height: 13vw;
+        float: left;
+        position: relative;
+    }
+    .question ul li:last-child .content{
+        box-sizing:border-box;
+        height: auto;
+        width: 73.3vw;
+        word-break: break-all;
+        font-size: 1.3rem;
+        padding: 4vw 4vw 5.3vw 2vw;
+    }
+    .question ul li .content p{
+        padding: 0 4vw 0 2.667vw;
+        font-size: 1.4rem;
+        background: #fff;
+        line-height: 1.5;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        word-break: break-all;
+    }
+    .reply p{
+        color: #5d9cec;
+    }
+    .reply .content{
+        box-sizing: border-box;
+        text-indent: 2rem;
+        word-break: break-all;
+        margin: 4vw;
+        font-size: 1.4rem;
+        line-height: 1.5;
+    }
+    .reply span{
+        display: inline-block;
+        margin: 0 4.267vw;
+        float: right;
+        color: #999;
+        font-size: 1.2rem;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div class="body">
+
+    <div class="question">
+        <p>问题信息</p>
+        <ul>
+            <li>
+                <div class="title">标<span class="nbsp"></span>题：</div>
+                <div class="content">
+                    <p>{$info->title}</p>
+                </div>
+            </li>
+
+            <li>
+                <div class="title">具体内容：</div>
+                <div class="content">
+                    {$info->content}
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="reply">
+        <p>园区回复</p>
+        {empty name="info->reply"}
+        <div class="content">暂无回复</div>
+        {else /}
+        <div class="content">
+            {$info->reply}
+        </div>
+        <span>{$info->reply_time|date='Y-m-d',###}</span>
+        {/empty}
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $(function(){
+
+    });
+</script>
+{/block}
+
+
+

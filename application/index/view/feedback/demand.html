@@ -1,0 +1,143 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/common/rem.css">
+
+<style type="text/css">
+    *,ul,li,p{
+        margin: 0;
+        padding: 0;
+    }
+    .body{
+        width: 100%;
+    }
+    .top{
+        width: 100%;
+        height: 16vw;
+        border-bottom: 10px solid #f4f4f4;
+        overflow: hidden;
+    }
+    .top .left{
+        width: 26.67vw;
+        line-height: 16vw;
+        float: left;
+        text-align: center;
+        font-size:1.4rem;
+    }
+    .top .right{
+        width: 73vw;
+        height: 100%;
+        float: left;
+    }
+    .theme .right input{
+        height: 7.467vw;
+        border: 1px solid #e5e5e5;
+        width: 70%;
+        border-radius: 5px;
+        margin: 4vw 0 4vw 2.66vw;
+        padding-left: 2.667vw;
+        font-size: 1.4rem;
+        outline: none;
+    }
+    .department .right select{
+        width: calc(70% + 12px);
+        height: 28px;
+        border-radius: 5px;
+        margin: 15px 0 15px 10px;
+        padding-left: 10px;
+        font-size: 14px;
+        border: 1px solid #e5e5e5;
+        outline: none;
+    }
+    .feedback{
+        width: 100%;
+        margin-bottom: 7vh;
+    }
+    .feedback p{
+        margin: 5.33vw 0 4vw 4vw;
+        font-size:1.4rem;
+    }
+    .feedback .content-box{
+        display: block;
+        width: 86.7vw;
+        height: 36vh;
+        margin: 0 auto;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        padding: 2vw;
+        font-size: 1.5rem;
+        outline: none;
+    }
+    .foot{
+        width: 92vw;
+        height:10.667vw;
+        line-height: 10.667vw;
+        text-align: center;
+        border-radius: 5px;
+        background: #5d9cec;
+        color: #fff;
+        font-size: 1.4rem;
+        margin: 0 auto;
+    }
+
+</style>
+{/block}
+
+{block name="body"}
+<div class="body">
+    <div class="theme top">
+        <div class="left">
+            您的主题：
+        </div>
+        <div class="right">
+            <input type="text" placeholder="20字以内" maxlength="20">
+        </div>
+    </div>
+    <div class="feedback">
+        <p>您的反馈内容或摘要：</p>
+        <textarea class="content-box" maxlength="300" placeholder="请在此输入反馈内容（300字以内）"></textarea>
+    </div>
+    <div class="foot">
+        提交
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $(function(){
+        $(".foot").on('click',function () {
+            var title = $('.theme input').val(),
+                department = $('.department option:checked').val(),
+                question = $('.content-box').val();
+            if(!title || !question){
+                alert('请填写相关信息！');
+            } else if(question.length<=300){
+                $.ajax({
+                    type:'post',
+                    url:'{:Url("Feedback/demand")}',
+                    data:{
+                        'title':title,
+                        'content':question
+                    },
+                    success:function (data) {
+                        if(data.code == 1){
+                            alert('提交成功！');
+                           window.location.href = '/index/feedback/index.html'
+                        }else{
+                            alert('提交失败！');
+
+                        }
+                    }
+                });
+            }else{
+                alert('反馈内容应在300字以内！');
+            }
+
+        })
+    });
+</script>
+{/block}
+
+
+

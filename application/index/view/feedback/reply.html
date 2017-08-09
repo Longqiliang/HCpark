@@ -1,0 +1,286 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/common/rem.css">
+
+<style type="text/css">
+    *,ul,li,p{
+        margin: 0;
+        padding: 0;
+    }
+    .body{
+        width: 100%;
+    }
+    .question{
+        width: 100%;
+    }
+    .question p,.reply p{
+        padding-left: 4vw;
+        line-height: 9.333vw;
+        background: #f4f4f4;
+    }
+    .question ul li{
+        width: 100%;
+        list-style: none;
+        overflow: hidden;
+    }
+    .question ul li:last-child{
+        border: none;
+    }
+    .question ul li .title{
+        padding:4vw 0;
+        width: 26.67vw;
+        float: left;
+        text-align: right;
+        font-size: 1.5rem;
+        line-height: 1.5;
+    }
+    .question ul li .title>.nbsp{
+        padding:0 1em;
+    }
+    .question ul li .content{
+        padding:4vw 0;
+        width: 73.33vw;
+        float: left;
+        position: relative;
+        font-size: 1.4rem;
+        line-height: 1.5;
+
+    }
+    .special ul li:last-child .content{
+        height: auto;
+        word-break: break-all;
+
+    }
+    .reply .reply-title{
+        color: #5d9cec;
+    }
+    .radio-box{
+        margin: 16px 0;
+        color: #333;
+        font-size: 15px;
+    }
+    .radio-box .checked{
+        background: url("/index/images/feedback/radio.png") left 5px no-repeat;
+        background-size: 16px;
+        position: relative;
+        top: -2px;
+    }
+    .radio-box label{
+        padding-left: 16px;
+        background: url("/index/images/feedback/radio.png") left -15px no-repeat;
+        background-size: 16px;
+        cursor: pointer;
+        position: relative;
+        top: 3px;
+        margin-left: 14vw;
+        margin-right: 8px;
+    }
+    .radio-box input{
+        display: none;
+    }
+    .page{
+        width: 100%;
+    }
+    .department{
+        width: 100%;
+        height: 50px;
+        overflow: hidden;
+    }
+    .department .left{
+        width: 100px;
+        line-height: 50px;
+        float: left;
+        text-align: center;
+    }
+    .department .right{
+        width: calc(100% - 100px);
+        height: 100%;
+        float: left;
+    }
+    .department .right select{
+        width: calc(70% + 12px);
+        height: 28px;
+        border-radius: 5px;
+        margin: 12px 0 8px 10px;
+        padding-left: 10px;
+        font-size: 14px;
+        border: 1px solid #e5e5e5;
+        outline: none;
+    }
+    .yourself .content-box{
+        width: calc(100% - 62px);
+        height: 36vh;
+        margin: 0 auto;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        padding: 5px 5px;
+        font-size: 14px;
+        word-break: break-all;
+        outline: none;
+    }
+    /*.replyed .content{*/
+        /*width: calc(100% - 30px);*/
+        /*text-indent: 20px;*/
+        /*word-break: break-all;*/
+        /*margin: 16px auto;*/
+        /*font-size: 13px;*/
+        /*line-height: 1.5;*/
+    /*}*/
+    /*.replyed span{*/
+        /*display: inline-block;*/
+        /*margin: 0 16px;*/
+        /*float: right;*/
+        /*color: #999;*/
+        /*font-size: 12px;*/
+    /*}*/
+
+    .reply .content{
+        box-sizing: border-box;
+        text-indent: 2rem;
+        word-break: break-all;
+        margin: 4vw;
+        font-size: 1.4rem;
+        line-height: 1.5;
+    }
+    .reply span{
+        display: inline-block;
+        margin: 0 4.267vw;
+        float: right;
+        color: #999;
+        font-size: 1.2rem;
+    }
+
+    .foot{
+        width: calc(100% - 30px);
+        line-height: 40px;
+        text-align: center;
+        border-radius: 5px;
+        background: #5d9cec;
+        color: #fff;
+        font-size: 15px;
+        margin: 25px auto 15px auto;
+    }
+
+    .reply_box{
+        padding-top: 6vw;
+    }
+    .reply_box>.content-box{
+        display: block;
+        width: 86.7vw;
+        height: 36vh;
+        margin: 0 auto;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        padding: 2vw;
+        font-size: 1.5rem;
+        outline: none;
+    }
+
+</style>
+{/block}
+
+{block name="body"}
+<div class="body">
+    <div class="question">
+        <p>反馈人信息</p>
+        <ul>
+            <li>
+                <div class="title">企业名称：</div>
+                <div class="content">
+                    {$feedback->userName->departmentName->name}
+                </div>
+            </li>
+            <li>
+                <div class="title">姓<span class="nbsp"></span>名：</div>
+                <div class="content">
+                   {$feedback->userName->name}
+                </div>
+            </li>
+
+            <li>
+                <div class="title">手机号码：</div>
+                <div class="content">
+                   {$feedback->userName->mobile}
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="question special">
+
+        <p>问题信息</p>
+        <ul>
+            <li>
+                <div class="title">标<span class="nbsp"></span>题：</div>
+                <div class="content">
+                   {$feedback->title}
+                </div>
+            </li>
+            <li>
+                <div class="title">具体内容：</div>
+                <div class="content">
+                    {$feedback->content}
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="reply">
+        <p class="reply-title">园区回复</p>
+        {eq name="feedback->status" value="1"}
+                <div class="content">
+                    {$feedback->reply}
+                </div>
+                <span>{$feedback->reply_time|date='Y-m-d',###}</span>
+        {else/}
+            <div class="reply_box">
+                    <textarea class="content-box" maxlength="300" placeholder="请在此输入（300字以内）"></textarea>
+                <div class="foot">
+                    提交
+                </div>
+            </div>
+        {/eq}
+        </div>
+
+    </div>
+
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    console.log({$feedback});
+    $(function(){
+        $(".foot").on('click',function () {
+            var reply = $('.reply_box>.content-box').val();
+            if(!reply){
+                alert('请填写回复信息！');
+            } else if(reply.length<=300){
+                $.ajax({
+                    type:'post',
+                    url:'{:Url("Feedback/reply")}',
+                    data:{
+                        'reply':reply,
+                        'id':'{$feedback->id}'
+                    },
+                    success:function (data) {
+                        console.log(data);
+                        if(data.code == 1){
+                            alert('提交成功！');
+                            window.location.href = '/index/feedback/replylist.html'
+                        }else{
+                            alert("提交失败！")
+                        }
+                    }
+                })
+            }else{
+                alert('反馈内容应在300字以内！');
+            }
+
+        })
+    });
+</script>
+{/block}
+
+
+
