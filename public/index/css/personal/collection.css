@@ -1,0 +1,113 @@
+body{
+    background-color: #F1F1F1;
+}
+/*tab*/
+.tabs {
+    width: 100vw;
+    border-bottom:1px solid #dddddd;
+    background: #ffffff;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.tabs .line{
+    height:3rem;
+    width: 1px;
+    background-color: #f1f1f1;
+}
+.tabs .tab {
+    width: 32.5vw;
+    height: 100%;
+    color: #333333;
+    font-size: 1.5rem;
+    line-height: 28px;
+    text-align: center;
+}
+.tabs .tab>span{
+    display: inline-block;
+    line-height: 50px;
+    padding:0 5px;
+    border-bottom: 2px solid transparent;
+}
+.tabs .active {
+    color: #2baf2b;
+    border-bottom:2px solid #2baf2b!important;
+}
+/*覆盖*/
+.tabs .tab {
+    width: 25vw;
+}
+/*列表修改*/
+.content .notices .notice .list {
+    background-color: #fff;
+    height:6rem;
+    display: block;
+    padding: 1.5rem 1.2rem;
+    border-bottom: 1px solid #f1f1f1;
+    color: #666666;
+}
+.content .notices .notice .list .fl img {
+    width: 80px;
+    height: 60px;
+    margin-top: 10px;
+}
+.content .notices .notice .list .right .title {
+    margin-bottom: 5px;
+    margin-top: 10px;
+    height: 38px;
+}
+.content .notices .notice .list .title {
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    color: #333333;
+    font-size: 1.4rem;
+}
+.content .notices .notice .list .time {
+    font-size: 1.2rem;
+}
+.content .notices .notice .source{
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap
+}
+.content .notices .notice .list-right{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction:column;
+    justify-content: space-between;
+    height:100%;
+}
+.content .notices .notice .list .time .readed{
+    width:3rem;
+    padding-left: 2em;
+    background: url('/index/images/news/view.png') left center no-repeat;
+    background-size: 1.3em;
+}
+.content .notices .notice .list .time span{
+    color: #999;
+    font-size: 1.2rem;
+}
+.content .notices .notice .list .time span:first-child{
+    margin-right: 1rem;
+}
+/*.content .notices .notice .list.news{*/
+    /*display: -webkit-flex;*/
+    /*display: flex;*/
+/*}*/
+.content .notices .notice .list.news .news-info{
+    height:100%;
+    width:68vw;
+}
+.content .notices .notice .list.news .news-img {
+    width:20vw;
+    height:6rem;
+    margin-right: 2.6vw;
+
+}
+/*.content .notices .notice .time{*/
+    /*width:70vw;*/
+/*}*/

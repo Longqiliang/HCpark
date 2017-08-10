@@ -1,0 +1,121 @@
+/*banner*/
+/*.banners{*/
+    /*position: relative;*/
+    /*width: 100%;*/
+    /*height: 50vw;*/
+/*}*/
+/*.banners img{*/
+    /*width: 100vw;*/
+    /*height: 50vw;*/
+/*}*/
+/*.banner .title_{*/
+    /*position: absolute;*/
+    /*bottom: 0;*/
+    /*width: 100%;*/
+    /*height: 40px;*/
+    /*padding-left: 13px;*/
+    /*padding-right: 13px;*/
+    /*background-color: rgba(0, 0, 0, 0.6);*/
+    /*line-height: 40px;*/
+    /*font-size: 1.6rem;*/
+    /*color: #ffffff;*/
+/*}*/
+/*tab*/
+body{
+    background-color: #fff;
+}
+.tabs {
+    width: 100vw;
+    border-bottom:1px solid #dddddd;
+    background: #ffffff;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.tabs .line{
+    height:3rem;
+    width: 1px;
+    background-color: #f1f1f1;
+}
+.tabs .tab {
+    width: 32.5vw;
+    height: 100%;
+    color: #333333;
+    font-size: 1.5rem;
+    line-height: 28px;
+    text-align: center;
+}
+.tabs .tab>span{
+    display: inline-block;
+    line-height: 50px;
+    padding:0 5px;
+    border-bottom: 2px solid transparent;
+}
+.tabs .tab:first-child {
+    /*border-right: 1px solid #e5e5e5;*/
+}
+.tabs .tab:nth-child(2) {
+    border-right: 1px solid #e5e5e5;
+}
+.tabs .active {
+    color: #2baf2b;
+    border-bottom:2px solid #2baf2b!important;
+}
+/*覆盖*/
+.tabs .tab {
+    width: 49vw;
+}
+.tabs .tab:nth-child(2) {
+    border-right: none;
+}
+
+/*列表修改*/
+.notice .list {
+    display: block;
+    padding: 1.5rem 1.2rem;
+    border-bottom: 1px solid #f1f1f1;
+    color: #666666;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.notice .list>.state>span{
+    font-size: 1.4rem;
+}
+.notice .list>.state>.ing{
+    color: #fe5656;
+}
+.notice .list>.state>.end{
+    color: #2baf2b;
+}
+.notice .list .title {
+    max-width: 80vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #333333;
+    font-size: 1.4rem;
+}
+.notice .list .time {
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+}
+.notice .list .time .readed{
+    width:3rem;
+    padding-left: 2em;
+    background: url('/index/images/news/view.png') left center no-repeat;
+    background-size: 1.3em;
+}
+.notice .list .time span{
+    color: #999;
+    font-size: 1.2rem;
+}
+.notice .list .time span:first-child{
+    max-width: 35vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 10px;
+}

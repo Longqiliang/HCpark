@@ -1,0 +1,44 @@
+body,p,ul,li{
+    padding:0;
+    margin:0;
+}
+li{
+    list-style-type: none;
+}
+ul{
+    width:100%;
+}
+.header{
+    width:100%;
+    height:100%;
+}
+.header img{
+    width:100%;
+    height:auto;
+}
+.header ul{
+    width: calc(100% - 70px);
+    height:52px;
+    line-height:52px;
+    background: url(../../images/declaration/news.png) no-repeat 15px 10px;
+    background-size:35px;
+    padding-left:70px;
+    font-size:16px;
+    color:#333;
+    border-bottom:5px solid #f4f4f4;
+    overflow: hidden;
+}
+#main li{
+    float: left;
+    text-align: center;
+    width: calc(100%/3);
+}
+#main li img{
+    width:37px;
+    height:37px;
+    margin:20px 0 15px 0;
+}
+#main li p{
+    margin-bottom:43px;
+    font-size:14px;
+}

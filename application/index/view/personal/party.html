@@ -50,7 +50,7 @@
         <li>
             <a href="javascript:void(0);">
                 <p>性别
-                    <span class="ft-right select" @click="sexShow" v-bind:class="[sex ? 'txt-center' : '', '']">
+                    <span class="ft-right select" @click="sexShow" v-bind:class="[gender ? 'txt-center' : '', '']">
                     {{statusSex}}<i class="subscript"></i>
                     </span>
                 </p>
@@ -65,9 +65,7 @@
     <button class="btn " @click="submitBtn">提交</button>
 </div>
 {/block}
-
 {block name="script"}
-<script src="/static/vue/vue.min.js"></script>
 <script>
     var data = {$data};
     console.log(data);
@@ -76,7 +74,7 @@
         party_branch:'',
         name:'',
         education:'',
-        sex:''
+        gender:''
     };
     if(!data){
         data = defaultData;
@@ -88,7 +86,7 @@
        data:data,
        computed: {
            sexClass: function () {
-               if(this.sex){
+               if(this.gender){
                    return {
                        sexActive:true
                    };
@@ -97,10 +95,10 @@
            },
 
            statusSex: function () {
-               if (!this.sex) {
+               if (!this.gender) {
                    return '请选择性别';
                }
-               switch (this.sex){
+               switch (this.gender){
                    case 1:
                        return '男';
                        break;
@@ -175,7 +173,7 @@
                     $.toast('请选择学历',{ duration:'short' });
                     return;
                 }
-                if(!data.sex){
+                if(!data.gender){
                     $.toast('请选择性别',{ duration:'short' });
                     return;
                 }

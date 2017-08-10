@@ -1,0 +1,170 @@
+body,p,h2,section,ul{
+    padding:0;
+    margin:0;
+}
+ul li{
+    list-style: none;
+}
+.header{
+    padding-bottom:5.33vw;
+}
+.header h2{
+    font-weight:bold;
+    text-align:center;
+    margin:2.667vw 0 4vw 0;
+    color:#333;
+    font-size:1.8rem;
+    padding: 0 4vw;
+}
+.header p{
+    margin:0 4vw;
+}
+.header p span{
+    color:#999;
+    padding-right:1.33vw;
+    font-size:1.2rem;
+}
+.header p span:last-child{
+    float:right;
+    background: url("../../images/declaration/eyes.png") no-repeat 0 center;
+    padding:0 0 0 1.9rem;
+    background-size: 1.3rem;
+    position: relative;
+    top: 1.33vw;
+}
+section{
+    padding:0 4vw 5.33vw 4vw;
+    font-size:1.4rem;
+    color:#333;
+    line-height: 1.5;
+    word-wrap:break-word;
+}
+section img{
+    width: 100%;
+}
+.comment-box{
+    width: 100%;
+    margin-bottom: 12.267vw;
+}
+.comment-box p{
+    line-height: 7.467vw;
+    border-bottom: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    background: #f2f2f2;
+    font-size: 1.2rem;
+    padding-left: 4vw;
+}
+.comment{
+    width: 100%;
+}
+.comment ul li{
+    width: 100%;
+    border-bottom: 1px solid #f1f1f1;
+    overflow: hidden;
+}
+.comment .img-box{
+    width: 16vw;
+    float: left;
+}
+.comment .img-box img{
+    width: 9.067vw;
+    border-radius: 50%;
+    margin: 2.93vw 2.93vw 0 4vw;
+}
+.comment .content-box{
+    width: 82vw;
+    float: left;
+}
+.comment .content-box .top{
+    width: 100%;
+    margin: 2.93vw 0;
+    color: #999;
+    display: inline-block;
+}
+.comment .content-box .top span{
+    font-size: 1.4rem;
+}
+/*.comment .content-box .top .dislike{*/
+    /*line-height: 20px;*/
+    /*background: url("/index/images/detail/dislike.png") left 1px no-repeat;*/
+    /*padding-left: 20px;*/
+    /*background-size: 15px;*/
+    /*margin-right: 15px;*/
+    /*font-size: 12px;*/
+    /*float: right;*/
+/*}*/
+/*.comment .content-box .top .like{*/
+    /*line-height: 20px;*/
+    /*background: url("/index/images/detail/like.png") left 1px no-repeat;*/
+    /*padding-left: 20px;*/
+    /*background-size: 15px;*/
+    /*margin-right: 15px;*/
+    /*font-size: 12px;*/
+    /*float: right;*/
+/*}*/
+.comment .content-box div:nth-child(2){
+    line-height: 1.5;
+    color: #333;
+    font-size: 1.5rem;
+    padding-right: 4vw;
+    word-break: break-all;
+}
+.comment .content-box div:last-child{
+    width: 100%;
+    font-size: 1.2rem;
+    color: #999;
+    margin: 2.933vw 0;
+    text-align: left;
+}
+.comment-box .load-more{
+    width: 100%;
+    line-height: 40px;
+    text-align: center;
+    font-size: 1.4rem;
+    color: #ccc;
+}
+.foot{
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 12vw;
+    bottom: 0;
+    left: 0;
+    z-index: 9;
+    border-top: 1px solid #e5e5e5;
+    overflow: hidden;
+    background: #fff;
+}
+.foot .collect-box{
+    width: 13.33vw;
+    height: 100%;
+}
+.foot .collect-box img{
+    width: 6.4vw;
+    margin: 2.933vw 3.467vw;
+}
+.foot .input-box{
+    width: 69.33vw;
+    height: 100%;
+}
+.foot .input-box input{
+    height: 7.4667vw;
+    width: 65.3vw;
+    background: #f2f2f2;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    padding-left: 4vw;
+    outline: none;
+    margin: 1.6vw 0 2.4vw 0;
+    font-size: 1.4rem;
+}
+.foot .input-box input::-webkit-input-placeholder{
+    font-size: 1.4rem;
+    color: #b2b2b2;
+}
+.foot .send{
+    width: 17.33vw;
+    line-height: 12vw;
+    text-align: center;
+    font-size: 1.5rem;
+}
