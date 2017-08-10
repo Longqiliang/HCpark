@@ -25,7 +25,7 @@
                         <div class="title">{$loo.title}</div>
                         <div class="clear time">
                             <span class="fl">{$loo.source}</span>
-                            <span class="fl ">{$loo.create_time|date='Y-m-d',###}</span>
+                            <span class="fl ">{$loo.create_time}</span>
                             {gt name="$loo.views" value="9999"}
                             <span class="fr readed">9999+</span>
                             {else/}
@@ -47,7 +47,7 @@
                         <div class="title">{$lo.title}</div>
                         <div class="clear time">
                             <span class="fl">{$lo.source}</span>
-                            <span class="fl ">{$lo.create_time|date='Y-m-d',###}</span>
+                            <span class="fl ">{$lo.create_time}</span>
                             {gt name="$lo.views" value="9999"}
                             <span class="fr readed">9999+</span>
                             {else/}
@@ -196,7 +196,7 @@
                   '<div class="">'+
                   '<div class="clear time">'+
                   '<span class="fl">'+list.source+'</span>'+
-                  '<span class="fl">'+timeChange(list.create_time)+'</span>'+
+                  '<span class="fl">'+list.create_time+'</span>'+
                   '<span class="fr readed">'+(list.views>9999?'9999+':list.views)+'</span>'+
                   '</div>'+
                   '</div>'+

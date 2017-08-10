@@ -14,6 +14,8 @@ use think\Loader;
 use wechat\TPWechat;
 use app\index\model\WechatUser as WechatUserModel;
 use app\admin\model\Config as ConfigModel;
+use app\index\model\Collect;
+use app\index\model\Comment;
 
 class Base extends Controller
 {
@@ -58,5 +60,54 @@ class Base extends Controller
         $jsSign = $weObj->getJsSign($url);
         $this->assign("jsSign", $jsSign);
     }
+    // 添加评论
+    public function addComment() {
+        $data = [
+            'target_id' => input('targetId'),
+            'user_id' => session('userId'),
+            'content' => input('content'),
+            'type' => input('type'),
+        ];
+        $name = WechatUser::where('userid',session('userId'))->field('name')->find();
+        $data['user_name'] = $name['name'];
+        $result = Comment::create($data);
+        if($result) {
+            $result['create_time'] = date("Y-m-d",$result['create_time']);
+            return $this->success('评论成功', '', $result);
+        } else {
+            return $this->error('评论失败');
+        }
+    }
+    // 收藏
+    public function addCollect() {
+        $data = [
+            'target_id' => input('targetId'),
+            'user_id' => session('userId'),
+            'type' => input('type'),
+        ];
+
+        $result = Collect::create($data);
+        if($result) {
+            return $this->success('收藏成功', '', $result);
+        } else {
+            return $this->error('收藏失败');
+        }
+    }
+    //取消收藏
+    public  function delCollect() {
+        $data = [
+            'target_id' => input('targetId'),
+            'user_id' => session('userId'),
+            'type' => input('type'),
+        ];
+        $result = Collect::where($data)->delete();
+        if($result) {
+            return  $this->success('取消收藏成功', '', $result);
+        } else {
+            return $this->error('取消收藏失败');
+        }
+    }
+
+
 
 }
