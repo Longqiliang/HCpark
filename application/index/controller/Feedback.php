@@ -18,7 +18,8 @@ class Feedback extends Base
     //反馈记录(用户)
     public function index() {
         $map = [
-            'create_user' => session('userId')
+            'create_user' => session('userId'),
+            'park_id'=>session('user_auth')['park_id'],
         ];
         $list = FeedbackModel::where($map)->order('status')->select();
         $this->assign('list',$list);
@@ -33,6 +34,7 @@ class Feedback extends Base
                 'title' => input('title'),
                 'create_user' => session('userId'),
                 'content' => input('content'),
+                'park_id'=>session('user_auth')['park_id'],
             ];
             $result = FeedbackModel::create($data);
             if($result){
@@ -77,7 +79,8 @@ class Feedback extends Base
     //反馈详情
     public function  detail() {
         $map = [
-            'id' =>input('id')
+            'id' =>input('id'),
+            'park_id'=>session('user_auth')['park_id'],
         ];
         $list = FeedbackModel::where($map)->find();
         $this->assign('info',$list);
@@ -86,9 +89,17 @@ class Feedback extends Base
 
     //意见回复首页（园区领导）
     public function  replylist() {
-        $noReply = FeedbackModel::where('status', 0)->select();
+        $map = [
+            'status' =>0,
+            'park_id'=>session('user_auth')['park_id'],
+        ];
+        $map2 = [
+            'status' =>1,
+            'park_id'=>session('user_auth')['park_id'],
+        ];
+        $noReply = FeedbackModel::where($map)->select();
         $this->assign('noReply', $noReply);
-        $replied = FeedbackModel::where('status', 1)->order('id desc')->select();
+        $replied = FeedbackModel::where($map2)->order('id desc')->select();
         $this->assign('replied', $replied);
         return $this->fetch();
     }
@@ -100,7 +111,8 @@ class Feedback extends Base
                 'reply' => input('reply'),
                 'reply_user' => session('userId'),
                 'reply_time'=> time(),
-                'status'=>1
+                'status'=>1,
+                'park_id'=>session('user_auth')['park_id'],
             ];
             $result = FeedbackModel::where('id', input('id'))->update($data);
             if($result){

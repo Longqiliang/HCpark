@@ -13,7 +13,7 @@ use app\common\model\Feedback as FeedbackModel;
 class Feedback extends Admin
 {
     public function index() {
-        $list = FeedbackModel::order('id desc')->paginate(12);
+        $list = FeedbackModel::where('park_id',session('user_auth')['park_id'])->order('id desc')->paginate(12);
         $this->assign('list', $list);
 
         return $this->fetch();
@@ -23,9 +23,14 @@ class Feedback extends Admin
     //反馈详情
     public function  detail() {
         $map = [
-            'id' =>input('id')
+            'id' =>input('id'),
+            'park_id'=>session('user_auth')['park_id'],
         ];
+
         $list = FeedbackModel::where($map)->find();
+        if (!$list){
+            $this->error("非法访问");
+        }
         $this->assign('info',$list);
         return $this->fetch();
     }
@@ -36,9 +41,14 @@ class Feedback extends Admin
             $map = [
                 'id' =>input('id')
             ];
+            $msg=[
+                'reply'=>input('reply'),
+                'status'=>1,
+                'park_id'=>session('user_auth')['park_id'],
+            ];
 
             $feedbackModel=new FeedbackModel;
-            $result =$feedbackModel->validate(true)->save(['reply'=>input('reply'),'status'=>1], ['id'=>input('id')]);
+            $result =$feedbackModel->validate(true)->save($msg, ['id'=>input('id')]);
             if($result){
                 return $this->success('回复成功',Url('index'));
             }elseif($result === 0) {
@@ -49,9 +59,13 @@ class Feedback extends Admin
 
         }else {
             $map = [
-                'id' => input('id')
+                'id' => input('id'),
+                'park_id'=>session('user_auth')['park_id'],
             ];
             $list = FeedbackModel::where($map)->find();
+            if (!$list){
+                $this->error("非法访问");
+            }
             $this->assign('info', $list);
             return $this->fetch();
         }
