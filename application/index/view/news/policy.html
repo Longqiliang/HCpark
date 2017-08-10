@@ -84,7 +84,7 @@
             <li>
                 <div class="content-box">
                     <p>{$news->title}</p>
-                    <span>{$news->create_time|date='Y-m-d',###}</span>
+                    <span>{$news->create_time}</span>
                     <span><img src="/index/images/news/view.png">{$news->views}</span>
                 </div>
                 <a href="{:Url('News/detail?id='.$news->id)}"></a>

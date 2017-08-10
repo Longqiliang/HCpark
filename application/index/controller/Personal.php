@@ -11,7 +11,6 @@ namespace app\index\controller;
 
 
 use app\index\model\Collect as CollectModel;
-use app\index\model\PartyUser;
 use app\index\model\WechatUser;
 use app\index\model\WechatDepartment;
 use app\index\model\PersonalService;
@@ -93,32 +92,18 @@ class Personal extends Base
     public function party ()
     {
         $user_id = session("userId");
-        $party_user=new  PartyUser();
+        $party_user=new  WechatUser();
         if (IS_POST) {
             $data=input('');
-
-            $is_add =$party_user->where('userid',$user_id)->find();
-
-            //修改
-            if($is_add){
-                unset($data['id']);
-                unset($data['userid']);
                 $result =$party_user->save($data,['userid'=>$user_id]);
-           $sql = $party_user->getLastSql();
-            }
-            //增加
-            else{
-                $data['userid']=$user_id;
-                $result =  $party_user->save($data);
-            }
             if($result!==false){
 
                 return $this->success('成功');
             }else{
+
                 return $this->error('失败');
             }
         } else {
-            $result['data']='';
             $userInfo = $party_user->where(['userid' => $user_id])->find();
             if($userInfo){
                 $result['data']=$userInfo;
