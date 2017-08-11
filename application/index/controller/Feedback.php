@@ -19,7 +19,6 @@ class Feedback extends Base
     public function index() {
         $map = [
             'create_user' => session('userId'),
-            'park_id'=>session('park_id'),
         ];
         $list = FeedbackModel::where($map)->order('status')->select();
         $this->assign('list',$list);
@@ -80,7 +79,6 @@ class Feedback extends Base
     public function  detail() {
         $map = [
             'id' =>input('id'),
-            'park_id'=>session('park_id'),
         ];
         $list = FeedbackModel::where($map)->find();
         $this->assign('info',$list);
