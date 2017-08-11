@@ -31,7 +31,7 @@ class Collect extends Model
 
     public function news(){
 
-        return $this->hasOne('News',"id","target_id")->field('title,views,front_cover');
+        return $this->hasOne('News',"id","target_id")->field('title,views,front_cover,source');
     }
 
 }

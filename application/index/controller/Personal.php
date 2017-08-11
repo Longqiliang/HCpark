@@ -54,7 +54,7 @@ class Personal extends Base
         foreach ($list1 as $k=>$v){
             $list1[$k]['title'] = $v->News->title;
             $list1[$k]['views'] =$v->News->views;
-            $list1[$k]['image'] =$v->News->frontCover;
+            $list1[$k]['image'] =$v->News->front_cover;
         }
 
         $list2 = CollectModel::where(['user_id'=> $user_id,'type'=>2])
@@ -63,6 +63,7 @@ class Personal extends Base
         foreach ($list2 as $k=>$v){
             $list2[$k]['title'] = $v->News->title;
             $list2[$k]['views'] =$v->News->views;
+            $list2[$k]['source'] =$v->News->source;
         }
 
         $list3 = CollectModel::where(['user_id'=>$user_id,'type'=>3])
@@ -71,6 +72,7 @@ class Personal extends Base
         foreach ($list3 as $k=>$v){
             $list3[$k]['title'] = $v->News->title;
             $list3[$k]['views'] =$v->News->views;
+            $list3[$k]['source'] =$v->News->source;
         }
         $list4 = CollectModel::where(['user_id'=>$user_id,'type'=>['>',3]])
             ->order('create_time desc')
@@ -78,6 +80,7 @@ class Personal extends Base
         foreach ($list4 as $k=>$v){
             $list4[$k]['title'] = $v->News->title;
             $list4[$k]['views'] =$v->News->views;
+            $list4[$k]['source'] =$v->News->source;
         }
 
         $this->assign('list1',$list1);

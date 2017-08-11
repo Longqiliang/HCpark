@@ -12,7 +12,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Loader;
 use wechat\TPWechat;
-use app\index\model\WechatUser as WechatUserModel;
+use app\index\model\WechatUser ;
 use app\admin\model\Config as ConfigModel;
 use app\index\model\Collect;
 use app\index\model\Comment;
@@ -66,13 +66,11 @@ class Base extends Controller
             'target_id' => input('targetId'),
             'user_id' => session('userId'),
             'content' => input('content'),
-            'type' => input('type'),
         ];
         $name = WechatUser::where('userid',session('userId'))->field('name')->find();
         $data['user_name'] = $name['name'];
         $result = Comment::create($data);
         if($result) {
-            $result['create_time'] = date("Y-m-d",$result['create_time']);
             return $this->success('评论成功', '', $result);
         } else {
             return $this->error('评论失败');
@@ -107,7 +105,17 @@ class Base extends Controller
             return $this->error('取消收藏失败');
         }
     }
+    //评论分页
+    public function moreComment() {
+        $lastId = input('lastId', 0);
+        $map = [
+            'target_id' => input('targetId')
+        ];
+        if ($lastId != 0) {  $map['id'] = ['<', $lastId]; }
+        $comments = Comment::where($map)->order('id desc')->limit(6)->select();
 
+        return json(['total'=>count($comments), 'comments'=>$comments]);
+    }
 
 
 }

@@ -70,7 +70,6 @@ class News extends Base
         ];
         $comments = Comment::where($map)->order('id desc')->limit(6)->select();
         foreach ($comments as $value){
-            $value['create_time'] = date("Y-m-d",$value['create_time']);
         }
         $this->assign('comments', json_encode($comments));
         // 是否已经收藏
