@@ -19,7 +19,7 @@ class Feedback extends Base
     public function index() {
         $map = [
             'create_user' => session('userId'),
-            'park_id'=>session('user_auth')['park_id'],
+            'park_id'=>session('park_id'),
         ];
         $list = FeedbackModel::where($map)->order('status')->select();
         $this->assign('list',$list);
@@ -34,7 +34,7 @@ class Feedback extends Base
                 'title' => input('title'),
                 'create_user' => session('userId'),
                 'content' => input('content'),
-                'park_id'=>session('user_auth')['park_id'],
+                'park_id'=>session('park_id'),
             ];
             $result = FeedbackModel::create($data);
             if($result){
@@ -80,7 +80,7 @@ class Feedback extends Base
     public function  detail() {
         $map = [
             'id' =>input('id'),
-            'park_id'=>session('user_auth')['park_id'],
+            'park_id'=>session('park_id'),
         ];
         $list = FeedbackModel::where($map)->find();
         $this->assign('info',$list);
@@ -91,11 +91,11 @@ class Feedback extends Base
     public function  replylist() {
         $map = [
             'status' =>0,
-            'park_id'=>session('user_auth')['park_id'],
+            'park_id'=>session('park_id'),
         ];
         $map2 = [
             'status' =>1,
-            'park_id'=>session('user_auth')['park_id'],
+            'park_id'=>session('park_id'),
         ];
         $noReply = FeedbackModel::where($map)->select();
         $this->assign('noReply', $noReply);
@@ -112,7 +112,6 @@ class Feedback extends Base
                 'reply_user' => session('userId'),
                 'reply_time'=> time(),
                 'status'=>1,
-                'park_id'=>session('user_auth')['park_id'],
             ];
             $result = FeedbackModel::where('id', input('id'))->update($data);
             if($result){
