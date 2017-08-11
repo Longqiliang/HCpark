@@ -12,14 +12,15 @@ use app\index\model\Collect;
 use app\index\model\News as NewsModel;
 use app\index\model\Comment as CommentModel ;
 use app\index\model\Collect as CollectModel;
+use app\index\model\WechatUser;
 use think\Controller;
 
 class Policy extends Base
 {
     //政策法规首页
     public function index() {
-        $list1 =NewsModel::where(['type'=>5])->limit(6)->select();
-        $list2 =NewsModel::where(['type'=>4])->limit(6)->select();
+        $list1 =NewsModel::where(['type'=>5, 'park_id'  =>session("park_id")])->limit(6)->select();
+        $list2 =NewsModel::where(['type'=>4, 'park_id'  =>session("park_id")])->limit(6)->select();
 
         $this->assign('list1',$list1);
         $this->assign('list2',$list2);
@@ -33,6 +34,9 @@ class Policy extends Base
         $newsId = input("id");
         $news = NewsModel::where(['id'=>$newsId])->find();
         $comments = CommentModel::where(['target_id'=>$newsId])->order("create_time")->limit(6)->select();
+        foreach( $comments as $v){
+            $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
+        }
         //是否收藏
         $res =Collect::where(['user_id'=>$userId,'target_id'=>$newsId])->find();
         if ($res){
@@ -44,6 +48,7 @@ class Policy extends Base
         NewsModel::where('id', $newsId)->setInc('views');
 
         $this->assign('comments',json_encode($comments));
+
         $this->assign('news',$news);
 
 

@@ -18,4 +18,11 @@ class Comment extends Model
         'status' => 1
     ];
     protected $dateFormat="Y-m-d";
+
+    public function wechatuser(){
+
+        return $this->hasOne("WechatUser","userid","user_id");
+    }
+
+
 }

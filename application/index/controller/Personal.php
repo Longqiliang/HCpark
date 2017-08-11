@@ -56,7 +56,6 @@ class Personal extends Base
             $list1[$k]['views'] =$v->News->views;
             $list1[$k]['image'] =$v->News->front_cover;
         }
-
         $list2 = CollectModel::where(['user_id'=> $user_id,'type'=>2])
             ->order('create_time desc')
             ->limit(6)->select();
@@ -74,7 +73,7 @@ class Personal extends Base
             $list3[$k]['views'] =$v->News->views;
             $list3[$k]['source'] =$v->News->source;
         }
-        $list4 = CollectModel::where(['user_id'=>$user_id,'type'=>['>',3]])
+        $list4 = CollectModel::where(['user_id'=>$user_id,'type'=>['in',[4,5]]])
             ->order('create_time desc')
             ->limit(6)->select();
         foreach ($list4 as $k=>$v){

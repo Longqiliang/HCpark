@@ -20,7 +20,8 @@ class News extends Base
         $bannerMap = [
             'status' => 1,
             'type' => 1,
-            'is_banner' => 1
+            'is_banner' => 1,
+            'park_id'  =>session("park_id")
         ];
         $count = NewsModel::where($bannerMap)->order('create_time desc')->limit(2)->count();
         $banners = NewsModel::where($bannerMap)->order('create_time desc')->limit(2)->select();
@@ -31,7 +32,8 @@ class News extends Base
         $listMap = [
             'type' => 1,
             'status' => 1,
-            'is_banner' => 0
+            'is_banner' => 0,
+            'park_id'  =>session("park_id")
         ];
         $list = NewsModel::where($listMap)->order('create_time desc')->limit(6)->select();
 
@@ -69,6 +71,9 @@ class News extends Base
             'target_id' => input('id')
         ];
         $comments = Comment::where($map)->order('id desc')->limit(6)->select();
+        foreach( $comments as $v){
+            $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
+        }
         foreach ($comments as $value){
         }
         $this->assign('comments', json_encode($comments));
@@ -82,6 +87,7 @@ class News extends Base
 
         // 添加阅读量
         NewsModel::where('id', input('id'))->setInc('views');
+
         return $this->fetch();
     }
 
@@ -89,7 +95,8 @@ class News extends Base
     public function policy() {
         $listFileMap = [
             'type' => 2,
-            'status' => 1
+            'status' => 1,
+            'park_id'  =>session("park_id")
         ];
         $listFile = NewsModel::where($listFileMap)->order('create_time desc')->limit(6)->select();
         $this->assign('listFile', $listFile);
@@ -102,7 +109,8 @@ class News extends Base
     public function article (){
         $articleMap= [
             'type' => 3,
-            'status' => 1
+            'status' => 1,
+            'park_id'  =>session("park_id")
         ];
         $articleList =  NewsModel::where($articleMap)->order('create_time desc')->limit(6)->select();
         $this->assign('article',  $articleList);
@@ -118,7 +126,8 @@ class News extends Base
             $listMap = [
                 'type' => 1,
                 'status' => 1,
-                'is_banner' => 0
+                'is_banner' => 0,
+                'park_id'  =>session("park_id")
             ];
             $list = NewsModel::where($listMap)->order('create_time desc')->limit($len,6)->select();
             if ($list){
