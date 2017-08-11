@@ -12,5 +12,5 @@ use think\Model;
 
 class PersonalService extends Model
 {
-
+    protected $dateFormat="Y-m-d";
 }

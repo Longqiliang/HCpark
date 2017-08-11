@@ -10,6 +10,6 @@ use think\Model;
 
 class PartyUser extends Model
 {
-
+    protected $dateFormat="Y-m-d";
 
 }

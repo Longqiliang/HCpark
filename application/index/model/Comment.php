@@ -17,4 +17,5 @@ class Comment extends Model
         'create_time' => NOW_TIME,
         'status' => 1
     ];
+    protected $dateFormat="Y-m-d";
 }

@@ -5,7 +5,7 @@ use think\Model;
 
 class WechatUser extends Model
 {
-
+    protected $dateFormat="Y-m-d";
 
     public function checkUserExist($userId) {
         return $this->where('userId', $userId)->find();

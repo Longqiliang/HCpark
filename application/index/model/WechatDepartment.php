@@ -12,6 +12,7 @@ namespace app\index\model;
 use think\Model;
 class WechatDepartment extends Model
 {
+    protected $dateFormat="Y-m-d";
     public  function  findallfartherbychild($deparment,$sd){
 
         array_unshift($sd,$deparment['id']);

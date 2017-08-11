@@ -16,6 +16,7 @@ class Feedback extends Model
         'create_time' => NOW_TIME,
 
     ];
+    protected $dateFormat="Y-m-d";
     public  function  userName() {
 
         return $this->hasOne("WechatUser","userid","create_user");

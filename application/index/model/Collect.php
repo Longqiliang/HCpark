@@ -16,7 +16,7 @@ class Collect extends Model
     protected $insert = [
         'create_time' => NOW_TIME,
     ];
-
+    protected $dateFormat="Y-m-d";
    /*
    $map=[
       'tb_news.type'=>1,
