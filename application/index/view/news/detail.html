@@ -25,7 +25,7 @@
             <ul>
                 <li v-for="list in documents">
                     <div class="img-box">
-                        <img src="/index/images/declaration/DS.png">
+                        <img :src="list.header==''?'/index/images/personal/personalinfo.png':list.header">
                     </div>
                     <div class="content-box">
                         <div class="top">

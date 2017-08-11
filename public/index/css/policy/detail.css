@@ -68,6 +68,7 @@ section img{
 }
 .comment .img-box img{
     width: 9.067vw;
+    height:9.067vw;
     border-radius: 50%;
     margin: 2.93vw 2.93vw 0 4vw;
 }
