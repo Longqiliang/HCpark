@@ -18,15 +18,15 @@
         <div class="notices hidden">
             <div class="notice new">
                 {volist name="list1" id="vo1"}
-                <a href="{:Url('News/detail?id='.$vo1['id'])}" class="news list clear">
+                <a href="{:Url('News/detail?id='.$vo1['target_id'])}" class="news list clear">
                     <div class="news-img fl" style="background: url('{$vo1.image}') no-repeat center center; background-size: cover;">
                     </div>
                     <div class="list-right news-info fl">
                         <div class="title ">{$vo1.title}</div>
                         <div class="clear time">
                             <span class="fl ">{$vo1.create_time}</span>
-                            {gt name="$vo1.views" value="9999"}
-                            <span class="fr readed">9999+</span>
+                            {gt name="$vo1.views" value="999"}
+                            <span class="fr readed">999+</span>
                             {else/}
                             <span class="fr readed">{$vo1.views}</span>
                             {/gt}
@@ -41,14 +41,14 @@
         <div class="notices hidden">
             <div class="notice notify">
                 {volist name="list2" id="vo2"}
-                <a href="{:Url('News/detail?id='.$vo2['id'])}" class="list clear">
+                <a href="{:Url('News/detail?id='.$vo2['target_id'])}" class="list clear">
                     <div class="list-right">
                         <div class="title ">{$vo2.title}</div>
                         <div class="clear time">
                             <span class="fl source">{$vo2.source}</span>
                             <span class="fl ">{$vo2.create_time}</span>
-                            {gt name="$vo2.views" value="9999"}
-                            <span class="fr readed">9999+</span>
+                            {gt name="$vo2.views" value="999"}
+                            <span class="fr readed">999+</span>
                             {else/}
                             <span class="fr readed">{$vo2.views}</span>
                             {/gt}
@@ -62,14 +62,14 @@
         <div class="notices hidden">
             <div class="notice article">
                 {volist name="list3" id="vo3"}
-                <a href="{:Url('News/detail?id='.$vo3['id'])}" class="list clear">
+                <a href="{:Url('News/detail?id='.$vo3['target_id'])}" class="list clear">
                     <div class="list-right">
                         <div class="title ">{$vo3.title}</div>
                         <div class="clear time">
                             <span class="fl source">{$vo3.source}</span>
                             <span class="fl ">{$vo3.create_time}</span>
-                            {gt name="$vo3.views" value="9999"}
-                            <span class="fr readed">9999+</span>
+                            {gt name="$vo3.views" value="999"}
+                            <span class="fr readed">999+</span>
                             {else/}
                             <span class="fr readed">{$vo3.views}</span>
                             {/gt}
@@ -83,14 +83,14 @@
         <div class="notices hidden">
             <div class="notice policy">
                 {volist name="list4" id="vo4"}
-                <a href="{:Url('Policy/detail?id='.$vo4['id'])}" class="list clear">
+                <a href="{:Url('Policy/detail?id='.$vo4['target_id'])}" class="list clear">
                     <div class="list-right">
                         <div class="title ">{$vo4.title}</div>
                         <div class="clear time">
                             <span class="fl source">{$vo4.source}</span>
                             <span class="fl ">{$vo4.create_time}</span>
-                            {gt name="$vo4.views" value="9999"}
-                            <span class="fr readed">9999+</span>
+                            {gt name="$vo4.views" value="999"}
+                            <span class="fr readed">999+</span>
                             {else/}
                             <span class="fr readed">{$vo4.views}</span>
                             {/gt}
@@ -245,8 +245,8 @@
           html +=
                   '<div class="title ">'+list.title+'</div>'+
                   '<div class="clear time">'+
-                  '<span class="fl">'+timeChange(list.create_time)+'</span>'+
-                  '<span class="fr readed">'+(list.views>9999?'9999+':list.views)+'</span>'+
+                  '<span class="fl">'+list.create_time+'</span>'+
+                  '<span class="fr readed">'+(list.views>999?'999+':list.views)+'</span>'+
                   '</div>'+
                   '</div>'+
                   '</a>'

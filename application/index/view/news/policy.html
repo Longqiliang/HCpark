@@ -27,41 +27,40 @@
     }
     .body ul li{
         width: 100%;
-        height:22.93vw;
+        height:7.6rem;
         overflow: hidden;
         border-bottom: 1px solid #e5e5e5;
         position: relative;
     }
     .body ul li .content-box{
         height: 100%;
-        padding-left: 3.2vw;
-        padding-right:3.2vw;
+        padding:1.2rem;
         position: relative;
     }
     .body ul li .content-box p{
-        padding-top: 2.66vw;
         font-size: 1.4rem;
         color: #333;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         overflow: hidden;
+        line-height: 1.8rem;
     }
     .body ul li .content-box>span{
         color: #999;
         font-size: 1.1rem;
         position: absolute;
-        bottom: 2.66vw;
+        bottom: 1.2rem;
+        line-height: 1;
     }
-    .body ul li .content-box span:last-child>img{
-        width: 4vw;
-        margin-right: 5.6vw;
-        position: relative;
-        top: 1px;
+    .body ul li .content-box .my-views{
+        width: 4.4rem;
+        padding-left: 2rem;
+        background: url("/index/images/news/view.png") no-repeat left center;
+        background-size: 1.3rem;
+        right: 1.2rem;
     }
-    .body ul li .content-box span:last-child{
-        right: 4vw;
-    }
+
     .body ul li a{
         width: 100%;
         height: 100%;
@@ -85,7 +84,11 @@
                 <div class="content-box">
                     <p>{$news->title}</p>
                     <span>{$news->create_time}</span>
-                    <span><img src="/index/images/news/view.png">{$news->views}</span>
+                    {gt name="$news.views" value='999'}
+                    <span class="my-views">999+</span>
+                    {else/}
+                    <span class="my-views">{$news->views}</span>
+                    {/gt}
                 </div>
                 <a href="{:Url('News/detail?id='.$news->id)}"></a>
             </li>
@@ -159,13 +162,13 @@ function addLists(data){
     var len = lists.length;
     for(var i = 0; i< len;i++){
         var list = lists[i];
-
         html +=
                 '<li>'+
                     '<div class="content-box">'+
                         '<p>'+list.title+'</p>'+
-                        '<span>'+timeChange(list.create_time)+'</span>'+
-                        '<span><img src="/index/images/news/view.png">'+list.views+'</span>'+
+//                          '<span>'+timeChange(list.create_time)+'</span>'+
+                            '<span>'+list.create_time+'</span>'+
+                            '<span  class="my-views">'+(list.views>999?'999+':list.views)+'</span>'+
                     '</div>'+
                     '<a href="/index/news/detail/id/'+list.id+'"></a>'+
                 '</li>';
@@ -174,8 +177,10 @@ function addLists(data){
 }
 //    时间戳转换
 function timeChange(time) {
-    var time = new Date(parseInt(time)*1000);
-    return time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate();
+//    var time = new Date(parseInt(time)*1000);
+//    return time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate();
+    var time=time;
+    return time.split(' ')[0]
 }
 </script>
 {/block}

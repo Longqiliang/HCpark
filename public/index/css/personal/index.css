@@ -43,7 +43,7 @@ textarea::-webkit-input-placeholder {
 }
 .content{
     padding-top: 10px;
-    height: 100vh;
+    /*height: 100vh;*/
 }
 .user-info{
     position: absolute;
@@ -137,7 +137,7 @@ ul.list li:after{
 ul.list li:last-child:after{
     height: 0;
 }
-.icon{
+.content .icon{
     position: absolute;
     display:inline-block;
     width: 30px;

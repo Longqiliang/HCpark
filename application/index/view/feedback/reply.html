@@ -1,8 +1,8 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>意见反馈</title>
 <link rel="stylesheet" href="/index/css/common/rem.css">
-
 <style type="text/css">
     *,ul,li,p{
         margin: 0;
@@ -249,12 +249,18 @@
 
 {block name="script"}
 <script>
-    console.log({$feedback});
     $(function(){
+        $("title").html("意见反馈");
         $(".foot").on('click',function () {
             var reply = $('.reply_box>.content-box').val();
             if(!reply){
-                alert('请填写回复信息！');
+                swal({
+                    title: "",
+                    text: "请填写回复信息!",
+                    type: "warning",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定"
+                })
             } else if(reply.length<=300){
                 $.ajax({
                     type:'post',
@@ -266,15 +272,35 @@
                     success:function (data) {
                         console.log(data);
                         if(data.code == 1){
-                            alert('提交成功！');
-                            window.location.href = '/index/feedback/replylist.html'
+                            swal({
+                                title: "",
+                                text: "提交成功!",
+                                type: "success",
+                                confirmButtonColor: "#5d9cec",
+                                confirmButtonText: "确定",
+                                closeOnConfirm: false
+                            },function () {
+                                window.location.href = '/index/feedback/replylist.html'
+                            })
                         }else{
-                            alert("提交失败！")
+                            swal({
+                                title: "",
+                                text: "提交失败!",
+                                type: "error",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "确定"
+                            })
                         }
                     }
                 })
             }else{
-                alert('反馈内容应在300字以内！');
+                swal({
+                    title: "",
+                    text: "反馈内容应在300字以内!",
+                    type: "error",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定"
+                })
             }
 
         })

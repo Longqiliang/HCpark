@@ -1,5 +1,6 @@
 body{
     background-color: #F1F1F1;
+    line-height: 1;
 }
 /*tab*/
 .tabs {
@@ -41,7 +42,7 @@ body{
 /*列表修改*/
 .content .notices .notice .list {
     background-color: #fff;
-    height:6rem;
+    height:9rem;
     display: block;
     padding: 1.5rem 1.2rem;
     border-bottom: 1px solid #f1f1f1;
@@ -82,7 +83,7 @@ body{
     height:100%;
 }
 .content .notices .notice .list .time .readed{
-    width:3rem;
+    width:4rem;
     padding-left: 2em;
     background: url('/index/images/news/view.png') left center no-repeat;
     background-size: 1.3em;

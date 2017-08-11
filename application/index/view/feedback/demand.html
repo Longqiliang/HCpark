@@ -1,6 +1,8 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>意见反馈</title>
+
 <link rel="stylesheet" href="/index/css/common/rem.css">
 
 <style type="text/css">
@@ -122,11 +124,24 @@
                     },
                     success:function (data) {
                         if(data.code == 1){
-                            alert('提交成功！');
-                           window.location.href = '/index/feedback/index.html'
+                            swal({
+                                title: "",
+                                text: "提交成功!",
+                                type: "success",
+                                confirmButtonColor: "#5d9cec",
+                                confirmButtonText: "确定",
+                                closeOnConfirm: false
+                            },function () {
+                                window.location.href = '/index/feedback/index.html'
+                            })
                         }else{
-                            alert('提交失败！');
-
+                            swal({
+                                title: "",
+                                text: "提交失败!",
+                                type: "error",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "确定"
+                            })
                         }
                     }
                 });

@@ -70,11 +70,11 @@
                                     data:{header:path},
                                     dataType:'json',
                                     success: function () {
-
+                                        mui.toast('上传成功',{ duration:'1000ms', type:'div' })
                                     }
                                 })
                            } else {
-                               warning({msg:'上传失败'});
+                               mui.toast('上传失败',{ duration:'1000ms', type:'div' });
                                return;
                            }
                        }
