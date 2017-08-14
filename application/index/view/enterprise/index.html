@@ -1,0 +1,36 @@
+{extend name="public/common"}
+
+{block name="style"}
+
+{/block}
+
+{block name="body"}
+<div id="app">
+    <!--<div class="search">-->
+        <!--<div class="searchBox">-->
+            <!--<div class="searchText"><span class="searchText_c">请在此搜索企业</span></div>-->
+            <!--<input type="text" class="searchInput">-->
+        <!--</div>-->
+        <!--<div class="unBtn">取消</div>-->
+    <!--</div>-->
+    <mt-search
+        v-model="value"
+        cancel-text="取消"
+        placeholder="搜索">
+    </mt-search>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app= new Vue({
+        el:'#app',
+        data:{
+            value:''
+        },
+        methods:{
+
+        }
+    })
+</script>
+{/block}
