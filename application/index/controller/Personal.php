@@ -19,8 +19,9 @@ class Personal extends Base
     public function  index(){
         $user_id= session("userId");
         $user = new  WechatUser();
-
+        $partyinfo = $user->where(['userid'=>$user_id])->find();
         $userinfo = $user->checkUserExist($user_id);
+        $this->assign("party_branch",$partyinfo['party_branch']);
         $this->assign("userinfo",$userinfo);
 
         return $this->fetch();
