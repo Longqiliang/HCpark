@@ -64,6 +64,9 @@ textarea::-webkit-input-placeholder {
     width: 100%;
     height: 100%;
 }
+.user-info .user-photo a:active{
+    background-color: inherit;
+}
 .user-photo img{
     border-radius: 50%;
 }
@@ -177,14 +180,14 @@ ul.list li:last-child:after{
     position: relative;
     width: 46px;
     height: 46px;
-    margin: -5px 0;
+    margin: -5px 20px;
     border-radius: 50%;
 }
 
 .select{
     width: 80px;
     height: 30px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     border: 1px solid #999;
     line-height: 30px;
     border-radius: 3px;
@@ -255,6 +258,7 @@ ul.list li:last-child:after{
     width: 100%;
     background-color: #2baf2b;
     text-align: center;
+    outline:none;
 }
 
 .mui-toast-container {

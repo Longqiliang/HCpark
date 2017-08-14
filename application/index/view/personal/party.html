@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>党员信息</title>
 <link rel="stylesheet" href="/index/css/common/rem.css">
 <link rel="stylesheet" href="/index/css/personal/index.css">
 {/block}
@@ -156,7 +157,7 @@
                 $(".model-bg").fadeOut();
                 var state =event.target.getAttribute("data-state");
                 if(state){
-                    this.sex = parseInt(state);
+                    this.gender = parseInt(state);
                 }
             },
             submitBtn: function () {

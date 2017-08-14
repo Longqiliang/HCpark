@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>个人中心</title>
 <link rel="stylesheet" href="/index/css/common/rem.css">
 <link rel="stylesheet" href="/index/css/personal/index.css">
 {/block}
@@ -14,7 +15,7 @@
     <div class="user-info">
         <div class="user-photo">
             <a href="{:Url('Personal/personalinfo')}">
-                <img src="{$userinfo.avatar}" alt="用户头像">
+                <img src="{$userinfo.avatar}" alt="{$userinfo.name}">
             </a>
         </div>
         <div class="user-name">
@@ -27,7 +28,7 @@
     <div class="user-info">
         <div class="user-photo">
             <a href="{:Url('Personal/personalinfo')}">
-                <img src="{$userinfo.header}" alt="用户头像">
+                <img src="{$userinfo.header}" alt="{$userinfo.name}">
             </a>
         </div>
         <div class="user-name">
