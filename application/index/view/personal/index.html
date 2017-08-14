@@ -39,7 +39,13 @@
 </div>
 <div class="content">
     <ul class="list">
-        <li><a href="{:Url('Personal/party')}" class="item-pull-right"><span class="icon icon-party"></span><p>党员信息</p></a></li>
+        <li>
+            {eq name="party_branch" value=""}
+            <a href="{:Url('Personal/party')}" class="item-pull-right"><span class="icon icon-party"></span><p>党员信息</p></a>
+            {else/}
+            <a href="{:Url('Personal/editparty')}" class="item-pull-right"><span class="icon icon-party"></span><p>党员信息</p></a>
+            {/eq}
+        </li>
     </ul>
     <ul class="list">
         <li><a href="{:Url('Personal/message')}" class="item-pull-right"><span class="icon icon-message"></span><p>我的消息</p></a></li>

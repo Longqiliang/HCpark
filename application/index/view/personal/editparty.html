@@ -1,10 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{extend name="public/common"}
 
-</body>
-</html>
+{block name="style"}
+<title>党员信息</title>
+<link rel="stylesheet" href="/index/css/common/rem.css">
+<link rel="stylesheet" href="/index/css/personal/index.css">
+{/block}
+
+
+{block name="body"}
+<div class="content" id="app">
+    <ul class="list default-list">
+        <li>
+            <a href="javascript:;" >
+                <p class="head-info">所属党支部 <span class="ft-right">{{party_branch}}</span>
+                </p>
+            </a>
+        </li>
+    </ul>
+    <ul class="list default-list">
+        <li>
+            <a href="javascript:;">
+                <p>党员姓名 <span class="ft-right">{{name}}</span>
+                </p>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:;">
+                <p>年龄 <span class="ft-right">{{age}}</span>
+                </p>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:;">
+                <p>学历 
+                    <span class="ft-right">{{statusEducation}}</span>
+                </p>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <p>性别
+                    <span class="ft-right">{{statusSex}}</span>
+                </p>
+            </a>
+        </li>
+    </ul>
+    <button class="btn " @click="redactBtn">编辑</button>
+</div>
+{/block}
+{block name="script"}
+<script>
+    var data = {$data};
+    //console.log(data);
+    var defaultData = {
+        age:'',
+        party_branch:'',
+        name:'',
+        education:'',
+        gender:''
+    };
+    if(!data){
+        data = defaultData;
+    }else{
+        data = $.extend(defaultData,data)
+    }
+    var vm = new Vue({
+        el:'#app',
+        data:data,
+        computed: {
+            statusSex: function () {
+                switch (this.gender){
+                    case 1:
+                        return '男';
+                        break;
+                    case 2:
+                        return '女';
+                        break;
+                }
+            },
+            statusEducation: function () {
+                switch (this.education){
+                    case 1:
+                        return '本科以下';
+                        break;
+                    case 2:
+                        return '本科';
+                        break;
+                    case 3:
+                        return '硕士';
+                        break;
+                    case 4:
+                        return '博士';
+                        break;
+                }
+            }
+        },
+        methods:{
+            redactBtn: function () {
+               window.location.href ="{:Url('Personal/party')}";
+            }
+        }
+    });
+
+</script>
+{/block}
