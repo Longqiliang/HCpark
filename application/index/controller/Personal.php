@@ -109,12 +109,25 @@ class Personal extends Base
         } else {
             $userInfo = $party_user->where(['userid' => $user_id])->find();
             if($userInfo){
+                unset($userInfo['mobile']);
+                unset($userInfo['userid']);
                 $result['data']=$userInfo;
             }
-            $this->assign("data",json_encode($result) );
+            $this->assign("data",json_encode($result));
             return $this->fetch();
         }
 
+    }
+    //党员编辑
+    public function editParty(){
+        $user_id = session("userId");
+        $party_user=new  WechatUser();
+        $userInfo = $party_user->where(['userid' => $user_id])->find();
+        unset($userInfo['mobile']);
+        unset($userInfo['userid']);
+        $this->assign("data",$userInfo);
+
+        return $this->fetch();
     }
 
     /**
