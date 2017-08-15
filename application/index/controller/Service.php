@@ -17,24 +17,45 @@ class Service extends Base{
     public function index() {
         $park_id=session('park_id');
         $app= new  CompanyApplication();
-        $list=$app->where('park_id',$park_id)->select();
-       $this->assign('list',$list);
+        $map=[
+            'park_id'=>$park_id,
+            'type'=>0
+        ];
+        //物业服务
+        $PropertyServices=$app->where($map)->select();
+        $map['type']=1;
+        //企业服务
+        $CompanyService=$app->where($map)->select();
+        $this->assign('propert',$PropertyServices);
+        $this->assign('company',$CompanyService);
         return $this->fetch();
 
     }
 
     //选择服务
     public function  onCheck(){
-        $data=input('');
+        $path=input('path');
+        $app_id=input('id');
         $user_id = session('userId');
         $UserModel = new  WechatUser();
         $user=$UserModel->where('userid',$user_id)->find();
         $info['name']=$user['name'];
         $info['mobile']=$user['mobile'];
         $info['company']=$user->departmentName->name;
-        $this->assign('user',$info);
-        return $this->fetch($data['path']);
+        $info['app_id']=$app_id;
+        $this->assign('info',$info);
+        return $this->fetch($path);
 
     }
+
+
+     //预约
+     public  function  order(){
+
+
+
+
+
+     }
 
 }
