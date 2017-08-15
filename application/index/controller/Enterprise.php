@@ -22,7 +22,15 @@ class Enterprise extends Base{
 
     }
 
+    //企业详情
+    public function info() {
+        $id = input('get.id');
+        $parkcompany= new ParkCompany();
+        $info = $parkcompany->where('id',$id)->find();
+        $this->assign('info',$info);
+        return $this->fetch();
 
+    }
 
 
 
