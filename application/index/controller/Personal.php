@@ -91,8 +91,8 @@ class Personal extends Base
         return $this->fetch();
 
     }
-    /**党员信息*/
-    public function party ()
+    /**党员信息编辑*/
+    public function editparty ()
     {
         $user_id = session("userId");
         $party_user=new  WechatUser();
@@ -118,13 +118,15 @@ class Personal extends Base
         }
 
     }
-    //党员编辑
-    public function editParty(){
+    //党员信息查看
+    public function showParty(){
         $user_id = session("userId");
         $party_user=new  WechatUser();
         $userInfo = $party_user->where(['userid' => $user_id])->find();
-        unset($userInfo['mobile']);
-        unset($userInfo['userid']);
+        if($userInfo) {
+            unset($userInfo['mobile']);
+            unset($userInfo['userid']);
+        }
         $this->assign("data",$userInfo);
 
         return $this->fetch();
