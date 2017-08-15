@@ -17,7 +17,7 @@ class Enterprise extends Base{
         $park_id=session('park_id');
         $parkcompany= new ParkCompany();
         $list = $parkcompany->where('park_id',$park_id)->select();
-        $this->assign('list',$list);
+        $this->assign('list',json_encode($list));
         return $this->fetch();
 
     }
