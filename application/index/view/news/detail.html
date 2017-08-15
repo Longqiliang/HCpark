@@ -9,6 +9,11 @@
 
 {block name="body"}
 <div id="comment">
+    <mt-search
+            v-model="value"
+            cancel-text="取消"
+            placeholder="搜索">
+    </mt-search>
     <div class="header">
         <h2>{$news->title}</h2>
         <p>
@@ -64,7 +69,8 @@
         el:'#comment',
         data:{
             documents:{$comments},
-            collection:{$collect}
+            collection:{$collect},
+            value:''
         },
         methods:{
             send:function (id,type) {

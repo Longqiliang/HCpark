@@ -1,0 +1,182 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    h1{
+        text-align: center;
+    }
+    .my-service-list{
+    display: -webkit-flex;
+    display: flex;
+    width:100%;
+    flex-wrap: wrap;
+
+    align-items: center;
+}
+    .my-service-list>li{
+        width:33.333333vw;
+        height:33.333333vw;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .my-service-list>li>a{
+        text-align: center;
+    }
+    .my-service-list>li>a>img{
+        /*display: block;*/
+    }
+    .my-service-list>li>a>span{
+    display: block;
+    line-height: 2;
+    text-align: center;
+    color: #333;
+}
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div>
+        <span>当前：{{parks[keyPark]}}</span>
+        <select name="" id="">
+            <option :value="keyPark" v-for="(item,key) in parks" >
+                {{item}}
+            </option>
+        </select>
+    </div>
+    <h1>物业服务</h1>
+    <ul class="my-service-list">
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>费用缴纳</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>物业报修</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>饮水服务</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>室内保洁</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>办公用品</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>卡车服务</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>充电柱办理</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>公共区服务</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>电话宽带</span>
+            </a>
+        </li>
+    </ul>
+    <h1>企业服务</h1>
+    <ul class="my-service-list">
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>财税服务</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>工商注册</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>知识产权</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>项目申报</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>金融服务</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>法律服务</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>人事社保</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>广告设计</span>
+            </a>
+        </li>
+        <li>
+            <a href="">
+                <img src="/index/images/feedback/reply-blue.png" alt="图标">
+                <span>企业办公</span>
+            </a>
+        </li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app= new Vue({
+        el:'#app',
+        data:{
+            keyPark:1,
+            nowPark:'希垦科技园',
+            parks:['全部','希垦科技园','浙江互联网产业园','人工智能产业园']
+        },
+        methods:{
+            parkChange:function () {
+            }
+        }
+    })
+</script>
+{/block}
