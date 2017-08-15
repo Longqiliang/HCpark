@@ -8,15 +8,17 @@
 namespace app\index\controller;
 
 use app\index\model\WechatUser;
+use app\index\model\CompanyApplication;
 //企业服务
 class Service extends Base{
 
 
   //服务列表
     public function index() {
-
-
-
+        $park_id=session('park_id');
+        $app= new  CompanyApplication();
+        $list=$app->where('park_id',$park_id)->select();
+       $this->assign('list',$list);
         return $this->fetch();
 
     }
