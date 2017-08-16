@@ -38,17 +38,12 @@ class Enterprise extends Base{
          $map['type']=2;
          $service =  $CompanyProduct->where($map)->select();
          $this->assign('product_num',count($product));
-
-
          $this->assign('service_num',count($service));
-
          $this->assign('id',$id);
          return $this->fetch();
-
     }
 
     //企业详情
-
     public function detail(){
         $id = input('post.id');
         $parkcompany= new ParkCompany();
@@ -66,12 +61,18 @@ class Enterprise extends Base{
         $info = $parkcompany->where('id',$id)->find();
 
        $result=[
-         'present'=>$info['present'],
+
+           'present'=>$info['present'],
            'about_us'=>$info['about_us'],
+           'name'=>$info['name'],
+           'mobile'=>$info['mobile'],
+           'img'=>$info['img'],
            'service_num'=>count($service),
            'product_num'=>count($product),
            'service'=>$service,
            'product'=>$product
+
+
        ];
 
         $this->assign('info',json_encode($result));
