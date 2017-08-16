@@ -109,7 +109,7 @@ class Service extends Base{
            $map=[
           'company'=>$data['company'],
           'people'=>$data['name'],
-          'mobile'=>$data['moblie'],
+          'mobile'=>$data['mobile'],
           'app_id'=>$data['app_id'],
           'remark'=>$data['remark'],
           'user_id'=>session('userId'),
@@ -133,7 +133,7 @@ public  function  _checkData($data){
          }
          if(!isset($data['company'])||
              !isset($data['name'])||
-             !isset($data['moblie'])||
+             !isset($data['mobile'])||
              !isset($data['app_id'])
          ){
 
@@ -143,7 +143,7 @@ public  function  _checkData($data){
 
     if(empty($data['company'])||
         empty($data['name'])||
-        empty($data['moblie'])||
+        empty($data['mobile'])||
         empty($data['app_id'])
     ){
 

@@ -23,7 +23,7 @@ class Enterprise extends Base{
     }
 
     //引导页
-    public function welcome() {
+    public function info() {
 
         $id = input('id');
         $CompanyProduct= new ParkProduct();
@@ -74,7 +74,7 @@ class Enterprise extends Base{
            'product'=>$product
        ];
 
-        $this->assign('info',$result);
+        $this->assign('info',json_encode($result));
         return $this->fetch();
 
     }
