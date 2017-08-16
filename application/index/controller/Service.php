@@ -33,20 +33,46 @@ class Service extends Base{
              $map['type']=1;
              //企业服务
              $CompanyService=$app->where($map)->select();
-           $is_boss="yes";
+             $is_boss="yes";
 
 
          }else{
-        $map=[
-            'park_id'=>$park_id,
-            'type'=>0
-        ];
-        //物业服务
-        $PropertyServices=$app->where($map)->select();
-        $map['type']=1;
-        //企业服务
-        $CompanyService=$app->where($map)->select();
+             //物业服务
+             $serviceApps= $app->where('type',0)->select();
+             $PropertyServices=array();
+             foreach ($serviceApps as $value){
+
+                 $parkid= json_decode($value['park_id']);
+
+                 foreach($parkid as $value2){
+                     if($value2==$park_id ){
+                         array_push($PropertyServices,$value);
+                     }
+                 }
+
+             }
+             //企业服务
+             $companyApps=$app->where('type',1)->select();
+             $CompanyService=array();
+             foreach ($serviceApps as $value){
+
+                 $parkid= json_decode($value['park_id']);
+
+                 foreach($parkid as $value2){
+                     if($value2==$park_id ){
+                         array_push($PropertyServices,$value);
+                     }
+                 }
+
+             }
+
+
              $is_boss="no";
+
+
+
+
+
          }
         $this->assign('is_boss',$is_boss);
         $this->assign('propert',$PropertyServices);
@@ -75,13 +101,18 @@ class Service extends Base{
      //预约
      public  function  order(){
       $compantService = new CompanyService();
-        $data=input('');
-      $map=[
-        'company'=>$data['company'],
+           $data=input('');
+           $re =$this->_checkData($data);
+           if(!$re){
+             return $this->error('参数缺失');
+            }
+           $map=[
+          'company'=>$data['company'],
           'people'=>$data['name'],
           'mobile'=>$data['moblie'],
           'app_id'=>$data['app_id'],
           'remark'=>$data['remark'],
+          'user_id'=>session('userId'),
           'create_time'=>time(),
           'status'=>0
       ];
@@ -94,5 +125,39 @@ class Service extends Base{
 
      }
      }
+
+
+public  function  _checkData($data){
+         if(empty($data)){
+             return false;
+         }
+         if(!isset($data['company'])||
+             !isset($data['name'])||
+             !isset($data['moblie'])||
+             !isset($data['app_id'])
+         ){
+
+             return false;
+
+         }
+
+    if(empty($data['company'])||
+        empty($data['name'])||
+        empty($data['moblie'])||
+        empty($data['app_id'])
+    ){
+
+        return false;
+
+    }
+
+      return true;
+
+
+
+}
+
+
+
 
 }
