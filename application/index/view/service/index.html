@@ -1,182 +1,222 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>莫干红云</title>
 <style>
-    h1{
-        text-align: center;
+    body{
+        background: #f0edf1;
+        padding-bottom: 3rem;
     }
-    .my-service-list{
-    display: -webkit-flex;
-    display: flex;
-    width:100%;
-    flex-wrap: wrap;
-
-    align-items: center;
-}
-    .my-service-list>li{
-        width:33.333333vw;
-        height:33.333333vw;
+    .my-items{
+        /*padding:0 1.2rem 2rem 1.2rem;*/
+    }
+    .my-item{
+        position: relative;
+        width:90%;
+        margin:0 auto;
+        margin-top: 3rem;
+        background: #ffffff;
+        border:1px solid #e2e2e2;
+        border-radius: .5rem;
+        /*padding:15px 10px 0 10px;*/
+        padding-top: 1.5rem;
+        padding-bottom: 2.8rem;
+    }
+    .my-item-title{
+        width:10rem;
+        height:2.7rem;
+        color: #ffffff;
+        font-size: 1.6rem;
+        text-align: center;
+        line-height: 2.7rem;
+        border-radius: 10rem;
+        position: absolute;
+        top:-1.35rem;
+        left:50%;
+        -webkit-transform: translateX(-50%);
+        -moz-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        -o-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+    .my-item-title.color1{
+        box-shadow: 0 .2rem .2rem 0 rgba(252,196,75,0.5);
+        background: #fcc44b;
+    }
+    .my-item-title.color2{
+        box-shadow: 0 .2rem .2rem 0 rgba(105,185,249,0.5);
+        background: #69b9f9;
+    }
+    .my-lists{
         display: -webkit-flex;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+        flex-wrap: wrap;
     }
-    .my-service-list>li>a{
+    .my-list{
+        width:33.33333333%;
         text-align: center;
+        padding-top:3rem;
     }
-    .my-service-list>li>a>img{
-        /*display: block;*/
+    .my-list>img{
+        width:3.2rem;
+        height:3.2rem;
+        display: block;
+        margin:0 auto;
     }
-    .my-service-list>li>a>span{
-    display: block;
-    line-height: 2;
-    text-align: center;
-    color: #333;
-}
+    .my-list>span{
+        display: block;
+        margin-top: 1.5rem;
+        color:#333;
+        font-size: 1.4rem;
+    }
+    .my-park{
+        display: -webkit-flex;
+        display: flex;
+        padding:0 5vw;
+        height:5rem;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 1.4rem;
+        color: #666;
+    }
+    .my-park>select{
+        background-color: #fff;
+        color: #666;
+        height: 2.5rem;
+        border-radius: 5px;
+        font-size: 14px;
+        border: 1px solid #e5e5e5;
+        outline: none;
+    }
 </style>
 {/block}
-
 {block name="body"}
 <div id="app">
-    <div>
-        <span>当前：{{parks[keyPark]}}</span>
-        <select name="" id="">
-            <option :value="keyPark" v-for="(item,key) in parks" >
-                {{item}}
+    <div class="my-park">
+        <span>当前：{{parks[nowPark].name}}</span>
+        <select name="" id="" v-model="nowPark" @change="parkChange">
+            <option :value="item.value" v-for="(item,key) in parks" >
+                {{item.name}}
             </option>
         </select>
     </div>
-    <h1>物业服务</h1>
-    <ul class="my-service-list">
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>费用缴纳</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>物业报修</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>饮水服务</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>室内保洁</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>办公用品</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>卡车服务</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>充电柱办理</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>公共区服务</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>电话宽带</span>
-            </a>
-        </li>
-    </ul>
-    <h1>企业服务</h1>
-    <ul class="my-service-list">
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>财税服务</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>工商注册</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>知识产权</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>项目申报</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>金融服务</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>法律服务</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>人事社保</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>广告设计</span>
-            </a>
-        </li>
-        <li>
-            <a href="">
-                <img src="/index/images/feedback/reply-blue.png" alt="图标">
-                <span>企业办公</span>
-            </a>
-        </li>
-    </ul>
-</div>
-{/block}
+    <div class="my-items">
+        <div class="my-item">
+            <div class="my-item-title color1">
+                物业服务
+            </div>
+            <ul class="my-lists">
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p1.png" alt="图标">
+                    <span>费用缴纳</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p2.png" alt="图标">
+                    <span>物业报修</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p3.png" alt="图标">
+                    <span>饮水服务</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p4.png" alt="图标">
+                    <span>室内保洁</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p5.png" alt="图标">
+                    <span>办公用品</span>
+                </li>
+                <li class="my-list" @click="jumpTo('/index/service/parking')">
+                    <img src="/index/images/service/index/p6.png" alt="图标">
+                    <span>车卡服务</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p7.png" alt="图标">
+                    <span>充电桩办理</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p8.png" alt="图标">
+                    <span>公共区服务</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p9.png" alt="图标">
+                    <span>电话宽带</span>
+                </li>
+            </ul>
+        </div>
+        <div class="my-item">
+            <div class="my-item-title color2">
+                企业服务
+            </div>
+            <ul class="my-lists">
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p10.png" alt="图标">
+                    <span>财税服务</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p11.png" alt="图标">
+                    <span>工商注册</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p12.png" alt="图标">
+                    <span>知识产权</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p13.png" alt="图标">
+                    <span>项目申报</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p14.png" alt="图标">
+                    <span>金融服务</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p15.png" alt="图标">
+                    <span>法律服务</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p16.png" alt="图标">
+                    <span>人事社保</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p17.png" alt="图标">
+                    <span>广告设计</span>
+                </li>
+                <li class="my-list" @click="jumpTo('')">
+                    <img src="/index/images/service/index/p18.png" alt="图标">
+                    <span>企业办公</span>
+                </li>
+            </ul>
+        </div>
+    </div>
 
+
+</div>
+
+{/block}
 {block name="script"}
 <script>
-    var app= new Vue({
+    $("title").html('企业服务');
+    var app=new Vue({
         el:'#app',
         data:{
-            keyPark:1,
-            nowPark:'希垦科技园',
-            parks:['全部','希垦科技园','浙江互联网产业园','人工智能产业园']
+            nowPark:0,
+            parks:[
+                {name:'希垦科技园',value:0},
+                {name:'浙江互联网产业园',value:1},
+                {name:'人工智能产业园',value:2}
+            ],
+            changeApi:'{:Url("Service/changePark")}'
         },
         methods:{
-            parkChange:function () {
+            jumpTo(path){
+                window.location.href=path
+            },
+            parkChange(){
+                this.$http.post(this.changeApi,{value:this.nowPark}).then(function (res) {
+                    console.log(res)
+                })
             }
         }
-    })
+    });
 </script>
 {/block}

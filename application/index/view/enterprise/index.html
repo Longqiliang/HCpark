@@ -146,7 +146,7 @@
     </div>
     <!--公司列表-->
     <ul class="company-list" :class="{hidden:inputValue}">
-        <li v-for="item in companyList">
+        <li v-for="item in companyList" @click="jumpTo(item.id)">
             <img :src="item.img" alt="">
             <ul class="company-info">
                 <li>{{item.name}}</li>
@@ -186,8 +186,10 @@
 //
 //                })
 //            },
+            jumpTo(id){
+                window.location.href="/index/enterprise/info/id/"+id;
+            },
             isClick:function () {
-                console.log(this.companyList)
                 this.inputStatus=true;
                 this.$refs.inputF.focus();
                 console.log(this.$refs.inputF);

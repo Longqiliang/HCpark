@@ -117,14 +117,14 @@
     <h2>企业信息</h2>
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide my-profile">
+            <div class="swiper-slide my-profile" @click="jumpTo(0)">
                 <div class="my-content">
                     <h3>企业介绍</h3>
                     <div class="my-content-e"><span>COMPANY PROFILE</span></div>
                     <div class=" my-content-info">企业情况了然于胸</div>
                 </div>
             </div>
-            <div class="swiper-slide my-service">
+            <div class="swiper-slide my-service" @click="jumpTo(1)">
                 <div class="my-content">
                     <h3>企业服务</h3>
                     <div class="my-content-e">COMPANY SERVICE</div>
@@ -132,7 +132,7 @@
                 </div>
 
             </div>
-            <div class="swiper-slide my-product">
+            <div class="swiper-slide my-product" @click="jumpTo(2)">
                 <div class="my-content">
                     <h3>企业产品</h3>
                     <div class="my-content-e">COMPANY PRODUCT</div>
@@ -140,7 +140,7 @@
                 </div>
 
             </div>
-            <div class="swiper-slide my-contact">
+            <div class="swiper-slide my-contact" @click="jumpTo(3)">
                 <div class="my-content">
                     <h3>联系我们</h3>
                     <div class="my-content-e">CONTACT US</div>
@@ -157,13 +157,28 @@
 {block name="script"}
 <script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
 <script>
-    var swiper = new Swiper('.swiper-container', {
-        pagination: '.swiper-pagination',
-        loop: true,
-        slidesPerView: 'auto',
-        centeredSlides: true,
-        paginationClickable: true,
-        spaceBetween: 35
-    });
+
+    var app=new Vue({
+        el:'#app',
+        data:{
+
+        },
+        mounted(){
+            var swiper = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                loop: true,
+                slidesPerView: 'auto',
+                centeredSlides: true,
+                paginationClickable: true,
+                spaceBetween: 35,
+                pid:parseInt(window.location.href.split('/c/')[1])
+            });
+        },
+        methods:{
+            jumpTo(c){
+                window.location.href="/index/enterprise/detail/c/"+c+'/id/'+this.pid;
+            }
+        }
+    })
 </script>
 {/block}

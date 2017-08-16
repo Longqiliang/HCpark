@@ -1,0 +1,192 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    .my-header{
+        padding:2.15rem 5.73333333333vw;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        border-bottom: 0.8rem solid  #f1f1f1;
+    }
+    .my-header-img{
+        width:15.733333333vw;
+        margin-right: 5.733333333vw;
+    }
+    .my-header-img>img{
+        width:59px;
+        height:59px;
+        border-radius: 3px;
+    }
+    .my-header-info{
+        width:67vw;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .my-header-info>li:first-child{
+        font-size: 1.6rem;
+        color: #333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+    }
+    .my-header-info>li:last-child{
+        color: #333;
+        font-size: 1.2rem;
+        margin-top: 1.4rem;
+    }
+
+    /*tab*/
+    .my-nav{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-around;
+        line-height: 5rem;
+        font-size: 1.5rem;
+        height:5rem;
+        border-bottom: 2px solid #f1f1f1;
+    }
+    .my-nav>li{
+        margin-bottom: -2px;
+        padding:0 1rem;
+    }
+    .my-nav>li.active{
+        color: #69b9f9;
+        border-bottom: 2px solid #69b9f9;
+    }
+
+    /*内容*/
+    .my-content>li{
+        display: none;
+    }
+    .my-content>.profile, .my-content>.contact{
+        padding:1.7rem 5.06666666vw;
+    }
+    .my-content>.profile>p,.my-content>.contact>p{
+        overflow: hidden;
+        font-size: 1.4rem;
+        line-height: 2.0rem;
+        color: #666;
+        /*text-indent:2em;*/
+    }
+    .my-content .contentShow{
+        display: block;
+    }
+    .service>ul>li,.product>ul>li{
+        padding:1.8rem 5.8666666vw;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .my-content-img{
+        width:90px;
+        height:70px;
+        margin-right: 5.3333333vw;
+        background: url('') no-repeat center center;
+        background-size: cover;
+        border-radius: 3px;
+    }
+    .my-content-info{
+        width:57.6vw;
+    }
+    .my-content-info>li:first-child{
+        width:100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 1.4rem;
+        color: #666;
+    }
+    .my-content-info>li:last-child{
+        width:100%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+         overflow: hidden;
+        font-size: 1.2rem;
+        color: #999;
+        margin-top: 0.7rem;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="my-header">
+        <div class="my-header-img"><img src="/index/images/feedback/indexbg.jpg" alt="公司logo"></div>
+        <ul class="my-header-info">
+            <li>神华集团有限公司神华集团有限公司神华集团有限公司神华集团有限公司</li>
+            <li>电话：0571-8897654</li>
+        </ul>
+    </div>
+    <ul class="my-nav">
+        <li :class="{active:isActive==0}" @click="changeTab(0)">企业介绍</li>
+        <li :class="{active:isActive==1}" @click="changeTab(1)">企业产品</li>
+        <li :class="{active:isActive==2}" @click="changeTab(2)">企业服务</li>
+        <li :class="{active:isActive==3}" @click="changeTab(3)">联系我们</li>
+    </ul>
+    <ul class="my-content">
+        <li class="profile" :class="{'contentShow':isActive==0}">
+            <p>杭州之图网络科技有限公司是一家由海归人士创办的高新技术企业，专业从事智慧社区信息化管理技术的开发和转化推广。在社区地理空间信息采集、无人机激光点云三维测绘、全息三维建模、智能传感器的物联网应用及多维度大数据分析技术等方面，都具有较强的研发能力。致力于利用自主研制的地图服务器、移动互联网技术、移动GIS技术进行绿地图智慧社区系统的研发。</p>
+        </li>
+        <li class="service" :class="{'contentShow':isActive==1}">
+            <ul>
+                <li>
+                    <div class="my-content-img" :style="{backgroundImage:'url('+imgPath+')'}"></div>
+                    <ul  class="my-content-info">
+                        <li>你猜猜我是不是一个快乐的产品你猜猜我是不是一个快乐的产品你猜猜我是不是一个快乐的产品</li>
+                        <li>不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说，哈哈哈 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="product" :class="{'contentShow':isActive==2}">
+            <ul>
+                <li>
+                    <div class="my-content-img" :style="{backgroundImage:'url('+imgPath+')'}"></div>
+                    <ul  class="my-content-info">
+                        <li>你猜猜我是不是一个快乐的产品你猜猜我是不是一个快乐的产品你猜猜我是不是一个快乐的产品</li>
+                        <li>不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说，哈哈哈 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="contact" :class="{'contentShow':isActive==3}">
+            <p>杭州之图网络科技有限公司是一家由海归人士创办的高新技术企业，专业从事智慧社区信息化管理技术的开发和转化推广。在社区地理空间信息采集、无人机激光点云三维测绘、全息三维建模、智能传感器的物联网应用及多维度大数据分析技术等方面，都具有较强的研发能力。致力于利用自主研制的地图服务器、移动互联网技术、移动GIS技术进行绿地图智慧社区系统的研发。</p>
+        </li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+        isActive:0,
+        imgPath:'/index/images/feedback/indexbg.jpg',
+        baseApi:'{:Url("Enterprise/detail")}'
+    },
+//    emulateJSON: true,
+    mounted(){
+        this.addBase()
+    },
+    methods:{
+        addBase(){
+            this.isActive=parseInt(window.location.href.split('/c/')[1]);
+            this.$http.get(this.baseApi,{params:{id:1}}).then(function (res) {
+                console.log(res.data)
+            })
+        },
+        changeTab(value){
+            this.isActive=value;
+
+        }
+    }
+})
+</script>
+{/block}
