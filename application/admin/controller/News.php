@@ -75,7 +75,7 @@ class News extends Admin
             $news = NewsModel::where('id','eq',input('id'))->find();
             $this->assign('news', $news);
 
-            $sendTargetName = '所有人';
+            /*$sendTargetName = '所有人';
             if ($news['send_type'] == 1) {
                 $target = WechatDepartment::get($news['send_target']);
                 $sendTargetName = $target['name'];
@@ -83,9 +83,9 @@ class News extends Admin
             if ($news['send_type'] == 2) {
                 $target = WechatTag::where('tagid', $news['send_target'])->find();
                 $sendTargetName = $target['tagname'];
-            }
+            }*/
             $this->assign('pageType',$pageType);
-            $this->assign('sendTargetName', $sendTargetName);
+            ///$this->assign('sendTargetName', $sendTargetName);
 
             return $this->fetch();
         }

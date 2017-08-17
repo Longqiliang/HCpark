@@ -1,12 +1,14 @@
 <?php
 namespace app\admin\controller;
 
+use app\common\model\Park;
 use think\Loader;
 use wechat\TPWechat;
 use app\common\model\WechatDepartment;
 use app\common\model\WechatTag;
 use app\index\model\WechatUser;
 use app\common\behavior\Service;
+
 
 class Index extends Admin {
 
@@ -57,14 +59,58 @@ class Index extends Admin {
         $weObj = new TPWechat(config('party'));
         // 更新部门信息
         $department = $weObj->getDepartment();
-
         $dep = new WechatDepartment();
-        foreach($department['department'] as $data){
+        foreach($department['department'] as $k=>$data){
             $isUpdate = false;
             if (WechatDepartment::get($data['id'])) {
                 $isUpdate = true;
             }
             $dep->data($data,true)->isUpdate($isUpdate)->save();
+            $number[$k] =$data['id'];
+        }
+
+        $deaprtment=$dep->select();
+
+        foreach ($deaprtment as $k=>$v){
+            $deaprtmentNumber[$k] = $v['id'];
+        }
+        $deleteId =[] ;
+        foreach($deaprtmentNumber as $v){
+            if (!in_array($v,$number)){
+                $deleteId[]=$v;
+            }
+        }
+        foreach($deleteId as $v){
+            WechatDepartment::where(['id'=> $v])->delete();
+        }
+        /*同步园区表*/
+        $parkList=WechatDepartment::where(['parentid'=> 1])->select();
+        $park =new Park();
+        foreach($parkList as $k=>$v){
+            $data =[
+                'id'=>$v['id'],
+                'name'=>$v['name'],
+            ];
+            $numberPark[$k] =$v['id'];
+            $isUpdate = false;
+            if (Park::get($data['id'])) {
+                $isUpdate = true;
+            }
+            $res=$park->data($data,true)->isUpdate($isUpdate)->save();
+        }
+        $parks=$park->select();
+        foreach($parks as $k=>$v){
+
+            $parksNumber[$k] =$v['id'];
+        }
+        $delete =[];
+        foreach($parksNumber as $v){
+            if (!in_array($v, $numberPark)){
+                $delete[] =$v;
+            }
+        }
+        foreach($delete as $v){
+            Park::where("id",$v)->delete();
         }
 
         $this->success('同步部门成功！');

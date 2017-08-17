@@ -59,7 +59,6 @@ class Member extends Model
             'last_login_ip'   => get_client_ip(1),
         );
         $this->save($data, ['id'=>$user['id']]);
-
         /* 记录登录SESSION和COOKIES */
         $auth = array(
             'id'              => $user['id'],

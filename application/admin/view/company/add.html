@@ -3,8 +3,10 @@
 {block name="style"}
 <link href="/static/summernote/summernote.css" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+
 </style>
 
 {/block}
@@ -18,7 +20,41 @@
     <div class="row">
         <div class="mail-box-header">
             <div>
+                <div class="row clearfix">
+                    <div class="col-md-8 column">
+                        <div class="col-md-2 column">
+                            <h3>企业头像</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <input  type="file" class="file input-file"><br>
+                        </div>
+                        <div class="col-md-2 column"><h3>联系电话</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <input type="number" class="form-control"   name="phone" value="{$companyInfo.mobile}" />
+                        </div >
+
+                        <div class="col-md-12 column "><br>
+                            <a class="btn btn-sm btn-primary " style="float:right" onclick="companyMobile()"><i class="fa fa-reply"></i>&nbsp;发送</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <sapn>
+                            <a class="front_cover" href="#">
+                                <img class="front_cover_img images3" src="{$companyInfo.img}" width="100"/>
+                            </a>
+                        </sapn>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="mail-box-header">
+            <div>
                 <ul class="nav nav-tabs nav-justified" id="changelist">
+                    <!--<li class="active"><a href="#">企业头像</a></li>-->
                     <li class="active"><a href="#">企业介绍</a></li>
                     <li><a href="#">企业产品</a></li>
                     <li><a href="#">企业服务</a></li>
@@ -27,14 +63,35 @@
             </div>
         </div>
         <div id="changelist1" class="mail-box-header">
-        <!--企业介绍-->
+            <!--企业头像-->
+           <!-- <div class="notices">
+                <div class="mail-header">
+                    <div>
+                        <input  type="file" class="file input-file">
+                        <sapn>
+
+                            <a class="front_cover" href="#">
+                                <img class="front_cover_img images3" src=""/>
+                            </a>
+
+                        </sapn>
+                    </div>
+                </div>
+                <div class="mail-body">
+                    <div>
+                        联系电话
+                    </div>
+                </div>
+
+            </div>-->
+            <!--企业介绍-->
             <div class="notices ">
                 <form class="form-horizontal" method="post">
                     <div class="mail-text h-200">
                         <div class="summernote">{$companyInfo->present}</div>
                         <div class="clearfix"></div>
                         <input type="hidden" name="content">
-                        <input type="hidden" name="id" value="{$companyInfo.id}">
+                        <input type="hidden" name="id" value="{$companyInfo->id}">
                     </div>
                     <div class="mail-body text-right tooltip-demo">
                         <button url="{:Url('send')}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
@@ -54,7 +111,6 @@
                     <tr>
                         <th>产品名称</th>
                         <th>产品简介</th>
-                        <th>产品功能</th>
                         <th>创建时间</th>
                         <th>操作</th>
                     </tr>
@@ -63,8 +119,7 @@
                     {volist name="list" id="vo"}
                     <tr class="read">
                         <td>{$vo.name}</td>
-                        <td>{$vo.present}</td>
-                        <td>{$vo.effect}</td>
+                        <td>{$vo.content}</td>
                         <td>{$vo.create_time}</td>
                         <td>
                             <a data-toggle="modal" href="#modal-form"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}',1)"> 编辑</a>
@@ -84,7 +139,6 @@
                     <tr>
                         <th>产品名称</th>
                         <th>产品简介</th>
-                        <th>产品功能</th>
                         <th>创建时间</th>
                         <th>操作</th>
                     </tr>
@@ -93,8 +147,7 @@
                     {volist name="list1" id="vo"}
                     <tr class="read">
                         <td>{$vo.name}</td>
-                        <td>{$vo.present}</td>
-                        <td>{$vo.effect}</td>
+                        <td>{$vo.content}</td>
                         <td>{$vo.create_time}</td>
                         <td>
                             <a data-toggle="modal" href="#modal-form1"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}',2)"> 编辑</a>
@@ -120,30 +173,6 @@
         </div>
     </div>
 </div>
-<div id="modal-form1" class="modal fade" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form class="form-horizontal" method="post" action="">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h3 class="modal-title text-center">企业服务</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">服务名称</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="name2"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">服务简介</label>
-                        <div class="col-sm-10"><textarea name="present2"  cols="60" rows="10" class="present"></textarea></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-10"><input type="button"  class="form-control"   value="提交" onclick="update(2)"></div>
-                        <input type="hidden" name="id" >
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <div id="modal-form" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -156,12 +185,68 @@
                     <div class="form-group"><label class="col-sm-2 control-label">产品名称</label>
                         <div class="col-sm-10"><input type="text" class="form-control" required="" name="name1"></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">产品简介</label>
-                        <div class="col-sm-10"><textarea name="present1"  cols="60" rows="10" class="present"></textarea></div>
+                    <div class="form-group"><label class="col-sm-2 control-label">服务简介</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="detail1"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
+                        <div class="col-sm-10">
+                            <input  type="file" class="file input-file">
+                            <sapn>
+
+                                <a class="front_cover" href="#">
+                                    <img class="front_cover_img images1" src=""/>
+                                </a>
+
+                            </sapn>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">服务详情</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 present" name="present1"></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-10"><input type="button"  class="form-control"   value="提交" onclick="update(1)"></div>
-                        <input type="hidden" name="id" >
+                        <div class="col-sm-12"><input type="button"  class="form-control"   value="提交" onclick="update(1)"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="modal-form1" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">企业服务</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">服务名称</label>
+                        <div class="col-sm-10 "><input type="text" class="form-control" required="" name="name2"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">服务简介</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="detail2"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
+                        <div class="col-sm-10">
+                            <input  type="file" class="file input-file">
+                            <sapn>
+
+                                <a class="front_cover" href="#">
+                                    <img class="front_cover_img images2" src=""/>
+                                </a>
+
+                            </sapn>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">服务详情</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 present" name="present2"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-12"><input type="button"  class="form-control"   value="提交" onclick="update(2)"></div>
                     </div>
                 </div>
             </form>
@@ -171,7 +256,7 @@
 <div id="modal-form2" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="form-horizontal" method="post" action="{:Url('Company/edit')}">
+            <form class="form-horizontal" method="post" action="">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h3 class="modal-title text-center">企业服务</h3>
@@ -181,21 +266,46 @@
                         <div class="col-sm-10"><input type="text" class="form-control" required="" name="name"></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">服务简介</label>
-                        <div class="col-sm-10"><textarea name="present"  cols="60" rows="10" class="present"></textarea></div>
-                    <div class="form-group"><label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-10"><input type="submit"  class="form-control"   value="提交"></div>
+                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="detail"></div>
                     </div>
-                </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
+                        <div class="col-sm-10">
+                            <input type="file" class="file input-file">
+                            <sapn>
+
+                                <a class="front_cover" href="#">
+                                    <img class="front_cover_img" src=""/>
+                                </a>
+
+                            </sapn>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">服务详情</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 present " name="present" ></div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-12"><input type="button"  class="form-control"   value="提交" onclick="addProduct()"></div>
+                        </div>
+                    </div>
+
             </form>
+
         </div>
     </div>
 </div>
+<input type="hidden" name="front_cover" value="">
 {/block}
 
 {block name="script"}
 <script src="/static/summernote/summernote.min.js"></script>
 <script src="/static/summernote/lang/summernote-zh-CN.js"></script>
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 <script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
@@ -205,6 +315,23 @@
         $(".check-all").on("ifChanged",function(){
             $("tbody").find(".ids").iCheck("toggle");
         });
+
+        function sendFile(file) {
+            var data = new FormData();
+            data.append("file_data", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "{:Url('Upload/picture')}",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var data = $.parseJSON(response);
+                    $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+                }
+            });
+        }
 
         $('.summernote').summernote({
             lang: 'zh-CN',
@@ -244,8 +371,7 @@
             var n=$(this).index();
             $(this).addClass('active').siblings().removeClass('active');
             $(".notices").eq(n).show();
-
-
+            types =$(this).index();
         });
 
     });
@@ -257,7 +383,10 @@
             url: "{:Url('Company/sendAbout')}",
             success: function(data) {
                 if(data.code=1){
-                    updateAlert(data.msg,'success');
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
                 }else {
                     updateAlert(data.msg,'error');
                 }
@@ -270,33 +399,113 @@
             type: "POST",
             url: "{:Url('Company/getCompanyserver')}",
             success: function(data) {
+               // console.log(data);
                 $("[name='name"+uid+"']").val(data.name);
-                $("[name='present"+uid+"']").val(data.present);
-                $("[name='effect"+uid+"']").val(data.effect);
+                $("[name='detail"+uid+"']").val(data.detail);
+                if (uid ==1){
+                    $('.present').summernote('code',data.content);
+                }else{
+                    $('.present').eq(1).summernote('code',data.content);
+                }
                 $("[name='id']").val(data.id);
+                $("input[name='front_cover']").val(data.front_cover);
+                $('.images'+uid+'').attr('src',data.front_cover);
             }
         });
     }
     function update(uid){
         var id =   $("[name='id']").val();
         var names=$("[name='name"+uid+"']").val();
-        var presents = $("[name='present"+uid+"']").val();
-        var effects = $("[name='effect"+uid+"']").val();
+        var details=$("[name='detail"+uid+"']").val();
+        var image=$("input[name='front_cover']").val();
+        if (uid==1){
+            var presents = $('.present').summernote('code');
+        }else{
+            var presents = $('.present').eq(1).summernote('code');
+        }
         $.ajax({
-            data: {id:id,name:names,present:presents,effect:effects},
+            data: {id:id,name:names,content:presents,detail:details,type:types,front_cover:image},
             type: "POST",
             url: "{:Url('Company/updateCompany')}",
             success: function(data) {
                 if(data.code=1){
-                    updateAlert(data.msg,'success');
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
                 }else{
                     updateAlert(data.msg,'error');
                 }
 
             }
         });
-
+    }
+    function addProduct(){
+        var names=$("[name='name']").val();
+        var contents=$('.present').eq(2).summernote('code');
+        var companyid ="{$companyInfo['id']}";
+        var details =$("[name='detail']").val();
+        var image=$("input[name='front_cover']").val();
+        $.ajax({
+            data: {name:names,content:contents,company_id:companyid,type:types,front_cover:image,detail:details},
+            type: "POST",
+            url: "{:Url('Company/edit')}",
+            success: function(data) {
+                if(data.code=1){
+                    updateAlert(data.msg,'success');
+                }else{
+                    updateAlert(data.msg,'error');
+                }
+            }
+        });
     }
 
+    $(".input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $("input[name='front_cover']").val(response.data);
+            $('.front_cover_img').attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+
+    function companyMobile(){
+
+        var image=$("input[name='front_cover']").val();
+        var phone = $("[name='phone']").val();
+        $.ajax({
+            type:"POST",
+            url:"{:Url('Company/companyMobile')}",
+            data:{id:'{$companyInfo.id}',img:image,mobile:phone,images:'{$companyInfo.img}'},
+            success:function (data) {
+                if(data.code=1){
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
+                }else {
+                    updateAlert(data.msg,"error");
+                }
+            }
+        });
+    }
 </script>
 {/block}

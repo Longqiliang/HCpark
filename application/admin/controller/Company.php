@@ -9,7 +9,6 @@ namespace app\admin\controller;
 
 use app\common\model\ParkCompany;
 use app\common\model\WechatDepartment as WechatDepartmentModel;
-use app\common\model\ParkCompany as ParkCompanyModel;
 use app\common\model\ParkProduct;
 
 class Company extends Admin
@@ -36,7 +35,7 @@ class Company extends Admin
 
         $list1=ParkProduct::where(['type'=>2])
             ->order('create_time desc')
-            ->paginate();;
+            ->paginate();
         $this->assign('companyInfo',$companyInfo);
         $this->assign('list',$list);
         $this->assign('list1',$list1);
@@ -44,17 +43,37 @@ class Company extends Admin
     }
     /*同步企业信息*/
     public function getCompany(){
+        $deleteId=[];
         $parkid =session("user_auth")['park_id'];
         $parkCompany =new ParkCompany();
         $companyList=WechatDepartmentModel::where(['parentid'=>4])->select();
-
         foreach ($companyList as $k=>$v){
             $data=[
+                'id'=>$v['id'],
               'name'=>$v['name'],
-              'park_id'=>$parkid
+              'park_id'=>$parkid,
+              'company_id'=>$v['id'],
             ];
-            $res=$parkCompany->update($data,['id'=>"$k+1"]);
+            $number[$k]=$v['id'];
+            $isUpdate = false;
+            if (ParkCompany::get($data['id'])) {
+                $isUpdate = true;
+            }
+            $res=$parkCompany->data($data,true)->isUpdate($isUpdate)->save();
+
         }
+            $parkNumber=ParkCompany::where(['park_id'=>$parkid])->select();
+            foreach($parkNumber as $k=>$v){
+                $companyNumber[$k]=$v['id'];
+            }
+            foreach ($companyNumber as $v){
+                if (!in_array(intval($v), $number)){
+                    $deleteId[] =$v;
+                }
+            }
+            foreach($deleteId as $v){
+                ParkCompany::where(['id'=> $v])->delete();
+            }
 
             return $this->success('同步成功');
 
@@ -64,7 +83,7 @@ class Company extends Admin
     public function send(){
         $id =input("id");
         $content = input('content');
-        $res=ParkCompany::update(['present'=>input("content")],['id'=>$id]);
+        $res=ParkCompany::update(['present'=>$content],['id'=>$id]);
         if ($res){
 
             return $this->success("添加成功");
@@ -98,6 +117,7 @@ class Company extends Admin
     /*修改企业的产品或服务*/
     public function updateCompany(){
         $id=input("id");
+        //return  $_POST;
         $res=ParkProduct::where(['id'=>$id])->update(input('post.'));
         if ($res){
 
@@ -110,12 +130,45 @@ class Company extends Admin
     }
     public function edit(){
         $parkcompany =new ParkProduct();
-        //dump(input("post."));
+        unset($_POST['file']);
+        $_POST['create_time']=time();
+        //return  $_POST;
+        $res=$parkcompany->save($_POST);
+        if ($res){
 
-        $res=$parkcompany->insert(input("post."));
-       
+            $this->success("添加成功");
+        }else{
+
+            $this->error("添加失败");
+        }
+
+    }
+
+    public function companyMobile(){
+        $id=input("id");
+       // return dump($_POST);
+        if(empty(input('img'))){
+            $_POST['img'] =$_POST['images'];
+
+        }
+        unset($_POST['images']);
+        $res=ParkCompany::where(['id'=>$id])->update($_POST);
+        if ($res){
+
+            return $this->success("修改成功");
+        }else{
+
+            return $this->error("修改失败");
+        }
+
 
 
     }
+
+
+
+
+
+
 
 }
