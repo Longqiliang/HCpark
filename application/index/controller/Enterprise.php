@@ -27,14 +27,14 @@ class Enterprise extends Base{
 
         $id = input('id');
         $CompanyProduct= new ParkProduct();
-
         $map=[
          'company_id'=>$id,
-         'type'=>1
+         'type'=>'1'
      ];
-     //企业产品
+        echo json_encode($map);
+        //企业产品
         $product =  $CompanyProduct->where($map)->select();
-     //企业服务
+        //企业服务
          $map['type']=2;
          $service =  $CompanyProduct->where($map)->select();
          $this->assign('product_num',count($product));
@@ -45,7 +45,7 @@ class Enterprise extends Base{
 
     //企业详情
     public function detail(){
-        $id = input('post.id');
+        $id = input('id');
         $parkcompany= new ParkCompany();
         $CompanyProduct= new ParkProduct();
         $map=[
@@ -80,6 +80,17 @@ class Enterprise extends Base{
 
     }
 
+  //企业服务或者企业产品
+     public  function  product(){
+        $id=input('id');
+        $product=new ParkProduct();
+        $info=  $product->where('id',$id)->find();
+        $data['name']=$info['name'];
+       $data['content']=$info['content'];
+        $this->assign('info',$data);
+        return $this->fetch();
 
+
+     }
 
 }
