@@ -1,0 +1,62 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>注册</title>
+<style>
+    body{
+        background: #fff;
+    }
+.codeword{
+    text-align: center;
+    margin-top: 86px;
+}
+/*.codeword img{*/
+    /*width:17px;*/
+    /*height:20px;*/
+/*}*/
+/*.codeword span{*/
+    /*font-size: 1.5rem;*/
+    /*color: #333;*/
+/*}*/
+    /*#qrcode{*/
+        /*position: absolute;*/
+        /*left:50%;*/
+        /*margin-left: -129px;*/
+        /*margin-top: 80px;*/
+    /*}*/
+    img{
+        position:absolute;
+        top: 50%;
+        left:50%;
+        -webkit-transform: translateY(-50%) translateX(-50%);
+        display:block;
+        border:4px solid #fff;
+        border-radius: 5px;
+        display:block;
+        display:none;
+    }
+    #qrcode{
+        position:absolute;
+        top: 50%;
+        left:50%;
+        -webkit-transform: translateY(-50%) translateX(-50%);
+    }
+</style>
+{/block}
+
+{block name="body"}
+    <div id="qrcode"></div>
+    <img src="/home/images/ourist/logo.jpg" alt="">
+{/block}
+{block name="script"}
+<script src="/work/js/jquery-1.12.1.min.js"></script>
+<script src="/work/js/jquery.qrcode.min.js"></script>
+<script>
+    jQuery('#qrcode').qrcode({width: document.body.clientWidth-20,height: document.body.clientWidth-20,text: "http://mgspb.0574ztnet.com/"+"/home/index/register"});
+    $('body').height(window.screen.availHeight);
+    $('#qrcode').width(document.body.clientWidth-20);
+    $('img').width(document.body.clientWidth*0.2);
+    $('img').height(document.body.clientWidth*0.2);
+    $('img').show();
+</script>
+{/block}

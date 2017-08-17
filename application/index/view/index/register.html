@@ -1,0 +1,196 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>用户注册</title>
+<style>
+    input{
+        border: none!important;
+        width: 53.33vw!important;
+    }
+    ::-webkit-input-placeholder { /* WebKit browsers */
+        color:    #999;
+        font-size: 1.4rem;
+    }
+    body{
+        background-color: #F1F1F1;
+        padding:14px;
+        min-height: 100vh;
+    }
+    #reigster{
+        background: #ffffff;
+        border-radius: 5px;
+        padding:1px 0 75px 0;
+        box-shadow: 0px 0px 6px 0 rgba(0,0,0,.2);
+    }
+    /*logo图片*/
+    .mui-table-logo{
+        text-align: center;
+        margin: 20.8vw;
+    }
+    .mui-table-logo img{
+        width:27vw;
+    }
+
+    /*注册窗口*/
+    .mui-table-content{
+        width:84.53vw;
+        margin: 0 auto;
+    }
+    .mui-table-user{
+        height:8vw;
+    }
+
+    .mui-table-phone{
+        margin-top:20px;
+    }
+
+    .mui-table-user input,.mui-table-phone input{
+        border-bottom: 1px solid #f00;
+        height: 50px;
+        margin-bottom: 0;
+        font-size: 1.4rem;
+        width:84.53vw;
+    }
+    .mui-table-user:after,.mui-table-phone:after{
+        display: block;
+        content: "";
+        height: 1px;
+        width:84.53vw;
+        background: #f1f1f1;
+        position: relative;
+        top: -4px;
+    }
+    .mui-table-tip{
+        font-size: 1.2rem;
+        color: #999;
+        margin-top: 15px;
+        text-align: left;
+    }
+    /*选择性别*/
+    .mui-table-radio{
+        text-align: center;
+        margin-top:42px ;
+        margin-bottom: 45px;
+    }
+    .mui-table-radio span{
+        margin:0 8vw;
+    }
+    .nochecked,.checked,.checked2{
+        display: inline-block;
+        content: '';
+        background: url("/index/images/index/noselect.png") 1px 3px no-repeat;
+        height:18px;
+        background-size: 15px 15px;
+        padding-left: 10px;
+        position: relative;
+        top:2px;
+        padding-left: 20px;
+    }
+    .checked,.checked,.checked2{
+        background: url("/index/images/index/select.png") 1px 3px no-repeat;
+        background-size: 15px 15px;
+    }
+    .mui-table-register span{
+        display: block;
+        width:84.53vw;
+        height:45px;
+        background: #338cec;
+        text-align: center;
+        margin: 0 auto;
+        line-height:45px;
+        color: #fff;
+        font-size: 1.5rem;
+        border-radius: 5px;
+    }
+</style>
+<script src="/index/js/index/vue.js"></script>
+<script src="/index/js/index/vue-resource.js"></script>
+{/block}
+
+{block name="body"}
+<div id="reigster">
+    <div class="mui-table-logo">
+        <img src="/index/images/index/logo.png">
+    </div>
+    <div class="mui-table-content">
+        <div class="mui-table-user">
+            <input type="text" placeholder="请输入姓名" ref="name">
+        </div>
+        <div class="mui-table-phone">
+            <input type="tel" placeholder="请输入手机号" ref="phone">
+        </div>
+        <p class="mui-table-tip">注：请填入与该微信号绑定的手机号</p>
+        <div class="mui-table-radio">
+            <span @click="check(1)" :class="{checked:ischecked}" class="nochecked">男</span>
+            <span @click="check(2)" :class="{checked2:ischecked2}" class="nochecked">女</span>
+        </div>
+    </div>
+    <div class="mui-table-register"><span @click="register">注册</span></div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    var main = new Vue({
+        el: '#reigster',
+        data: {
+            apiRegister:"{:Url('Index/register')}",
+            ischecked:true,
+            ischecked2:false,
+            gender:1
+        },
+
+        mounted: function() {
+        },
+        methods: {
+            check: function(e) {
+                if(e==1){
+                    this.ischecked = true;
+                    this.ischecked2 = false;
+                    this.gender=1;
+                }
+                if(e==2){
+                    this.ischecked2 = true;
+                    this.ischecked = false;
+                    this.gender=2;
+                }
+            },
+            register: function() {
+                if(!(/^1[34578]\d{9}$/.test(this.$refs.phone.value))){
+                    swal({
+                        title: "",
+                        text: "请输入正确的手机号",
+                        type: "error",
+                        confirmButtonColor: "#338cec",
+                        confirmButtonText: "确定",
+                    });
+                    return ;
+                }
+                var data={name:this.$refs.name.value,mobile:this.$refs.phone.value,gender:this.gender};
+                this.$http.post(this.apiRegister,data,{emulateJSON: true})
+                        .then(function(response) {
+                            if(response.data.code==1){
+                                swal({
+                                    title: "",
+                                    text: response.data.msg,
+                                    confirmButtonColor: "#338cec",
+                                    confirmButtonText: "确定"
+                                },function(isConfirm){
+                                    if(isConfirm){
+                                    window.location.href="code.html"
+                                    }
+                                })
+                            }else{
+                                swal({
+                                    title: "",
+                                    text: response.data.msg,
+                                    type: "error",
+                                    confirmButtonColor: "#338cec",
+                                    confirmButtonText: "确定"
+                                });
+                            }
+                        })
+            }
+        }
+    });
+</script>
+{/block}

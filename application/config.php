@@ -132,8 +132,12 @@ return [
         'agentid' => 1000004
     ),
 
+//注册
+       'register'=>[
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' =>  'pgdv-joifw5SlO7UCsUT8bISF7SA6tFk0ERTg_dkU4g',
 
-
+    ],
 
     'weixinpay'       => [
         'appid'       => 'ww61224724ee102fbc', // 微信支付appid
