@@ -1,0 +1,84 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<style type="text/css">
+    .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <h2>园区信息</h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizontal" method="post">
+                <div class="mail-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">园区名称:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="name" value='{$info.name}' readonly></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">物业电话:</label>
+                        <div class="col-sm-10"><input type="number" class="form-control" name="property_phone" value='{$info.property_phone}'></div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">支付宝用户:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="ailpay_user" value='{$info.ailpay_user}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">支付宝账号:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="payment_alipay" value='{$info.payment_alipay}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">银行用户:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="bank_user" value='{$info.bank_user}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">银行账号:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="payment_bank" value='{$info.payment_bank}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">保洁价格:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="clean_price" value='{$info.clean_price}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">充电柱押金:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="charging_deposit" value='{$info.charging_deposit}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">充电柱单价:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="charging_price" value='{$info.charging_price}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">车卡押金：</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="carpark_deposit" value='{$info.carpark_deposit}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">车卡单价:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control"  name="carpark_price" value='{$info.carpark_price}'></div>
+                    </div>
+                </div>
+                <div class="mail-body text-right tooltip-demo">
+                    <button url="{:Url('index')}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
+                            data-toggle="tooltip" data-placement="top" data-edit="content">
+                        <i class="fa fa-reply"></i> 保存
+                    </button>
+                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                </div>
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+    });
+</script>
+{/block}

@@ -40,6 +40,7 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+
 </style>
 {/block}
 
@@ -69,10 +70,11 @@
 
                 <thead>
                 <tr>
-                    <th></th>
-                    <th>企业名称</th>
-                    <th>联系方式</th>
-                    <th>操作</th>
+                    <th style="width:10%"></th>
+                    <th style="width:25%">企业名称</th>
+                    <th style="width:35%">企业简介</th>
+                    <th style="width:15%">联系方式</th>
+                    <th style="width:15%">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -85,11 +87,14 @@
                             <a href="{:Url('add','id='.$vo.id)}">{$vo.name}</a>
                     </td>
                     <td>
+                        {$vo.present}
+                    </td>
+                    <td>
                         {$vo.mobile}
                     </td>
 
                     <td>
-                        <a  href="{:Url('add','id='.$vo.id)}" >编辑</a>
+                        <a  href="{:Url('add','id='.$vo.id)}" class="btn btn-primary" style="color:#fff">编辑</a>
                     </td>
                 </tr>
                 {/volist}
