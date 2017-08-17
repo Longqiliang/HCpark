@@ -1,0 +1,143 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    body{
+        padding-bottom: 2rem;
+    }
+    .my-item{
+        width:93.33vw;
+        margin:0 auto;
+        box-shadow: 0 2px 20px 0 rgba(0,0,0,.15);
+        border-radius: 5px;
+        margin-top: 2rem;
+    }
+    .my-item-img{
+        width:100%;
+        height:18.8rem;
+        background:url('') no-repeat center center;
+        background-size: cover;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .my-item-price{
+        width:7rem;
+        padding-right: 0.5rem;
+        height:3rem;
+        line-height: 3rem;
+        text-align: center;
+        color: #fff;
+        font-size: 1.4rem;
+        background:url('') no-repeat center center;
+        background-size: contain;
+        position: relative;
+        top: -0.5rem;
+        left: 1.5rem;
+    }
+    .my-item-info{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding:1.2rem;
+    }
+    .my-item-info>ul{
+        width:70%;
+    }
+    .my-item-info>ul>li:first-child{
+        color: #333;
+        font-size: 1.6rem;
+    }
+    .my-item-info>ul>li:last-child{
+        color: #999;
+        margin-top: 0.7rem;
+        font-size: 1.4rem;
+    }
+    .my-item-btn{
+        width:7rem;
+        height:2.5rem;
+        line-height: 2.5rem;
+        font-size: 1.4rem;
+        text-align: center;
+        border:1px solid #000;
+        border-radius: 10rem;
+    }
+    .my-color1 .my-item-price{
+        background-image: url('/index/images/service/publicservice/p1.png');
+    }
+    .my-color1 .my-item-btn{
+        color: #fcc44b;
+        border-color: #fcc44b;
+    }
+    .my-color2 .my-item-price{
+        background-image: url('/index/images/service/publicservice/p2.png');
+    }
+    .my-color2 .my-item-btn{
+        color: #52cc92;
+        border-color: #52cc92;
+    }
+    .my-color3 .my-item-price{
+        background-image: url('/index/images/service/publicservice/p3.png');
+    }
+    .my-color3 .my-item-btn{
+        color: #8984E6;
+        border-color: #8984E6;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="my-item my-color1">
+        <div class="my-item-img" style="background-image: url('/index/images/cbd.jpg')">
+            <div class="my-item-price">¥400/天</div>
+        </div>
+        <div class="my-item-info">
+            <ul>
+                <li>海创大厦A座--大厅广告位</li>
+                <li>服务时间：08:30--17:30（工作日）</li>
+            </ul>
+            <div class="my-item-btn" @click="jumpTo('advertise')">马上预约</div>
+        </div>
+    </div>
+    <div class="my-item my-color2">
+        <div class="my-item-img" style="background-image: url('/index/images/cbd.jpg')">
+            <div class="my-item-price">¥800/天</div>
+        </div>
+        <div class="my-item-info">
+            <ul>
+                <li>海创大厦A座--二楼多功能厅</li>
+                <li>服务时间：08:30--17:30（工作日）</li>
+            </ul>
+            <div class="my-item-btn">马上预约</div>
+        </div>
+    </div>
+    <div class="my-item my-color3">
+        <div class="my-item-img" style="background-image: url('/index/images/cbd.jpg')">
+            <div class="my-item-price">¥10/h</div>
+        </div>
+        <div class="my-item-info">
+            <ul>
+                <li>海创大厦A座--大堂LED屏</li>
+                <li>服务时间：08:30--17:30（工作日）</li>
+            </ul>
+            <div class="my-item-btn" >马上预约</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+    },
+    methods:{
+        jumpTo(path){
+            window.location.href='/index/service/'+path;
+        }
+    }
+})
+</script>
+{/block}

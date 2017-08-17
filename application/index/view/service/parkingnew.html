@@ -1,0 +1,147 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>新卡办理</title>
+<style>
+a:active{
+    background: transparent;
+}
+    p{
+        font-size: 1.4rem;
+        padding:1.2rem;
+        color: #666;
+        background-color: #f1f1f1;
+    }
+    select{
+    background-color: #fff;
+    color: #666;
+    height: 2.5rem;
+    border-radius: 5px;
+    font-size: 14px;
+    border: 1px solid #e5e5e5;
+    outline: none;
+}
+    .my-prompt{
+        line-height: 3rem;
+        text-align: center;
+        font-size: 1.4rem;
+        color: #999;
+    }
+
+.my-item{
+    position: relative;
+    width:90%;
+    margin:0 auto;
+    margin-top: 3rem;
+    background: #ffffff;
+    border:1px solid #e2e2e2;
+    border-radius: .5rem;
+    /*padding:15px 10px 0 10px;*/
+    padding-top: 1.5rem;
+    padding-bottom: 2.8rem;
+}
+.my-item-title{
+    width:10rem;
+    height:2.7rem;
+    color: #ffffff;
+    font-size: 1.6rem;
+    text-align: center;
+    line-height: 2.7rem;
+    border-radius: 10rem;
+    position: absolute;
+    top:-1.35rem;
+    left:50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+.my-item-title.color1{
+    box-shadow: 0 .2rem .2rem 0 rgba(252,196,75,0.5);
+    background: #fcc44b;
+}
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="my-items">
+        <div class="my-item">
+            <div class="my-item-title color1">
+                物业服务
+            </div>
+            <mt-field label="车牌号码" placeholder="请输入车牌号码" v-model="formInfo.num"></mt-field>
+        </div>
+    </div>
+    <p>车主信息</p>
+    <mt-field label="车牌号码" placeholder="请输入车牌号码" v-model="formInfo.num"></mt-field>
+    <mt-field label="车主姓名" placeholder="请输入车主姓名" v-model="formInfo.ownerName"></mt-field>
+    <mt-field label="手机号码" placeholder="请输入手机号码" v-model="formInfo.tel"></mt-field>
+    <mt-field label="身份证号码" placeholder="请输入身份证号码" v-model="formInfo.idNumber"></mt-field>
+    <p>办理信息</p>
+    <mt-cell title="办理时长" >
+        <select v-model="formInfo.duration" @change="changeTime">
+            <option value="-1">请选择时效</option>
+            <option value="0">半年</option>
+            <option value="1">一年</option>
+        </select>
+    </mt-cell>
+    <mt-cell title="车卡押金"><span>100元</span></mt-cell>
+    <mt-cell title="停车费用"><span>{{formInfo.cost}}</span></mt-cell>
+    <mt-cell title="费用合计"><span>100+{{formInfo.cost}}=</span><span style="color:#E81B20;">{{100+formInfo.cost}}</span></mt-cell>
+    <div class="my-prompt">信息输入完后请点击下一步</div>
+    <div style="padding: 0 12px;">
+    <mt-button type="primary" size="large" @click="nextStep">
+        <span v-if="!isNext">下一步</span>
+        <mt-spinner type="triple-bounce" class="p1" v-if="isNext" color="rgb(255, 255, 255)"></mt-spinner>
+    </mt-button>
+    </div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+    el:'#app',
+    data:{
+        formInfo:{
+            num:'',//车牌
+            ownerName:'',//车主名字
+            tel:'',//电话
+            idNumber:'',//身份证号
+            duration:-1,//办理时长
+            cost:0,//合计
+        },
+        isNext:false
+    },
+    methods:{
+        changeTime(){
+            console.log(this.formInfo.duration)
+            if(this.formInfo.duration==0){
+                this.formInfo.cost=1800
+            }else if(this.formInfo.duration==1){
+                this.formInfo.cost=3600
+            }else{
+                this.formInfo.cost=0
+            }
+        },
+        nextStep(){
+
+            for(item in this.formInfo){
+                if(this.formInfo[item]==''){
+                    alert('您有未填写的信息')
+                   return ;
+                }else if(item.duration==-1){
+                    alert('请选择办理时长')
+                }
+            }
+            sessionStorage.setItem('formInfo',JSON.stringify(this.formInfo));
+            this.isNext=true;
+//            window.location.href='/index/service/payinfo'
+        }
+    }
+})
+</script>
+{/block}

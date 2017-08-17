@@ -94,7 +94,7 @@
 <div id="app">
     <div class="my-park">
         <span>当前：{{parks[nowPark].name}}</span>
-        <select name="" id="" v-model="nowPark" @change="parkChange">
+        <select name="" id="" v-model="nowPark" @change="parkChange" v-if="">
             <option :value="item.value" v-for="(item,key) in parks" >
                 {{item.name}}
             </option>
@@ -199,6 +199,11 @@
     var app=new Vue({
         el:'#app',
         data:{
+            baseData:{
+                isBoss:JSON.parse('{$is_boss}'),
+                propertyServices:JSON.parse('{$propert}'),
+                companyService:JSON.parse('{$company}')
+            },
             nowPark:0,
             parks:[
                 {name:'希垦科技园',value:0},
@@ -206,6 +211,9 @@
                 {name:'人工智能产业园',value:2}
             ],
             changeApi:'{:Url("Service/changePark")}'
+        },
+        mounted(){
+            console.log(this.baseData)
         },
         methods:{
             jumpTo(path){
