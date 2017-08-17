@@ -23,8 +23,8 @@
         <div class="mail-box-header">
             <div class="pull-right tooltip-demo">
                 <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
-                        <!--target-form="form-horizontal" data-edit="content">-->
-                    <!--<i class="fa fa-pencil"></i> 保存草稿-->
+                <!--target-form="form-horizontal" data-edit="content">-->
+                <!--<i class="fa fa-pencil"></i> 保存草稿-->
                 <!--</button>-->
                 <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
             </div>
@@ -72,11 +72,12 @@
                         <div class="col-sm-10">
                             <label class="checkbox-inline i-checks">
                                 {volist name="check" id="check"}
-                                {eq name="check.park_id" value="0"}
+                                {notpresent name="check.park_id"}
                                 {$check.name}&nbsp;<input style="margin-left:0" type="checkbox" value="{$check.id}" name="park_id[]">　
-                                {else /}
+                                {/notpresent}
+                                {present name="check.park_id"}
                                 {$check.name}&nbsp;<input style="margin-left:0" type="checkbox" value="{$check.id}" name="park_id[]" checked>　
-                                {/eq}
+                                {/present}
                                 {/volist}
                             </label>
                         </div>
@@ -131,21 +132,18 @@
                     </div>
 
 
+                    <div class="mail-body text-right tooltip-demo">
 
-
-
-                <div class="mail-body text-right tooltip-demo">
-
-                    <button url="{:Url('add')}{notempty name='$pageType'}?page_type=1{/notempty}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
-                            data-toggle="tooltip" data-placement="top" data-edit="content">
-                        <i class="fa fa-reply"></i> 添加
-                    </button>
-                    <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
-                            <!--target-form="form-horizontal" data-edit="content">-->
+                        <button url="{:Url('add')}{notempty name='$pageType'}?page_type=1{/notempty}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
+                                data-toggle="tooltip" data-placement="top" data-edit="content">
+                            <i class="fa fa-reply"></i> 添加
+                        </button>
+                        <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
+                        <!--target-form="form-horizontal" data-edit="content">-->
                         <!--<i class="fa fa-pencil"></i> 保存草稿-->
-                    <!--</button>-->
-                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
-                </div>
+                        <!--</button>-->
+                        <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                    </div>
 
                     {empty name="list.name"}
                     <input type="hidden" name="id">
@@ -168,100 +166,8 @@
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 <script>
-    $(document).ready(function () {
 
-        $('.summernote').summernote({
-            lang: 'zh-CN',
-            height: 300,
-            minHeight: 210,
-            callbacks: {
-                onImageUpload: function (files) { //the onImageUpload API
-                    img = sendFile(files[0]);
-                }
-            }
-        });
-
-        function sendFile(file) {
-            var data = new FormData();
-            data.append("file_data", file);
-            $.ajax({
-                data: data,
-                type: "POST",
-                url: "{:Url('Upload/picture')}",
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    var data = $.parseJSON(response);
-                    $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
-                }
-            });
-        }
-
-        console.log($(this).val())
-        $('.send_type').on('ifChecked', function(event){
-            switch ($(this).val()) {
-                case '0' :
-                    $("#send_target").empty();
-                    $("#send_target").append("<option value='0'>所有人</option>");
-                    break;
-                case '1':
-                    $.ajax({
-                        type: "get",
-                        url: "{:Url('getDepartment')}",
-                        success: function(response) {
-                            $("#send_target").empty();
-                            $.each(response.department, function(i,item){
-                                $("#send_target").append("<option value='"+item.id+"'>"+item.name+"</option>");
-                            });
-                        }
-                    });
-                    break;
-                case '2':
-                    $.ajax({
-                        type: "get",
-                        url: "{:Url('getTag')}",
-                        success: function(response) {
-                            $("#send_target").empty();
-                            $.each(response.taglist, function(i,item){
-                                $("#send_target").append("<option value='"+item.tagid+"'>"+item.tagname+"</option>");
-                            });
-                        }
-                    });
-                    break;
-            }
-        });
-    });
-
-    $("#input-file").fileinput({
-        showPreview: false,
-        language: 'zh', //设置语言
-        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
-        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
-        maxFileSize: 1024 * 200,
-    }).on("filebatchselected", function(event, files) {
-        $(this).fileinput("upload");
-    }).on('fileuploaded', function(event, data, previewId, index) {
-        var response = $.parseJSON(data.response);
-        if(response.code == 1) {
-            $("input[name='img']").val(response.data);
-        } else {
-            updateAlert(response.msg, 'warning');
-        }
-    });
-
-    $(".front_cover").imgbox({
-        overlayShow: false,
-        hideOnContentClick: true,
-        slideshow: false,
-        theme: 'dark',
-        alignment: 'center',       // Position - may be auto OR center.
-        allowMultiple: false,
-    });
-        highlight_subnav("{:Url('CompanyApplication/index')}");
-
-
-
+    highlight_subnav("{:Url('CompanyApplication/index')}");
 
 </script>
 {/block}

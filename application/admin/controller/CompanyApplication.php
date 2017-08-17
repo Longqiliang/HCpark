@@ -1,11 +1,4 @@
-﻿<?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2017/8/15
- * Time: 9:35
- */
-
+<?php
 namespace app\admin\controller;
 
 use app\common\model\CompanyApplication as CompanyModel;
@@ -54,7 +47,7 @@ class CompanyApplication extends Admin
         return $this->fetch();
     }
 
-    
+
     //编辑应用
     public function add()
     {

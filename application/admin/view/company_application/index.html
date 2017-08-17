@@ -136,22 +136,6 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
-
-    function editAuth(id) {
-        $.ajax({
-            type: "get",
-            url: "{:Url('addPark')}",
-            data: {id:id},
-            //dataType: "json",
-            success: function(data){
-                $(".tt").html("编辑菜单");
-                $("input[name='id']").val(data.id);
-                $("input[name='name']").val(data.name);
-                $(".park_id").text(data.park_id);
-                $(".option").val(data.option);
-            }
-        })
-    }
-
+    
 </script>
 {/block}
