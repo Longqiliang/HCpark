@@ -1,0 +1,121 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style>
+    .mail-box .mail-ontact{
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+    .mail-box .mail-subject{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+    .mail-subject-div{
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-box .mail-main{
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-date{
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+    @media only screen and (max-width: 550px){
+        .mail-date{
+            display: none;
+        }
+    }
+    .list_banner {width: 80px}
+    .list_type {width: 80px}
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <form method="get" action="index.html" class="pull-right mail-search">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索标题">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
+                    </div>
+                </div>
+            </form>
+            <h2>饮水服务 ({$list->total()})</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>联系人</th>
+                    <th>送水地址</th>
+                    <th>送水桶数</th>
+                    <th>联系电话</th>
+                    <th>创建时间</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                <td class="check-mail">
+                    <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                </td>
+                    <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.id}</a></td>
+                    <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.user}</a></td>
+                <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.address}</a></td>
+                <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.number}</a></td>
+                <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.mobile}</a></td>
+                <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.create_time}</a></td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+</script>
+{/block}
