@@ -124,7 +124,7 @@
                     <div class=" my-content-info">企业情况了然于胸</div>
                 </div>
             </div>
-            <div class="swiper-slide my-service" @click="jumpTo(1)">
+            <div class="swiper-slide my-service" @click="jumpTo(1)" v-if="service!=0">
                 <div class="my-content">
                     <h3>企业服务</h3>
                     <div class="my-content-e">COMPANY SERVICE</div>
@@ -132,13 +132,12 @@
                 </div>
 
             </div>
-            <div class="swiper-slide my-product" @click="jumpTo(2)">
+            <div class="swiper-slide my-product" @click="jumpTo(2)" v-if="product!=0">
                 <div class="my-content">
                     <h3>企业产品</h3>
                     <div class="my-content-e">COMPANY PRODUCT</div>
                     <div class=" my-content-info">企业导向深入了解</div>
                 </div>
-
             </div>
             <div class="swiper-slide my-contact" @click="jumpTo(3)">
                 <div class="my-content">
@@ -157,11 +156,12 @@
 {block name="script"}
 <script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
 <script>
-
     var app=new Vue({
         el:'#app',
         data:{
-
+            product:JSON.parse({$product_num}),
+            service:JSON.parse({$service_num}),
+            pid:{$id}
         },
         mounted(){
             var swiper = new Swiper('.swiper-container', {
@@ -171,11 +171,11 @@
                 centeredSlides: true,
                 paginationClickable: true,
                 spaceBetween: 35,
-                pid:parseInt(window.location.href.split('/c/')[1])
             });
         },
         methods:{
             jumpTo(c){
+                console.log(this.pid);
                 window.location.href="/index/enterprise/detail/c/"+c+'/id/'+this.pid;
             }
         }

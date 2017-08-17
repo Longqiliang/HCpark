@@ -100,24 +100,30 @@
         margin-top: 4.8rem;
     }
     .company-list{
-        padding:0.4rem 0.8rem;
+        padding:0.4rem 3.7333333vw;
     }
     .company-list>li{
         margin-bottom: 0.8rem;
-        padding:0.8rem 1.4rem;
+        padding:0.8rem 3.7333333vw;
         display: -webkit-flex;
         display: flex;
         align-items: center;
         background-color: #fff;
     }
-    .company-list>li>img{
-        width:5.9rem;
-        height:5.9rem;
-        margin-right: 1.4rem;
+    .company-logo>img{
+        width:59px;
+        height:59px;
         border-radius: 3px;
     }
+    .company-list .company-logo{
+        margin-right: 1.4rem;
+    }
     .company-info>li{
+        width:65vw;
         line-height: 2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .company-info>li:first-child{
         font-size: 1.6rem;
@@ -147,7 +153,9 @@
     <!--公司列表-->
     <ul class="company-list" :class="{hidden:inputValue}">
         <li v-for="item in companyList" @click="jumpTo(item.id)">
-            <img :src="item.img" alt="">
+            <div class="company-logo">
+                <img :src="item.img" alt="">
+            </div>
             <ul class="company-info">
                 <li>{{item.name}}</li>
                 <li>{{item.mobile}}</li>
@@ -156,13 +164,15 @@
     </ul>
     <!--搜索列表-->
     <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
-        <li v-for="item in searchList">
-        <img :src="item.img" alt="">
-        <ul class="company-info">
-            <li>{{item.name}}</li>
-            <li>{{item.mobile}}</li>
-        </ul>
-    </li>
+        <li v-for="item in searchList" @click="jumpTo(item.id)">
+            <div class="company-logo">
+                <img :src="item.img" alt="">
+            </div>
+            <ul class="company-info">
+                <li>{{item.name}}</li>
+                <li>{{item.mobile}}</li>
+            </ul>
+        </li>
     </ul>
 
 </div>

@@ -38,6 +38,9 @@
         font-size: 1.2rem;
         margin-top: 1.4rem;
     }
+    .my-header-info>li a{
+        color: #333;
+    }
 
     /*tab*/
     .my-nav{
@@ -101,6 +104,7 @@
         font-size: 1.4rem;
         color: #666;
     }
+
     .my-content-info>li:last-child{
         width:100%;
         display: -webkit-box;
@@ -111,52 +115,53 @@
         color: #999;
         margin-top: 0.7rem;
     }
+
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
     <div class="my-header">
-        <div class="my-header-img"><img src="/index/images/feedback/indexbg.jpg" alt="公司logo"></div>
+        <div class="my-header-img"><img :src="baseData.img" alt="公司logo"></div>
         <ul class="my-header-info">
-            <li>神华集团有限公司神华集团有限公司神华集团有限公司神华集团有限公司</li>
-            <li>电话：0571-8897654</li>
+            <li>{{baseData.name}}</li>
+            <li>电话：<a :href="'tel:'+baseData.mobile">{{baseData.mobile}}</a></li>
         </ul>
     </div>
     <ul class="my-nav">
         <li :class="{active:isActive==0}" @click="changeTab(0)">企业介绍</li>
-        <li :class="{active:isActive==1}" @click="changeTab(1)">企业产品</li>
-        <li :class="{active:isActive==2}" @click="changeTab(2)">企业服务</li>
+        <li :class="{active:isActive==1}" @click="changeTab(1)">企业服务</li>
+        <li :class="{active:isActive==2}" @click="changeTab(2)">企业产品</li>
         <li :class="{active:isActive==3}" @click="changeTab(3)">联系我们</li>
     </ul>
     <ul class="my-content">
         <li class="profile" :class="{'contentShow':isActive==0}">
-            <p>杭州之图网络科技有限公司是一家由海归人士创办的高新技术企业，专业从事智慧社区信息化管理技术的开发和转化推广。在社区地理空间信息采集、无人机激光点云三维测绘、全息三维建模、智能传感器的物联网应用及多维度大数据分析技术等方面，都具有较强的研发能力。致力于利用自主研制的地图服务器、移动互联网技术、移动GIS技术进行绿地图智慧社区系统的研发。</p>
+            {{baseData.present}}
         </li>
         <li class="service" :class="{'contentShow':isActive==1}">
             <ul>
-                <li>
+                <li v-for="item in baseData.service">
                     <div class="my-content-img" :style="{backgroundImage:'url('+imgPath+')'}"></div>
                     <ul  class="my-content-info">
-                        <li>你猜猜我是不是一个快乐的产品你猜猜我是不是一个快乐的产品你猜猜我是不是一个快乐的产品</li>
-                        <li>不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说，哈哈哈 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</li>
+                        <li>{{item.name}}</li>
+                        <li>{{item.content}}</li>
                     </ul>
                 </li>
             </ul>
         </li>
         <li class="product" :class="{'contentShow':isActive==2}">
             <ul>
-                <li>
+                <li v-for="item in baseData.product">
                     <div class="my-content-img" :style="{backgroundImage:'url('+imgPath+')'}"></div>
                     <ul  class="my-content-info">
-                        <li>你猜猜我是不是一个快乐的产品你猜猜我是不是一个快乐的产品你猜猜我是不是一个快乐的产品</li>
-                        <li>不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说不用你猜我就是一个快乐的解说，哈哈哈 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</li>
+                        <li>{{item.name}}</li>
+                        <li>{{item.content}}</li>
                     </ul>
                 </li>
             </ul>
         </li>
         <li class="contact" :class="{'contentShow':isActive==3}">
-            <p>杭州之图网络科技有限公司是一家由海归人士创办的高新技术企业，专业从事智慧社区信息化管理技术的开发和转化推广。在社区地理空间信息采集、无人机激光点云三维测绘、全息三维建模、智能传感器的物联网应用及多维度大数据分析技术等方面，都具有较强的研发能力。致力于利用自主研制的地图服务器、移动互联网技术、移动GIS技术进行绿地图智慧社区系统的研发。</p>
+            {{baseData.about_us}}
         </li>
     </ul>
 </div>
@@ -168,19 +173,21 @@ var app = new Vue({
     el:'#app',
     data:{
         isActive:0,
+        baseData:JSON.parse('{$info}'),
         imgPath:'/index/images/feedback/indexbg.jpg',
         baseApi:'{:Url("Enterprise/detail")}'
     },
 //    emulateJSON: true,
     mounted(){
+        console.log(this.baseData)
         this.addBase()
     },
     methods:{
         addBase(){
             this.isActive=parseInt(window.location.href.split('/c/')[1]);
-            this.$http.get(this.baseApi,{params:{id:1}}).then(function (res) {
-                console.log(res.data)
-            })
+//            this.$http.get(this.baseApi,{params:{id:1}}).then(function (res) {
+//                console.log(res.data)
+//            })
         },
         changeTab(value){
             this.isActive=value;
