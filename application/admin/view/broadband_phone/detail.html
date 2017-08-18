@@ -5,18 +5,8 @@
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style type="text/css">
-    .note-editor.note-frame {
-        border-radius: 0;
-        border: 0;
-        margin-bottom: 0;
-    }
-
-    .front_cover_img {
-        height: 40px;
-        width: 40px;
-        margin-top: 4px
-    }
-
+    .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+    .front_cover_img {height: 40px; width: 40px; margin-top: 4px}
     .send_type_label {
         padding-left: 12px;
     }
@@ -36,44 +26,47 @@
                 <!--target-form="form-horizontal" data-edit="content">-->
                 <!--<i class="fa fa-pencil"></i> 保存草稿-->
                 <!--</button>-->
-                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
-                        class="fa fa-times"></i> 关闭</a>
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
             </div>
-            <h2>饮水服务详情</h2>
+            <h2>电话宽带详情</h2>
         </div>
         <div class="mail-box">
             <form class="form-horizontal" method="post">
                 <div class="mail-body">
                     <div class="form-group"><label class="col-sm-2 control-label">ID:</label>
-                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.id}">
-                        </div>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.id}"></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">联系人:</label>
-                        <div class="col-sm-10"><input type="text" readonly class="form-control"
-                                                      placeholder="{$res.name}"></div>
+                    <div class="form-group"><label class="col-sm-2 control-label">公司名称:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.company}"></div>
                     </div>
 
-                    <div class="form-group"><label class="col-sm-2 control-label">送水地址:</label>
-                        <div class="col-sm-10"><input type="text" readonly class="form-control"
-                                                      placeholder="{$res.address}"></div>
+                    <div class="form-group"><label class="col-sm-2 control-label">联系人:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.people}"></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">送水桶数:</label>
-                        <div class="col-sm-10"><input type="text" readonly class="form-control"
-                                                      placeholder="{$res.number}"></div>
+                    <div class="form-group"><label class="col-sm-2 control-label">联系方式:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.mobile}"></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">联系电话:</label>
-                        <div class="col-sm-10"><input type="text" readonly class="form-control"
-                                                      placeholder="{$res.mobile}"></div>
+                    <div class="form-group"><label class="col-sm-2 control-label">备注信息:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.remark}"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">办公地点:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.address}"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">办理业务:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.business}"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">办理时长:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.business_time}"></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">创建时间:</label>
-                        <div class="col-sm-10"><input type="text" readonly class="form-control"
-                                                      placeholder="{$res.create_time}"></div>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$res.create_time}"></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">状态:</label>
                         <div class="col-sm-10"><input type="text" readonly class="form-control"
                                                       placeholder="{eq name='$res.status' value='1'}启用{else/}禁用{/eq}">
                         </div>
                     </div>
+
                 </div>
 
                 <div class="mail-body text-right tooltip-demo">
@@ -98,6 +91,6 @@
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 <script>
-    highlight_subnav("{:Url('WaterService/index')}");
+    highlight_subnav("{:Url('broadband_phone/index')}");
 </script>
 {/block}
