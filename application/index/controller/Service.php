@@ -37,7 +37,7 @@ class Service extends Base{
              $map['type']=1;
              //企业服务
              $CompanyService=$app->where($map)->order('id asc')->select();
-             $is_boss=true;
+             $is_boss="yes";
 
 
          }else{
@@ -69,7 +69,7 @@ class Service extends Base{
                  }
 
              }
-             $is_boss=false;
+             $is_boss="no";
          }
         $this->assign('is_boss',$is_boss);
         $this->assign('propert',json_encode($PropertyServices));
