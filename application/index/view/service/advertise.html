@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>大厅广告位预约</title>
 <style>
     * {
         box-sizing: border-box;
@@ -10,7 +11,6 @@
     }
     body {
         font-family: Verdana, sans-serif;
-        background: #E8F0F3;
     }
     #calendar{
         width:80%;
@@ -19,39 +19,35 @@
     }
     .month {
         width: 100%;
-        background: #00B8EC;
+        height:5.5rem;
+        background: #f8f7fc;
     }
     .month ul {
         margin: 0;
         padding: 0;
         display: flex;
+        height:100%;
         justify-content: space-between;
+        align-items: center;
+    }
+    .month ul>li{
+        line-height: 5.5rem;
+        vertical-align: middle;
     }
     .year-month {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
+        color: #333;
+        font-size: 1.8rem;
     }
-    .year-month:hover {
-        background: rgba(150, 2, 12, 0.1);
-    }
-    .choose-year {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-    .choose-month {
-        text-align: center;
-        font-size: 1.5rem;
-    }
-    .arrow {
-        padding: 30px;
+
+    .month .arrow {
+        padding:0 3rem;
+        color: #666;
     }
     /*.arrow:hover {*/
         /*background: rgba(100, 2, 12, 0.1);*/
     /*}*/
     .month ul li {
-        color: white;
+        color: #333;
         font-size: 20px;
         text-transform: uppercase;
         letter-spacing: 3px;
@@ -59,10 +55,11 @@
     .weekdays {
         margin: 0;
         padding: 10px 0;
-        background-color: #00B8EC;
+        background-color: #f8f7fc;
         display: flex;
         flex-wrap: wrap;
-        color: #FFFFFF;
+        color: #333;
+        font-size: 1.5rem;
         justify-content: space-around;
     }
     .weekdays li {
@@ -71,21 +68,21 @@
         text-align: center;
     }
     .days {
-        padding: 0;
-        background: #FFFFFF;
+        padding-bottom: 10px;
+        background: #f8f7fc;
         margin: 0;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
     }
     .days li {
         list-style-type: none;
-        display: inline-block;
-        width: 14.2%;
-        height: 50px;
-        line-height: 50px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 14.2857143vw;
+        height: 13.2857143vw;
         text-align: center;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         color: #000;
     }
     .days li .active {
@@ -97,25 +94,121 @@
     .days li.other-month {
         color: gainsboro;
     }
-    .my-total{
-        line-height: 3rem;
-        background: #fff;
-    }
-    .my-total>span{
-        display: inline-block;
-        height:3rem;
-        padding:0 1rem;
-        background: #00B8EC;
-        margin-right: 1rem;
-        color: #fff;
+    .days li>span{
+        display: block;
+        height:3.4rem;
+        width:3.4rem;
+        line-height: 3.4rem;
+        border-radius: 100%;
     }
 
-    .isBespeak{
-        color: #f1a417!important;
+    .isBespeak span{
+        color: #999;
+        background-color: #e8e8e8;
     }
-    .isChecked{
-        color: #8a6de9!important;
+    .isChecked span{
+        color: #fff;
+        background-color: #ffc44b;
     }
+
+
+    .my-tags{
+        height:4.4rem;
+        padding:0 1.8rem;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fff;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .my-tag{
+        width:6.7rem;
+        height:2rem;
+        line-height: 2rem;
+        font-size: 1.5rem;
+        color: #333;
+        padding-left: 3.7rem;
+        background: url("") no-repeat left center;
+        background-size: contain;
+    }
+    .my-tag-sell{
+        background-image: url('/index/images/service/publicservice/sell.png');
+    }
+    .my-tag-checked{
+        background-image: url('/index/images/service/publicservice/checked.png');
+    }
+    .my-history{
+        height:2.9rem;
+        width:10rem;
+        border-radius: 15rem;
+        color: #918fe6;
+        font-size: 1.5rem;
+        border:1px solid #918fe6;
+        text-align: center;
+        line-height: 2.9rem;
+    }
+    .my-illustrate{
+        padding:1rem 1.7rem;
+    }
+    .my-illustrate>h4{
+        font-size: 1.5rem;
+        line-height: 1.8rem;
+        color: #333;
+        font-weight: normal;
+        margin:0;
+    }
+    .my-illustrate>h4>span{
+        display: inline-block;
+        text-align: center;
+        width:1.8rem;
+        height:1.8rem;
+        line-height: 1.8rem;
+        border-radius: 100%;
+        border:1px solid #9F9F9F;
+        color: #9F9F9F;
+        margin-left: 1rem;
+    }
+    .my-illustrate-info{
+        margin-top: 5px;
+        padding-bottom: 5rem;
+    }
+    .my-illustrate-info>p{
+        line-height: 2rem;
+        font-size: 1.4rem;
+        color: #999;
+    }
+    .my-total{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width:100%;
+        border-top: 1px solid #f1f1f1;
+        height:50px;
+        line-height: 50px;
+        background: #fff;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: 1.7rem;
+    }
+    .my-total>span{
+        min-width:10rem;
+        margin-right: 30px;
+        color: #fcc44b;
+    }
+    .my-total>button{
+        width:100px;
+        height:51px;
+        margin-top: -1px;
+        background-color: #fcc44b;
+        color: #fff;
+        border:none;
+        outline: none;
+        font-size: 1.7rem;
+    }
+
 </style>
 {/block}
 
@@ -127,40 +220,47 @@
             <!--点击会触发pickpre函数，重新刷新当前日期 @click(vue v-on:click缩写) -->
             <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
             <li class="year-month">
-                <span class="choose-year">{{ currentYear }}</span>
-                <span class="choose-month">{{ currentMonth }}月</span>
+                <span class="choose-year">{{ currentYear }}-{{ currentMonth }}</span>
             </li>
             <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
         </ul>
     </div>
     <!-- 星期 -->
     <ul class="weekdays">
-        <li>一</li>
-        <li>二</li>
-        <li>三</li>
-        <li>四</li>
-        <li>五</li>
-        <li style="color:#666">六</li>
-        <li style="color:#666">日</li>
+        <li>SUN</li>
+        <li>MON</li>
+        <li>TUE</li>
+        <li>WED</li>
+        <li>THE</li>
+        <li>FRI</li>
+        <li>SAT</li>
     </ul>
     <!-- 日期 -->
     <ul class="days">
-        <!-- 核心 v-for循环 每一次循环用<li>标签创建一天 -->
-        <li  v-for="(dayobject,key) in days" @click="toCheck(key)" :class="{'other-month':(dayobject.day.getMonth()+1 != currentMonth || dayobject.day<new Date()),isBespeak:dayobject.isBespeak,isChecked:dayobject.isChecked}">
-            <!--本月-->
-            <!--如果不是本月  改变类名加灰色-->
-
-            <span>{{ dayobject.day.getDate() }}</span>
-            <!--如果是本月  还需要判断是不是这一天-->
-            <!--<span v-else :class="{isBespeak:dayobject.isBespeak,isChecked:dayobject.isChecked}">-->
-                <!--今天  同年同月同日-->
-                <!--<span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>-->
-                <!--<span v-else>{{ dayobject.day.getDate() }}</span>-->
-                <!--{{ dayobject.day.getDate() }}-->
-            <!--</span>-->
+        <li  v-for="(dayobject,key) in days" @click="toCheck(key)" :class="{'other-month':(new Date(dayobject.day).getMonth()+1 != currentMonth || dayobject.day<Date.parse(new Date())),isBespeak:dayobject.isBespeak,isChecked:dayobject.isChecked}">
+            <span>{{dayobject.day == '' ? '': new Date(dayobject.day).getDate() }}</span>
         </li>
     </ul>
-    <div class="my-total"><span>合计</span>{{this.checkedList.length*400}}</div>
+    <div class="my-tags">
+        <div class="my-tag my-tag-checked">已选</div>
+        <div class="my-tag my-tag-sell">已售</div>
+        <div class="my-history">预约记录</div>
+    </div>
+    <div class="my-illustrate">
+        <h4>规则说明</h4>
+        <div class="my-illustrate-info">
+            <p>1.预约时长1天起，不足1天按1天计算，超过1天按2天计算，以此类推，预约价格400元/天。</p>
+            <p> 2.请至少提前一个工作日进行预约，特殊情况请提前沟通。 </p>
+            <p>3.预约地点可用时间为08:30--17:30，请提前安排计划，如有临时变化，请提前2小时取消，以免带来不便。 </p>
+            <p>4.预约成功后，请在2小时内前往海创大厦A座201进行缴费和相关手续办理。 </p>
+            <p>5.指定预约日期当天不可取消预约。</p>
+            <p>6.咨询电话：0571-88610333。</p>
+        </div>
+    </div>
+    <div class="my-total">
+        <span>合计：{{this.checkedList.length*400}}元</span>
+        <button>确认预约</button>
+    </div>
 </div>
 {/block}
 
@@ -175,7 +275,8 @@
             currentWeek: 1,
             days: [],
             checkedList:[],
-            bespeakList:['Mon Jul 31 2017 08:00:00 GMT+0800 (中国标准时间)','Wed Sep 20 2017 08:00:00 GMT+0800 (中国标准时间)','Fri Aug 25 2017 08:00:00 GMT+0800 (中国标准时间)']
+            bespeakList:[1504310400000,1504656000000],
+            nextApi:"{:url('Service/')}"
         },
         created: function() {  //在vue初始化时调用
             this.initData(null);
@@ -183,54 +284,56 @@
         },
         methods: {
             initData: function(cur) {
-                var leftcount=0; //存放剩余数量
                 var date;
-
                 if (cur) {
                     date = new Date(cur);
                 } else {
                     var now=new Date();
                     var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1));
-                    d.setDate(40);
+                    d.setDate(41);
                     date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
                 }
                 this.currentDay = date.getDate();
                 this.currentYear = date.getFullYear();
                 this.currentMonth = date.getMonth() + 1;
-
                 this.currentWeek = date.getDay(); // 1...6,0
-                if (this.currentWeek == 0) {
-                    this.currentWeek = 7;
-                }
+
                 var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay);
                 this.days.length = 0;
                 // 今天是周日，放在第一行第7个位置，前面6个
                 //初始化本周
-                for (var i = this.currentWeek - 1; i >= 0; i--) {
+                for (var i = this.currentWeek; i >= 0; i--) {
                     var d = new Date(str);
-                    d.setDate(d.getDate() - i);
-                    var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
-                    dayobject.day=d;
-                    dayobject.isChecked=this.isChecked(d);
-                    dayobject.isBespeak=this.isBespeak(d);
+                    d=d.setDate(d.getDate() - i);
+//                    console.log(new Date(d))
+                    if(new Date(d).getMonth()!=this.currentMonth-1){
+                        var dayobject={day:''}
+                    }else{
+                        var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
+                        dayobject.day=d;
+                        dayobject.isChecked=this.isChecked(d);
+                        dayobject.isBespeak=this.isBespeak(d);
+                    }
                     this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
                 }
                 //其他周
-                for (var i = 1; i <= 35 - this.currentWeek; i++) {
+                for (var i = 1; i <= 41 - this.currentWeek; i++) {
                     var d = new Date(str);
-                    d.setDate(d.getDate() + i);
+                    console.log(str,d)
+                   d= d.setDate(d.getDate() + i);
                     var dayobject={};
                     dayobject.day=d;
                     dayobject.isChecked=this.isChecked(d);
                     dayobject.isBespeak=this.isBespeak(d);
-                    this.days.push(dayobject);
+                    if(new Date(d).getMonth()==this.currentMonth-1){
+                        this.days.push(dayobject);
+                    }
                 }
 
             },
             isChecked:function (date) {
               for(var i=0;i<this.checkedList.length;i++){
                   if(date==this.checkedList[i]) {
-                      console.log('xiangt')
                       return true
                   }
               }
@@ -246,7 +349,7 @@
             },
             toCheck:function (key) {
                 var the=this.days[key];
-                if(!the.isBespeak && Date.parse(new Date(the.day)) > new Date()){
+                if(the.day != '' && !the.isBespeak && Date.parse(new Date(the.day)) > new Date()){
                     the.isChecked=!this.days[key].isChecked;
                     if(!the.isChecked){
                         this.removeChecked(this.checkedList,the.day);
@@ -275,9 +378,12 @@
             pickNext: function(year, month) {
                 var d = new Date(this.formatDate(year , month , 1));
                 d.setDate(35);
+                this.$http.post(this.nextApi,{month:d.getMonth+1}).then(function (res) {
+                    console.log(res)
+                })
                 this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
             },
-            
+
             // 返回 2017-01-01 格式的字符串
             formatDate: function(year,month,day){
                 var y = year;
@@ -286,10 +392,10 @@
                 var d = day;
                 if(d<10) d = "0" + d;
                 return y+"-"+m+"-"+d
-            },
+            }
 
 
-        },
+        }
     });
 
 </script>

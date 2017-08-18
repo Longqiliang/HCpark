@@ -359,6 +359,17 @@ public  function  _checkData($data){
 
 
     }
+    //广告位预约
+        public function advertise(){
+            return $this->fetch();
+        }
+    //    公共区服务
+        public function publicservice(){
+            return $this->fetch();
+        }
+        public function hall(){
+            return $this->fetch();
+        }
 
 
 

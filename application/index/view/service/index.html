@@ -94,7 +94,7 @@
 <div id="app">
     <div class="my-park">
         <span>当前：{{parks[nowPark].name}}</span>
-        <select name="" id="" v-model="nowPark" @change="parkChange" v-if="">
+        <select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">
             <option :value="item.value" v-for="(item,key) in parks" >
                 {{item.name}}
             </option>
@@ -106,42 +106,42 @@
                 物业服务
             </div>
             <ul class="my-lists">
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p1.png" alt="图标">
-                    <span>费用缴纳</span>
+                <li class="my-list" @click="jumpTo(item.path)" v-for="item in baseData.propertyServices">
+                    <img :src="item.img" alt="图标">
+                    <span>{{item.name}}</span>
                 </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p2.png" alt="图标">
-                    <span>物业报修</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p3.png" alt="图标">
-                    <span>饮水服务</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p4.png" alt="图标">
-                    <span>室内保洁</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p5.png" alt="图标">
-                    <span>办公用品</span>
-                </li>
-                <li class="my-list" @click="jumpTo('/index/service/parking')">
-                    <img src="/index/images/service/index/p6.png" alt="图标">
-                    <span>车卡服务</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p7.png" alt="图标">
-                    <span>充电桩办理</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p8.png" alt="图标">
-                    <span>公共区服务</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p9.png" alt="图标">
-                    <span>电话宽带</span>
-                </li>
+                <!--<li class="my-list" @click="jumpTo('')">-->
+                    <!--<img src="/index/images/service/index/p2.png" alt="图标">-->
+                    <!--<span>物业报修</span>-->
+                <!--</li>-->
+                <!--<li class="my-list" @click="jumpTo('')">-->
+                    <!--<img src="/index/images/service/index/p3.png" alt="图标">-->
+                    <!--<span>饮水服务</span>-->
+                <!--</li>-->
+                <!--<li class="my-list" @click="jumpTo('')">-->
+                    <!--<img src="/index/images/service/index/p4.png" alt="图标">-->
+                    <!--<span>室内保洁</span>-->
+                <!--</li>-->
+                <!--<li class="my-list" @click="jumpTo('')">-->
+                    <!--<img src="/index/images/service/index/p5.png" alt="图标">-->
+                    <!--<span>办公用品</span>-->
+                <!--</li>-->
+                <!--<li class="my-list" @click="jumpTo('/index/service/parking')">-->
+                    <!--<img src="/index/images/service/index/p6.png" alt="图标">-->
+                    <!--<span>车卡服务</span>-->
+                <!--</li>-->
+                <!--<li class="my-list" @click="jumpTo('')">-->
+                    <!--<img src="/index/images/service/index/p7.png" alt="图标">-->
+                    <!--<span>充电桩办理</span>-->
+                <!--</li>-->
+                <!--<li class="my-list" @click="jumpTo('/index/service/publicservice')">-->
+                    <!--<img src="/index/images/service/index/p8.png" alt="图标">-->
+                    <!--<span>公共区服务</span>-->
+                <!--</li>-->
+                <!--<li class="my-list" @click="jumpTo('')">-->
+                    <!--<img src="/index/images/service/index/p9.png" alt="图标">-->
+                    <!--<span>电话宽带</span>-->
+                <!--</li>-->
             </ul>
         </div>
         <div class="my-item">
@@ -149,42 +149,11 @@
                 企业服务
             </div>
             <ul class="my-lists">
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p10.png" alt="图标">
-                    <span>财税服务</span>
+                <li class="my-list" @click="jumpTo(item.path)" v-for="item in baseData.companyServices">
+                    <img :src="item.img" alt="图标">
+                    <span>{{item.name}}</span>
                 </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p11.png" alt="图标">
-                    <span>工商注册</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p12.png" alt="图标">
-                    <span>知识产权</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p13.png" alt="图标">
-                    <span>项目申报</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p14.png" alt="图标">
-                    <span>金融服务</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p15.png" alt="图标">
-                    <span>法律服务</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p16.png" alt="图标">
-                    <span>人事社保</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p17.png" alt="图标">
-                    <span>广告设计</span>
-                </li>
-                <li class="my-list" @click="jumpTo('')">
-                    <img src="/index/images/service/index/p18.png" alt="图标">
-                    <span>企业办公</span>
-                </li>
+
             </ul>
         </div>
     </div>
@@ -200,9 +169,9 @@
         el:'#app',
         data:{
             baseData:{
-                isBoss:JSON.parse('{$is_boss}'),
-                propertyServices:JSON.parse('{$propert}'),
-                companyService:JSON.parse('{$company}')
+                isBoss:'{$is_boss}',
+                propertyServices:{$propert},
+                companyService:'{$company}'
             },
             nowPark:0,
             parks:[

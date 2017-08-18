@@ -1,0 +1,28 @@
+
+{extend name="public/common"}
+
+{block name="style"}
+<title>{$info.name}</title>
+<link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
+<link rel="stylesheet" href="/index/css/common/rem.css">
+{/block}
+
+{block name="body"}
+<div id="comment">
+    <div class="header">
+        <h2>{$info.name}</h2>
+    </div>
+    <section>
+        {$info.content}
+    </section>
+
+
+</div>
+<div>
+
+</div>
+{/block}
+
+{block name="script"}
+
+{/block}

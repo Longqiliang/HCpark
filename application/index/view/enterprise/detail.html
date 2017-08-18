@@ -138,9 +138,9 @@
         <li class="profile" :class="{'contentShow':isActive==0}">
             {{baseData.present}}
         </li>
-        <li class="service" :class="{'contentShow':isActive==1}">
+        <li class="service" :class="{'contentShow':isActive==1}" >
             <ul>
-                <li v-for="item in baseData.service">
+                <li v-for="item in baseData.service" @click="jumpTo(item.id)">
                     <div class="my-content-img" :style="{backgroundImage:'url('+imgPath+')'}"></div>
                     <ul  class="my-content-info">
                         <li>{{item.name}}</li>
@@ -151,7 +151,7 @@
         </li>
         <li class="product" :class="{'contentShow':isActive==2}">
             <ul>
-                <li v-for="item in baseData.product">
+                <li v-for="item in baseData.product" @click="jumpTo(item.id)">
                     <div class="my-content-img" :style="{backgroundImage:'url('+imgPath+')'}"></div>
                     <ul  class="my-content-info">
                         <li>{{item.name}}</li>
@@ -185,13 +185,13 @@ var app = new Vue({
     methods:{
         addBase(){
             this.isActive=parseInt(window.location.href.split('/c/')[1]);
-//            this.$http.get(this.baseApi,{params:{id:1}}).then(function (res) {
-//                console.log(res.data)
-//            })
         },
         changeTab(value){
             this.isActive=value;
-
+        },
+        jumpTo(id){
+            console.log(1)
+            window.location.href='/index/enterprise/product/id/'+id
         }
     }
 })

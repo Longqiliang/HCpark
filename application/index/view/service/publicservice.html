@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>公共区服务</title>
 <style>
     body{
         padding-bottom: 2rem;
@@ -109,7 +110,7 @@
                 <li>海创大厦A座--二楼多功能厅</li>
                 <li>服务时间：08:30--17:30（工作日）</li>
             </ul>
-            <div class="my-item-btn">马上预约</div>
+            <div class="my-item-btn" @click="jumpTo('hall')">马上预约</div>
         </div>
     </div>
     <div class="my-item my-color3">
