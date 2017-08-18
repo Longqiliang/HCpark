@@ -17,6 +17,8 @@ use  app\index\model\PropertyServer;
 use app\index\model\WaterService as WaterModel;
 use app\index\model\BroadbandPhone as BroadbandModel;
 
+use  app\index\model\AdvertisingRecord;
+use  app\index\model\AdvertisingService;
 //企业服务
 class Service extends Base{
 
@@ -92,6 +94,7 @@ class Service extends Base{
         $UserModel = new  WechatUser();
         $Park = new Park();
         $CardparkService= new CarparkService();
+        $AdService = new AdvertisingService();
         $info=[];
         switch ($app_id){
             //车卡
@@ -117,8 +120,11 @@ class Service extends Base{
 
             //充电柱
             case 7:  break;
-
-
+           //公共场所
+            case 8:
+                $re = $AdService->where('park_id',$park_id)->select();
+                $info['adlist']=json_encode($re);
+                break;
             default:
                 $user=$UserModel->where('userid',$user_id)->find();
                 $info['name']=$user['name'];
@@ -361,14 +367,104 @@ public  function  _checkData($data){
 
 
     }
-    //广告位预约
+
+        //大厅广告位预约
         public function advertise(){
+            $adService=new AdvertisingService();
+            $adRecord = new AdvertisingRecord();
+            //今天结束时间
+            $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+            //本月结束时间
+            $endThismonth=mktime(23,59,59,date('m'),date('t'),date('Y'));
+            $map['order_time']=array('between',array($endToday,$endThismonth));
+            $map['service_id']=1;
+            $map['status']=array('eq',1);
+            $list =$adRecord->where($map)->select();
+            $service =$adService->where('id',1)->find();
+            $this->assign('price',$service['price']);
+            $this->assign('record',json_encode($list));
             return $this->fetch();
         }
-    //    公共区服务
+
+
+
+      //大厅广告位（下一步）
+      public  function  nextAdvertise(){
+            $park_id=session('$park_id');
+            $Park=new Park();
+            $data=input('');
+            $info = $Park->where("id",$park_id)->find();
+            $data['ailpay_user']=$info['ailpay_user'];
+            $data['payment_alipay']=$info['payment_alipay'];
+            $this->assign('data',$data);
+            return $this->fetch();
+      }
+
+    //大厅广告位（提交）
+    public  function  submitAdvertise(){
+        $ad =new AdvertisingRecord();
+       $user_id =session('userId');
+        $data=input('');
+        $num = count($data['order_times']);
+        $record=array();
+        $creat_time=time();
+        foreach ($data['order_times'] as $value){
+            $info=[
+              'create_user'=>$user_id,
+                'service_id'=>1,
+                'payment_voucher'=>$data['payment_voucher'],
+                'order_time'=>$value,
+                 'create_time'=>$creat_time,
+                  'statute'=>1
+            ];
+            array_push($record,$info);
+        }
+         $re = $ad ->save($record);
+        if($re){
+            return $this->success('成功');
+        }
+         else{
+             return $this->error('成功');
+         }
+    }
+
+
+
+
+        //大厅广告位月份切换
+       public  function   changeMonth(){
+           $adRecord = new AdvertisingRecord();
+        //数字（几月）
+        $month=input('month');
+
+
+           $beginThismonth=mktime(0,0,0,$month,1,date('Y'));
+
+           $endThismonth=mktime(23,59,59,$month,date('t'),date('Y'));
+           $map['order_time']=array('between',array($beginThismonth,$endThismonth));
+           $map['service_id']=1;
+           $map['status']=array('eq',1);
+           $list =$adRecord->where($map)->select();
+
+           return json_encode($list);
+       }
+
+
+
+
+
+
+
+
+        //公共区服务
         public function publicservice(){
+
+
+
             return $this->fetch();
         }
+
+
         public function hall(){
             return $this->fetch();
         }
