@@ -7,19 +7,18 @@
  */
 namespace app\admin\controller;
 
-use app\common\model\WaterService as WaterModel;
+use app\common\model\BroadbandPhone as BroadbandModel;
 
-class WaterService extends Admin
+class BroadbandPhone extends Admin
 {
     public function index()
     {
-        $search = input('search');
         $map['status']  = ['neq',-1];
+        $search = input('search');
         if ($search != '') {
-            $map['name'] = ['like','%'.$search.'%'];
+            $map['company'] = ['like','%'.$search.'%'];
         }
-        $list = WaterModel::where($map)->order('id desc')->paginate();
-
+        $list = BroadbandModel::where($map)->order('id desc')->paginate();
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -27,7 +26,7 @@ class WaterService extends Admin
 //详情页
     public function detail(){
         $id=input('id');
-        $result=WaterModel::where('id','eq',$id)->find();
+        $result=BroadbandModel::where('id','eq',$id)->find();
         $this->assign('res',$result);
         return $this->fetch();
     }
@@ -35,9 +34,9 @@ class WaterService extends Admin
 //逻辑删除
     public function moveToTrash() {
         $ids = input('ids/a');
-        $result = WaterModel::where('id', 'in', $ids)->update(['status' => -1]);
+        $result = BroadbandModel::where('id', 'in', $ids)->update(['status' => -1]);
         if($result) {
-            return $this->success('删除成功', url('WaterService/index'));
+            return $this->success('删除成功', url('BroadbandPhone/index'));
         } elseif(!$result) {
             return $this->error('删除失败');
         }
@@ -46,16 +45,15 @@ class WaterService extends Admin
     //启用
     public function disable() {
         $id = input('id');
-        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1]);
+        $result = BroadbandModel::where('id', 'in', $id)->update(['status' => 1]);
         return $this->redirect('index');
     }
     //禁用
     public function ban() {
         $id = input('id');
-        $result = WaterModel::where('id', 'in', $id)->update(['status' => 0]);
+        $result = BroadbandModel::where('id', 'in', $id)->update(['status' => 0]);
         return $this->redirect('index');
     }
-
 
 
 }
