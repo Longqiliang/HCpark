@@ -42,18 +42,11 @@ class BroadbandPhone extends Admin
         }
     }
 
-    //启用
-    public function disable() {
+ //启用
+    public function complete() {
         $id = input('id');
         $result = BroadbandModel::where('id', 'in', $id)->update(['status' => 1]);
         return $this->redirect('index');
     }
-    //禁用
-    public function ban() {
-        $id = input('id');
-        $result = BroadbandModel::where('id', 'in', $id)->update(['status' => 0]);
-        return $this->redirect('index');
-    }
-
 
 }

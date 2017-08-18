@@ -99,17 +99,17 @@
                 <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.create_time}</a></td>
 
                     {eq name="$vo.status" value="1"}
-                    <td><span class="label label-info">启用</span></td>
+                    <td><span class="label label-info">已完成</span></td>
                     {/eq}
                     {eq name="$vo.status" value="0"}
-                    <td><span class="label label-danger">禁用</span></td>
+                    <td><span class="label label-danger">进行中</span></td>
                     {/eq}
 
                     {eq name="$vo.status" value="0"}
-                    <td><a href="{:Url('disable','id='.$vo.id)}">启用</a></td>
+                    <td><a href="{:Url('complete','id='.$vo.id)}">完成</a></td>
                     {/eq}
                     {eq name="$vo.status" value="1"}
-                    <td><a href="{:Url('ban','id='.$vo.id)}">禁用</a></td>
+                    <td><a href="{:Url('complete','id='.$vo.id)}"></a></td>
                     {/eq}
                 </tr>
                 {/volist}
