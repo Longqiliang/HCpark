@@ -195,7 +195,7 @@ public  function  _checkData($data){
 }
 
 
-    public  function  NewCard(){
+    public  function  newCard(){
         $park_id =session('park_id');
         $Park = new Park();
         $park= $Park->where('id',$park_id)->find();
@@ -218,12 +218,23 @@ public  function  _checkData($data){
     }
 
 
+    public  function  nextNewCard(){
+
+        $data=input('');
+        $this->assign('data',$data);
+        return $this->fetch();
+
+    }
+
+
+
+
 
     public  function  addNewCard(){
 
         $CarparkRecord = new CarparkRecord();
         $CardparkService= new CarparkService();
-        if(IS_POST) {
+
             $id = session('userId');
             $data = input('');
             $service = [
@@ -253,23 +264,14 @@ public  function  _checkData($data){
                 $this->error("失败");
             }
 
-        }else{
-            $data=input('');
-            $this->assign('data',$data);
-            return $this->fetch();
-        }
+
 
     }
 
 
 
 
-
-
-
-
-
-    public  function  OldCard(){
+    public  function  oldCard(){
         $user_id =session('userId');
         $park_id =session('park_id');
         $Park = new Park();
@@ -298,13 +300,19 @@ public  function  _checkData($data){
         return $this->fetch();
     }
 
+    public  function  nextOldCard(){
+
+        $data=input('');
+        $this->assign('data',$data);
+        return $this->fetch();
+
+    }
 
 
     public  function  keepOldCard(){
 
         $CarparkRecord = new CarparkRecord();
         $CardparkService= new CarparkService();
-        if(IS_POST) {
             $id = session('userId');
             $data = input('');
             $service = [
@@ -334,10 +342,7 @@ public  function  _checkData($data){
                 $this->error("失败");
             }
 
-        }else{
 
-            return $this->fetch();
-        }
 
 
 
