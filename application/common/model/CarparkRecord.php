@@ -11,8 +11,13 @@ namespace app\common\model;
 
 use think\Model;
 
-class CardparkRecord extends  Model
+class CarparkRecord extends  Model
 {
+    public  function  findService(){
 
+       return $this->hasOne('CarparkService','id','carpark_id');
+
+
+    }
 
 }

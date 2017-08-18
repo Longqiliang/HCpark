@@ -14,7 +14,13 @@ use think\Model;
 class CarparkService extends  Model
 {
 
+public  function  findRecord(){
 
+
+    return $this->hasMany('CarparkRecord','carpark_id','id');
+
+
+}
 
 
 }

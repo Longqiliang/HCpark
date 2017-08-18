@@ -11,7 +11,7 @@ namespace app\common\model;
 
 use think\Model;
 
-class CardparkService  extends Model
+class CarparkService  extends Model
 {
 
 }

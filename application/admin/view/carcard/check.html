@@ -1,0 +1,229 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/static/datepicker/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="/static/iCheck/custom.css">
+<link rel="stylesheet" href="/admin/css/chosen/chosen.css">
+<style>
+    .main{
+        padding:12px;
+
+    }
+    .main>p{
+        line-height: 2rem;
+    }
+
+    label{
+        color: #333;
+        display: inline;
+        font-weight:normal;
+    }
+    input[type='radio']{
+        width:13px;
+        height:13px;
+        outline: none;
+        background: url("/home/images/application/radio2.png") center no-repeat;
+        background-size: contain;
+    }
+    input[type='radio']:checked{
+        background: url("/home/images/application/radio1.png") center no-repeat;
+        background-size: contain;
+    }
+    input[type='text']{
+        border-bottom:1px solid #000000;
+    }
+
+    .main>p{
+        text-indent: 2rem;
+    }
+
+
+</style>
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2><a href="{:Url('Carcard/index')}">停车卡申请列表</a></h2>
+        <ol class="breadcrumb">
+            <li>
+                停车卡审核
+            </li>
+            <li class="active">
+                <strong>详情</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5></h5>
+                    <div class="ibox-tools">
+                        <a href="javascript:window.history.go(-1);" class="btn btn-white btn-sm"><i class="fa fa-reply"></i> 返回</a>
+                    </div>
+                </div>
+                <div class="ibox-content all">
+                    <form id="form" class="form-horizontal" method="post">
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>停车卡号:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input type="text" readonly=ture class="form-control form_title" name="business_name" value="{$info.registration_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>车主姓名:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input type="text" readonly=ture class="form-control form_title" name="business_name" value="{$info.registration_name}">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>车主电话:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input readonly=ture type="text" placeholder="请输入主体名称" class="form-control form_title" name="subject_name" value="{$info.brand_name}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>车牌号码:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input  readonly=ture type="text" placeholder="请输入办理地点" class="form-control form_title" name="address" value="{$info.openning_hours}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>车主身份证:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input  readonly=ture type="text" placeholder="请输入办理电话" class="form-control form_title" name="telephone" value="{$info.address}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>起止时间:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input  readonly=ture type="text" placeholder="请输入办理电话" class="form-control form_title" name="telephone" value="{$info.address}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>创建用户:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input  readonly=ture type="text" placeholder="请输入办理电话" class="form-control form_title" name="telephone" value="{$info.address}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>创卡日期:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input  readonly=ture type="text" placeholder="请输入办理电话" class="form-control form_title" name="telephone" value="{$info.address}">
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>类型:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input readonly=ture type="text" placeholder="请输入费用标准" class="form-control form_title" name="cost" value="{$info.investment_total} 万元">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>办理期限:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input  readonly=ture type="text" placeholder="请输入办理期限" class="form-control form_title" name="term" value="{$info.investment_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>总金额:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input  readonly=ture type="text" placeholder="请输入办理期限" class="form-control form_title" name="term" value="{$info.legal_representative}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>状态:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input  readonly=ture type="text" placeholder="请输入办理期限" class="form-control form_title" name="term" value="{$info.legal_representative_mobile}">
+                            </div>
+                        </div>
+
+
+                        {if condition="$record.status eq  0"}
+                        <div class="form-group">
+                            <div class="col-lg-11 col-lg-offset-1">
+                                <button class="btn btn-primary submit-btn post-put" type="button" target-form="form-horizontal" >通过</button>
+
+                                <a data-toggle="modal" class="btn btn-sm btn-primary" href="#modal-form" onclick="addMenu()">不通过</a>
+                            </div>
+                        </div>
+                        {else/}审核已完成
+                        {/if}
+
+                        <input type="hidden" name="id" value="{$record.id}">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/uploadify/jquery.uploadify.min.js"></script>
+<script src="/static/iCheck/icheck.min.js"></script>
+<script src="/static/ueditor/ueditor.config.js"></script>
+<script src="/static/ueditor/ueditor.all.min.js"></script>
+<script src="/admin/js/chosen.jquery.js"></script>
+<script>
+    $(function () {
+        $("title").text('个人申请书');
+        $("input[name=construction_time]").val(constructionTimeY);
+        $("input[name=rent_start_y]").val(rentStartY);
+        $("input[name=rent_start_m]").val(rentStartM);
+        $("input[name=rent_end_y]").val(rentEndy);
+        $("input[name=rent_end_m]").val(rentEndm);
+
+        var type={$info.type};
+        $(`input[value=${type}][name=type]`).attr('checked','checked');
+        if($("input[name=number]").val()==0){
+            $("input[name=number]").val('');
+        }
+    })
+
+</script>
+{/block}
