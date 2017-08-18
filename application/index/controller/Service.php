@@ -388,16 +388,19 @@ public  function  _checkData($data){
 
         }
         $userid =session("userId");
+        $parkid=session('park_id');
+        $parkInfo=Park::where('id',$parkid)->find();
         $userinfo=WechatUser::where(['userid'=>$userid])->find();
         $data =[
             'name'=>$userinfo['name'],
-            'mobile'=>$userinfo['mobile']
+            'mobile'=>$userinfo['mobile'],
+            'propretyMobile'=>$parkInfo['property_phone']
         ];
 
         //dump($data);
         $this->assign('data',$data);
 
-        //return  $this->fetch();
+        return  $this->fetch();
     }
     /*保洁服务*/
     public function clear(){
@@ -414,10 +417,13 @@ public  function  _checkData($data){
 
         }
         $userid =session("userId");
+        $parkid=session('park_id');
+        $parkInfo=Park::where('id',$parkid)->find();
         $userinfo=WechatUser::where(['userid'=>$userid])->find();
         $data =[
             'name'=>$userinfo['name'],
-            'mobile'=>$userinfo['mobile']
+            'mobile'=>$userinfo['mobile'],
+            'propretyMobile'=>$parkInfo['property_phone']
         ];
 
         //dump($data);
