@@ -46,13 +46,12 @@
 
 {block name="body"}
     <div id="qrcode"></div>
-    <img src="/home/images/ourist/logo.jpg" alt="">
+    <img src="/index/images/index/logo.jpg" alt="">
 {/block}
 {block name="script"}
-<script src="/work/js/jquery-1.12.1.min.js"></script>
-<script src="/work/js/jquery.qrcode.min.js"></script>
+<script src="/static/js/jquery.qrcode.min.js"></script>
 <script>
-    jQuery('#qrcode').qrcode({width: document.body.clientWidth-20,height: document.body.clientWidth-20,text: "http://mgspb.0574ztnet.com/"+"/home/index/register"});
+    jQuery('#qrcode').qrcode({width: document.body.clientWidth-20,height: document.body.clientWidth-20,text: "http://xk.0519ztnet.com/"+"/index/index/register"});
     $('body').height(window.screen.availHeight);
     $('#qrcode').width(document.body.clientWidth-20);
     $('img').width(document.body.clientWidth*0.2);
