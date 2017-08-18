@@ -1,0 +1,174 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>物业报修</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+<style>
+    body{
+        background-color: #f0eff5;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="card">
+        <!--<div class="card-tit">缴费信息</div>-->
+        <div class="card-cell">
+            <span>服务类型</span>
+            <span @click="checkRepair" >
+                <span :class="[!defaultData.type ? 'select-color' : '', '']">{{RepairStatus}}</span> <i class="allow-right"></i>
+            </span>
+
+            <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelRepair">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectRepair">确定</span>
+                </div>
+                <mt-picker :slots="slots" @change="onRepairChange" ></mt-picker>
+            </mt-popup>
+        </div>
+        <div class="card-cell">
+            <label for="name">服务地点</label>
+            <input type="text" placeholder="请输入服务地点" id="name" v-model="defaultData.address">
+        </div>
+        <div class="card-cell">
+            <span>联系人员</span>
+            <span>{{subData.name}}</span>
+        </div>
+        <div class="card-cell">
+            <span>联系电话</span>
+            <span>{{subData.mobile}}</span>
+        </div>
+    </div>
+    <p class="prompt-message">资讯电话：{{subData.propretyMobile}}</p>
+    <div class="card">
+        <div class="card-area">
+            <span class="group-area-tit">备注信息</span>
+            <textarea    v-model="defaultData.extra" class="group-area" maxlength="200"></textarea>
+        </div>
+        <div class="card-upload">
+            <div class="upload-box">
+                <img src="/index/images/service/card/card-camera.png" >
+                <span class="upload-info">上传凭证</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-btn-box payment-btn">
+        <button class="btn btn-block btn-warning" @click="orderBtn">确定预约</button>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var defaultData = {
+        type:0,
+        extra:'',
+        address:''
+    };
+    var data = {$data};
+    console.log(data);
+
+    var vm = new Vue({
+        el:"#app",
+        computed:{
+            RepairStatus:function () {
+                var text = "";
+                if(!this.defaultData.type){
+                    text = "请选择"
+                }else {
+                    switch (this.defaultData.type){
+                        case 1:
+                             text = "空调维修";
+                        break;
+                        case 2:
+                            text = "电梯维修";
+                        break;
+                        case 3:
+                            text = "其他维修";
+                        break;
+                    }
+                }
+                return text;
+            }
+        },
+        data:{
+            defaultData:defaultData,
+            subData:data,
+            popupVisible: false,
+            repairPicker:'',
+            repairTxt:'',
+            isSubmit:true,
+            slots: [
+                {
+                    values: ['空调维修','电梯维修','其他维修']
+                }
+            ]
+        },
+        methods: {
+            checkRepair: function () {
+                this.popupVisible = true;
+                if(!this.defaultData.type){
+                    this.repairPicker.setSlotValue(0, '空调维修');
+                }
+            },
+            onRepairChange: function (picker,values) {
+                this.repairPicker =  picker;
+                if(values[0]){
+                    this.repairTxt = values[0];
+                }
+            },
+            cancelRepair: function () {
+                this.popupVisible = false;
+            },
+            selectRepair: function () {
+                this.popupVisible = false;
+                switch (this.repairTxt){
+                    case "空调维修":
+                        this.defaultData.type = 1;
+                        break;
+                    case "电梯维修":
+                        this.defaultData.type = 2;
+                        break;
+                    case "其他维修":
+                        this.defaultData.type = 3;
+                        break;
+                }
+            },
+            orderBtn: function () {
+                var _this = this;
+//                if(!_this.defaultData.name){
+//                    _this.$toast('');
+//                    return;
+//                }
+//                if(!_this.defaultData.phone){
+//                    _this.$toast('');
+//                    return;
+//                }
+//                if(!_this.defaultData.mobile){
+//                    _this.$toast('');
+//                    return;
+//                }
+//                if(!_this.defaultData.mobile){
+//                    _this.$toast('');
+//                    return;
+//                }
+//                if(!_this.isSubmit){
+//                    return;
+//                }
+                _this.isSubmit = false;
+                var subData = JSON.parse(JSON.stringify(_this.subData));
+                console.log(_this.defaultData);
+                console.log(subData);
+                return;
+                this.$http.post('',subData).then(function (res) {
+                    _this.isSubmit = true;
+                },function (res) {
+                    _this.isSubmit = true;
+                })
+            }
+        }
+    })
+</script>
+{/block}

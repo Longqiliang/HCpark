@@ -339,6 +339,9 @@ textarea::-webkit-input-placeholder {
     align-items: center;
     padding: 6.67vw 0;
 }
+.card-area .group-area{
+    margin-bottom: inherit;
+}
 .upload-box{
     width: 29.3vw;
     height: 29.3vw;
