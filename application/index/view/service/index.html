@@ -110,38 +110,6 @@
                     <img :src="item.img" alt="图标">
                     <span>{{item.name}}</span>
                 </li>
-                <!--<li class="my-list" @click="jumpTo('')">-->
-                    <!--<img src="/index/images/service/index/p2.png" alt="图标">-->
-                    <!--<span>物业报修</span>-->
-                <!--</li>-->
-                <!--<li class="my-list" @click="jumpTo('')">-->
-                    <!--<img src="/index/images/service/index/p3.png" alt="图标">-->
-                    <!--<span>饮水服务</span>-->
-                <!--</li>-->
-                <!--<li class="my-list" @click="jumpTo('')">-->
-                    <!--<img src="/index/images/service/index/p4.png" alt="图标">-->
-                    <!--<span>室内保洁</span>-->
-                <!--</li>-->
-                <!--<li class="my-list" @click="jumpTo('')">-->
-                    <!--<img src="/index/images/service/index/p5.png" alt="图标">-->
-                    <!--<span>办公用品</span>-->
-                <!--</li>-->
-                <!--<li class="my-list" @click="jumpTo('/index/service/parking')">-->
-                    <!--<img src="/index/images/service/index/p6.png" alt="图标">-->
-                    <!--<span>车卡服务</span>-->
-                <!--</li>-->
-                <!--<li class="my-list" @click="jumpTo('')">-->
-                    <!--<img src="/index/images/service/index/p7.png" alt="图标">-->
-                    <!--<span>充电桩办理</span>-->
-                <!--</li>-->
-                <!--<li class="my-list" @click="jumpTo('/index/service/publicservice')">-->
-                    <!--<img src="/index/images/service/index/p8.png" alt="图标">-->
-                    <!--<span>公共区服务</span>-->
-                <!--</li>-->
-                <!--<li class="my-list" @click="jumpTo('')">-->
-                    <!--<img src="/index/images/service/index/p9.png" alt="图标">-->
-                    <!--<span>电话宽带</span>-->
-                <!--</li>-->
             </ul>
         </div>
         <div class="my-item">
@@ -149,7 +117,7 @@
                 企业服务
             </div>
             <ul class="my-lists">
-                <li class="my-list" @click="jumpTo(item.path)" v-for="item in baseData.companyServices">
+                <li class="my-list" @click="jumpTo(item.path,item.id)" v-for="item in baseData.companyService">
                     <img :src="item.img" alt="图标">
                     <span>{{item.name}}</span>
                 </li>
@@ -170,8 +138,8 @@
         data:{
             baseData:{
                 isBoss:'{$is_boss}',
-                propertyServices:{$propert},
-                companyService:'{$company}'
+                propertyServices:JSON.parse('{$propert}'),
+                companyService:JSON.parse('{$company}')
             },
             nowPark:0,
             parks:[
@@ -185,8 +153,8 @@
             console.log(this.baseData)
         },
         methods:{
-            jumpTo(path){
-                window.location.href=path
+            jumpTo(path,id){
+                window.location.href='/index/service/onCheck/id/'+id+'/path/'+path;
             },
             parkChange(){
                 this.$http.post(this.changeApi,{value:this.nowPark}).then(function (res) {
