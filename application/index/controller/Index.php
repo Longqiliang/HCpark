@@ -26,7 +26,7 @@ class Index extends Base
                 "userid" => $mobile,
                 "name"=> $name,
                 "mobile" => $mobile,
-                'department'=> [7244], //部门先随便敲了个id
+                'department'=> [78],
                 "gender" => $gender,
                 "enable" => 1,
             ];

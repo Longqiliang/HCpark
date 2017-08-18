@@ -14,7 +14,8 @@ use app\index\model\CompanyApplication;
 use app\index\model\Park;
 use  app\index\model\WechatTag;
 use  app\index\model\PropertyServer;
-
+use app\index\model\WaterService as WaterModel;
+use app\index\model\BroadbandPhone as BroadbandModel;
 
 //企业服务
 class Service extends Base{
@@ -469,6 +470,69 @@ public  function  _checkData($data){
 
         return $list;
 
+    }
+
+    //送水记录
+    public function waterService()
+    {
+        if ($_POST) {
+            $waterModel = new WaterModel;
+            $_POST['userid']=session('userId');
+            $result = $waterModel->allowField(true)->validate(true)->save($_POST);
+            if ($result) {
+                //预约成功
+                return $this->success("预约成功");
+            } else {
+                return $this->error($waterModel->getError());
+            }
+
+        } else {
+            $userid = session('userId');
+            $contact = WechatUser::where('userid', 'eq', $userid)->field('name,mobile')->find();
+            $this->assign('contact', $contact);
+            return $this->fetch();
+        }
+    }
+
+    //送水记录列表页
+    public function waterList(){
+        //分页total
+        $total=input('total');
+        $userid = session('userId');
+        $map = [
+            'status'=> "1",
+            'userid'=>$userid,
+        ];
+        $list = WaterModel::where($map)->order('id desc')->paginate($total);
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+
+    //送水记录详情页
+    public function waterDetail(){
+        $id=input('id');
+        $result=WaterModel::where('id','eq',$id)->find();
+        $this->assign('res',$result);
+        echo json_encode($result);exit;
+        return $this->fetch();
+    }
+
+    //电话宽带
+    public function broadbandPhone()
+    {
+        if ($_POST) {
+            $broadbandModel = new BroadbandModel;
+            $_POST['user_id']=session('userId');
+
+            $result = $broadbandModel->allowField(true)->validate(true)->save($_POST);
+            if ($result) {
+                return $this->success("预约成功");
+            } else {
+                return $this->error($broadbandModel->getError());
+            }
+        } else {
+            return $this->fetch();
+        }
     }
 
 
