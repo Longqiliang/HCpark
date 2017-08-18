@@ -41,7 +41,6 @@
             <span>{{subData.mobile}}</span>
         </div>
     </div>
-    <p class="prompt-message">资讯电话：{{subData.propretyMobile}}</p>
     <div class="card">
         <div class="card-tit">备注信息</div>
         <div class="card-area">
@@ -54,12 +53,14 @@
             </div>
         </div>
     </div>
+    <p class="prompt-message">资讯电话：{{subData.propretyMobile}}</p>
     <div class="card-more">
-        <button class="btn btn-purple btn-outlined btn-sm" @click="paymentInfo">预约记录</button>
+        <button class="btn btn-warning btn-warning-outlined btn-sm" @click="paymentInfo"><i class="icon icon-record"></i>预约记录</button>
     </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="orderBtn">确定预约</button>
     </div>
+
 </div>
 {/block}
 
@@ -144,25 +145,22 @@
             },
             orderBtn: function () {
                 var _this = this;
-//                if(!_this.defaultData.name){
-//                    _this.$toast('');
-//                    return;
-//                }
-//                if(!_this.defaultData.phone){
-//                    _this.$toast('');
-//                    return;
-//                }
-//                if(!_this.defaultData.mobile){
-//                    _this.$toast('');
-//                    return;
-//                }
-//                if(!_this.defaultData.mobile){
-//                    _this.$toast('');
-//                    return;
-//                }
-//                if(!_this.isSubmit){
-//                    return;
-//                }
+                if(!_this.defaultData.type){
+                    _this.$toast('');
+                    return;
+                }
+                if(!_this.defaultData.address){
+                    _this.$toast('');
+                    return;
+                }
+                if(!_this.defaultData.extra){
+                    _this.$toast('');
+                    return;
+                }
+
+                if(!_this.isSubmit){
+                    return;
+                }
                 _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 var defaultData =  JSON.parse(JSON.stringify(_this.defaultData));

@@ -122,6 +122,12 @@ textarea::-webkit-input-placeholder {
     height: 20px;
     background-image: url("/index/images/service/card/icon-ads.png");
 }
+.icon-record{
+    width: 18px;
+    height: 20px;
+    background-image: url("/index/images/service/card/icon-record.png");
+    vertical-align: -5px;
+}
 .group-tit{
     position: relative;
     text-align: center;
@@ -207,7 +213,17 @@ textarea::-webkit-input-placeholder {
     background-color: #918FE6;
     color: #fff;
 }
-.btn-purple.btn-outlined{
+.btn-warning.btn-warning-outlined{
+    /*border: 1px solid #fcc44b;*/
+    background-color: transparent;
+    color: #fcc44b;
+}
+.btn-primary.btn-primary-outlined{
+    /*border: 1px solid #fcc44b;*/
+    background-color: transparent;
+    color: #69b9f9;
+}
+.btn-purple.btn-purple-outlined{
     border: 1px solid #918FE6;
     background-color: #fff;
     color: #918FE6;
@@ -360,6 +376,10 @@ textarea::-webkit-input-placeholder {
     display: flex;
     justify-content: center;
     margin: 4vw 0;
+}
+.card-more button{
+    min-width: 26.7vw;
+    border-radius: 15px;
 }
 .upload-box{
     width: 29.3vw;
