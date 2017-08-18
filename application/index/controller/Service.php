@@ -110,7 +110,7 @@ class Service extends Base{
 
                 }else{
 
-                    $type['type']="new";
+                    $info['type']="new";
                 }
 
 
@@ -216,7 +216,7 @@ public  function  _checkData($data){
         //车卡押金
         $data['carpark_deposit']=$park['carpark_deposit'];
 
-        $this->assign('data',$data);
+        $this->assign('info',json_encode($data));
 
         return $this->fetch();
     }
