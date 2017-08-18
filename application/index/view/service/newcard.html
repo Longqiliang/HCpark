@@ -1,0 +1,158 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>车卡服务</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+<style>
+    body{
+        background-color: #f0eff5;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="card">
+        <div class="card-tit">车主信息</div>
+        <div class="card-cell">
+            <label for="name">车主姓名</label>
+            <input type="text" placeholder="请输入车主姓名" id="name">
+        </div>
+        <div class="card-cell">
+            <label for="phone">车主电话</label>
+            <input type="number" placeholder="请输入车主电话" id="phone">
+        </div>
+        <div class="card-cell">
+            <label for="number">车牌号码</label>
+            <input type="text" placeholder="请输入车牌号码" id="number">
+        </div>
+        <div class="card-cell">
+            <label for="idCard">身份证号</label>
+            <input type="text" placeholder="请输入身份证号" id="idCard">
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-tit">办理信息</div>
+        <div class="card-cell">
+            <span>办理时长</span>
+            <span @click="checkTime" >
+                <span :class="[!subData.aging ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>
+            </span>
+
+            <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelTime">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectTime">确定</span>
+                </div>
+                <mt-picker :slots="slots" @change="onTimesChange" ></mt-picker>
+            </mt-popup>
+        </div>
+        <div class="card-cell">
+            <span>车卡押金</span>
+            <span>{{subData.cash}}</span>
+        </div>
+        <div class="card-cell">
+            <span>停车费用</span>
+            <span>{{parkingFares}}</span>
+        </div>
+        <div class="card-cell">
+            <span>费用总计</span>
+            <span>{{totalMoney}}</span>
+        </div>
+    </div>
+    <div class="card-btn-box">
+        <button class="btn btn-block btn-warning" @click="nextBtn">下一步</button>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var date = new  Date();
+    var data = {$info};
+    console.log(data);
+    if(!data){
+
+    }
+    var vm = new Vue({
+        el:"#app",
+        computed:{
+            timeStatus:function () {
+                if(!this.subData.aging){
+                    return "请选择";
+                }else{
+                    return this.subData.aging+"个月";
+                }
+            },
+            parkingFares :function () {
+                return (this.subData.aging * this.subData.price)
+            },
+            totalMoney:function () {
+                return (this.subData.aging * this.subData.price) + this.subData.cash;
+            }
+        },
+        data:{
+            subData:data,
+            popupVisible: false,
+            timePicker:'',
+            timeTxt:'',
+            isSubmit:true,
+            slots: [
+                {
+                    values: ['6个月','12个月']
+                }
+            ]
+        },
+        methods: {
+            checkTime: function () {
+                this.popupVisible = true;
+                this.timePicker.setSlotValue(0, '6个月');
+            },
+            onTimesChange: function (picker,values) {
+                this.timePicker =  picker;
+                if(!isNaN(parseInt(values[0]))){
+                    this.timeTxt = parseInt(values[0]);
+                }
+            },
+            cancelTime: function () {
+                this.popupVisible = false;
+            },
+            selectTime: function () {
+                this.popupVisible = false;
+                this.subData.aging = this.timeTxt;
+            },
+            nextBtn: function () {
+                var _this = this;
+                if(!_this.subData.name){
+                    _this.$toast('请填写车主姓名');
+                    return;
+                }
+                if(!_this.subData.name){
+                    _this.$toast('请填写车主电话');
+                    return;
+                }
+                if(!_this.subData.mobile){
+                    _this.$toast('请填写车牌号码');
+                    return;
+                }
+                if(!_this.subData.mobile){
+                    _this.$toast('请填写身份证号');
+                    return;
+                }
+                if(!_this.isSubmit){
+                    return;
+                }
+                _this.isSubmit = false;
+                var subData = JSON.parse(JSON.stringify(_this.subData));
+                console.log(subData);
+                return;
+                this.$http.post('',subData).then(function (res) {
+                    _this.isSubmit = true;
+                },function (res) {
+                    _this.isSubmit = true;
+                })
+            }
+        }
+    })
+</script>
+{/block}

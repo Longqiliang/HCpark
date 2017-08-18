@@ -1,0 +1,165 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>财税服务</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+{/block}
+
+
+{block name="body"}
+<div id="app" class="content">
+
+    <div class="detail">
+        <div class="group-tit">
+            <h3 class="group-tit-info">服务简介</h3>
+        </div>
+        <p class="detail-txt">财税服务主要涉及零申报、小规模纳税人代账、一般纳税人代账、发票代理、验资报告及其他服务，园区为企业精心打造最舒适便捷的财税服务。</p>
+        <div class="detail-img-group">
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit">零申报</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit">小规模纳税人代账</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit ">一般纳税人代账</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit ">企业注销财报诊断</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit ">银行开户/变更</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit ">发票代理</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit ">各类专项审计报告</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit ">财务整理及调整</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit ">验资报告</div>
+            </div>
+            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+                <div class="detail-img-tit ">其他相关</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-view">
+        <div class="table-view-cell"><i class="icon icon-phone"></i><span>电话：0571-88610333</span></div>
+        <div class="table-view-cell"><i class="icon icon-email"></i><span>邮箱：503783395@qq.com</span></div>
+        <div class="table-view-cell"><i class="icon icon-ads"></i><span>地址：余杭区文一西路1338号海创大厦A座201</span></div>
+        <div class="table-view-cell"><button class="btn btn-block btn-primary reservation-btn" @click="bgShow">预约服务</button></div>
+    </div>
+
+    <div class="layer" v-show="isShow">
+        <div class="form-group">
+            <div class="group-tit">
+                <h3 class="group-tit-info">预约信息填写</h3>
+            </div>
+            <div class="group-cell table-view-cell">
+                <label for="company">公司名称</label><input type="text" v-model="subData.company" id="company" placeholder="请填写" maxlength="15">
+            </div>
+            <div class="group-cell table-view-cell">
+                <label for="name">联系人员</label><input type="text" v-model="subData.name" id="name" placeholder="请填写">
+            </div>
+            <div class="group-cell table-view-cell">
+                <label for="mobile">联系方式</label><input type="number" v-model="subData.mobile" id="mobile" placeholder="请填写" minlength="7">
+            </div>
+            <div>
+                <span class="group-area-tit">备注信息</span>
+                <textarea  id="" cols="30" rows="10" v-model="subData.remark" class="group-area" maxlength="200"></textarea>
+            </div>
+            <div class="table-view-cell group-cell btn-box">
+                <button class="group-btn btn-warning btn" @click="bgClose">取消提交</button>
+                <button class="group-btn btn-primary btn" @click="subBtn">确定提交</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="model-bg" @click="bgClose" v-show="isShow"></div>
+</div>
+
+{/block}
+
+{block name="script"}
+<script>
+    var data = {$info};
+    data.remark ='';
+    console.log(data);
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            subData:data,
+            isShow:false,
+            isSubmit:true
+        },
+        methods:{
+            bgShow:function () {
+                this.isShow = true;
+            },
+            bgClose:function () {
+                this.isShow = false;
+            },
+            subBtn:function () {
+                var _this = this;
+                console.log(_this.subData);
+                if(!_this.subData.company){
+                    _this.$toast('请填写公司名称');
+                    return;
+                }
+                if(!_this.subData.name){
+                    _this.$toast('请填写联系人员');
+                    return;
+                }
+                if(!_this.subData.mobile){
+                    _this.$toast('请填写联系方式');
+                    return;
+                }
+                if(!_this.isSubmit){
+                    return;
+                }
+
+                _this.isSubmit = false;
+                var subData = JSON.parse(JSON.stringify(_this.subData));
+                //return;
+                this.$http.post('order',subData).then(function (res) {
+                    console.log(res);
+                    _this.isSubmit = true;
+                    var resData = res.data;
+                    if(resData.code == 1){
+                        swal({
+                            title:"预约成功!",
+                            text:'工作人员将会在2小时内联系您，洽谈具体事宜，请您耐心等待',
+                            type:"success"
+                        },function (e) {
+                            if(e){
+                                _this.isShow = false;
+                            }
+                        });
+                    }else{
+                        swal({
+                            title:"",
+                            text:'预约失败!',
+                            type:"error",
+                            confirmButtonText: "重新预约"
+                        },function (e) {
+                            if(e){
+                                _this.isShow = false;
+                            }
+                        });
+                    }
+                },function (res) {
+                    _this.isSubmit = true;
+                })
+            }
+        }
+    })
+
+
+</script>
+
+{/block}
