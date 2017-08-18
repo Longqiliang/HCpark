@@ -568,7 +568,7 @@ public  function  _checkData($data){
 
     }
 
-    //送水记录
+    //饮水服务
     public function waterService()
     {
         if ($_POST) {
@@ -590,7 +590,7 @@ public  function  _checkData($data){
         }
     }
 
-    //送水记录列表页
+    //饮水服务列表页
     public function waterList(){
         //分页total
         $total=input('total');
@@ -604,7 +604,7 @@ public  function  _checkData($data){
         return $this->fetch();
     }
 
-    //送水记录详情页
+    //饮水服务详情页
     public function waterDetail(){
         $id=input('id');
         $result=WaterModel::where('id','eq',$id)->find();
