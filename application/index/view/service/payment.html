@@ -1,0 +1,81 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>车卡服务</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+<style>
+    body{
+        background-color: #f0eff5;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="card">
+        <div class="card-tit">缴费信息</div>
+        <div class="card-cell">
+            <span>银行账户</span>
+            <span></span>
+        </div>
+        <div class="card-cell">
+            <span>账号名称</span>
+            <span></span>
+        </div>
+        <div class="card-cell bottom-inherit">
+            <span class="card-hr">— — — or — — —</span>
+        </div>
+        <div class="card-cell">
+            <span>支付宝账号</span>
+            <span></span>
+        </div>
+        <div class="card-cell">
+            <span>账号名称</span>
+            <span></span>
+        </div>
+    </div>
+    <p class="prompt-message">转账时请备注个人信息（转账事由及内容）</p>
+    <div class="card">
+        <div class="card-tit">办理信息</div>
+        <div class="card-upload">
+            <div class="upload-box">
+                <img src="/index/images/service/card/card-camera.png" >
+                <span class="upload-info">上传凭证</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-btn-box payment-btn">
+        <button class="btn btn-block btn-warning" @click="subBtn">提交</button>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var date = new  Date();
+    var data = {$info};
+    console.log(data);
+    if(!data){
+
+    }
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            subData:data,
+            imgSrc:''
+        },
+        methods: {
+            subBtn: function () {
+                var _this = this;
+                _this.isSubmit = false;
+                var subData = JSON.parse(JSON.stringify(_this.subData));
+                console.log(subData);
+                return;
+                this.$http.post('',subData).then(function (res) {
+
+                })
+            }
+        }
+    })
+</script>
+{/block}
