@@ -13,7 +13,7 @@
 {block name="body"}
 <div id="app">
     <div class="card">
-        <!--<div class="card-tit">缴费信息</div>-->
+        <div class="card-tit">物业报修</div>
         <div class="card-cell">
             <span>服务类型</span>
             <span @click="checkRepair" >
@@ -43,8 +43,8 @@
     </div>
     <p class="prompt-message">资讯电话：{{subData.propretyMobile}}</p>
     <div class="card">
+        <div class="card-tit">备注信息</div>
         <div class="card-area">
-            <span class="group-area-tit">备注信息</span>
             <textarea    v-model="defaultData.extra" class="group-area" maxlength="200"></textarea>
         </div>
         <div class="card-upload">
@@ -53,6 +53,9 @@
                 <span class="upload-info">上传凭证</span>
             </div>
         </div>
+    </div>
+    <div class="card-more">
+        <button class="btn btn-purple btn-outlined btn-sm" @click="paymentInfo">预约记录</button>
     </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="orderBtn">确定预约</button>
@@ -136,6 +139,9 @@
                         break;
                 }
             },
+            paymentInfo:function () {
+
+            },
             orderBtn: function () {
                 var _this = this;
 //                if(!_this.defaultData.name){
@@ -159,13 +165,17 @@
 //                }
                 _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
+                var defaultData =  JSON.parse(JSON.stringify(_this.defaultData));
+                var data = Object.assign(subData,defaultData);
                 console.log(_this.defaultData);
                 console.log(subData);
-                return;
-                this.$http.post('',subData).then(function (res) {
+                console.log(data);
+                this.$http.post('repair',data).then(function (res) {
                     _this.isSubmit = true;
+                    console.log(res.data);
                 },function (res) {
                     _this.isSubmit = true;
+                    console.log(res.data);
                 })
             }
         }
