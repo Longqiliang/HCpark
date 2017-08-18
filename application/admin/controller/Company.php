@@ -128,6 +128,7 @@ class Company extends Admin
         }
 
     }
+    /*园区产品或服务的添加*/
     public function edit(){
         $parkcompany =new ParkProduct();
         unset($_POST['file']);
@@ -143,7 +144,7 @@ class Company extends Admin
         }
 
     }
-
+    /*修改企业头像及联系方式*/
     public function companyMobile(){
         $id=input("id");
        // return dump($_POST);

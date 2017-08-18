@@ -375,6 +375,7 @@
         });
 
     });
+        /*修改企业关于我们*/
     function send(){
         var content =$('#summernote').summernote('code');
         $.ajax({
@@ -393,6 +394,7 @@
             }
         });
     }
+        /*获取企业产品或服务详细信息*/
     function getCompanyserver(id,uid){
         $.ajax({
             data: {id:id},
@@ -413,6 +415,7 @@
             }
         });
     }
+        /*修改企业产品或服务详细信息*/
     function update(uid){
         var id =   $("[name='id']").val();
         var names=$("[name='name"+uid+"']").val();
@@ -440,6 +443,7 @@
             }
         });
     }
+        /*添加企业产品或服务*/
     function addProduct(){
         var names=$("[name='name']").val();
         var contents=$('.present').eq(2).summernote('code');
@@ -486,7 +490,7 @@
         alignment: 'center',       // Position - may be auto OR center.
         allowMultiple: false,
     });
-
+    /*添加企业头像和联系电话*/
     function companyMobile(){
 
         var image=$("input[name='front_cover']").val();
