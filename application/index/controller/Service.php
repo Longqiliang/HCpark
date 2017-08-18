@@ -58,7 +58,7 @@ class Service extends Base{
              //企业服务
              $companyApps=$app->where('type',1)->order('id asc')->select();
              $CompanyService=array();
-             foreach ($serviceApps as $value){
+             foreach ($companyApps as $value){
 
                  $parkid= json_decode($value['park_id']);
 
