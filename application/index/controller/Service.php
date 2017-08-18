@@ -69,18 +69,11 @@ class Service extends Base{
                  }
 
              }
-
-
              $is_boss=false;
-
-
-
-
-
          }
         $this->assign('is_boss',$is_boss);
-        $this->assign('propert',$PropertyServices);
-        $this->assign('company',$CompanyService);
+        $this->assign('propert',json_encode($PropertyServices));
+        $this->assign('company',json_encode($CompanyService));
         return $this->fetch();
 
     }
@@ -352,7 +345,7 @@ public  function  _checkData($data){
         $user_id= session('userId');
 
         $list=$service->where('user_id',$user_id)->select();
-        $this->assign('list',$list);
+        $this->assign('list',json_encode($list));
         return $this->fetch();
 
 
