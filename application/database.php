@@ -17,9 +17,9 @@ return [
     // 数据库名
     'database'       => 'hcpark',
     // 用户名
-    'username'       => '123456',
+    'username'       => 'root',
     // 密码
-    'password'       => '',
+    'password'       => '123456',
     // 端口
     'hostport'       => '',
     // 连接dsn
