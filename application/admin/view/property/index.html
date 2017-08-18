@@ -70,16 +70,26 @@
                     <th>联系人员</th>
                     <th>联系方式</th>
                     <th>备注</th>
+                    <th>状态</th>
+                    <th>编辑</th>
                 </tr>
                 </thead>
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr class="read">
-                    <td>{$vo.type}</td>
+                    <td>{$vo.type_text}</td>
                     <td>{$vo.address}</td>
                     <td>{$vo.name}</td>
                     <td>{$vo.mobile}</td>
                     <td>{$vo.extra}</td>
+                    <th>{$vo.status_text}</th>
+                    <td>
+                        {eq name="$vo.status" value="0"}
+                        <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',0)">审核</button>
+                        {else/}<button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',1)">删除</button>
+                        {/eq}
+
+                    </td>
                 </tr>
                 {/volist}
                 </tbody>
@@ -102,6 +112,24 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
+    /*修改服务状态值*/
+    function changeStatus(id,uid){
+        $.ajax({
+            data:{id:id,del:uid},
+            type:"POST",
+            url:"{:Url('Property/changeStatus')}",
+            success:function (data){
+                if(data.code==1){
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },2000);
+                }else{
+                    updateAlert(data.msg,'info');
+                }
+            }
+        })
 
+    }
 </script>
 {/block}
