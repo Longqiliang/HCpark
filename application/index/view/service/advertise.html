@@ -258,7 +258,7 @@
         </div>
     </div>
     <div class="my-total">
-        <span>合计：{{this.checkedList.length*400}}元</span>
+        <span>合计：{{this.checkedList.length*this.price}}元</span>
         <button>确认预约</button>
     </div>
 </div>
@@ -269,18 +269,20 @@
     var myVue=new Vue({
         el: '#app',
         data: {
+            price:{$price},
             currentDay: 1,
             currentMonth: 1,
             currentYear: 1970,
             currentWeek: 1,
             days: [],
             checkedList:[],
-            bespeakList:[1504310400000,1504656000000],
+            bespeakList:JSON.parse('{$record}'),
             nextApi:"{:url('Service/')}"
         },
         created: function() {  //在vue初始化时调用
             this.initData(null);
             console.log(this.days)
+            console.log(this.bespeakList)
         },
         methods: {
             initData: function(cur) {
@@ -319,7 +321,7 @@
                 //其他周
                 for (var i = 1; i <= 41 - this.currentWeek; i++) {
                     var d = new Date(str);
-                    console.log(str,d)
+//                    console.log(str,d)
                    d= d.setDate(d.getDate() + i);
                     var dayobject={};
                     dayobject.day=d;
@@ -341,7 +343,7 @@
             },
             isBespeak:function (date) {
                 for(var i=0;i<this.bespeakList.length;i++){
-                    if(date==this.bespeakList[i]) {
+                    if(date==parseInt(this.bespeakList[i])) {
                         return true
                     }
                 }
@@ -371,17 +373,24 @@
                 // setDate(0); 上月最后一天
                 // setDate(-1); 上月倒数第二天
                 // setDate(dx) 参数dx为 上月最后一天的前后dx天
-                var d = new Date(this.formatDate(year , month , 1));
-                d.setDate(0);
-                this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+console.log(this.currentMonth-1)
+                this.$http.post('/index/service/changeMonth',{ month : this.currentMonth-1 }).then(function (res) {
+                    this.bespeakList=JSON.parse(res.data);
+                    console.log(this.bespeakList)
+                    var d = new Date(this.formatDate(year , month , 1));
+                    d.setDate(0);
+                    this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                })
             },
             pickNext: function(year, month) {
-                var d = new Date(this.formatDate(year , month , 1));
-                d.setDate(35);
-                this.$http.post(this.nextApi,{month:d.getMonth+1}).then(function (res) {
-                    console.log(res)
+                console.log(this.currentMonth)
+
+                this.$http.post('/index/service/changeMonth',{ month : this.currentMonth+1 }).then(function (res) {
+                    this.bespeakList=JSON.parse(res.data);
+                    var d = new Date(this.formatDate(year , month , 1));
+                    d.setDate(35);
+                    this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
                 })
-                this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
             },
 
             // 返回 2017-01-01 格式的字符串
