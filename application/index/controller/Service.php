@@ -67,7 +67,7 @@ class Service extends Base{
                  foreach($parkid as $value2){
                      if($value2==$park_id ){
                          $value['park_id']=$park_id;
-                         array_push($PropertyServices,$value);
+                         array_push($CompanyService,$value);
                      }
                  }
 
