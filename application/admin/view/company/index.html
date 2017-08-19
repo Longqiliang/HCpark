@@ -124,7 +124,10 @@
             type: "POST",
             url: "{:Url('Company/getCompany')}",
             success:function(data){
-                updateAlert(data.msg,"success");
+                updateAlert(data.msg+' 页面稍后会自动跳转～',"success");
+                setTimeout(function(){
+                    location.href=data.url;
+                },2000);
             }
 
         })

@@ -29,11 +29,11 @@ class Company extends Admin
     public  function add(){
         $id =input('id');
         $companyInfo=ParkCompany::get($id);
-        $list = ParkProduct::where(['type'=>1])
+        $list = ParkProduct::where(['type'=>1,'company_id'=>$id])
                 ->order('create_time desc')
                 ->paginate();
 
-        $list1=ParkProduct::where(['type'=>2])
+        $list1=ParkProduct::where(['type'=>2,'company_id'=>$id])
             ->order('create_time desc')
             ->paginate();
         $this->assign('companyInfo',$companyInfo);
@@ -57,9 +57,12 @@ class Company extends Admin
             $number[$k]=$v['id'];
             $isUpdate = false;
             if (ParkCompany::get($data['id'])) {
-                $isUpdate = true;
+                $res=$parkCompany->where('id',$data['id'])->update($data);
+
+            }else{
+                $res=$parkCompany->data($data,true)->isUpdate($isUpdate)->save();
             }
-            $res=$parkCompany->data($data,true)->isUpdate($isUpdate)->save();
+
 
         }
             $parkNumber=ParkCompany::where(['park_id'=>$parkid])->select();

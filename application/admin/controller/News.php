@@ -17,8 +17,10 @@ use wechat\TPWechat;
 
 class News extends Admin
 {
+    /*新闻通告首页面*/
     public function index() {
-        $map = ['status'=> 1,'type'=>['<=',3]];
+        $parkid = session('user_auth')['park_id'];
+        $map = ['status'=> 1,'type'=>['<=',3],'park_id'=>$parkid];
         $search = input('search');
         if ($search != '') {
             $map['title'] = ['like','%'.$search.'%'];
@@ -28,18 +30,20 @@ class News extends Admin
 
         return $this->fetch();
     }
-
+    /*新闻通告，政策法规的添加及修改*/
     public function add() {
+        $parkid = session('user_auth')['park_id'];
         $pageType =input("page_type");
         if(IS_POST) {
             $pageType =input("page_type");
             $news = new NewsModel();
             if(input('id')) {
                 $_POST['status'] = 1;
+                $_POST['park_id']=$parkid;
                 $result = $news->validate(true)->save($_POST, ['id'=>input('id')]);
 
             } else {
-
+                $_POST['park_id']=$parkid;
                 unset($_POST['id']);
                 $result = $news->validate(true)->save($_POST);
             }
@@ -92,7 +96,7 @@ class News extends Admin
     }
 
 
-
+    /*删除新闻*/
     public function moveToTrash() {
         $pageType =input('page_type');
         $ids = input('ids/a');
@@ -112,6 +116,7 @@ class News extends Admin
         }
     }
 
+    /*推送*/
     public function send() {
         $news = NewsModel::get(input('id'));
         if ($news) {
@@ -166,7 +171,7 @@ class News extends Admin
             $this->error('参数错误');
         }
     }
-
+    /*获取部门*/
     public function getDepartment() {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('wechat'));
@@ -174,7 +179,7 @@ class News extends Admin
 
         return json($department);
     }
-
+    /*获取部门标签*/
     public function getTag() {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('wechat'));
@@ -182,9 +187,10 @@ class News extends Admin
 
         return json($tag);
     }
-
+    /*政策法规*/
     public function policyLaw(){
-        $map = ['status'=> 1,'type'=>['>',3]];
+        $parkid = session('user_auth')['park_id'];
+        $map = ['status'=> 1,'type'=>['>',3],'park_id'=>$parkid];
         $search = input('search');
         if ($search != '') {
             $map['title'] = ['like','%'.$search.'%'];

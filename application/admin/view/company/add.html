@@ -122,7 +122,7 @@
                         <td>{$vo.content}</td>
                         <td>{$vo.create_time}</td>
                         <td>
-                            <a data-toggle="modal" href="#modal-form"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}',1)"> 编辑</a>
+                            <a data-toggle="modal" style="color: #ffffff;" href="#modal-form"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}',1)"> 编辑</a>
                         </td>
                     </tr>
                     {/volist}
@@ -150,7 +150,7 @@
                         <td>{$vo.content}</td>
                         <td>{$vo.create_time}</td>
                         <td>
-                            <a data-toggle="modal" href="#modal-form1"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}',2)"> 编辑</a>
+                            <a data-toggle="modal" style="color: #ffffff;" href="#modal-form1"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}',2)"> 编辑</a>
                         </td>
                     </tr>
                     {/volist}
@@ -456,7 +456,10 @@
             url: "{:Url('Company/edit')}",
             success: function(data) {
                 if(data.code=1){
-                    updateAlert(data.msg,'success');
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
                 }else{
                     updateAlert(data.msg,'error');
                 }
