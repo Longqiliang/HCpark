@@ -641,6 +641,12 @@ class Service extends Base{
         $userid =session("userId");
         $parkid=session('park_id');
         $data = input('post.');
+        $time = date("w",strtotime(input("dateStr")));
+        if ($time ==6 ||$time ==0){
+            return $this->error("请在工作日预约");
+        }
+        $data['clear_time']=strtotime(input("dateStr"));
+        $data['image'] =input('imgStr');
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
         $property =new PropertyServer();

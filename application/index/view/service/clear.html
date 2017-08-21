@@ -78,12 +78,12 @@
 
 {block name="script"}
 <script>
-    var nowDate = new Date("2013/4/30 8:10:10");
+    var nowDate = new Date();
     nowDate = dateHour(nowDate,12,8);
     var date = new Date();
     var endDate = dateMonth(date,6);
     var defaultData = {
-        type:0,
+        type:4,
         extra:'',
         address:'',
         dateStr:'',
@@ -150,7 +150,7 @@
                 console.log(_this.defaultData);
                 console.log(subData);
                 console.log(data);
-                this.$http.post('clear',data).then(function (res) {
+                this.$http.post("{:Url('index/Service/clear')}",data).then(function (res) {
                     _this.isSubmit = true;
                     console.log(res.data);
                 },function (res) {
