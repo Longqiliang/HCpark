@@ -736,19 +736,18 @@ class Service extends Base{
     //电话宽带
     public function broadbandPhone()
     {
-        if ($_POST) {
+        $data=input('');
+//        echo json_encode($data);exit;
             $broadbandModel = new BroadbandModel;
-            $_POST['user_id']=session('userId');
+            $data['user_id']=session('userId');
 
-            $result = $broadbandModel->allowField(true)->validate(true)->save($_POST);
+            $result = $broadbandModel->allowField(true)->validate(true)->save($data);
             if ($result) {
                 return $this->success("预约成功");
             } else {
                 return $this->error($broadbandModel->getError());
             }
-        } else {
-            return $this->fetch();
-        }
+
     }
 
 
