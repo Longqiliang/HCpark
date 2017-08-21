@@ -257,6 +257,25 @@ class Service extends Base{
         return $this->fetch('payment');
 
     }
+
+    public function  payment(){
+        $park_id =session('park_id');
+        $Park = new Park();
+        $park= $Park->where('id',$park_id)->find();
+        //支付宝用户
+        $data['ailpay_user']=$park['ailpay_user'];
+        //银行用户
+        $data['bank_user']=$park['bank_user'];
+        //缴费支付宝账号
+        $data['payment_alipay']=$park['payment_alipay'];
+        //缴费支付宝账号
+        $data['payment_bank']=$park['payment_bank'];
+        $this->assign('info',json_encode($data));
+
+        return $this->fetch();
+
+
+    }
     public  function  addNewCard(){
 
         $CarparkRecord = new CarparkRecord();
