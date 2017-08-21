@@ -630,8 +630,8 @@ class Service extends Base{
             return $this->fetch();
         }
 
-
-        public function hall(){
+        //多功能厅
+        public function multifunction(){
             return $this->fetch();
         }
 
@@ -791,6 +791,15 @@ class Service extends Base{
 
     }
 
+//费用缴纳
+    public function feedetail(){
 
+        return $this->fetch();
+    }
+
+    public function history()
+    {
+        return $this->fetch();
+    }
 
 }

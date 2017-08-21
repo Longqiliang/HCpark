@@ -89,8 +89,6 @@ class Enterprise extends Base{
        $data['content']=$info['content'];
         $this->assign('info',$data);
         return $this->fetch();
-
-
      }
 
 }
