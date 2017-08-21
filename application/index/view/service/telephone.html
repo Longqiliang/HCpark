@@ -5,7 +5,9 @@
 <link rel="stylesheet" href="/index/css/service/detail.css">
 
 <style>
-
+    .detail{
+        font-size: 1.4rem
+    }
 </style>
 {/block}
 
@@ -38,20 +40,20 @@
                 <mt-picker :slots="slots" @change="onServiceChange" ></mt-picker>
             </mt-popup>
         </div>
-        <!--<div class="card-cell">-->
-            <!--<span>办理时长</span>-->
-            <!--<span @click="checkTime" >-->
-                <!--<span :class="[!defaultData.timeType ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>-->
-            <!--</span>-->
+        <div class="card-cell">
+            <span>办理时长</span>
+            <span @click="checkTime" >
+                <span :class="[!defaultData.timeType ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>
+            </span>
 
-            <!--<mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">-->
-                <!--<div class="picker-toolbar">-->
-                    <!--<span class="mint-datetime-action mint-datetime-cancel" @click="cancelTime">取消</span>-->
-                    <!--<span class="mint-datetime-action mint-datetime-confirm" @click="selectTime">确定</span>-->
-                <!--</div>-->
-                <!--<mt-picker :slots="timeSlots" @change="onTimeChange" ></mt-picker>-->
-            <!--</mt-popup>-->
-        <!--</div>-->
+            <mt-popup  position="bottom"  v-model="timePopupVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelTime">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectTime">确定</span>
+                </div>
+                <mt-picker :slots="timeSlots" @change="onTimeChange" ></mt-picker>
+            </mt-popup>
+        </div>
         <div class="table-view-cell"><button class="btn btn-block btn-primary reservation-btn" @click="bgShow">预约服务</button></div>
     </div>
     <div class="layer" v-show="isShow">
@@ -88,22 +90,26 @@
     var defaultData = {
         serviceType:0,
         timeType:0,
-        extra:'',
         address:''
     };
 var app = new Vue({
     el:'#app',
 
     data:{
-        subData:{},
+        subData:{
+            remark:'',
+            mobile:'',
+            name:'',
+            company:''
+        },
         isShow:false,
         defaultData:{
             serviceType:0,
             timeType:0,
-            extra:'',
             address:''
         },
         popupVisible: false,
+        timePopupVisible: false,
         servicePicker:'',
         serviceTxt:'',
         timePicker:'',
@@ -114,11 +120,11 @@ var app = new Vue({
                 values: ['电信业务','铁通业务','联通业务']
             }
         ],
-        timeSlots:[
+        timeSlots: [
             {
-                value:['3个月','6个月','12个月']
+                values: ['3个月','6个月','12个月']
             }
-        ]
+        ],
     },
     computed:{
         serviceStatus:function () {
@@ -148,17 +154,17 @@ var app = new Vue({
             }else {
                 switch (this.defaultData.timeType){
                     case 1:
-                        text = "电信业务";
+                        text = "3个月";
                         break;
                     case 2:
-                        text = "铁通业务";
+                        text = "6个月";
                         break;
                     case 3:
-                        text = "联通业务";
+                        text = "12个月";
                         break;
                 }
             }
-            console.log(this.defaultData.timeType);
+            console.log(this.defaultData.timeType)
             return text;
         }
     },
@@ -169,14 +175,29 @@ var app = new Vue({
                 this.servicePicker.setSlotValue(0, '电信业务');
             }
         },
+        checkTime: function () {
+            this.timePopupVisible = true;
+            if(!this.defaultData.timeType){
+                this.timePicker.setSlotValue(0, '3个月');
+            }
+        },
         onServiceChange: function (picker,values) {
             this.servicePicker =  picker;
             if(values[0]){
                 this.serviceTxt = values[0];
             }
         },
+        onTimeChange: function (picker,values) {
+            this.timePicker =  picker;
+            if(values[0]){
+                this.timeTxt = values[0];
+            }
+        },
         cancelService: function () {
             this.popupVisible = false;
+        },
+        cancelTime: function () {
+            this.timePopupVisible = false;
         },
         selectService: function () {
             this.popupVisible = false;
@@ -193,23 +214,9 @@ var app = new Vue({
                     break;
             }
         },
-        checkTime: function () {
-            this.popupVisible = true;
-            if(!this.defaultData.serviceType){
-                this.timePicker.setSlotValue(0, '3个月');
-            }
-        },
-        onTimeChange: function (picker,values) {
-            this.timePicker =  picker;
-            if(values[0]){
-                this.timeTxt = values[0];
-            }
-        },
-        cancelTime: function () {
-            this.popupVisible = false;
-        },
         selectTime: function () {
-            this.popupVisible = false;
+            this.timePopupVisible = false;
+            console.log(this.timeTxt);
             switch (this.timeTxt){
                 case "3个月":
                     this.defaultData.timeType = 1;
@@ -231,8 +238,16 @@ var app = new Vue({
         subBtn:function () {
             var _this = this;
             console.log(_this.subData);
-            if(!_this.subData.company){
-                _this.$toast('请填写公司名称');
+            if(!_this.defaultData.address){
+                _this.$toast('请填写办公地点');
+                return;
+            }
+            if(!_this.defaultData.serviceType){
+                _this.$toast('请选择办理服务');
+                return;
+            }
+            if(!_this.subData.timeType){
+                _this.$toast('请选择办理时长');
                 return;
             }
             if(!_this.subData.name){

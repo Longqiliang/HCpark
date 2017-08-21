@@ -1,0 +1,314 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>多功能厅预约</title>
+<style>
+    body{
+        background-color: #f8f7fc;
+        color: #333;
+    }
+    h1{
+         padding:1.45rem 0;
+         text-align: center;
+         font-size: 1.8rem;
+         font-weight: normal;
+     }
+    .my-time{
+        padding:0 1.2rem;
+    }
+    .my-time>li{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .my-time>li>div:not(:nth-child(2)){
+        display: block;
+        font-size: 1.3rem;
+        width:90px;
+        height:38px;
+        line-height: 38px;
+        text-align: center;
+        box-shadow: 0 0 4px 0 rgba(0,0,0,.1);
+    }
+    .my-time-am{
+        border-top-left-radius: 100px;
+        border-bottom-left-radius: 100px;
+    }
+    .my-time-pm{
+        border-top-right-radius: 100px;
+        border-bottom-right-radius: 100px;
+    }
+    .my-time-day{
+        padding:0 12px;
+        font-size: 1.3rem;
+    }
+    .my-checked{
+        color: #fff;
+        background-color: #52cc92;
+    }
+    .my-Bespeak{
+        color: #999;
+        background-color: #e8e8e8;
+    }
+
+    .my-tags{
+        height:4.4rem;
+        padding:0 1.8rem;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fff;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .my-tag{
+        width:6.7rem;
+        height:2rem;
+        line-height: 2rem;
+        font-size: 1.5rem;
+        color: #333;
+        padding-left: 3.7rem;
+        background: url("") no-repeat left center;
+        background-size: contain;
+    }
+    .my-tag-sell{
+        background-image: url('/index/images/service/publicservice/sell.png');
+    }
+    .my-tag-checked{
+        background-image: url('/index/images/service/publicservice/checkedGreen.png');
+    }
+    .my-history{
+        height:2.9rem;
+        width:10rem;
+        border-radius: 15rem;
+        color: #fcc44b;
+        font-size: 1.5rem;
+        border:1px solid #fcc44b;
+        text-align: center;
+        line-height: 2.9rem;
+    }
+    .my-illustrate{
+        background-color: #fff;
+        padding:1rem 1.7rem;
+    }
+    .my-illustrate>h4{
+        font-size: 1.5rem;
+        line-height: 1.8rem;
+        color: #333;
+        font-weight: normal;
+        margin:0;
+    }
+    .my-illustrate>h4>span{
+        display: inline-block;
+        text-align: center;
+        width:1.8rem;
+        height:1.8rem;
+        line-height: 1.8rem;
+        border-radius: 100%;
+        border:1px solid #9F9F9F;
+        color: #9F9F9F;
+        margin-left: 1rem;
+    }
+    .my-illustrate-info{
+        margin-top: 5px;
+        padding-bottom: 5rem;
+    }
+    .my-illustrate-info>p{
+        line-height: 2rem;
+        font-size: 1.4rem;
+        color: #999;
+    }
+    .my-total{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width:100%;
+        border-top: 1px solid #f1f1f1;
+        height:50px;
+        line-height: 50px;
+        background: #fff;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: 1.7rem;
+    }
+    .my-total>span{
+        min-width:10rem;
+        margin-right: 30px;
+        color: #52cc92;
+    }
+    .my-total>button{
+        width:100px;
+        height:51px;
+        margin-top: -1px;
+        background-color: #52cc92;
+        color: #fff;
+        border:none;
+        outline: none;
+        font-size: 1.7rem;
+    }
+    
+    .my-back{
+        position: absolute;
+        top:0;
+        right:0;
+        bottom:0;
+        left:0;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <h1>选择时间</h1>
+    <ul class="my-time">
+        <li v-for="item in weeks">
+            <div class="my-time-am" :class="{'my-checked':item.amCheck=='yes','my-Bespeak':item.amBespeak=='yes'}" @click="toChecked(item,'am')">上午（AM）</div>
+            <div class="my-time-day">{{item.day | timeToString}}</span></div>
+            <div class="my-time-pm" :class="{'my-checked':item.pmCheck=='yes','my-Bespeak':item.pmBespeak=='yes'}" @click="toChecked(item,'pm')">下午（PM）</div>
+        </li>
+    </ul>
+    <div class="my-tags">
+        <div class="my-tag my-tag-checked">已选</div>
+        <div class="my-tag my-tag-sell">已售</div>
+        <div class="my-history">预约记录</div>
+    </div>
+    <div class="my-illustrate">
+        <h4>规则说明</h4>
+        <div class="my-illustrate-info">
+
+            <p>1.预约时长半天起，不足半天按半天计算，超过半天按1天计算，以此类推，预约价格800元/天，500元/半天。 </p>
+            <p>2.请至少提前一个工作日进行预约，特殊情况请提前沟通。</p>
+            <p>3.预约地点可用时间为09:00--18:00，请提前安排计划，如有临时变化，请提前2小时取消，以免带来不便。 </p>
+            <p>4.预约成功后，请在2小时内前往海创大厦A座201进行缴费和相关手续办理。 </p>
+            <p>5.指定预约日期当天不可取消预约。</p>
+            <p>6.咨询电话：0571-88610333。</p>
+        </div>
+    </div>
+    <div class="my-total">
+        <span>合计：{{price}}元</span>
+        <button @click="toSubmit">确认预约</button>
+    </div>
+    <div class="my-back"></div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    d=newTime.getDay();
+            if(dt.length<1){
+                dt='0'+dt;
+            }
+            switch (d){
+                case 0:
+                    d = '周日';
+                    break;
+                case 1:
+                    d='周一';
+                    break;
+                case 2:
+                    d = '周二';
+                    break;
+                case 3:
+                    d='周三';
+                    break;
+                case 4:
+                    d = '周四';
+                    break;
+                case 5:
+                    d='周五';
+                    break;
+                case 6:
+                    d = '周六';
+                    break;
+            };
+            return m+'月'+dt+'日 '+d;
+        }
+    });
+
+    var app = new Vue({
+        el:'#app',
+        mounted(){
+            this.baseInfo()
+        },
+        data:{
+            weeks:[
+                {day: 1503273600000, amBespeak: "yes",pmBespeak: "no", amCheck: "no",pmCheck:'yes'},
+                {day: 1503360000000, amBespeak: "no",pmBespeak: "no", amCheck: "no",pmCheck:'no'},
+                {day: 1503446400000, amBespeak: "no",pmBespeak: "yes", amCheck: "yes",pmCheck:'no'},
+                {day: 1503532800000, amBespeak: "no",pmBespeak: "no", amCheck: "no",pmCheck:'no'},
+                {day: 1503619200000, amBespeak: "no",pmBespeak: "no", amCheck: "no",pmCheck:'no'},
+                {day: 1503705600000, amBespeak: "yes",pmBespeak: "no", amCheck: "no",pmCheck:'no'},
+                {day: 1503792000000, amBespeak: "no",pmBespeak: "no", amCheck: "no",pmCheck:'no'}
+            ],
+            price:0,
+            isSubmit:false
+        },
+        methods:{
+           baseInfo(){
+               document.getElementsByTagName('html')[0].style.fontSize = window.screen.width / 375 * 10 + 'px';
+               for(var i=0;i<this.weeks.length;i++){
+                   if(this.weeks[i].amCheck=='yes'||this.weeks[i].pmCheck=='yes'){
+                        this.price+=500;
+                       if(this.weeks[i].pmCheck=='yes' && this.weeks[i].amCheck=='yes'){
+                           this.price+=300;
+                       }
+                   }
+                }
+            },
+            toChecked(time,amOrPm){
+                if(amOrPm=='am'){
+                    if(time.amBespeak=='no'){
+                        var thisPrice = time.pmCheck == 'yes'? 300 : 500;
+                        if(time.amCheck=='yes'){
+                            time.amCheck = 'no';
+                            this.price -= thisPrice;
+                        }else{
+                            time.amCheck = 'yes';
+                            this.price += thisPrice;
+                        }
+                    }
+                }else{
+                    if(time.pmBespeak=='no'){
+                        var thisPrice = time.amCheck == 'yes'? 300 : 500;
+                        if(time.pmCheck=='yes'){
+                            time.pmCheck = 'no';
+                            this.price -= thisPrice;
+                        }else{
+                            time.pmCheck = 'yes';
+                            this.price += thisPrice;
+                        }
+                    }
+                }
+            },
+            toSubmit(){
+                var canSubmit=false;
+                if(!this.isSubmit){
+                    this.isSubmit=true;
+                    for(var i=0;i<this.weeks.length;i++){
+//                        有选择，给上传
+                        if(this.weeks[i].amCheck=='yes'||this.weeks[i].pmCheck=='yes'){
+                            canSubmit=true;
+                            break;
+                        }
+                    }
+                    if(canSubmit){
+                        console.log(111111)
+                    }else{
+                        this.$toast('请选择预约时间')
+                    }
+                }
+            }
+        }
+    })
+</script>
+{/block}

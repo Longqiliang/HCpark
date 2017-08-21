@@ -1,0 +1,96 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>送水服务</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+<style>
+    body{
+        background-color: #f0eff5;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="card">
+        <div class="card-tit">送水服务</div>
+        <div class="card-cell">
+            <label for="add">送水地点</label>
+            <input type="text" placeholder="请输入送水地点" id="add" v-model="defaultData.address">
+        </div>
+        <div class="card-cell">
+            <label for="num">送水桶数</label>
+            <input type="text" placeholder="请输入送水桶数" id="num" v-model="defaultData.num">
+        </div>
+        <div class="card-cell">
+            <label for="name">联系人员</label>
+            <input type="text" placeholder="请输入联系人员" id="name" v-model="defaultData.name">
+        </div>
+        <div class="card-cell">
+            <label for="tel">联系电话</label>
+            <input type="text" placeholder="请输入联系电话" id="tel" v-model="defaultData.tel">
+        </div>
+    </div>
+    <div class="card-more">
+        <button class="btn btn-warning btn-warning-outlined btn-sm" @click="paymentInfo"><i class="icon icon-record"></i>送水记录</button>
+    </div>
+    <div class="card-btn-box payment-btn">
+        <button class="btn btn-block btn-warning" @click="orderBtn">确定预约</button>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            defaultData:{
+                address:'',
+                num:'',
+                name:'',
+                tel:''
+            },
+            subData:{},
+            isSubmit:true,
+        },
+        methods: {
+            paymentInfo:function () {
+
+            },
+            orderBtn: function () {
+                var _this = this;
+                if(!_this.defaultData.address){
+                    _this.$toast('请输入送水地点');
+                    return;
+                }
+                if(!_this.defaultData.num){
+                    _this.$toast('请输入送水桶数');
+                    return;
+                }
+                if(!_this.defaultData.name){
+                    _this.$toast('请输入联系人员');
+                    return;
+                }
+                if(!_this.defaultData.tel){
+                    _this.$toast('请输入联系电话');
+                    return;
+                }
+                if(!_this.isSubmit){
+                    return;
+                }
+                _this.isSubmit = false;
+                var subData = JSON.parse(JSON.stringify(_this.subData));
+                var defaultData =  JSON.parse(JSON.stringify(_this.defaultData));
+                var data = Object.assign(subData,defaultData);
+                this.$http.post('repair',data).then(function (res) {
+                    _this.isSubmit = true;
+                    console.log(res.data);
+                },function (res) {
+                    _this.isSubmit = true;
+                    console.log(res.data);
+                })
+            }
+        }
+    })
+</script>
+{/block}

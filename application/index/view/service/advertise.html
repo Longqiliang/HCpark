@@ -281,8 +281,6 @@
         },
         created: function() {  //在vue初始化时调用
             this.initData(null);
-            console.log(this.days)
-            console.log(this.bespeakList)
         },
         methods: {
             initData: function(cur) {
@@ -321,7 +319,6 @@
                 //其他周
                 for (var i = 1; i <= 41 - this.currentWeek; i++) {
                     var d = new Date(str);
-//                    console.log(str,d)
                    d= d.setDate(d.getDate() + i);
                     var dayobject={};
                     dayobject.day=d;
@@ -373,7 +370,6 @@
                 // setDate(0); 上月最后一天
                 // setDate(-1); 上月倒数第二天
                 // setDate(dx) 参数dx为 上月最后一天的前后dx天
-console.log(this.currentMonth-1)
                 this.$http.post('/index/service/changeMonth',{ month : this.currentMonth-1 }).then(function (res) {
                     this.bespeakList=JSON.parse(res.data);
                     console.log(this.bespeakList)

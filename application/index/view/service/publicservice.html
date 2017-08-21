@@ -110,7 +110,7 @@
                 <li>海创大厦A座--二楼多功能厅</li>
                 <li>服务时间：08:30--17:30（工作日）</li>
             </ul>
-            <div class="my-item-btn" @click="jumpTo('hall')">马上预约</div>
+            <div class="my-item-btn" @click="jumpTo('multifunction')">马上预约</div>
         </div>
     </div>
     <div class="my-item my-color3">
@@ -133,6 +133,12 @@
 var app = new Vue({
     el:'#app',
     data:{
+    },
+    mounted(){
+        console.log(document.getElementsByTagName('html')[0].style.fontSize);
+        document.getElementsByTagName('html')[0].style.fontSize=window.screen.width/375*10+'px';
+        console.log(document.getElementsByTagName('html')[0].style.fontSize);
+        console.log(window.screen.width/375*10)
     },
     methods:{
         jumpTo(path){
