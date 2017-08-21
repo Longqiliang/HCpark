@@ -259,6 +259,7 @@ class Service extends Base{
     }
 
     public function  payment(){
+        $data = input('');
         $park_id =session('park_id');
         $Park = new Park();
         $park= $Park->where('id',$park_id)->find();
