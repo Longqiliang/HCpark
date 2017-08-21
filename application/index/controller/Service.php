@@ -97,12 +97,27 @@ class Service extends Base{
         $AdService = new AdvertisingService();
         $info=[];
         switch ($app_id){
-            //饮水服务
-            case 3:
-                $userid = session('userId');
-                $info = WechatUser::where('userid', 'eq', $userid)->field('name,mobile')->find();
-                break;
-            //车卡服务
+            case 2:
+                $userid =session("userId");
+                $parkid=session('park_id');
+                $parkInfo=Park::where('id',$parkid)->find();
+                $userinfo=WechatUser::where(['userid'=>$userid])->find();
+                $info =[
+                    'name'=>$userinfo['name'],
+                    'mobile'=>$userinfo['mobile'],
+                    'propretyMobile'=>$parkInfo['property_phone']
+                ];
+            case 4:
+                $userid =session("userId");
+                $parkid=session('park_id');
+                $parkInfo=Park::where('id',$parkid)->find();
+                $userinfo=WechatUser::where(['userid'=>$userid])->find();
+                $info =[
+                    'name'=>$userinfo['name'],
+                    'mobile'=>$userinfo['mobile'],
+                    'propretyMobile'=>$parkInfo['property_phone']
+                ];
+            //车卡
             case 6:
                 $map=[
                     'user_id'=>$user_id,
@@ -589,69 +604,42 @@ class Service extends Base{
     public function repair(){
         $userid =session("userId");
         $parkid=session('park_id');
-        if (IS_POST){
-            $property =new PropertyServer();
-            $data = input('post.');
-            $data['user_id']=$userid;
-            $data['park_id']=$parkid;
+        $property =new PropertyServer();
+        $data = input('post.');
+        $data['user_id']=$userid;
+        $data['park_id']=$parkid;
 
-            $res=$property->allowField(true)->save($data);
+        $res=$property->allowField(true)->save($data);
 
-            if ($res){
+        if ($res){
 
-                return $this->success("报修成功");
-            }else{
+            return $this->success("报修成功");
+        }else{
 
-                return $this->error("报修失败");
-            }
-
+            return $this->error("报修失败");
         }
-        $parkInfo=Park::where('id',$parkid)->find();
-        $userinfo=WechatUser::where(['userid'=>$userid])->find();
-        $data =[
-            'name'=>$userinfo['name'],
-            'mobile'=>$userinfo['mobile'],
-            'propretyMobile'=>$parkInfo['property_phone']
-        ];
 
-        //dump($data);
-        $this->assign('data',json_encode($data));
 
-        return  $this->fetch();
     }
     /*保洁服务*/
     public function clear(){
         $userid =session("userId");
         $parkid=session('park_id');
-        if ($_POST){
-            $data = input('post.');
-            $data['user_id']=$userid;
-            $data['park_id']=$parkid;
-            $property =new PropertyServer();
+        $data = input('post.');
+        $data['user_id']=$userid;
+        $data['park_id']=$parkid;
+        $property =new PropertyServer();
 
-            $res=$property->allowField(true)->save($data);
-            if ($res){
+        $res=$property->allowField(true)->save($data);
+        if ($res){
 
-                return $this->success("报修成功");
-            }else{
+            return $this->success("报修成功");
+        }else{
 
-                return $this->error("报修失败");
-            }
-
+            return $this->error("报修失败");
         }
 
-        $parkInfo=Park::where('id',$parkid)->find();
-        $userinfo=WechatUser::where(['userid'=>$userid])->find();
-        $data =[
-            'name'=>$userinfo['name'],
-            'mobile'=>$userinfo['mobile'],
-            'propretyMobile'=>$parkInfo['property_phone']
-        ];
 
-        //dump($data);
-        $this->assign('data',json_encode($data));
-
-        return  $this->fetch();
     }
     /*物业报修记录*/
     public function repairRecord(){
@@ -697,7 +685,7 @@ class Service extends Base{
     //饮水服务
     public function waterService()
     {
-
+        if ($_POST) {
             $waterModel = new WaterModel;
             $_POST['userid']=session('userId');
             $result = $waterModel->allowField(true)->validate(true)->save($_POST);
@@ -708,6 +696,12 @@ class Service extends Base{
                 return $this->error($waterModel->getError());
             }
 
+        } else {
+            $userid = session('userId');
+            $contact = WechatUser::where('userid', 'eq', $userid)->field('name,mobile')->find();
+            $this->assign('contact', $contact);
+            return $this->fetch();
+        }
     }
 
     //饮水服务列表页
