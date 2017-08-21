@@ -685,8 +685,19 @@ class Service extends Base{
     //饮水服务
     public function waterService()
     {
+        $data=input('');
+        $waterModel = new WaterModel;
+        $data['userid']=session('userId');
+        $result = $waterModel->allowField(true)->validate(true)->save($data);
+        if ($result) {
+            //预约成功
+            return $this->success("预约成功");
+        } else {
+            return $this->error($waterModel->getError());
+        }
 
-            $waterModel = new WaterModel;
+
+          /*  $waterModel = new WaterModel;
             $_POST['userid']=session('userId');
             $result = $waterModel->allowField(true)->validate(true)->save($_POST);
             if ($result) {
@@ -694,7 +705,7 @@ class Service extends Base{
                 return $this->success("预约成功");
             } else {
                 return $this->error($waterModel->getError());
-            }
+            }*/
 
 
     }
