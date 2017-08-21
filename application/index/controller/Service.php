@@ -227,6 +227,24 @@ class Service extends Base{
 }
 
 
+
+
+  //新柱办理
+    public function  newPillar(){
+
+
+        return $this->fetch();
+    }
+ //旧柱办理
+    public function  oldPillar(){
+
+
+        return $this->fetch();
+    }
+
+
+
+    //新卡主页
     public  function  newCard(){
         $park_id =session('park_id');
         $Park = new Park();
@@ -249,7 +267,7 @@ class Service extends Base{
         return $this->fetch();
     }
 
-
+   //新卡，下一步
     public  function  nextNewCard(){
 
         $data=input('');
@@ -257,7 +275,7 @@ class Service extends Base{
         return $this->fetch('payment');
 
     }
-
+    //凭证提交公共方法
     public function  payment(){
         $data = input('');
         $park_id =session('park_id');
@@ -277,6 +295,7 @@ class Service extends Base{
 
 
     }
+    //提交新卡
     public  function  addNewCard(){
 
         $CarparkRecord = new CarparkRecord();
@@ -313,6 +332,7 @@ class Service extends Base{
                 $this->error("失败");
             }
     }
+    //旧卡首页
     public  function  oldCard(){
         $user_id =session('userId');
         $park_id =session('park_id');
@@ -339,6 +359,8 @@ class Service extends Base{
         $this->assign('data',json_encode($data));
         return $this->fetch();
     }
+
+    //旧卡下一步
     public  function  nextOldCard(){
 
         $data=input('');
@@ -346,8 +368,7 @@ class Service extends Base{
         return $this->fetch();
 
     }
-
-
+    //旧卡续费（上传凭证）
     public  function  keepOldCard(){
 
         $CarparkRecord = new CarparkRecord();
@@ -469,6 +490,17 @@ class Service extends Base{
 
            return json_encode($list);
        }*/
+
+
+
+
+
+
+
+
+
+
+
 
 
     //大厅广告位预约
