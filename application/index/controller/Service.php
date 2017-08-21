@@ -494,44 +494,50 @@ class Service extends Base{
 
     //大厅广告位（下一步）
     public  function  nextAdvertise(){
-        $data=input('');
-        $ad =new AdvertisingRecord();
-        $user_id =session('userId');
-        $park_id=session('$park_id');
-        $Park=new Park();
-        $ad =new AdvertisingRecord();
-        echo json_encode($data);
-        $record=array();
-        $creat_time=time();
-        $map =[
-            'create_user'=>$user_id,
-             'status'=>1
-        ];
-        $de = $ad->where($map)->delete();
-        $is_select=array();
-        foreach ($data['order_times'] as $value){
-            $is=$ad->where(array('order_time'=>$value,'status'=>array('neq',0)))->find();
-            if($is){
-                array_push($is_select,$is['order_time']);
-            }else{
-            $info=[
-                'create_user'=>$user_id,
-                'service_id'=>1,
-                'order_time'=>$value,
-                'create_time'=>$creat_time,
-                'statute'=>1
-            ];
-            array_push($record,$info);
-            }
-        }
-        $re = $ad ->save($record);
-        $info = $Park->where("id",$park_id)->find();
-        $data['ailpay_user']=$info['ailpay_user'];
-        $data['payment_alipay']=$info['payment_alipay'];
-        $data['no_save']=json_encode($is_select);
-        $this->assign('data',$data);
 
-        return $this->fetch();
+           $data = input('');
+           $user_id = session('userId');
+           $park_id = session('$park_id');
+           $Park = new Park();
+           $ad = new AdvertisingRecord();
+           $record = array();
+           $creat_time = time();
+           $map = [
+               'create_user' => $user_id,
+               'status' => 1
+           ];
+           $de = $ad->where($map)->delete();
+           $is_select = array();
+
+           foreach ($data['order_times'] as $value) {
+              $map=['order_time'=> $value,
+               'status' => array('neq', 0)];
+               $is = $ad->where($map)->find();
+
+               if ($is) {
+                   array_push($is_select, $is['order_time']);
+               } else {
+                   $info = [
+                       'create_user' => $user_id,
+                       'service_id' => 1,
+                       'order_time' => $value,
+                       'create_time' => $creat_time,
+                       'status' => 1
+                   ];
+                   array_push($record, $info);
+               }
+           }
+
+           $re = $ad->saveAll($record);
+           echo json_encode($ad.getLastSql());
+
+           $info = $Park->where("id", $park_id)->find();
+           $data['ailpay_user'] = $info['ailpay_user'];
+           $data['payment_alipay'] = $info['payment_alipay'];
+           $data['no_save'] = json_encode($is_select);
+
+
+        return   $data;
     }
 
     //大厅广告位（提交）
