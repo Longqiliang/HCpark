@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>车卡服务</title>
+<title>旧卡续费</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
 <style>
     body{
@@ -15,26 +15,26 @@
     <div class="card">
         <div class="card-tit">车主信息</div>
         <div class="card-cell">
-            <label for="name">车主姓名</label>
-            <input type="text" placeholder="请输入车主姓名" id="name" v-model="defaultData.name">
+            <span>车牌号码</span><span></span>
         </div>
         <div class="card-cell">
-            <label for="phone">车主电话</label>
-            <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile">
+            <span>停车卡号</span><span></span>
         </div>
         <div class="card-cell">
-            <label for="number">车牌号码</label>
-            <input type="text" placeholder="请输入车牌号码" id="number" v-model="defaultData.car_card">
+            <span>车主姓名</span>
+            <span></span>
         </div>
         <div class="card-cell">
-            <label for="idCard">身份证号</label>
-            <input type="text" placeholder="请输入身份证号" id="idCard" v-model="defaultData.people_card">
+            <span>车主电话</span><span></span>
+        </div>
+        <div class="card-cell">
+            <span>身份证号</span><span></span>
         </div>
     </div>
     <div class="card">
         <div class="card-tit">办理信息</div>
         <div class="card-cell">
-            <span>办理时长</span>
+            <span>续费时长</span>
             <span @click="checkTime" >
                 <span :class="[!defaultData.aging ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>
             </span>
@@ -48,15 +48,7 @@
             </mt-popup>
         </div>
         <div class="card-cell">
-            <span>车卡押金</span>
-            <span>{{subData.carpark_deposit}}</span>
-        </div>
-        <div class="card-cell">
-            <span>停车费用</span>
-            <span>{{parkingFares}}</span>
-        </div>
-        <div class="card-cell">
-            <span>费用总计</span>
+            <span>应缴费用</span>
             <span>{{totalMoney}}</span>
         </div>
     </div>
@@ -69,15 +61,10 @@
 {block name="script"}
 <script>
     var defaultData = {
-        t:'newCard',
-        people_card:'',
-        car_card:'',
-        mobile:'',
-        name:'',
+        type:'oldCard',
         aging:0
     };
-    var data = {$info};
-    console.log(data);
+    var data = {$data};
 
     console.log(data);
     var vm = new Vue({
@@ -90,11 +77,8 @@
                     return this.defaultData.aging+"个月";
                 }
             },
-            parkingFares :function () {
-                return (this.defaultData.aging * this.subData.carpark_price)
-            },
             totalMoney:function () {
-                return (this.defaultData.aging  * this.subData.carpark_price) + this.subData.carpark_deposit;
+                return (this.defaultData.aging  * this.subData.carpark_price);
             }
         },
         data:{
@@ -130,24 +114,6 @@
             },
             nextBtn: function () {
                 var _this = this;
-                if(!_this.defaultData.name){
-                    _this.$toast('请填写车主姓名');
-                    return;
-                }
-                if(!_this.defaultData.mobile){
-                    _this.$toast('请填写车主电话');
-                    return;
-                }
-                if(!_this.defaultData.car_card){
-                    _this.$toast('请填写车牌号码');
-                    return;
-                }
-                if(!_this.defaultData.people_card){
-                    _this.$toast('请填写身份证号');
-                    return;
-                }else{
-                    validateIdCard(_this.defaultData.people_card);
-                }
                 if(!_this.isSubmit){
                     return;
                 }
@@ -157,7 +123,7 @@
                 console.log(data);
                 // return;
                 window.sessionStorage.setItem("data",data);
-                window.location.href="{:Url('Service/nextNewCard')}";
+                window.location.href="{:Url('Service/nextOldCard')}";
 
             }
         }

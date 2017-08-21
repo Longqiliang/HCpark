@@ -498,6 +498,8 @@ textarea::-webkit-input-placeholder {
     background-color:rgba(252,196,75,.2);
     position: absolute;
     top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     overflow: hidden;
 }
 .circle-inner{
