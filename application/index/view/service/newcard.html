@@ -69,6 +69,7 @@
 {block name="script"}
 <script>
     var defaultData = {
+        type:'newCard',
         people_card:'',
         car_card:'',
         mobile:'',
@@ -152,13 +153,12 @@
                 }
                 _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
-                console.log(subData);
-                return;
-                this.$http.post('nextNewCard',subData).then(function (res) {
-                    _this.isSubmit = true;
-                },function (res) {
-                    _this.isSubmit = true;
-                })
+                var data = JSON.stringify(Object.assign(subData,defaultData));
+                console.log(data);
+                // return;
+                window.sessionStorage.setItem("data",data);
+                window.location.href="{:Url('Service/nextNewCard')}";
+
             }
         }
     });

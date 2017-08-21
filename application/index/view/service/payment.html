@@ -16,22 +16,22 @@
         <div class="card-tit">缴费信息</div>
         <div class="card-cell">
             <span>银行账户</span>
-            <span></span>
+            <span>{{subData.bank_user}}</span>
         </div>
         <div class="card-cell">
             <span>账号名称</span>
-            <span></span>
+            <span>{{subData.payment_bank}}</span>
         </div>
         <div class="card-cell bottom-inherit">
             <span class="card-hr">— — — or — — —</span>
         </div>
         <div class="card-cell">
             <span>支付宝账号</span>
-            <span></span>
+            <span>{{subData.payment_alipay}}</span>
         </div>
         <div class="card-cell">
             <span>账号名称</span>
-            <span></span>
+            <span>{{subData.ailpay_user}}</span>
         </div>
     </div>
     <p class="prompt-message">转账时请备注个人信息（转账事由及内容）</p>
@@ -52,28 +52,45 @@
 
 {block name="script"}
 <script>
-    var date = new  Date();
-    var data = {$info};
-    console.log(data);
-    if(!data){
-
+   var data = window.sessionStorage.getItem("data");
+    if(data){
+        data = JSON.parse(data);
+        data.payment_voucher =[1,2,3];
     }
+    console.log(data);
     var vm = new Vue({
         el:"#app",
         data:{
             subData:data,
-            imgSrc:''
+            isSubmit:true
         },
         methods: {
             subBtn: function () {
                 var _this = this;
+
+                if(!_this.isSubmit){
+                    return;
+                }
                 _this.isSubmit = false;
+
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 console.log(subData);
-                return;
-                this.$http.post('',subData).then(function (res) {
-
-                })
+                if(subData.type == "newCard"){
+                    this.$http.post('addNewCard',subData).then(function (res) {
+                        console.log(res.data);
+                        _this.isSubmit = true;
+                        var data = res.data;
+                        if(data.code == 1){
+                            swal({
+                                title:"预约成功!",
+                                text:'工作人员将会在2小时内联系您，洽谈具体事宜，请您耐心等待',
+                                type:"success"
+                            });
+                        }
+                    },function (res) {
+                        _this.isSubmit = true;
+                    })
+                }
             }
         }
     })
