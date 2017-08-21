@@ -168,7 +168,7 @@
                 console.log(_this.defaultData);
                 console.log(subData);
                 console.log(data);
-                this.$http.post('repair',data).then(function (res) {
+                this.$http.post("{:Url('index/Service/repair')}",data).then(function (res) {
                     _this.isSubmit = true;
                     console.log(res.data);
                 },function (res) {
