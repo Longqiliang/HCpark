@@ -15,25 +15,28 @@
     <div class="card">
         <div class="card-tit">车主信息</div>
         <div class="card-cell">
-            <span>车主姓名</span>
-            <span></span>
+            <label for="name">车主姓名</label>
+            <input type="text" placeholder="请输入车主姓名" id="name" v-model="defaultData.name">
         </div>
         <div class="card-cell">
-            <span>车主电话</span><span></span>
+            <label for="phone">车主电话</label>
+            <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile">
         </div>
         <div class="card-cell">
-            <span>车牌号码</span><span></span>
+            <label for="number">车牌号码</label>
+            <input type="text" placeholder="请输入车牌号码" id="number" v-model="defaultData.car_card">
         </div>
         <div class="card-cell">
-            <span>身份证号</span><span></span>
+            <label for="idCard">身份证号</label>
+            <input type="text" placeholder="请输入身份证号" id="idCard" v-model="defaultData.people_card">
         </div>
     </div>
     <div class="card">
         <div class="card-tit">办理信息</div>
         <div class="card-cell">
-            <span>办理时长</span>
+            <span>续费时长</span>
             <span @click="checkTime" >
-                <span :class="[!subData.aging ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>
+                <span :class="[!defaultData.aging ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>
             </span>
 
             <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
@@ -45,15 +48,7 @@
             </mt-popup>
         </div>
         <div class="card-cell">
-            <span>车卡押金</span>
-            <span>{{subData.cash}}</span>
-        </div>
-        <div class="card-cell">
-            <span>停车费用</span>
-            <span>{{parkingFares}}</span>
-        </div>
-        <div class="card-cell">
-            <span>费用总计</span>
+            <span>应缴费用</span>
             <span>{{totalMoney}}</span>
         </div>
     </div>
@@ -65,30 +60,33 @@
 
 {block name="script"}
 <script>
-    var date = new  Date();
+    var defaultData = {
+        type:'oldCard',
+        people_card:'',
+        car_card:'',
+        mobile:'',
+        name:'',
+        aging:0
+    };
     var data = {$data};
-    console.log(data);
-    if(!data){
 
-    }
+    console.log(data);
     var vm = new Vue({
         el:"#app",
         computed:{
             timeStatus:function () {
-                if(!this.subData.aging){
+                if(!this.defaultData.aging){
                     return "请选择";
                 }else{
-                    return this.subData.aging+"个月";
+                    return this.defaultData.aging+"个月";
                 }
             },
-            parkingFares :function () {
-                return (this.subData.aging * this.subData.price)
-            },
             totalMoney:function () {
-                return (this.subData.aging * this.subData.price) + this.subData.cash;
+                return (this.defaultData.aging  * this.subData.carpark_price);
             }
         },
         data:{
+            defaultData:defaultData,
             subData:data,
             popupVisible: false,
             timePicker:'',
@@ -116,40 +114,23 @@
             },
             selectTime: function () {
                 this.popupVisible = false;
-                this.subData.aging = this.timeTxt;
+                this.defaultData.aging = this.timeTxt;
             },
             nextBtn: function () {
                 var _this = this;
-                if(!_this.subData.name){
-                    _this.$toast('请填写车主姓名');
-                    return;
-                }
-                if(!_this.subData.name){
-                    _this.$toast('请填写车主电话');
-                    return;
-                }
-                if(!_this.subData.mobile){
-                    _this.$toast('请填写车牌号码');
-                    return;
-                }
-                if(!_this.subData.mobile){
-                    _this.$toast('请填写身份证号');
-                    return;
-                }
                 if(!_this.isSubmit){
                     return;
                 }
                 _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
-                console.log(subData);
-                return;
-                this.$http.post('',subData).then(function (res) {
-                    _this.isSubmit = true;
-                },function (res) {
-                    _this.isSubmit = true;
-                })
+                var data = JSON.stringify(Object.assign(subData,defaultData));
+                console.log(data);
+                // return;
+                window.sessionStorage.setItem("data",data);
+                window.location.href="{:Url('Service/nextOldCard')}";
+
             }
         }
-    })
+    });
 </script>
 {/block}
