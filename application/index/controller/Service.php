@@ -229,8 +229,8 @@ public  function  _checkData($data){
     public  function  nextNewCard(){
 
         $data=input('');
-        $this->assign('data',$data);
-        return $this->fetch();
+        $this->assign('data',json_encode($data));
+        return $this->fetch('');
 
     }
 
@@ -368,7 +368,7 @@ public  function  _checkData($data){
 
     }
 
-        //大厅广告位预约
+/*        //大厅广告位预约
         public function advertise(){
             $adService=new AdvertisingService();
             $adRecord = new AdvertisingRecord();
@@ -382,7 +382,11 @@ public  function  _checkData($data){
             $list =$adRecord->where($map)->select();
             $service =$adService->where('id',1)->find();
             $this->assign('price',$service['price']);
-            $this->assign('record',json_encode($list));
+            $data=array();
+            foreach ($list as $value){
+                array_push($data,$value['order_time']);
+            }
+            $this->assign('record',json_encode($data));
             return $this->fetch();
         }
 
@@ -447,9 +451,142 @@ public  function  _checkData($data){
            $list =$adRecord->where($map)->select();
 
            return json_encode($list);
-       }
+       }*/
 
 
+    //大厅广告位预约
+    public function advertise(){
+        $user_id = session('userId');
+        $adService=new AdvertisingService();
+        $adRecord = new AdvertisingRecord();
+        //今天结束时间
+        $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+        //本月结束时间
+        $endThismonth=mktime(23,59,59,date('m'),date('t'),date('Y'));
+        $map['order_time']=array('between',array($endToday,$endThismonth));
+        $map['service_id']=1;
+        $map['status']=array('neq',0);
+        //所有被选中的和预约成功的
+        $list =$adRecord->where($map)->select();
+        //该用户自己选中的（当月）
+        $map['status']=array('eq',1);
+        $map['create_user']=$user_id;
+        $user_select = $adRecord->where($map)->select();
+        //该用户自己选中的（全部）
+        unset($map['order_time']);
+        $user_allselect = $adRecord->where($map)->select();
+        $user_allcheck=array();
+        foreach ($user_allselect as $value){
+            array_push($user_allcheck,$value['order_time']);
+        }
+        //两者差值
+        $reult = array_diff($list,$user_select);
+        $service =$adService->where('id',1)->find();
+        $this->assign('price',$service['price']);
+        $data=array();
+        foreach ($reult as $value){
+            array_push($data,$value['order_time']);
+        }
+
+        $this->assign('record',json_encode($data));
+        $this->assign('user_check',json_encode($user_allcheck));
+
+        return $this->fetch();
+    }
+
+
+
+    //大厅广告位（下一步）
+    public  function  nextAdvertise(){
+        $ad =new AdvertisingRecord();
+        $user_id =session('userId');
+        $park_id=session('$park_id');
+        $Park=new Park();
+        $ad =new AdvertisingRecord();
+        $data=input('');
+        $record=array();
+        $creat_time=time();
+        $map =[
+            'create_user'=>$user_id,
+             'status'=>1
+        ];
+        $de = $ad->where($map)->delete();
+        $is_select=array();
+        foreach ($data['order_times'] as $value){
+            $is=$ad->where(array('order_time'=>$value,'status'=>array('neq',0)))->find();
+            if($is){
+                array_push($is_select,$is['order_time']);
+            }else{
+            $info=[
+                'create_user'=>$user_id,
+                'service_id'=>1,
+                'order_time'=>$value,
+                'create_time'=>$creat_time,
+                'statute'=>1
+            ];
+            array_push($record,$info);
+            }
+        }
+        $re = $ad ->save($record);
+        $info = $Park->where("id",$park_id)->find();
+        $data['ailpay_user']=$info['ailpay_user'];
+        $data['payment_alipay']=$info['payment_alipay'];
+        $data['no_save']=json_encode($is_select);
+        $this->assign('data',$data);
+
+        return $this->fetch();
+    }
+
+    //大厅广告位（提交）
+    public  function  submitAdvertise(){
+        $ad =new AdvertisingRecord();
+        $user_id =session('userId');
+        $data=input('');
+        $map=[
+            'create_user'=>$user_id,
+             'status'=>1
+        ];
+        $record =$ad->where($map)->select();
+        foreach ($record as $value){
+            $value['payment_voucher']=$data['payment_voucher'];
+            $value['status']=2;
+        }
+
+        $re = $ad->saveAll($record);
+        if($re){
+            return $this->success('成功');
+        }
+        else{
+            return $this->error('成功');
+        }
+    }
+
+
+
+
+    //大厅广告位月份切换
+    public  function   changeMonth(){
+        $adRecord = new AdvertisingRecord();
+        //数字（几月）
+        $month=input('month');
+
+
+        $beginThismonth=mktime(0,0,0,$month,1,date('Y'));
+
+        $endThismonth=mktime(23,59,59,$month,date('t'),date('Y'));
+        $map['order_time']=array('between',array($beginThismonth,$endThismonth));
+        $map['service_id']=1;
+        $map['status']=array('eq',2);
+        $list =$adRecord->where($map)->select();
+        $reult =array();
+        foreach ($list as $value){
+
+            array_push($list,$value['order_time']);
+
+        }
+
+        return json_encode($reult);
+    }
 
 
 
