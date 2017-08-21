@@ -685,7 +685,7 @@ class Service extends Base{
     //饮水服务
     public function waterService()
     {
-        if ($_POST) {
+
             $waterModel = new WaterModel;
             $_POST['userid']=session('userId');
             $result = $waterModel->allowField(true)->validate(true)->save($_POST);
@@ -696,12 +696,7 @@ class Service extends Base{
                 return $this->error($waterModel->getError());
             }
 
-        } else {
-            $userid = session('userId');
-            $contact = WechatUser::where('userid', 'eq', $userid)->field('name,mobile')->find();
-            $this->assign('contact', $contact);
-            return $this->fetch();
-        }
+
     }
 
     //饮水服务列表页
