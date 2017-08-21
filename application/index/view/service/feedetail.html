@@ -1,0 +1,110 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>水电费</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+<style>
+    body{
+        background-color: #f0eff5;
+    }
+    .card-cell>span:last-child{
+        text-align: right;
+        width:70vw;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="card">
+        <div class="card-tit">{{title}}</div>
+        <div class="card-cell">
+            <span>企业名称</span>
+            <span>杭州之图网络科技有限公司</span>
+        </div>
+        <div class="card-cell">
+            <span>到期时间</span>
+            <span>2017-06-09</span>
+        </div>
+        <div class="card-cell">
+            <span>应交费用</span>
+            <span>100元</span>
+        </div>
+    </div>
+    <div class="card-more">
+        <button class="btn btn-warning btn-warning-outlined btn-sm" @click="goHistory"><i class="icon icon-record"></i>缴费记录</button>
+    </div>
+    <div class="card-btn-box payment-btn">
+        <button class="btn btn-block btn-warning" @click="orderBtn">下一步</button>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            type:parseInt(window.location.href.split('/t/')[1])
+        },
+        created(){
+            console.log(this.type)
+        },
+        computed:{
+          title:function(){
+              switch (this.type){
+                  case 1:
+                      return "水电费";
+                  case 2:
+                      return "物业费";
+                  case 3:
+                      return "房租费";
+                  case 4:
+                      return "功耗费";
+              }
+          }
+        },
+        methods: {
+            paymentInfo:function () {
+
+            },
+            goHistory(){
+                window.location.href='/index/service/history/t/'+this.type;
+            },
+            orderBtn: function () {
+                window.location.href='/index/service/payment/t/'+this.type;
+//                this.$http.post("/index/service/waterService",data).then(function (res) {
+//                    _this.isSubmit = true;
+//                    var resData = res.data;
+//                    console.log(resData)
+//                    if(resData.code == 1){
+//                        swal({
+//                            title:"预约成功!",
+//                            text:'工作人员将在2小时内上门送水，请您耐心等待',
+//                            type:"success"
+//                        },function (e) {
+//                            window.history.back();
+//                        });
+//                    }else{
+//                        swal({
+//                            title:"",
+//                            text:'预约失败!',
+//                            type:"error",
+//                            confirmButtonText: "重新预约"
+//                        },function (e) {
+//                            if(e){
+//                                _this.isShow = false;
+//                            }
+//                        });
+//                    }
+//                },function (res) {
+//                    _this.isSubmit = true;
+//                    console.log(res.data);
+//                })
+            }
+        }
+    })
+</script>
+{/block}

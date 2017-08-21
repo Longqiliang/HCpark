@@ -399,12 +399,48 @@
                 return y+"-"+m+"-"+d
             },
             toSubmit(){
+                var the=this;
                 if(!this.isSubmit){
+                    this.isSubmit=true;
                     if(this.checkedList.length>0){
-                        this.$http.post('/index/service/nextAdvertise',{order_times:this.checkedList}).then(function (res) {
-                            console.log(res);
-//                            window.location.href='/index/service/payment';
+                        this.$http.post('/index/service/nextAdvertise',{order_times:this.checkedList},{emulateJSON: true}).then(function (res) {
+                            this.isSubmit=false;
+                            var noSave = JSON.parse(res.data).no_save;
+//                            如果有被预定，删除、提示
+                            if(noSave = '' ){
+                                var text = '';
+                                for(var i=0;i<noSave.length;i++){
+                                    var date=new Date(noSave[i]);
+                                    var y=date.getFullYear(),m=date.getMonth(),d=date.getDate();
+                                    var str=the.formatDate(y,m,d);
+                                    text=str+'、';
+                                    for(var o=0;o<the.checkedList.length;o++){
+                                        if(the.checkedList[o]==noSave[i]){
+                                            the.checkedList[o].split(o,1)
+                                        }
+                                    }
+                                }
+                                text=text.substr(0,text.length-1);
+                                swal({
+                                    title:"",
+                                    text:"您选择的"+ text +'已被预约，已为您取消选择',
+                                    type:"warning"
+                                })
+
+                            }else{
+                                window.sessionStorage.setItem('data',res.data)
+                                swal({
+                                    title:"",
+                                    text:"缴费完成后，请尽快上传缴费凭证",
+                                    type:"success"
+                                },function (e) {
+                                    if(e){
+                                        window.location.href='/index/service/'
+                                    }
+                                })
+                            }
                         },function (res) {
+                            this.isSubmit=false;
                             console.log(res)
                         })
                     }else{

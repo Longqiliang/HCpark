@@ -1,0 +1,79 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    ul{
+        padding:1.2rem;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    ul>li{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #333;
+    }
+    ul>li:first-child{
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+    ul>li:last-child{
+        font-size: 1.4rem;
+        color: #000;
+    }
+    .unPay{
+        color: #f97878;
+    }
+    .auditing{
+        color: #fcc44b;
+    }
+    .payed{
+        color: #52cc92;
+    }
+    .no-history{
+        color: #999;
+        font-size: 1.6rem;
+        text-align: center;
+        margin-top: 40vh;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <ul v-for="item in historyList">
+        <li>
+            <span>水电费</span>
+            <span class="unPay">未缴费</span>
+        </li>
+        <li>
+            <span>2017-7-7</span>
+            <span>缴费金额：118元</span>
+        </li>
+    </ul>
+    <p class="no-history" v-if="historyList==''">
+        暂无记录
+    </p>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+        historyList:[
+//            {
+////                name:'水费',
+////                state:'未缴费',
+////                time:1503532800000,
+////                pay:'1111'
+//            }
+        ]
+    },
+    methods:{
+        
+    }
+})
+</script>
+{/block}
