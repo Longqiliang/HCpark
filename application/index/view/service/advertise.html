@@ -259,7 +259,7 @@
     </div>
     <div class="my-total">
         <span>合计：{{this.checkedList.length*this.price}}元</span>
-        <button>确认预约</button>
+        <button @click="toSubmit">确认预约</button>
     </div>
 </div>
 {/block}
@@ -277,7 +277,7 @@
             days: [],
             checkedList:[],
             bespeakList:JSON.parse('{$record}'),
-            nextApi:"{:url('Service/')}"
+            isSubmit:false
         },
         created: function() {  //在vue初始化时调用
             this.initData(null);
@@ -397,8 +397,24 @@
                 var d = day;
                 if(d<10) d = "0" + d;
                 return y+"-"+m+"-"+d
+            },
+            toSubmit(){
+                if(!this.isSubmit){
+                    if(this.checkedList.length>0){
+                        this.$http.post('/index/service/nextAdvertise',{order_times:this.checkedList}).then(function (res) {
+                            console.log(res);
+//                            window.location.href='/index/service/payment';
+                        },function (res) {
+                            console.log(res)
+                        })
+                    }else{
+                        console.log(this.checkedList)
+                        this.$toast("请选择预约日期")
+                    }
+                }else{
+                    this.$toast("预约中，请勿重复提交")
+                }
             }
-
 
         }
     });

@@ -20,7 +20,7 @@
         </div>
         <div class="card-cell">
             <label for="num">送水桶数</label>
-            <input type="text" placeholder="请输入送水桶数" id="num" v-model="defaultData.num">
+            <input type="text" placeholder="请输入送水桶数" id="num" v-model="defaultData.number">
         </div>
         <div class="card-cell">
             <label for="name">联系人员</label>
@@ -28,7 +28,7 @@
         </div>
         <div class="card-cell">
             <label for="tel">联系电话</label>
-            <input type="text" placeholder="请输入联系电话" id="tel" v-model="defaultData.tel">
+            <input type="text" placeholder="请输入联系电话" id="tel" v-model="defaultData.mobile">
         </div>
     </div>
     <div class="card-more">
@@ -46,11 +46,10 @@
         data:{
             defaultData:{
                 address:'',
-                num:'',
-                name:'',
-                tel:''
+                number:'',
+                name:JSON.parse('{$info}').name,
+                mobile:JSON.parse('{$info}').mobile
             },
-            subData:{},
             isSubmit:true,
         },
         methods: {
@@ -63,7 +62,7 @@
                     _this.$toast('请输入送水地点');
                     return;
                 }
-                if(!_this.defaultData.num){
+                if(!_this.defaultData.number){
                     _this.$toast('请输入送水桶数');
                     return;
                 }
@@ -71,7 +70,7 @@
                     _this.$toast('请输入联系人员');
                     return;
                 }
-                if(!_this.defaultData.tel){
+                if(!_this.defaultData.mobile){
                     _this.$toast('请输入联系电话');
                     return;
                 }
@@ -79,12 +78,33 @@
                     return;
                 }
                 _this.isSubmit = false;
-                var subData = JSON.parse(JSON.stringify(_this.subData));
-                var defaultData =  JSON.parse(JSON.stringify(_this.defaultData));
-                var data = Object.assign(subData,defaultData);
-                this.$http.post('repair',data).then(function (res) {
+                var defaultData =  _this.defaultData;
+                var data = defaultData;
+                console.log(data);
+                this.$http.post("/index/service/waterService",data).then(function (res) {
                     _this.isSubmit = true;
-                    console.log(res.data);
+                    var resData = res.data;
+                    console.log(resData)
+                    if(resData.code == 1){
+                        swal({
+                            title:"预约成功!",
+                            text:'工作人员将在2小时内上门送水，请您耐心等待',
+                            type:"success"
+                        },function (e) {
+                            window.history.back();
+                        });
+                    }else{
+                        swal({
+                            title:"",
+                            text:'预约失败!',
+                            type:"error",
+                            confirmButtonText: "重新预约"
+                        },function (e) {
+                            if(e){
+                                _this.isShow = false;
+                            }
+                        });
+                    }
                 },function (res) {
                     _this.isSubmit = true;
                     console.log(res.data);

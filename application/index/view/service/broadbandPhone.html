@@ -1,0 +1,292 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>电话宽带</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+
+<style>
+    .detail{
+        font-size: 1.4rem
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="detail">
+        <div class="group-tit">
+            <h3 class="group-tit-info">服务简介</h3>
+        </div>
+        <p class="detail-txt">中国电信：主要经营固定电话、移动通信、卫星通信、互联网接入及应用等综合信息服务。客服电话：10000</p>
+        <p class="detail-txt">中国铁通：主要经营固定网本地电话业务，固定网国内长途电话业务，固定网国际长途电话业务、IP电话业务、公众电报和用户电报业务。客服电话：10050</p>
+        <p class="detail-txt">中国联通：主要经营固定通信业务，国内国际通信设施服务业务、数据通信业务、网络接入业务和各类电信增值业务。客服电话：10010</p>
+    </div>
+    <div class="card">
+        <div class="card-cell">
+            <label for="name">办公地点</label>
+            <input type="text" placeholder="请输入办公地点" v-model="subData.address">
+        </div>
+        <div class="card-cell">
+            <span>办理业务</span>
+            <span @click="checkService" >
+                <span :class="[!subData.business ? 'select-color' : '', '']">{{serviceStatus}}</span> <i class="allow-right"></i>
+            </span>
+
+            <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelService">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectService">确定</span>
+                </div>
+                <mt-picker :slots="slots" @change="onServiceChange" ></mt-picker>
+            </mt-popup>
+        </div>
+        <div class="card-cell">
+            <span>办理时长</span>
+            <span @click="checkTime" >
+                <span :class="[!subData.business_time ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>
+            </span>
+
+            <mt-popup  position="bottom"  v-model="timePopupVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelTime">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectTime">确定</span>
+                </div>
+                <mt-picker :slots="timeSlots" @change="onTimeChange" ></mt-picker>
+            </mt-popup>
+        </div>
+        <div class="table-view-cell"><button class="btn btn-block btn-primary reservation-btn" @click="bgShow">预约服务</button></div>
+    </div>
+    <div class="layer" v-show="isShow">
+        <div class="form-group">
+            <div class="group-tit">
+                <h3 class="group-tit-info">预约信息填写</h3>
+            </div>
+            <div class="group-cell table-view-cell">
+                <label for="company">公司名称</label><input type="text" v-model="subData.company" id="company" placeholder="请填写" maxlength="15">
+            </div>
+            <div class="group-cell table-view-cell">
+                <label for="name">联系人员</label><input type="text" v-model="subData.people" id="name" placeholder="请填写">
+            </div>
+            <div class="group-cell table-view-cell">
+                <label for="mobile">联系方式</label><input type="number" v-model="subData.mobile" id="mobile" placeholder="请填写" minlength="7">
+            </div>
+            <div>
+                <span class="group-area-tit">备注信息</span>
+                <textarea  id="" cols="30" rows="10" v-model="subData.remark" class="group-area" maxlength="200"></textarea>
+            </div>
+            <div class="table-view-cell group-cell btn-box">
+                <button class="group-btn btn-warning btn" @click="bgClose">取消提交</button>
+                <button class="group-btn btn-primary btn" @click="subBtn">确定提交</button>
+            </div>
+        </div>
+    </div>
+    <div class="model-bg" @click="bgClose" v-show="isShow"></div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var baseInfo=JSON.parse('{$info}')
+    var app = new Vue({
+        el:'#app',
+        data:{
+            subData:{
+                remark:'',
+                mobile:baseInfo.mobile,
+                people:baseInfo.name,
+                company:baseInfo.company,
+                business:0,
+                business_time:0,
+                address:''
+            },
+            isShow:false,
+            popupVisible: false,
+            timePopupVisible: false,
+            servicePicker:'',
+            serviceTxt:'',
+            timePicker:'',
+            timeTxt:'',
+            isSubmit:true,
+            slots: [
+                {
+                    values: ['电信业务','铁通业务','联通业务']
+                }
+            ],
+            timeSlots: [
+                {
+                    values: ['3个月','6个月','12个月']
+                }
+            ],
+        },
+        computed:{
+            serviceStatus:function () {
+                var text = "";
+                if(!this.subData.business){
+                    text = "请选择"
+                }else {
+                    switch (this.subData.business){
+                        case 1:
+                            text = "电信业务";
+                            break;
+                        case 2:
+                            text = "铁通业务";
+                            break;
+                        case 3:
+                            text = "联通业务";
+                            break;
+                    }
+                }
+                console.log(this.subData.business)
+                return text;
+            },
+            timeStatus:function () {
+                var text = "";
+                if(!this.subData.business_time){
+                    text = "请选择"
+                }else {
+                    switch (this.subData.business_time){
+                        case 1:
+                            text = "3个月";
+                            break;
+                        case 2:
+                            text = "6个月";
+                            break;
+                        case 3:
+                            text = "12个月";
+                            break;
+                    }
+                }
+                return text;
+            }
+        },
+        methods:{
+            checkService: function () {
+                this.popupVisible = true;
+                if(!this.subData.business){
+                    this.servicePicker.setSlotValue(0, '电信业务');
+                }
+            },
+            checkTime: function () {
+                this.timePopupVisible = true;
+                if(!this.subData.business_time){
+                    this.timePicker.setSlotValue(0, '3个月');
+                }
+            },
+            onServiceChange: function (picker,values) {
+                this.servicePicker =  picker;
+                if(values[0]){
+                    this.serviceTxt = values[0];
+                }
+            },
+            onTimeChange: function (picker,values) {
+                this.timePicker =  picker;
+                if(values[0]){
+                    this.timeTxt = values[0];
+                }
+            },
+            cancelService: function () {
+                this.popupVisible = false;
+            },
+            cancelTime: function () {
+                this.timePopupVisible = false;
+            },
+            selectService: function () {
+                this.popupVisible = false;
+                console.log(this.serviceTxt);
+                switch (this.serviceTxt){
+                    case "电信业务":
+                        this.subData.business = 1;
+                        break;
+                    case "铁通业务":
+                        this.subData.business = 2;
+                        break;
+                    case "联通业务":
+                        this.subData.business = 3;
+                        break;
+                }
+            },
+            selectTime: function () {
+                this.timePopupVisible = false;
+                console.log(this.timeTxt);
+                switch (this.timeTxt){
+                    case "3个月":
+                        this.subData.business_time = 1;
+                        break;
+                    case "6个月":
+                        this.subData.business_time = 2;
+                        break;
+                    case "12个月":
+                        this.subData.business_time = 3;
+                        break;
+                }
+            },
+            bgShow:function () {
+                this.isShow = true;
+            },
+            bgClose:function () {
+                this.isShow = false;
+            },
+            subBtn:function () {
+                var _this = this;
+                console.log(_this.subData);
+                if(!_this.subData.address){
+                    _this.$toast('请填写办公地点');
+                    return;
+                }
+                if(!_this.subData.business){
+                    _this.$toast('请选择办理服务');
+                    return;
+                }
+                if(!_this.subData.business_time){
+                    _this.$toast('请选择办理时长');
+                    return;
+                }
+                if(!_this.subData.people){
+                    _this.$toast('请填写联系人员');
+                    return;
+                }
+                if(!_this.subData.mobile){
+                    _this.$toast('请填写联系方式');
+                    return;
+                }
+                if(!_this.isSubmit){
+                    return;
+                }
+                _this.isSubmit = false;
+                var subData = JSON.parse(JSON.stringify(_this.subData));
+                //return;
+                this.$http.post('/index/service/broadbandPhone',subData).then(function (res) {
+                    console.log(res);
+                    _this.isSubmit = true;
+                    var resData = res.data;
+                    if(resData.code == 1){
+                        swal({
+                            title:"预约成功!",
+                            text:'请您在2小时内前往，海创大厦A座2楼201进行费用缴纳和相关手续办理',
+                            type:"success"
+                        },function (e) {
+                            if(e){
+                               window.history.back();
+                            }
+                        });
+                    }else{
+                        swal({
+                            title:"",
+                            text:'预约失败!',
+                            type:"error",
+                            confirmButtonText: "重新预约"
+                        },function (e) {
+                            if(e){
+                                _this.isShow = false;
+                            }
+                        });
+                    }
+                },function (res) {
+                    _this.isSubmit = true;
+                })
+            }
+        }
+    })
+</script>
+{/block}
