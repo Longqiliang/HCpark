@@ -316,12 +316,9 @@ class Service extends Base{
         $data['carpark_deposit']=$park['carpark_deposit'];
         //用户停车卡信息
         $data['cardlist']=$cardinfo;
-
-        $this->assign('data',$data);
-
+        $this->assign('data',json_encode($data));
         return $this->fetch();
     }
-
     public  function  nextOldCard(){
 
         $data=input('');
@@ -501,7 +498,7 @@ class Service extends Base{
 
            $data = input('');
            $user_id = session('userId');
-           $park_id = session('$park_id');
+           $park_id = session('park_id');
            $Park = new Park();
            $ad = new AdvertisingRecord();
            $record = array();
@@ -510,12 +507,15 @@ class Service extends Base{
                'create_user' => $user_id,
                'status' => 1
            ];
-           $de = $ad->where($map)->delete();
+
            $is_select = array();
 
            foreach ($data['order_times'] as $value) {
               $map=['order_time'=> $value,
-               'status' => array('neq', 0)];
+               'status' => array('neq', 0),
+                  'create_user'=>array('neq',$user_id)
+                  ];
+
                $is = $ad->where($map)->find();
 
                if ($is) {
@@ -531,17 +531,19 @@ class Service extends Base{
                    array_push($record, $info);
                }
            }
-
+           if(count($is_select)>0){
+               $data['no_save'] = json_encode($is_select);
+               return   json_encode($data);
+           }
+           $de = $ad->where($map)->delete();
            $re = $ad->saveAll($record);
-
-
-           $info = $Park->where("id", $park_id)->find();
+           $info = $Park->where("id",$park_id)->find();
            $data['ailpay_user'] = $info['ailpay_user'];
            $data['payment_alipay'] = $info['payment_alipay'];
            $data['no_save'] = json_encode($is_select);
 
 
-        return   $data;
+        return   json_encode($data);
     }
 
     //大厅广告位（提交）
