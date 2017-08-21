@@ -529,7 +529,7 @@ class Service extends Base{
            }
 
            $re = $ad->saveAll($record);
-           echo json_encode($ad.getLastSql());
+
 
            $info = $Park->where("id", $park_id)->find();
            $data['ailpay_user'] = $info['ailpay_user'];
