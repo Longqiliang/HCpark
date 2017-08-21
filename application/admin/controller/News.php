@@ -139,8 +139,13 @@ class News extends Admin
                     ]]
                 ]
             ];
-
-            switch ($news['send_type']) {
+            $userId = '';
+            $userList = WechatUser::select();
+            foreach ($userList as $user) {
+                $userId .= $user['userid'].'|';
+            }
+            $data['touser'] = rtrim($userId, "|");
+            /*switch ($news['send_type']) {
                 case 0:
                     $userId = '';
                     $userList = WechatUser::select();
@@ -156,13 +161,13 @@ class News extends Admin
                 case 2:
                     $data['totag'] = $news['send_target'];
                     break;
-            }
+            }*/
 
             $result = $weObj->sendMessage($data);
 //            var_dump($result);
 //            var_dump($weObj->errCode.'|'.$weObj->errMsg);
             if ($result['errcode'] == 0 ) {
-                NewsModel::where('id', input('id'))->update(['is_send' => 1]);
+             NewsModel::where('id', input('id'))->update(['is_send' => 1]);
                 return $this->success('推送成功');
             } else {
                 return $this->error('推送失败');
