@@ -250,7 +250,7 @@ class Service extends Base{
 
         $data=input('');
         $this->assign('data',json_encode($data));
-        return $this->fetch('');
+        return $this->fetch('payment');
 
     }
     public  function  addNewCard(){
@@ -266,22 +266,24 @@ class Service extends Base{
                 'people_card' => $data['people_card'],
                 'car_card' => $data['car_card'],
                 'user_id' => $id,
-                'status' => 0
+                'status' => 0,
+                'create_time'=>time()
             ];
 
             $re = $CardparkService->save($service);
+
             $record=[
                 'type'=>1,
                 'aging'=>$data['aging'],
                 'payment_voucher'=>$data['payment_voucher'],
                 'create_time'=>time(),
-                'carpark_id'=>$re,
+                'carpark_id'=>$CardparkService->id,
                 'status'=>0,
                 'money'=>((int)$data['carpark_price']*(int)$data['aging'])+100,
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
-                $this->success('成功');
+                $this->success('成功'.json_encode($CardparkService->id));
 
             }else{
                 $this->error("失败");
@@ -492,12 +494,13 @@ class Service extends Base{
 
     //大厅广告位（下一步）
     public  function  nextAdvertise(){
+        $data=input('');
         $ad =new AdvertisingRecord();
         $user_id =session('userId');
         $park_id=session('$park_id');
         $Park=new Park();
         $ad =new AdvertisingRecord();
-        $data=input('');
+        echo json_encode($data);
         $record=array();
         $creat_time=time();
         $map =[
@@ -551,7 +554,7 @@ class Service extends Base{
             return $this->success('成功');
         }
         else{
-            return $this->error('成功');
+            return $this->error('失败'.$re);
         }
     }
 
@@ -685,7 +688,7 @@ class Service extends Base{
     //饮水服务
     public function waterService()
     {
-        $data=input('');
+        $data=input('post.');
         $waterModel = new WaterModel;
         $data['userid']=session('userId');
         $result = $waterModel->allowField(true)->validate(true)->save($data);
