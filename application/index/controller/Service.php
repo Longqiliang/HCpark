@@ -97,7 +97,12 @@ class Service extends Base{
         $AdService = new AdvertisingService();
         $info=[];
         switch ($app_id){
-            //车卡
+            //饮水服务
+            case 3:
+                $userid = session('userId');
+                $info = WechatUser::where('userid', 'eq', $userid)->field('name,mobile')->find();
+                break;
+            //车卡服务
             case 6:
                 $map=[
                     'user_id'=>$user_id,
@@ -135,7 +140,7 @@ class Service extends Base{
 
 
         }
-        $this->assign('info',$info);
+        $this->assign('info',json_echode($info));
         return $this->fetch($path);
 
 
@@ -696,7 +701,7 @@ public  function  _checkData($data){
     //饮水服务
     public function waterService()
     {
-        if ($_POST) {
+
             $waterModel = new WaterModel;
             $_POST['userid']=session('userId');
             $result = $waterModel->allowField(true)->validate(true)->save($_POST);
@@ -707,12 +712,6 @@ public  function  _checkData($data){
                 return $this->error($waterModel->getError());
             }
 
-        } else {
-            $userid = session('userId');
-            $contact = WechatUser::where('userid', 'eq', $userid)->field('name,mobile')->find();
-            $this->assign('contact', $contact);
-            return $this->fetch();
-        }
     }
 
     //饮水服务列表页
