@@ -233,11 +233,6 @@ public  function  _checkData($data){
         return $this->fetch('');
 
     }
-
-
-
-
-
     public  function  addNewCard(){
 
         $CarparkRecord = new CarparkRecord();
@@ -271,14 +266,7 @@ public  function  _checkData($data){
             }else{
                 $this->error("失败");
             }
-
-
-
     }
-
-
-
-
     public  function  oldCard(){
         $user_id =session('userId');
         $park_id =session('park_id');
@@ -323,22 +311,12 @@ public  function  _checkData($data){
         $CardparkService= new CarparkService();
             $id = session('userId');
             $data = input('');
-            $service = [
-                'name' => $data['name'],
-                'mobile' => $data['mobile'],
-                'people_card' => $data['people_card'],
-                'car_card' => $data['car_card'],
-                'user_id' => $id,
-                'status' => 0
-            ];
-
-            $re = $CardparkService->save($service);
             $record=[
                 'type'=>2,
                 'aging'=>$data['aging'],
                 'payment_voucher'=>$data['payment_voucher'],
                 'create_time'=>time(),
-                'carpark_id'=>$re,
+                'carpark_id'=>$data['carpark_id'],
                 'status'=>0,
                 'money'=>$data['money'],
             ];
