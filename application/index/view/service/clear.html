@@ -31,15 +31,15 @@
                 <mt-datetime-picker
                         :start-date="startDate"
                         :end-date="endDate"
-                        :start-hour="8"
-                        :end-hour="11"
+                        :start-hour=8
+                        :end-hour=11
                         ref="picker"
                         type="datetime"
                         v-model="defaultData.pickerValue"
                         month-format="{value} 月"
                         date-format="{value} 日"
                         hour-format="{value}时"
-                        minute-format="0"
+                        minute-format="{value}分"
                         @confirm="handleChange">
                 </mt-datetime-picker>
             </template>
@@ -81,24 +81,6 @@
     var nowDate = new Date();
     var date = new Date();
     var endDate = dateMonth(date,6);
-    function dateMonth(date,maxlength) {
-       var nowMonth =  date.getMonth();
-        var nowYear = date.getFullYear();
-        if((typeof(maxlength) == 'number')||(typeof(maxlength) == 'string')){
-            maxlength = parseInt(maxlength) ;
-            if(isNaN(maxlength)){
-                maxlength = 1;
-            }
-        }
-        var newMonth = nowMonth +maxlength;
-       var monthCount = 12;
-        if(newMonth>monthCount){
-            var resMonth = newMonth - monthCount;
-            var newDate = date.setFullYear(nowYear + 1);
-            newDate =new Date(date.setMonth(resMonth));
-            return newDate;
-        }
-    }
     var defaultData = {
         type:0,
         extra:'',
@@ -165,6 +147,30 @@
                 })
             }
         }
-    })
+    });
+
+    /**
+     * 时间函数(返回距初始时间多少月后的时间)
+     * @param {Date} date 初始的时间
+     * @param {Number} maxlength 多少个月后(0-12)
+     */
+    function dateMonth(date,maxlength) {
+        var nowMonth =  date.getMonth();
+        var nowYear = date.getFullYear();
+        if((typeof(maxlength) == 'number')||(typeof(maxlength) == 'string')){
+            maxlength = parseInt(maxlength) ;
+            if(isNaN(maxlength)){
+                maxlength = 1;
+            }
+        }
+        var newMonth = nowMonth +maxlength;
+        var monthCount = 12;
+        if(newMonth>monthCount){
+            var resMonth = newMonth - monthCount;
+            var newDate = date.setFullYear(nowYear + 1);
+            newDate =new Date(date.setMonth(resMonth));
+            return newDate;
+        }
+    }
 </script>
 {/block}

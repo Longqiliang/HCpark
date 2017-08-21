@@ -133,17 +133,19 @@
                     _this.$toast('请填写车主姓名');
                     return;
                 }
-                if(!_this.defaultData.phone){
+                if(!_this.defaultData.mobile){
                     _this.$toast('请填写车主电话');
                     return;
                 }
-                if(!_this.defaultData.mobile){
+                if(!_this.defaultData.car_card){
                     _this.$toast('请填写车牌号码');
                     return;
                 }
-                if(!_this.defaultData.mobile){
+                if(!_this.defaultData.people_card){
                     _this.$toast('请填写身份证号');
                     return;
+                }else{
+                    validateIdCard(_this.defaultData.people_card);
                 }
                 if(!_this.isSubmit){
                     return;
@@ -152,13 +154,13 @@
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 console.log(subData);
                 return;
-                this.$http.post('',subData).then(function (res) {
+                this.$http.post('nextNewCard',subData).then(function (res) {
                     _this.isSubmit = true;
                 },function (res) {
                     _this.isSubmit = true;
                 })
             }
         }
-    })
+    });
 </script>
 {/block}
