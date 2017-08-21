@@ -25,7 +25,7 @@
         <div class="card-cell">
             <span>服务时间</span>
             <span @click="checkTime" >
-                <span :class="[!defaultData.aging ? 'select-color' : '', '']">请选择</span> <i class="allow-right"></i>
+                <span :class="[!defaultData.dateStr ? 'select-color' : '', '']">{{dateStatus}}</span> <i class="allow-right"></i>
             </span>
             <template>
                 <mt-datetime-picker
@@ -35,7 +35,7 @@
                         :end-hour=11
                         ref="picker"
                         type="datetime"
-                        v-model="defaultData.pickerValue"
+                        v-model="pickerValue"
                         month-format="{value} 月"
                         date-format="{value} 日"
                         hour-format="{value}时"
@@ -84,7 +84,9 @@
     var defaultData = {
         type:0,
         extra:'',
-        pickerValue:''
+        address:'',
+        dateStr:'',
+        imgSrc:''
     };
     var data = {$data};
     console.log(data);
@@ -95,10 +97,21 @@
             defaultData:defaultData,
             subData:data,
             isSubmit:true,
+            pickerValue:'',
             startDate:nowDate,
             endDate:endDate,
             startHour:8,
             endHour:11
+        },
+        computed:{
+            dateStatus:function () {
+                if(this.defaultData.dateStr){
+                    return this.defaultData.dateStr;
+                }else{
+                    var text ="请选择";
+                    return text;
+                }
+            }
         },
         methods: {
             paymentInfo:function () {
@@ -108,26 +121,26 @@
                 this.$refs.picker.open();
             },
             handleChange:function (value) {
-                console.log(value.toString());
+                var dateMinute = value.getMinutes()+"";
+                if(dateMinute.length == 1){
+                    dateMinute = "0"+dateMinute;
+                }
+                var dateValue = value.getFullYear()+"-"+(value.getMonth()+1)+"-"+value.getDate()+" "+value.getHours()+":"+dateMinute;
+                this.defaultData.dateStr = dateValue;
             },
             orderBtn: function () {
                 var _this = this;
-//                if(!_this.defaultData.name){
+                if(!_this.defaultData.address){
+                    _this.$toast('请输入服务地点');
+                    return;
+                }
+                if(!_this.defaultData.dateStr){
+                    _this.$toast('请选择服务时间');
+                    return;
+                }
+                if(!_this.defaultData.imgSrc){
 //                    _this.$toast('');
-//                    return;
-//                }
-//                if(!_this.defaultData.phone){
-//                    _this.$toast('');
-//                    return;
-//                }
-//                if(!_this.defaultData.mobile){
-//                    _this.$toast('');
-//                    return;
-//                }
-//                if(!_this.defaultData.mobile){
-//                    _this.$toast('');
-//                    return;
-//                }
+                }
                 if(!_this.isSubmit){
                     return;
                 }
@@ -138,7 +151,7 @@
                 console.log(_this.defaultData);
                 console.log(subData);
                 console.log(data);
-                this.$http.post('repair',data).then(function (res) {
+                this.$http.post('clear',data).then(function (res) {
                     _this.isSubmit = true;
                     console.log(res.data);
                 },function (res) {
