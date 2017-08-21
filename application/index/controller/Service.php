@@ -140,7 +140,7 @@ class Service extends Base{
 
 
         }
-        $this->assign('info',json_echode($info));
+        $this->assign('info',json_encode($info));
         return $this->fetch($path);
 
 
@@ -177,7 +177,7 @@ class Service extends Base{
      }
 
 
-public  function  _checkData($data){
+    public  function  _checkData($data){
          if(empty($data)){
              return false;
          }
@@ -332,23 +332,19 @@ public  function  _checkData($data){
             }else{
                 $this->error("失败");
             }
-
-
-
-
-
     }
     //车卡记录
     public  function  carRecord(){
         $service =new CarparkService();
         $user_id= session('userId');
-
-        $list=$service->where('user_id',$user_id)->select();
+        $map=[
+            'user_id'=>$user_id,
+            'status'=>array('neq',-1)
+        ];
+        $list=$service->where($map)->select();
+        int_to_string($list,array('status'=>array(0=>'审核中',1=>'审核通过',2=>'审核失败')));
         $this->assign('list',json_encode($list));
         return $this->fetch();
-
-
-
     }
 
 /*        //大厅广告位预约
