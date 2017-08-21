@@ -234,7 +234,34 @@ textarea::-webkit-input-placeholder {
 .reservation-btn{
     margin-top: 4.8vw;
 }
-
+.img-list{
+    margin:4vw 3.2vw;
+    border-radius: 5px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+}
+.img-list-item{
+    height: 34.67vw;
+    position: relative;
+}
+.item-img-marking{
+    position: absolute;
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 2rem;
+}
+.item-img-marking .marking-info{
+    position: relative;
+    width: 82.13vw;
+    text-align: center;
+}
 .img-card{
     margin: 12.8vw 8.8vw;
     border-radius: 13px;

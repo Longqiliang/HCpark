@@ -1,10 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{extend name="public/common"}
 
-</body>
-</html>
+{block name="style"}
+<title>生活缴费</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+{/block}
+
+{block name="body"}
+<div >
+    <div class="img-list">
+        <a href="/index/service/feedetail/t/1">
+            <div class="img-list-item">
+                <img src="/index/images/service/lifepay/utilities.png"  class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">水电费</span></div>
+            </div>
+        </a>
+    </div>
+    <div class="img-list">
+        <a href="/index/service/feedetail/t/2">
+            <div class="img-list-item">
+                <img src="/index/images/service/lifepay/propertyfee.png" class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">物业费</span></div>
+            </div>
+        </a>
+    </div>
+    <div class="img-list">
+        <a href="/index/service/feedetail/t/3">
+            <div class="img-list-item">
+                <img src="/index/images/service/lifepay/residentialrent.png" class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">房租费</span></div>
+            </div>
+        </a>
+    </div>
+    <div class="img-list">
+        <a href="/index/service/feedetail/t/4">
+            <div class="img-list-item">
+                <img src="/index/images/service/lifepay/totalcost.png" class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">共耗费</span></div>
+            </div>
+        </a>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+
+{/block}

@@ -15,20 +15,20 @@
     <div class="card">
         <div class="card-tit">车主信息</div>
         <div class="card-cell">
-            <label for="name">车主姓名</label>
-            <input type="text" placeholder="请输入车主姓名" id="name" v-model="defaultData.name">
+            <span>车牌号码</span><span></span>
         </div>
         <div class="card-cell">
-            <label for="phone">车主电话</label>
-            <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile">
+            <span>停车卡号</span><span></span>
         </div>
         <div class="card-cell">
-            <label for="number">车牌号码</label>
-            <input type="text" placeholder="请输入车牌号码" id="number" v-model="defaultData.car_card">
+            <span>车主姓名</span>
+            <span></span>
         </div>
         <div class="card-cell">
-            <label for="idCard">身份证号</label>
-            <input type="text" placeholder="请输入身份证号" id="idCard" v-model="defaultData.people_card">
+            <span>车主电话</span><span></span>
+        </div>
+        <div class="card-cell">
+            <span>身份证号</span><span></span>
         </div>
     </div>
     <div class="card">
@@ -62,10 +62,6 @@
 <script>
     var defaultData = {
         type:'oldCard',
-        people_card:'',
-        car_card:'',
-        mobile:'',
-        name:'',
         aging:0
     };
     var data = {$data};
