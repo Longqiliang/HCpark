@@ -47,11 +47,17 @@
             <textarea    v-model="defaultData.extra" class="group-area" maxlength="200"></textarea>
         </div>
         <div class="card-upload">
-            <div class="upload-box">
-                <img src="/index/images/service/card/card-camera.png" >
-                <span class="upload-info">上传凭证</span>
+            <div class="img-box" >
+                <div class="upload-box" @click="imgUpload" v-if="dataUrl === ''">
+                    <img src="/index/images/service/card/card-camera.png" >
+                    <span class="upload-info" >上传凭证</span>
+                </div>
+                <div class="upload-img" v-else>
+                    <img :src="dataUrl" class="img-responsive">
+                </div>
             </div>
         </div>
+        <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg">
     </div>
     <p class="prompt-message">资讯电话：{{subData.propretyMobile}}</p>
     <div class="card-more">
@@ -100,6 +106,7 @@
         data:{
             defaultData:defaultData,
             subData:data,
+            dataUrl:'',
             popupVisible: false,
             repairPicker:'',
             repairTxt:'',
@@ -111,6 +118,48 @@
             ]
         },
         methods: {
+            imgPreview (file) {
+                let self = this;
+                // 看支持不支持FileReader
+                if (!file || !window.FileReader) return;
+
+                if (/^image/.test(file.type)) {
+                    // 创建一个reader
+                    var reader = new FileReader();
+                    // 将图片将转成 base64 格式
+                    reader.readAsDataURL(file);
+                    // 读取成功后的回调
+                    reader.onloadend = function () {
+                        self.dataUrl = this.result;
+                    }
+                }
+            },
+            imgUpload:function () {
+                var upImg = this.$refs.upimg;
+                upImg.click();
+            },
+            handleFileChange:function (e) {
+                var _this = this;
+                var upImg = _this.$refs.upimg;
+                var img = upImg.files[0];
+                console.log(img);
+                // 在获取到文件对象进行预览就行了！
+                this.imgPreview(img);
+                if(img){
+                    var newSize = (img.size/1024).toFixed(2);
+                    if(newSize <= 10240){
+                        var formData = new FormData();
+                        formData.append("picture",img);
+//                        return;
+                        _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
+                            var data = res.data;
+                            console.log(data);
+                        },function (res) {
+
+                        });
+                    }
+                }
+            },
             checkRepair: function () {
                 this.popupVisible = true;
                 if(!this.defaultData.type){
