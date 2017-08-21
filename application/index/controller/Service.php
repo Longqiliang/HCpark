@@ -97,6 +97,10 @@ class Service extends Base{
         $AdService = new AdvertisingService();
         $info=[];
         switch ($app_id){
+            case 1:
+
+
+
             case 2:
                 $userid =session("userId");
                 $parkid=session('park_id');
