@@ -117,7 +117,9 @@
                     if(newSize <= 10240){
                         // 在获取到文件对象进行预览
                         this.imgPreview(img);
-                        this.imgSrc.push(img);
+                        var formData = new FormData();
+                        formData.append("picture",img);
+                        this.imgSrc.push(formData);
                         console.log(this.imgSrc);
                     }else{
                         _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
@@ -165,6 +167,25 @@
 //
 //                });
                 console.log(subData);
+                var data = {
+                    payment_voucher:img
+                };
+                this.$http.post('a',data).then(function (res) {
+                    console.log(res.data);
+                    _this.isSubmit = true;
+                    var data = res.data;
+                    if(data.code == 1){
+                        swal({
+                            title:"预约成功!",
+                            text:'您的缴费信息正在核对中<br/>核对完成后，将在个人中心中予以反馈<br/>请耐心等待，确认成功后<br/><span style="color:#333">请您在2小时内到海创大厦A座201领取车卡</span>',
+                            html:true,
+                            type:"success",
+                            confirmButtonColor: "#fcc44b"
+                        });
+                    }
+                },function (res) {
+                    _this.isSubmit = true;
+                });
                 this.$http.post('addNewCard',subData).then(function (res) {
                     console.log(res.data);
                     _this.isSubmit = true;
