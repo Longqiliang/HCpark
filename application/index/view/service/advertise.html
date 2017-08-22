@@ -244,7 +244,7 @@
     <div class="my-tags">
         <div class="my-tag my-tag-checked">已选</div>
         <div class="my-tag my-tag-sell">已售</div>
-        <div class="my-history">预约记录</div>
+        <div class="my-history" @click="toHistory">预约记录</div>
     </div>
     <div class="my-illustrate">
         <h4>规则说明</h4>
@@ -275,7 +275,7 @@
             currentYear: 1970,
             currentWeek: 1,
             days: [],
-            checkedList:[],
+            checkedList:JSON.parse('{$user_check}'),
             bespeakList:JSON.parse('{$record}'),
             isSubmit:false
         },
@@ -411,7 +411,7 @@
                                 var text = '';
                                 for(var i=0;i<noSave.length;i++){
                                     var date=new Date(noSave[i]);
-                                    var y=date.getFullYear(),m=date.getMonth(),d=date.getDate();
+                                    var y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
                                     var str=the.formatDate(y,m,d);
                                     text=str+'、';
                                     for(var o=0;o<the.checkedList.length;o++){
@@ -435,7 +435,7 @@
                                     type:"success"
                                 },function (e) {
                                     if(e){
-                                        window.location.href='/index/service/'
+                                        window.location.href='/index/service/payment/t/4'
                                     }
                                 })
                             }
@@ -450,6 +450,9 @@
                 }else{
                     this.$toast("预约中，请勿重复提交")
                 }
+            },
+            toHistory(){
+                window.location.href='/index/service/history/t/1';
             }
 
         }

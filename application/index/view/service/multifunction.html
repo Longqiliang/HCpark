@@ -175,7 +175,7 @@
     <div class="my-tags">
         <div class="my-tag my-tag-checked">已选</div>
         <div class="my-tag my-tag-sell">已售</div>
-        <div class="my-history">预约记录</div>
+        <div class="my-history" @click="toHistory">预约记录</div>
     </div>
     <div class="my-illustrate">
         <h4>规则说明</h4>
@@ -193,7 +193,7 @@
         <span>合计：{{price}}元</span>
         <button @click="toSubmit">确认预约</button>
     </div>
-    <div class="my-back"></div>
+    <!--<div class="my-back"></div>-->
 </div>
 {/block}
 
@@ -239,17 +239,10 @@
         el:'#app',
         mounted(){
             this.baseInfo()
+            console.log(this.weeks)
         },
         data:{
-            weeks:[
-                {day: 1503273600000, amBespeak: "yes",pmBespeak: "no", amCheck: "no",pmCheck:'yes'},
-                {day: 1503360000000, amBespeak: "no",pmBespeak: "no", amCheck: "no",pmCheck:'no'},
-                {day: 1503446400000, amBespeak: "no",pmBespeak: "yes", amCheck: "yes",pmCheck:'no'},
-                {day: 1503532800000, amBespeak: "no",pmBespeak: "no", amCheck: "no",pmCheck:'no'},
-                {day: 1503619200000, amBespeak: "no",pmBespeak: "no", amCheck: "no",pmCheck:'no'},
-                {day: 1503705600000, amBespeak: "yes",pmBespeak: "no", amCheck: "no",pmCheck:'no'},
-                {day: 1503792000000, amBespeak: "no",pmBespeak: "no", amCheck: "no",pmCheck:'no'}
-            ],
+            weeks:JSON.parse('{$data}'),
             price:0,
             isSubmit:false
         },
@@ -302,11 +295,81 @@
                         }
                     }
                     if(canSubmit){
-                        console.log(111111)
+                        var data=[];
+                        for(var i=0;i<this.weeks.length;i++){
+                            if(this.weeks[i].amCheck=='yes'||this.weeks[i].pmCheck=='yes'){
+                                var day={
+                                    day:this.weeks[i].day,
+                                    amCheck:this.weeks[i].amCheck,
+                                    pmCheck:this.weeks[i].pmCheck
+                                }
+                                data.push(day);
+                            }
+                        }
+                        console.log(data);
+                         this.$http.post('/index/service/nextMultifunction/',data).then(function (res) {
+                             console.log(res)
+                             this.isSubmit=false;
+                             var noSave = JSON.parse(res.data).no_save;
+//                            如果有被预定，删除、提示
+                             if(noSave = '' ){
+                                 var text = '';
+                                 for(var i=0;i<noSave.length;i++){
+                                     var date=new Date(noSave[i].day);
+                                     var y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
+                                     var str=the.formatDate(y,m,d);
+                                     if(noSave[i].amCheck=='yes'){
+                                         str+=' 上午'
+                                         if(noSave[i].pmCheck=='yes'){
+                                             str+=' /下午'
+                                         }
+                                     }else if(noSave[i].pmCheck=='yes'){
+                                         str+='下午'
+                                     }
+                                     text=str+'、';
+                                     for(var o=0;o<this.weeks.length;o++){
+                                         if(this.weeks[o].day==noSave[i].day){
+                                             if(noSave[i].amCheck=='yes'){
+                                                 this.weeks[o].amCheck=='yes';
+                                                 this.weeks[o].amBespeak=='yes';
+                                             }else if(noSave[i].pmCheck=='yes'){
+                                                 this.weeks[o].pmCheck=='yes';
+                                                 this.weeks[o].pmBespeak=='yes';
+                                             }
+                                         }
+                                     }
+                                 }
+                                 text=text.substr(0,text.length-1);
+                                 swal({
+                                     title:"",
+                                     text:"您选择的"+ text +'已被预约，已为您取消选择',
+                                     type:"warning"
+                                 })
+
+                             }else{
+//                                 window.sessionStorage.setItem('data',res.data);
+                                 swal({
+                                     title:"",
+                                     text:"缴费完成后，请尽快上传缴费凭证",
+                                     type:"success"
+                                 },function (e) {
+                                     if(e){
+                                         window.location.href='/index/service/payment/t/4'
+                                     }
+                                 })
+                             }
+                             //                        window.location.href='/index/service/payment/t/6'
+                         },function (res) {
+                             this.isSubmit=false;
+                         })
                     }else{
+                         this.isSubmit=false;
                         this.$toast('请选择预约时间')
                     }
                 }
+            },
+            toHistory(){
+                window.location.href='/index/service/history/t/1';
             }
         }
     })
