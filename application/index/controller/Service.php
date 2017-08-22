@@ -6,9 +6,9 @@
  * Time: 17:55
  */
 namespace app\index\controller;
-use app\common\model\CarparkRecord;
+use app\index\model\CarparkRecord;
 use  app\index\model\CompanyService;
-use app\common\model\CarparkService;
+use app\index\model\CarparkService;
 use app\index\model\WechatUser;
 use app\index\model\CompanyApplication;
 use app\index\model\Park;
@@ -16,7 +16,8 @@ use  app\index\model\WechatTag;
 use  app\index\model\PropertyServer;
 use app\index\model\WaterService as WaterModel;
 use app\index\model\BroadbandPhone as BroadbandModel;
-
+use  app\index\model\ElectricityRecord;
+use  app\index\model\ElectricityService;
 use  app\index\model\AdvertisingRecord;
 use  app\index\model\AdvertisingService;
 //企业服务
@@ -101,6 +102,7 @@ class Service extends Base{
 
 
 
+            //物业报修
             case 2:
                 $userid =session("userId");
                 $parkid=session('park_id');
@@ -111,6 +113,7 @@ class Service extends Base{
                     'mobile'=>$userinfo['mobile'],
                     'propretyMobile'=>$parkInfo['property_phone']
                 ];
+            //室内保洁
             case 4:
                 $userid =session("userId");
                 $parkid=session('park_id');
@@ -143,7 +146,23 @@ class Service extends Base{
 
 
             //充电柱
-            case 7:  break;
+            case 7:
+               $es = new ElectricityService();
+              $map=[
+                  'user_id'=>$user_id,
+                  'electricity_id'=>array('exp','is not null')
+
+
+
+              ];
+               $is_new=$es->where($map)->select();
+                if(count($is_new)>0){
+                  $info['type']="old";
+
+             }else{
+                    $info['type']="new";
+                }
+                break;
            //公共场所
             case 8:
                 $re = $AdService->where('park_id',$park_id)->select();
@@ -226,25 +245,124 @@ class Service extends Base{
 
 }
 
-
-
-
   //新柱办理
     public function  newPillar(){
-
-
+        $park_id =session('park_id');
+        $Park = new Park();
+        $park= $Park->where('id',$park_id)->find();
+        //充电柱单价
+        $data['charging_price']=$park['charging_price'];
+        //充电柱押金
+        $data['charging_deposit']=$park['charging_deposit'];
+        $this->assign('data',json_encode($data));
         return $this->fetch();
     }
- //旧柱办理
+    //新柱提交
+    public function addNewPillar()
+    {
+        $PillarRecord = new ElectricityRecord();
+        $PillarService= new ElectricityService();
+
+        $id = session('userId');
+        $data = input('');
+        $service = [
+            'name' => $data['name'],
+            'mobile' => $data['mobile'],
+            'user_id' => $id,
+            'status' => 0,
+            'create_time'=>time()
+        ];
+
+        $re = $PillarService->save($service);
+
+        $record=[
+            'type'=>1,
+            'aging'=>$data['aging'],
+            'payment_voucher'=>$data['payment_voucher'],
+            'create_time'=>time(),
+            'service_id'=>$PillarService->id,
+            'status'=>0,
+            'money'=>((int)$data['charging_price']*(int)$data['aging'])+(int)$data['charging_deposit'],
+        ];
+        $re2=$PillarRecord->save($record);
+        if($re2){
+            $this->success('成功'.json_encode($PillarService->id));
+
+        }else{
+            $this->error("失败");
+        }
+
+    }
+
+
+    //旧柱办理
     public function  oldPillar(){
-
-
+        $user_id =session('userId');
+        $park_id =session('park_id');
+        $Park = new Park();
+        $pillar =new ElectricityService();
+        $park= $Park->where('id',$park_id)->find();
+        $map['user_id']=$user_id;
+        $map['electricity_id']=array('exp','is not null');
+        $cardinfo =$pillar->where($map)->select();
+        //充电柱单价
+        $data['charging_price']=$park['charging_price'];
+        //充电柱押金
+        $data['charging_deposit']=$park['charging_deposit'];
+        //用户停车卡信息
+        $data['cardlist']=$cardinfo;
+        $this->assign('info',json_encode($data));
         return $this->fetch();
     }
+    //旧柱提交
+    public function addOldPillar()
+    {
+        $er = new ElectricityRecord();
+
+        $data = input('');
+        $record=[
+            'type'=>2,
+            'aging'=>$data['aging'],
+            'payment_voucher'=>$data['payment_voucher'],
+            'create_time'=>time(),
+            'service_id'=>$data['service_id'],
+            'status'=>0,
+            'money'=>((int)$data['charging_price']*(int)$data['aging'])+(int)$data['charging_deposit'],
+        ];
+        $re2=$er->save($record);
+        if($re2){
+            $this->success('成功');
+
+        }else{
+            $this->error("失败");
+        }
+
+    }
+
+    //充电柱记录
+    public  function  pillarRecord(){
+        $service =new ElectricityService();
+        $user_id= session('userId');
+        $map=[
+            'user_id'=>$user_id,
+            'status'=>array('neq',-1)
+        ];
+        $list=$service->where($map)->select();
+        $record=array();
+        foreach ($list as $value){
+            array_push($record,$value->findRecord());
+        }
+        int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
+
+
+        $this->assign('list',json_encode($list));
+        return $this->fetch();
 
 
 
-    //新卡主页
+    }
+
+    //新车卡主页
     public  function  newCard(){
         $park_id =session('park_id');
         $Park = new Park();
@@ -267,7 +385,7 @@ class Service extends Base{
         return $this->fetch();
     }
 
-   //新卡，下一步
+   //新车卡，下一步
     public  function  nextNewCard(){
 
         $data=input('');
@@ -322,7 +440,7 @@ class Service extends Base{
                 'create_time'=>time(),
                 'carpark_id'=>$CardparkService->id,
                 'status'=>0,
-                'money'=>((int)$data['carpark_price']*(int)$data['aging'])+100,
+                'money'=>((int)$data['carpark_price']*(int)$data['aging'])+(int)$data['carpark_deposit'],
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
@@ -382,7 +500,7 @@ class Service extends Base{
                 'create_time'=>time(),
                 'carpark_id'=>$data['carpark_id'],
                 'status'=>0,
-                'money'=>$data['money'],
+                'money'=>((int)$data['carpark_price']*(int)$data['aging'])+(int)$data['carpark_deposit'],
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
