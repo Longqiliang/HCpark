@@ -1,0 +1,209 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>预约记录</title>
+<style>
+    .my-title{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding:1.4rem 0;
+    }
+    .my-title>span:not(:nth-child(2)){
+        width:29.3vw;
+        height:1px;
+        background-color: #e8e8e8;
+    }
+    .my-title>span:nth-child(2){
+        font-size: 1.8rem;
+        color: #333;
+        margin:0 0.6rem;
+    }
+
+    .my-record>li{
+        border-bottom: 1px solid #f1f1f1;
+        display: -webkit-flex;
+        display: flex;
+        padding:3.2vw;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .my-time{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .my-time>.my-icon-line{
+        height:3rem;
+        width:1px;
+        background-color: #e8e8e8;
+        margin-left: 3.2vw;
+    }
+    .my-time>div>span{
+        display: block;
+        text-align: center;
+        color: #999;
+        font-size: 1.6rem;
+    }
+    .my-time>div>span:last-child{
+        font-size: 1.4rem;
+        margin-top: 0.6rem;
+    }
+    .my-info{
+        width:72.5vw;
+        margin-left: 3.2vw;
+        color: #333;
+    }
+    .my-info>div{
+        display: -webkit-flex;
+        display: flex;
+    }
+    .my-info-pay{
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.6rem;
+    }
+    .my-order-time{
+        font-size: 1.4rem;
+        margin-top: 0.6rem;
+    }
+    .my-order-time>span:first-child{
+        width:6rem;
+    }
+    .my-order-time>span:last-child{
+        width:15rem;
+    }
+    .my-success{
+        color: #52cc92;
+    }
+    .my-cancel{
+        color: #f97878;
+    }
+    .no-history{
+        color: #999;
+        font-size: 1.6rem;
+        text-align: center;
+        margin-top: 40vh;
+    }
+
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="my-title">
+        <span></span>
+        <span>{{record.title}}</span>
+        <span></span>
+    </div>
+    <ul class="my-record">
+        <li v-for="item in record">
+            <div class="my-time">
+                <div>
+                    <span>
+                        {{new Date(item.create_ime).getMonth()+1}}-{{new Date(item.create_ime).getDate()}}
+                    </span>
+                    <span>
+                        {{new Date(item.create_ime).getFullYear()}}年
+                    </span>
+                </div>
+                <span class="my-icon-line"></span>
+            </div>
+            <div class="my-info">
+                <div class="my-info-pay">
+                    <span>缴费金额：{{item.pay}}元</span>
+                    <span class="my-success" v-if="item.state==1">预约成功</span>
+                    <span class="my-cancel" v-if="item.state==2">取消预约</span>
+                </div>
+                <div class="my-order-time">
+                    <span>预约时间：</span>
+                    <span>{{orderStr(item)}}</span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<!--<p class="no-history" v-if="==''">-->
+    <!--暂无记录-->
+<!--</p>-->
+{/block}
+
+{block name="script"}
+<script>
+
+Vue.filter('timeToStr', function(value) {
+    if (!value) { return ''}
+    var time=new Date(value);
+    var y=time.getFullYear(),m=time.getMonth()+1,d=time.getDate();
+    m=String(m).length<2?'0'+m:m;
+    return y+'-'+m+'-'+d
+})
+var app = new Vue({
+    el:'#app',
+    data:{
+        type:parseInt(window.location.href.split('/t/')[1]),
+        record:[
+//            {
+//            title:'大厅广告位',
+//                create_ime:1503532800000,
+//                state:1,
+//                pay:400,
+//                orderTime:["1503619200000", "1503705600000", "1503964800000", "1504051200000"],
+//            },
+            {
+                title:'大厅广告位',
+                create_ime: 1503532800000,
+                pay:1600,
+                state:1,
+                data: [
+                    {day: 1503792000000, amBespeak: "yes", pmBespeak: "no", amCheck: "no", pmCheck: 'no'},
+                    {day: 1503792000000, amBespeak: "yes", pmBespeak: "yes", amCheck: "no", pmCheck: 'no'},
+                    {day: 1503792000000, amBespeak: "no", pmBespeak: "yes", amCheck: "no", pmCheck: 'no'}
+                ]
+            },
+
+        ]
+    },
+    methods:{
+        orderStr(time){
+            var str='';
+            if(this.type==1){
+                for(var i=0;i<time.length;i++){
+                    var date=new Date(parseInt(time[i].orderTime));
+                    var m=date.getMonth()+1,d=date.getDate();
+                    m=String(m).length<2?'0'+m:m;
+                    str+=m+'-'+d+'、'
+                }
+            }
+            if(this.type==2){
+                console.log(time)
+                for(var i=0;i<time.data.length;i++) {
+                    var date=new Date(parseInt(time.data[i].day));
+                    var m=date.getMonth()+1,d=date.getDate();
+                    m=String(m).length<2?'0'+m:m;
+                    str+=m+'-'+d;
+                    if(time.data[i].amBespeak=='yes'){
+                        str+=' 上午';
+                        if(time.data[i].pmBespeak=='yes'){
+                            str+='/下午';
+                        }
+                    }else if(time.data[i].pmBespeak=='yes'){
+                        str+=' 下午';
+                    }
+                    str+='、'
+                }
+            }
+            if(this.type==3){
+                for(var i=0;i<time.length;i++) {
+
+                }
+            }
+            return str.substring(0,str.length-1);
+        }
+    }
+})
+</script>
+{/block}

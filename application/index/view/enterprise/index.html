@@ -156,7 +156,8 @@
     <ul class="company-list" :class="{hidden:inputValue}">
         <li v-for="item in companyList" @click="jumpTo(item.id)">
             <div class="company-logo">
-                <img :src="item.img" alt="">
+                <img :src="item.img" alt="公司logo" v-if="item.img">
+                <img src="/index/images/index/code.png" alt="公司logo" v-else>
             </div>
             <ul class="company-info">
                 <li>{{item.name}}</li>
@@ -168,7 +169,8 @@
     <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
         <li v-for="item in searchList" @click="jumpTo(item.id)">
             <div class="company-logo">
-                <img :src="item.img" alt="">
+                <img :src="item.img" alt="公司logo" v-if="item.img">
+                <img src="/index/images/index/code.png" alt="公司logo" v-else>
             </div>
             <ul class="company-info">
                 <li>{{item.name}}</li>

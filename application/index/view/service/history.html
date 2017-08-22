@@ -43,12 +43,16 @@
 <div id="app">
     <ul v-for="item in historyList">
         <li>
-            <span>水电费</span>
-            <span class="unPay">未缴费</span>
+            <span>{{item.name}}</span>
+            <span class="unPay" v-if="item.state==1">未缴费</span>
+            <span class="auditing" v-if="item.state==2">审核中</span>
+            <span class="payed" v-if="item.state==3">已缴费</span>
+
         </li>
         <li>
-            <span>2017-7-7</span>
-            <span>缴费金额：118元</span>
+            <span>{{item.time | timeToStr}}</span>
+            <span v-if="item.num">数量：{{item.num}}桶</span>
+            <span v-if="item.pay">缴费金额：{{item.pay}}元</span>
         </li>
     </ul>
     <p class="no-history" v-if="historyList==''">
@@ -59,21 +63,90 @@
 
 {block name="script"}
 <script>
-var app = new Vue({
-    el:'#app',
-    data:{
-        historyList:[
-//            {
-////                name:'水费',
-////                state:'未缴费',
-////                time:1503532800000,
-////                pay:'1111'
-//            }
-        ]
-    },
-    methods:{
-        
-    }
+    Vue.filter('timeToStr', function(value) {
+        if (!value) { return ''}
+        var time=new Date(value);
+        var y=time.getFullYear(),m=time.getMonth(),d=time.getDate();
+        m=String(m).length<2?'0'+m:m;
+        return y+'-'+m+'-'+d
+    })
+
+    var app = new Vue({
+        el:'#app',
+        mounted(){
+            document.title=this.baseData.title;
+        },
+        data:{
+            historyList:[
+                {
+                    name:'水费',
+//                    state:2,
+                    time:1503532800000,
+//                    pay:'1111',
+                    num:2
+                },
+                {
+                    name:'报修',
+//                    state:2,
+                    time:1503532800000,
+//                    pay:'1111',
+//                    num:2
+                },
+                {
+                    name:'水费',
+                    state:1,
+                    time:1503532800000,
+                    pay:1111,
+//                    num:2
+                },
+                {
+                    name:'新卡办理',
+                    state:2,
+                    time:1503532800000,
+                    pay:1111,
+//                    num:2
+                },
+                {
+                    name:'新卡办理',
+                    state:3,
+                    time:1503532800000,
+                    pay:1111,
+//                    num:2
+                }
+            ]
+        },
+        computed:{
+
+            baseData:function () {
+                var info={};
+                var type=parseInt(window.location.href.split('/t/')[1]);
+                info.type=type;
+                switch (type){
+                    case 1:
+                        info.title='缴费记录';
+                        break;
+                    case 2:
+                        info.title='报修记录';
+                        break;
+                    case 3:
+                        info.title='送水记录';
+                        break;
+                    case 4:
+                        info.title='保洁记录';
+                        break;
+                    case 6:
+                        info.title='办理记录';
+                        break;
+                    case 7:
+                        info.title='办理记录';
+                        break;
+                }
+                return info;
+            }
+        },
+        methods:{
+
+        }
 })
 </script>
 {/block}
