@@ -20,16 +20,18 @@ use  app\index\model\ElectricityRecord;
 use  app\index\model\ElectricityService;
 use  app\index\model\AdvertisingRecord;
 use  app\index\model\AdvertisingService;
+use   app\index\model\FunctionRoomRecord;
+
 //企业服务
 class Service extends Base{
 
 
   //服务列表
     public function index() {
-        $user_id =session('userId');
-        $park_id=session('park_id');
+         $user_id =session('userId');
+         $park_id=session('park_id');
          $user =new WechatUser();
-        $app= new  CompanyApplication();
+         $app= new  CompanyApplication();
          $info=$user->where('userid',$user_id)->find();
          if($info['tagid']==1){
 
@@ -208,9 +210,7 @@ class Service extends Base{
      if($result){
          return $this->success('提交成功');
      }else{
-
          return $this->error('提交失败');
-
      }
      }
 
@@ -245,7 +245,7 @@ class Service extends Base{
 
 }
 
-  //新柱办理
+    //新柱办理
     public function  newPillar(){
         $park_id =session('park_id');
         $Park = new Park();
@@ -293,8 +293,6 @@ class Service extends Base{
         }
 
     }
-
-
     //旧柱办理
     public function  oldPillar(){
         $user_id =session('userId');
@@ -355,7 +353,7 @@ class Service extends Base{
         int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
 
 
-        $this->assign('list',json_encode($list));
+        $this->assign('list',json_encode($record));
         return $this->fetch();
 
 
@@ -743,6 +741,10 @@ class Service extends Base{
 
 
 
+
+
+
+
     //大厅广告位月份切换
     public  function   changeMonth(){
         $adRecord = new AdvertisingRecord();
@@ -768,22 +770,97 @@ class Service extends Base{
     }
 
 
-
-
-
-
         //公共区服务
         public function publicservice(){
 
-
-
             return $this->fetch();
         }
+
+
 
         //多功能厅
         public function multifunction(){
+            $adService =new  AdvertisingService();
+            $FunctionRoomRecord = new FunctionRoomRecord();
+            $user_id = session('user_id');
+            //从今天到第七天结束的时间戳数组
+            $weeks=array();
+            for($i=1;$i<8;$i++){
+                $days=array();
+                $time=mktime(0,0,0,date('m'),date('d')+$i,date('Y'))-1;
+                $map=['order_time'=>$time,'status'=>array('neq',0)];
+                $re =$FunctionRoomRecord->where($map)->find();
+                if($re){
+                   $days['day']=$time;
+                   //是当前用户
+                   if($re['create_user']==$user_id){
+                        //选中未付款
+                        if($re['status']==1){
+                            //上午
+                            if($re['date_type']==1){
+                                $days['amBespeak']="no";
+                                $days['pmBespeak']="no";
+                                $days['amCheck']="yes";
+                                $days['pmCheck']="no";
+                            }
+                            //下午
+                            else{
+                                $days['amBespeak']="no";
+                                $days['pmBespeak']="no";
+                                $days['amCheck']="no";
+                                $days['pmCheck']="yes";
+                            }
+                        }
+                        //已付款
+                        else{
+                             //上午
+                            if($re['date_type']==1){
+                                $days['amBespeak']="yes";
+                                $days['pmBespeak']="no";
+                                $days['amCheck']="no";
+                                $days['pmCheck']="no";
+                            }
+                            //下午
+                            else{
+                                $days['amBespeak']="no";
+                                $days['pmBespeak']="yes";
+                                $days['amCheck']="no";
+                                $days['pmCheck']="no";
+                            }
+                        }
+                    }
+                    //不是当前用户
+                    else{
+                            //上午
+                            if($re['date_type']==1){
+                                $days['amBespeak']="yes";
+                                $days['pmBespeak']="no";
+                                $days['amCheck']="no";
+                                $days['pmCheck']="no";
+                            }
+                            //下午
+                            else{
+                                $days['amBespeak']="no";
+                                $days['pmBespeak']="yes";
+                                $days['amCheck']="no";
+                                $days['pmCheck']="no";
+                            }
+                    }
+                }
+                else{
+                    $days['day']=$time;
+                    $days['amBespeak']="no";
+                    $days['pmBespeak']="no";
+                    $days['amCheck']="no";
+                    $days['pmCheck']="no";
+                }
+                 array_push($weeks,$days);
+            }
+            $this->assign('data',$weeks);
             return $this->fetch();
         }
+
+
 
     /*物业报修*/
     public function repair(){
