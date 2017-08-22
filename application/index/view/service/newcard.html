@@ -13,23 +13,28 @@
 {block name="body"}
 <div id="app">
     <div class="card">
-        <div class="card-tit">车主信息</div>
-        <div class="card-cell">
-            <label for="name">车主姓名</label>
-            <input type="text" placeholder="请输入车主姓名" id="name" v-model="defaultData.name">
-        </div>
-        <div class="card-cell">
-            <label for="phone">车主电话</label>
-            <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile">
-        </div>
-        <div class="card-cell">
-            <label for="number">车牌号码</label>
-            <input type="text" placeholder="请输入车牌号码" id="number" v-model="defaultData.car_card">
-        </div>
-        <div class="card-cell">
-            <label for="idCard">身份证号</label>
-            <input type="text" placeholder="请输入身份证号" id="idCard" v-model="defaultData.people_card">
-        </div>
+        <form action="payment" method="post" ref="cardform">
+            <div class="card-tit">车主信息</div>
+            <div class="card-cell">
+                <label for="name">车主姓名</label>
+                <input type="text" placeholder="请输入车主姓名" id="name" v-model="defaultData.name" name="name">
+            </div>
+            <div class="card-cell">
+                <label for="phone">车主电话</label>
+                <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile" name="moblie">
+            </div>
+            <div class="card-cell">
+                <label for="number">车牌号码</label>
+                <input type="text" placeholder="请输入车牌号码" id="number" v-model="defaultData.car_card" name="car_card">
+            </div>
+            <div class="card-cell">
+                <label for="idCard">身份证号</label>
+                <input type="text" placeholder="请输入身份证号" id="idCard" v-model="defaultData.people_card" name="people_card">
+            </div>
+                <input type="hidden" v-model="defaultData.aging" name="aging">
+                <input type="hidden" v-model="subData.carpark_deposit" name="carpark_deposit">
+                <input type="hidden" v-model="defaultData.t" name="type">
+        </form>
     </div>
     <div class="card">
         <div class="card-tit">办理信息</div>
@@ -155,9 +160,8 @@
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 var data = JSON.stringify(Object.assign(subData,defaultData));
                 console.log(data);
-                // return;
-                window.sessionStorage.setItem("data",data);
-                window.location.href="{:Url('Service/nextNewCard')}";
+                _this.$refs.cardform.submit();
+
 
             }
         }

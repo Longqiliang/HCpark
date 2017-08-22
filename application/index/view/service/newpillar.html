@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>车卡服务</title>
+<title>新柱办理</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
 <style>
     body{
@@ -41,7 +41,7 @@
         </div>
         <div class="card-cell">
             <span>车卡押金</span>
-            <span>{{subData.carpark_deposit}}</span>
+            <span>{{subData.charging_deposit}}</span>
         </div>
         <div class="card-cell">
             <span>充电费用</span>
@@ -60,6 +60,7 @@
 
 {block name="script"}
 <script>
+    var data = {$data};
     var defaultData = {
         t:'newCard',
         people_card:'',
@@ -68,10 +69,7 @@
         name:'',
         aging:0
     };
-    var data = {
-        carpark_deposit:50,
-        carpark_price:10
-    };
+
     console.log(data);
 
     console.log(data);
@@ -86,10 +84,10 @@
                 }
             },
             parkingFares :function () {
-                return (this.defaultData.aging * this.subData.carpark_price)
+                return (this.defaultData.aging * this.subData.charging_price)
             },
             totalMoney:function () {
-                return (this.defaultData.aging  * this.subData.carpark_price) + this.subData.carpark_deposit;
+                return (this.defaultData.aging  * this.subData.charging_price) + this.subData.charging_deposit;
             }
         },
         data:{

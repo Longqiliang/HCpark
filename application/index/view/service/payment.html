@@ -22,7 +22,7 @@
             <span>账号名称</span>
             <span>{{subData.payment_bank}}</span>
         </div>
-        <div v-if="subData.t.length>1">
+        <div v-if="subData.payment_alipay">
             <div class="card-cell bottom-inherit">
                 <span class="card-hr">— — — or — — —</span>
             </div>
@@ -41,17 +41,19 @@
     <div class="card">
         <div class="card-tit">办理信息</div>
         <div class="card-upload">
-            <div class="img-box" >
-                <div class="upload-box" @click="imgUpload" v-if="dataUrl === ''">
-                    <img src="/index/images/service/card/card-camera.png" >
-                    <span class="upload-info" >上传凭证</span>
-                </div>
-                <div class="upload-img" v-else>
-                    <img :src="dataUrl" class="img-responsive">
-                </div>
+            <div class="upload-img" v-for="(imgUrl,index) of dataUrl">
+                <i class="del-img" @click="delImg(index)"></i>
+                <img :src="imgUrl" class="img-responsive">
+            </div>
+            <div class="upload-box" @click="imgUpload" v-if="dataUrl.length < imgLength">
+                <img src="/index/images/service/card/card-camera.png" >
+                <span class="upload-info" >上传凭证</span>
             </div>
         </div>
-        <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg">
+        <form ref="myform">
+            <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" capture="camera">
+        </form>
+
     </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="subBtn">提交</button>
@@ -62,13 +64,6 @@
 {block name="script"}
 <script>
     var data ={$data};
-    if(!data.length && (data instanceof Array)){
-        data = window.sessionStorage.getItem("data");
-        data = JSON.parse(data);
-    }
-    console.log(data.t);
-    console.log(isNaN(parseInt(data.t)));
-        data.payment_voucher =[1,2,3];
     console.log(data);
     var vm = new Vue({
         el:"#app",
@@ -77,11 +72,17 @@
             isSubmit:true,
             imgLength:3,
             payment_voucher:[],
-            dataUrl:''
+            dataUrl:[],
+            imgSrc:[]
         },
         methods: {
+            delImg: function (e) {
+                this.dataUrl.splice(e,1);
+                this.imgSrc.splice(e,1);
+                this.$refs.myform.reset();
+            },
             imgPreview (file) {
-                let self = this;
+                var self = this;
                 // 看支持不支持FileReader
                 if (!file || !window.FileReader) return;
 
@@ -92,7 +93,12 @@
                     reader.readAsDataURL(file);
                     // 读取成功后的回调
                     reader.onloadend = function () {
-                        self.dataUrl = this.result;
+                        if(self.dataUrl.length >= self.imgLength){
+                            return;
+                        }else{
+                            self.dataUrl.push(this.result) ;
+                        }
+                        console.log(self.dataUrl);
                     }
                 }
             },
@@ -105,47 +111,16 @@
                 var upImg = _this.$refs.upimg;
                 var img = upImg.files[0];
                 console.log(img);
-                // 在获取到文件对象进行预览就行了！
-                this.imgPreview(img);
+
                 if(img){
                     var newSize = (img.size/1024).toFixed(2);
                     if(newSize <= 10240){
-                        var formData = new FormData();
-                        formData.append("picture",img);
-//                        return;
-                        _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
-                            var data = res.data;
-                            console.log(data);
-                        },function (res) {
-
-                        });
-//                        $.ajax({
-//                            type:"post",
-//                            url:"{:Url('File/uploadPicture')}",
-//                            data:formData,
-//                            processData : false,
-//                            contentType : false,
-//                            success:function(data){
-//                                var msg = $.parseJSON(data);
-//
-//                                if(msg.code == 1){
-//                                    var path = msg.data.path;
-//                                    $(".head-img").attr('src',path);
-//                                    $.ajax({
-//                                        url:"setHeader",
-//                                        type:'post',
-//                                        data:{header:path},
-//                                        dataType:'json',
-//                                        success: function () {
-//                                            mui.toast('上传成功',{ duration:'1000ms', type:'div' })
-//                                        }
-//                                    })
-//                                } else {
-//                                    mui.toast('上传失败',{ duration:'1000ms', type:'div' });
-//                                    return;
-//                                }
-//                            }
-//                        });
+                        // 在获取到文件对象进行预览
+                        this.imgPreview(img);
+                        this.imgSrc.push(img);
+                        console.log(this.imgSrc);
+                    }else{
+                        _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
                     }
                 }
             },
@@ -159,6 +134,35 @@
 
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 console.log(subData);
+                 var formData = new FormData();
+                var img = _this.imgSrc;
+                console.log(img[0]);
+                for(var i=0;i<img.length;i++){
+                    formData.append("picture",img[i]);
+                    _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
+                        var data = res.data;
+                        console.log(data);
+                        if(data.code == 1){
+
+                        }
+                    },function (res) {
+
+                    });
+                }
+                return;
+                formData.append("picture",img);
+
+//                        return;
+                _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
+                    var data = res.data;
+                    console.log(data);
+                    if(data.code == 1){
+
+
+                    }
+                },function (res) {
+
+                });
                 if(subData.t == "newCard"){
                     this.$http.post('addNewCard',subData).then(function (res) {
                         console.log(res.data);
