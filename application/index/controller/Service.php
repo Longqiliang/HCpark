@@ -21,9 +21,6 @@ use  app\index\model\ElectricityService;
 use  app\index\model\AdvertisingRecord;
 use  app\index\model\AdvertisingService;
 use   app\index\model\FunctionRoomRecord;
-use  app\index\controller\File;
-use  app\index\model\Picture;
-use think\Config;
 use  app\index\model\LedRecord;
 //企业服务
 class Service extends Base{
@@ -94,7 +91,7 @@ class Service extends Base{
     //选择服务
     public function  onCheck(){
         $path=input('path');
-        $app_id=input('app_id');
+        $app_id=input('id');
         $user_id = session('userId');
         $park_id = session('park_id');
         $UserModel = new  WechatUser();
@@ -142,20 +139,13 @@ class Service extends Base{
 
                     $info['type']="new";
                 }
-
-
                 break;
-
-
             //充电柱
             case 7:
                $es = new ElectricityService();
               $map=[
                   'user_id'=>$user_id,
                   'electricity_id'=>array('exp','is not null')
-
-
-
               ];
                $is_new=$es->where($map)->select();
                 if(count($is_new)>0){
@@ -183,6 +173,9 @@ class Service extends Base{
         $this->assign('info',json_encode($info));
         return $this->fetch($path);
     }
+
+
+
      //预约
      public  function  order(){
       $compantService = new CompanyService();
@@ -210,35 +203,7 @@ class Service extends Base{
      }
 
 
-    public  function  _checkData($data){
-         if(empty($data)){
-             return false;
-         }
-         if(!isset($data['company'])||
-             !isset($data['name'])||
-             !isset($data['mobile'])||
-             !isset($data['app_id'])
-         ){
 
-             return false;
-
-         }
-
-    if(empty($data['company'])||
-        empty($data['name'])||
-        empty($data['mobile'])||
-        empty($data['app_id'])
-    ){
-
-        return false;
-
-    }
-
-      return true;
-
-
-
-}
 
     //新柱办理
     public function  newPillar(){
@@ -253,6 +218,9 @@ class Service extends Base{
         $this->assign('data',json_encode($data));
         return $this->fetch();
     }
+
+
+
     //新柱提交
     public function addNewPillar()
     {
@@ -274,7 +242,7 @@ class Service extends Base{
         $record=[
             'type'=>1,
             'aging'=>$data['aging'],
-            'payment_voucher'=>$data['payment_voucher'],
+            'payment_voucher'=>json_encode($data['payment_voucher']),
             'create_time'=>time(),
             'service_id'=>$PillarService->id,
             'status'=>0,
@@ -289,6 +257,9 @@ class Service extends Base{
         }
 
     }
+
+
+
     //旧柱办理
     public function  oldPillar(){
         $data['app_id']=input('app_id');
@@ -309,6 +280,9 @@ class Service extends Base{
         $this->assign('info',json_encode($data));
         return $this->fetch();
     }
+
+
+
     //旧柱提交
     public function addOldPillar()
     {
@@ -318,7 +292,7 @@ class Service extends Base{
         $record=[
             'type'=>2,
             'aging'=>$data['aging'],
-            'payment_voucher'=>$data['payment_voucher'],
+            'payment_voucher'=>json_encode($data['payment_voucher']),
             'create_time'=>time(),
             'service_id'=>$data['id'],
             'status'=>0,
@@ -331,7 +305,6 @@ class Service extends Base{
         }else{
             $this->error("失败");
         }
-
     }
 
     //充电柱记录
@@ -348,14 +321,11 @@ class Service extends Base{
             array_push($record,$value->findRecord());
         }
         int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
-
-
         $this->assign('list',json_encode($record));
         return $this->fetch();
-
-
-
     }
+
+
 
     //新车卡主页
     public  function  newCard(){
@@ -380,6 +350,9 @@ class Service extends Base{
         return $this->fetch('payment');
 
     }
+
+
+
     //凭证提交公共方法
     public function  payment(){
         $data = input('');
@@ -400,11 +373,6 @@ class Service extends Base{
         return $this->fetch();
     }
 
-    public  function  test(){
-
-
-
-    }
 
 
 
@@ -451,6 +419,9 @@ class Service extends Base{
                 $this->error("失败");
             }
     }
+
+
+
     //旧卡首页
     public  function  oldCard(){
         $user_id =session('userId');
@@ -482,7 +453,7 @@ class Service extends Base{
             $record=[
                 'type'=>2,
                 'aging'=>$data['aging'],
-                'payment_voucher'=>$data['payment_voucher'],
+                'payment_voucher'=>json_encode($data['payment_voucher']),
                 'create_time'=>time(),
                 'carpark_id'=>$data['id'],
                 'status'=>0,
@@ -497,6 +468,10 @@ class Service extends Base{
                 $this->error("失败");
             }
     }
+
+
+
+
     //车卡记录
     public  function  carRecord(){
         $service =new CarparkService();
@@ -510,6 +485,9 @@ class Service extends Base{
         $this->assign('list',json_encode($list));
         return $this->fetch();
     }
+
+
+
 
     //大厅广告位预约
     public function advertise(){
@@ -536,7 +514,7 @@ class Service extends Base{
         $user_allselect = $adRecord->where($map)->select();
         $user_allcheck=array();
         foreach ($user_allselect as $value){
-            array_push($user_allcheck,$value['order_time']);
+            array_push($user_allcheck,$value['order_time']*1000);
         }
         //两者差值
         $reult = array_diff($list,$user_select);
@@ -602,6 +580,10 @@ class Service extends Base{
         return   json_encode($data);
     }
 
+
+
+
+
     //大厅广告位（提交）
     public  function  submitAdvertise(){
         $ad =new AdvertisingRecord();
@@ -613,7 +595,7 @@ class Service extends Base{
         ];
         $record =$ad->where($map)->select();
         foreach ($record as $value){
-            $value['payment_voucher']=$data['payment_voucher'];
+            $value['payment_voucher']=json_encode($data['payment_voucher']);
             $value['status']=2;
         }
 
@@ -625,6 +607,10 @@ class Service extends Base{
             return $this->error('失败'.$re);
         }
     }
+
+
+
+
     //大厅广告位月份切换
     public  function   changeMonth(){
         $adRecord = new AdvertisingRecord();
@@ -648,6 +634,9 @@ class Service extends Base{
 
         return json_encode($reult);
     }
+
+
+
 
         //多功能厅
         public function multifunction(){
@@ -791,7 +780,7 @@ class Service extends Base{
         ];
         $record =$ad->where($map)->select();
         foreach ($record as $value){
-            $value['payment_voucher']=$data['payment_voucher'];
+            $value['payment_voucher']=json_encode($data['payment_voucher']);
             $value['status']=2;
         }
 
@@ -820,7 +809,7 @@ class Service extends Base{
       $user_check2=array();
       foreach ($user_check as $value){
           $info=[
-              'order_time'=>$value['order_time']*1000,
+              'day'=>$value['order_time']*1000,
 
               'interval'=>$value['date_type']
           ];
@@ -928,7 +917,7 @@ class Service extends Base{
         ];
         $record =$ad->where($map)->select();
         foreach ($record as $value){
-            $value['payment_voucher']=$data['payment_voucher'];
+            $value['payment_voucher']=json_encode($data['payment_voucher']);
             $value['status']=2;
         }
 
@@ -939,10 +928,6 @@ class Service extends Base{
         else{
             return $this->error('失败'.$re);
         }
-
-
-
-
 
     }
 
@@ -1099,6 +1084,35 @@ class Service extends Base{
     public function history()
     {
         return $this->fetch();
+    }
+
+
+
+
+
+
+    public  function  _checkData($data){
+        if(empty($data)){
+            return false;
+        }
+        if(!isset($data['company'])||
+            !isset($data['name'])||
+            !isset($data['mobile'])||
+            !isset($data['app_id'])
+        ){
+
+            return false;
+
+        }
+
+        if(empty($data['company'])||
+            empty($data['name'])||
+            empty($data['mobile'])||
+            empty($data['app_id'])
+        ){
+            return false;
+        }
+        return true;
     }
 
 }
