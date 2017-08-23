@@ -21,7 +21,9 @@ use  app\index\model\ElectricityService;
 use  app\index\model\AdvertisingRecord;
 use  app\index\model\AdvertisingService;
 use   app\index\model\FunctionRoomRecord;
-
+use  app\index\controller\File;
+use  app\index\model\Picture;
+use think\Config;
 //企业服务
 class Service extends Base{
 
@@ -101,9 +103,6 @@ class Service extends Base{
         $info=[];
         switch ($app_id){
             case 1:
-
-
-
             //物业报修
             case 2:
                 $userid =session("userId");
@@ -405,12 +404,54 @@ class Service extends Base{
         $data['payment_alipay']=$park['payment_alipay'];
         //缴费支付宝账号
         $data['payment_bank']=$park['payment_bank'];
-        $this->assign('info',json_encode($data));
+        $this->assign('data',json_encode($data));
 
         return $this->fetch();
 
 
     }
+
+    public  function  test(){
+
+        phpinfo();
+
+    }
+
+
+    //
+    public  function  a(){
+
+        $data['payment_voucher']=1;
+        $Picture = new Picture();
+        $pic_driver = Config::get('upload_drive');
+       echo  json_encode($data['payment_voucher']);
+
+        $info = $Picture->upload(
+            $data['payment_voucher'],
+            Config::get('download_upload'),
+            Config::get('upload_drive'),
+            Config::get("upload_{$pic_driver}_config")
+        );
+
+        /* 记录图片信息 */
+        /* 记录附件信息 */
+        if($info){
+            $return['data'] = $info['picture'];
+            $return['code'] = 1;
+        } else {
+            $return['code'] = 0;
+            $return['info'] = $Picture->getError();
+        }
+
+        return json_encode($return);
+    }
+
+
+
+
+
+
+
     //提交新卡
     public  function  addNewCard(){
 
@@ -419,7 +460,17 @@ class Service extends Base{
 
             $id = session('userId');
             $data = input('');
-            $service = [
+        $p_v=array();
+        $file = new File();
+        foreach ($data['payment_voucher'] as $value){
+            $info = $file->uploadPicture();
+            $a['picture']=$value;
+
+
+
+            array_push($p_v,$info);
+            }
+        $service = [
                 'name' => $data['name'],
                 'mobile' => $data['mobile'],
                 'people_card' => $data['people_card'],
@@ -428,9 +479,7 @@ class Service extends Base{
                 'status' => 0,
                 'create_time'=>time()
             ];
-
             $re = $CardparkService->save($service);
-
             $record=[
                 'type'=>1,
                 'aging'=>$data['aging'],
@@ -522,103 +571,6 @@ class Service extends Base{
         return $this->fetch();
     }
 
-/*        //大厅广告位预约
-        public function advertise(){
-            $adService=new AdvertisingService();
-            $adRecord = new AdvertisingRecord();
-            //今天结束时间
-            $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
-            //本月结束时间
-            $endThismonth=mktime(23,59,59,date('m'),date('t'),date('Y'));
-            $map['order_time']=array('between',array($endToday,$endThismonth));
-            $map['service_id']=1;
-            $map['status']=array('eq',1);
-            $list =$adRecord->where($map)->select();
-            $service =$adService->where('id',1)->find();
-            $this->assign('price',$service['price']);
-            $data=array();
-            foreach ($list as $value){
-                array_push($data,$value['order_time']);
-            }
-            $this->assign('record',json_encode($data));
-            return $this->fetch();
-        }
-
-
-
-      //大厅广告位（下一步）
-      public  function  nextAdvertise(){
-            $park_id=session('$park_id');
-            $Park=new Park();
-            $data=input('');
-            $info = $Park->where("id",$park_id)->find();
-            $data['ailpay_user']=$info['ailpay_user'];
-            $data['payment_alipay']=$info['payment_alipay'];
-            $this->assign('data',$data);
-            return $this->fetch();
-      }
-
-    //大厅广告位（提交）
-    public  function  submitAdvertise(){
-        $ad =new AdvertisingRecord();
-       $user_id =session('userId');
-        $data=input('');
-        $num = count($data['order_times']);
-        $record=array();
-        $creat_time=time();
-        foreach ($data['order_times'] as $value){
-            $info=[
-              'create_user'=>$user_id,
-                'service_id'=>1,
-                'payment_voucher'=>$data['payment_voucher'],
-                'order_time'=>$value,
-                 'create_time'=>$creat_time,
-                  'statute'=>1
-            ];
-            array_push($record,$info);
-        }
-         $re = $ad ->save($record);
-        if($re){
-            return $this->success('成功');
-        }
-         else{
-             return $this->error('成功');
-         }
-    }
-
-
-
-
-        //大厅广告位月份切换
-       public  function   changeMonth(){
-           $adRecord = new AdvertisingRecord();
-        //数字（几月）
-        $month=input('month');
-
-
-           $beginThismonth=mktime(0,0,0,$month,1,date('Y'));
-
-           $endThismonth=mktime(23,59,59,$month,date('t'),date('Y'));
-           $map['order_time']=array('between',array($beginThismonth,$endThismonth));
-           $map['service_id']=1;
-           $map['status']=array('eq',1);
-           $list =$adRecord->where($map)->select();
-
-           return json_encode($list);
-       }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
     //大厅广告位预约
     public function advertise(){
         $user_id = session('userId');
@@ -703,7 +655,11 @@ class Service extends Base{
                $data['no_save'] = json_encode($is_select);
                return   json_encode($data);
            }
-           $de = $ad->where($map)->delete();
+        $map2 = [
+            'create_user' => $user_id,
+            'status' => 1
+        ];
+           $de = $ad->where($map2)->delete();
            $re = $ad->saveAll($record);
            $info = $Park->where("id",$park_id)->find();
            $data['ailpay_user'] = $info['ailpay_user'];
@@ -737,14 +693,6 @@ class Service extends Base{
             return $this->error('失败'.$re);
         }
     }
-
-
-
-
-
-
-
-
     //大厅广告位月份切换
     public  function   changeMonth(){
         $adRecord = new AdvertisingRecord();
@@ -768,16 +716,11 @@ class Service extends Base{
 
         return json_encode($reult);
     }
-
-
         //公共区服务
         public function publicservice(){
 
             return $this->fetch();
         }
-
-
-
         //多功能厅
         public function multifunction(){
             $adService =new  AdvertisingService();
@@ -791,7 +734,7 @@ class Service extends Base{
                 $map=['order_time'=>$time,'status'=>array('neq',0)];
                 $re =$FunctionRoomRecord->where($map)->find();
                 if($re){
-                   $days['day']=$time;
+                   $days['day']=$time*1000;
                    //是当前用户
                    if($re['create_user']==$user_id){
                         //选中未付款
@@ -848,7 +791,7 @@ class Service extends Base{
                     }
                 }
                 else{
-                    $days['day']=$time;
+                    $days['day']=$time*1000;
                     $days['amBespeak']="no";
                     $days['pmBespeak']="no";
                     $days['amCheck']="no";
@@ -859,6 +802,89 @@ class Service extends Base{
             $this->assign('data',$weeks);
             return $this->fetch();
         }
+    //多功能厅预定先生成数据
+    public function nextFunctionHome(){
+        $data = input('');
+        $user_id = session('userId');
+        $park_id = session('park_id');
+        $Park = new Park();
+        $frr = new FunctionRoomRecord();
+        $record = array();
+        $create_time = time();
+        $map = [
+            'create_user' => $user_id,
+            'status' => 1
+        ];
+        $is_select = array();
+        foreach ($data as $value) {
+            $map=['order_time'=> $value['day'],
+                'status' => array('neq', 0),
+                'create_user'=>array('neq',$user_id)
+            ];
+            $is = $frr->where($map)->find();
+            if ($is) {
+                array_push($is_select, $is['order_time']);
+            } else {
+                $info = [
+                    'create_user' => $user_id,
+                    'service_id' => 2,
+                    'order_time' => $value,
+                    'create_time' => $create_time,
+                    'status' => 1
+                ];
+               if($value['amCheck']=='no'){
+                   $info['date_type']=2;
+
+               }else{
+                   $info['date_type']=1;
+               }
+                array_push($record, $info);
+            }
+        }
+        if(count($is_select)>0){
+            $data['no_save'] = json_encode($is_select);
+            return   json_encode($data);
+        }
+        $map2=[
+            'status'=>array('eq',1),
+            'create_user'=>$user_id
+        ];
+
+        $de = $frr->where($map2)->delete();
+        $re = $frr->saveAll($record);
+        $info = $Park->where("id",$park_id)->find();
+        $data['ailpay_user'] = $info['ailpay_user'];
+        $data['payment_alipay'] = $info['payment_alipay'];
+        $data['no_save'] = json_encode($is_select);
+
+        return   json_encode($data);
+    }
+
+    //二楼多功能厅（提交）
+    public  function  submitFunctionRoom(){
+        $ad =new FunctionRoomRecord();
+        $user_id =session('userId');
+        $data=input('');
+        $map=[
+            'create_user'=>$user_id,
+            'status'=>1
+        ];
+        $record =$ad->where($map)->select();
+        foreach ($record as $value){
+            $value['payment_voucher']=$data['payment_voucher'];
+            $value['status']=2;
+        }
+
+        $re = $ad->saveAll($record);
+        if($re){
+            return $this->success('成功');
+        }
+        else{
+            return $this->error('失败'.$re);
+        }
+    }
+
+
 
 
 
@@ -963,18 +989,6 @@ class Service extends Base{
         } else {
             return $this->error($waterModel->getError());
         }
-
-
-          /*  $waterModel = new WaterModel;
-            $_POST['userid']=session('userId');
-            $result = $waterModel->allowField(true)->validate(true)->save($_POST);
-            if ($result) {
-                //预约成功
-                return $this->success("预约成功");
-            } else {
-                return $this->error($waterModel->getError());
-            }*/
-
 
     }
 
