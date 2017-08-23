@@ -174,11 +174,11 @@ class Service extends Base{
                 $info['name']=$user['name'];
                 $info['mobile']=$user['mobile'];
                 $info['company']=$user->departmentName->name;
-                $info['app_id']=$app_id;
                 break;
 
 
         }
+        $info['app_id']=$app_id;
         $this->assign('info',json_encode($info));
         return $this->fetch($path);
 
@@ -246,6 +246,7 @@ class Service extends Base{
 
     //新柱办理
     public function  newPillar(){
+
         $park_id =session('park_id');
         $Park = new Park();
         $park= $Park->where('id',$park_id)->find();
@@ -361,22 +362,14 @@ class Service extends Base{
 
     //新车卡主页
     public  function  newCard(){
+        $data['app_id']=input('app_id');
         $park_id =session('park_id');
         $Park = new Park();
         $park= $Park->where('id',$park_id)->find();
-        //支付宝用户
-        $data['ailpay_user']=$park['ailpay_user'];
-        //银行用户
-        $data['bank_user']=$park['bank_user'];
-        //缴费支付宝账号
-        $data['payment_alipay']=$park['payment_alipay'];
-        //缴费支付宝账号
-        $data['payment_bank']=$park['payment_bank'];
         //停车卡单价
         $data['carpark_price']=$park['carpark_price'];
         //车卡押金
         $data['carpark_deposit']=$park['carpark_deposit'];
-
         $this->assign('info',json_encode($data));
 
         return $this->fetch();
@@ -396,6 +389,7 @@ class Service extends Base{
         $park_id =session('park_id');
         $Park = new Park();
         $park= $Park->where('id',$park_id)->find();
+
         //支付宝用户
         $data['ailpay_user']=$park['ailpay_user'];
         //银行用户
@@ -482,7 +476,7 @@ class Service extends Base{
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
-                $msg="您的缴费信息正在核对中,核对完成后，将在个人中心中予以反馈,请耐心等待，确认成功后,请您在2小时内到海创大厦A座201领取车卡";
+                $msg="您的缴费信息正在核对中,核对完成后,将在个人中心中予以反馈,请耐心等待,确认成功后,请您在2小时内到海创大厦A座201领取车卡";
                 $this->success('成功',"",$msg);
 
             }else{
@@ -543,7 +537,7 @@ class Service extends Base{
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
-                $msg="您的缴费信息正在核对中,核对完成后，将在个人中心中予以反馈";
+                $msg="您的缴费信息正在核对中,核对完成后,将在个人中心中予以反馈";
                 $this->success('成功',"",$msg);
 
             }else{
