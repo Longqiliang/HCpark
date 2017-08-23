@@ -269,6 +269,7 @@
     var myVue=new Vue({
         el: '#app',
         data: {
+            app_id:parseInt(window.location.href.split('app_id=')[1]),
             price:{$price},
             currentDay: 1,
             currentMonth: 1,
@@ -428,14 +429,14 @@
                                 })
 
                             }else{
-                                window.sessionStorage.setItem('data',res.data)
+                                window.sessionStorage.setItem('data',res.data);
                                 swal({
                                     title:"",
                                     text:"缴费完成后，请尽快上传缴费凭证",
                                     type:"success"
                                 },function (e) {
                                     if(e){
-                                        window.location.href='/index/service/payment/t/4'
+                                        window.location.href='/index/service/payment?app_id='+the.app_id+'&&type=submitAdvertise';
                                     }
                                 })
                             }
@@ -452,7 +453,7 @@
                 }
             },
             toHistory(){
-                window.location.href='/index/service/history/t/1';
+                window.location.href='/index/service/record/t/1';
             }
 
         }

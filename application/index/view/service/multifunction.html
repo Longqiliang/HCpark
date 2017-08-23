@@ -242,6 +242,7 @@
             console.log(this.weeks)
         },
         data:{
+            app_id:parseInt(window.location.href.split('app_id=')[1]),
             weeks:JSON.parse('{$data}'),
             price:0,
             isSubmit:false
@@ -307,9 +308,9 @@
                             }
                         }
                         console.log(data);
-                         this.$http.post('/index/service/nextMultifunction/',data).then(function (res) {
-                             console.log(res)
+                         this.$http.post('/index/service/nextFunctionRoom',data).then(function (res) {
                              this.isSubmit=false;
+                             var the=this;
                              var noSave = JSON.parse(res.data).no_save;
 //                            如果有被预定，删除、提示
                              if(noSave = '' ){
@@ -331,10 +332,10 @@
                                          if(this.weeks[o].day==noSave[i].day){
                                              if(noSave[i].amCheck=='yes'){
                                                  this.weeks[o].amCheck=='yes';
-                                                 this.weeks[o].amBespeak=='yes';
+                                                 this.weeks[o].amBespeak=='no';
                                              }else if(noSave[i].pmCheck=='yes'){
                                                  this.weeks[o].pmCheck=='yes';
-                                                 this.weeks[o].pmBespeak=='yes';
+                                                 this.weeks[o].pmBespeak=='no';
                                              }
                                          }
                                      }
@@ -354,7 +355,7 @@
                                      type:"success"
                                  },function (e) {
                                      if(e){
-                                         window.location.href='/index/service/payment/t/4'
+                                         window.location.href='/index/service/payment?app_id='+the.app_id+'&&type=submitFunctionRoom';
                                      }
                                  })
                              }
@@ -369,7 +370,7 @@
                 }
             },
             toHistory(){
-                window.location.href='/index/service/history/t/1';
+                window.location.href='/index/service/record/t/2';
             }
         }
     })

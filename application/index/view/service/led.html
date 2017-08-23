@@ -230,7 +230,7 @@
     </div>
     <div class="my-total">
         <span>合计：{{10*checkedTime.length}}元</span>
-        <button>确认预约</button>
+        <button @click="toSubmit">确认预约</button>
     </div>
 </div>
 {/block}
@@ -244,27 +244,38 @@ var app = new Vue({
         currentDate:'',
         clickRecord:0,//日期翻页点击记录
         date:[],//顶部日期
-        checkedTime:[],//选中的时间段
+        checkedTime:JSON.parse('{$user}'),//选中的时间段
+        bespeakTime:JSON.parse('{$other}'),//预约得时间段
         infoData:{
             day:Date.parse(new Date()),
-            time:[
-                {isChecked:'no',isBespeak:'no',interval:1},
-                {isChecked:'no',isBespeak:'no',interval:2},
-                {isChecked:'no',isBespeak:'no',interval:3},
-                {isChecked:'no',isBespeak:'yes',interval:4},
-                {isChecked:'no',isBespeak:'no',interval:5},
-                {isChecked:'no',isBespeak:'no',interval:6},
-                {isChecked:'no',isBespeak:'yes',interval:7},
-                {isChecked:'no',isBespeak:'no',interval:8},
-                {isChecked:'no',isBespeak:'no',interval:9}
-            ]
+            time:[]
         },
 
     },
     mounted(){
+        console.log(this.checkedTime)
         this.checkedDate(this.infoData.day);
+        this.baseInfo(this.infoData.day);
+        console.log(this.infoData.time)
     },
     methods:{
+        baseInfo(time){
+            for(var i=0;i<9;i++){
+                var info={isChecked:'no',isBespeak:'no',interval:i+1};
+                for(var c=0;c<this.checkedTime.length;c++){
+                    console.log(this.checkedTime[c].day,time)
+                    if(this.timeIsSame(this.checkedTime[c].day,time) && (i+1) == this.checkedTime[c].interval){
+                        info.isChecked='yes'
+                    }
+                }
+                for(var b=0;b<this.bespeakTime.length;b++){
+                    if(this.timeIsSame(this.bespeakTime[b].day,time)){
+                        info.isBespeak='yes'
+                    }
+                }
+                this.infoData.time.push(info)
+            }
+        },
         //顶部日期选择器生成
         checkedDate(t){
             days=[];
@@ -286,32 +297,43 @@ var app = new Vue({
             if(!this.date[key].checked){
                 for(var i=0;i<this.date.length;i++){
                     this.date[i].checked=false;
-                }                console.log(this.date)
+                }
                 this.currentDate=this.date[key].time;
                 this.date[key].checked=true;
             }
+            this.$http.post('/index/service/changeLed',{day:this.date[key].time}).then(function (res) {
+                this.infoData.time.length=0
+                this.bespeakTime=JSON.parse(res.data);
+                this.baseInfo(this.date[key].time)
+            },function (res) {
+                console.log(res)
+            })
         },
         //上一页
         pickPre() {
             if(this.clickRecord>0){
-    //            this.$http.post('/index/service/changeMonth',{ month : this.currentMonth-1 }).then(function (res) {
-    //                this.bespeakList=JSON.parse(res.data);
                 var now=new Date();
                 this.clickRecord-=1;
                 var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
-                this.checkedDate(d);
-    //            })
+                this.$http.post('/index/service/changeLed',{ month : d }).then(function (res) {
+                    this.infoData.time.length=0
+                    this.bespeakTime=JSON.parse(res.data);
+                    this.checkedDate(d);
+                    this.baseInfo(d)
+                })
             }
         },
         //下一页
         pickNext() {
-//            this.$http.post('/index/service/changeMonth',{ month : this.currentMonth+1 }).then(function (res) {
-//                this.bespeakList=JSON.parse(res.data);
             var now=new Date();
             this.clickRecord+=1
             var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
-            this.checkedDate(d);
-//            })
+            this.$http.post('/index/service/changeLed',{ month : d }).then(function (res) {
+                this.infoData.time.length=0
+                this.bespeakTime=JSON.parse(res.data);
+                this.checkedDate(d);
+                this.baseInfo(d)
+            })
         },
         //选择时间段
         toCheck(key){
@@ -333,7 +355,6 @@ var app = new Vue({
                     };
                     this.checkedTime.push(info)
                 }
-                console.log(this.checkedTime)
             }
         },
         // 返回 2017-01-01 格式的字符串
@@ -344,6 +365,17 @@ var app = new Vue({
             var d = day;
             if(d<10) d = "0" + d;
             return y+"-"+m+"-"+d
+        },
+        timeIsSame(time1,time2){
+            var time1=new Date(time1),time2=new Date(time2);
+            var year1=time1.getFullYear(),month1=time1.getMonth(),day1=time1.getDate();
+            var year2=time2.getFullYear(),month2=time1.getMonth(),day2=time2.getDate();
+
+            if(year1 == year2 && month1 == month2 && day1 == day2){
+                return true;
+            }else{
+                return false;
+            }
         },
         //顶部日期选择器内 一天的信息
         oneDayInfo(time,key){
@@ -383,6 +415,18 @@ var app = new Vue({
             }
             return info;
 
+        },
+        toSubmit(){
+            if(this.checkedTime.length>0){
+                console.log(this.checkedTime)
+                this.$http.post('/index/service/nextLed',this.checkedTime).then(function (res) {
+                    console.log(JSON.parse(res.data))
+                },function (res) {
+                    console.log(res.data)
+                })
+            }else{
+                this.$toast('请选择预约时段')
+            }
         },
         //历史记录
         toHistory(){

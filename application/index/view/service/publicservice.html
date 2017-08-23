@@ -89,6 +89,7 @@
 
 {block name="body"}
 <div id="app">
+    <p>{$info}</p>
     <div class="my-item my-color1">
         <div class="my-item-img" style="background-image: url('/index/images/service/publicservice/i1.jpeg')">
             <div class="my-item-price">¥400/天</div>
@@ -132,8 +133,7 @@
 <script>
 var app = new Vue({
     el:'#app',
-    data:{
-    },
+    data:JSON.parse('{$info}'),
     mounted(){
         console.log(document.getElementsByTagName('html')[0].style.fontSize);
         document.getElementsByTagName('html')[0].style.fontSize=window.screen.width/375*10+'px';
@@ -142,7 +142,7 @@ var app = new Vue({
     },
     methods:{
         jumpTo(path){
-            window.location.href='/index/service/'+path;
+            window.location.href='/index/service/'+path+'?app_id='+this.app_id;
         }
     }
 })
