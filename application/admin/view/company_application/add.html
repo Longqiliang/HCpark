@@ -131,6 +131,54 @@
                         </div>
                     </div>
 
+                    <div class="form-group"><label class="col-sm-2 control-label">支付宝:</label>
+                        <div class="col-sm-10">
+                            {notpresent name="$list.has_alipay"}
+                            <label class="checkbox-inline i-checks">
+                                支持&nbsp;<input type="radio" value="1" name="has_alipay" checked>　
+                                不支持&nbsp;<input type="radio" value="2" name="has_alipay">
+                            </label>
+                            {/notpresent}
+                            {present name="$list.has_alipay"}
+                            {eq  name="$list.has_alipay"  value="2"}
+                            <label class="checkbox-inline i-checks">
+                                支持&nbsp;<input type="radio" value="1" name="has_alipay">　
+                                不支持&nbsp;<input type="radio" value="2" name="has_alipay" checked>
+                            </label>　
+                            {else/}
+                            <label class="checkbox-inline i-checks">
+                                支持&nbsp;<input type="radio" value="1" name="has_alipay" checked>　
+                                不支持&nbsp;<input type="radio" value="2" name="has_alipay">
+                            </label>
+                            {/eq}
+                            {/present}
+                        </div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">银行卡:</label>
+                        <div class="col-sm-10">
+                            {notpresent name="$list.has_bank"}
+                            <label class="checkbox-inline i-checks">
+                                支持&nbsp;<input type="radio" value="1" name="has_bank" checked>　
+                                不支持&nbsp;<input type="radio" value="2" name="has_bank">
+                            </label>
+                            {/notpresent}
+                            {present name="$list.has_bank"}
+                            {eq  name="$list.has_bank"  value="2"}
+                            <label class="checkbox-inline i-checks">
+                                支持&nbsp;<input type="radio" value="1" name="has_bank">　
+                                不支持&nbsp;<input type="radio" value="2" name="has_bank" checked>
+                            </label>　
+                            {else/}
+                            <label class="checkbox-inline i-checks">
+                                支持&nbsp;<input type="radio" value="1" name="has_bank" checked>　
+                                不支持&nbsp;<input type="radio" value="2" name="has_bank">
+                            </label>
+                            {/eq}
+                            {/present}
+                        </div>
+                    </div>
+
 
                     <div class="mail-body text-right tooltip-demo">
 

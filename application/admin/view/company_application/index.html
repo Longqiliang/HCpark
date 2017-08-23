@@ -80,6 +80,8 @@
                     <th>地址</th>
                     <th>类型</th>
                     <th>所属园区</th>
+                    <th>支付宝</th>
+                    <th>银行卡</th>
                     <th>状态</th>
                 </tr>
                 </thead>
@@ -95,12 +97,13 @@
                     <td><a href="{:Url('add','id='.$list.id)}">{$list.path}</a></td>
                     <td><a href="{:Url('add','id='.$list.id)}">{$list.type_text}</a></td>
                     <td><a href="{:Url('add','id='.$list.id)}">
-                    {volist name="list.park_id" id="parkname"}
+                        {volist name="list.park_id" id="parkname"}
                         <span>{$parkname}</span>
-                    {/volist}
+                        {/volist}
                     </a>
                     </td>
-
+                    <td><a href="{:Url('add','id='.$list.id)}">{$list.has_alipay_text}</a></td>
+                    <td><a href="{:Url('add','id='.$list.id)}">{$list.has_bank_text}</a></td>
                     {eq name="$list.status" value="1"}
                     <td><span class="label label-info">启用</span></td>
                     {else/}
@@ -136,6 +139,6 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
-    
+
 </script>
 {/block}

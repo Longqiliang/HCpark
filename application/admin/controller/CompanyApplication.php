@@ -36,6 +36,12 @@ class CompanyApplication extends Admin
         int_to_string($list, array(
             'type' => array(1 => '企业服务', 0 => '物业服务'),
         ));
+        int_to_string($list, array(
+            'has_alipay' => array(1 => '支持', 2 => '不支持'),
+        ));
+        int_to_string($list, array(
+            'has_bank' => array(1 => '支持', 2 => '不支持'),
+        ));
         //分页
         $page = $list->render();
         $this->assign('page', $page);
