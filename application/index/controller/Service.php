@@ -242,7 +242,7 @@ class Service extends Base{
 
     //新柱办理
     public function  newPillar(){
-
+        $data['app_id']=input('app_id');
         $park_id =session('park_id');
         $Park = new Park();
         $park= $Park->where('id',$park_id)->find();
@@ -291,6 +291,7 @@ class Service extends Base{
     }
     //旧柱办理
     public function  oldPillar(){
+        $data['app_id']=input('app_id');
         $user_id =session('userId');
         $park_id =session('park_id');
         $Park = new Park();
@@ -319,9 +320,9 @@ class Service extends Base{
             'aging'=>$data['aging'],
             'payment_voucher'=>$data['payment_voucher'],
             'create_time'=>time(),
-            'service_id'=>$data['service_id'],
+            'service_id'=>$data['id'],
             'status'=>0,
-            'money'=>((int)$data['charging_price']*(int)$data['aging'])+(int)$data['charging_deposit'],
+            'money'=>((int)$data['charging_price']*(int)$data['aging']),
         ];
         $re2=$er->save($record);
         if($re2){
@@ -406,33 +407,6 @@ class Service extends Base{
     }
 
 
-    //
-    public  function  a(){
-
-        $data['payment_voucher']=1;
-        $Picture = new Picture();
-        $pic_driver = Config::get('upload_drive');
-       echo  json_encode($data['payment_voucher']);
-
-        $info = $Picture->upload(
-            $data['payment_voucher'],
-            Config::get('download_upload'),
-            Config::get('upload_drive'),
-            Config::get("upload_{$pic_driver}_config")
-        );
-
-        /* 记录图片信息 */
-        /* 记录附件信息 */
-        if($info){
-            $return['data'] = $info['picture'];
-            $return['code'] = 1;
-        } else {
-            $return['code'] = 0;
-            $return['info'] = $Picture->getError();
-        }
-
-        return json_encode($return);
-    }
 
     //提交新卡
     public  function  addNewCard(){
@@ -510,9 +484,9 @@ class Service extends Base{
                 'aging'=>$data['aging'],
                 'payment_voucher'=>$data['payment_voucher'],
                 'create_time'=>time(),
-                'carpark_id'=>$data['carpark_id'],
+                'carpark_id'=>$data['id'],
                 'status'=>0,
-                'money'=>((int)$data['carpark_price']*(int)$data['aging'])+(int)$data['carpark_deposit'],
+                'money'=>((int)$data['carpark_price']*(int)$data['aging']),
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
@@ -674,11 +648,7 @@ class Service extends Base{
 
         return json_encode($reult);
     }
-        //公共区服务
-        public function publicservice(){
 
-            return $this->fetch();
-        }
         //多功能厅
         public function multifunction(){
             $adService =new  AdvertisingService();
@@ -758,6 +728,7 @@ class Service extends Base{
                  array_push($weeks,$days);
             }
             $this->assign('data',$weeks);
+            $this->assign('app_id',input('app_id'));
             return $this->fetch();
         }
     //多功能厅预定先生成数据
@@ -791,12 +762,6 @@ class Service extends Base{
                      'date_type'=>$value['interval']
 
                 ];
-              /* if($value['amCheck']=='no'){
-                   $info['date_type']=2;
-
-               }else{
-                   $info['date_type']=1;
-               }*/
                 array_push($record, $info);
             }
         }
@@ -841,6 +806,7 @@ class Service extends Base{
    //led 灯服务
    public  function  led(){
      $user_id = session('userId');
+
         $led = new LedRecord();
        //今天的时间
        $Today=mktime(8,0,0,date('m'),date('d'),date('Y'));
@@ -934,7 +900,7 @@ class Service extends Base{
      $led = new LedRecord();
      $map['create_user']=array('neq',$user_id);
      $map['status']=array('neq',0);
-     $map['order_time']=$data;
+     $map['order_time']=$data/1000;
      //今天已选的
      $all_check=$led->where($map)->select();
      $all_check2=array();
