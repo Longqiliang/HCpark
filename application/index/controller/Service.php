@@ -865,7 +865,7 @@ class Service extends Base{
       $user_check2=array();
       foreach ($user_check as $value){
           $info=[
-              'order_time'=>$value['order_time'],
+              'order_time'=>$value['order_time']*1000,
 
               'interval'=>$value['date_type']
           ];
@@ -886,8 +886,8 @@ class Service extends Base{
         ];
         array_push($all_check2,$data);
        }
-        $this->assign('other',$all_check2);
-        $this->assign('user',$user_check2);
+        $this->assign('other',json_encode($all_check2));
+        $this->assign('user',json_encode($user_check2));
       return $this->fetch();
    }
 
