@@ -365,19 +365,24 @@ function validateIdCard(idCard,obj){
 			if(idCardMod==2){
 				if(idCardLast=="X"||idCardLast=="x"){
 					console.log("验证成功！");
+					return true;
 				}else{
 					obj.$toast("身份证号码错误！");
+					return false;
 				}
 			}else{
 				//用计算出的验证码与最后一位身份证号码匹配，如果一致，说明通过，否则是无效的身份证号码
 				if(idCardLast==idCardY[idCardMod]){
 					console.log("验证成功！");
+					return true;
 				}else{
 					obj.$toast("身份证号码错误！");
+					return false;
 				}
 			}
 		}
 	}else{
 		obj.$toast("身份证格式不正确!");
+		return false;
 	}
 }

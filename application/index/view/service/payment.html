@@ -41,11 +41,11 @@
     <div class="card">
         <div class="card-tit">办理信息</div>
         <div class="card-upload">
-            <div class="upload-img" v-for="(imgUrl,index) of dataUrl">
+            <div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">
                 <i class="del-img" @click="delImg(index)"></i>
                 <img :src="imgUrl" class="img-responsive">
             </div>
-            <div class="upload-box" @click="imgUpload" v-if="dataUrl.length < imgLength">
+            <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
                 <img src="/index/images/service/card/card-camera.png" >
                 <span class="upload-info" >上传凭证</span>
             </div>
@@ -70,21 +70,31 @@
         data:{
             subData:data,
             isSubmit:true,
-            imgLength:3,
             payment_voucher:[],
-            dataUrl:[],
-            imgSrc:[]
+            imgSrc:{
+                imgLength:3,
+                dataUrl:[],
+                imgName:[]
+            }
         },
         methods: {
             delImg: function (e) {
-                this.dataUrl.splice(e,1);
-                this.imgSrc.splice(e,1);
-                this.$refs.myform.reset();
+                this.imgSrc.dataUrl.splice(e,1);
+                this.payment_voucher.splice(e,1);
+                this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
             },
-            imgPreview (file) {
+            imgPreview (file,path,name) {
                 var self = this;
-                // 看支持不支持FileReader
-                if (!file || !window.FileReader) return;
+                if(self.imgSrc.dataUrl.length >= self.imgSrc.imgLength){
+                    return;
+                }
+                // 是否支持FileReader
+                if (!file || !window.FileReader){
+                    if(path){
+                        self.imgSrc.dataUrl.push(path) ;
+                    }
+                    return;
+                }
 
                 if (/^image/.test(file.type)) {
                     // 创建一个reader
@@ -93,12 +103,15 @@
                     reader.readAsDataURL(file);
                     // 读取成功后的回调
                     reader.onloadend = function () {
-                        if(self.dataUrl.length >= self.imgLength){
-                            return;
-                        }else{
-                            self.dataUrl.push(this.result) ;
+                        self.imgSrc.dataUrl.push(this.result) ; //64格式图片数组
+                        if(name && path){
+                            var imgObj = {
+                                name:name,
+                                path:path,
+                                base:this.result
+                            };
+                            self.imgSrc.imgName.push(imgObj);
                         }
-                        console.log(self.dataUrl);
                     }
                 }
             },
@@ -110,15 +123,59 @@
                 var _this = this;
                 var upImg = _this.$refs.upimg;
                 var img = upImg.files[0];
-                console.log(img);
-
+                if(img){
+                    var name = img.name;
+                }
+                for(var j = 0,imgName = _this.imgSrc.imgName ; j < imgName.length ; j += 1){
+                    if(name == imgName[j].name ){
+                        for(var k = 0,showPath = _this.imgSrc.dataUrl; k < showPath.length ; k += 1){
+                            if( showPath[k] == imgName[j].base){
+                                return;
+                            }
+                        }
+                        _this.payment_voucher.push(imgName[j].path );
+                        _this.imgPreview(img);
+//                        console.log("64位图片",_this.imgSrc.dataUrl);
+//                        console.log("图片名字",_this.imgSrc.imgName);
+//                        console.log("凭证",_this.payment_voucher);
+                        return;
+                    }
+                }
                 if(img){
                     var newSize = (img.size/1024).toFixed(2);
                     if(newSize <= 10240){
-                        // 在获取到文件对象进行预览
-                        this.imgPreview(img);
-                        this.imgSrc.push(img);
-                        console.log(this.imgSrc);
+                        _this.$indicator.open({
+                            text: '图片上传中',
+                            spinnerType: 'triple-bounce'
+                        });
+                        var formData = new FormData();
+                        formData.append("picture",img);
+                        _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
+                            var data = JSON.parse(res.data);
+                            console.log(data);
+                            if(data.code == 1){
+                            // 在获取到文件对象进行预览
+                                _this.$indicator.close();
+                                _this.$toast({
+                                    message:"上传成功！",
+                                    duration:1000
+                                });
+                                _this.payment_voucher.push(data.data.path); //上传后图片路径
+                                _this.imgPreview(img,data.data.path,name);
+                            }else{
+                                _this.$indicator.close();
+                                _this.$toast({
+                                    message:"上传失败，请重新上传！",
+                                    duration:1000
+                                });
+                            }
+                        },function (res) {
+                            _this.$indicator.close();
+                            _this.$toast({
+                                message:"上传失败，请重新上传！",
+                                duration:1000
+                            });
+                        });
                     }else{
                         _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
                     }
@@ -131,47 +188,22 @@
                     return;
                 }
                 _this.isSubmit = false;
-
+                _this.subData.payment_voucher = _this.payment_voucher;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 console.log(subData);
-                 var formData = new FormData();
-                var img = _this.imgSrc;
-                console.log(img[0]);
-                for(var i=0;i<img.length;i++){
-                    formData.append("picture",img[i]);
-                    _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
-                        var data = res.data;
-                        console.log(data);
-                        if(data.code == 1){
-
-                        }
-                    },function (res) {
-
-                    });
-                }
-                return;
-                formData.append("picture",img);
-
-//                        return;
-                _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
-                    var data = res.data;
-                    console.log(data);
-                    if(data.code == 1){
-
-
-                    }
-                },function (res) {
-
-                });
-                if(subData.t == "newCard"){
-                    this.$http.post('addNewCard',subData).then(function (res) {
+                var type = subData.type;
+                if(type){
+                    this.$http.post(type,subData).then(function (res) {
                         console.log(res.data);
                         _this.isSubmit = true;
                         var data = res.data;
                         if(data.code == 1){
+                            var msg = data.data;
+                          var newMsg =  msg.split("；");
+                          msg =  newMsg.join("<br/>");
                             swal({
                                 title:"预约成功!",
-                                text:'您的缴费信息正在核对中<br/>核对完成后，将在个人中心中予以反馈<br/>请耐心等待，确认成功后<br/><span style="color:#333">请您在2小时内到海创大厦A座201领取车卡</span>',
+                                text:msg,
                                 html:true,
                                 type:"success",
                                 confirmButtonColor: "#fcc44b"
@@ -180,18 +212,6 @@
                     },function (res) {
                         _this.isSubmit = true;
                     })
-                }else{
-                    var type =subData.t;
-                    type = parseInt(type);
-                    if(!isNaN(type)){
-                            swal({
-                                title:"提交成功!",
-                                text:'您的缴费信息正在核对中<br/>核对完成后，将在个人中心中予以反馈<br/>请您耐心等待',
-                                html:true,
-                                type:"success",
-                                confirmButtonColor: "#fcc44b"
-                            });
-                    }
                 }
             }
         }

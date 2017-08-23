@@ -6,9 +6,9 @@
 {/block}
 
 {block name="body"}
-<div >
+<div id="app">
     <div class="img-card">
-        <a href="{:Url('Service/newCard')}">
+        <a  @click.prevent="jump('newCard')">
             <div class="img-card-box">
                 <img src="/index/images/service/card/newcard.png"  class="img-responsive">
                 <div class="img-marking"><span class="marking-info">新卡缴费</span></div>
@@ -17,7 +17,7 @@
         </a>
     </div>
     <div class="img-card">
-        <a href="{:Url('Service/oldCard')}">
+        <a  @click.prevent="jump('oldCard')">
             <div class="img-card-box">
                 <img src="/index/images/service/card/oldcard.png" class="img-responsive">
                 <div class="img-marking"><span class="marking-info">旧卡续费</span></div>
@@ -38,5 +38,19 @@
 {/block}
 
 {block name="script"}
+<script>
+    var data = {$info};
+    console.log(data);
+    var vm = new Vue({
+        el:'#app',
+        data:data,
+        methods:{
+            jump:function (e) {
+                var app_id = this.app_id;
+                window.location.href = "/index/service/"+e+"?app_id="+app_id;
+            }
+        }
+    })
+</script>
 
 {/block}

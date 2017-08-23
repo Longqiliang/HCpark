@@ -21,7 +21,7 @@
             </div>
             <div class="card-cell">
                 <label for="phone">车主电话</label>
-                <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile" name="mobile">
+                <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile" name="mobile" maxlength="11">
             </div>
             <div class="card-cell">
                 <label for="number">车牌号码</label>
@@ -34,7 +34,8 @@
                 <input type="hidden" v-model="defaultData.aging" name="aging">
                 <input type="hidden" v-model="subData.carpark_deposit" name="carpark_deposit">
                 <input type="hidden" v-model="subData.carpark_price" name="carpark_price">
-                <input type="hidden" v-model="defaultData.t" name="type">
+                <input type="hidden" v-model="subData.app_id" name="app_id">
+                <input type="hidden" v-model="defaultData.type" name="type">
         </form>
     </div>
     <div class="card">
@@ -75,7 +76,7 @@
 {block name="script"}
 <script>
     var defaultData = {
-        t:'newCard',
+        type:'addNewCard',
         people_card:'',
         car_card:'',
         mobile:'',
@@ -85,7 +86,6 @@
     var data = {$info};
     console.log(data);
 
-    console.log(data);
     var vm = new Vue({
         el:"#app",
         computed:{
@@ -141,18 +141,25 @@
                     return;
                 }
                 if(!_this.defaultData.mobile){
-                    _this.$toast('请填写车主电话');
+                    _this.$toast('请填写正确的车主电话');
                     return;
                 }
                 if(!_this.defaultData.car_card){
                     _this.$toast('请填写车牌号码');
                     return;
                 }
+                if(!_this.defaultData.aging){
+                    _this.$toast('请选择办理时长');
+                    return;
+                }
                 if(!_this.defaultData.people_card){
                     _this.$toast('请填写身份证号');
                     return;
                 }else{
-                    validateIdCard(_this.defaultData.people_card);
+                   var status = validateIdCard(_this.defaultData.people_card);
+                    if(!status){
+                        return;
+                    }
                 }
                 if(!_this.isSubmit){
                     return;
