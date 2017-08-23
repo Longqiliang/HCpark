@@ -24,6 +24,7 @@ use   app\index\model\FunctionRoomRecord;
 use  app\index\controller\File;
 use  app\index\model\Picture;
 use think\Config;
+use  app\index\model\LedRecord;
 //企业服务
 class Service extends Base{
 
@@ -93,7 +94,7 @@ class Service extends Base{
     //选择服务
     public function  onCheck(){
         $path=input('path');
-        $app_id=input('id');
+        $app_id=input('app_id');
         $user_id = session('userId');
         $park_id = session('park_id');
         $UserModel = new  WechatUser();
@@ -181,12 +182,7 @@ class Service extends Base{
         $info['app_id']=$app_id;
         $this->assign('info',json_encode($info));
         return $this->fetch($path);
-
-
-
     }
-
-
      //预约
      public  function  order(){
       $compantService = new CompanyService();
@@ -405,7 +401,7 @@ class Service extends Base{
 
     public  function  test(){
 
-        phpinfo();
+
 
     }
 
@@ -485,6 +481,7 @@ class Service extends Base{
     public  function  oldCard(){
         $user_id =session('userId');
         $park_id =session('park_id');
+        $data['app_id']=input('app_id');
         $Park = new Park();
         $carCard =new CarparkService();
         $park= $Park->where('id',$park_id)->find();
@@ -504,7 +501,6 @@ class Service extends Base{
 
     //旧卡续费（上传凭证）
     public  function  keepOldCard(){
-
         $CarparkRecord = new CarparkRecord();
         $CardparkService= new CarparkService();
             $id = session('userId');
@@ -853,8 +849,47 @@ class Service extends Base{
             return $this->error('失败'.$re);
         }
     }
+   //led 灯服务
+   public  function  led(){
+     $user_id = session('userId');
+        $led = new LedRecord();
+       //今天的时间
+       $Today=mktime(8,0,0,date('m'),date('d'),date('Y'));
+        $map=[
+         'create_user'=>$user_id,
+         'status'=>1,
 
+        ];
+      //用户所有选中的
+      $user_check=$led->where($map)->select();
+      $user_check2=array();
+      foreach ($user_check as $value){
+          $info=[
+              'order_time'=>$value['order_time'],
 
+              'interval'=>$value['date_type']
+          ];
+          array_push($user_check2,$info);
+      }
+
+      $map['create_user']=array('neq',$user_id);
+      $map['status']=array('neq',0);
+      $map['order_time']=$Today;
+       //今天已选的
+       $all_check=$led->where($map)->select();
+       $all_check2=array();
+       foreach ($all_check as $value){
+        $data=[
+
+            'interval'=>$value['date_type']
+
+        ];
+        array_push($all_check2,$data);
+       }
+        $this->assign('other',$all_check2);
+        $this->assign('user',$user_check2);
+      return $this->fetch();
+   }
 
 
 
