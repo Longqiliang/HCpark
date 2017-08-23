@@ -446,12 +446,6 @@ class Service extends Base{
         return json_encode($return);
     }
 
-
-
-
-
-
-
     //提交新卡
     public  function  addNewCard(){
 
@@ -465,9 +459,6 @@ class Service extends Base{
         foreach ($data['payment_voucher'] as $value){
             $info = $file->uploadPicture();
             $a['picture']=$value;
-
-
-
             array_push($p_v,$info);
             }
         $service = [
@@ -491,7 +482,8 @@ class Service extends Base{
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
-                $this->success('成功'.json_encode($CardparkService->id));
+                $msg="您的缴费信息正在核对中,核对完成后，将在个人中心中予以反馈,请耐心等待，确认成功后,请您在2小时内到海创大厦A座201领取车卡";
+                $this->success('成功',"",$msg);
 
             }else{
                 $this->error("失败");
@@ -551,7 +543,8 @@ class Service extends Base{
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
-                $this->success('成功');
+                $msg="您的缴费信息正在核对中,核对完成后，将在个人中心中予以反馈";
+                $this->success('成功',"",$msg);
 
             }else{
                 $this->error("失败");
