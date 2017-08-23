@@ -539,6 +539,7 @@ class Service extends Base{
 
     //大厅广告位预约
     public function advertise(){
+
         $user_id = session('userId');
         $adService=new AdvertisingService();
         $adRecord = new AdvertisingRecord();
@@ -551,6 +552,7 @@ class Service extends Base{
         $map['status']=array('neq',0);
         //所有被选中的和预约成功的
         $list =$adRecord->where($map)->select();
+
         //该用户自己选中的（当月）
         $map['status']=array('eq',1);
         $map['create_user']=$user_id;
@@ -573,7 +575,7 @@ class Service extends Base{
 
         $this->assign('record',json_encode($data));
         $this->assign('user_check',json_encode($user_allcheck));
-
+        $this->assign('app_id',input('app_id'));
         return $this->fetch();
     }
 
@@ -584,20 +586,12 @@ class Service extends Base{
 
            $data = input('');
            $user_id = session('userId');
-           $park_id = session('park_id');
-           $Park = new Park();
            $ad = new AdvertisingRecord();
            $record = array();
            $creat_time = time();
-           $map = [
-               'create_user' => $user_id,
-               'status' => 1
-           ];
-
            $is_select = array();
-
            foreach ($data['order_times'] as $value) {
-              $map=['order_time'=> $value,
+              $map=['order_time'=> $value/1000,
                'status' => array('neq', 0),
                   'create_user'=>array('neq',$user_id)
                   ];
@@ -605,12 +599,12 @@ class Service extends Base{
                $is = $ad->where($map)->find();
 
                if ($is) {
-                   array_push($is_select, $is['order_time']);
+                   array_push($is_select, $is['order_time']*1000);
                } else {
                    $info = [
                        'create_user' => $user_id,
                        'service_id' => 1,
-                       'order_time' => $value,
+                       'order_time' => $value/1000,
                        'create_time' => $creat_time,
                        'status' => 1
                    ];
@@ -627,9 +621,7 @@ class Service extends Base{
         ];
            $de = $ad->where($map2)->delete();
            $re = $ad->saveAll($record);
-           $info = $Park->where("id",$park_id)->find();
-           $data['ailpay_user'] = $info['ailpay_user'];
-           $data['payment_alipay'] = $info['payment_alipay'];
+
            $data['no_save'] = json_encode($is_select);
 
 
@@ -676,7 +668,7 @@ class Service extends Base{
         $reult =array();
         foreach ($list as $value){
 
-            array_push($list,$value['order_time']);
+            array_push($reult,$value['order_time']*1000);
 
         }
 
@@ -772,8 +764,6 @@ class Service extends Base{
     public function nextFunctionRoom(){
         $data = input('');
         $user_id = session('userId');
-        $park_id = session('park_id');
-        $Park = new Park();
         $frr = new FunctionRoomRecord();
         $record = array();
         $create_time = time();
@@ -783,27 +773,30 @@ class Service extends Base{
         ];
         $is_select = array();
         foreach ($data as $value) {
-            $map=['order_time'=> $value['day'],
+            $map=['order_time'=> $value['day']/1000,
                 'status' => array('neq', 0),
-                'create_user'=>array('neq',$user_id)
+                'create_user'=>array('neq',$user_id),
+                 'date_type'=>$value['interval']
             ];
             $is = $frr->where($map)->find();
             if ($is) {
-                array_push($is_select, $is['order_time']);
+                array_push($is_select, $is['order_time']*1000);
             } else {
                 $info = [
                     'create_user' => $user_id,
                     'service_id' => 2,
-                    'order_time' => $value,
+                    'order_time' => $value['day']/1000,
                     'create_time' => $create_time,
-                    'status' => 1
+                    'status' => 1,
+                     'date_type'=>$value['interval']
+
                 ];
-               if($value['amCheck']=='no'){
+              /* if($value['amCheck']=='no'){
                    $info['date_type']=2;
 
                }else{
                    $info['date_type']=1;
-               }
+               }*/
                 array_push($record, $info);
             }
         }
@@ -818,11 +811,7 @@ class Service extends Base{
 
         $de = $frr->where($map2)->delete();
         $re = $frr->saveAll($record);
-        $info = $Park->where("id",$park_id)->find();
-        $data['ailpay_user'] = $info['ailpay_user'];
-        $data['payment_alipay'] = $info['payment_alipay'];
         $data['no_save'] = json_encode($is_select);
-
         return   json_encode($data);
     }
 
@@ -886,12 +875,110 @@ class Service extends Base{
         ];
         array_push($all_check2,$data);
        }
+       $this->assign('app_id',input('app_id'));
         $this->assign('other',json_encode($all_check2));
         $this->assign('user',json_encode($user_check2));
       return $this->fetch();
    }
+   //led灯下一步
+    public  function  nextLed(){
+        $data = input('');
+        $user_id = session('userId');
+
+        $ad = new LedRecord();
+        $record = array();
+        $creat_time = time();
+        $is_select = array();
+        foreach ($data['day'] as $value) {
+            $map=['order_time'=> $value/1000,
+                'status' => array('neq', 0),
+                'create_user'=>array('neq',$user_id),
+                'date_type'=>$value['interval']
+
+            ];
+
+            $is = $ad->where($map)->find();
+
+            if ($is) {
+                array_push($is_select, $is['order_time']);
+            } else {
+                $info = [
+                    'create_user' => $user_id,
+                    'service_id' => 1,
+                    'order_time' => $value/1000,
+                    'create_time' => $creat_time,
+                    'status' => 1,
+                     'date_type'=>$value['interval']
+                ];
+                array_push($record, $info);
+            }
+        }
+        if(count($is_select)>0){
+            $data['no_save'] = json_encode($is_select);
+            return   json_encode($data);
+        }
+        $map2 = [
+            'create_user' => $user_id,
+            'status' => 1
+        ];
+        $de = $ad->where($map2)->delete();
+        $re = $ad->saveAll($record);
+        $data['no_save'] = json_encode($is_select);
+
+        return   json_encode($data);
+    }
+// led灯的日期切换
+ public function changeLed(){
+     $data=input('day');
+     $user_id = session('userId');
+     $led = new LedRecord();
+     $map['create_user']=array('neq',$user_id);
+     $map['status']=array('neq',0);
+     $map['order_time']=$data;
+     //今天已选的
+     $all_check=$led->where($map)->select();
+     $all_check2=array();
+     foreach ($all_check as $value){
+         $data=[
+
+             'interval'=>$value['date_type']
+
+         ];
+         array_push($all_check2,$data);
+     }
+
+     return json_encode($all_check2);
 
 
+   }
+   //Led灯提交
+    public  function  submitLed(){
+        $ad =new LedRecord();
+        $user_id =session('userId');
+        $data=input('');
+        $map=[
+            'create_user'=>$user_id,
+            'status'=>1
+        ];
+        $record =$ad->where($map)->select();
+        foreach ($record as $value){
+            $value['payment_voucher']=$data['payment_voucher'];
+            $value['status']=2;
+        }
+
+        $re = $ad->saveAll($record);
+        if($re){
+            return $this->success('成功');
+        }
+        else{
+            return $this->error('失败'.$re);
+        }
+
+
+
+
+
+    }
 
     /*物业报修*/
     public function repair(){
