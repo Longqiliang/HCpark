@@ -387,22 +387,20 @@ class Service extends Base{
     public function  payment(){
         $data = input('');
         $park_id =session('park_id');
+        $cp=new CompanyApplication();
         $Park = new Park();
         $park= $Park->where('id',$park_id)->find();
-
+        $CA=$cp->where('app_id',$data['app_id'])->find();
         //支付宝用户
-        $data['ailpay_user']=$park['ailpay_user'];
+        $data['ailpay_user']=$CA['has_alipay']==1?$park['ailpay_user']:"";
         //银行用户
-        $data['bank_user']=$park['bank_user'];
+        $data['bank_user']=$CA['has_bank']==1?$park['bank_user']:"";
         //缴费支付宝账号
-        $data['payment_alipay']=$park['payment_alipay'];
+        $data['payment_alipay']=$CA['has_alipay']==1?$park['payment_alipay']:"";
         //缴费支付宝账号
-        $data['payment_bank']=$park['payment_bank'];
+        $data['payment_bank']=$CA['has_bank']==1?$park['payment_bank']:"";
         $this->assign('data',json_encode($data));
-
         return $this->fetch();
-
-
     }
 
     public  function  test(){
@@ -476,7 +474,7 @@ class Service extends Base{
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
-                $msg="您的缴费信息正在核对中,核对完成后,将在个人中心中予以反馈,请耐心等待,确认成功后,请您在2小时内到海创大厦A座201领取车卡";
+                $msg="您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈;请耐心等待,确认成功后;请您在2小时内到海创大厦A座201领取车卡";
                 $this->success('成功',"",$msg);
 
             }else{
@@ -493,14 +491,6 @@ class Service extends Base{
         $map['user_id']=$user_id;
         $map['park_card']=array('exp','is not null');
         $cardinfo =$carCard->where($map)->select();
-        //支付宝用户
-        $data['ailpay_user']=$park['ailpay_user'];
-        //银行用户
-        $data['bank_user']=$park['bank_user'];
-        //缴费支付宝账号
-        $data['payment_alipay']=$park['payment_alipay'];
-        //缴费支付宝账号
-        $data['payment_bank']=$park['payment_bank'];
         //停车卡单价
         $data['carpark_price']=$park['carpark_price'];
         //车卡押金
@@ -511,14 +501,7 @@ class Service extends Base{
         return $this->fetch();
     }
 
-    //旧卡下一步
-    public  function  nextOldCard(){
 
-        $data=input('');
-        $this->assign('data',$data);
-        return $this->fetch();
-
-    }
     //旧卡续费（上传凭证）
     public  function  keepOldCard(){
 
@@ -537,7 +520,7 @@ class Service extends Base{
             ];
             $re2=$CarparkRecord->save($record);
             if($re2){
-                $msg="您的缴费信息正在核对中,核对完成后,将在个人中心中予以反馈";
+                $msg="您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈";
                 $this->success('成功',"",$msg);
 
             }else{
@@ -790,7 +773,7 @@ class Service extends Base{
             return $this->fetch();
         }
     //多功能厅预定先生成数据
-    public function nextFunctionHome(){
+    public function nextFunctionRoom(){
         $data = input('');
         $user_id = session('userId');
         $park_id = session('park_id');
