@@ -1056,12 +1056,11 @@ class Service extends Base{
                      'create_time'=>$onetime,
                       'price'=>count($map)*$serviceInfo['price']
                   ];
-                   $re2=array();
+                   $re['day']="";
 
                   foreach ($map as  $value){
-                     array_push($re2,$value['order_time']*1000);
+                      $re['day'].=date('Y-m-d',$value['order_time'])." ";
                    }
-                   $re['day']=$re2;
                    if($map[0]['status']==0){
 
                        $re['status']="被取消";
@@ -1079,7 +1078,48 @@ class Service extends Base{
 
           //二楼多功能厅
           case 2:
+              $data=array();
+              $time=array();
+              $create_time=array();
+              $serviceInfo =$service->where('id',1)->find();
+              $list= $fs->where('create_user',$user_id)->order('create_time desc')->select();
+              //所有的创建时间
+              foreach ($list as $l){
+                  array_push($create_time,$l['create_time']);
+              }
+              //数组去重
+              $time = array_values(array_unique ($create_time));
 
+              foreach ($time as $onetime){
+                  $map =array();
+                  foreach ($list as  $info){
+                      if($info['create_time']==$onetime){
+                          array_push($map,$info);
+                      }
+                  }
+                  $re=[
+                      'create_time'=>$onetime,
+                      'price'=>count($map)*$serviceInfo['price']
+                  ];
+
+                  $re2="";
+                  foreach ($map as  $value){
+                      $re2.=date('Y-m-d',$value['order_time'])."  ";
+                  }
+                  $re['day']=$re2;
+                  if($map[0]['status']==0){
+
+                      $re['status']="被取消";
+                  }else if($map[0]['status']==1){
+                      $re['status']="还未上传凭证";
+
+                  }else{
+                      $re['status']="预约成功";
+                  }
+
+                  array_push($data,$re);
+
+              }
 
               break;
 
@@ -1095,7 +1135,7 @@ class Service extends Base{
 
 
       }
-
+     echo  json_encode($data);
      $this->assign('data',json_encode($data));
      return $this->fetch();
 
