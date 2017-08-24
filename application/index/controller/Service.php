@@ -1182,6 +1182,7 @@ class Service extends Base{
         }
 
         $this->assign('info',json_encode($info));
+        $this->assign('appId',$appid);
 
         return $this->fetch();
     }
@@ -1209,7 +1210,14 @@ class Service extends Base{
         return $this->fetch();
 
     }
+    /* 记录详情*/
+    public function  historyDetail(){
+        $id = input('id');
+        $appid = input('appid');
 
+
+
+    }
 
 
 
