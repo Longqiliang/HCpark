@@ -6,6 +6,7 @@
  * Time: 17:55
  */
 namespace app\index\controller;
+use app\common\model\FeePayment;
 use app\index\model\CarparkRecord;
 use  app\index\model\CompanyService;
 use app\index\model\CarparkService;
@@ -20,7 +21,9 @@ use  app\index\model\ElectricityRecord;
 use  app\index\model\ElectricityService;
 use  app\index\model\AdvertisingRecord;
 use  app\index\model\AdvertisingService;
-use   app\index\model\FunctionRoomRecord;
+use  app\index\model\FunctionRoomRecord;
+use  app\index\model\WechatDepartment;
+
 use  app\index\model\LedRecord;
 //企业服务
 class Service extends Base{
@@ -101,6 +104,10 @@ class Service extends Base{
         $info=[];
         switch ($app_id){
             case 1:
+
+
+                break;
+
             //物业报修
             case 2:
                 $userid =session("userId");
@@ -112,6 +119,7 @@ class Service extends Base{
                     'mobile'=>$userinfo['mobile'],
                     'propretyMobile'=>$parkInfo['property_phone']
                 ];
+                break;
             //室内保洁
             case 4:
                 $userid =session("userId");
@@ -123,6 +131,7 @@ class Service extends Base{
                     'mobile'=>$userinfo['mobile'],
                     'propretyMobile'=>$parkInfo['property_phone']
                 ];
+                break;
             //车卡
             case 6:
                 $map=[
@@ -139,13 +148,20 @@ class Service extends Base{
 
                     $info['type']="new";
                 }
+
+
                 break;
+
+
             //充电柱
             case 7:
                $es = new ElectricityService();
               $map=[
                   'user_id'=>$user_id,
                   'electricity_id'=>array('exp','is not null')
+
+
+
               ];
                $is_new=$es->where($map)->select();
                 if(count($is_new)>0){
@@ -165,6 +181,7 @@ class Service extends Base{
                 $info['name']=$user['name'];
                 $info['mobile']=$user['mobile'];
                 $info['company']=$user->departmentName->name;
+                $info['app_id']=$app_id;
                 break;
 
 
@@ -172,6 +189,9 @@ class Service extends Base{
         $info['app_id']=$app_id;
         $this->assign('info',json_encode($info));
         return $this->fetch($path);
+
+
+
     }
 
 
@@ -201,7 +221,6 @@ class Service extends Base{
          return $this->error('提交失败');
      }
      }
-
 
 
 
@@ -242,7 +261,7 @@ class Service extends Base{
         $record=[
             'type'=>1,
             'aging'=>$data['aging'],
-            'payment_voucher'=>json_encode($data['payment_voucher']),
+            'payment_voucher'=>$data['payment_voucher'],
             'create_time'=>time(),
             'service_id'=>$PillarService->id,
             'status'=>0,
@@ -958,7 +977,7 @@ class Service extends Base{
         $data = input('post.');
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
-
+        $data['image']=strval(input('payment_voucher'));
         $res=$property->allowField(true)->save($data);
 
         if ($res){
@@ -981,9 +1000,12 @@ class Service extends Base{
             return $this->error("请在工作日预约");
         }
         $data['clear_time']=strtotime(input("dateStr"));
-        $data['image'] =input('imgStr');
+
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
+        //$data['image']=serialize(input('payment_voucher'));
+
+        return json_encode(input('payment_voucher'));exit;
         $property =new PropertyServer();
 
         $res=$property->allowField(true)->save($data);
@@ -1096,6 +1118,15 @@ class Service extends Base{
 
 //费用缴纳
     public function feedetail(){
+        $type = input('t');
+        $appid = input('id');
+        $userid =session("userId");
+        $userinfo=WechatUser::where(['userid'=>$userid])->find();
+        $departmentId =$userinfo['department'];
+        $map = ['company_id'=>$departmentId,'type'=>$type];
+        $info = FeePayment::where($map)->find();
+        $info['appid']=$appid;
+        $this->assign('info',json_encode($info));
 
         return $this->fetch();
     }

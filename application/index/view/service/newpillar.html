@@ -13,15 +13,22 @@
 {block name="body"}
 <div id="app">
     <div class="card">
-        <div class="card-tit">车主信息</div>
-        <div class="card-cell">
-            <label for="name">车主姓名</label>
-            <input type="text" placeholder="请输入车主姓名" id="name" v-model="defaultData.name">
-        </div>
-        <div class="card-cell">
-            <label for="phone">车主电话</label>
-            <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile">
-        </div>
+        <form action="payment" method="post" ref="cardform">
+            <div class="card-tit">车主信息</div>
+            <div class="card-cell">
+                <label for="name">车主姓名</label>
+                <input type="text" placeholder="请输入车主姓名" id="name" v-model="defaultData.name" name="name">
+            </div>
+            <div class="card-cell">
+                <label for="phone">车主电话</label>
+                <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile" name="mobile">
+            </div>
+            <input type="hidden" v-model="defaultData.aging" name="aging">
+            <input type="hidden" v-model="subData.charging_deposit" name="charging_deposit">
+            <input type="hidden" v-model="subData.charging_price" name="charging_price">
+            <input type="hidden" v-model="subData.app_id" name="app_id">
+            <input type="hidden" v-model="defaultData.type" name="type">
+        </form>
     </div>
     <div class="card">
         <div class="card-tit">办理信息</div>
@@ -62,9 +69,7 @@
 <script>
     var data = {$data};
     var defaultData = {
-        t:'newCard',
-        people_card:'',
-        car_card:'',
+        type:'addNewPillar',
         mobile:'',
         name:'',
         aging:0
@@ -72,7 +77,6 @@
 
     console.log(data);
 
-    console.log(data);
     var vm = new Vue({
         el:"#app",
         computed:{
@@ -96,7 +100,6 @@
             popupVisible: false,
             timePicker:'',
             timeTxt:'',
-            isSubmit:true,
             slots: [
                 {
                     values: ['6个月','12个月']
@@ -131,16 +134,11 @@
                     _this.$toast('请填写车主电话');
                     return;
                 }
-                if(!_this.isSubmit){
+                if(!_this.defaultData.aging){
+                    _this.$toast('请选择办理时长');
                     return;
                 }
-                _this.isSubmit = false;
-                var subData = JSON.parse(JSON.stringify(_this.subData));
-                var data = JSON.stringify(Object.assign(subData,defaultData));
-                console.log(data);
-                // return;
-                window.sessionStorage.setItem("data",data);
-                window.location.href="/index/service/payment/t/newpillar";
+                _this.$refs.cardform.submit();
 
             }
         }

@@ -59,11 +59,18 @@
             <textarea    v-model="defaultData.extra" class="group-area" maxlength="200"></textarea>
         </div>
         <div class="card-upload">
-            <div class="upload-box">
+            <div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">
+                <i class="del-img" @click="delImg(index)"></i>
+                <img :src="imgUrl" class="img-responsive">
+            </div>
+            <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
                 <img src="/index/images/service/card/card-camera.png" >
-                <span class="upload-info">上传图片</span>
+                <span class="upload-info" >上传图片</span>
             </div>
         </div>
+        <form ref="myform">
+            <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" capture="camera">
+        </form>
     </div>
 
     <p class="prompt-message">资讯电话：{{subData.propretyMobile}}</p>
@@ -87,7 +94,7 @@
         extra:'',
         address:'',
         dateStr:'',
-        imgSrc:''
+        payment_voucher:[]
     };
     var data = {$info};
     console.log(data);
@@ -100,7 +107,12 @@
             isSubmit:true,
             pickerValue:'',
             startDate:nowDate,
-            endDate:endDate
+            endDate:endDate,
+            imgSrc:{
+                imgLength:3,
+                dataUrl:[],
+                imgName:[]
+            }
         },
         computed:{
             dateStatus:function () {
@@ -113,6 +125,112 @@
             }
         },
         methods: {
+            delImg: function (e) {
+                this.imgSrc.dataUrl.splice(e,1);
+                this.defaultData.payment_voucher.splice(e,1);
+                this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
+            },
+            imgPreview (file,path,name) {
+                var self = this;
+                if(self.imgSrc.dataUrl.length >= self.imgSrc.imgLength){
+                    return;
+                }
+                // 是否支持FileReader
+                if (!file || !window.FileReader){
+                    if(path){
+                        self.imgSrc.dataUrl.push(path) ;
+                    }
+                    return;
+                }
+
+                if (/^image/.test(file.type)) {
+                    // 创建一个reader
+                    var reader = new FileReader();
+                    // 将图片将转成 base64 格式
+                    reader.readAsDataURL(file);
+                    // 读取成功后的回调
+                    reader.onloadend = function () {
+                        self.imgSrc.dataUrl.push(this.result) ; //64格式图片数组
+                        if(name && path){
+                            var imgObj = {
+                                name:name,
+                                path:path,
+                                base:this.result
+                            };
+                            self.imgSrc.imgName.push(imgObj);
+                        }
+                    }
+                }
+            },
+            imgUpload:function () {
+                var upImg = this.$refs.upimg;
+                upImg.click();
+            },
+            handleFileChange:function (e) {
+                var _this = this;
+                var upImg = _this.$refs.upimg;
+                var img = upImg.files[0];
+                if(img){
+                    var name = img.name;
+                }
+                for(var j = 0,imgName = _this.imgSrc.imgName ; j < imgName.length ; j += 1){
+                    if(name == imgName[j].name ){
+                        for(var k = 0,showPath = _this.imgSrc.dataUrl; k < showPath.length ; k += 1){
+                            if( showPath[k] == imgName[j].base){
+                                return;
+                            }
+                        }
+                        _this.defaultData.payment_voucher.push(imgName[j].path );
+                        _this.imgPreview(img);
+//                        console.log("64位图片",_this.imgSrc.dataUrl);
+//                        console.log("图片名字",_this.imgSrc.imgName);
+//                        console.log("凭证",_this.defaultData.payment_voucher);
+                        return;
+                    }
+                }
+                if(img){
+                    var newSize = (img.size/1024).toFixed(2);
+                    if(newSize <= 10240){
+                        _this.$indicator.open({
+                            text: '图片上传中',
+                            spinnerType: 'triple-bounce'
+                        });
+                        _this.isSubmit = false;
+                        var formData = new FormData();
+                        formData.append("picture",img);
+                        _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
+                            var data = JSON.parse(res.data);
+                            console.log(data);
+                            _this.isSubmit = true;
+                            if(data.code == 1){
+                                // 在获取到文件对象进行预览
+                                _this.$indicator.close();
+                                _this.$toast({
+                                    message:"上传成功！",
+                                    duration:1000
+                                });
+                                _this.defaultData.payment_voucher.push(data.data.path); //上传后图片路径
+                                _this.imgPreview(img,data.data.path,name);
+                            }else{
+                                _this.$indicator.close();
+                                _this.$toast({
+                                    message:"上传失败，请重新上传！",
+                                    duration:1000
+                                });
+                            }
+                        },function (res) {
+                            _this.isSubmit = true;
+                            _this.$indicator.close();
+                            _this.$toast({
+                                message:"上传失败，请重新上传！",
+                                duration:1000
+                            });
+                        });
+                    }else{
+                        _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
+                    }
+                }
+            },
             paymentInfo:function () {
 
             },
@@ -136,9 +254,13 @@
                 if(!_this.defaultData.dateStr){
                     _this.$toast('请选择服务时间');
                     return;
-                }
-                if(!_this.defaultData.imgSrc){
-//                    _this.$toast('');
+                }else {
+                    var regDate = new Date(_this.defaultData.dateStr);
+                    var regDay  = regDate.getDay();
+                    if(regDay>5){
+                        _this.$toast('服务时间为工作日，请重新选择时间');
+                        return;
+                    }
                 }
                 if(!_this.isSubmit){
                     return;
@@ -185,14 +307,12 @@
         }
     }
     function  dateHour(date,endHour,startHour) {
-        var nowDateTime = date.getTime();
         var nowYear = date.getFullYear();
         var nowMonth = date.getMonth() + 1;
         var nowHour = date.getHours();
         var nowDate = date.getDate();
         var smallMonths = [4,6,9,11];
         var bigMonths = [1,3,5,7,8,12];
-        console.log(nowMonth);
         if(smallMonths.indexOf(nowMonth) > -1){
             if(nowHour >= endHour){
                 if((nowDate+1) > 30){

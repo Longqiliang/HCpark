@@ -53,7 +53,6 @@
         <form ref="myform">
             <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" capture="camera">
         </form>
-
     </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="subBtn">提交</button>
@@ -148,11 +147,13 @@
                             text: '图片上传中',
                             spinnerType: 'triple-bounce'
                         });
+                        _this.isSubmit = false;
                         var formData = new FormData();
                         formData.append("picture",img);
                         _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
                             var data = JSON.parse(res.data);
                             console.log(data);
+                            _this.isSubmit = true;
                             if(data.code == 1){
                             // 在获取到文件对象进行预览
                                 _this.$indicator.close();
@@ -170,6 +171,7 @@
                                 });
                             }
                         },function (res) {
+                            _this.isSubmit = true;
                             _this.$indicator.close();
                             _this.$toast({
                                 message:"上传失败，请重新上传！",
@@ -199,7 +201,7 @@
                         var data = res.data;
                         if(data.code == 1){
                             var msg = data.data;
-                          var newMsg =  msg.split("；");
+                          var newMsg =  msg.split(";");
                           msg =  newMsg.join("<br/>");
                             swal({
                                 title:"预约成功!",
@@ -207,6 +209,8 @@
                                 html:true,
                                 type:"success",
                                 confirmButtonColor: "#fcc44b"
+                            },function () {
+                                window.location.href = "/index/service/index";
                             });
                         }
                     },function (res) {
