@@ -1400,6 +1400,7 @@ class Service extends Base{
         $map = ['company_id'=>$departmentId,'type'=>$type];
         $info = FeePayment::where($map)->find();
         $info['appid']=$appid;
+        $info['payment_voucher']=unserialize($info["payment_voucher"]);
         $this->assign('info',json_encode($info));
 
 
@@ -1423,7 +1424,7 @@ class Service extends Base{
                     'status'=>$v['status'],
                     'time'=>$v['expiration_time'],
                     'pay'=>$v['fee'],
-                    'img'=>$v['payment_voucher'],
+                    'img'=>unserialize($v['payment_voucher']),
                 ];
             }
 
@@ -1456,8 +1457,10 @@ class Service extends Base{
             $feePayment = new FeePayment();
             $id = input('id');
             $appid =input('app_id');
-
-            $res=$feePayment->where('id',$id)->update(['status'=>1]);
+            $data = input('post.');
+            $datas["payment_voucher"] = serialize($data["payment_voucher"]);
+            $datas['status']=1;
+            $res=$feePayment->where('id',$id)->update($datas);
             if ($res){
 
                 return $this->success("上传成功");
@@ -1481,7 +1484,12 @@ class Service extends Base{
         $appid = input('appid');
         if ($appid ==1){
 
-            $info = FeePayment::get($id);
+            $infos = FeePayment::get($id);
+            $info = [
+                'name'=>$infos['name'],
+                'expiration_time'=>$infos['expiration_time'],
+                'img'=>unserialize($infos['payment_voucher']),
+            ];
         }elseif($appid ==3){
 
             $info=WaterService::get($id);
