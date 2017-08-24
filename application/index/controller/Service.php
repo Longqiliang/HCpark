@@ -10,6 +10,7 @@ use app\common\model\FeePayment;
 use app\index\model\CarparkRecord;
 use  app\index\model\CompanyService;
 use app\index\model\CarparkService;
+use app\index\model\WaterService;
 use app\index\model\WechatUser;
 use app\index\model\CompanyApplication;
 use app\index\model\Park;
@@ -1023,7 +1024,7 @@ class Service extends Base{
     /*物业报修记录*/
     public function repairRecord(){
         $types=[1=>'空调报修',2=>"电梯报修",3=>"其他报修"];
-        $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('id desc')->paginate();
+        $list = PropertyServer::where(['type'=>['<',4],'status'=>['>=',0]])->order('id desc')->paginate();
         foreach($list as $k=>$v){
             $info[$k]=[
                 'id'=>$v['id'],
@@ -1040,7 +1041,7 @@ class Service extends Base{
     /*保洁服务记录*/
 
     public function clearRecord(){
-        $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('clear_time desc')->paginate();
+        $list = PropertyServer::where(['type'=>['<',4],'status'=>['>=',0]])->order('clear_time desc')->paginate();
         foreach($list as $k=>$v){
             $info[$k]=[
                 'id'=>$v['id'],
@@ -1210,12 +1211,29 @@ class Service extends Base{
         return $this->fetch();
 
     }
+
+
     /* 记录详情*/
     public function  historyDetail(){
         $id = input('id');
         $appid = input('appid');
+        if ($appid ==1){
 
+            $info = FeePayment::get($id);
+        }elseif($appid ==3){
 
+            $info=WaterService::get($id);
+        }elseif ($appid ==6){
+
+            $info=CarparkService::get($id);
+        }elseif ($appid==7){
+
+            $info=CarparkService::get($id);
+        }
+
+        $this->assign('info',json_encode($info));
+
+        return $this->fetch();
 
     }
 
