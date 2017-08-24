@@ -977,12 +977,13 @@ class Service extends Base{
         $data = input('post.');
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
-        $data['image']=strval(input('payment_voucher'));
+        $data["payment_voucher"] = json_encode($data["payment_voucher"]);
         $res=$property->allowField(true)->save($data);
 
         if ($res){
 
-            return $this->success("报修成功");
+            return $this->success("预约成功",""," 请您在2小时内前往海创大厦A座2楼201；
+                    进行费用缴纳和相关手续办理");
         }else{
 
             return $this->error("报修失败");
@@ -1000,18 +1001,17 @@ class Service extends Base{
             return $this->error("请在工作日预约");
         }
         $data['clear_time']=strtotime(input("dateStr"));
-
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
-        //$data['image']=serialize(input('payment_voucher'));
+        $data["payment_voucher"] = json_encode($data["payment_voucher"]);
 
-        return json_encode(input('payment_voucher'));exit;
         $property =new PropertyServer();
 
         $res=$property->allowField(true)->save($data);
         if ($res){
 
-            return $this->success("报修成功");
+            return $this->success("预约成功",""," 请您在2小时内前往海创大厦A座2楼201；
+                    进行费用缴纳和相关手续办理");
         }else{
 
             return $this->error("报修失败");
@@ -1021,7 +1021,7 @@ class Service extends Base{
     }
     /*物业报修记录*/
     public function repairRecord(){
-
+        $types=[];
         $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('create_time desc')->paginate();
         int_to_string($list,['type'=>[1=>'空调报修',2=>"电梯报修",3=>"其他报修"],
                              'status'=>[0=>"进行中",1=>"已完成"]
@@ -1128,14 +1128,64 @@ class Service extends Base{
         $info['appid']=$appid;
         $this->assign('info',json_encode($info));
 
+
         return $this->fetch();
     }
+    /*缴费记录*/
+    public function history(){
+        $type = input('type');
+        $appid = input('id');
+        $userid =session("userId");
+        $userinfo=WechatUser::where(['userid'=>$userid])->find();
+        $departmentId =$userinfo['department'];
+        if($appid == 1){
+            $map = ['company_id'=>$departmentId,'type'=>$type];
+            $list = FeePayment::where($map)->order('id desc')->paginate(12);
+            foreach($list as $k=>$v){
+                $info[$k]=[
+                    'name' =>$v['name'],
+                    'status'=>$v['status'],
+                    'time'=>$v['expiration_time'],
+                    'pay'=>$v['fee'],
+                ];
+            }
 
-    public function history()
-    {
+        }elseif($appid ==2){
+
+
+        }
+
+
+
+
+        dump($info);
+        $this->assign('info',json_encode($info));
+
         return $this->fetch();
     }
+    /*付款*/
+    public function feeinfo(){
+        $parkid= session('park_id');
+        if (IS_POST){
+            $id = input('id');
+            $data = input('post.');
+            $data['status']= 1 ;
+            $res=FeePayment::where('id',$id)->save($data);
+            if ($res){
 
+                return $this->success("上传成功");
+            }else{
+
+                return $this->error("上传失败");
+            }
+
+        }
+        $parkInfo = Park::where('id',$parkid)->find();
+        $this->assign('parkInfo',json_encode($parkInfo));
+
+        return $this->fetch();
+
+    }
 
 
 
@@ -1172,6 +1222,7 @@ class Service extends Base{
 
     }
 
+    public function checkAppid(){}
 
 
 
