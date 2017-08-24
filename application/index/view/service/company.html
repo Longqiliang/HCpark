@@ -109,7 +109,7 @@
                 _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 //return;
-                this.$http.post('order',subData).then(function (res) {
+                this.$http.post('/index/service/order',subData).then(function (res) {
                     console.log(res);
                     _this.isSubmit = true;
                     var resData = res.data;
