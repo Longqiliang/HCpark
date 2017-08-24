@@ -1157,7 +1157,6 @@ class Service extends Base{
             $departmentId =$userinfo['department'];
             $map = ['company_id'=>$departmentId,'type'=>$type];
             $list = FeePayment::where($map)->order('id desc')->select();
-            dump($list);
             foreach($list as $k=>$v){
                 $info[$k]=[
                     'name' =>$v['name'],
@@ -1177,7 +1176,6 @@ class Service extends Base{
 
             $info = $this->clearRecord();
         }
-
 
         $this->assign('info',json_encode($info));
 
