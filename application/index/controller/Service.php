@@ -338,7 +338,7 @@ class Service extends Base{
         $list=$service->where($map)->select();
         $record=array();
         foreach ($list as $value){
-            array_push($record,$value->findRecord());
+            array_push($record,$value->findRecord);
         }
         int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
 
