@@ -157,10 +157,6 @@
                             if(data.code == 1){
                             // 在获取到文件对象进行预览
                                 _this.$indicator.close();
-                                _this.$toast({
-                                    message:"上传成功！",
-                                    duration:1000
-                                });
                                 _this.payment_voucher.push(data.data.path); //上传后图片路径
                                 _this.imgPreview(img,data.data.path,name);
                             }else{
