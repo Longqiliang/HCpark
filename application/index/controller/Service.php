@@ -625,22 +625,23 @@ class Service extends Base{
         $ad =new AdvertisingRecord();
         $user_id =session('userId');
         $data=input('');
+
         $map=[
             'create_user'=>$user_id,
              'status'=>1
         ];
         $record =$ad->where($map)->select();
+        if(count($record)>0){
         foreach ($record as $value){
             $value['payment_voucher']=json_encode($data['payment_voucher']);
             $value['status']=2;
             $value->save();
         }
-
-
-
             return $this->success('成功');
-
-    }
+        }
+        else {
+            return $this->error('超时');
+        }}
 
 
 
@@ -670,76 +671,65 @@ class Service extends Base{
     }
 
 
-
-
         //多功能厅
         public function multifunction(){
             $adService =new  AdvertisingService();
             $FunctionRoomRecord = new FunctionRoomRecord();
-            $user_id = session('user_id');
+            $user_id = session('userId');
             //从今天到第七天结束的时间戳数组
             $weeks=array();
             for($i=1;$i<8;$i++){
                 $days=array();
                 $time=mktime(0,0,0,date('m'),date('d')+$i,date('Y'))-1;
                 $map=['order_time'=>$time,'status'=>array('neq',0)];
-                $re =$FunctionRoomRecord->where($map)->find();
+                $re =$FunctionRoomRecord->where($map)->select();
                 if($re){
+                    foreach ($re as $value){
                    $days['day']=$time*1000;
                    //是当前用户
-                   if($re['create_user']==$user_id){
+                   if($value['create_user']==$user_id){
                         //选中未付款
-                        if($re['status']==1){
+                        if($value['status']==1){
                             //上午
-                            if($re['date_type']==1){
-                                $days['amBespeak']="no";
-                                $days['pmBespeak']="no";
+                            if($value['date_type']==1){
                                 $days['amCheck']="yes";
-                                $days['pmCheck']="no";
                             }
                             //下午
                             else{
-                                $days['amBespeak']="no";
-                                $days['pmBespeak']="no";
-                                $days['amCheck']="no";
                                 $days['pmCheck']="yes";
                             }
                         }
                         //已付款
                         else{
                              //上午
-                            if($re['date_type']==1){
+                            if($value['date_type']==1){
                                 $days['amBespeak']="yes";
-                                $days['pmBespeak']="no";
-                                $days['amCheck']="no";
-                                $days['pmCheck']="no";
                             }
                             //下午
                             else{
-                                $days['amBespeak']="no";
                                 $days['pmBespeak']="yes";
-                                $days['amCheck']="no";
-                                $days['pmCheck']="no";
                             }
                         }
                     }
                     //不是当前用户
                     else{
                             //上午
-                            if($re['date_type']==1){
+                            if($value['date_type']==1){
                                 $days['amBespeak']="yes";
-                                $days['pmBespeak']="no";
-                                $days['amCheck']="no";
-                                $days['pmCheck']="no";
                             }
                             //下午
                             else{
-                                $days['amBespeak']="no";
                                 $days['pmBespeak']="yes";
-                                $days['amCheck']="no";
-                                $days['pmCheck']="no";
                             }
                     }
+                    }
+
+                    $days['amBespeak']=isset($days['amBespeak'])?$days['amBespeak']:"no";
+                    $days['pmBespeak']=isset($days['pmBespeak'])?$days['pmBespeak']:"no";
+                    $days['amCheck']=isset($days['amCheck'])?$days['amCheck']:"no";
+                    $days['pmCheck']=isset($days['pmCheck'])?$days['pmCheck']:"no";
+
+
                 }
                 else{
                     $days['day']=$time*1000;
@@ -750,7 +740,7 @@ class Service extends Base{
                 }
                  array_push($weeks,$days);
             }
-            $this->assign('data',$weeks);
+            $this->assign('data',json_encode($weeks));
             $this->assign('app_id',input('app_id'));
             return $this->fetch();
         }
@@ -770,7 +760,7 @@ class Service extends Base{
             $map=['order_time'=> $value['day']/1000,
                 'status' => array('neq', 0),
                 'create_user'=>array('neq',$user_id),
-                 'date_type'=>$value['interval']
+                 'date_type'=>$value['amCheck']=="yes"?1:2
             ];
             $is = $frr->where($map)->find();
             if ($is) {
@@ -782,7 +772,7 @@ class Service extends Base{
                     'order_time' => $value['day']/1000,
                     'create_time' => $create_time,
                     'status' => 1,
-                     'date_type'=>$value['interval']
+                    'date_type'=>$value['amCheck']=="yes"?1:2
 
                 ];
                 array_push($record, $info);
@@ -813,19 +803,17 @@ class Service extends Base{
             'status'=>1
         ];
         $record =$ad->where($map)->select();
-        foreach ($record as $value){
-            $value['payment_voucher']=json_encode($data['payment_voucher']);
-            $value['status']=2;
-        }
-
-        $re = $ad->saveAll($record);
-        if($re){
+        if(count($record)>0){
+            foreach ($record as $value){
+                $value['payment_voucher']=json_encode($data['payment_voucher']);
+                $value['status']=2;
+                $value->save();
+            }
             return $this->success('成功');
         }
-        else{
-            return $this->error('失败'.$re);
-        }
-    }
+        else {
+            return $this->error('超时');
+        }}
    //led 灯服务
    public  function  led(){
      $user_id = session('userId');
