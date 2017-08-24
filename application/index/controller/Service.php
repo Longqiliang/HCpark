@@ -524,25 +524,20 @@ class Service extends Base{
 
         foreach ($out_date as $value){
             $value['status']=0;
+            $value->save();
         }
-         if(count($out_date)>0){
-
-         $re = $adRecord->saveAll($out_date,true);
-     echo json_encode($re);
-
-        }
-
         /* **************************************/
+
         //今天结束时间
         $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
         //本月结束时间
         $endThismonth=mktime(23,59,59,date('m'),date('t'),date('Y'));
+       unset($map['create_time']);
         $map['order_time']=array('between',array($endToday,$endThismonth));
         $map['service_id']=1;
         $map['status']=array('neq',0);
         //所有被选中的和预约成功的
         $list =$adRecord->where($map)->select();
-
         //该用户自己选中的（当月）
         $map['status']=array('eq',1);
         $map['create_user']=$user_id;
@@ -556,13 +551,16 @@ class Service extends Base{
         }
         //两者差值
         $reult = array_diff($list,$user_select);
+
         $service =$adService->where('id',1)->find();
         $this->assign('price',$service['price']);
         $data=array();
         foreach ($reult as $value){
-            array_push($data,$value['order_time']);
+            array_push($data,$value['order_time']*1000);
         }
-
+        echo json_encode($data);
+        echo json_encode($user_allcheck);
+        echo json_encode(input('app_id'));
         $this->assign('record',json_encode($data));
         $this->assign('user_check',json_encode($user_allcheck));
         $this->assign('app_id',input('app_id'));
@@ -635,15 +633,13 @@ class Service extends Base{
         foreach ($record as $value){
             $value['payment_voucher']=json_encode($data['payment_voucher']);
             $value['status']=2;
+            $value->save();
         }
 
-        $re = $ad->saveAll($record);
-        if($re){
+
+
             return $this->success('成功');
-        }
-        else{
-            return $this->error('失败'.$re);
-        }
+
     }
 
 
@@ -1135,6 +1131,7 @@ class Service extends Base{
     {
         return $this->fetch();
     }
+
 
 
 
