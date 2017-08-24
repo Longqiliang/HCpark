@@ -250,10 +250,16 @@ var app = new Vue({
             day:Date.parse(new Date()),
             time:[]
         },
-
+        isClick:false
     },
     mounted(){
-        console.log(this.checkedTime)
+        var baseDay=new Date();
+        baseDay=baseDay.setDate(baseDay.getDate()+1);
+        this.infoData.day=baseDay;
+        console.log(this.checkedTime);
+        for(var i=0;i<this.checkedTime.length;i++){
+            console.log(new Date(this.checkedTime[i].day),this.checkedTime[i].interval)
+        }
         this.checkedDate(this.infoData.day);
         this.baseInfo(this.infoData.day);
         console.log(this.infoData.time)
@@ -263,7 +269,6 @@ var app = new Vue({
             for(var i=0;i<9;i++){
                 var info={isChecked:'no',isBespeak:'no',interval:i+1};
                 for(var c=0;c<this.checkedTime.length;c++){
-                    console.log(this.checkedTime[c].day,time)
                     if(this.timeIsSame(this.checkedTime[c].day,time) && (i+1) == this.checkedTime[c].interval){
                         info.isChecked='yes'
                     }
@@ -294,46 +299,72 @@ var app = new Vue({
         },
         //选择顶部日期
         changeDate(key){
-            if(!this.date[key].checked){
-                for(var i=0;i<this.date.length;i++){
-                    this.date[i].checked=false;
+            if(!this.isClick){
+                this.isClick=true;
+                if(!this.date[key].checked){
+                    for(var i=0;i<this.date.length;i++){
+                        this.date[i].checked=false;
+                    }
+                    this.currentDate=this.date[key].time;
+                    this.date[key].checked=true;
                 }
-                this.currentDate=this.date[key].time;
-                this.date[key].checked=true;
+                        this.$http.post('/index/service/changeLed',{day:this.date[key].time}).then(function (res) {
+                    this.isClick=false;
+                    this.infoData.time.length=0
+                    this.bespeakTime=JSON.parse(res.data);
+                    this.baseInfo(this.date[key].time)
+                },function (res) {
+                            this.isClick=false;
+                            this.$toast('请求失败，请重试');
+                            console.log(res)
+                })
+            }else{
+                this.$toast('请求提交中···')
             }
-            this.$http.post('/index/service/changeLed',{day:this.date[key].time}).then(function (res) {
-                this.infoData.time.length=0
-                this.bespeakTime=JSON.parse(res.data);
-                this.baseInfo(this.date[key].time)
-            },function (res) {
-                console.log(res)
-            })
         },
         //上一页
         pickPre() {
             if(this.clickRecord>0){
-                var now=new Date();
-                this.clickRecord-=1;
-                var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
-                this.$http.post('/index/service/changeLed',{ month : d }).then(function (res) {
-                    this.infoData.time.length=0
-                    this.bespeakTime=JSON.parse(res.data);
-                    this.checkedDate(d);
-                    this.baseInfo(d)
-                })
+                if(!this.isClick){
+                    this.isClick=true;
+                    var now=new Date();
+                    this.clickRecord-=1;
+                    var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
+                    this.$http.post('/index/service/changeLed',{ month : d }).then(function (res) {
+                        this.isClick=false;
+                        this.infoData.time.length=0;
+                        this.bespeakTime=JSON.parse(res.data);
+                        this.checkedDate(d);
+                        this.baseInfo(d)
+                    },function (res) {
+                        this.isClick=false;
+                        this.$toast('请求失败，请重试');
+                    })
+                }else{
+                    this.$toast('请求提交中···')
+                }
             }
         },
         //下一页
         pickNext() {
-            var now=new Date();
-            this.clickRecord+=1
-            var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
-            this.$http.post('/index/service/changeLed',{ month : d }).then(function (res) {
-                this.infoData.time.length=0
-                this.bespeakTime=JSON.parse(res.data);
-                this.checkedDate(d);
-                this.baseInfo(d)
-            })
+            if(!this.isClick){
+                this.isClick=true;
+                var now=new Date();
+                this.clickRecord+=1
+                var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
+                this.$http.post('/index/service/changeLed',{ month : d }).then(function (res) {
+                    this.isClick=false;
+                    this.infoData.time.length=0
+                    this.bespeakTime=JSON.parse(res.data);
+                    this.checkedDate(d);
+                    this.baseInfo(d)
+                },function (res) {
+                    this.isClick=false;
+                    this.$toast('请求失败，请重试');
+                })
+            }else{
+                this.$toast('请求提交中···')
+            }
         },
         //选择时间段
         toCheck(key){
@@ -417,15 +448,22 @@ var app = new Vue({
 
         },
         toSubmit(){
-            if(this.checkedTime.length>0){
-                console.log(this.checkedTime)
-                this.$http.post('/index/service/nextLed',this.checkedTime).then(function (res) {
-                    console.log(JSON.parse(res.data))
-                },function (res) {
-                    console.log(res.data)
-                })
+            if(!this.isClick){
+                this.isClick=true;
+                if(this.checkedTime.length>0){
+                    console.log(this.checkedTime)
+                    this.$http.post('/index/service/nextLed',this.checkedTime).then(function (res) {
+                        this.isClick=false;
+                        console.log(JSON.parse(res.data))
+                    },function (res) {
+                        this.isClick=false;
+                        this.$toast('请求失败，请重试');
+                    })
+                }else{
+                    this.$toast('请选择预约时段')
+                }
             }else{
-                this.$toast('请选择预约时段')
+                this.$toast('请求提交中···')
             }
         },
         //历史记录

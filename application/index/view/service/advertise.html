@@ -208,7 +208,14 @@
         outline: none;
         font-size: 1.7rem;
     }
-
+    .my-back{
+        position: absolute;
+        background-color: rgba(0,0,0,.3);
+        top:0;
+        right:0;
+        bottom:0;
+        left:0;
+    }
 </style>
 {/block}
 
@@ -261,6 +268,8 @@
         <span>合计：{{this.checkedList.length*this.price}}元</span>
         <button @click="toSubmit">确认预约</button>
     </div>
+    <div class="my-back"></div>
+
 </div>
 {/block}
 
@@ -371,23 +380,39 @@
                 // setDate(0); 上月最后一天
                 // setDate(-1); 上月倒数第二天
                 // setDate(dx) 参数dx为 上月最后一天的前后dx天
-                this.$http.post('/index/service/changeMonth',{ month : this.currentMonth-1 }).then(function (res) {
-                    this.bespeakList=JSON.parse(res.data);
-                    console.log(this.bespeakList)
-                    var d = new Date(this.formatDate(year , month , 1));
-                    d.setDate(0);
-                    this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
-                })
+                if(!this.isSubmit){
+                    this.isSubmit=true;
+                    this.$http.post('/index/service/changeMonth',{ month : this.currentMonth-1 }).then(function (res) {
+                        this.isSubmit=false;
+                        console.log(JSON.parse(res.data))
+                        this.bespeakList=JSON.parse(res.data);
+                        var d = new Date(this.formatDate(year , month , 1));
+                        d.setDate(0);
+                        this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                    },function (res) {
+                        this.isSubmit=false;
+                        this.$toast('请求失败，请重试')
+                    })
+                }else{
+                    this.$toast('请求提交中···')
+                }
             },
             pickNext: function(year, month) {
-                console.log(this.currentMonth)
-
-                this.$http.post('/index/service/changeMonth',{ month : this.currentMonth+1 }).then(function (res) {
-                    this.bespeakList=JSON.parse(res.data);
-                    var d = new Date(this.formatDate(year , month , 1));
-                    d.setDate(35);
-                    this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
-                })
+                if(!this.isSubmit){
+                    this.isSubmit=true;
+                    this.$http.post('/index/service/changeMonth',{ month : this.currentMonth+1 }).then(function (res) {
+                        this.isSubmit=false;
+                        this.bespeakList=JSON.parse(res.data);
+                        var d = new Date(this.formatDate(year , month , 1));
+                        d.setDate(35);
+                        this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                    },function (res) {
+                        this.isSubmit=false;
+                        this.$toast('请求失败，请重试')
+                    })
+                }else{
+                    this.$toast('请求提交中···')
+                }
             },
 
             // 返回 2017-01-01 格式的字符串

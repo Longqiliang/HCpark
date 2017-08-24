@@ -106,7 +106,7 @@
                 物业服务
             </div>
             <ul class="my-lists">
-                <li class="my-list" @click="jumpTo(item.path,item.id)" v-for="item in baseData.propertyServices">
+                <li class="my-list" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.propertyServices">
                     <img :src="item.img" alt="图标">
                     <span>{{item.name}}</span>
                 </li>
