@@ -103,107 +103,46 @@
             <div class="my-time">
                 <div>
                     <span>
-                        {{new Date(item.create_ime).getMonth()+1}}-{{new Date(item.create_ime).getDate()}}
+                        {{new Date(parseInt(item.create_ime)).getMonth()+1}}-{{new Date(parseInt(item.create_ime)).getDate()}}
                     </span>
                     <span>
-                        {{new Date(item.create_ime).getFullYear()}}年
+                        {{new Date(parseInt(item.create_ime)).getFullYear()}}年
                     </span>
                 </div>
                 <span class="my-icon-line"></span>
             </div>
             <div class="my-info">
                 <div class="my-info-pay">
-                    <span>缴费金额：{{item.pay}}元</span>
-                    <span class="my-success" v-if="item.state==1">预约成功</span>
-                    <span class="my-cancel" v-if="item.state==2">取消预约</span>
+                    <span>缴费金额：{{item.price}}元</span>
+                    <span v-if="item.status=='被取消'" class="my-cancel">已取消</span>
+                    <span v-if="item.status=='预约成功'" class="my-success">预约成功</span>
                 </div>
                 <div class="my-order-time">
                     <span>预约时间：</span>
-                    <span>{{orderStr(item)}}</span>
+                    <span>{{item.day}}</span>
                 </div>
             </div>
         </li>
     </ul>
+    <p class="no-history" v-if="!record">
+        暂无记录
+    </p>
 </div>
 
-<!--<p class="no-history" v-if="==''">-->
-    <!--暂无记录-->
-<!--</p>-->
+
 {/block}
 
 {block name="script"}
 <script>
-
-Vue.filter('timeToStr', function(value) {
-    if (!value) { return ''}
-    var time=new Date(value);
-    var y=time.getFullYear(),m=time.getMonth()+1,d=time.getDate();
-    m=String(m).length<2?'0'+m:m;
-    return y+'-'+m+'-'+d
-})
 var app = new Vue({
     el:'#app',
     data:{
-        type:parseInt(window.location.href.split('/t/')[1]),
-        record:[
-//            {
-//            title:'大厅广告位',
-//                create_ime:1503532800000,
-//                state:1,
-//                pay:400,
-//                orderTime:["1503619200000", "1503705600000", "1503964800000", "1504051200000"],
-//            },
-            {
-                title:'大厅广告位',
-                create_ime: 1503532800000,
-                pay:1600,
-                state:1,
-                data: [
-                    {day: 1503792000000, amBespeak: "yes", pmBespeak: "no", amCheck: "no", pmCheck: 'no'},
-                    {day: 1503792000000, amBespeak: "yes", pmBespeak: "yes", amCheck: "no", pmCheck: 'no'},
-                    {day: 1503792000000, amBespeak: "no", pmBespeak: "yes", amCheck: "no", pmCheck: 'no'}
-                ]
-            },
-
-        ]
+        record:JSON.parse('{$data}')
     },
     methods:{
-        orderStr(time){
-            var str='';
-            if(this.type==1){
-                for(var i=0;i<time.length;i++){
-                    var date=new Date(parseInt(time[i].orderTime));
-                    var m=date.getMonth()+1,d=date.getDate();
-                    m=String(m).length<2?'0'+m:m;
-                    str+=m+'-'+d+'、'
-                }
-            }
-            if(this.type==2){
-                console.log(time)
-                for(var i=0;i<time.data.length;i++) {
-                    var date=new Date(parseInt(time.data[i].day));
-                    var m=date.getMonth()+1,d=date.getDate();
-                    m=String(m).length<2?'0'+m:m;
-                    str+=m+'-'+d;
-                    if(time.data[i].amBespeak=='yes'){
-                        str+=' 上午';
-                        if(time.data[i].pmBespeak=='yes'){
-                            str+='/下午';
-                        }
-                    }else if(time.data[i].pmBespeak=='yes'){
-                        str+=' 下午';
-                    }
-                    str+='、'
-                }
-            }
-            if(this.type==3){
-                for(var i=0;i<time.length;i++) {
 
-                }
-            }
-            return str.substring(0,str.length-1);
-        }
     }
+
 })
 </script>
 {/block}

@@ -14,20 +14,20 @@
     <!--type=1 生活缴费-->
     <!--type=2 送水-->
     <!--type=3 车卡-->
-    <div v-if="defaultData.appid==1">
+    <div v-if="appid==1">
         <div class="card">
             <div class="card-tit">缴费信息</div>
             <div class="card-cell">
                 <span>企业名称</span>
-                <span></span>
+                <span>{{info.name}}</span>
             </div>
             <div class="card-cell">
                 <span>到期时间</span>
-                <span></span>
+                <span>{{info.expiration_time}}</span>
             </div>
             <div class="card-cell">
                 <span>应缴金额</span>
-                <span></span>
+                <span>{{info.name}}</span>
             </div>
         </div>
         <div class="card">
@@ -46,65 +46,65 @@
         </div>
     </div>
 
-    <div v-if="defaultData.appid==2">
+    <div v-if="appid==3">
         <div class="card">
             <div class="card-tit">送水服务</div>
             <div class="card-cell">
                 <span>送水地点</span>
-                <span></span>
+                <span>{{info.address}}</span>
             </div>
             <div class="card-cell">
                 <span>送水桶数</span>
-                <span></span>
+                <span>{{info.number}}</span>
             </div>
             <div class="card-cell">
                 <span>提交时间</span>
-                <span></span>
+                <span>{{info.create_time}}</span>
             </div>
             <div class="card-cell">
                 <span>联系人员</span>
-                <span></span>
+                <span>{{info.name}}</span>
             </div>
             <div class="card-cell">
                 <span>联系电话</span>
-                <span></span>
+                <span>{{info.mobile}}</span>
             </div>
         </div>
     </div>
 
-    <div v-if="defaultData.appid==3">
+    <div v-if="appid==6 || appid==7">
         <div class="card">
             <div class="card-tit">车主信息</div>
             <div class="card-cell">
                 <span>车牌号码</span>
-                <span></span>
+                <span>{{info.car_card}}</span>
             </div>
             <div class="card-cell">
                 <span>停车卡号</span>
-                <span></span>
+                <span>{{info.park_card}}</span>
             </div>
             <div class="card-cell">
                 <span>车主姓名</span>
-                <span></span>
+                <span>{{info.name}}</span>
             </div>
             <div class="card-cell">
                 <span>手机号码</span>
-                <span></span>
+                <span>{{info.mobile}}</span>
             </div>
             <div class="card-cell">
                 <span>身份证号</span>
-                <span></span>
+                <span>{{info.people_card}}</span>
             </div>
         </div>
         <div class="card">
             <div class="card-tit">办理信息</div>
             <div class="card-cell">
                 <span>办理时长</span>
-                <span></span>
+                <span>{{info.aging}}</span>
             </div>
             <div class="card-cell">
                 <span>车卡押金</span>
-                <span></span>
+                <span>100元</span>
             </div>
             <div class="card-cell">
                 <span>停车费用</span>
@@ -132,12 +132,11 @@
 var app = new Vue({
     el:'#app',
     mounted(){
-        console.log(0)
+        console.log(JSON.parse('{$info}'));
     },
     data:{
-        defaultData:{
-            appid:1
-        }
+        appid:JSON.parse('{$type}'),
+        info:JSON.parse('{$info}'),
     },
     methods:{
         

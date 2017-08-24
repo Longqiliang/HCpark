@@ -240,6 +240,7 @@
 var app = new Vue({
     el:'#app',
     data:{
+        appid:{$app_id},
         price:0,
         currentDate:'',
         clickRecord:0,//日期翻页点击记录
@@ -253,6 +254,7 @@ var app = new Vue({
         isClick:false
     },
     mounted(){
+        console.log(this.appid)
         var baseDay=new Date();
         baseDay=baseDay.setDate(baseDay.getDate()+1);
         this.infoData.day=baseDay;
@@ -467,27 +469,35 @@ var app = new Vue({
 
         },
         toSubmit(){
-            if(!this.isClick){
-                this.isClick=true;
-                if(this.checkedTime.length>0){
-                    this.$indicator.open({
+            var the=this;
+            if(!the.isClick){
+                the.isClick=true;
+                if(the.checkedTime.length>0){
+                    the.$indicator.open({
                         text: '预约中',
                         spinnerType: 'triple-bounce'
                     });
-                    this.$http.post('/index/service/nextLed',this.checkedTime).then(function (res) {
-                        this.isClick=false;
-                        this.$indicator.close();
-                        console.log(JSON.parse(res.data))
+                    the.$http.post('/index/service/nextLed',the.checkedTime).then(function (res) {
+                        the.isClick=false;
+                        the.$indicator.close();
+                        console.log(JSON.parse(res.data));
+                        swal({
+                            title:"",
+                            text:"缴费完成后，请尽快上传缴费凭证",
+                            type:"success"
+                        },function (e) {
+                            window.location.href='/index/service/payment?app_id='+the.appid+'&type=submitLed'
+                        })
                     },function (res) {
-                        this.$indicator.close();
-                        this.isClick=false;
-                        this.$toast('请求失败，请重试');
+                        the.$indicator.close();
+                        the.isClick=false;
+                        the.$toast('请求失败，请重试');
                     })
                 }else{
-                    this.$toast('请选择预约时段')
+                    the.$toast('请选择预约时段')
                 }
             }else{
-                this.$toast('请求提交中···')
+                the.$toast('请求提交中···')
             }
         },
         //历史记录

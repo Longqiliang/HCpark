@@ -29,7 +29,7 @@
         <div class="circle-show-box">
 
             <div class="card-record circle-out">
-                <div class="circle-inner" onclick="window.location.href='/index/service/history/'">办卡记录</div>
+                <div class="circle-inner" @click="goHistory">办卡记录</div>
             </div>
         </div>
 
@@ -48,7 +48,10 @@
             jump:function (e) {
                 var app_id = this.app_id;
                 window.location.href = "/index/service/"+e+"?app_id="+app_id;
-            }
+            },
+            goHistory(){
+                window.location.href='/index/service/history/id/'+this.app_id;
+            },
         }
     })
 </script>

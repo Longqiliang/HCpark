@@ -62,7 +62,7 @@
     </div>
     <p class="prompt-message">资讯电话：{{subData.propretyMobile}}</p>
     <div class="card-more">
-        <button class="btn btn-warning btn-warning-outlined btn-sm" @click="paymentInfo"><i class="icon icon-record"></i>预约记录</button>
+        <button class="btn btn-warning btn-warning-outlined btn-sm" @click="goHistory"><i class="icon icon-record"></i>预约记录</button>
     </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="orderBtn" >确定预约</button>
@@ -256,8 +256,8 @@
                         break;
                 }
             },
-            paymentInfo:function () {
-                window.location.href='/index/service/history/'
+            goHistory(){
+                window.location.href='/index/service/history/id/'+this.subData.app_id;
             },
             orderBtn: function () {
                 var _this = this;
