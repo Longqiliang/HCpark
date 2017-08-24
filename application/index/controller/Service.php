@@ -913,7 +913,7 @@ class Service extends Base{
     public  function  nextLed(){
         $data = input('');
         $user_id = session('userId');
-        echo json_encode($data);
+
         $ad = new LedRecord();
         $record = array();
         $creat_time = time();
@@ -1009,6 +1009,7 @@ class Service extends Base{
     public  function  record(){
         $type=input('t');
         $user_id=session('userId');
+        $service = new AdvertisingService();
         $ad=new AdvertisingRecord();
         $fs = new FunctionRoomRecord();
         $led = new LedRecord();
@@ -1018,6 +1019,8 @@ class Service extends Base{
           case 1:
               $data=array();
               $time=array();
+              $serviceInfo =$service->where('id',1)->find();
+
               $list= $ad->where('create_user',$user_id)->order('create_time desc')->select();
               //所有的创建时间
               $create_time = array_column($list, 'create_time');
@@ -1032,13 +1035,20 @@ class Service extends Base{
               }
 
               foreach ($time as $onetime){
-               $map=[
-                   '1'=>1
+               $map =array();
+                  foreach ($list as  $info){
+                   if($info['create_time']==$onetime){
+                       array_push($map,$info);
+                   }
+                  $re=[
+                     'create_time'=>$onetime,
+                      'price'=>count($map)*$serviceInfo['price']
+                  ];
+                   foreach ($map as  $value){
+                     array_push($re['days'],$value['order_time']);
 
-
-               ];
-
-
+                   }
+               }
               }
               break;
 
