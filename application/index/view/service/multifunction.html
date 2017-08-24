@@ -285,9 +285,9 @@
                 }
             },
             toSubmit(){
+                var the=this;
                 var canSubmit=false;
                 if(!this.isSubmit){
-                    this.isSubmit=true;
                     for(var i=0;i<this.weeks.length;i++){
 //                        有选择，给上传
                         if(this.weeks[i].amCheck=='yes'||this.weeks[i].pmCheck=='yes'){
@@ -296,7 +296,7 @@
                         }
                     }
                     if(canSubmit){
-                        var data=[];
+                        var data=[],checkedText = '';
                         for(var i=0;i<this.weeks.length;i++){
                             if(this.weeks[i].amCheck=='yes'||this.weeks[i].pmCheck=='yes'){
                                 var day={
@@ -304,73 +304,103 @@
                                     amCheck:this.weeks[i].amCheck,
                                     pmCheck:this.weeks[i].pmCheck
                                 }
+                                checkedText += this.getCheckedText(day);
                                 data.push(day);
                             }
                         }
-                        console.log(data);
-                         this.$http.post('/index/service/nextFunctionRoom',data).then(function (res) {
-                             this.isSubmit=false;
-                             var the=this;
-                             var noSave = JSON.parse(res.data).no_save;
-//                            如果有被预定，删除、提示
-                             if(noSave = '' ){
-                                 var text = '';
-                                 for(var i=0;i<noSave.length;i++){
-                                     var date=new Date(noSave[i].day);
-                                     var y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
-                                     var str=the.formatDate(y,m,d);
-                                     if(noSave[i].amCheck=='yes'){
-                                         str+=' 上午'
-                                         if(noSave[i].pmCheck=='yes'){
-                                             str+=' /下午'
-                                         }
-                                     }else if(noSave[i].pmCheck=='yes'){
-                                         str+='下午'
-                                     }
-                                     text=str+'、';
-                                     for(var o=0;o<this.weeks.length;o++){
-                                         if(this.weeks[o].day==noSave[i].day){
-                                             if(noSave[i].amCheck=='yes'){
-                                                 this.weeks[o].amCheck=='yes';
-                                                 this.weeks[o].amBespeak=='no';
-                                             }else if(noSave[i].pmCheck=='yes'){
-                                                 this.weeks[o].pmCheck=='yes';
-                                                 this.weeks[o].pmBespeak=='no';
-                                             }
-                                         }
-                                     }
-                                 }
-                                 text=text.substr(0,text.length-1);
-                                 swal({
-                                     title:"",
-                                     text:"您选择的"+ text +'已被预约，已为您取消选择',
-                                     type:"warning"
-                                 })
-
-                             }else{
-//                                 window.sessionStorage.setItem('data',res.data);
-                                 swal({
-                                     title:"",
-                                     text:"缴费完成后，请尽快上传缴费凭证",
-                                     type:"success"
-                                 },function (e) {
-                                     if(e){
-                                         window.location.href='/index/service/payment?app_id='+the.app_id+'&&type=submitFunctionRoom';
-                                     }
-                                 })
-                             }
-                             //                        window.location.href='/index/service/payment/t/6'
-                         },function (res) {
-                             this.isSubmit=false;
-                         })
+                        checkedText=checkedText.substring(0, checkedText.length - 1);
+                        console.log("您选择的预约时间为："+checkedText);
+                        swal({
+                            title:"是否确认预约",
+                            text:checkedText,
+                            html: true,
+                            showCancelButton: true,
+                            confirmButtonText: "确认",
+                            cancelButtonText: "取消",
+                            closeOnConfirm: false,
+                        },function (e) {
+                            if(e && !this.isSubmit){
+                                this.isSubmit=true;
+                                the.$indicator.open({
+                                    text: '预约提交中',
+                                    spinnerType: 'triple-bounce'
+                                });
+                                the.$http.post('/index/service/nextFunctionRoom',data).then(function (res) {
+                                    the.$indicator.close();
+                                    the.isSubmit=false;
+                                    var noSave = JSON.parse(res.data).no_save;
+                                    //如果有被预定，删除、提示
+                                    if(noSave = '' ){
+                                        var text = '';
+                                        for(var i=0;i<noSave.length;i++){
+                                            text+=the.getCheckedText(noSave[i]);
+                                            for(var o=0;o<the.weeks.length;o++){
+                                                if(the.weeks[o].day==noSave[i].day){
+                                                    if(noSave[i].amCheck=='yes'){
+                                                        the.weeks[o].amCheck=='yes';
+                                                        the.weeks[o].amBespeak=='no';
+                                                    }else if(noSave[i].pmCheck=='yes'){
+                                                        the.weeks[o].pmCheck=='yes';
+                                                        the.weeks[o].pmBespeak=='no';
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        text=text.substr(0,text.length-1);
+                                        swal({
+                                            title:"",
+                                            text:"您选择的"+ text +'已被预约，已为您取消选择',
+                                            type:"warning"
+                                        })
+                                    }else{
+                                        swal({
+                                            title:"",
+                                            text:"缴费完成后，请尽快上传缴费凭证",
+                                            type:"success"
+                                        },function (e) {
+                                            if(e){
+                                                window.location.href='/index/service/payment?app_id='+the.app_id+'&&type=submitFunctionRoom';
+                                            }
+                                        })
+                                    }
+                                },function (res) {
+                                    the.$indicator.close();
+                                    the.isSubmit=false;
+                                })
+                            }
+                        })
                     }else{
-                         this.isSubmit=false;
+                        this.isSubmit=false;
                         this.$toast('请选择预约时间')
                     }
                 }
             },
             toHistory(){
                 window.location.href='/index/service/record/t/2';
+            },
+            // 返回 2017-01-01 格式的字符串
+            formatDate: function(year,month,day){
+                var y = year;
+                var m = month;
+                if(m<10) m = "0" + m;
+                var d = day;
+                if(d<10) d = "0" + d;
+                return y+"-"+m+"-"+d
+            },
+            getCheckedText(list){
+                var date=new Date(parseInt(list.day));
+                var y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
+                var str=this.formatDate(y,m,d);
+                if(list.amCheck=='yes'){
+                    str+=' 上午'
+                    if(list.pmCheck=='yes'){
+                        str+=' /下午'
+                    }
+                }else if(list.pmCheck=='yes'){
+                    str+='下午'
+                }
+                text=str+'、';
+                return text;
             }
         }
     })

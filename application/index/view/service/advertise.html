@@ -268,7 +268,7 @@
         <span>合计：{{this.checkedList.length*this.price}}元</span>
         <button @click="toSubmit">确认预约</button>
     </div>
-    <div class="my-back"></div>
+    <!--<div class="my-back"></div>-->
 
 </div>
 {/block}
@@ -381,8 +381,13 @@
                 // setDate(-1); 上月倒数第二天
                 // setDate(dx) 参数dx为 上月最后一天的前后dx天
                 if(!this.isSubmit){
+                    this.$indicator.open({
+                        text: '数据加载中',
+                        spinnerType: 'triple-bounce'
+                    });
                     this.isSubmit=true;
                     this.$http.post('/index/service/changeMonth',{ month : this.currentMonth-1 }).then(function (res) {
+                        this.$indicator.close();
                         this.isSubmit=false;
                         console.log(JSON.parse(res.data))
                         this.bespeakList=JSON.parse(res.data);
@@ -390,6 +395,7 @@
                         d.setDate(0);
                         this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
                     },function (res) {
+                        this.$indicator.close();
                         this.isSubmit=false;
                         this.$toast('请求失败，请重试')
                     })
@@ -399,14 +405,20 @@
             },
             pickNext: function(year, month) {
                 if(!this.isSubmit){
+                    this.$indicator.open({
+                        text: '数据加载中',
+                        spinnerType: 'triple-bounce'
+                    });
                     this.isSubmit=true;
                     this.$http.post('/index/service/changeMonth',{ month : this.currentMonth+1 }).then(function (res) {
+                        this.$indicator.close();
                         this.isSubmit=false;
                         this.bespeakList=JSON.parse(res.data);
                         var d = new Date(this.formatDate(year , month , 1));
                         d.setDate(35);
                         this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
                     },function (res) {
+                        this.$indicator.close();
                         this.isSubmit=false;
                         this.$toast('请求失败，请重试')
                     })
@@ -426,55 +438,86 @@
             },
             toSubmit(){
                 var the=this;
-                if(!this.isSubmit){
-                    this.isSubmit=true;
-                    if(this.checkedList.length>0){
-                        this.$http.post('/index/service/nextAdvertise',{order_times:this.checkedList},{emulateJSON: true}).then(function (res) {
-                            this.isSubmit=false;
-                            var noSave = JSON.parse(res.data).no_save;
+                if(!the.isSubmit){
+                    if(the.checkedList.length>0){
+                        console.log(the.checkedList);
+                        var checkedText='您选择预约的时间为：';
+                        for(var i=0;i<the.checkedList.length;i++){
+                            var time=new Date(parseInt(the.checkedList[i]));
+                            var y=time.getFullYear(),m=time.getMonth()+1,d=time.getDate();
+                            checkedText += the.formatDate(y,m,d)+'、';
+                        }
+                        swal({
+                            title:"是否确认预约",
+                            text:checkedText,
+                            html: true,
+                            showCancelButton: true,
+                            confirmButtonText: "确认",
+                            cancelButtonText: "取消",
+                            closeOnConfirm: false,
+                        },function (e) {
+                            if (e) {
+                                the.isSubmit=true;
+                                the.$indicator.open({
+                                    text: '预约提交中',
+                                    spinnerType: 'triple-bounce'
+                                });
+                                the.$http.post('/index/service/nextAdvertise',{order_times:the.checkedList},{emulateJSON: true}).then(function (res) {
+                                    the.isSubmit=false;
+                                    the.$indicator.close();
+                                    var noSave = JSON.parse(res.data).no_save;
 //                            如果有被预定，删除、提示
-                            if(noSave = '' ){
-                                var text = '';
-                                for(var i=0;i<noSave.length;i++){
-                                    var date=new Date(noSave[i]);
-                                    var y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
-                                    var str=the.formatDate(y,m,d);
-                                    text=str+'、';
-                                    for(var o=0;o<the.checkedList.length;o++){
-                                        if(the.checkedList[o]==noSave[i]){
-                                            the.checkedList[o].split(o,1)
+                                    if(noSave = '' ){
+                                        var text = '';
+                                        for(var i=0;i<noSave.length;i++){
+                                            var date=new Date(noSave[i]);
+                                            var y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
+                                            var str=the.formatDate(y,m,d);
+                                            text=str+'、';
+                                            for(var o=0;o<the.checkedList.length;o++){
+                                                if(the.checkedList[o]==noSave[i]){
+                                                    the.checkedList[o].split(o,1)
+                                                }
+                                            }
                                         }
-                                    }
-                                }
-                                text=text.substr(0,text.length-1);
-                                swal({
-                                    title:"",
-                                    text:"您选择的"+ text +'已被预约，已为您取消选择',
-                                    type:"warning"
-                                })
+                                        text=text.substr(0,text.length-1);
+                                        swal({
+                                            title:"",
+                                            text:"您选择的"+ text +'已被预约，已为您取消选择',
+                                            type:"warning"
+                                        })
 
-                            }else{
-                                window.sessionStorage.setItem('data',res.data);
-                                swal({
-                                    title:"",
-                                    text:"缴费完成后，请尽快上传缴费凭证",
-                                    type:"success"
-                                },function (e) {
-                                    if(e){
-                                        window.location.href='/index/service/payment?app_id='+the.app_id+'&&type=submitAdvertise';
+                                    }else{
+                                        window.sessionStorage.setItem('data',res.data);
+                                        swal({
+                                            title:"",
+                                            text:"缴费完成后，请尽快上传缴费凭证",
+                                            type:"success"
+                                        },function (e) {
+                                            if(e){
+                                                window.location.href='/index/service/payment?app_id='+the.app_id+'&&type=submitAdvertise';
+                                            }
+                                        })
                                     }
+                                },function (res) {
+                                    the.$indicator.close();
+                                    the.isSubmit=false;
+                                    console.log(res)
                                 })
+                            }else{
+
                             }
-                        },function (res) {
-                            this.isSubmit=false;
-                            console.log(res)
-                        })
+                        });
+//                        return;
+
                     }else{
-                        console.log(this.checkedList)
-                        this.$toast("请选择预约日期")
+                        the.$indicator.close();
+                        the.isSubmit=false;
+                        console.log(the.checkedList)
+                        the.$toast("请选择预约日期")
                     }
                 }else{
-                    this.$toast("预约中，请勿重复提交")
+                    the.$toast("预约中，请勿重复提交")
                 }
             },
             toHistory(){

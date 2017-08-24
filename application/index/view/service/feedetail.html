@@ -19,19 +19,20 @@
 
 {block name="body"}
 <div id="app">
+    <p>{$info}</p>
     <div class="card">
         <div class="card-tit">{{title}}</div>
         <div class="card-cell">
             <span>企业名称</span>
-            <span>杭州之图网络科技有限公司</span>
+            <span>{{info.name}}</span>
         </div>
         <div class="card-cell">
             <span>到期时间</span>
-            <span>2017-06-09</span>
+            <span>{{info.expiration_time}}</span>
         </div>
         <div class="card-cell">
             <span>应交费用</span>
-            <span>100元</span>
+            <span>{{info.fee}}元</span>
         </div>
     </div>
     <div class="card-more">
@@ -47,34 +48,35 @@
     var vm = new Vue({
         el:"#app",
         data:{
-            type:parseInt(window.location.href.split('/t/')[1])
+            type:'',
+            title:'',
+            info:JSON.parse('{$info}')
         },
         created(){
-            console.log(this.type)
-        },
-        computed:{
-          title:function(){
-              switch (this.type){
-                  case 1:
-                      return "水电费";
-                  case 2:
-                      return "物业费";
-                  case 3:
-                      return "房租费";
-                  case 4:
-                      return "功耗费";
-              }
-          }
+            console.log(JSON.parse('{$info}'));
+            this.type=this.GetQueryString('t');
+            if(this.type==1){
+                this.title= "水电费";
+            }else if(this.type==2){
+                this.title= "物业费";
+            }else if(this.type==3){
+                this.title= "房租费";
+            }else if(this.type==4){
+                this.title= "功耗费";
+            }
+            document.title=this.title;
         },
         methods: {
-            paymentInfo:function () {
-
+            GetQueryString(name){
+                var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if(r!=null)return  r[2]; return null;
             },
             goHistory(){
-                window.location.href='/index/service/history/t/'+this.type;
+                window.location.href='/index/service/history/type/'+this.type+"/id/"+this.info.appid;
             },
             orderBtn: function () {
-                window.location.href='/index/service/payment/t/1';
+                window.location.href='/index/service/payment?type=feeinfo'+'&app_id='+this.info.appid;
 //                this.$http.post("/index/service/waterService",data).then(function (res) {
 //                    _this.isSubmit = true;
 //                    var resData = res.data;

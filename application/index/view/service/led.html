@@ -308,15 +308,21 @@ var app = new Vue({
                     this.currentDate=this.date[key].time;
                     this.date[key].checked=true;
                 }
-                        this.$http.post('/index/service/changeLed',{day:this.date[key].time}).then(function (res) {
+                this.$indicator.open({
+                    text: '数据加载中',
+                    spinnerType: 'triple-bounce'
+                });
+                this.$http.post('/index/service/changeLed',{day:this.date[key].time}).then(function (res) {
+                    this.$indicator.close();
                     this.isClick=false;
                     this.infoData.time.length=0
                     this.bespeakTime=JSON.parse(res.data);
                     this.baseInfo(this.date[key].time)
                 },function (res) {
-                            this.isClick=false;
-                            this.$toast('请求失败，请重试');
-                            console.log(res)
+                    this.$indicator.close();
+                    this.isClick=false;
+                    this.$toast('请求失败，请重试');
+                    console.log(res)
                 })
             }else{
                 this.$toast('请求提交中···')
@@ -326,17 +332,23 @@ var app = new Vue({
         pickPre() {
             if(this.clickRecord>0){
                 if(!this.isClick){
+                    var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
+                    this.$indicator.open({
+                        text: '数据加载中',
+                        spinnerType: 'triple-bounce'
+                    });
                     this.isClick=true;
                     var now=new Date();
                     this.clickRecord-=1;
-                    var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
                     this.$http.post('/index/service/changeLed',{ month : d }).then(function (res) {
+                        this.$indicator.close();
                         this.isClick=false;
                         this.infoData.time.length=0;
                         this.bespeakTime=JSON.parse(res.data);
                         this.checkedDate(d);
                         this.baseInfo(d)
                     },function (res) {
+                        this.$indicator.close();
                         this.isClick=false;
                         this.$toast('请求失败，请重试');
                     })
@@ -348,17 +360,23 @@ var app = new Vue({
         //下一页
         pickNext() {
             if(!this.isClick){
+                this.$indicator.open({
+                    text: '数据加载中',
+                    spinnerType: 'triple-bounce'
+                });
                 this.isClick=true;
                 var now=new Date();
                 this.clickRecord+=1
                 var d = new Date(now.setDate(now.getDate()+(4*this.clickRecord)));
                 this.$http.post('/index/service/changeLed',{ month : d }).then(function (res) {
+                    this.$indicator.close();
                     this.isClick=false;
                     this.infoData.time.length=0
                     this.bespeakTime=JSON.parse(res.data);
                     this.checkedDate(d);
                     this.baseInfo(d)
                 },function (res) {
+                    this.$indicator.close();
                     this.isClick=false;
                     this.$toast('请求失败，请重试');
                 })
@@ -397,6 +415,7 @@ var app = new Vue({
             if(d<10) d = "0" + d;
             return y+"-"+m+"-"+d
         },
+        //判断是否同一天
         timeIsSame(time1,time2){
             var time1=new Date(time1),time2=new Date(time2);
             var year1=time1.getFullYear(),month1=time1.getMonth(),day1=time1.getDate();
@@ -451,11 +470,16 @@ var app = new Vue({
             if(!this.isClick){
                 this.isClick=true;
                 if(this.checkedTime.length>0){
-                    console.log(this.checkedTime)
+                    this.$indicator.open({
+                        text: '预约中',
+                        spinnerType: 'triple-bounce'
+                    });
                     this.$http.post('/index/service/nextLed',this.checkedTime).then(function (res) {
                         this.isClick=false;
+                        this.$indicator.close();
                         console.log(JSON.parse(res.data))
                     },function (res) {
+                        this.$indicator.close();
                         this.isClick=false;
                         this.$toast('请求失败，请重试');
                     })

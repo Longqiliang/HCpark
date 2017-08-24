@@ -41,16 +41,16 @@
 
 {block name="body"}
 <div id="app">
-    <ul v-for="item in historyList">
+    <ul v-for="item in historyList" @click="jumpTo(item.id)">
         <li>
             <span>{{item.name}}</span>
-            <span class="unPay" v-if="item.state==1">未缴费</span>
-            <span class="auditing" v-if="item.state==2">审核中</span>
-            <span class="payed" v-if="item.state==3">已缴费</span>
+            <span class="unPay" v-if="item.status==2">未缴费</span>
+            <span class="auditing" v-if="item.status==0">审核中</span>
+            <span class="payed" v-if="item.status==1">已缴费</span>
 
         </li>
         <li>
-            <span>{{item.time | timeToStr}}</span>
+            <span>{{item.time}}</span>
             <span v-if="item.num">数量：{{item.num}}桶</span>
             <span v-if="item.pay">缴费金额：{{item.pay}}元</span>
         </li>
@@ -63,63 +63,20 @@
 
 {block name="script"}
 <script>
-    Vue.filter('timeToStr', function(value) {
-        if (!value) { return ''}
-        var time=new Date(value);
-        var y=time.getFullYear(),m=time.getMonth(),d=time.getDate();
-        m=String(m).length<2?'0'+m:m;
-        return y+'-'+m+'-'+d
-    })
-
     var app = new Vue({
         el:'#app',
         mounted(){
+            console.log(JSON.parse('{$info}'))
             document.title=this.baseData.title;
         },
         data:{
-            historyList:[
-                {
-                    name:'水费',
-//                    state:2,
-                    time:1503532800000,
-//                    pay:'1111',
-                    num:2
-                },
-                {
-                    name:'报修',
-//                    state:2,
-                    time:1503532800000,
-//                    pay:'1111',
-//                    num:2
-                },
-                {
-                    name:'水费',
-                    state:1,
-                    time:1503532800000,
-                    pay:1111,
-//                    num:2
-                },
-                {
-                    name:'新卡办理',
-                    state:2,
-                    time:1503532800000,
-                    pay:1111,
-//                    num:2
-                },
-                {
-                    name:'新卡办理',
-                    state:3,
-                    time:1503532800000,
-                    pay:1111,
-//                    num:2
-                }
-            ]
+            historyList:JSON.parse('{$info}'),
+            appid:JSON.parse('{$appId}')
         },
         computed:{
-
             baseData:function () {
                 var info={};
-                var type=parseInt(window.location.href.split('/t/')[1]);
+                var type=parseInt(window.location.href.split('/id/')[1]);
                 info.type=type;
                 switch (type){
                     case 1:
@@ -145,7 +102,9 @@
             }
         },
         methods:{
-
+            jumpTo(id){
+                window.location.href='/index/service/historyDetail/appid/'+this.appid+'/id/'+id
+            }
         }
 })
 </script>

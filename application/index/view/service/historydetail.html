@@ -1,0 +1,147 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/service/detail.css">
+<style>
+    body{
+        background-color: #f0eff5;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <!--type=1 生活缴费-->
+    <!--type=2 送水-->
+    <!--type=3 车卡-->
+    <div v-if="defaultData.appid==1">
+        <div class="card">
+            <div class="card-tit">缴费信息</div>
+            <div class="card-cell">
+                <span>企业名称</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>到期时间</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>应缴金额</span>
+                <span></span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-tit">缴费凭证</div>
+            <div class="card-upload">
+                <div class="upload-img">
+                    <img src="" alt="缴费凭证">
+                </div>
+                <div class="upload-img">
+                    <img src="" alt="缴费凭证">
+                </div>
+                <div class="upload-img">
+                    <img src="" alt="缴费凭证">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="defaultData.appid==2">
+        <div class="card">
+            <div class="card-tit">送水服务</div>
+            <div class="card-cell">
+                <span>送水地点</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>送水桶数</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>提交时间</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>联系人员</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>联系电话</span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="defaultData.appid==3">
+        <div class="card">
+            <div class="card-tit">车主信息</div>
+            <div class="card-cell">
+                <span>车牌号码</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>停车卡号</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>车主姓名</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>手机号码</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>身份证号</span>
+                <span></span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-tit">办理信息</div>
+            <div class="card-cell">
+                <span>办理时长</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>车卡押金</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>停车费用</span>
+                <span></span>
+            </div>
+            <div class="card-cell">
+                <span>费用总计</span>
+                <span></span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-tit">缴费凭证</div>
+            <div class="card-upload">
+                <div class="upload-img">
+                    <img src="" alt="缴费凭证">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    mounted(){
+        console.log(0)
+    },
+    data:{
+        defaultData:{
+            appid:1
+        }
+    },
+    methods:{
+        
+    }
+})
+</script>
+{/block}

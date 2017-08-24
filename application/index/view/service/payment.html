@@ -181,10 +181,11 @@
             },
             subBtn: function () {
                 var _this = this;
-
+                console.log(_this.isSubmit)
                 if(!_this.isSubmit){
                     return;
-                }
+                }                console.log(_this.isSubmit)
+
                 _this.isSubmit = false;
                 _this.subData.payment_voucher = _this.payment_voucher;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
