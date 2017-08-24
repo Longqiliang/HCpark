@@ -1185,10 +1185,11 @@ class Service extends Base{
     public function feeinfo(){
         $parkid= session('park_id');
         if (IS_POST){
+            $feePayment = new FeePayment();
             $id = input('id');
             $data = input('post.');
             $data['status']= 1 ;
-            $res=FeePayment::where('id',$id)->save($data);
+            $res=$feePayment->where('id',$id)->update($data);
             if ($res){
 
                 return $this->success("上传成功");
