@@ -959,6 +959,7 @@ class Service extends Base{
         $parkid=session('park_id');
         $property =new PropertyServer();
         $data = input('post.');
+        $data['create_time']=time();
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
         $data["payment_voucher"] = json_encode($data["payment_voucher"]);
@@ -1005,26 +1006,33 @@ class Service extends Base{
     }
     /*物业报修记录*/
     public function repairRecord(){
-        $types=[];
-        $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('create_time desc')->paginate();
-        int_to_string($list,['type'=>[1=>'空调报修',2=>"电梯报修",3=>"其他报修"],
-                             'status'=>[0=>"进行中",1=>"已完成"]
-                    ]);
+        $types=[1=>'空调报修',2=>"电梯报修",3=>"其他报修"];
+        $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('id desc')->paginate();
+        foreach($list as $k=>$v){
+            $info[$k]=[
+                'type'=>$types[$v['type']],
+                'time'=>$v['create_time'],
+                'status'=>$v['status'],
+            ];
+        }
 
-        $this->assign('list',$list);
+        return  $info;
 
-        return $this->fetch();
     }
 
     /*保洁服务记录*/
 
     public function clearRecord(){
-        $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('create_time desc')->paginate();
-        int_to_string($list,['type'=>[4=>'保洁记录'], 'status'=>[0=>"进行中",1=>"已完成"]]);
+        $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('clear_time desc')->paginate();
+        foreach($list as $k=>$v){
+            $info[$k]=[
+                'type'=>"保洁服务",
+                'time'=>$v['clear_time'],
+                'status'=>$v['status'],
+            ];
+        }
 
-        $this->assign('list',$list);
-
-        return $this->fetch();
+        return  $info;
 
     }
     /*物业保洁下拉刷新*/
@@ -1062,16 +1070,23 @@ class Service extends Base{
 
     //饮水服务列表页
     public function waterList(){
-        //分页total
-        $total=input('total');
         $userid = session('userId');
+        echo  $userid;
         $map = [
             'status'=> "1",
             'userid'=>$userid,
         ];
-        $list = WaterModel::where($map)->order('id desc')->paginate($total);
-        $this->assign('list',$list);
-        return $this->fetch();
+        $list = WaterModel::where($map)->order('id desc')->paginate();
+
+        foreach($list as $k=>$v){
+            $info[$k]=[
+                'name'=>$v['name'],
+                'time'=>$v['create_time'],
+                'num'=>$v['number'],
+            ];
+        }
+
+        return $info;
     }
 
     //饮水服务详情页
@@ -1115,16 +1130,18 @@ class Service extends Base{
 
         return $this->fetch();
     }
-    /*缴费记录*/
+    /*记录*/
     public function history(){
-        $type = input('type');
+        $info =[];
         $appid = input('id');
-        $userid =session("userId");
-        $userinfo=WechatUser::where(['userid'=>$userid])->find();
-        $departmentId =$userinfo['department'];
+        $type = input('type');
         if($appid == 1){
+            $userid =session("userId");
+            $userinfo=WechatUser::where(['userid'=>$userid])->find();
+            $departmentId =$userinfo['department'];
             $map = ['company_id'=>$departmentId,'type'=>$type];
-            $list = FeePayment::where($map)->order('id desc')->paginate(12);
+            $list = FeePayment::where($map)->order('id desc')->select();
+            dump($list);
             foreach($list as $k=>$v){
                 $info[$k]=[
                     'name' =>$v['name'],
@@ -1136,13 +1153,16 @@ class Service extends Base{
 
         }elseif($appid ==2){
 
+            $info = $this->repairRecord();
+        }elseif ($appid ==3){
 
+            $info = $this->waterList();
+        }elseif($appid==4){
+
+            $info = $this->clearRecord();
         }
 
 
-
-
-        dump($info);
         $this->assign('info',json_encode($info));
 
         return $this->fetch();
