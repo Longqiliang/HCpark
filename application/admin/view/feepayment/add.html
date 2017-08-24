@@ -1,0 +1,211 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/plugins/datapicker/datepicker3.css">
+<style type="text/css">
+    .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+    .content{
+        width: 45%;
+        height:300px;
+        background-color: #fff;
+        margin: 20px;
+        padding: 20px;
+        border-radius: 20px;
+    }
+    .input{
+        width: 300px;
+        height:35px;
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <h2>{$company.name}本月缴费去详情</h2>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+                     <!--水电费-->
+        <div class="col-md-6 column content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <span class=" pull-right"><input type="text" name="fee1" class="input" value="{$list1.fee}"></span>
+                    <h3>水电费</h3>
+                </div>
+                <div class="ibox-content">
+                    <span class=" pull-right"><input type="text" name="expiration1" class="input" value="{$list1.expiration_time}" ></span>
+                    <h4>到期时间</h4>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"></h1>
+                    <div class="stat-percent font-bold text-success" name="status1">
+                        {$list1.state}&nbsp;&nbsp;&nbsp;&nbsp;
+                        {eq name="$list1.status" value="1"}
+                        <a href="#" class="btn btn-primary" onclick="changeState('{$list1.id}')" >审核</a>
+                        {/eq}
+                    </div>
+                    <h4>状态</h4>
+                </div>
+                <div class="mail-body text-right tooltip-demo">
+                    <a class="btn btn-sm btn-primary" onclick="makeOrder(1)">
+                        <i class="fa fa-reply"></i> 保存
+                    </a>
+                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                </div>
+            </div>
+        </div>
+                        <!--物业费-->
+        <div class="col-md-6 column content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <span class=" pull-right"><input type="text" name="fee2" class="input" value="{$list2.fee}"></span>
+                    <h3>物业费</h3>
+                </div>
+                <div class="ibox-content">
+                    <span class=" pull-right"><input type="text" name="expiration2" class="input" value="{$list2.expiration_time}"></span>
+                    <h4>到期时间</h4>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"></h1>
+                    <div class="stat-percent font-bold text-success" name="status2">
+                        {$list2.state}&nbsp;&nbsp;&nbsp;&nbsp;
+                        {eq name="$list2.status" value="1"}
+                        <a href="#" class="btn btn-primary" onclick="changeState('{$list2.id}')">审核</a>
+                        {/eq}
+                    </div>
+                    <h4>状态</h4>
+                </div>
+                <div class="mail-body text-right tooltip-demo">
+                    <a class="btn btn-sm btn-primary" onclick="makeOrder(2)">
+                        <i class="fa fa-reply"></i> 保存
+                    </a>
+                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-md-6 column content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <span class=" pull-right"><input type="text" name="fee3" class="input" value="{$list3.fee}"></span>
+                    <h3>房租费</h3>
+                </div>
+                <div class="ibox-content">
+                    <span class=" pull-right"><input type="text" name="expiration3" class="input expiration" value="{$list3.expiration_time}"></span>
+                    <h4>到期时间</h4>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"></h1>
+                    <div class="stat-percent font-bold text-success" name="status3">
+                        {$list3.state}&nbsp;&nbsp;&nbsp;&nbsp;
+                        {eq name="$list3.status" value="1"}
+                        <a href="#" class="btn btn-primary" onclick="changeState('{$list3.id}')">审核</a>
+                        {/eq}
+                    </div>
+                    <h4>状态</h4>
+                </div>
+                <div class="mail-body text-right tooltip-demo">
+                    <a class="btn btn-sm btn-primary" onclick="makeOrder(3)">
+                        <i class="fa fa-reply"></i> 保存
+                    </a>
+                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 column content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <span class=" pull-right"><input type="text" name="fee4" class="input" value="{$list4.fee}"></span>
+                    <h3>公耗费</h3>
+                </div>
+                <div class="ibox-content">
+                    <span class=" pull-right"><input type="text" name="expiration4" class="input expiration datetimepicker" value="{$list4.expiration_time}"></span>
+                    <h4>到期时间</h4>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"></h1>
+                    <div class="stat-percent font-bold text-success" name="status4">
+                        {$list4.state}&nbsp;&nbsp;&nbsp;&nbsp;
+                        {eq name="$list4.status" value="1"}
+                        <a href="#" class="btn btn-primary" onclick="changeState('{$list4.id}')">审核</a>
+                        {/eq}
+                    </div>
+                    <h4>状态</h4>
+                </div>
+                <div class="mail-body text-right tooltip-demo">
+                    <a class="btn btn-sm btn-primary" onclick="makeOrder(4)">
+                        <i class="fa fa-reply"></i> 保存
+                    </a>
+                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/admin/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+
+
+    });
+    function makeOrder(id){
+        var fee = $("input[name='fee"+id+"']").val();
+        var time = $("input[name='expiration"+id+"']").val();
+        $.ajax({
+            data:{type:id,name:"{$company.name}",company_id:"{$company.id}",fee:fee,expiration_time:time},
+            type:"POST",
+            url:"{:Url('Feepayment/add')}",
+            success:function (data) {
+                if(data.code==1){
+                    updateAlert(data.msg+' 稍后页面自动刷新～','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
+                }else{
+                    updateAlert(data.msg);
+                }
+            }
+            
+        })
+    }
+    function changeState(id) {
+        $.ajax({
+            data:{id:id},
+            type:"post",
+            url:"{:Url('Feepayment/changeState')}",
+            success:function (data) {
+                if (data.code==1){
+                    updateAlert(data.msg,"success");
+                    setTimeout(function () {
+                        location.href=data.url;
+                    },2000);
+                }else{
+                    updateAlert(data.msg,"info");
+                }
+            }
+        });
+    }
+</script>
+{/block}
