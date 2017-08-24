@@ -973,7 +973,7 @@ class Service extends Base{
         $data = input('post.');
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
-
+        $data['image']=input('payment_voucher');
         $res=$property->allowField(true)->save($data);
 
         if ($res){
@@ -999,6 +999,7 @@ class Service extends Base{
         $data['image'] =input('imgStr');
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
+        $data['image']=input('payment_voucher');
         $property =new PropertyServer();
 
         $res=$property->allowField(true)->save($data);
