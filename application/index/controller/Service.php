@@ -1181,7 +1181,6 @@ class Service extends Base{
                 'id'=>$v['id'],
                 'type'=>"保洁服务",
                 'time'=>$v['clear_time'],
-                'status'=>$v['status'],
                 'name'=>$v['address'],
             ];
         }
