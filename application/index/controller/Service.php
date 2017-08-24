@@ -1424,7 +1424,6 @@ class Service extends Base{
                     'status'=>$v['status'],
                     'time'=>$v['expiration_time'],
                     'pay'=>$v['fee'],
-                    'img'=>unserialize($v['payment_voucher']),
                 ];
             }
 
@@ -1494,8 +1493,22 @@ class Service extends Base{
 
             $info=WaterService::get($id);
         }elseif ($appid ==6){
-
             $info=CarparkService::get($id);
+            $payment_voucher=CarparkRecord::where('id',$id)->field('payment_voucher,money,aging')->find();
+            //图片
+            $info['img']=$payment_voucher['payment_voucher'];
+            //费用总计
+            $info['all_money']=$payment_voucher['money'];
+
+            $park_id=session('park_id');
+            $park=Park::where('id',$park_id)->field('carpark_deposit,carpark_price')->find();
+            //押金
+            $info['carpark_deposit']=$park['carpark_deposit'];
+            //时长
+            $info['aging']=$payment_voucher['aging'];
+            //停车费
+            $info['money']=$park['carpark_price']*$payment_voucher['aging'];
+
         }elseif ($appid==7){
 
             $info=CarparkService::get($id);
@@ -1503,7 +1516,6 @@ class Service extends Base{
 
         $this->assign('type',json_encode($appid));
         $this->assign('info',json_encode($info));
-
         return $this->fetch();
 
     }
