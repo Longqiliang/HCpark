@@ -491,10 +491,22 @@ class Service extends Base{
 
     //大厅广告位预约
     public function advertise(){
-
         $user_id = session('userId');
         $adService=new AdvertisingService();
         $adRecord = new AdvertisingRecord();
+        //取消超时没有上传凭证的预约信息
+        $nowtime=time()-60;
+        $map=[
+            'status'=>1,
+            'create_time'=>array('lt',$nowtime)
+        ];
+
+        $out_date = $adRecord->where($map)->select();
+        foreach ($out_date as $value){
+         $value['status']=0;
+        }
+        $re = $adRecord->saveAll($out_date);
+       /* **************************************/
         //今天结束时间
         $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
         //本月结束时间
