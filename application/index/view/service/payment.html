@@ -212,9 +212,26 @@
                             },function () {
                                 window.location.href = "/index/service/index";
                             });
+                        }else{
+                            swal({
+                                title:"预约失败!",
+                                text:"请重新预约！",
+                                type:"error",
+                                confirmButtonColor: "#fcc44b"
+                            },function () {
+                                window.location.href = "/index/service/index";
+                            });
                         }
                     },function (res) {
                         _this.isSubmit = true;
+                        swal({
+                            title:"预约失败!",
+                            text:'请重新预约！',
+                            type:"error",
+                            confirmButtonColor: "#fcc44b"
+                        },function () {
+                            window.location.href = "/index/service/index";
+                        });
                     })
                 }
             }

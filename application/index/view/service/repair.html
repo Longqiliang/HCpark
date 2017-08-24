@@ -290,11 +290,24 @@
                     var result = res.data;
                     var code = result.code;
                     if(code == 1){
+                        var msg = result.data;
+                        var newMsg =  msg.split("；");
+                        msg =  newMsg.join("<br/>");
+                        swal({
+                            title:result.msg,
+                            text:msg,
+                            html:true,
+                            type:"success",
+                            confirmButtonColor: "#fcc44b"
+                        },function () {
+                            window.location.href = "/index/service/index";
+                        });
+                    }else{
                         swal({
                             title:result.msg,
                             text:result.data,
                             html:true,
-                            type:"success",
+                            type:"error",
                             confirmButtonColor: "#fcc44b"
                         },function () {
                             window.location.href = "/index/service/index";
@@ -302,7 +315,14 @@
                     }
                 },function (res) {
                     _this.isSubmit = true;
-                    console.log(res.data);
+                    swal({
+                        title:'预约失败',
+                        text:'请重新预约',
+                        type:"error",
+                        confirmButtonColor: "#fcc44b"
+                    },function () {
+                        window.location.href = "/index/service/index";
+                    });
                 })
             }
         }
