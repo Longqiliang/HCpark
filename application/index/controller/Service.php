@@ -341,8 +341,8 @@ class Service extends Base{
             array_push($record,$value->findRecord());
         }
         int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
-        $this->assign('list',json_encode($record));
-        return $this->fetch();
+
+        return $record;
     }
 
 
@@ -502,8 +502,8 @@ class Service extends Base{
         ];
         $list=$service->where($map)->select();
         int_to_string($list,array('status'=>array(0=>'审核中',1=>'审核通过',2=>'审核失败')));
-        $this->assign('list',json_encode($list));
-        return $this->fetch();
+
+        return $list;
     }
 
 
@@ -1354,6 +1354,12 @@ class Service extends Base{
         }elseif($appid==4){
 
             $info = $this->clearRecord();
+        }elseif($appid==6){
+
+            $info = $this->carRecord();
+        }elseif($appid==7){
+
+            $info = $this->pillarRecord();
         }
 
         $this->assign('info',json_encode($info));
