@@ -691,9 +691,6 @@ class Service extends Base{
                 $value->save();
             }
             /* **************************************/
-
-
-
             //从今天到第七天结束的时间戳数组
             $weeks=array();
             for($i=1;$i<8;$i++){
@@ -775,26 +772,64 @@ class Service extends Base{
         ];
         $is_select = array();
         foreach ($data as $value) {
-            $map=['order_time'=> $value['day']/1000,
-                'status' => array('neq', 0),
-                'create_user'=>array('neq',$user_id),
-                 'date_type'=>$value['amCheck']=="yes"?1:2
-            ];
-            $is = $frr->where($map)->find();
-            if ($is) {
-                array_push($is_select, $is['order_time']*1000);
-            } else {
-                $info = [
-                    'create_user' => $user_id,
-                    'service_id' => 2,
-                    'order_time' => $value['day']/1000,
-                    'create_time' => $create_time,
-                    'status' => 1,
-                    'date_type'=>$value['amCheck']=="yes"?1:2
+           if($value['amCheck']=="yes") {
+               $map = ['order_time' => $value['day'] / 1000,
+                   'status' => array('neq', 0),
+                   'create_user' => array('neq', $user_id),
+                   'date_type' => 1
+               ];
+               $is1 = $frr->where($map)->find();
+               if ($is1) {
+                   $map=[
+                       'day'=>$is1['order_time']*1000,
+                       'type'=>'am'
+                   ];
+                   array_push($is_select, $map);
+               }else{
 
+                   $info = [
+                       'create_user' => $user_id,
+                       'service_id' => 2,
+                       'order_time' => $value['day']/1000,
+                       'create_time' => $create_time,
+                       'status' => 1,
+                       'date_type'=>1
+
+                   ];
+                   array_push($record, $info);
+
+               }
+
+           }
+            if($value['pmCheck']=="yes") {
+                $map = ['order_time' => $value['day'] / 1000,
+                    'status' => array('neq', 0),
+                    'create_user' => array('neq', $user_id),
+                    'date_type' => 2
                 ];
-                array_push($record, $info);
-            }
+                $is2 = $frr->where($map)->find();
+                if($is2){
+                    $map=[
+                        'day'=>$is1['order_time']*1000,
+                        'type'=>'pm'
+                    ];
+                    array_push($is_select, $map);
+
+                }else{
+                    $info = [
+                        'create_user' => $user_id,
+                        'service_id' => 2,
+                        'order_time' => $value['day']/1000,
+                        'create_time' => $create_time,
+                        'status' => 1,
+                        'date_type'=>2
+
+                    ];
+                    array_push($record, $info);
+
+                }
+           }
+
         }
         if(count($is_select)>0){
             $data['no_save'] = json_encode($is_select);
@@ -969,6 +1004,69 @@ class Service extends Base{
         }
 
     }
+
+    //公共场所全部广告记录分类
+    public  function  record(){
+        $type=input('t');
+        $user_id=session('userId');
+        $ad=new AdvertisingRecord();
+        $fs = new FunctionRoomRecord();
+        $led = new LedRecord();
+        $data=array();
+        switch ($type){
+          //大厅广告记录
+          case 1:
+              $data=array();
+              $time=array();
+              $list= $ad->where('create_user',$user_id)->order('create_time desc')->select();
+              //所有的创建时间
+              $create_time = array_column($list, 'create_time');
+              //数组去重
+              for($i=0;$i<count($create_time);$i++){
+                  foreach ($time as $value){
+                      $a =$value ==$create_time[$i]?1:2;
+                  }
+                   if($a==2){
+                      array_push($time,$create_time[$i]);
+                   }
+              }
+
+              foreach ($time as $onetime){
+               $map=[
+                   '1'=>1
+
+
+               ];
+
+
+              }
+              break;
+
+          //二楼多功能厅
+          case 2:
+
+
+              break;
+
+
+          //大堂led灯
+          case 3:
+
+
+              break;
+
+
+
+
+
+      }
+
+     return $this->fetch();
+
+
+    }
+
+
 
     /*物业报修*/
     public function repair(){
