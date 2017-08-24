@@ -319,6 +319,19 @@ if (!Object.assign) {
 		}
 	});
 }
+// 手机号验证
+function checkMobile(mobile){
+	var reg = /^1[3|4|5|8][0-9]\d{4,8}$/;
+	if(typeof mobile == "string" || (typeof  mobile == "number")){
+		if(!(reg.test(mobile))){
+			console.log("手机号格式错误！");
+			return false;
+		}else{
+			console.log("验证成功");
+			return true;
+		}
+	}
+}
 /*
  * 身份证15位编码规则：dddddd yymmdd xx p
  * dddddd：6位地区编码

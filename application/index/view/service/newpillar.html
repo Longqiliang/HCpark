@@ -130,7 +130,7 @@
                     _this.$toast('请填写车主姓名');
                     return;
                 }
-                if(!_this.defaultData.mobile){
+                if(!checkMobile(_this.defaultData.mobile)){
                     _this.$toast('请填写车主电话');
                     return;
                 }
