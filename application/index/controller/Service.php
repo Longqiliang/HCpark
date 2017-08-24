@@ -158,7 +158,7 @@ class Service extends Base{
            //公共场所
             case 8:
                 $re = $AdService->where('park_id',$park_id)->select();
-                $info['adlist']=json_encode($re);
+                $info['adlist']=$re;
                 break;
             default:
                 $user=$UserModel->where('userid',$user_id)->find();
@@ -502,11 +502,18 @@ class Service extends Base{
         ];
 
         $out_date = $adRecord->where($map)->select();
+
         foreach ($out_date as $value){
-         $value['status']=0;
+            $value['status']=0;
         }
-        $re = $adRecord->saveAll($out_date);
-       /* **************************************/
+         if(count($out_date)>0){
+
+         $re = $adRecord->saveAll($out_date,true);
+     echo json_encode($re);
+
+        }
+
+        /* **************************************/
         //今天结束时间
         $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
         //本月结束时间
@@ -871,7 +878,7 @@ class Service extends Base{
             } else {
                 $info = [
                     'create_user' => $user_id,
-                    'service_id' => 1,
+                    'service_id' => 3,
                     'order_time' => $value/1000,
                     'create_time' => $creat_time,
                     'status' => 1,
@@ -1126,5 +1133,15 @@ class Service extends Base{
         }
         return true;
     }
+
+    public  function  test(){
+
+      phpinfo();
+
+
+    }
+
+
+
 
 }
