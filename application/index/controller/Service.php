@@ -1089,9 +1089,9 @@ class Service extends Base{
     //饮水服务列表页
     public function waterList(){
         $userid = session('userId');
-        echo  $userid;
+  //      echo  $userid;
         $map = [
-            'status'=> "1",
+            'status'=> array('neq',-1),
             'userid'=>$userid,
         ];
         $list = WaterModel::where($map)->order('id desc')->paginate();
@@ -1113,7 +1113,7 @@ class Service extends Base{
         $id=input('id');
         $result=WaterModel::where('id','eq',$id)->find();
         $this->assign('res',$result);
-        echo json_encode($result);exit;
+ //       echo json_encode($result);exit;
         return $this->fetch();
     }
 
