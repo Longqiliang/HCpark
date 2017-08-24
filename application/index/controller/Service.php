@@ -1423,6 +1423,7 @@ class Service extends Base{
                     'status'=>$v['status'],
                     'time'=>$v['expiration_time'],
                     'pay'=>$v['fee'],
+                    'img'=>$v['payment_voucher'],
                 ];
             }
 
@@ -1492,6 +1493,7 @@ class Service extends Base{
             $info=CarparkService::get($id);
         }
 
+        $this->assign('type',json_encode($appid));
         $this->assign('info',json_encode($info));
 
         return $this->fetch();
