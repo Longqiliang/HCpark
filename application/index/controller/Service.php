@@ -1026,6 +1026,7 @@ class Service extends Base{
         $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('id desc')->paginate();
         foreach($list as $k=>$v){
             $info[$k]=[
+                'id'=>$v['id'],
                 'type'=>$types[$v['type']],
                 'time'=>$v['create_time'],
                 'status'=>$v['status'],
@@ -1042,6 +1043,7 @@ class Service extends Base{
         $list = PropertyServer::where(['type'=>['<',4],'status'=>['in',[0,1]]])->order('clear_time desc')->paginate();
         foreach($list as $k=>$v){
             $info[$k]=[
+                'id'=>$v['id'],
                 'type'=>"保洁服务",
                 'time'=>$v['clear_time'],
                 'status'=>$v['status'],
@@ -1096,6 +1098,7 @@ class Service extends Base{
 
         foreach($list as $k=>$v){
             $info[$k]=[
+                'id'=>$v['id'],
                 'name'=>$v['name'],
                 'time'=>$v['create_time'],
                 'num'=>$v['number'],
@@ -1159,6 +1162,7 @@ class Service extends Base{
             $list = FeePayment::where($map)->order('id desc')->select();
             foreach($list as $k=>$v){
                 $info[$k]=[
+                    'id'=>$v['id'],
                     'name' =>$v['name'],
                     'status'=>$v['status'],
                     'time'=>$v['expiration_time'],
