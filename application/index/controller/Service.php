@@ -262,7 +262,7 @@ class Service extends Base{
         $record=[
             'type'=>1,
             'aging'=>$data['aging'],
-            'payment_voucher'=>$data['payment_voucher'],
+            'payment_voucher'=>json_encode($data['payment_voucher']),
             'create_time'=>time(),
             'service_id'=>$PillarService->id,
             'status'=>0,
@@ -421,10 +421,11 @@ class Service extends Base{
                 'create_time'=>time()
             ];
             $re = $CardparkService->save($service);
+
             $record=[
                 'type'=>1,
                 'aging'=>$data['aging'],
-                'payment_voucher'=>$data['payment_voucher'],
+                'payment_voucher'=>json_encode($data['payment_voucher']),
                 'create_time'=>time(),
                 'carpark_id'=>$CardparkService->id,
                 'status'=>0,
@@ -559,9 +560,7 @@ class Service extends Base{
         foreach ($reult as $value){
             array_push($data,$value['order_time']*1000);
         }
-        echo json_encode($data);
-        echo json_encode($user_allcheck);
-        echo json_encode(input('app_id'));
+
         $this->assign('record',json_encode($data));
         $this->assign('user_check',json_encode($user_allcheck));
         $this->assign('app_id',input('app_id'));
@@ -1053,7 +1052,7 @@ class Service extends Base{
                    }
                   }
                   $re=[
-                     'create_time'=>$onetime,
+                     'create_time'=>strtotime($onetime)*1000,
                       'price'=>count($map)*$serviceInfo['price']
                   ];
                    $re['day']="";
@@ -1098,15 +1097,32 @@ class Service extends Base{
                       }
                   }
                   $re=[
-                      'create_time'=>$onetime,
+                      'create_time'=>strtotime($onetime)*1000,
                       'price'=>count($map)*$serviceInfo['price']
                   ];
-
-                  $re2="";
-                  foreach ($map as  $value){
-                      $re2.=date('Y-m-d',$value['order_time'])."  ";
+                  $re['day']="";
+                  //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
+                  $map_time=array();
+                  foreach ($map as $m){
+                      array_push($map_time,$m['order_time']);
                   }
-                  $re['day']=$re2;
+                  $mtime_list = array_values(array_unique ($map_time));
+
+                  foreach ($mtime_list as $value){
+                      $re['day'].=date('Y-m-d',$value);
+                      foreach($map as $value2){
+                      if($value ==$value2['order_time']){
+
+                         if($value2['date_type']==1){
+                             $re['day'].="上午 ";
+                         }
+                          elseif($value2['date_type']==2){
+                              $re['day'].="下午 " ;
+                          }
+                      }
+                    }
+
+                  }
                   if($map[0]['status']==0){
 
                       $re['status']="被取消";
@@ -1126,16 +1142,81 @@ class Service extends Base{
 
           //大堂led灯
           case 3:
+              $data=array();
+              $time=array();
+              $create_time=array();
+              $serviceInfo =$service->where('id',1)->find();
+              $list= $led->where('create_user',$user_id)->order('create_time desc')->select();
+              //所有的创建时间
+              foreach ($list as $l){
+                  array_push($create_time,$l['create_time']);
+              }
+              //数组去重
+              $time = array_values(array_unique ($create_time));
 
+              foreach ($time as $onetime){
+                  $map =array();
+                  foreach ($list as  $info){
+                      if($info['create_time']==$onetime){
+                          array_push($map,$info);
+                      }
+                  }
+                  $re=[
+                      'create_time'=>strtotime($onetime)*1000,
+                      'price'=>count($map)*$serviceInfo['price']
+                  ];
+                  $re['day']="";
+                  //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
+                  $map_time=array();
+                  foreach ($map as $m){
+                      array_push($map_time,$m['order_time']);
+                  }
+                  $mtime_list = array_values(array_unique ($map_time));
+
+                  foreach ($mtime_list as $value){
+                      $re['day'].=date('Y-m-d',$value)."| ";
+                      foreach($map as $value2){
+                          if($value ==$value2['order_time']){
+
+                            switch($value2['date_type']){
+                                case 1:$re['day'].="9:00-10:00 ";break;
+                                case 2:$re['day'].="10:00-11:00 ";break;
+                                case 3:$re['day'].="11:00-12:00 ";break;
+                                case 4:$re['day'].="12:00-13:00 ";break;
+                                case 5:$re['day'].="13:00-14:00 ";break;
+                                case 6:$re['day'].="14:00-15:00 ";break;
+                                case 7:$re['day'].="15:00-16:00 ";break;
+                                case 8:$re['day'].="16:00-17:00 ";break;
+                                case 9:$re['day'].="17:00-18:00 ";break;
+                            }
+
+                              if($value2['date_type']==1){
+                                  $re['day'].="上午 ";
+                              }
+                              elseif($value2['date_type']==2){
+                                  $re['day'].="下午 " ;
+                              }
+                          }
+                      }
+
+                  }
+                  if($map[0]['status']==0){
+
+                      $re['status']="被取消";
+                  }else if($map[0]['status']==1){
+                      $re['status']="还未上传凭证";
+
+                  }else{
+                      $re['status']="预约成功";
+                  }
+
+                  array_push($data,$re);
+
+              }
 
               break;
 
-
-
-
-
       }
-     echo  json_encode($data);
      $this->assign('data',json_encode($data));
      return $this->fetch();
 
