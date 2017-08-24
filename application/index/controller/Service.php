@@ -676,6 +676,23 @@ class Service extends Base{
             $adService =new  AdvertisingService();
             $FunctionRoomRecord = new FunctionRoomRecord();
             $user_id = session('userId');
+            //取消超时没有上传凭证的预约信息
+            $nowtime=time()-60;
+            $map=[
+                'status'=>1,
+                'create_time'=>array('lt',$nowtime)
+            ];
+
+            $out_date = $FunctionRoomRecord->where($map)->select();
+
+            foreach ($out_date as $value){
+                $value['status']=0;
+                $value->save();
+            }
+            /* **************************************/
+
+
+
             //从今天到第七天结束的时间戳数组
             $weeks=array();
             for($i=1;$i<8;$i++){
@@ -817,7 +834,6 @@ class Service extends Base{
    //led 灯服务
    public  function  led(){
      $user_id = session('userId');
-
         $led = new LedRecord();
        //今天的时间
        $Today=mktime(8,0,0,date('m'),date('d'),date('Y'));
@@ -861,13 +877,13 @@ class Service extends Base{
     public  function  nextLed(){
         $data = input('');
         $user_id = session('userId');
-
+        echo json_encode($data);
         $ad = new LedRecord();
         $record = array();
         $creat_time = time();
         $is_select = array();
-        foreach ($data['day'] as $value) {
-            $map=['order_time'=> $value/1000,
+        foreach ($data as $value) {
+            $map=['order_time'=> $value['day']/1000,
                 'status' => array('neq', 0),
                 'create_user'=>array('neq',$user_id),
                 'date_type'=>$value['interval']
@@ -882,7 +898,7 @@ class Service extends Base{
                 $info = [
                     'create_user' => $user_id,
                     'service_id' => 3,
-                    'order_time' => $value/1000,
+                    'order_time' => $value['day']/1000,
                     'create_time' => $creat_time,
                     'status' => 1,
                      'date_type'=>$value['interval']
