@@ -990,20 +990,20 @@ class Service extends Base{
             'status'=>1
         ];
         $record =$ad->where($map)->select();
-        foreach ($record as $value){
-            $value['payment_voucher']=json_encode($data['payment_voucher']);
-            $value['status']=2;
-        }
-
-        $re = $ad->saveAll($record);
-        if($re){
+        if(count($record)>0){
+            foreach ($record as $value){
+                $value['payment_voucher']=json_encode($data['payment_voucher']);
+                $value['status']=2;
+                $value->save();
+            }
             return $this->success('成功');
         }
-        else{
-            return $this->error('失败'.$re);
-        }
+        else {
+            return $this->error('超时');
+        }}
 
-    }
+
+
 
     //公共场所全部广告记录分类
     public  function  record(){
