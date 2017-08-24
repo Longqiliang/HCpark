@@ -109,7 +109,6 @@
             popupVisible: false,
             timePicker:'',
             timeTxt:'',
-            isSubmit:true,
             slots: [
                 {
                     values: ['6个月','12个月']
@@ -161,15 +160,10 @@
                         return;
                     }
                 }
-                if(!_this.isSubmit){
-                    return;
-                }
-                _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 var data = JSON.stringify(Object.assign(subData,defaultData));
                 console.log(data);
                 _this.$refs.cardform.submit();
-
 
             }
         }

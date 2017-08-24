@@ -6,21 +6,21 @@
 {/block}
 
 {block name="body"}
-<div >
+<div id="app">
     <div class="img-card">
-        <a href="{:Url('Service/newPillar')}">
+        <a @click.prevent="jump('newPillar')">
             <div class="img-card-box">
-                <img src="/index/images/service/card/newcard.png"  class="img-responsive">
-                <div class="img-marking"><span class="marking-info">新柱办理</span></div>
+                <img src="/index/images/service/electric/newpillar.jpg"  class="img-responsive">
+                <div class="img-marking marking-pillar-new"><span class="marking-info">新柱办理</span></div>
             </div>
             <div class="img-card-info">前往办理</div>
         </a>
     </div>
     <div class="img-card">
-        <a href="{:Url('Service/oldPillar')}">
+        <a @click.prevent="jump('oldPillar')">
             <div class="img-card-box">
-                <img src="/index/images/service/card/oldcard.png" class="img-responsive">
-                <div class="img-marking"><span class="marking-info">旧柱续费</span></div>
+                <img src="/index/images/service/electric/oldpillar.jpg" class="img-responsive">
+                <div class="img-marking marking-pillar-old"><span class="marking-info">旧柱续费</span></div>
             </div>
             <div class="img-card-info">前往办理</div>
         </a>
@@ -38,5 +38,18 @@
 {/block}
 
 {block name="script"}
-
+<script>
+    var data = {$info};
+    console.log(data);
+    var vm = new Vue({
+        el:'#app',
+        data:data,
+        methods:{
+            jump:function (e) {
+                var app_id = this.app_id;
+                window.location.href = "/index/service/"+e+"?app_id="+app_id;
+            }
+        }
+    })
+</script>
 {/block}
