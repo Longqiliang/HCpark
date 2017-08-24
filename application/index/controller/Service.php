@@ -104,10 +104,7 @@ class Service extends Base{
         $info=[];
         switch ($app_id){
             case 1:
-                $userid =session("userId");
-                $userinfo=WechatUser::where(['userid'=>$userid])->find();
-                $departmentId =$userinfo['department'];
-                WechatDepartment::where('id',$departmentId)->find();
+
 
                 break;
 
@@ -973,7 +970,7 @@ class Service extends Base{
         $data = input('post.');
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
-        $data['image']=input('payment_voucher');
+        $data['image']=strval(input('payment_voucher'));
         $res=$property->allowField(true)->save($data);
 
         if ($res){
@@ -996,10 +993,12 @@ class Service extends Base{
             return $this->error("请在工作日预约");
         }
         $data['clear_time']=strtotime(input("dateStr"));
-        $data['image'] =input('imgStr');
+
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
-        $data['image']=input('payment_voucher');
+        //$data['image']=serialize(input('payment_voucher'));
+
+        return json_encode(input('payment_voucher'));exit;
         $property =new PropertyServer();
 
         $res=$property->allowField(true)->save($data);
@@ -1120,7 +1119,7 @@ class Service extends Base{
         $map = ['company_id'=>$departmentId,'type'=>$type];
         $info = FeePayment::where($map)->find();
         $info['appid']=$appid;
-        $this->assign('info',$info);
+        $this->assign('info',json_encode($info));
 
         return $this->fetch();
     }
