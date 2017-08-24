@@ -257,7 +257,7 @@
                 }else {
                     var regDate = new Date(_this.defaultData.dateStr);
                     var regDay  = regDate.getDay();
-                    if(regDay>5){
+                    if(regDay == 6 || regDay == 0){
                         _this.$toast('服务时间为工作日，请重新选择时间');
                         return;
                     }
@@ -275,9 +275,40 @@
                 this.$http.post("{:Url('index/Service/clear')}",data).then(function (res) {
                     _this.isSubmit = true;
                     console.log(res.data);
+                    var data = res.data;
+                    if(data.code == 1){
+                        var msg = data.data;
+                        var newMsg =  msg.split("；");
+                        msg =  newMsg.join("<br/>");
+                        swal({
+                            title:"预约成功!",
+                            text:msg,
+                            html:true,
+                            type:"success",
+                            confirmButtonColor: "#fcc44b"
+                        },function () {
+                            window.location.href = "/index/service/index";
+                        });
+                    }else{
+                        swal({
+                            title:"预约失败!",
+                            text:msg,
+                            type:"error",
+                            confirmButtonColor: "#fcc44b"
+                        },function () {
+                            window.location.href = "/index/service/index";
+                        });
+                    }
                 },function (res) {
                     _this.isSubmit = true;
-                    console.log(res.data);
+                    swal({
+                        title:"预约失败!",
+                        text:"请重新预约！",
+                        type:"error",
+                        confirmButtonColor: "#fcc44b"
+                    },function () {
+                        window.location.href = "/index/service/index";
+                    });
                 })
             }
         }
