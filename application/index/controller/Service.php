@@ -1182,6 +1182,7 @@ class Service extends Base{
                 'type'=>"保洁服务",
                 'time'=>$v['clear_time'],
                 'status'=>$v['status'],
+                'name'=>$v['address'],
             ];
         }
 
@@ -1327,9 +1328,9 @@ class Service extends Base{
         if (IS_POST){
             $feePayment = new FeePayment();
             $id = input('id');
-            $data = input('post.');
-            $data['status']= 1 ;
-            $res=$feePayment->where('id',$id)->update($data);
+            $appid =input('app_id');
+
+            $res=$feePayment->where('id',$id)->update(['status'=>1]);
             if ($res){
 
                 return $this->success("上传成功");
