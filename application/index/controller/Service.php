@@ -871,7 +871,22 @@ class Service extends Base{
    public  function  led(){
      $user_id = session('userId');
         $led = new LedRecord();
-       //今天的时间
+       //取消超时没有上传凭证的预约信息
+       $nowtime=time()-60;
+       $map=[
+           'status'=>1,
+           'create_time'=>array('lt',$nowtime)
+       ];
+
+       $out_date = $led->where($map)->select();
+
+       foreach ($out_date as $value){
+           $value['status']=0;
+           $value->save();
+       }
+       /* **************************************/
+
+        //今天的时间
        $Today=mktime(8,0,0,date('m'),date('d'),date('Y'));
         $map=[
          'create_user'=>$user_id,
@@ -1019,20 +1034,16 @@ class Service extends Base{
           case 1:
               $data=array();
               $time=array();
+              $create_time=array();
               $serviceInfo =$service->where('id',1)->find();
-
               $list= $ad->where('create_user',$user_id)->order('create_time desc')->select();
               //所有的创建时间
-              $create_time = array_column($list, 'create_time');
-              //数组去重
-              for($i=0;$i<count($create_time);$i++){
-                  foreach ($time as $value){
-                      $a =$value ==$create_time[$i]?1:2;
-                  }
-                   if($a==2){
-                      array_push($time,$create_time[$i]);
-                   }
+              foreach ($list as $l){
+              array_push($create_time,$l['create_time']);
               }
+
+              //数组去重
+              $time = array_values(array_unique ($create_time));
 
               foreach ($time as $onetime){
                $map =array();
@@ -1040,15 +1051,29 @@ class Service extends Base{
                    if($info['create_time']==$onetime){
                        array_push($map,$info);
                    }
+                  }
                   $re=[
                      'create_time'=>$onetime,
                       'price'=>count($map)*$serviceInfo['price']
                   ];
-                   foreach ($map as  $value){
-                     array_push($re['days'],$value['order_time']);
+                   $re2=array();
 
+                  foreach ($map as  $value){
+                     array_push($re2,$value['order_time']*1000);
                    }
-               }
+                   $re['day']=$re2;
+                   if($map[0]['status']==0){
+
+                       $re['status']="被取消";
+                   }else if($map[0]['status']==1){
+                       $re['status']="还未上传凭证";
+
+                   }else{
+                       $re['status']="预约成功";
+                   }
+
+                array_push($data,$re);
+
               }
               break;
 
@@ -1071,6 +1096,7 @@ class Service extends Base{
 
       }
 
+     $this->assign('data',json_encode($data));
      return $this->fetch();
 
 
