@@ -15,22 +15,22 @@
         </div>
         <p class="detail-txt">工商注册主要涉及公司设立、公司变更、公司注销、公司刻章、企业顾问及其他服务，园区为企业精心打造最舒适便捷的工商注册服务。</p>
         <div class="detail-img-group">
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/business-img1.png" >
                 <div class="detail-img-tit tit-orange">公司设立</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/business-img2.jpeg" >
                 <div class="detail-img-tit tit-green">公司变更</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/business-img3.png" >
                 <div class="detail-img-tit tit-red">公司注销</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/business-img4.png" >
                 <div class="detail-img-tit tit-purple">公司刻章</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/business-img5.jpeg" >
                 <div class="detail-img-tit tit-purple">企业顾问</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/business-img6.png" >
                 <div class="detail-img-tit tit-purple">其他相关</div>
             </div>
 
@@ -115,7 +115,7 @@
                 _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 //return;
-                this.$http.post('order',subData).then(function (res) {
+                this.$http.post('/index/service/order',subData).then(function (res) {
                     console.log(res);
                     _this.isSubmit = true;
                     var resData = res.data;

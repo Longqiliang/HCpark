@@ -15,19 +15,19 @@
         </div>
         <p class="detail-txt">金融服务主要涉及投资机构介绍、我要投资、发撰写商业计划书、项目路演及其他服务，园区为企业精心打造便捷的金融服务。</p>
         <div class="detail-img-group">
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/finance-img1.png" >
                 <div class="detail-img-tit">走进投资机构</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/finance-img2.png" >
                 <div class="detail-img-tit">我要投资</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/finance-img3.png" >
                 <div class="detail-img-tit ">商业计划书</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/finance-img4.png" >
                 <div class="detail-img-tit ">项目路演</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/finance-img5.png" >
                 <div class="detail-img-tit ">其他相关</div>
             </div>
         </div>
@@ -119,7 +119,7 @@
                 _this.isSubmit = false;
                  var subData = JSON.parse(JSON.stringify(_this.subData));
                 //return;
-                this.$http.post('order',subData).then(function (res) {
+                this.$http.post('/index/service/order',subData).then(function (res) {
                     console.log(res);
                     _this.isSubmit = true;
                     var resData = res.data;

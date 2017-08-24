@@ -15,22 +15,22 @@
         </div>
         <p class="detail-txt">知识产权主要涉及商标申请、软著产品登记、发明专利申请、外观专利申请、实用新型专利申请及其他服务，园区为企业精心打造便捷的知识产权服务。</p>
         <div class="detail-img-group">
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/patent-img1.png" >
                 <div class="detail-img-tit tit-orange">商标申请</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/patent-img2.png" >
                 <div class="detail-img-tit tit-green">软著产品登记</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/patent-img3.png" >
                 <div class="detail-img-tit tit-red">发明专利申请</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/patent-img4.png" >
                 <div class="detail-img-tit tit-purple">外观专利申请</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/patent-img5.png" >
                 <div class="detail-img-tit tit-purple">实用新型专利申请</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/patent-img6.png" >
                 <div class="detail-img-tit tit-purple">其他相关</div>
             </div>
 
@@ -115,7 +115,7 @@
                 _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 //return;
-                this.$http.post('order',subData).then(function (res) {
+                this.$http.post('/index/service/order',subData).then(function (res) {
                     console.log(res);
                     _this.isSubmit = true;
                     var resData = res.data;

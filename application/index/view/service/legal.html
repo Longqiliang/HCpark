@@ -15,31 +15,31 @@
         </div>
         <p class="detail-txt">法律服务主要涉及公司章程、公司合同、股东股权协议、股权激励方案、劳动合同及其他相关服务，园区为企业精心打造最舒适便捷的法律服务。</p>
         <div class="detail-img-group">
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img1.png" >
                 <div class="detail-img-tit tit-orange">公司章程</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img2.png" >
                 <div class="detail-img-tit tit-green">公司合同</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img3.png" >
                 <div class="detail-img-tit tit-red">股东股权协议</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img4.png" >
                 <div class="detail-img-tit tit-purple">股权激励方案</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img5.png" >
                 <div class="detail-img-tit tit-purple">劳动合同</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img6.png" >
                 <div class="detail-img-tit tit-purple">买卖合同</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img7.png" >
                 <div class="detail-img-tit tit-purple">创业融资协议</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img8.png" >
                 <div class="detail-img-tit tit-purple">保密协议</div>
             </div>
-            <div class="detail-img-box"><img src="/index/images/news/news.jpg" >
+            <div class="detail-img-box"><img src="/index/images/service/enterprise/legal-img9.png" >
                 <div class="detail-img-tit tit-purple">其他相关</div>
             </div>
         </div>
@@ -123,7 +123,7 @@
                 _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 //return;
-                this.$http.post('order',subData).then(function (res) {
+                this.$http.post('/index/service/order',subData).then(function (res) {
                     console.log(res);
                     _this.isSubmit = true;
                     var resData = res.data;
