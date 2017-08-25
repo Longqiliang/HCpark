@@ -499,10 +499,7 @@ class Service extends Base{
         $map=[
             'status'=>array('neq',-1)
         ];
-        $list=$service->where($map)->select();
-        int_to_string($list,array('status'=>array(-1=>'被删除',0=>'审核中',1=>'审核通过',2=>'审核失败')));
-        int_to_string($list,array('type'=>array(1=>'新卡办理',2=>'旧卡续费')));
-
+        $list=$service->where($map)->field('id,type,money,status,create_time')->select();
         return $list;
     }
 

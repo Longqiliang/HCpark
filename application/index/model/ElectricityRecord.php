@@ -13,5 +13,5 @@ use think\Model;
 
 class ElectricityRecord extends  Model
 {
-
+    protected $dateFormat="Y-m-d";
 }

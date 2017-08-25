@@ -13,5 +13,5 @@ use think\Model;
 
 class CarparkRecord extends  Model
 {
-
+    protected $dateFormat="Y-m-d";
 }
