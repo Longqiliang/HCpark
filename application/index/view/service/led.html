@@ -315,8 +315,8 @@ var app = new Vue({
         toSubmit(){
             var the=this;
             if(!the.isClick){
-                the.isClick=true;
                 if(the.checkedTime.length>0){
+                    the.isClick=true;
                     the.$indicator.open({
                         text: '预约中',
                         spinnerType: 'triple-bounce'
@@ -339,6 +339,7 @@ var app = new Vue({
                         the.$toast('请求失败，请重试');
                     })
                 }else{
+                    the.isClick=false;
                     the.$toast('请选择预约时段')
                 }
             }else{

@@ -2,6 +2,7 @@
 
 {block name="style"}
 <link rel="stylesheet" href="/index/css/service/detail.css">
+<link rel="stylesheet" href="/static/viewer/viewer.min.css">
 <style>
     body{
         background-color: #f0eff5;
@@ -126,11 +127,18 @@
 {/block}
 
 {block name="script"}
+<script src="/static/viewer/viewer.min.js"></script>
 <script>
 var app = new Vue({
     el:'#app',
     mounted(){
         console.log(JSON.parse('{$info}'));
+        if(this.info.img){
+            var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
+                toolbar:2,
+                title:2,
+            });
+        }
     },
     data:{
         appid:JSON.parse('{$type}'),
