@@ -341,7 +341,11 @@ class Service extends Base{
             array_push($record,$value->findRecord);
         }
         int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
-
+        foreach ($list as $v){
+            $v['name']=$v['type']==1?'新卡办理':"旧卡续费";
+            $v['pay']=$v['money'];
+            $v['time']=$v['create_time'];
+        }
         return $record;
     }
 
@@ -500,6 +504,12 @@ class Service extends Base{
             'status'=>array('neq',-1)
         ];
         $list=$service->where($map)->field('id,type,money,status,create_time')->select();
+
+        foreach ($list as $v){
+            $v['name']=$v['type']==1?'新卡办理':"旧卡续费";
+            $v['pay']=$v['money'];
+            $v['time']=$v['create_time'];
+        }
         return $list;
     }
 
@@ -1176,7 +1186,6 @@ class Service extends Base{
                       $re['day'].=date('Y-m-d',$value)."| ";
                       foreach($map as $value2){
                           if($value ==$value2['order_time']){
-
                             switch($value2['date_type']){
                                 case 1:$re['day'].="9:00-10:00 ";break;
                                 case 2:$re['day'].="10:00-11:00 ";break;
