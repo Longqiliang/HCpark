@@ -898,8 +898,8 @@ class Service extends Base{
        }
        /* **************************************/
 
-        //今天的时间
-       $Today=mktime(8,0,0,date('m'),date('d'),date('Y'));
+        //明天的时间
+       $Today=mktime(8,0,0,date('m'),date('d')+1,date('Y'));
         $map=[
          'create_user'=>$user_id,
          'status'=>1,
@@ -911,15 +911,16 @@ class Service extends Base{
            'create_user'=>$user_id,
            'status'=>2,
        ];
-       $usersuccess=$led->where($map)->select();
+       $usersuccess=$led->where($map2)->select();
        foreach ($usersuccess as $value){
            $data=[
 
-               'interval'=>$value['date_type']
-
+               'interval'=>$value['date_type'],
+               'day'=>$Today*1000
            ];
            array_push($all_check2,$data);
        }
+
       //用户所有选中的
       $user_check=$led->where($map)->select();
       $user_check2=array();
@@ -937,19 +938,18 @@ class Service extends Base{
       $map['order_time']=$Today;
        //今天已选的
        $all_check=$led->where($map)->select();
-
-
        foreach ($all_check as $value){
         $data=[
 
-            'interval'=>$value['date_type']
-
+            'interval'=>$value['date_type'],
+            'day'=>$Today*1000
         ];
         array_push($all_check2,$data);
        }
 
 
-       $this->assign('app_id',input('app_id'));
+       echo json_encode($all_check2);
+        $this->assign('app_id',input('app_id'));
         $this->assign('other',json_encode($all_check2));
         $this->assign('user',json_encode($user_check2));
       return $this->fetch();
@@ -1003,23 +1003,40 @@ class Service extends Base{
     }
 // led灯的日期切换
  public function changeLed(){
-     $data=input('day');
+     $data2=input('day');
+
      $user_id = session('userId');
      $led = new LedRecord();
      $map['create_user']=array('neq',$user_id);
      $map['status']=array('neq',0);
-     $map['order_time']=$data/1000;
+     $map['order_time']=$data2/1000;
      //今天已选的
      $all_check=$led->where($map)->select();
      $all_check2=array();
      foreach ($all_check as $value){
          $data=[
 
-             'interval'=>$value['date_type']
-
+             'interval'=>$value['date_type'],
+              'day'=>$data2
          ];
          array_push($all_check2,$data);
      }
+
+     //用户约成功的
+     $map2=[
+         'create_user'=>$user_id,
+         'status'=>2,
+     ];
+     $usersuccess=$led->where($map2)->select();
+     foreach ($usersuccess as $value){
+         $data=[
+
+             'interval'=>$value['date_type'],
+             'day'=>$data2
+         ];
+         array_push($all_check2,$data);
+     }
+        array_push($all_check2,$data2);
 
      return json_encode($all_check2);
 
