@@ -74,11 +74,15 @@
     <div v-if="appid==6 || appid==7">
         <div class="card">
             <div class="card-tit">车主信息</div>
-            <div class="card-cell">
+            <div class="card-cell" v-if="appid==7">
                 <span>车牌号码</span>
                 <span>{{info.car_card}}</span>
             </div>
-            <div class="card-cell">
+            <div class="card-cell" v-if="appid==7">
+                <span>停车卡号</span>
+                <span>{{info.park_card}}</span>
+            </div>
+            <div class="card-cell" v-if="appid==6">
                 <span>停车卡号</span>
                 <span>{{info.park_card}}</span>
             </div>
@@ -90,7 +94,7 @@
                 <span>手机号码</span>
                 <span>{{info.mobile}}</span>
             </div>
-            <div class="card-cell">
+            <div class="card-cell" v-if="appid==6">
                 <span>身份证号</span>
                 <span>{{info.people_card}}</span>
             </div>
@@ -101,15 +105,19 @@
                 <span>办理时长</span>
                 <span>{{info.aging}}</span>
             </div>
-            <div class="card-cell">
+            <div class="card-cell" v-if="info.type==1">
                 <span>车卡押金</span>
                 <span>{{info.carpark_deposit}}</span>
             </div>
-            <div class="card-cell">
+            <div class="card-cell" v-if="appid==6">
                 <span>停车费用</span>
                 <span>{{info.money}}</span>
             </div>
-            <div class="card-cell">
+            <div class="card-cell" v-if="appid==7">
+                <span>充电费用</span>
+                <span>{{info.money}}</span>
+            </div>
+            <div class="card-cell" v-if="info.type==1">
                 <span>费用总计</span>
                 <span>{{info.all_money}}</span>
             </div>
