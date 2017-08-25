@@ -1010,19 +1010,10 @@ class Service extends Base{
      $map['create_user']=array('neq',$user_id);
      $map['status']=array('neq',0);
      $map['order_time']=$data2/1000;
-     //今天已选的
-     $all_check=$led->where($map)->select();
-     $all_check2=array();
-     foreach ($all_check as $value){
-         $data=[
 
-             'interval'=>$value['date_type'],
-              'day'=>$data2
-         ];
-         array_push($all_check2,$data);
-     }
 
      //用户约成功的
+     $all_check2=array();
      $map2=[
          'create_user'=>$user_id,
          'status'=>2,
@@ -1030,13 +1021,23 @@ class Service extends Base{
      $usersuccess=$led->where($map2)->select();
      foreach ($usersuccess as $value){
          $data=[
-
              'interval'=>$value['date_type'],
-             'day'=>$data2
+             'day'=>$value['order_time']*1000
          ];
          array_push($all_check2,$data);
      }
-        array_push($all_check2,$data2);
+     //今天已选的
+     $all_check=$led->where($map)->select();
+     foreach ($all_check as $value){
+         $data=[
+             'interval'=>$value['date_type'],
+              'day'=>$data2
+         ];
+         array_push($all_check2,$data);
+     }
+
+
+
 
      return json_encode($all_check2);
 
