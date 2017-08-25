@@ -118,9 +118,13 @@ var app = new Vue({
                         info.isChecked='yes'
                     }
                 }
-                for(var b=0;b<this.bespeakTime.length;b++){
-                    if(this.timeIsSame(this.bespeakTime[b].day,time)){
-                        info.isBespeak='yes'
+                if(this.bespeakTime.length>0){
+                    console.log(this.bespeakTime,1)
+                    for(var b=0;b<this.bespeakTime.length;b++){
+                        console.log(this.bespeakTime[b].day)
+                        if(this.timeIsSame(this.bespeakTime[b].day,time) && this.bespeakTime[b].interval ==info.interval){
+                            info.isBespeak='yes'
+                        }
                     }
                 }
                 this.infoData.time.push(info)
@@ -164,6 +168,7 @@ var app = new Vue({
                     this.infoData.time.length=0
                     this.bespeakTime=JSON.parse(res.data);
                     this.baseInfo(this.date[key].time)
+                    console.log(this.bespeakTime)
                 },function (res) {
                     this.$indicator.close();
                     this.isClick=false;
@@ -193,6 +198,8 @@ var app = new Vue({
                         this.bespeakTime=JSON.parse(res.data);
                         this.checkedDate(d);
                         this.baseInfo(d)
+                        console.log(this.bespeakTime)
+
                     },function (res) {
                         this.$indicator.close();
                         this.isClick=false;
@@ -221,6 +228,7 @@ var app = new Vue({
                     this.bespeakTime=JSON.parse(res.data);
                     this.checkedDate(d);
                     this.baseInfo(d)
+                    console.log(this.bespeakTime)
                 },function (res) {
                     this.$indicator.close();
                     this.isClick=false;
@@ -263,7 +271,8 @@ var app = new Vue({
         },
         //判断是否同一天
         timeIsSame(time1,time2){
-            var time1=new Date(time1),time2=new Date(time2);
+            console.log(time1,time2);
+            var time1=new Date(parseInt(time1)),time2=new Date(parseInt(time2));
             var year1=time1.getFullYear(),month1=time1.getMonth(),day1=time1.getDate();
             var year2=time2.getFullYear(),month2=time1.getMonth(),day2=time2.getDate();
 

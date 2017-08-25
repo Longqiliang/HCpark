@@ -71,10 +71,10 @@
                 {volist name="data" id="vo"}
                 <tr class="read">
                     <td class="check-mail">
-                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.create_time}">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.time}">
                     </td>
                     <td class="mail-subject">
-                        {$vo.create_time}
+                        {$vo.time}
                     </td>
                     <td>
                         {$vo.user}
@@ -89,7 +89,7 @@
                         {$vo.status}
                     </td>
                     <td>
-                        <a  href="{:Url('cancel','create_time='.$vo.create_time.'&&type='.$vo.type)}" >取消</a>
+                        <a  href="{:Url('cancel','create_time='.$vo.time.'&&type='.$vo.type)}" >取消</a>
                     </td>
                 </tr>
                 {/volist}

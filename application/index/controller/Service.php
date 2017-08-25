@@ -1129,7 +1129,7 @@ class Service extends Base{
               $data=array();
               $time=array();
               $create_time=array();
-              $serviceInfo =$service->where('id',1)->find();
+              $serviceInfo =$service->where('id',2)->find();
               $list= $fs->where('create_user',$user_id)->order('create_time desc')->select();
               //所有的创建时间
               foreach ($list as $l){
@@ -1192,7 +1192,7 @@ class Service extends Base{
               $data=array();
               $time=array();
               $create_time=array();
-              $serviceInfo =$service->where('id',1)->find();
+              $serviceInfo =$service->where('id',3)->find();
               $list= $led->where('create_user',$user_id)->order('create_time desc')->select();
               //所有的创建时间
               foreach ($list as $l){
