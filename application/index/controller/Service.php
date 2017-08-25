@@ -1533,6 +1533,7 @@ class Service extends Base{
             $info['money']=$park['charging_price']*$record['aging'];//充电费用
             $info['all_money']=$record['money'];//总费用
             $info['img']=json_decode($record['payment_voucher'],true);//图片
+            $info['type']=$record['type'];
 
         }
 
