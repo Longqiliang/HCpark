@@ -1301,7 +1301,7 @@ class Service extends Base{
             $info[$k]=[
                 'id'=>$v['id'],
                 'type'=>"保洁服务",
-                'time'=>$v['clear_time'],
+                'time'=> date("Y-m-d", $v['clear_time']),
                 'name'=>$v['address'],
             ];
         }
@@ -1496,7 +1496,7 @@ class Service extends Base{
             $info=CarparkService::get($id);
             $payment_voucher=CarparkRecord::where('id',$id)->field('payment_voucher,money,aging')->find();
             //图片
-            $info['img']=$payment_voucher['payment_voucher'];
+            $info['img']=json_decode($payment_voucher['payment_voucher'],true);
             //费用总计
             $info['all_money']=$payment_voucher['money'];
 
