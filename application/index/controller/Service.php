@@ -345,7 +345,7 @@ class Service extends Base{
         $res=array();
         foreach ($record as $k=>$v){
             foreach ($v as $val){
-                $res[$k]['name']=$val['type']==1?'新卡办理':"旧卡续费";
+                $res[$k]['name']=$val['type']==1?'新柱办理':"旧柱续费";
                 $res[$k]['pay']=$val['money'];
                 $res[$k]['time']=$val['create_time'];
                 $res[$k]['status']=$val['status'];
@@ -1502,8 +1502,8 @@ class Service extends Base{
 
             $info=WaterService::get($id);
         }elseif ($appid ==6){
-            $info=CarparkService::get($id);
-            $payment_voucher=CarparkRecord::where('id',$id)->field('payment_voucher,money,aging')->find();
+            $payment_voucher=CarparkRecord::where('id',$id)->field('payment_voucher,money,aging,carpark_id')->find();
+            $info=CarparkService::where('id',$payment_voucher['carpark_id'])->find();
             //图片
             $info['img']=json_decode($payment_voucher['payment_voucher'],true);
             //费用总计
@@ -1519,15 +1519,15 @@ class Service extends Base{
             $info['money']=$park['carpark_price']*$payment_voucher['aging'];
 
         }elseif ($appid==7){
-
-            $service=ElectricityService::get($id);
+            $record=ElectricityRecord::get($id);
+            $service=ElectricityService::where('id',$record['service_id'])->find();
             $info['electricity_id']=$service['electricity_id'];//充电柱编号
             $info['name']=$service['name'];
             $info['mobile']=$service['mobile'];
 
             $park_id=session('park_id');
             $park=Park::where('id',$park_id)->field('charging_deposit,charging_price')->find();
-            $record=ElectricityRecord::get($id);
+
             $info['aging']=$record['aging'];
             $info['carpark_deposit']=$park['charging_deposit'];//押金
             $info['money']=$park['charging_price']*$record['aging'];//充电费用
