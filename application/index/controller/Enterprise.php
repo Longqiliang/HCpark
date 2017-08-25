@@ -31,7 +31,6 @@ class Enterprise extends Base{
          'company_id'=>$id,
          'type'=>'1'
      ];
-        echo json_encode($map);
         //企业产品
         $product =  $CompanyProduct->where($map)->select();
         //企业服务
