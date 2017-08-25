@@ -164,6 +164,7 @@ var app = new Vue({
                     this.infoData.time.length=0
                     this.bespeakTime=JSON.parse(res.data);
                     this.baseInfo(this.date[key].time)
+                    console.log(this.bespeakTime)
                 },function (res) {
                     this.$indicator.close();
                     this.isClick=false;
@@ -193,6 +194,8 @@ var app = new Vue({
                         this.bespeakTime=JSON.parse(res.data);
                         this.checkedDate(d);
                         this.baseInfo(d)
+                        console.log(this.bespeakTime)
+
                     },function (res) {
                         this.$indicator.close();
                         this.isClick=false;
@@ -221,6 +224,7 @@ var app = new Vue({
                     this.bespeakTime=JSON.parse(res.data);
                     this.checkedDate(d);
                     this.baseInfo(d)
+                    console.log(this.bespeakTime)
                 },function (res) {
                     this.$indicator.close();
                     this.isClick=false;
