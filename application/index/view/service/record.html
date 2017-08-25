@@ -3,91 +3,23 @@
 {block name="style"}
 <title>预约记录</title>
 <style>
-    .my-title{
-        display: -webkit-flex;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding:1.4rem 0;
-    }
-    .my-title>span:not(:nth-child(2)){
-        width:29.3vw;
-        height:1px;
-        background-color: #e8e8e8;
-    }
-    .my-title>span:nth-child(2){
-        font-size: 1.8rem;
-        color: #333;
-        margin:0 0.6rem;
-    }
-
-    .my-record>li{
-        border-bottom: 1px solid #f1f1f1;
-        display: -webkit-flex;
-        display: flex;
-        padding:3.2vw;
-        justify-content: center;
-        align-items: flex-start;
-    }
-    .my-time{
-        display: -webkit-flex;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .my-time>.my-icon-line{
-        height:3rem;
-        width:1px;
-        background-color: #e8e8e8;
-        margin-left: 3.2vw;
-    }
-    .my-time>div>span{
-        display: block;
-        text-align: center;
-        color: #999;
-        font-size: 1.6rem;
-    }
-    .my-time>div>span:last-child{
-        font-size: 1.4rem;
-        margin-top: 0.6rem;
-    }
-    .my-info{
-        width:72.5vw;
-        margin-left: 3.2vw;
-        color: #333;
-    }
-    .my-info>div{
-        display: -webkit-flex;
-        display: flex;
-    }
-    .my-info-pay{
-        justify-content: space-between;
-        align-items: center;
-        font-size: 1.6rem;
-    }
-    .my-order-time{
-        font-size: 1.4rem;
-        margin-top: 0.6rem;
-    }
-    .my-order-time>span:first-child{
-        width:6rem;
-    }
-    .my-order-time>span:last-child{
-        width:15rem;
-    }
-    .my-success{
-        color: #52cc92;
-    }
-    .my-cancel{
-        color: #f97878;
-    }
-    .no-history{
-        color: #999;
-        font-size: 1.6rem;
-        text-align: center;
-        margin-top: 40vh;
-    }
-
+    .my-title{display:-webkit-flex;display:flex;justify-content:center;align-items:center;padding:1.4rem 0}
+    .my-title>span:not(:nth-child(2)){width:29.3vw;height:1px;background-color:#e8e8e8}
+    .my-title>span:nth-child(2){font-size:1.8rem;color:#333;margin:0 .6rem}
+    .my-record>li{border-bottom:1px solid #f1f1f1;display:-webkit-flex;display:flex;padding:3.2vw;justify-content:center;align-items:flex-start}
+    .my-time{display:-webkit-flex;display:flex;justify-content:space-between;align-items:center}
+    .my-time>.my-icon-line{height:3rem;width:1px;background-color:#e8e8e8;margin-left:3.2vw}
+    .my-time>div>span{display:block;text-align:center;color:#999;font-size:1.6rem}
+    .my-time>div>span:last-child{font-size:1.4rem;margin-top:.6rem}
+    .my-info{width:72.5vw;margin-left:3.2vw;color:#333}
+    .my-info>div{display:-webkit-flex;display:flex}
+    .my-info-pay{justify-content:space-between;align-items:center;font-size:1.6rem}
+    .my-order-time{font-size:1.4rem;margin-top:.6rem}
+    .my-order-time>span:first-child{width:6rem}
+    .my-order-time>span:last-child{width:15rem}
+    .my-success{color:#52cc92}
+    .my-cancel{color:#f97878}
+    .no-history{color:#999;font-size:1.6rem;text-align:center;margin-top:40vh}
 </style>
 {/block}
 
@@ -95,7 +27,7 @@
 <div id="app">
     <div class="my-title">
         <span></span>
-        <span>{{record.title}}</span>
+        <span>{{title}}</span>
         <span></span>
     </div>
     <ul class="my-record">
@@ -138,6 +70,19 @@ var app = new Vue({
     el:'#app',
     data:{
         record:JSON.parse('{$data}')
+    },
+    computed:{
+        title:function () {
+            var t=parseInt(window.location.href.split('/t/')[1])
+            switch (t){
+                case 1:
+                    return '大厅广告位';
+                case 2:
+                    return '多功能厅';
+                case 3:
+                    return '大堂LED屏';
+            }
+        }
     },
     methods:{
 

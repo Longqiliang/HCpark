@@ -633,7 +633,8 @@ class Service extends Base{
             $value['status']=2;
             $value->save();
         }
-            return $this->success('成功');
+            $msg="您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
+            return  $this->success('成功',"",$msg);
         }
         else {
             return $this->error('超时');
@@ -857,7 +858,8 @@ class Service extends Base{
                 $value['status']=2;
                 $value->save();
             }
-            return $this->success('成功');
+            $msg="您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
+            return  $this->success('成功',"",$msg);
         }
         else {
             return $this->error('超时');
@@ -1006,7 +1008,8 @@ class Service extends Base{
                 $value['status']=2;
                 $value->save();
             }
-            return $this->success('成功');
+            $msg="您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
+            return  $this->success('成功',"",$msg);
         }
         else {
             return $this->error('超时');
@@ -1186,12 +1189,6 @@ class Service extends Base{
                                 case 9:$re['day'].="17:00-18:00 ";break;
                             }
 
-                              if($value2['date_type']==1){
-                                  $re['day'].="上午 ";
-                              }
-                              elseif($value2['date_type']==2){
-                                  $re['day'].="下午 " ;
-                              }
                           }
                       }
 
@@ -1457,8 +1454,8 @@ class Service extends Base{
             $datas['status']=1;
             $res=$feePayment->where('id',$id)->update($datas);
             if ($res){
-
-                return $this->success("上传成功");
+                $msg="您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
+                return  $this->success('成功',"",$msg);
             }else{
 
                 return $this->error("上传失败");

@@ -3,219 +3,40 @@
 {block name="style"}
 <title>大厅广告位预约</title>
 <style>
-    * {
-        box-sizing: border-box;
-    }
-    ul {
-        list-style-type: none;
-    }
-    body {
-        font-family: Verdana, sans-serif;
-    }
-    #calendar{
-        width:80%;
-        margin: 0 auto;
-        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.1), 0 1px 5px 0 rgba(0,0,0,0.12);
-    }
-    .month {
-        width: 100%;
-        height:5.5rem;
-        background: #f8f7fc;
-    }
-    .month ul {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        height:100%;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .month ul>li{
-        line-height: 5.5rem;
-        vertical-align: middle;
-    }
-    .year-month {
-        color: #333;
-        font-size: 1.8rem;
-    }
-
-    .month .arrow {
-        padding:0 3rem;
-        color: #666;
-    }
-    /*.arrow:hover {*/
-        /*background: rgba(100, 2, 12, 0.1);*/
-    /*}*/
-    .month ul li {
-        color: #333;
-        font-size: 20px;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-    }
-    .weekdays {
-        margin: 0;
-        padding: 10px 0;
-        background-color: #f8f7fc;
-        display: flex;
-        flex-wrap: wrap;
-        color: #333;
-        font-size: 1.5rem;
-        justify-content: space-around;
-    }
-    .weekdays li {
-        display: inline-block;
-        width: 13.6%;
-        text-align: center;
-    }
-    .days {
-        padding-bottom: 10px;
-        background: #f8f7fc;
-        margin: 0;
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .days li {
-        list-style-type: none;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        width: 14.2857143vw;
-        height: 13.2857143vw;
-        text-align: center;
-        font-size: 1.5rem;
-        color: #000;
-    }
-    .days li .active {
-        padding: 6px 10px;
-        border-radius: 50%;
-        background: #00B8EC;
-        color: #fff;
-    }
-    .days li.other-month {
-        color: gainsboro;
-    }
-    .days li>span{
-        display: block;
-        height:3.4rem;
-        width:3.4rem;
-        line-height: 3.4rem;
-        border-radius: 100%;
-    }
-
-    .isBespeak span{
-        color: #999;
-        background-color: #e8e8e8;
-    }
-    .isChecked span{
-        color: #fff;
-        background-color: #ffc44b;
-    }
+    *{box-sizing:border-box}
+    ul{list-style-type:none}
+    body{font-family:Verdana,sans-serif}
+    #calendar{width:80%;margin:0 auto;box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.12)}
+    .month{width:100%;height:5.5rem;background:#f8f7fc}
+    .month ul{margin:0;padding:0;display:flex;height:100%;justify-content:space-between;align-items:center}
+    .month ul>li{line-height:5.5rem;vertical-align:middle}
+    .year-month{color:#333;font-size:1.8rem}
+    .month .arrow{padding:0 3rem;color:#666}
+    .month ul li{color:#333;font-size:20px;text-transform:uppercase;letter-spacing:3px}
+    .weekdays{margin:0;padding:10px 0;background-color:#f8f7fc;display:flex;flex-wrap:wrap;color:#333;font-size:1.5rem;justify-content:space-around}
+    .weekdays li{display:inline-block;width:13.6%;text-align:center}
+    .days{padding-bottom:10px;background:#f8f7fc;margin:0;display:flex;flex-wrap:wrap}
+    .days li{list-style-type:none;display:inline-flex;justify-content:center;align-items:center;width:14.2857143vw;height:13.2857143vw;text-align:center;font-size:1.5rem;color:#000}
+    .days li .active{padding:6px 10px;border-radius:50%;background:#00B8EC;color:#fff}
+    .days li.other-month{color:#dcdcdc}
+    .days li>span{display:block;height:3.4rem;width:3.4rem;line-height:3.4rem;border-radius:100%}
+    .isBespeak span{color:#999;background-color:#e8e8e8}
+    .isChecked span{color:#fff;background-color:#ffc44b}
+    .my-tags{height:4.4rem;padding:0 1.8rem;display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;background-color:#fff;border-bottom:1px solid #f1f1f1}
+    .my-tag{height:2rem;line-height:2rem;font-size:1.5rem;color:#333;padding-left:3.5rem;background:url() no-repeat left center;background-size:2.2rem 1.8rem}
+    .my-tag-sell{background-image:url(/index/images/service/publicservice/sell.png)}
+    .my-tag-checked{background-image:url(/index/images/service/publicservice/checked.png)}
+    .my-history{height:2.9rem;width:8rem;border-radius:15rem;color:#fcc44b;font-size:1.5rem;border:1px solid #fcc44b;text-align:center;line-height:2.9rem}
+    .my-illustrate{padding:1rem 1.7rem}
+    .my-illustrate>h4{font-size:1.5rem;line-height:1.8rem;color:#333;font-weight:400;margin:0}
+    .my-illustrate>h4>span{display:inline-block;text-align:center;width:1.8rem;height:1.8rem;line-height:1.8rem;border-radius:100%;border:1px solid #9F9F9F;color:#9F9F9F;margin-left:1rem}
+    .my-illustrate-info{margin-top:5px;padding-bottom:5rem}
+    .my-illustrate-info>p{line-height:2rem;font-size:1.4rem;color:#999}
+    .my-total{position:fixed;bottom:0;left:0;width:100%;border-top:1px solid #f1f1f1;height:50px;line-height:50px;background:#fff;display:-webkit-flex;display:flex;justify-content:flex-end;align-items:center;font-size:1.7rem}
+    .my-total>span{min-width:10rem;margin-right:30px;color:#fcc44b}
+    .my-total>button{width:100px;height:51px;margin-top:-1px;background-color:#fcc44b;color:#fff;border:none;outline:0;font-size:1.7rem}
 
 
-    .my-tags{
-        height:4.4rem;
-        padding:0 1.8rem;
-        display: -webkit-flex;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #fff;
-        border-bottom: 1px solid #f1f1f1;
-    }
-    .my-tag{
-        width:6.7rem;
-        height:2rem;
-        line-height: 2rem;
-        font-size: 1.5rem;
-        color: #333;
-        padding-left: 3.7rem;
-        background: url("") no-repeat left center;
-        background-size: contain;
-    }
-    .my-tag-sell{
-        background-image: url('/index/images/service/publicservice/sell.png');
-    }
-    .my-tag-checked{
-        background-image: url('/index/images/service/publicservice/checked.png');
-    }
-    .my-history{
-        height:2.9rem;
-        width:10rem;
-        border-radius: 15rem;
-        color: #918fe6;
-        font-size: 1.5rem;
-        border:1px solid #918fe6;
-        text-align: center;
-        line-height: 2.9rem;
-    }
-    .my-illustrate{
-        padding:1rem 1.7rem;
-    }
-    .my-illustrate>h4{
-        font-size: 1.5rem;
-        line-height: 1.8rem;
-        color: #333;
-        font-weight: normal;
-        margin:0;
-    }
-    .my-illustrate>h4>span{
-        display: inline-block;
-        text-align: center;
-        width:1.8rem;
-        height:1.8rem;
-        line-height: 1.8rem;
-        border-radius: 100%;
-        border:1px solid #9F9F9F;
-        color: #9F9F9F;
-        margin-left: 1rem;
-    }
-    .my-illustrate-info{
-        margin-top: 5px;
-        padding-bottom: 5rem;
-    }
-    .my-illustrate-info>p{
-        line-height: 2rem;
-        font-size: 1.4rem;
-        color: #999;
-    }
-    .my-total{
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width:100%;
-        border-top: 1px solid #f1f1f1;
-        height:50px;
-        line-height: 50px;
-        background: #fff;
-        display: -webkit-flex;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        font-size: 1.7rem;
-    }
-    .my-total>span{
-        min-width:10rem;
-        margin-right: 30px;
-        color: #fcc44b;
-    }
-    .my-total>button{
-        width:100px;
-        height:51px;
-        margin-top: -1px;
-        background-color: #fcc44b;
-        color: #fff;
-        border:none;
-        outline: none;
-        font-size: 1.7rem;
-    }
-    .my-back{
-        position: absolute;
-        background-color: rgba(0,0,0,.3);
-        top:0;
-        right:0;
-        bottom:0;
-        left:0;
-    }
 </style>
 {/block}
 
@@ -224,7 +45,7 @@
     <!-- 年份 月份 -->
     <div class="month">
         <ul>
-            <!--点击会触发pickpre函数，重新刷新当前日期 @click(vue v-on:click缩写) -->
+            <!--点击会触发pickpre函数，重新刷新当前日期 -->
             <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
             <li class="year-month">
                 <span class="choose-year">{{ currentYear }}-{{ currentMonth }}</span>
@@ -268,17 +89,15 @@
         <span>合计：{{this.checkedList.length*this.price}}元</span>
         <button @click="toSubmit">确认预约</button>
     </div>
-    <!--<div class="my-back"></div>-->
-
 </div>
 {/block}
 
 {block name="script"}
 <script>
-    var myVue=new Vue({
+    var app=new Vue({
         el: '#app',
         data: {
-            app_id:parseInt(window.location.href.split('app_id=')[1]),
+            app_id:{$app_id},
             price:{$price},
             currentDay: 1,
             currentMonth: 1,
@@ -293,6 +112,7 @@
             this.initData(null);
         },
         methods: {
+            //生成月份数据 初始传null
             initData: function(cur) {
                 var date;
                 if (cur) {
@@ -340,6 +160,7 @@
                 }
 
             },
+            //是否为用户选中
             isChecked:function (date) {
               for(var i=0;i<this.checkedList.length;i++){
                   if(date==this.checkedList[i]) {
@@ -348,6 +169,7 @@
               }
                 return false
             },
+            //是否被预约
             isBespeak:function (date) {
                 for(var i=0;i<this.bespeakList.length;i++){
                     if(date==parseInt(this.bespeakList[i])) {
@@ -447,6 +269,7 @@
                             var y=time.getFullYear(),m=time.getMonth()+1,d=time.getDate();
                             checkedText += the.formatDate(y,m,d)+'、';
                         }
+                        checkedText=checkedText.substring(0, checkedText.length - 1);
                         swal({
                             title:"是否确认预约",
                             text:checkedText,
@@ -454,6 +277,7 @@
                             showCancelButton: true,
                             confirmButtonText: "确认",
                             cancelButtonText: "取消",
+                            confirmButtonColor: "#fcc44b",
                             closeOnConfirm: false,
                         },function (e) {
                             if (e) {
@@ -484,13 +308,15 @@
                                         swal({
                                             title:"",
                                             text:"您选择的"+ text +'已被预约，已为您取消选择',
-                                            type:"warning"
+                                            type:"warning",
+                                            confirmButtonColor: "#fcc44b",
                                         })
 
                                     }else{
                                         swal({
                                             title:"",
                                             text:"缴费完成后，请尽快上传缴费凭证",
+                                            confirmButtonColor: "#fcc44b",
                                             type:"success"
                                         },function (e) {
                                             if(e){
@@ -520,7 +346,7 @@
                 }
             },
             toHistory(){
-                window.location.href='/index/service/record/t/1';
+                window.location.href='/index/service/record/t/2';
             }
 
         }

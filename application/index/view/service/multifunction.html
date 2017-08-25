@@ -3,162 +3,30 @@
 {block name="style"}
 <title>多功能厅预约</title>
 <style>
-    body{
-        background-color: #f8f7fc;
-        color: #333;
-    }
-    h1{
-         padding:1.45rem 0;
-         text-align: center;
-         font-size: 1.8rem;
-        color: #333;
-     }
-    .my-time{
-        padding:0 1.2rem;
-    }
-    .my-time>li{
-        display: -webkit-flex;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .my-time>li>div:not(:nth-child(2)){
-        display: block;
-        font-size: 1.3rem;
-        width:90px;
-        height:38px;
-        line-height: 38px;
-        text-align: center;
-        box-shadow: 0 0 4px 0 rgba(0,0,0,.1);
-    }
-    .my-time-am{
-        border-top-left-radius: 100px;
-        border-bottom-left-radius: 100px;
-    }
-    .my-time-pm{
-        border-top-right-radius: 100px;
-        border-bottom-right-radius: 100px;
-    }
-    .my-time-day{
-        padding:0 12px;
-        font-size: 1.3rem;
-    }
-    .my-checked{
-        color: #fff;
-        background-color: #52cc92;
-    }
-    .my-Bespeak{
-        color: #999;
-        background-color: #e8e8e8;
-    }
+    body{background-color:#f8f7fc;color:#333}
+    h1{padding:1.45rem 0;text-align:center;font-size:1.8rem;color:#333}
+    .my-time{padding:0 1.2rem}
+    .my-time>li{display:-webkit-flex;display:flex;justify-content:center;align-items:center;text-align:center;margin-bottom:20px}
+    .my-time>li>div:not(:nth-child(2)){display:block;font-size:1.3rem;width:90px;height:38px;line-height:38px;text-align:center;box-shadow:0 0 4px 0 rgba(0,0,0,.1)}
+    .my-time-am{border-top-left-radius:100px;border-bottom-left-radius:100px}
+    .my-time-pm{border-top-right-radius:100px;border-bottom-right-radius:100px}
+    .my-time-day{padding:0 12px;font-size:1.3rem}
+    .my-checked{color:#fff;background-color:#52cc92}
+    .my-Bespeak{color:#999;background-color:#e8e8e8}
+    .my-tags{height:4.4rem;padding:0 1.8rem;display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;background-color:#fff;border-bottom:1px solid #f1f1f1}
+    .my-tag{height:2rem;line-height:2rem;font-size:1.5rem;color:#333;padding-left:3.5rem;background:url() no-repeat left center;background-size:2.2rem 1.8rem}
+    .my-tag-sell{background-image:url(/index/images/service/publicservice/sell.png)}
+    .my-tag-checked{background-image:url(/index/images/service/publicservice/checkedGreen.png)}
+    .my-history{height:2.9rem;width:8rem;border-radius:15rem;color:#fcc44b;font-size:1.5rem;border:1px solid #fcc44b;text-align:center;line-height:2.9rem}
+    .my-illustrate{background-color:#fff;padding:1rem 1.7rem}
+    .my-illustrate>h4{font-size:1.5rem;line-height:1.8rem;color:#333;font-weight:400;margin:0}
+    .my-illustrate>h4>span{display:inline-block;text-align:center;width:1.8rem;height:1.8rem;line-height:1.8rem;border-radius:100%;border:1px solid #9F9F9F;color:#9F9F9F;margin-left:1rem}
+    .my-illustrate-info{margin-top:5px;padding-bottom:5rem}
+    .my-illustrate-info>p{line-height:2rem;font-size:1.4rem;color:#999}
+    .my-total{position:fixed;bottom:0;left:0;width:100%;border-top:1px solid #f1f1f1;height:50px;line-height:50px;background:#fff;display:-webkit-flex;display:flex;justify-content:flex-end;align-items:center;font-size:1.7rem}
+    .my-total>span{min-width:10rem;margin-right:30px;color:#52cc92}
+    .my-total>button{width:100px;height:51px;margin-top:-1px;background-color:#52cc92;color:#fff;border:none;outline:0;font-size:1.7rem}
 
-    .my-tags{
-        height:4.4rem;
-        padding:0 1.8rem;
-        display: -webkit-flex;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #fff;
-        border-bottom: 1px solid #f1f1f1;
-    }
-    .my-tag{
-        width:6.7rem;
-        height:2rem;
-        line-height: 2rem;
-        font-size: 1.5rem;
-        color: #333;
-        padding-left: 3.7rem;
-        background: url("") no-repeat left center;
-        background-size: contain;
-    }
-    .my-tag-sell{
-        background-image: url('/index/images/service/publicservice/sell.png');
-    }
-    .my-tag-checked{
-        background-image: url('/index/images/service/publicservice/checkedGreen.png');
-    }
-    .my-history{
-        height:2.9rem;
-        width:10rem;
-        border-radius: 15rem;
-        color: #fcc44b;
-        font-size: 1.5rem;
-        border:1px solid #fcc44b;
-        text-align: center;
-        line-height: 2.9rem;
-    }
-    .my-illustrate{
-        background-color: #fff;
-        padding:1rem 1.7rem;
-    }
-    .my-illustrate>h4{
-        font-size: 1.5rem;
-        line-height: 1.8rem;
-        color: #333;
-        font-weight: normal;
-        margin:0;
-    }
-    .my-illustrate>h4>span{
-        display: inline-block;
-        text-align: center;
-        width:1.8rem;
-        height:1.8rem;
-        line-height: 1.8rem;
-        border-radius: 100%;
-        border:1px solid #9F9F9F;
-        color: #9F9F9F;
-        margin-left: 1rem;
-    }
-    .my-illustrate-info{
-        margin-top: 5px;
-        padding-bottom: 5rem;
-    }
-    .my-illustrate-info>p{
-        line-height: 2rem;
-        font-size: 1.4rem;
-        color: #999;
-    }
-    .my-total{
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width:100%;
-        border-top: 1px solid #f1f1f1;
-        height:50px;
-        line-height: 50px;
-        background: #fff;
-        display: -webkit-flex;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        font-size: 1.7rem;
-    }
-    .my-total>span{
-        min-width:10rem;
-        margin-right: 30px;
-        color: #52cc92;
-    }
-    .my-total>button{
-        width:100px;
-        height:51px;
-        margin-top: -1px;
-        background-color: #52cc92;
-        color: #fff;
-        border:none;
-        outline: none;
-        font-size: 1.7rem;
-    }
-    
-    .my-back{
-        position: absolute;
-        top:0;
-        right:0;
-        bottom:0;
-        left:0;
-    }
 </style>
 {/block}
 
@@ -199,6 +67,7 @@
 
 {block name="script"}
 <script>
+    //时间过滤器: )
     Vue.filter('timeToString', function(time) {
         if(time){
             var newTime = new Date(time);
@@ -239,17 +108,17 @@
         el:'#app',
         mounted(){
             this.baseInfo()
-            console.log(this.weeks)
         },
         data:{
-            app_id:parseInt(window.location.href.split('app_id=')[1]),
+            app_id:{$app_id},
             weeks:JSON.parse('{$data}'),
             price:0,
             isSubmit:false
         },
         methods:{
+            // 初始化信息: )
            baseInfo(){
-               document.getElementsByTagName('html')[0].style.fontSize = window.screen.width / 375 * 10 + 'px';
+//               document.getElementsByTagName('html')[0].style.fontSize = window.screen.width / 375 * 10 + 'px';
                for(var i=0;i<this.weeks.length;i++){
                    if(this.weeks[i].amCheck=='yes'||this.weeks[i].pmCheck=='yes'){
                         this.price+=500;
@@ -259,6 +128,7 @@
                    }
                 }
             },
+            // 选择时间: )
             toChecked(time,amOrPm){
                 if(amOrPm=='am'){
                     if(time.amBespeak=='no'){
@@ -296,7 +166,7 @@
                         }
                     }
                     if(canSubmit){
-                        var data=[],checkedText = '';
+                        var data=[],checkedText = '您选择的预约时间为：';
                         for(var i=0;i<this.weeks.length;i++){
                             if(this.weeks[i].amCheck=='yes'||this.weeks[i].pmCheck=='yes'){
                                 var day={
@@ -317,6 +187,7 @@
                             showCancelButton: true,
                             confirmButtonText: "确认",
                             cancelButtonText: "取消",
+                            confirmButtonColor: "#52cc92",
                             closeOnConfirm: false,
                         },function (e) {
                             if(e && !this.isSubmit){
@@ -350,13 +221,15 @@
                                         swal({
                                             title:"",
                                             text:"您选择的"+ text +'已被预约，已为您取消选择',
+                                            confirmButtonColor: "#52cc92",
                                             type:"warning"
                                         })
                                     }else{
                                         swal({
                                             title:"",
                                             text:"缴费完成后，请尽快上传缴费凭证",
-                                            type:"success"
+                                            type:"success",
+                                            confirmButtonColor: "#52cc92",
                                         },function (e) {
                                             if(e){
                                                 window.location.href='/index/service/payment?app_id='+the.app_id+'&&type=submitFunctionRoom';
@@ -378,7 +251,7 @@
             toHistory(){
                 window.location.href='/index/service/record/t/2';
             },
-            // 返回 2017-01-01 格式的字符串
+            // 返回 2017-01-01 格式的字符串: )
             formatDate: function(year,month,day){
                 var y = year;
                 var m = month;
@@ -387,6 +260,7 @@
                 if(d<10) d = "0" + d;
                 return y+"-"+m+"-"+d
             },
+            // 选中时间转字符串 如：2017-1-1 上午/下午: )
             getCheckedText(list){
                 var date=new Date(parseInt(list.day));
                 var y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();

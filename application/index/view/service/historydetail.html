@@ -6,6 +6,10 @@
     body{
         background-color: #f0eff5;
     }
+    .upload-img img{
+        max-width: 100%;
+        max-height: 100%;
+    }
 </style>
 {/block}
 
@@ -30,17 +34,11 @@
                 <span>{{info.name}}</span>
             </div>
         </div>
-        <div class="card">
+        <div class="card" v-if="info.img">
             <div class="card-tit">缴费凭证</div>
             <div class="card-upload">
-                <div class="upload-img">
-                    <img src="{{info.img}}" alt="缴费凭证">
-                </div>
-                <div class="upload-img">
-                    <img src="" alt="缴费凭证">
-                </div>
-                <div class="upload-img">
-                    <img src="" alt="缴费凭证">
+                <div class="upload-img" v-for="img in info.img">
+                    <img :src="img" alt="缴费凭证">
                 </div>
             </div>
         </div>
@@ -115,11 +113,11 @@
                 <span>{{info.all_money}}</span>
             </div>
         </div>
-        <div class="card">
+        <div class="card" v-if="info.img">
             <div class="card-tit">缴费凭证</div>
             <div class="card-upload">
-                <div class="upload-img">
-                    <img src="{{info.img}}" alt="缴费凭证">
+                <div class="upload-img" v-for="img in info.img">
+                    <img :src="img" alt="缴费凭证">
                 </div>
             </div>
         </div>

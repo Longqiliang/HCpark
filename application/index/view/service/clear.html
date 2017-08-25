@@ -114,6 +114,9 @@
                 imgName:[]
             }
         },
+        mounted(){
+            console.log(JSON.parse('{$info}'))
+        },
         computed:{
             dateStatus:function () {
                 if(this.defaultData.dateStr){

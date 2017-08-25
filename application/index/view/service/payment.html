@@ -192,6 +192,7 @@
                 console.log(subData);
                 var type = subData.type;
                 if(type){
+                    console.log(subData)
                     this.$http.post(type,subData).then(function (res) {
                         console.log(res.data);
                         _this.isSubmit = true;
@@ -201,7 +202,7 @@
                           var newMsg =  msg.split(";");
                           msg =  newMsg.join("<br/>");
                             swal({
-                                title:"预约成功!",
+                                title:"提交成功!",
                                 text:msg,
                                 html:true,
                                 type:"success",
@@ -211,8 +212,8 @@
                             });
                         }else{
                             swal({
-                                title:"预约失败!",
-                                text:"请重新预约！",
+                                title:"提交失败!",
+                                text:"请重新提交！",
                                 type:"error",
                                 confirmButtonColor: "#fcc44b"
                             },function () {
@@ -222,8 +223,8 @@
                     },function (res) {
                         _this.isSubmit = true;
                         swal({
-                            title:"预约失败!",
-                            text:'请重新预约！',
+                            title:"提交失败!",
+                            text:'请重新提交！',
                             type:"error",
                             confirmButtonColor: "#fcc44b"
                         },function () {
