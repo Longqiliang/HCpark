@@ -37,7 +37,7 @@ class Base extends Controller
         $userId = session('userId');
 
         Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $weObj = new TPWechat(config('mall'));
+        $weObj = new TPWechat(config('party'));
         if(empty($userId)) {
             $redirect_uri = config("login_url");
             $url = $weObj->getOauthRedirect($redirect_uri);
