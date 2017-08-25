@@ -495,14 +495,13 @@ class Service extends Base{
 
     //车卡记录
     public  function  carRecord(){
-        $service =new CarparkService();
-        $user_id= session('userId');
+        $service =new CarparkRecord();
         $map=[
-            'user_id'=>$user_id,
             'status'=>array('neq',-1)
         ];
         $list=$service->where($map)->select();
-        int_to_string($list,array('status'=>array(0=>'审核中',1=>'审核通过',2=>'审核失败')));
+        int_to_string($list,array('status'=>array(-1=>'被删除',0=>'审核中',1=>'审核通过',2=>'审核失败')));
+        int_to_string($list,array('type'=>array(1=>'新卡办理',2=>'旧卡续费')));
 
         return $list;
     }
@@ -1513,7 +1512,7 @@ class Service extends Base{
 
             $info=CarparkService::get($id);
         }
-
+/*echo json_encode($info);exit;*/
         $this->assign('type',json_encode($appid));
         $this->assign('info',json_encode($info));
         return $this->fetch();
