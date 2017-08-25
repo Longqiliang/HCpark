@@ -122,24 +122,24 @@
                 var _this = this;
                 var upImg = _this.$refs.upimg;
                 var img = upImg.files[0];
-                if(img){
-                    var name = img.name;
-                }
-                for(var j = 0,imgName = _this.imgSrc.imgName ; j < imgName.length ; j += 1){
-                    if(name == imgName[j].name ){
-                        for(var k = 0,showPath = _this.imgSrc.dataUrl; k < showPath.length ; k += 1){
-                            if( showPath[k] == imgName[j].base){
-                                return;
-                            }
-                        }
-                        _this.payment_voucher.push(imgName[j].path );
-                        _this.imgPreview(img);
-//                        console.log("64位图片",_this.imgSrc.dataUrl);
-//                        console.log("图片名字",_this.imgSrc.imgName);
-//                        console.log("凭证",_this.payment_voucher);
-                        return;
-                    }
-                }
+//                if(img){
+//                    var name = img.name;
+//                }
+//                for(var j = 0,imgName = _this.imgSrc.imgName ; j < imgName.length ; j += 1){
+//                    if(name == imgName[j].name ){
+//                        for(var k = 0,showPath = _this.imgSrc.dataUrl; k < showPath.length ; k += 1){
+//                            if( showPath[k] == imgName[j].base){
+//                                return;
+//                            }
+//                        }
+//                        _this.payment_voucher.push(imgName[j].path );
+//                        _this.imgPreview(img);
+////                        console.log("64位图片",_this.imgSrc.dataUrl);
+////                        console.log("图片名字",_this.imgSrc.imgName);
+////                        console.log("凭证",_this.payment_voucher);
+//                        return;
+//                    }
+//                }
                 if(img){
                     var newSize = (img.size/1024).toFixed(2);
                     if(newSize <= 10240){
