@@ -37,9 +37,10 @@ class Wechat extends Controller
     // 自动登入
     public function login(){
         Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $weObj = new TPWechat(config('user'));
-        $userId = $weObj->getUserId(input('code'), config('mall.agentid'));
-
+        $weObj = new TPWechat(config('company'));
+        $userId = $weObj->getUserId(input('code'), config('company.agentid'));
+//var_dump($userId);
+//var_dump('errcode:'.$weObj->errCode.',msg:'.$weObj->errMsg);
         $userInfo = $weObj->getUserInfo($userId['UserId']);
         $data = [
             'userid' => $userInfo['userid'],

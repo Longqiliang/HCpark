@@ -97,6 +97,7 @@ return [
     /* 企业配置
         *  同步通讯录
         */
+    'login_url' => 'http://xk.0519ztnet.com/index/wechat/login',
     'party' => array(
         'login' => 'http://xk.0519ztnet.com/index/wechat/login',
 //        'token' => 'RMRUYhgJh7C',
@@ -131,6 +132,11 @@ return [
         'appsecret' => '4Y_vfF2ovs1Bc_UmMsvLEZh3XQxczHdgOAUSzghr2BA',
         'agentid' => 1000004
     ),
+    'company' => [
+        'agentid' => '1000011',
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => '_zPlbZhA4x5YUcILX0KklYnIJ-biY18fm36TAoPkJ_Q',
+    ],
 
 //注册
        'register'=>[
