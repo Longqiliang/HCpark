@@ -297,7 +297,7 @@ class Service extends Base{
         $data['charging_deposit']=$park['charging_deposit'];
         //用户停车卡信息
         $data['cardlist']=$cardinfo;
-        $this->assign('info',json_encode($data));
+        $this->assign('data',json_encode($data));
         return $this->fetch();
     }
 
