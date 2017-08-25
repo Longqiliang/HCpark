@@ -1510,9 +1510,22 @@ class Service extends Base{
 
         }elseif ($appid==7){
 
-            $info=CarparkService::get($id);
+            $service=ElectricityService::get($id);
+            $info['electricity_id']=$service['electricity_id'];//充电柱编号
+            $info['name']=$service['name'];
+            $info['mobile']=$service['mobile'];
+
+            $park_id=session('park_id');
+            $park=Park::where('id',$park_id)->field('charging_deposit,charging_price')->find();
+            $record=ElectricityRecord::get($id);
+            $info['aging']=$record['aging'];
+            $info['charging_deposit']=$park['charging_deposit'];//押金
+            $info['money']=$park['charging_price']*$record['aging'];//充电费用
+            $info['all_money']=$record['money'];//总费用
+            $info['img']=json_decode($record['payment_voucher'],true);//图片
+
         }
-/*echo json_encode($info);exit;*/
+
         $this->assign('type',json_encode($appid));
         $this->assign('info',json_encode($info));
         return $this->fetch();
