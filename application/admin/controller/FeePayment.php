@@ -16,7 +16,13 @@ class FeePayment extends Admin
     /*费用缴纳首页*/
     public function index(){
         $parkid =session("user_auth")['park_id'];
-        $companyList=ParkCompany::where(['park_id'=>$parkid])->order('id  asc')->paginate();
+        $map=['park_id'=>$parkid];
+        $search=input('search');
+        if (!empty($search)){
+            $map['name']=['like',"%$search%"];
+        }
+
+        $companyList=ParkCompany::where($map)->order('id  asc')->paginate();
 
         /// dump($companyList);
         $this->assign('list',$companyList);
@@ -112,7 +118,7 @@ class FeePayment extends Admin
 
 
     }
-
+    /*审核*/
     public function changeState(){
         $id =input('id');
         $feepayment = new FeePaymentModel();
@@ -127,7 +133,20 @@ class FeePayment extends Admin
 
 
     }
+    /*缴费记录*/
 
+    public function feeRecode(){
+        $feepayment = new FeePaymentModel();
+        $id = input('id');
+        $company = ParkCompany::get($id);
+        $list=$feepayment->where(['company_id'=>$id])->paginate();
+        int_to_string($list,['type'=>[1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"],
+                            'status'=>[-1=>"删除",0=>"进行中",1=>"审核中",2=>"已缴费",3=>"未缴费"]]);
+
+        $this->assign('company',$company);
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
 
 
 

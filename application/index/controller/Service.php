@@ -1274,7 +1274,7 @@ class Service extends Base{
         $data['create_time']=time();
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
-        $data["payment_voucher"] = json_encode($data["payment_voucher"]);
+        $data["image"] = json_encode($data["payment_voucher"]);
         $res=$property->allowField(true)->save($data);
 
         if ($res){
@@ -1300,7 +1300,7 @@ class Service extends Base{
         $data['clear_time']=strtotime(input("dateStr"));
         $data['user_id']=$userid;
         $data['park_id']=$parkid;
-        $data["payment_voucher"] = json_encode($data["payment_voucher"]);
+        $data["image"] = json_encode($data["payment_voucher"]);
 
         $property =new PropertyServer();
 
