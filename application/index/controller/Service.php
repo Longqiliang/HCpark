@@ -329,7 +329,8 @@ class Service extends Base{
 
     //充电柱记录
     public  function  pillarRecord(){
-        $service =new ElectricityService();
+
+        $service =new ElectricityService;
         $user_id= session('userId');
         $map=[
             'user_id'=>$user_id,
@@ -341,12 +342,18 @@ class Service extends Base{
             array_push($record,$value->findRecord);
         }
         int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
-        foreach ($list as $v){
-            $v['name']=$v['type']==1?'新卡办理':"旧卡续费";
-            $v['pay']=$v['money'];
-            $v['time']=$v['create_time'];
+        $res=array();
+        foreach ($record as $k=>$v){
+            foreach ($v as $val){
+                $res[$k]['name']=$val['type']==1?'新卡办理':"旧卡续费";
+                $res[$k]['pay']=$val['money'];
+                $res[$k]['time']=$val['create_time'];
+                $res[$k]['status']=$val['status'];
+                $res[$k]['id']=$val['id'];
+            }
         }
-        return $record;
+
+        return $res;
     }
 
 
@@ -1522,7 +1529,7 @@ class Service extends Base{
             $park=Park::where('id',$park_id)->field('charging_deposit,charging_price')->find();
             $record=ElectricityRecord::get($id);
             $info['aging']=$record['aging'];
-            $info['charging_deposit']=$park['charging_deposit'];//押金
+            $info['carpark_deposit']=$park['charging_deposit'];//押金
             $info['money']=$park['charging_price']*$record['aging'];//充电费用
             $info['all_money']=$record['money'];//总费用
             $info['img']=json_decode($record['payment_voucher'],true);//图片
