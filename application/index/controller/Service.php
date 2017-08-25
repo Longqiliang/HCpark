@@ -405,8 +405,6 @@ class Service extends Base{
     }
 
 
-
-
     //提交新卡
     public  function  addNewCard(){
 
@@ -886,7 +884,7 @@ class Service extends Base{
      $user_id = session('userId');
         $led = new LedRecord();
        //取消超时没有上传凭证的预约信息
-       $nowtime=time()-60;
+       $nowtime=time()-600;
        $map=[
            'status'=>1,
            'create_time'=>array('lt',$nowtime)
@@ -907,6 +905,21 @@ class Service extends Base{
          'status'=>1,
 
         ];
+       //用户约成功的
+       $all_check2=array();
+       $map2=[
+           'create_user'=>$user_id,
+           'status'=>2,
+       ];
+       $usersuccess=$led->where($map)->select();
+       foreach ($usersuccess as $value){
+           $data=[
+
+               'interval'=>$value['date_type']
+
+           ];
+           array_push($all_check2,$data);
+       }
       //用户所有选中的
       $user_check=$led->where($map)->select();
       $user_check2=array();
@@ -924,7 +937,8 @@ class Service extends Base{
       $map['order_time']=$Today;
        //今天已选的
        $all_check=$led->where($map)->select();
-       $all_check2=array();
+
+
        foreach ($all_check as $value){
         $data=[
 
@@ -933,6 +947,8 @@ class Service extends Base{
         ];
         array_push($all_check2,$data);
        }
+
+
        $this->assign('app_id',input('app_id'));
         $this->assign('other',json_encode($all_check2));
         $this->assign('user',json_encode($user_check2));
@@ -1154,8 +1170,6 @@ class Service extends Base{
               }
 
               break;
-
-
           //大堂led灯
           case 3:
               $data=array();
@@ -1578,8 +1592,7 @@ class Service extends Base{
 
     }
 
-    public function checkAppid(){}
-
-
 
 }
+
+

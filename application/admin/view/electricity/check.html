@@ -48,10 +48,10 @@
 {block name="page-header"}
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2><a href="{:Url('Carcard/index')}">停车卡申请列表</a></h2>
+        <h2><a href="{:Url('Carcard/index')}">充电柱申请列表</a></h2>
         <ol class="breadcrumb">
             <li>
-                停车卡审核
+                充电柱审核
             </li>
             <li class="active">
                 <strong>详情</strong>
@@ -81,18 +81,18 @@
 
                     <form id="form" class="form-horizontal" method="post">
                         <div class="form-group">
-                        <div class="col-lg-1 text-right control-label">
-                            <label>车卡信息:</label>
+                            <div class="col-lg-1 text-right control-label">
+                                <label>充电柱信息:</label>
+                            </div>
                         </div>
-                        </div>
-                         <br>
+                        <br>
                         <br>
                         <div class="form-group">
                             <div class="col-lg-1 text-right control-label">
-                                <label>停车卡号:</label>
+                                <label>充电柱号:</label>
                             </div>
                             <div class="col-lg-3">
-                                <input type="text" placeholder="请输入停车卡号" class="form-control form_title" name="park_card" value="{$info.park_card}">
+                                <input type="text" placeholder="请输入充电柱" class="form-control form_title" name="electricity_id" value="{$info.electricity_id}">
                             </div>
 
                             <div class="col-lg-1 text-right control-label">
@@ -113,30 +113,14 @@
 
 
                         <div class="form-group">
-                            <div class="col-lg-1 text-right control-label">
-                                <label>车牌号码:</label>
-                            </div>
-                            <div class="col-lg-3">
-                                <input  readonly=ture type="text" placeholder="请输入办理地点" class="form-control form_title" name="car_card" value="{$info.car_card}">
-                            </div>
-                            <div class="col-lg-1 text-right control-label">
-                                <label>车主身份证:</label>
-                            </div>
-                            <div class="col-lg-3">
-                                <input  readonly=ture type="text" placeholder="请输入办理电话" class="form-control form_title"  name="people_card" value="{$info.people_card}">
-                            </div>
+
+
                             <div class="col-lg-1 text-right control-label">
                                 <label>创建用户:</label>
                             </div>
                             <div class="col-lg-3">
                                 <input  readonly=ture type="text" placeholder="请输入办理电话" class="form-control form_title"   value="{$info.user}">
                             </div>
-
-
-                        </div>
-
-
-                        <div class="form-group">
 
                             <div class="col-lg-1 text-right control-label">
                                 <label>创卡日期:</label>
@@ -190,12 +174,12 @@
                             </div>
 
                         </div>
-     <br><br>
+                        <br><br>
                         <div class="form-group">
                             <div class="col-lg-1 text-right control-label">
                                 <label>缴费凭证:</label>
                             </div>
- <br>
+                            <br>
                             <div class="col-lg-5">
                                 <div  class="imggroup">
                                     {volist name="$info.payment_voucher" id="vo"}
@@ -208,7 +192,7 @@
 
 
 
-                        {if condition="$info.status eq  0"}
+                        {if condition="$info.status eq 0"}
                         <div class="form-group">
                             <div class="col-lg-11 col-lg-offset-1">
                                 <button class="btn btn-primary submit-btn post-put" type="button" target-form="form-horizontal" >通过</button>
@@ -242,7 +226,7 @@
     $(".post-put").off('click').on("click",function(){
         var it=$(this);
         var data = {
-            park_card:$("input[name='park_card']").val(),
+            electricity_id:$("input[name='electricity_id']").val(),
             id:$("input[name='id']").val(),
             type:1
         };
@@ -284,14 +268,14 @@
 
     function check(){
         var data = {
-            park_card:$("input[name='park_card']").val(),
+            electricity_id:$("input[name='electricity_id']").val(),
             id:$("input[name='id']").val(),
             type:2
         };
         $.ajax({
             data: data,
             type: "POST",
-            url: "{:Url('Carcard/check')}",
+            url: "{:Url('Electricity/check')}",
             success:function(data){
                 updateAlert(data.msg,"success");
             }
@@ -302,14 +286,14 @@
 
     function change(){
         var data = {
-            park_card:$("input[name='park_card']").val(),
+            electricity_id:$("input[name='electricity_id']").val(),
             id:$("input[name='id']").val(),
 
         };
         $.ajax({
             data: data,
             type: "POST",
-            url: "{:Url('Carcard/change')}",
+            url: "{:Url('Electricity/change')}",
             success:function(data){
                 updateAlert(data.msg,"success");
             }

@@ -51,15 +51,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <form method="get" action="index.html" class="pull-right mail-search">
-                <div class="input-group">
-                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索停车卡号">
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
-                    </div>
-                </div>
-            </form>
-            <h2>停车卡审核 (待办数量:{$list.num})</h2>
+            <h2>公共场所服务</h2>
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
@@ -67,53 +59,43 @@
                 <thead>
                 <tr>
                     <th></th>
-                    <th>id</th>
-                    <th>停车卡号</th>
-                    <th>办理类型</th>
-                    <th>办理时效</th>
+                    <th>创建时间</th>
+                    <th>申请用户</th>
+                    <th>申请时间</th>
                     <th>总金额</th>
-                    <th>办理时间</th>
                     <th>状态</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                {volist name="list.data" id="vo"}
+                {volist name="data" id="vo"}
                 <tr class="read">
                     <td class="check-mail">
-                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.create_time}">
                     </td>
                     <td class="mail-subject">
-                       {$vo.id}
-                    </td>
-                    <td>
-                        {$vo.park_card}
-                    </td>
-                    <td>
-                        {$vo.type_text}
-                    </td>
-                    <td>
-                        {$vo.aging} 月
-                    </td>
-                    <td>
-                        {$vo.money} 元
-                    </td>
-                    <td>
                         {$vo.create_time}
                     </td>
                     <td>
-                        {$vo.status_text}
+                        {$vo.user}
                     </td>
                     <td>
-                        <a  href="{:Url('check','id='.$vo.id)}" >审核</a>
-                        <a  href="{:Url('del','id='.$vo.id)}" >删除</a>
-
+                        {$vo.day}
+                    </td>
+                    <td>
+                        {$vo.price}
+                    </td>
+                    <td>
+                        {$vo.status}
+                    </td>
+                    <td>
+                        <a  href="{:Url('cancel','create_time='.$vo.create_time.'&&type='.$vo.type)}" >取消</a>
                     </td>
                 </tr>
                 {/volist}
                 </tbody>
             </table>
-            <div class="btn-group pull-right">{$list.data->render()}</div>
+            <div class="btn-group pull-right"></div>
         </div>
     </div>
 </div>
