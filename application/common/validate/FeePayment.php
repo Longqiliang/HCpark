@@ -11,14 +11,14 @@ class FeePayment extends Validate
 {
     protected $rule = [
         'fee' =>  'require',
-        'expiration1' => ['regex'=>'/\d{4}/i']
+        'expiration_time' => "require|regex:\d{4}\-\d{2}\-\d{2}"
 
     ];
 
     protected $message = [
-        'fee' => '金额必须添加',
-        'expiration1.regex' => '时间格式不正确',
+        'fee' => '请输入缴费金额',
+        'expiration_time.require'=>"请添加到期时间",
+        'expiration_time.regex' => '请输入正确时间格式，如xxxx-xx-xx',
     ];
-
 
 }

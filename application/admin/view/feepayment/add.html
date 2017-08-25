@@ -3,7 +3,7 @@
 {block name="style"}
 <link href="/static/summernote/summernote.css" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
-<link rel="stylesheet" href="/admin/css/plugins/datapicker/datepicker3.css">
+<link rel="stylesheet" href="/admin/css/plugins/daterangepicker/daterangepicker-bs3.css">
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
     .content{
@@ -29,7 +29,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <h2>{$company.name}本月缴费去详情</h2>
+            <h2>{$company.name}本月缴费详情</h2>
         </div>
     </div>
 
@@ -56,7 +56,7 @@
                     <h4>状态</h4>
                 </div>
                 <div class="mail-body text-right tooltip-demo">
-                    <a class="btn btn-sm btn-primary" onclick="makeOrder(1)">
+                    <a class="btn btn-sm btn-primary" onclick="makeOrder(1,'{$list1.id}')">
                         <i class="fa fa-reply"></i> 保存
                     </a>
                     <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
@@ -85,7 +85,7 @@
                     <h4>状态</h4>
                 </div>
                 <div class="mail-body text-right tooltip-demo">
-                    <a class="btn btn-sm btn-primary" onclick="makeOrder(2)">
+                    <a class="btn btn-sm btn-primary" onclick="makeOrder(2,'{$list2.id}')">
                         <i class="fa fa-reply"></i> 保存
                     </a>
                     <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
@@ -102,7 +102,7 @@
                     <h3>房租费</h3>
                 </div>
                 <div class="ibox-content">
-                    <span class=" pull-right"><input type="text" name="expiration3" class="input expiration" value="{$list3.expiration_time}"></span>
+                    <span class=" pull-right"><input type="text" name="expiration3" class="input" value="{$list3.expiration_time}"></span>
                     <h4>到期时间</h4>
                 </div>
                 <div class="ibox-content">
@@ -116,7 +116,7 @@
                     <h4>状态</h4>
                 </div>
                 <div class="mail-body text-right tooltip-demo">
-                    <a class="btn btn-sm btn-primary" onclick="makeOrder(3)">
+                    <a class="btn btn-sm btn-primary" onclick="makeOrder(3,'{$list3.id}')">
                         <i class="fa fa-reply"></i> 保存
                     </a>
                     <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
@@ -130,7 +130,7 @@
                     <h3>公耗费</h3>
                 </div>
                 <div class="ibox-content">
-                    <span class=" pull-right"><input type="text" name="expiration4" class="input expiration datetimepicker" value="{$list4.expiration_time}"></span>
+                    <span class=" pull-right"><input type="text" name="expiration4" class="input" value="{$list4.expiration_time}"></span>
                     <h4>到期时间</h4>
                 </div>
                 <div class="ibox-content">
@@ -144,7 +144,7 @@
                     <h4>状态</h4>
                 </div>
                 <div class="mail-body text-right tooltip-demo">
-                    <a class="btn btn-sm btn-primary" onclick="makeOrder(4)">
+                    <a class="btn btn-sm btn-primary" onclick="makeOrder(4,'{$list4.id}')">
                         <i class="fa fa-reply"></i> 保存
                     </a>
                     <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
@@ -159,7 +159,8 @@
 {block name="script"}
 <script src="/static/summernote/summernote.min.js"></script>
 <script src="/static/summernote/lang/summernote-zh-CN.js"></script>
-<script src="/admin/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="/admin/js/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="/admin/js/plugins/daterangepicker/moment.js"></script>
 <script>
     $(document).ready(function () {
         $('.i-checks').iCheck({
@@ -170,11 +171,11 @@
 
 
     });
-    function makeOrder(id){
+    function makeOrder(id,uid){
         var fee = $("input[name='fee"+id+"']").val();
         var time = $("input[name='expiration"+id+"']").val();
         $.ajax({
-            data:{type:id,name:"{$company.name}",company_id:"{$company.id}",fee:fee,expiration_time:time},
+            data:{type:id,name:"{$company.name}",company_id:"{$company.id}",fee:fee,expiration_time:time,uid:uid},
             type:"POST",
             url:"{:Url('Feepayment/add')}",
             success:function (data) {

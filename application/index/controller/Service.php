@@ -1399,7 +1399,7 @@ class Service extends Base{
         $map = ['company_id'=>$departmentId,'type'=>$type];
         $info = FeePayment::where($map)->find();
         $info['appid']=$appid;
-        $info['payment_voucher']=unserialize($info["payment_voucher"]);
+        $info['payment_voucher']=isset($info['payment_voucher'])?unserialize($info["payment_voucher"]):"";
         $this->assign('info',json_encode($info));
 
 
@@ -1486,7 +1486,7 @@ class Service extends Base{
             $info = [
                 'name'=>$infos['name'],
                 'expiration_time'=>$infos['expiration_time'],
-                'img'=>unserialize($infos['payment_voucher']),
+                'img'=>isset($infos['payment_voucher'])?unserialize($infos['payment_voucher']):"",
             ];
         }elseif($appid ==3){
 
