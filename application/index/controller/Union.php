@@ -9,7 +9,7 @@ namespace app\index\controller;
 use app\index\model\Union as UnionModel;
 use app\index\model\UnionLoabour as UnionLoabourModel;
 
-class Union extends Admin
+class Union extends Base
 {
     public function index(){
 
