@@ -61,6 +61,13 @@ textarea::-webkit-input-placeholder {
     justify-content: center;
     color: #333;
 }
+.layer-center.layer-default{
+    background-color: #f6f6f6;
+}
+.layer-center img{
+    width: 95%;
+    margin:-20%  auto 0;
+}
 .detail{
     border-bottom: 8px #f1f1f1 solid;
     padding: 3.46vw 4.53vw 2.93vw;
@@ -413,7 +420,7 @@ textarea::-webkit-input-placeholder {
     border: none;
 }
 .card-cell input{
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     text-align: right;
     width: 50vw;
 }

@@ -4,15 +4,16 @@
 <title>多功能厅预约</title>
 <style>
     body{background-color:#f8f7fc;color:#333}
-    h1{padding:1.45rem 0;text-align:center;font-size:1.8rem;color:#333}
+    h1{padding: 1.3rem 0 1rem;;text-align:center;font-size:1.8rem;color:#333;margin: 0;}
     .my-time{padding:0 1.2rem}
-    .my-time>li{display:-webkit-flex;display:flex;justify-content:center;align-items:center;text-align:center;margin-bottom:20px}
-    .my-time>li>div:not(:nth-child(2)){display:block;font-size:1.3rem;width:90px;height:38px;line-height:38px;text-align:center;box-shadow:0 0 4px 0 rgba(0,0,0,.1)}
+    .my-time>li{display:-webkit-flex;display: flex; justify-content: space-around;  align-items: center;  text-align: center;  margin-bottom: 20px;}
+    .my-time>li>div:not(:nth-child(2)){display:block;font-size:1.5rem;width:100px;height:38px;line-height:38px;text-align:center;box-shadow:0 0 4px 0 rgba(0,0,0,.1)}
     .my-time-am{border-top-left-radius:100px;border-bottom-left-radius:100px}
     .my-time-pm{border-top-right-radius:100px;border-bottom-right-radius:100px}
-    .my-time-day{padding:0 12px;font-size:1.3rem}
-    .my-checked{color:#fff;background-color:#52cc92}
-    .my-Bespeak{color:#999;background-color:#e8e8e8}
+    .my-time-day{padding:0 12px;font-size:1.7rem}
+    .my-default{color: #333;background-color: #fff}
+    .my-default.my-checked{color:#fff;background-color:#52cc92}
+    .my-default.my-Bespeak{color:#999;background-color:#e8e8e8}
     .my-tags{height:4.4rem;padding:0 1.8rem;display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;background-color:#fff;border-bottom:1px solid #f1f1f1}
     .my-tag{height:2rem;line-height:2rem;font-size:1.5rem;color:#333;padding-left:3.5rem;background:url() no-repeat left center;background-size:2.2rem 1.8rem}
     .my-tag-sell{background-image:url(/index/images/service/publicservice/sell.png)}
@@ -35,9 +36,9 @@
     <h1>选择时间</h1>
     <ul class="my-time">
         <li v-for="item in weeks">
-            <div class="my-time-am" :class="{'my-checked':item.amCheck=='yes','my-Bespeak':item.amBespeak=='yes'}" @click="toChecked(item,'am')">上午（AM）</div>
+            <div class="my-time-am my-default" :class="{'my-checked':item.amCheck=='yes','my-Bespeak':item.amBespeak=='yes'}" @click="toChecked(item,'am')">上午（AM）</div>
             <div class="my-time-day">{{item.day | timeToString}}</span></div>
-            <div class="my-time-pm" :class="{'my-checked':item.pmCheck=='yes','my-Bespeak':item.pmBespeak=='yes'}" @click="toChecked(item,'pm')">下午（PM）</div>
+            <div class="my-time-pm my-default" :class="{'my-checked':item.pmCheck=='yes','my-Bespeak':item.pmBespeak=='yes'}" @click="toChecked(item,'pm')">下午（PM）</div>
         </li>
     </ul>
     <div class="my-tags">

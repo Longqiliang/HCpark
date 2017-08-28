@@ -8,6 +8,9 @@
     .detail{
         font-size: 1.4rem
     }
+    .card,.broadbandPhone-card{
+      margin-top:  1.5vw ;
+    }
 </style>
 {/block}
 
@@ -21,7 +24,7 @@
         <p class="detail-txt">中国铁通：主要经营固定网本地电话业务，固定网国内长途电话业务，固定网国际长途电话业务、IP电话业务、公众电报和用户电报业务。客服电话：10050</p>
         <p class="detail-txt">中国联通：主要经营固定通信业务，国内国际通信设施服务业务、数据通信业务、网络接入业务和各类电信增值业务。客服电话：10010</p>
     </div>
-    <div class="card">
+    <div class="card broadbandPhone-card">
         <div class="card-cell">
             <label for="name">办公地点</label>
             <input type="text" placeholder="请输入办公地点" v-model="subData.address">
@@ -54,7 +57,7 @@
                 <mt-picker :slots="timeSlots" @change="onTimeChange" ></mt-picker>
             </mt-popup>
         </div>
-        <div class="table-view-cell"><button class="btn btn-block btn-primary reservation-btn" @click="bgShow">预约服务</button></div>
+        <div class="table-view-cell"><button class="btn btn-block btn-warning reservation-btn" @click="bgShow">预约服务</button></div>
     </div>
     <div class="layer" v-show="isShow">
         <div class="form-group">
