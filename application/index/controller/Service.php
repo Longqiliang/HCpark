@@ -37,12 +37,12 @@ class Service extends Base{
          $user =new WechatUser();
          $app= new  CompanyApplication();
          $info=$user->where('userid',$user_id)->find();
-         if($info['tagid']==1){
+         /*if($info['tagid']==1){
 
-             $map=[
-                 'park_id'=>3,
-                 'type'=>0
-             ];
+                 $map=[
+                     'park_id'=>3,
+                     'type'=>0
+                 ];
              //物业服务
              $PropertyServices=$app->where($map)->order('id asc')->select();
              $map['type']=1;
@@ -51,7 +51,7 @@ class Service extends Base{
              $is_boss="yes";
 
 
-         }else{
+         }else{*/
              //物业服务
              $serviceApps= $app->where('type',0)->order('id asc')->select();
              $PropertyServices=array();
@@ -84,7 +84,7 @@ class Service extends Base{
 
              }
              $is_boss="no";
-         }
+         /*}*/
         $this->assign('is_boss',$is_boss);
         $this->assign('propert',json_encode($PropertyServices));
         $this->assign('company',json_encode($CompanyService));
@@ -181,7 +181,7 @@ class Service extends Base{
                 $user=$UserModel->where('userid',$user_id)->find();
                 $info['name']=$user['name'];
                 $info['mobile']=$user['mobile'];
-                $info['company']=$user->departmentName->name;
+                $info['company']=isset($user->departmentName->name)?$user->departmentName->name:"";
                 $info['app_id']=$app_id;
                 break;
 
