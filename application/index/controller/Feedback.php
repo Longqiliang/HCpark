@@ -49,7 +49,7 @@ class Feedback extends Base
                 Loader::import('wechat\TPWechat', EXTEND_PATH);
                 $weObj = new TPWechat(config('reply'));
                 $data = [
-                    "touser" => @all,
+                    "touser" => $list['create_user'],
                     'safe' => 0,
                     'msgtype' => 'textcard',
                     'agentid' => 1000007,
