@@ -85,8 +85,12 @@
       var c =  parseInt(window.location.href.split("index/c/")[1]);
       console.log(c);
       var co = getCookie("type");
+      console.log(co);
       if(co == 11 || co == 12 || co == 13){
           c = co - 10;
+      }
+      if(isNaN(c)){
+          c = 1;
       }
       $('.tabs>.tab').eq(c-1).find('span').addClass('active');
       ntc.eq(c-1).removeClass('hidden');
