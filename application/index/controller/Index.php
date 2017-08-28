@@ -6,6 +6,11 @@ use wechat\TPQYWechat;
 use think\Loader;
 class Index extends Base
 {
+    /** 测试专用 页面地址列表 **/
+    public function index(){
+
+        return $this->fetch();
+    }
     /**
      * 注册入口，登记用户手机号码等资料（注册到居民组）
      * @return mixed
