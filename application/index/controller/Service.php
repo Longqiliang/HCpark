@@ -234,7 +234,7 @@ class Service extends Base{
         //充电柱单价
         $data['charging_price']=(int)$park['charging_price'];
         //充电柱押金
-        $data['charging_deposit']=$park['charging_deposit'];
+        $data['charging_deposit']=(int)$park['charging_deposit'];
         $this->assign('data',json_encode($data));
         return $this->fetch();
     }
