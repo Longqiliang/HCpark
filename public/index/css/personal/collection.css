@@ -46,9 +46,9 @@ body{
 /*列表修改*/
 .content .notices .notice .list {
     background-color: #fff;
-    height:9rem;
+    height:23.23vw;
     display: block;
-    padding: 1.5rem 1.2rem;
+    padding:3.2vw;
     border-bottom: 1px solid #f1f1f1;
     color: #666666;
 }
@@ -105,11 +105,11 @@ body{
 /*}*/
 .content .notices .notice .list.news .news-info{
     height:100%;
-    width:68vw;
+    width:70vw;
 }
 .content .notices .notice .list.news .news-img {
     width:20vw;
-    height:6rem;
+    height:100%;
     margin-right: 2.6vw;
 
 }
