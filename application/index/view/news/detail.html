@@ -4,7 +4,6 @@
 {block name="style"}
 <title>{$news->title}</title>
 <link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
-<link rel="stylesheet" href="/index/css/common/rem.css">
 {/block}
 
 {block name="body"}
@@ -23,7 +22,7 @@
     <div class="comment-box">
         <p>共 {{count}} 条评论</p>
         <div class="comment">
-            <ul
+            <ul infinite-scroll-immediate-check =false
                 v-infinite-scroll="loadMore"
                 infinite-scroll-disabled="loading"
                 infinite-scroll-distance="6">
@@ -42,14 +41,13 @@
             </ul>
         </div>
         <div class="load-more" v-if="documents.length === 0">暂时啥都没有，快去评论吧！</div>
-        <div class="load-more" v-else  @click="loadMore($event)">
+        <div class="load-more" v-else >
             <div v-if="loadOver">
                 没有更多了
             </div>
             <div v-show="loading" v-else>
                 <mt-spinner :type="3" color="#999" ></mt-spinner>加载中...
             </div>
-
         </div>
     </div>
     <div class="foot">
@@ -98,6 +96,7 @@
                         if(data.code === 1){
                             console.log(data);
                             _this.commentValue = '';
+                            _this.count +=1;
                             var extraObj = {
                                 like:0,
                                 header:''

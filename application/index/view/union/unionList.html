@@ -14,20 +14,26 @@
     <div class="page">
         <div class="body">
             <ul
+                    infinite-scroll-immediate-check =false
                 v-infinite-scroll="loadMore"
                 infinite-scroll-disabled="loading"
-                infinite-scroll-distance="6">
+                infinite-scroll-distance="45">
                 <li  v-for="(item,index) in list">
                     <div class="content-box">
                         <p>{{item.title}}</p>
                         <span>{{item.create_time}}</span>
                         <span>{{item.views}}</span>
                     </div>
+                    <a href="javascript:void(0);" @click="jump(item.id)"></a>
                 </li>
             </ul>
-            <div class="loading-more" v-show="loading">
-                <mt-spinner :type="3" color="#999" ></mt-spinner>
-                加载中...
+
+            <div class="loading-more">
+                <div v-if="loadOver">没有更多了</div>
+                <div v-else  v-show="loading" >
+                    <mt-spinner :type="3" color="#999"></mt-spinner>
+                    加载中...
+                </div>
             </div>
         </div>
     </div>
@@ -37,26 +43,53 @@
 {block name="script"}
 <script>
     var list = {$list};
+    var type = {$type};
     console.log(list);
     var vm = new Vue({
         el:'#app',
         data:{
+            type:type,
             list:list,
-            loading:false
+            loading:false,
+            loadOver:true
         },
         methods:{
+            jump:function (id) {
+                var _this = this;
+                if(_this.type == "2"){
+                    window.location.href="/index/Union/loabourDetail?id="+id
+                }else{
+                    window.location.href="/index/Union/unionDetail?id="+id
+                }
+            },
             loadMore:function () {
                 console.log("11");
                 var _this = this,
+                     type =_this.type,
                     list = _this.list,
                      length = list.length,
                      lastId =_this.list[length-1].id;
                 _this.loading = true;
-                _this.$http.get('{:Url("Union/unionList")}',{'lastId':lastId}).then(function (res) {
-                    console.log(res.data);
-                    _this.loadin = false;
+                _this.loadOver = false;
+                var subData ={
+                    'type':type,
+                    'lastId':lastId
+                };
+                _this.$http.post('/index/Union/pull',subData).then(function (res) {
+                    var data = JSON.parse(res.data);
+                    console.log(data);
+                    if(data.length){
+                        for(var i = 0;i<data.length;i++){
+                            list.push(data[i]);
+                        }
+                        _this.loading = false;
+                    }else{
+                        _this.loadOver = true;
+                        _this.loading = true;
+                    }
                 },function () {
-
+                    _this.loadOver = true;
+                    _this.loading = true;
                 });
 
             }
