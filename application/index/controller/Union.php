@@ -30,34 +30,78 @@ class Union extends Base
             $lastId = input('lastId', 0);
             if ($lastId != 0) {
                 $map['id'] = ['<', $lastId];
+                $total = input('total');
+                $map['status'] = 1;
+
+                $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
+                $this->assign('list',json_encode($list));
+            }else{
+                $map['id'] = ['<', $lastId];
+                $total = input('total');
+                $map['status'] = 1;
+
+                $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
+                $this->assign('list',json_encode($list));
+                return $this->fetch();
             }
-
-            $total = input('total');
-            $map['status'] = 1;
-
-            $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
 
         }else {
             $lastId = input('lastId', 0);
             if ($lastId != 0) {
                 $map['id'] = ['<', $lastId];
+
+
+                $map['type'] = input('type');
+                $total = input('total');
+                $map['status'] = 1;
+
+                $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
+                $this->assign('list',json_encode($list));
+            }else{
+                $map['id'] = ['<', $lastId];
+
+
+                $map['type'] = input('type');
+                $total = input('total');
+                $map['status'] = 1;
+
+                $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
+                $this->assign('list',json_encode($list));
+                return $this->fetch();
             }
-
-            $map['type'] = input('type');
-            $total = input('total');
-            $map['status'] = 1;
-
-            $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
         }
 
-        $this->assign('list',json_encode($list));
-        return $this->fetch();
     }
 
     public function unionDetail(){
         $map['id']=input('id');
         $res = UnionModel::where($map)->find();
         $this->assign('res',json_encode($res));
+
+        // 评论列表
+        $map = [
+            'target_id' => input('id')
+        ];
+        $comments = Comment::where($map)->order('id desc')->select();
+
+        $list2=array();
+        $count=count($comments);
+        if($count>0){
+            for($i=0;$i<6;$i++){
+                array_push($list2,$comments[$i]);
+            }
+            foreach( $list2 as $v){
+                $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
+                if(!empty($header)){
+                    $v['header']=$header;
+                }else {
+                    $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
+                }
+            }}
+
+        $this->assign('count', $count);
+        $this->assign('comments', json_encode($list2));
+
 
         return $this->fetch();
     }
@@ -66,6 +110,32 @@ class Union extends Base
         $res = UnionLoabourModel::where('id','eq',input('id'))->find();
         $res['title']=$res['title'];
         $this->assign('res',json_encode($res));
+
+
+        // 评论列表
+        $map = [
+            'target_id' => input('id')
+        ];
+        $comments = Comment::where($map)->order('id desc')->select();
+
+        $list2=array();
+        $count=count($comments);
+        if($count>0){
+            for($i=0;$i<6;$i++){
+                array_push($list2,$comments[$i]);
+            }
+            foreach( $list2 as $v){
+                $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
+                if(!empty($header)){
+                    $v['header']=$header;
+                }else {
+                    $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
+                }
+            }}
+
+        $this->assign('count', $count);
+        $this->assign('comments', json_encode($list2));
+
         return $this->fetch();
     }
 
