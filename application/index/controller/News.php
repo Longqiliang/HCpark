@@ -84,6 +84,7 @@ class News extends Base
 
         $list2=array();
         $count=count($comments);
+        if($count>0){
         for($i=0;$i<6;$i++){
             array_push($list2,$comments[$i]);
         }
@@ -94,7 +95,7 @@ class News extends Base
             }else {
                 $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
             }
-        }
+        }}
 
         $this->assign('count', $count);
         $this->assign('comments', json_encode($list2));
