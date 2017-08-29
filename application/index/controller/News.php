@@ -84,7 +84,7 @@ class News extends Base
 
         $list2=array();
         $count=count($comments);
-        if($count>0){
+        if($count>6){
         for($i=0;$i<6;$i++){
             array_push($list2,$comments[$i]);
         }
