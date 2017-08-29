@@ -17,7 +17,7 @@ class Union extends Base
         ];
         $list1=UnionModel::where($map)->where('type',1)->order('create_time desc')->limit(2)->field('id,title,front_cover')->select();
         $list2=UnionLoabourModel::where($map)->order('create_time desc')->limit(2)->field('id,title,front_cover')->select();
-        $list3=UnionModel::where($map)->where('type',2)->order('create_time desc')->field('id,title,front_cover')->limit(2)->select();
+        $list3=UnionModel::where($map)->where('type',3)->order('create_time desc')->field('id,title,front_cover')->limit(2)->select();
 
         $this->assign('list1',json_encode($list1));
         $this->assign('list2',json_encode($list2));

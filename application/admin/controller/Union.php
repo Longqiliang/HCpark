@@ -20,7 +20,7 @@ class Union extends Admin
         }
         $list = UnionModel::where($map)->order('create_time desc')->paginate();
         int_to_string($list,array(
-            'type'=>array(1=>'通知公告',2=>'相关活动')
+            'type'=>array(1=>'通知公告',3=>'相关活动')
         ));
         $this->assign('list', $list);
 
