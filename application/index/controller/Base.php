@@ -9,6 +9,7 @@
 namespace app\index\controller;
 
 
+use app\common\model\PartyComment;
 use think\Controller;
 use think\Loader;
 use wechat\TPWechat;
@@ -20,7 +21,7 @@ use app\index\model\Comment;
 class Base extends Controller
 {
     protected function _initialize(){
-        //session('userId', '15706844655');//测试
+        session('userId', '15706844655');//测试
         session('park_id', 3);//测试
 //        session('thirdUserId', '1001');
 
@@ -72,11 +73,37 @@ class Base extends Controller
         $data['user_name'] = $name['name'];
         $result = Comment::create($data);
         if($result) {
+
             return $this->success('评论成功', '', $result);
         } else {
+
             return $this->error('评论失败');
         }
     }
+    //党建添加评论
+    public function addComments(){
+        $data = [
+            'target_id' => input('targetId'),
+            'user_id' => session('userId'),
+            'content' => input('content'),
+        ];
+        $name = WechatUser::where('userid',session('userId'))->field('name')->find();
+        $data['user_name'] = $name['name'];
+        $result = PartyComment::create($data);
+        if($result) {
+
+            return $this->success('评论成功', '', $result);
+        } else {
+
+            return $this->error('评论失败');
+        }
+
+
+
+
+    }
+
+
     // 收藏
     public function addCollect() {
         $data = [
