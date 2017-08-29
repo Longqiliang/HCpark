@@ -10,22 +10,18 @@
 <div class="banner">
     <img src="/index/images/feedback/policy.jpg" alt="">
 </div>
-<div class="content">
+<div class="content" id="app">
     <ul>
         <li>
             <div class="list_img">
                 <img src="/index/images/union/icon-tit-2.png" alt="">
-                <a href="">
+                <span @click="jump(1,6)">
                     <img src="/index/images/union/icon-more-1.png" alt="更多">
-                </a>
+                </span>
             </div>
-            <a href="">
-                <img src="" alt="" class="fl">
-                <span class="limit fl">我改，我改还不行吗我改，我改还不行吗,我改，我改还不行吗,</span>
-            </a>
-            <a href="">
-                <img src="" alt="" class="fl">
-                <span class="limit fl">我改，我改还不行吗</span>
+            <a href="" v-for="info of inform" class="list-item">
+                <img :src="info.front_cover"  class="fl">
+                <span class="limit fl">{{info.title}}</span>
             </a>
         </li>
     </ul>
@@ -33,17 +29,13 @@
         <li>
             <div class="list_img">
                 <img src="/index/images/union/icon-tit-1.png" alt="">
-                <a href="/index/Union/unionList">
+                <span @click="jump(2,6)">
                     <img src="/index/images/union/icon-more-3.png" alt="更多">
-                </a>
+                </span>
             </div>
-            <a href="">
-                <img src="" alt="" class="fl">
-                <span class="limit fl">我改，我改还不行吗我改，我改还不行吗,我改，我改还不行吗,</span>
-            </a>
-            <a href="">
-                <img src="" alt="" class="fl">
-                <span class="limit fl">我改，我改还不行吗</span>
+            <a href="" v-for="g of guild" class="list-item">
+                <img :src="g.front_cover"  class="fl">
+                <span class="limit fl">{{g.title}}</span>
             </a>
         </li>
     </ul>
@@ -51,17 +43,13 @@
         <li>
             <div class="list_img">
                 <img src="/index/images/union/icon-tit-3.png" alt="">
-                <a href="">
+                <span @click="jump(3,6)">
                     <img src="/index/images/union/icon-more-2.png" alt="更多">
-                </a>
+                </span>
             </div>
-            <a href="/index/Union/loabourDetail">
-                <img src="" alt="" class="fl">
-                <span class="limit fl">我改，我改还不行吗我改，我改还不行吗,我改，我改还不行吗,</span>
-            </a>
-            <a href="">
-                <img src="" alt="" class="fl">
-                <span class="limit fl">我改，我改还不行吗</span>
+            <a href="" v-for="item of activity" class="list-item">
+                <img :src="item.front_cover"  class="fl">
+                <span class="limit fl">{{item.title}}</span>
             </a>
         </li>
     </ul>
@@ -70,6 +58,26 @@
 
 {block name="script"}
 <script>
-
+console.log({$list1},{$list2},{$list3});
+    var inform = {$list1},
+            guild = {$list2},
+            activity = {$list3};
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            inform:inform,
+            guild:guild,
+            activity:activity
+        },
+        methods:{
+            jump:function (type,total) {
+                if(type){
+                    window.location.href="/index/union/unionList?type="+type+"&total="+total;
+                }else{
+                    window.location.reload();
+                }
+            }
+        }
+    })
 </script>
 {/block}

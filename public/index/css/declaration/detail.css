@@ -122,6 +122,11 @@ section img{
     font-size: 1.4rem;
     color: #ccc;
 }
+.load-more div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
 .foot{
     position: fixed;
     display: flex;
@@ -166,4 +171,9 @@ section img{
     line-height: 12vw;
     text-align: center;
     font-size: 1.5rem;
+}
+section img{
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
 }

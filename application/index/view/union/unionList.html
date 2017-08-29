@@ -19,68 +19,11 @@
                 infinite-scroll-distance="6">
                 <li  v-for="(item,index) in list">
                     <div class="content-box">
-                        <p>测试</p>
-                        <span>测试{{index}}</span>
-                        <span><img src="/index/images/news/view.png" >哈哈</span>
+                        <p>{{item.title}}</p>
+                        <span>{{item.create_time}}</span>
+                        <span>{{item.views}}</span>
                     </div>
                 </li>
-                <!--<li>-->
-                    <!--<div class="content-box">-->
-                        <!--<p>测试一波</p>-->
-                        <!--<span>测试一波</span>-->
-                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
-                    <!--</div>-->
-                    <!--<a href=""></a>-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--<div class="content-box">-->
-                        <!--<p>测试一波</p>-->
-                        <!--<span>测试一波</span>-->
-                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
-                    <!--</div>-->
-                    <!--<a href=""></a>-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--<div class="content-box">-->
-                        <!--<p>测试一波</p>-->
-                        <!--<span>测试一波</span>-->
-                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
-                    <!--</div>-->
-                    <!--<a href=""></a>-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--<div class="content-box">-->
-                        <!--<p>测试一波</p>-->
-                        <!--<span>测试一波</span>-->
-                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
-                    <!--</div>-->
-                    <!--<a href=""></a>-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--<div class="content-box">-->
-                        <!--<p>测试一波</p>-->
-                        <!--<span>测试一波</span>-->
-                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
-                    <!--</div>-->
-                    <!--<a href=""></a>-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--<div class="content-box">-->
-                        <!--<p>测试一波</p>-->
-                        <!--<span>测试一波</span>-->
-                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
-                    <!--</div>-->
-                    <!--<a href=""></a>-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--<div class="content-box">-->
-                        <!--<p>测试一波</p>-->
-                        <!--<span>测试一波</span>-->
-                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
-                    <!--</div>-->
-                    <!--<a href=""></a>-->
-                <!--</li>-->
-
             </ul>
             <div class="loading-more" v-show="loading">
                 <mt-spinner :type="3" color="#999" ></mt-spinner>
@@ -93,30 +36,29 @@
 
 {block name="script"}
 <script>
+    var list = {$list};
+    console.log(list);
     var vm = new Vue({
         el:'#app',
         data:{
-            list:[{
-                name:'1'
-            },{
-                name:'2'
-            },{
-                name:'2'
-            }],
+            list:list,
             loading:false
         },
         methods:{
             loadMore:function () {
                 console.log("11");
-                var _this = this;
+                var _this = this,
+                    list = _this.list,
+                     length = list.length,
+                     lastId =_this.list[length-1].id;
                 _this.loading = true;
-                setTimeout(function() {
-                        var last = _this.list[_this.list.length - 1];
-                    for (var i = 1; i <= 10; i++) {
-                        _this.list.push(last + i);
-                    }
-                    _this.loading = false;
-                }, 3000);
+                _this.$http.get('{:Url("Union/unionList")}',{'lastId':lastId}).then(function (res) {
+                    console.log(res.data);
+                    _this.loadin = false;
+                },function () {
+
+                });
+
             }
         }
     })
