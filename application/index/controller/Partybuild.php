@@ -19,7 +19,6 @@ class Partybuild extends Base{
         $this->assign('list1',$list1);
         $this->assign('list2',$list2);
         $this->assign('list3',$list3);
-        $this->assign('type',1);
 
         return $this->fetch();
     }
@@ -59,8 +58,9 @@ class Partybuild extends Base{
                 break;
         }
 
-        return dump($list);
+
         $this->assign("list",json_encode($list));
+        $this->assign('type',1);
 
         return $this->fetch();
 
