@@ -28,50 +28,51 @@ class Union extends Base
     public function unionList(){
         if(input('type')==2){
             $lastId = input('lastId', 0);
-            if ($lastId != 0) {
-                $map['id'] = ['<', $lastId];
-                $total = input('total');
-                $map['status'] = 1;
 
-                $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
-                $this->assign('list',json_encode($list));
-            }else{
-                $map['id'] = ['<', $lastId];
-                $total = input('total');
-                $map['status'] = 1;
+            $total = input('total');
+            $map['status'] = 1;
 
-                $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
-                $this->assign('list',json_encode($list));
-                return $this->fetch();
-            }
+            $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
 
         }else {
             $lastId = input('lastId', 0);
-            if ($lastId != 0) {
-                $map['id'] = ['<', $lastId];
 
+            $map['type'] = input('type');
+            $total = input('total');
+            $map['status'] = 1;
 
-                $map['type'] = input('type');
-                $total = input('total');
-                $map['status'] = 1;
-
-                $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
-                $this->assign('list',json_encode($list));
-            }else{
-                $map['id'] = ['<', $lastId];
-
-
-                $map['type'] = input('type');
-                $total = input('total');
-                $map['status'] = 1;
-
-                $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
-                $this->assign('list',json_encode($list));
-                return $this->fetch();
-            }
+            $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
         }
 
+        $this->assign('list',json_encode($list));
+        return $this->fetch();
     }
+
+    public function pull(){
+        if(input('type')==2){
+            $lastId = input('lastId');
+            $map['id'] = ['<', $lastId];
+
+            $total = input('total');
+            $map['status'] = 1;
+
+            $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
+
+        }else {
+            $lastId = input('lastId');
+
+            $map['id'] = ['<', $lastId];
+            $map['type'] = input('type');
+            $total = input('total');
+            $map['status'] = 1;
+
+            $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
+        }
+
+        return json_encode($list);
+    }
+
+
 
     public function unionDetail(){
         $map['id']=input('id');
