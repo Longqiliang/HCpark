@@ -23,8 +23,8 @@ class News extends Base
             'is_banner' => 1,
             'park_id'  =>session("park_id")
         ];
-        $count = NewsModel::where($bannerMap)->order('create_time desc')->limit(2)->count();
-        $banners = NewsModel::where($bannerMap)->order('create_time desc')->limit(2)->select();
+        $count = NewsModel::where($bannerMap)->order('create_time desc')->count();
+        $banners = NewsModel::where($bannerMap)->order('create_time desc')->limit(3)->select();
 
 
 
@@ -38,22 +38,32 @@ class News extends Base
         $list = NewsModel::where($listMap)->order('create_time desc')->limit(6)->select();
 
 
-        if($count==2){
-            //如果有两张轮播图，优先使用轮播图
+        if($count==3){
+            //如果有3张轮播图，优先使用轮播图
             $this->assign('banners',$banners);
             $this->assign('list',$list);
-        }elseif($count==1){
-            //如果有一张轮播图，优先使用轮播图，再用列表最新的一张图片
-            $banners[0] = NewsModel::where($bannerMap)->order('create_time desc')->find();
-            $banners[1] = NewsModel::where($listMap)->order('create_time desc')->find();
+        }elseif($count==2){
+            //2张轮播图
+            $res= NewsModel::where($bannerMap)->order('create_time desc')->limit(2)->select();
+            $banners[0]=$res[0];
+            $banners[1]=$res[1];
+            $banners[2] = NewsModel::where($listMap)->order('create_time desc')->find();
             $this->assign('banners',$banners);
             $list = NewsModel::where($listMap)->order('create_time desc')->limit(1,6)->select();
             $this->assign('list',$list);
-        }elseif($count==0){
-            //没有轮播图就选择列表最新的两张
+        }elseif($count==1){
+            //1张轮播图
+            $banners[0] = NewsModel::where($bannerMap)->order('create_time desc')->find();
+            $res = NewsModel::where($listMap)->order('create_time desc')->limit(2)->select();
+            $banners[1]=$res[0];
+            $banners[2]=$res[1];
+            $this->assign('banners',$banners);
             $list = NewsModel::where($listMap)->order('create_time desc')->limit(2,6)->select();
-            $banners = NewsModel::where($listMap)->order('create_time desc')->limit(2)->select();
-
+            $this->assign('list',$list);
+        }elseif($count==0){
+            //没有轮播图就选择列表最新的3张
+            $list = NewsModel::where($listMap)->order('create_time desc')->limit(3,6)->select();
+            $banners = NewsModel::where($listMap)->order('create_time desc')->limit(3)->select();
             $this->assign('banners',$banners);
             $this->assign('list',$list);
         }
@@ -125,7 +135,7 @@ class News extends Base
             'park_id'  =>session("park_id")
         ];
         $articleList =  NewsModel::where($articleMap)->order('create_time desc')->limit(6)->select();
-        $this->assign('article',  $articleList);
+        $this->assign('article',  json_encode($articleList));
 
         return $this->fetch();
 

@@ -12,6 +12,7 @@ use app\common\model\News as NewsModel;
 use app\common\model\WechatDepartment;
 use app\common\model\WechatTag;
 use app\common\model\WechatUser;
+use app\index\model\Collect;
 use think\Loader;
 use wechat\TPWechat;
 
@@ -33,15 +34,21 @@ class News extends Admin
     /*新闻通告，政策法规的添加及修改*/
     public function add() {
         $parkid = session('user_auth')['park_id'];
-        $pageType =input("page_type");
+        $pageType = input("page_type");
         if(IS_POST) {
-            $pageType =input("page_type");
+            $pageType = input("page_type");
             $news = new NewsModel();
             if(input('id')) {
                 $_POST['status'] = 1;
                 $_POST['park_id']=$parkid;
                 $result = $news->validate(true)->save($_POST, ['id'=>input('id')]);
-
+                $type = $_POST['type'];
+                /*当修改新闻类型时候修改已收藏的新闻的type值*/
+                $collect = new Collect();
+                $re = $collect->where('target_id',input('id'))->find();
+                if ($re){
+                    $collect->where('target_id',input('id'))->update(['type'=>$type]);
+                }
             } else {
                 $_POST['park_id']=$parkid;
                 unset($_POST['id']);
