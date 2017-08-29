@@ -45,6 +45,7 @@ class Union extends Base
         }
 
         $this->assign('list',json_encode($list));
+        $this->assign('type',json_encode(input('type')));
         return $this->fetch();
     }
 

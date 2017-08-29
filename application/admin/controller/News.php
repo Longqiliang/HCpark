@@ -128,21 +128,21 @@ class News extends Admin
         $news = NewsModel::get(input('id'));
         if ($news) {
             Loader::import('wechat\TPWechat', EXTEND_PATH);
-            $weObj = new TPWechat(config('wechat'));
+            $weObj = new TPWechat(config('news'));
 
             $des = msubstr(str_replace('&nbsp;','',strip_tags($news['content'])), 0, 36);
             $data = [
                 'safe' => 0,
                 'msgtype' => 'news',
-                'agentid' => '3',
+                'agentid' => '1000005',
                 'news' => [
                     'articles' => [[
                         'title' => $news['title'],
                         'description' => $des,
-                        'url' => config('web_url').'/index/news/detail/id/'.input('id'),
+                        'url' => 'http://xk.0519ztnet.com/index/news/detail/id/'.input('id'),
                         'picurl' => empty($news['front_cover'])
-                            ? config('web_url').'/index/images/news/news.jpg'
-                            : config('web_url').$news['front_cover']
+                            ? 'http://xk.0519ztnet.com/index/images/news/news.jpg'
+                            : 'http://xk.0519ztnet.com'.$news['front_cover']
                     ]]
                 ]
             ];
