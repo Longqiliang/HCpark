@@ -69,9 +69,20 @@ class Base extends Controller
             'user_id' => session('userId'),
             'content' => input('content'),
         ];
-        $name = WechatUser::where('userid',session('userId'))->field('name')->find();
-        $data['user_name'] = $name['name'];
+        $userinfo = WechatUser::where('userid',session('userId'))->field('name,header,avatar')->find();
+
+
+        $data['user_name'] = $userinfo['name'];
         $result = Comment::create($data);
+        if(!empty($userinfo['header'])){
+
+            $result['header']=$userinfo['header'];
+
+        }else{
+            $result['header']=!empty($userinfo['avatar'])?$userinfo['avatar']:"";
+
+        }
+
         if($result) {
 
             return $this->success('评论成功', '', $result);
@@ -91,8 +102,7 @@ class Base extends Controller
         $data['user_name'] = $name['name'];
         $result = PartyComment::create($data);
         if($result) {
-
-            return $this->success('评论成功', '', $result);
+            return $this->success('评论成功', '', "1");
         } else {
 
             return $this->error('评论失败');
