@@ -1337,7 +1337,7 @@ class Service extends Base{
     /*保洁服务记录*/
 
     public function clearRecord(){
-        $list = PropertyServer::where(['type'=>['<',4],'status'=>['>=',0]])->order('clear_time desc')->paginate();
+        $list = PropertyServer::where(['type'=>4,'status'=>['>=',0]])->order('clear_time desc')->paginate();
         foreach($list as $k=>$v){
             $info[$k]=[
                 'id'=>$v['id'],
