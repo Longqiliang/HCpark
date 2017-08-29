@@ -75,7 +75,7 @@ class Partybuild extends Base{
         $map = [
             'target_id' => input('id')
         ];
-        $comments = PartyComment::where($map)->order("create_time")->limit(6)->select();
+        $comments = PartyComment::where($map)->order("create_time desc ")->limit(6)->select();
         foreach( $comments as $v){
             $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
         }
@@ -93,7 +93,7 @@ class Partybuild extends Base{
         $len = input("length");
         $newsId = input("news_id");
         $comments = PartyComment::where(['target_id' => $newsId])
-            ->order("create_time")
+            ->order("create_time desc")
             ->limit($len, 6)
             ->select();
         if ($comments) {
