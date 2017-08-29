@@ -87,7 +87,7 @@
                             <a href="{:Url('add','id='.$vo.id)}">{$vo.name}</a>
                     </td>
                     <td>
-                        {$vo.present}
+                        {$vo.present|mb_substr=###,0,30}
                     </td>
                     <td>
                         {$vo.mobile}
