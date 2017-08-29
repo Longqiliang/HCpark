@@ -90,6 +90,7 @@
             content:''
         },
         created(){
+            console.log(this.documents)
             if(this.documents.len==0){
                 this.canLoad=false
             }
@@ -97,8 +98,6 @@
         methods:{
             send:function (id,type) {
                 console.log(this.content)
-                var the=this;
-                        vm = this.documents;
                 if(this.content == '' || !this.content){
                     this.$toast({message:'评论不能为空！',position:'bottom',duration:1000});
                 } else {
@@ -110,9 +109,11 @@
                                 position: 'bottom',
                                 duration: 1000
                             });
+                            this.documents.push(res.data.data);
                             this.content=''
                         }
                     },function (res) {
+                        this.$toast({message:'发送失败，请重新发送',position:'bottom',duration:1000});
                         console.log(res.data)
                     })
                 }
@@ -141,20 +142,6 @@
                 }
             },
         }
-    });
-    //修改图片自适应
-    $(function () {
-        $("section").find('img').each(function(){
-            $(this).css('width',"100%");
-        });
-        //
-        ////        第三方输入法遮挡输入解决
-        //        $(".input-box>input").on('focus',function(){
-        //            $(".foot").css({'position':'absolute','bottom':'16vw'});
-        //        });
-        //        $(".input-box>input").on('blur',function(){
-        //            $(".foot").css({'position':'fixed','bottom':'0'});
-        //        })
     });
 </script>
 {/block}
