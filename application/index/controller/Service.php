@@ -508,8 +508,7 @@ class Service extends Base{
         $map=[
             'status'=>array('neq',-1)
         ];
-        $list=$service->where($map)->field('id,type,money,status,create_time')->select();
-
+        $list=$service->where($map)->field('id,type,money,status,create_time')->order('create_time desc')->select();
         foreach ($list as $v){
             $v['name']=$v['type']==1?'新卡办理':"旧卡续费";
             $v['pay']=$v['money'];
@@ -948,7 +947,7 @@ class Service extends Base{
        }
 
 
-       echo json_encode($all_check2);
+
         $this->assign('app_id',input('app_id'));
         $this->assign('other',json_encode($all_check2));
         $this->assign('user',json_encode($user_check2));
