@@ -34,6 +34,7 @@
         </div>
     </div>
     <div class="my-footer">
+        <span v-if="!canLoad">没有更多了</span>
         <mt-spinner :type="2"  v-if="loading"></mt-spinner>
     </div>
 </div>
@@ -50,19 +51,19 @@
         },
         methods:{
             loadMore(){
-                if(!this.loading && this.article.length>=6 && this.canLoad ){
+                if((!this.loading) && this.canLoad ){
                     this.loading = true;
-                    console.log(this.article.length+'old');
-                    this.$http.post('/index/news/getMoreList',{type:3,len:this.article.length}).then(function (res) {
-                        console.log(res.data.data.length);
-                        for(var i=0;i<res.data.data.length;i++){
-                            this.article.push(res.data.data[i])
-                        }
-                        console.log(this.article.length+'new');
-                        this.loading = false;
-                        if(res.data.length<6){
+                    this.$http.post('/index/news/getMoreList',{type:3,length:this.article.length}).then(function (res) {
+                        if(res.data.code!=0){
+                            for(var i=0;i<res.data.data.length;i++){
+                                this.article.push(res.data.data[i])
+                            }
+                            this.loading = false;
+                        }else{
+                            this.loading = false;
                             this.canLoad=false;
                         }
+                        console.log(this.canLoad)
                     },function (res) {
                         console.log(res.data);
                         this.loading = false;
