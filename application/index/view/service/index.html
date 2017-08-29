@@ -12,7 +12,7 @@
     }
     .my-item{
         position: relative;
-        width:90%;
+        width:94.67%;
         margin:0 auto;
         margin-top: 3rem;
         background: #ffffff;
@@ -21,6 +21,9 @@
         /*padding:15px 10px 0 10px;*/
         padding-top: 1.5rem;
         padding-bottom: 2.8rem;
+    }
+    .my-item:first-child{
+        margin-top: 2.25rem;
     }
     .my-item-title{
         width:10rem;
@@ -55,7 +58,7 @@
     .my-list{
         width:33.33333333%;
         text-align: center;
-        padding-top:3rem;
+        padding-top:2.5rem;
     }
     .my-list>img{
         width:3.2rem;
@@ -79,7 +82,7 @@
         font-size: 1.4rem;
         color: #666;
     }
-    .my-park>select{
+    .my-park select{
         background-color: #fff;
         color: #666;
         height: 2.5rem;
@@ -93,12 +96,21 @@
 {block name="body"}
 <div id="app">
     <div class="my-park">
-        <span>当前：{{parks[nowPark].name}}</span>
-        <select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">
-            <option :value="item.value" v-for="(item,key) in parks" >
-                {{item.name}}
-            </option>
-        </select>
+        <span>欢迎来到企业服务！</span>
+        <div>
+            <span>当前：</span>
+            <select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">
+                <option :value="item.value" v-for="(item,key) in parks" >
+                    {{item.name}}
+                </option>
+            </select>
+            <select   v-else>
+                <option >
+                    希恳科技园
+                </option>
+            </select>
+        </div>
+
     </div>
     <div class="my-items">
         <div class="my-item">

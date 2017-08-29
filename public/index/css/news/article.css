@@ -63,3 +63,17 @@ body{
     left: 0;
     z-index: 2;
 }
+.loading-more{
+    display: flex;
+    height: 45px;
+    align-items: center;
+    justify-content: center;
+}
+.loading-tit{
+    color:#333;
+}
+.loading-more div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}

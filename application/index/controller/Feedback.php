@@ -49,14 +49,14 @@ class Feedback extends Base
                 Loader::import('wechat\TPWechat', EXTEND_PATH);
                 $weObj = new TPWechat(config('reply'));
                 $data = [
-                    "touser" => @all,
+                    "touser" => $list['create_user'],
                     'safe' => 0,
                     'msgtype' => 'textcard',
                     'agentid' => 1000007,
                     'textcard' => [
                         'title' => "您有一条最新信息",
                         'description' => $list['create_time']."</br>"."海创大厦："."</br>尊敬的领导，我们公司现在发展有新的需求......，希望园区部门给出解答",
-                        'url' =>config('web_url').'/index/feedback/detail/id/'.$list['id'],
+                        'url' =>'http://xk.0519ztnet.com/index/feedback/detail/id/'.$list['id'],
                     ]
                 ];
                 $result1 = $weObj->sendMessage($data);
@@ -127,7 +127,7 @@ class Feedback extends Base
                     'textcard' => [
                         'title' => "您有一条最新信息",
                         'description' => date('Y-m-d H:i:s',$list['reply_time'])."</br>".$depart['name']."</br>根据你所提供的意见，我领导已经回复，批示内容如下，如有任何问题，欢迎咨询。O(∩_∩)O谢谢！",
-                        'url' =>config('web_url').'/index/feedback/detail/id/'.input('id'),
+                        'url' =>'http://xk.0519ztnet.com/index/feedback/detail/id/'.input('id'),
                     ]
                 ];
                 $weObj = new TPWechat(config('feedback'));
