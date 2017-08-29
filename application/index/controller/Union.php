@@ -16,7 +16,7 @@ class Union extends Base
             'status' => 1,
         ];
         $list1=UnionModel::where($map)->where('type',1)->order('create_time desc')->limit(2)->field('id,title,front_cover')->select();
-        $list2=UnionLoabourModel::where($map)->order('create_time desc')->limit(2)->field('id,name,front_cover')->select();
+        $list2=UnionLoabourModel::where($map)->order('create_time desc')->limit(2)->field('id,title,front_cover')->select();
         $list3=UnionModel::where($map)->where('type',2)->order('create_time desc')->field('id,title,front_cover')->limit(2)->select();
 
         $this->assign('list1',json_encode($list1));
@@ -35,7 +35,8 @@ class Union extends Base
             $total = input('total');
             $map['status'] = 1;
 
-            $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,name,create_time,views')->select();
+            $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
+
         }else {
             $lastId = input('lastId', 0);
             if ($lastId != 0) {
@@ -48,7 +49,7 @@ class Union extends Base
 
             $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
         }
-        var_dump($list);exit;
+
         $this->assign('list',json_encode($list));
         return $this->fetch();
     }
@@ -63,7 +64,7 @@ class Union extends Base
 
     public function loabourDetail(){
         $res = UnionLoabourModel::where('id','eq',input('id'))->find();
-        $res['title']=$res['name'];
+        $res['title']=$res['title'];
         $this->assign('res',json_encode($res));
         return $this->fetch();
     }
