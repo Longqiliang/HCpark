@@ -71,8 +71,14 @@ class News extends Base
             'target_id' => input('id')
         ];
         $comments = Comment::where($map)->order('id desc')->limit(6)->select();
+
         foreach( $comments as $v){
-            $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
+           $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
+            if(!empty($header)){
+                $v['header']=$header;
+            }else {
+                $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
+            }
         }
         foreach ($comments as $value){
         }
@@ -83,6 +89,7 @@ class News extends Base
             'user_id' => session('userId')
         ];
         $collect = Collect::where($collectMap)->find();
+        //echo json_encode($comments);
         $this->assign('collect', json_encode($collect));
 
         // 添加阅读量

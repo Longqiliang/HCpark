@@ -70,8 +70,6 @@ class Base extends Controller
             'content' => input('content'),
         ];
         $userinfo = WechatUser::where('userid',session('userId'))->field('name,header,avatar')->find();
-
-
         $data['user_name'] = $userinfo['name'];
         $result = Comment::create($data);
         if(!empty($userinfo['header'])){
@@ -82,7 +80,6 @@ class Base extends Controller
             $result['header']=!empty($userinfo['avatar'])?$userinfo['avatar']:"";
 
         }
-
         if($result) {
 
             return $this->success('评论成功', '', $result);
@@ -104,13 +101,8 @@ class Base extends Controller
         if($result) {
             return $this->success('评论成功', '', "1");
         } else {
-
             return $this->error('评论失败');
         }
-
-
-
-
     }
 
 
@@ -151,7 +143,18 @@ class Base extends Controller
         ];
         if ($lastId != 0) {  $map['id'] = ['<', $lastId]; }
         $comments = Comment::where($map)->order('id desc')->limit(6)->select();
+        foreach ($comments as $value){
+            $userinfo['header']=isset($value->wechatuser->header)?$value->wechatuser->header:"";
+            $userinfo['avatar']=isset($value->wechatuser->avatar)?$value->wechatuser->avatar:"";
+            if(!empty($userinfo['header'])){
 
+                $value['header']=$userinfo['header'];
+
+            }else{
+                $value['header']=!empty($userinfo['avatar'])?$userinfo['avatar']:"";
+
+            }
+        }
         return json(['total'=>count($comments), 'comments'=>$comments]);
     }
 
