@@ -8,6 +8,7 @@
     .my-footer{
         padding: 1rem 0;
         text-align: center;
+        color:#999
     }
 </style>
 {/block}
@@ -35,7 +36,8 @@
     </div>
     <div class="my-footer">
         <span v-if="!canLoad">没有更多了</span>
-        <mt-spinner :type="2"  v-if="loading"></mt-spinner>
+        <span v-if="canLoad && !loading">下拉加载更多</span>
+        <mt-spinner :type="2"  v-if=" loading "></mt-spinner>
     </div>
 </div>
 {/block}
