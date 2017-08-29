@@ -10,7 +10,7 @@ use  app\common\model\PartyBuilding as PartyBuildingModel;
 use app\common\model\PartyComment;
 use app\index\model\WechatUser;
 
-class PartyBuild extends Base{
+class Partybuild extends Base{
 
     public function index(){
         $list1=PartyBuildingModel::where(['type'=>1,'status'=>1])->order('id desc')->find();
@@ -19,8 +19,8 @@ class PartyBuild extends Base{
         $this->assign('list1',$list1);
         $this->assign('list2',$list2);
         $this->assign('list3',$list3);
-        dump($list1);
-        //return $this->fetch();
+
+        return $this->fetch();
     }
         /*党建新闻列表*/
     public function showList(){
