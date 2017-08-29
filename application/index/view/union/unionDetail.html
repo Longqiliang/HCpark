@@ -1,0 +1,198 @@
+
+{extend name="public/common"}
+
+{block name="style"}
+<title>详情</title>
+<link rel="stylesheet" href="/index/css/union/index.css">
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="header">
+        <h2>{$news->title}</h2>
+        <p>
+            <span>{$news->create_time}</span>
+            <span>{$news->source}</span>
+            <span>{$news->views}</span>
+        </p>
+    </div>
+    <section>
+        {$news->content}
+    </section>
+    <div class="comment-box">
+        <p>共 {{documents.length}} 条评论</p>
+        <div class="comment">
+            <ul>
+                <li v-for="list in documents">
+                    <div class="img-box">
+                        <img :src="list.header==''?'/index/images/personal/personalinfo.png':list.header">
+                    </div>
+                    <div class="content-box">
+                        <div class="top">
+                            <span>{{list.user_name}}</span>
+                            <!--<span class="dislike" @click="like($event,list.id)">{{list.likes}}</span>-->
+                        </div>
+                        <div>{{list.content}}</div>
+                        <div>{{list.create_time}}</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="load-more" v-if="documents.length === 0">暂时啥都没有，快去评论吧！</div>
+        <div class="load-more" v-if="documents.length > 0" @click="loadMore($event)">加载更多...</div>
+    </div>
+    <div class="foot">
+        <div class="collect-box">
+            <img class="outcollect" v-if="!collection" @click="collect($event,{$news->id},{$news->type})" src="/index/images/detail/outcollect.png">
+            <img class="collect" v-if="collection" @click="collect($event,{$news->id},{$news->type})" src="/index/images/detail/collect.png">
+        </div>
+        <div class="input-box">
+            <input type="text" placeholder="说说你的感想！" v-model="commentValue">
+        </div>
+        <div class="send" @click="send({$news->id},{$news->type})">发送</div>
+    </div>
+</div>
+<div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            documents:{$comments},
+            collection:{$collect},
+            value:'',
+            commentValue:''
+        },
+        methods:{
+            send:function (id,type) {
+                var content = $('.input-box input').val(),
+                        vm = this.documents;
+                if(content == '' || !content){
+                    alert('评论不能为空！')
+                } else {
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("Base/addComment")}',
+                        data:{
+                            'targetId':id,
+                            'type':type,
+                            'content':content
+                        }
+                    }).done(function (data) {
+                        if(data.code === 1){
+                            console.log(data);
+                            $('.input-box input').val('');
+                            data.data.likes = 0;
+                            vm.unshift(data.data);
+                        }
+                    })
+                }
+            },
+            collect:function (event,id,type) {
+                var img = event.target,
+                        classname = $(img).attr('class');
+                console.log(img);
+                if(classname === 'outcollect'){
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("Base/addCollect")}',
+                        data:{
+                            'targetId':id,
+                            'type':type
+                        }
+                    }).done(function (data) {
+                        if(data.code === 1){
+                            $(img).attr('class','collect');
+                            $(img).attr('src','/index/images/detail/collect.png');
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("Base/delCollect")}',
+                        data:{
+                            'targetId':id,
+                            'type':type
+                        }
+                    }).done(function (data) {
+                        if(data.code === 1){
+                            $(img).attr('class','outcollect');
+                            $(img).attr('src','/index/images/detail/outcollect.png');
+                        }
+                    });
+                }
+            },
+            loadMore:function (event) {
+                var length = this.documents.length,
+                        lastId = this.documents[length-1].id,
+                        vm = this.documents;
+                $.ajax({
+                    type:'post',
+                    url:'{:Url("Base/moreComment")}',
+                    dataType:'json',
+                    data:{
+                        'lastId':lastId,
+                        'targetId':"{$news.id}",
+                    }
+                }).done(function (data) {
+                    if(data.total === 0){
+                        $(event.target).text('已加载全部！')
+                    }else{
+                        $.each(data.comments,function(index,array){
+                            console.log(array)
+                            vm.push(array);
+                        })
+                    }
+                });
+            },
+            like:function (event,id) {
+                var classname = $(event.target).attr('class'),
+                        likes = $(event.target).text();
+                if(classname === 'dislike'){
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("Base/likes")}',
+                        data:{'id':id}
+                    }).done(function (data) {
+                        if(data.code === 1){
+                            likes++;
+                            $(event.target).removeClass('dislike').addClass('like');
+                            $(event.target).text(likes);
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("Base/unlikes")}',
+                        data:{'id':id}
+                    }).done(function (data) {
+                        if(data.code === 1){
+                            likes--;
+                            $(event.target).removeClass('like').addClass('dislike');
+                            $(event.target).text(likes);
+                        }
+                    });
+                }
+            }
+        }
+    });
+    //修改图片自适应
+    $(function () {
+        $("section").find('img').each(function(){
+            $(this).css('width',"100%");
+        });
+        //
+        ////        第三方输入法遮挡输入解决
+        //        $(".input-box>input").on('focus',function(){
+        //            $(".foot").css({'position':'absolute','bottom':'16vw'});
+        //        });
+        //        $(".input-box>input").on('blur',function(){
+        //            $(".foot").css({'position':'fixed','bottom':'0'});
+        //        })
+    });
+</script>
+{/block}

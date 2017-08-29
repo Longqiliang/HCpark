@@ -1,0 +1,124 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>工会列表</title>
+<link rel="stylesheet" href="/index/css/news/article.css">
+{/block}
+
+
+{block name="body"}
+<div id="app">
+    <div class="swiper-container" >
+        <img src="/index/images/feedback/policy.jpg">
+    </div>
+    <div class="page">
+        <div class="body">
+            <ul
+                v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-distance="6">
+                <li  v-for="(item,index) in list">
+                    <div class="content-box">
+                        <p>测试</p>
+                        <span>测试{{index}}</span>
+                        <span><img src="/index/images/news/view.png" >哈哈</span>
+                    </div>
+                </li>
+                <!--<li>-->
+                    <!--<div class="content-box">-->
+                        <!--<p>测试一波</p>-->
+                        <!--<span>测试一波</span>-->
+                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
+                    <!--</div>-->
+                    <!--<a href=""></a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="content-box">-->
+                        <!--<p>测试一波</p>-->
+                        <!--<span>测试一波</span>-->
+                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
+                    <!--</div>-->
+                    <!--<a href=""></a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="content-box">-->
+                        <!--<p>测试一波</p>-->
+                        <!--<span>测试一波</span>-->
+                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
+                    <!--</div>-->
+                    <!--<a href=""></a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="content-box">-->
+                        <!--<p>测试一波</p>-->
+                        <!--<span>测试一波</span>-->
+                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
+                    <!--</div>-->
+                    <!--<a href=""></a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="content-box">-->
+                        <!--<p>测试一波</p>-->
+                        <!--<span>测试一波</span>-->
+                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
+                    <!--</div>-->
+                    <!--<a href=""></a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="content-box">-->
+                        <!--<p>测试一波</p>-->
+                        <!--<span>测试一波</span>-->
+                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
+                    <!--</div>-->
+                    <!--<a href=""></a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="content-box">-->
+                        <!--<p>测试一波</p>-->
+                        <!--<span>测试一波</span>-->
+                        <!--<span><img src="/index/images/news/view.png">哈哈</span>-->
+                    <!--</div>-->
+                    <!--<a href=""></a>-->
+                <!--</li>-->
+
+            </ul>
+            <div class="loading-more" v-show="loading">
+                <mt-spinner :type="3" color="#999" ></mt-spinner>
+                加载中...
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            list:[{
+                name:'1'
+            },{
+                name:'2'
+            },{
+                name:'2'
+            }],
+            loading:false
+        },
+        methods:{
+            loadMore:function () {
+                console.log("11");
+                var _this = this;
+                _this.loading = true;
+                setTimeout(function() {
+                        var last = _this.list[_this.list.length - 1];
+                    for (var i = 1; i <= 10; i++) {
+                        _this.list.push(last + i);
+                    }
+                    _this.loading = false;
+                }, 3000);
+            }
+        }
+    })
+</script>
+{/block}
