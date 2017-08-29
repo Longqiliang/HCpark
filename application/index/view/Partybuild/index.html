@@ -1,0 +1,163 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>园区党建</title>
+<style>
+    .my-banner{
+        width:100%;
+        height:50vw;
+    }
+    .group-tit{
+        position: relative;
+        text-align: center;
+        width:80%;
+        margin:0 auto;
+    }
+    .group-tit:after{
+        position: absolute;
+        top:50%;
+        height: 1px;
+        background-color: #e8e8e8;
+        transform: translateY(-50%);
+        width: 100%;
+        content: '';
+        z-index: -1;
+        left: 0;
+    }
+    .group-tit-info{
+        display: inline-block;
+        padding: 0 5vw;
+        text-align: center;
+        font-size: 1.7rem;
+        line-height: 1.4;
+        background-color: #fff;
+    }
+    .my-tabs{
+        width:100vw;
+        padding:1.2rem 0;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        text-align: center;
+    }
+    .my-tabs img{
+        display: block;
+        margin:0 auto;
+        width:5rem;
+        height:5rem;
+        border-radius: 100%;
+    }
+    .my-tabs span{
+        line-height: 2;
+        font-size: 1.2rem;
+    }
+
+    .my-list li{
+        width: 100%;
+        height: 23.2vw;
+        overflow: hidden;
+        border-bottom: 1px solid #f1f1f1;
+        position: relative;
+    }
+    .my-list li .img-box{
+        width: 32vw;
+        height: 100%;
+        float: left;
+    }
+    .my-list li .img-box img{
+        width: 24vw;
+        height: 17.6vw;
+        margin: 2.67vw 4vw;
+        border-radius: 1.067vw;
+    }
+    .my-list li .content-box{
+        width: 66vw;
+        height: 100%;
+        float: left;
+        position: relative;
+    }
+    .my-list li .content-box p{
+        font-size: 1.4rem;
+        color: #333;
+        margin: 2.66vw 4vw 0 0;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+    .my-list li .content-box>span{
+        color: #999;
+        font-size: 1.1rem;
+        position: absolute;
+        bottom: 2.667vw;
+    }
+    .my-list li .content-box>span.readed{
+        padding-left: 2em;
+        background: url('/index/images/news/view.png') left center no-repeat;
+        background-size: 1.6em 1em;
+    }
+    /*.my-list li .content-box span:nth-child(2)>img{*/
+    /*width: 1.5rem;*/
+    /*margin-right: 6px;*/
+    /*position: relative;*/
+    /*top: 1px;*/
+    /*}*/
+    .my-list li .content-box span:last-child{
+        right: 4vw;
+    }
+    .my-list li a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <img src="/index/images/cbd.jpg" alt="banner图" class="my-banner">
+    <ul class="my-tabs">
+        <li @click="jumpTo('showList')"><img src="/index/images/cbd.jpg" alt="图标"><span>支部活动</span></li>
+        <li @click="jumpTo('showList')"><img src="/index/images/cbd.jpg" alt="图标"><span>两学一做</span></li>
+        <li @click="jumpTo('showList')"><img src="/index/images/cbd.jpg" alt="图标"><span>党员风采</span></li>
+        <li @click="jumpTo('countParty')"><img src="/index/images/cbd.jpg" alt="图标"><span>党员统计</span></li>
+    </ul>
+
+    <div class="group-tit">
+        <h3 class="group-tit-info">服务简介</h3>
+    </div>
+    <ul class="my-list">
+        <li v-for="n in 3">
+            <div class="img-box">
+                <img src="$news->front_cover">
+            </div>
+            <div class="content-box">
+                <p>$news->title</p>
+                <span class="readed"><img src="">$news->views</span>
+                <span>$news->create_time</span>
+            </div>
+            <a href=":Url('News/detail?id='.$news->id)"></a>
+        </li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+
+    },
+    methods:{
+        jumpTo(path){
+            window.location.href='/index/partybuilding/'+path
+        }
+    }
+})
+</script>
+{/block}

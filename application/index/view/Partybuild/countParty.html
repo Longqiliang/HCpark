@@ -1,0 +1,144 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    body{
+        background-color: #f0eff5;
+    }
+    /*卡片样式*/
+    .card{
+        position: relative;
+        margin:10.5vw 2.4vw 0;
+        padding: 4vw 2.66vw 0;
+        font-size: 1.5rem;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+    .card-tit:before{
+        content: '';
+        position: absolute;
+        left:-20px ;
+        top: -6px;
+        width: 14px;
+        height: 18px;
+        background: url("/index/images/service/card/icon-star.png") 0 0 no-repeat;
+        background-size:contain ;
+    }
+    .card-tit{
+        height: 8vw;
+        position: absolute;
+        top:-4vw;
+        width: 29.3vw;
+        transform: translateX(-50%);
+        left: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 100px;
+        font-size: 1.7rem;
+        color: #fcc44b;
+        box-shadow: 0 2px 4px #e8e8e8;;
+    }
+    .card-tit:after{
+        content: '';
+        position: absolute;
+        right:-20px ;
+        top: -6px;
+        width: 14px;
+        height: 18px;
+        background: url("/index/images/service/card/icon-star.png") 0 0 no-repeat;
+        background-size:contain ;
+        -webkit-transform: rotateY(180deg);
+        transform: rotateY(180deg);
+    }
+    .card-cell{
+        min-height: 49px;
+        border-bottom: 1px solid #f1f1f1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+    }
+    .my-party-sum{
+        padding: 1rem;
+        display: block;
+        text-align: center;
+        font-size: 4rem;
+        font-weight: bold;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="card">
+        <div class="card-tit">党支部总数</div>
+        <div class="my-card-box"><span class="my-party-sum">16</span></div>
+    </div>
+    <div class="card">
+        <div class="card-tit">年龄分布</div>
+        <div class="my-card-box">
+            <div id="age" style="width: 100%;height:100vw;"></div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/echarts/echarts.simple.min.js"></script>
+<script>
+    // 基于准备好的dom，初始化echarts实例
+    var myAge = echarts.init(document.getElementById('age'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '年龄分布'
+        },
+        tooltip: {},
+        legend: {
+            data:['年龄分布']
+        },
+        color:['#fcc44b','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
+        xAxis: {
+            data: ["20岁以下","20-30岁","30-40岁","40-50岁","50岁以上"],
+            axisLabel:{
+                interval:0,//横轴信息全部显示
+                rotate:-30,//倾斜显示 角度
+                margin:10,//文字到x轴间距
+                textStyle:{
+                    color:'#666'
+                },
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'#999'
+                },
+            }
+        },
+        yAxis: {
+            data:[10,20,30,40,50,60,70,80],
+            axisLabel:{
+                textStyle:{
+                    color:'#666'
+                },
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'#999'
+                },
+            }
+        },
+        series: [{
+            name: '销量',
+            type: 'bar',
+            data: [0.1, 2, 3, 1, 1]
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myAge.setOption(option);
+</script>
+
+{/block}
