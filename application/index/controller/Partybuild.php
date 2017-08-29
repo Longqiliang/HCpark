@@ -19,6 +19,7 @@ class Partybuild extends Base{
         $this->assign('list1',$list1);
         $this->assign('list2',$list2);
         $this->assign('list3',$list3);
+        $this->assign('type',1);
 
         return $this->fetch();
     }
@@ -94,8 +95,10 @@ class Partybuild extends Base{
             ->limit($len, 6)
             ->select();
         if ($comments) {
+
             return json(['code' => 1, 'data' => $comments]);
         } else {
+
             return json(['code' => 0, 'msg' => "没有更多内容了"]);
         }
 
