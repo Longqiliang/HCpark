@@ -56,13 +56,18 @@ class Enterprise extends Base{
         //企业服务
         $map['type']=2;
         $service =  $CompanyProduct->where($map)->select();
-
+         foreach ($service as $v){
+             $v['content']=preg_replace("/<(.*?)>/","",$v['content']);
+         }
+        foreach ($product as $v){
+            $v['content']=preg_replace("/<(.*?)>/","",$v['content']);
+        }
         $info = $parkcompany->where('id',$id)->find();
 
        $result=[
 
-           'present'=>$info['present'],
-           'about_us'=>$info['about_us'],
+           'present'=>$str= preg_replace("/<(.*?)>/","",$info['present']),
+           'about_us'=>$str= preg_replace("/<(.*?)>/","",$info['about_us']),
            'name'=>$info['name'],
            'mobile'=>$info['mobile'],
            'img'=>$info['img'],
