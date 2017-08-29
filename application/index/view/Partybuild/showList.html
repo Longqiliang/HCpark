@@ -54,6 +54,7 @@
     .my-footer{
         padding: 1rem 0;
         text-align: center;
+        color: #999;
     }
 </style>
 {/block}
@@ -69,10 +70,12 @@
                 <span>{{item.create_time}}</span>
                 <span>{{parseInt(item.views)>999?'999+':item.views}}</span>
             </div>
-            <a :href="'/index/Partybuilding/detail/id/'+item.id"></a>
+            <a :href="'/index/Partybuild/detail/id/'+item.id"></a>
         </li>
     </ul>
     <div class="my-footer">
+        <span v-if="canLoad && !loading">下拉加载更多</span>
+        <span v-if="!canLoad">没有更多啦！</span>
         <mt-spinner :type="2"  v-if="loading"></mt-spinner>
     </div>
 </div>
@@ -85,48 +88,34 @@ var app = new Vue({
     data:{
         loading:false,
         canLoad:true,
-        article:[
-            {
-                title:'test1',
-                create_time:'2017-7-7',
-                views:999,
-                id:1
-            },
-            {
-                title:'test1',
-                create_time:'2017-7-7',
-                views:88,
-                id:2
-            },
-            {
-                title:'test1',
-                create_time:'2017-7-7',
-                views:8888,
-                id:2
-            }
-        ]
+        article:{$list},
+        type:{$type}
     },
     mounted(){
     },
     methods:{
         loadMore(){
-            if(!this.loading && this.article.length>=6 && this.canLoad ){
+            if(!this.loading && this.canLoad ){
                 this.loading = true;
-                let lastId = this.article[this.article.length - 1].id;
-                console.log(lastId);
-                this.$http.post('/index/partybuilding/XXX',{lastId:lastId}).then(function (res) {
+                this.$http.post('/index/partybuild/getMoreList',{type:this.type,length:this.article.length}).then(function (res) {
                     console.log(res.data);
-                    this.article.concat(res.data);
-                    this.loading = false;
-                    if(res.data.length<6){
-                        this.canLoad=false;
+
+                    if(res.data.code==0){
+                        this.canLoad=false
+                    }else{
+                        for( var i = 0 ;i < res.data.data.length;i++){
+                            this.article.push(res.data.data[i])
+                        }
+                        if(res.data.data.length<6){
+                            this.canLoad = false
+                        }
                     }
+                    this.loading = false;
                 },function (res) {
                     console.log(res.data);
                     this.loading = false;
 
                 })
-                    this.loading = false;
             }
         },
     }
