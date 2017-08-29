@@ -19,8 +19,8 @@ class Policy extends Base
 {
     //政策法规首页
     public function index() {
-        $list1 =NewsModel::where(['type'=>5, 'park_id'  =>session("park_id")])->limit(6)->select();
-        $list2 =NewsModel::where(['type'=>4, 'park_id'  =>session("park_id")])->limit(6)->select();
+        $list1 =NewsModel::where(['type'=>5, 'park_id'  =>session("park_id")])->order("create_time desc")->limit(6)->select();
+        $list2 =NewsModel::where(['type'=>4, 'park_id'  =>session("park_id")])->order("create_time desc")->limit(6)->select();
 
         $this->assign('list1',$list1);
         $this->assign('list2',$list2);

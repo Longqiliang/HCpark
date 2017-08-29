@@ -8,7 +8,7 @@
 namespace app\index\controller;
 use app\index\model\Union as UnionModel;
 use app\index\model\UnionLoabour as UnionLoabourModel;
-
+use app\index\model\Comment;
 class Union extends Base
 {
     public function index(){
@@ -26,36 +26,46 @@ class Union extends Base
     }
 //通知公告和相关活动写一起，传我type1 type2
     public function unionList(){
-        if(input('type')==3){
-            $map['id'] = ['<', input('lastId')];
-            $total = input('total', 1);
+        if(input('type')==2){
+            $lastId = input('lastId', 0);
+            if ($lastId != 0) {
+                $map['id'] = ['<', $lastId];
+            }
+
+            $total = input('total');
             $map['status'] = 1;
 
-            $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,name,create_time,view')->select();
+            $list = UnionLoabourModel::where($map)->order('create_time desc')->limit($total)->field('id,name,create_time,views')->select();
         }else {
+            $lastId = input('lastId', 0);
+            if ($lastId != 0) {
+                $map['id'] = ['<', $lastId];
+            }
+
             $map['type'] = input('type');
-            $map['id'] = ['<', input('lastId')];
-            $total = input('total', 1);
+            $total = input('total');
             $map['status'] = 1;
 
-            $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,view')->select();
+            $list = UnionModel::where($map)->order('create_time desc')->limit($total)->field('id,title,create_time,views')->select();
         }
+        var_dump($list);exit;
         $this->assign('list',json_encode($list));
         return $this->fetch();
     }
 
     public function unionDetail(){
-        $map=[
-          'type'=>input('type'),
-            'id'=>input('id'),
-        ];
+        $map['id']=input('id');
         $res = UnionModel::where($map)->find();
         $this->assign('res',json_encode($res));
+
+        return $this->fetch();
     }
 
     public function loabourDetail(){
         $res = UnionLoabourModel::where('id','eq',input('id'))->find();
+        $res['title']=$res['name'];
         $this->assign('res',json_encode($res));
+        return $this->fetch();
     }
 
 

@@ -91,7 +91,7 @@ class Base extends Controller
     //党建添加评论
     public function addComments(){
         $data = [
-            'target_id' => input('targetId'),
+            'target_id' => input('id'),
             'user_id' => session('userId'),
             'content' => input('content'),
         ];
