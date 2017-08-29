@@ -130,7 +130,7 @@ class News extends Base
             'park_id'  =>session("park_id")
         ];
         $articleList =  NewsModel::where($articleMap)->order('create_time desc')->limit(6)->select();
-        $this->assign('article',  $articleList);
+        $this->assign('article',  json_encode($articleList));
 
         return $this->fetch();
 

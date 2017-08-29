@@ -4,31 +4,74 @@
 <title>好文分享</title>
 <link rel="stylesheet" href="/index/css/common/rem.css">
 <link rel="stylesheet" href="/index/css/news/article.css">
+<style>
+    .my-footer{
+        padding: 1rem 0;
+        text-align: center;
+    }
+</style>
 {/block}
 
 
 {block name="body"}
-<div class="swiper-container" id="banner-1">
-    <img src="/index/images/feedback/policy.jpg">
-</div>
-<div class="page">
-    <div class="body">
-        <ul>
-            {volist name="article" id="article"}
-            <li>
-                <div class="content-box">
-                    <p>{$article.title}</p>
-                    <span>{$article.create_time}</span>
-                    <span><img src="/index/images/news/view.png">{$article.views}</span>
-                </div>
-                <a href="{:Url('News/detail?id='.$article.id)}"></a>
-            </li>
-            {/volist}
-        </ul>
+<div id="app">
+    <div class="swiper-container" id="banner-1">
+        <img src="/index/images/feedback/policy.jpg">
+    </div>
+    <div class="page">
+        <div class="body">
+            <ul  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+                <li  v-for="item in article">
+                    <div class="content-box">
+                        <p>{{item.title}}</p>
+                        <span>{{item.create_time}}</span>
+                        <span>{{parseInt(item.views)>999?'999+':item.views}}</span>
+                    </div>
+                    <a :href="'/index/News/detail?id='+item.id"></a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="my-footer">
+        <mt-spinner :type="2"  v-if="loading"></mt-spinner>
     </div>
 </div>
 {/block}
 
 {block name="script"}
+<script>
+    var app=new Vue({
+        el:'#app',
+        data:{
+            loading:false,
+            canLoad:true,
+            article:{$article}
+        },
+        methods:{
+            loadMore(){
+                if(!this.loading && this.article.length>=6 && this.canLoad ){
+                    this.loading = true;
+                    console.log(this.article.length+'old');
+                    this.$http.post('/index/news/getMoreList',{type:3,len:this.article.length}).then(function (res) {
+                        console.log(res.data.data.length);
+                        for(var i=0;i<res.data.data.length;i++){
+                            this.article.push(res.data.data[i])
+                        }
+                        console.log(this.article.length+'new');
+                        this.loading = false;
+                        if(res.data.length<6){
+                            this.canLoad=false;
+                        }
+                    },function (res) {
+                        console.log(res.data);
+                        this.loading = false;
 
+                    })
+                    this.loading = false;
+                }
+            },
+        }
+    })
+</script>
 {/block}
