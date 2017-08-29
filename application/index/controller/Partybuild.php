@@ -61,13 +61,14 @@ class Partybuild extends Base{
 
 
         $this->assign("list",json_encode($list));
-        $this->assign('type',1);
+        $this->assign('type',$type);
 
         return $this->fetch();
 
     }
         /*新闻详细页面*/
     public function detail(){
+        $id= input('id');
         $news = PartyBuildingModel::get(input('id'));
         $this->assign('news', $news);
         // 评论列表
@@ -81,7 +82,7 @@ class Partybuild extends Base{
         foreach ($comments as $value){
         }
         $this->assign('comments', json_encode($comments));
-
+        $this->assign('id',$id);
         // 添加阅读量
         PartyBuildingModel::where('id', input('id'))->setInc('views');
 
