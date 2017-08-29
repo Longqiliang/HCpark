@@ -33,7 +33,7 @@ class Policy extends Base
         $userId = session("userId");
         $newsId = input("id");
         $news = NewsModel::where(['id'=>$newsId])->find();
-        $comments = CommentModel::where(['target_id'=>$newsId])->order("create_time")->limit(6)->select();
+        $comments = CommentModel::where(['target_id'=>$newsId])->order("create_time desc")->limit(6)->select();
         foreach( $comments as $v){
             $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
         }
@@ -59,7 +59,7 @@ class Policy extends Base
         $len = input("length");
         $type =input("type");
         if ($type==1){
-            $list2 =NewsModel::where(['type'=>4])->limit($len,6)->select();
+            $list2 =NewsModel::where(['type'=>4])->order("create_time desc")->limit($len,6)->select();
             if ($list2){
 
                 return  json(['code'=>1,'data'=>$list2]);

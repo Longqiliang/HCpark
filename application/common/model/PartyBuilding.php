@@ -10,7 +10,7 @@ use think\Model;
 
 class PartyBuilding extends Model
 {
-
+    protected $dateFormat="Y-m-d";
 
 
 

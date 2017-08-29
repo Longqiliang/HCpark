@@ -25,6 +25,7 @@ class Partybuild extends Base{
         /*党建新闻列表*/
     public function showList(){
         $type= input('type');
+        $list=[];
         switch ($type){
             case 1:
                 $listMap = [
