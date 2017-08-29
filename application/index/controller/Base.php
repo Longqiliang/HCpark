@@ -95,7 +95,7 @@ class Base extends Controller
             'user_id' => session('userId'),
             'content' => input('content'),
         ];
-        $userinfo = WechatUser::where('userid',session('userId'))->field('name')->find();
+        $userinfo = WechatUser::where('userid',session('userId'))->field('name,header,avatar')->find();
         $data['user_name'] = $userinfo['name'];
         $result = PartyComment::create($data);
         if(!empty($userinfo['header'])){
