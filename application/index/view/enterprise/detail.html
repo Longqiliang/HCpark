@@ -147,7 +147,8 @@
         <li class="service" :class="{'contentShow':isActive==1}" >
             <ul>
                 <li v-for="item in baseData.service" @click="jumpTo(item.id)">
-                    <div class="my-content-img" :style="{backgroundImage:'url('+imgPath+')'}"></div>
+                    <div class="my-content-img" v-if="!item.front_cover" :style="{backgroundImage:'url('+imgPath+')'}"></div>
+                    <div class="my-content-img" v-else :style="{backgroundImage:'url('+item.front_cover+')'}"></div>
                     <ul  class="my-content-info">
                         <li>{{item.name}}</li>
                         <li>{{item.content}}</li>
@@ -158,7 +159,8 @@
         <li class="product" :class="{'contentShow':isActive==2}" v-if="baseData.product!=''">
             <ul>
                 <li v-for="item in baseData.product" @click="jumpTo(item.id)">
-                    <div class="my-content-img" :style="{backgroundImage:'url('+imgPath+')'}"></div>
+                    <div class="my-content-img" v-if="!item.front_cover" :style="{backgroundImage:'url('+imgPath+')'}"></div>
+                    <div class="my-content-img" v-else :style="{backgroundImage:'url('+item.front_cover+')'}"></div>
                     <ul  class="my-content-info">
                         <li>{{item.name}}</li>
                         <li>{{item.content}}</li>

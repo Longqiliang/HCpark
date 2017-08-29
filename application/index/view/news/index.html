@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>新闻速递</title>
 <link rel="stylesheet" href="/static/swiper/swiper.min.css">
 <link rel="stylesheet" href="/index/css/common/rem.css">
 <style type="text/css">
@@ -152,7 +153,6 @@
 {block name="script"}
 <script type="text/javascript" src="/static/swiper/swiper.min.js"></script>
 <script>
-    $("title").html('新闻速递');
     var scrollNow = true;
     $(function(){
         var mySwiper = $('#banner').swiper({

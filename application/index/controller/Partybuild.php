@@ -58,8 +58,9 @@ class Partybuild extends Base{
                 break;
         }
 
-        return dump($list);
+
         $this->assign("list",json_encode($list));
+        $this->assign('type',1);
 
         return $this->fetch();
 
@@ -94,8 +95,10 @@ class Partybuild extends Base{
             ->limit($len, 6)
             ->select();
         if ($comments) {
+
             return json(['code' => 1, 'data' => $comments]);
         } else {
+
             return json(['code' => 0, 'msg' => "没有更多内容了"]);
         }
 
