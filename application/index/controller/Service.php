@@ -232,7 +232,7 @@ class Service extends Base{
         $Park = new Park();
         $park= $Park->where('id',$park_id)->find();
         //充电柱单价
-        $data['charging_price']=$park['charging_price'];
+        $data['charging_price']=(int)$park['charging_price'];
         //充电柱押金
         $data['charging_deposit']=$park['charging_deposit'];
         $this->assign('data',json_encode($data));
@@ -336,7 +336,7 @@ class Service extends Base{
             'user_id'=>$user_id,
             'status'=>array('neq',-1)
         ];
-        $list=$service->where($map)->select();
+        $list=$service->where($map)->order('create_time desc')->select();
         $record=array();
         foreach ($list as $value){
             array_push($record,$value->findRecord);

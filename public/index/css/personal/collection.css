@@ -1,4 +1,8 @@
+*{
+    box-sizing: border-box;
+}
 body{
+    box-sizing: border-box;
     background-color: #F1F1F1;
     line-height: 1;
 }
