@@ -102,7 +102,11 @@
         margin-top: 4.8rem;
     }
     .company-list{
-        padding:0.4rem 3.7333333vw;
+        box-sizing: border-box;
+        position: absolute;
+        top:0;
+        left:0;
+        padding:5.2rem 3.7vw 0.4rem 3.7vw;
     }
     .company-list>li{
         margin-bottom: 0.8rem;
@@ -139,6 +143,10 @@
     .hidden{
         display: none;
     }
+    .overflow{
+        height:100vh;
+        overflow: hidden;
+    }
 </style>
 
 {/block}
@@ -148,12 +156,12 @@
     <div class="search" :class="{isClick:inputStatus}" >
         <div class="searchBox" @click="isClick">
             <div class="searchText"><span class="searchText_c">请在此搜索企业</span></div>
-            <input type="text" v-model="inputValue" @keyup="toSearch" class="searchInput" placeholder="请输入企业名" ref="inputF">
+            <input type="text" v-model="inputValue" @keyup="toSearch" class="searchInput" placeholder="请输入企业名" v-focus="inputStatus">
         </div>
         <div class="unBtn" @click="isCancel">取消</div>
     </div>
     <!--公司列表-->
-    <ul class="company-list" :class="{hidden:inputValue}">
+    <ul class="company-list" :class="{overflow:inputStatus}">
         <li v-for="item in companyList" @click="jumpTo(item.id)">
             <div class="company-logo">
                 <img :src="item.img" alt="公司logo" v-if="item.img">
@@ -183,6 +191,16 @@
 
 {block name="script"}
 <script>
+    Vue.directive('focus', {
+        // When the bound element is inserted into the DOM...
+        update: function (el,value) {
+            // Focus the element
+            console.log(value)
+            if(value.value){
+                el.focus()
+            }
+        }
+    })
     var app= new Vue({
         el:'#app',
         data:{
@@ -204,11 +222,11 @@
             },
             isClick:function () {
                 this.inputStatus=true;
-                this.$refs.inputF.focus();
-                console.log(this.$refs.inputF);
             },
             isCancel:function () {
                 this.inputStatus=false;
+                this.inputValue='',
+                        this.searchList=[]
             },
             toSearch:function () {
                 let reg=new RegExp(this.inputValue);
