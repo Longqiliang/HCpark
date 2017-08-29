@@ -109,7 +109,7 @@
                                 position: 'bottom',
                                 duration: 1000
                             });
-                            this.documents.push(res.data.data);
+                            this.documents.unshift(res.data.data);
                             this.content=''
                         }
                     },function (res) {

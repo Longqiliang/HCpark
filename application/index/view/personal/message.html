@@ -3,101 +3,76 @@
 <title>我的消息</title>
 <link rel="stylesheet" href="/index/css/personal/message.css">
 <link rel="stylesheet" href="/index/css/common/tip.css">
+<style>
+.load-more{
+    text-align: center;
+    color: #999;
+}
+</style>
 {/block}
 {block name="body"}
-<ul class="msg-lists">
-    <li  class="clear">
-        <div style="background-image: url('/1.jpg')" class="msg-img"></div>
-        <div class="msg-text">
-            <div class="msg-title"><span class="msg-title-text">新闻速递</span> <span class="fr msg-time">2017-8-8 8:30</span> </div>
-            <div class="msg-info">希垦科技园区物业管理委员会第一次会议召开希垦科技园区物业管理委员会第一次会议召开</div>
-        </div>
-        <!--<a href=""></a>-->
-    </li>
-</ul>
-<!--加载更多-->
-<div class="tip"></div>
-<div class="loading hidden">
-    <div class="typing_loader"></div>
+<div id="app">
+    <ul class="msg-lists">
+        <li  class="clear" v-for="item in list">
+            <div :style="'background-image: url('+item.path+')'" class="msg-img"></div>
+            <div class="msg-text">
+                <div class="msg-title"><span class="msg-title-text">{{item.title}}</span> <span class="fr msg-time">{{item.create_time}}</span> </div>
+                <div class="msg-info">{{item.info}}</div>
+            </div>
+            <!--<a href=""></a>-->
+        </li>
+    </ul>
+    <div class="load-more">
+        <span v-if="documents.length === 0">暂无消息</span>
+        <mt-spinner :type="2"  v-if="canLoad && loading"></mt-spinner>
+        <span v-if="!canLoad">没有更多了</span>
+    </div>
 </div>
+<!--加载更多-->
+
 {/block}
 {block name="script"}
 <!--<script src="/index/js/reset.js"></script>-->
 <script>
-    $("title").html('我的消息');
     var scrollNow = true;//判断下拉请求是否执行中.false为正在请求
-    $(function(){
-        //tab初始化和数据存储
-        var lists = $('.msg-lists');
-        //上拉加载
-        var len = lists.find('li').length;
-        if(len >= 6){
-            $('.tip' ).text('上拉加载更多');
-        }
-        loadScroll();
-    });
-    function loadScroll(type){
-        $(window ).off("scroll" ).on("scroll",function(){
-            var lists = $('.msg-lists');
-            var dh = $(document).height();
-            var end = $(window).height() + $(window ).scrollTop();
-            var len = lists.find('li').length;
-            var tip = $(".tip");
-            var loading = $('.loading');
-            if(dh == end && scrollNow){
-                scrollNow = false;//请求执行中
-                $.ajax({
-                    type:"post",
-                    url: "{:Url('')}",
-                    data:{
-                        length:len
-                    },
-                    beforeSend: function(XMLHttpRequest){
-                        tip.hide();
-                        loading.toggleClass('hidden');
-                    },
-                    success:function(data){
-                        console.log(data)
-                        loading.toggleClass('hidden');
-                        tip.show();
-                        if(data.code == 1){
-                            console.log(data.data);
-                            addLists(data,type);
-                            var dataLen =data.data.length;
-                            if(dataLen == 6){
-                                tip.text('上拉加载更多');
-                            }
-                        }else{
-                            tip.text('没有更多了');
-                            $(window ).off("scroll");
-                        }
-                        scrollNow = true;//请求结束
-                    }
-                })
+    var app=new Vue({
+        el:'#app',
+        data:{
+            list:{$list},
+            canLoad:true,
+            loading:false,
+            id:{$id}
+        },
+        created(){
+            if(this.documents.len==0){
+                this.canLoad=false
             }
-        })
-    }
-    function timeChange(time) {
-        var newTime=new Date(time*1000);
-        return newTime.getFullYear()+"-"+newTime.getMonth()+"-"+newTime.getDate();
-    }
-    function addLists(data){
-        var html = '';
-        var lists = data.data;
-        var len = lists.length;
-        for(var i = 0; i< len;i++){
-            html += '<li  class="clear">'+
-                        '<div style="background-image: url('+lists.path+')" class="msg-img"></div>'+
-                            '<div class="msg-text">'+
-                            '<div class="msg-title">' +
-                                '<span class="msg-title-text">'+lists.title+'</span> ' +
-                                '<span class="fr msg-time">'+timeChange(lists.time)+'</span> ' +
-                            '</div>'+
-                            '<div class="msg-info">'+lists.info+'</div>'+
-                        '</div>'+
-                     '</li>';
-        }
-        $('.msg-lists').append(html);
-    }
+        },
+        methods:{
+            loadMore(){
+                if(!this.loading && this.documents.length>0 && this.canLoad ){
+                    this.loading = true;
+                    this.$http.post('/index/personal/getMore',{newsId:this.id,length:this.list.length}).then(function (res) {
+                        console.log(res.data);
+                        if(res.data.code==0){
+                            this.canLoad=false
+                        }else{
+                            for( var i = 0 ;i < res.data.data.length;i++){
+                                this.documents.push(res.data.data[i])
+                            }
+                            if(res.data.data.length<6){
+                                this.canLoad = false
+                            }
+                        }
+                        this.loading = false;
+                    },function (res) {
+                        console.log(res.data);
+                        this.loading = false;
+
+                    })
+                }
+            },
+        },
+    })
 </script>
 {/block}
