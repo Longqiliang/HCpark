@@ -8,6 +8,7 @@
 namespace app\index\controller;
 use  app\common\model\PartyBuilding as PartyBuildingModel;
 use app\common\model\PartyComment;
+use app\index\model\WechatUser;
 
 class PartyBuild extends Base{
 
@@ -21,7 +22,7 @@ class PartyBuild extends Base{
         dump($list1);
         //return $this->fetch();
     }
-
+        /*党建新闻列表*/
     public function showList(){
         $type= input('type');
         switch ($type){
@@ -149,7 +150,19 @@ class PartyBuild extends Base{
 
         }
 
+        /*党员统计*/
+        public function countParty(){
+            $parkId = session("park_id");
+            $data[0]= WechatUser::where(['age'=>['<',20]])->count();
+            $data[1]= WechatUser::where(['age'=>['between',[20,30]]])->count();
+            $data[2]= WechatUser::where(['age'=>['between',[30,40]]])->count();
+            $data[3]= WechatUser::where(['age'=>['between',[40,50]]])->count();
+            $data[4]= WechatUser::where(['age'=>['>',50]])->count();
+            $this->assign('data',$data);
 
+            return $this->fetch();
+
+        }
 
 
 
