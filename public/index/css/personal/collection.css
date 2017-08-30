@@ -105,13 +105,13 @@ body{
 /*}*/
 .content .notices .notice .list.news .news-info{
     height:100%;
-    width:70vw;
+    width:66vw;
 }
 .content .notices .notice .list.news .news-img {
-    width:20vw;
-    height:100%;
+    width:24vw;
+    height: 17.6vw;
     margin-right: 2.6vw;
-
+    border-radius: 1.067vw;
 }
 /*.content .notices .notice .time{*/
     /*width:70vw;*/
