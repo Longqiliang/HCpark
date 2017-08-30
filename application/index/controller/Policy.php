@@ -33,8 +33,15 @@ class Policy extends Base
         $userId = session("userId");
         $newsId = input("id");
         $news = NewsModel::where(['id'=>$newsId])->find();
-        $comments = CommentModel::where(['target_id'=>$newsId])->order("create_time desc")->limit(6)->select();
-        foreach( $comments as $v){
+
+        $comments = CommentModel::where(['target_id'=>$newsId])->order("create_time desc")->select();
+        $count=count($comments);
+        $list=array();
+        for($i=0;$i<6;$i++){
+         array_push($list,$comments[$i]);
+        }
+
+        foreach( $list as $v){
             $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
         }
         //是否收藏
@@ -48,7 +55,7 @@ class Policy extends Base
         NewsModel::where('id', $newsId)->setInc('views');
 
         $this->assign('comments',json_encode($comments));
-
+        $this->assign('count',$count);
         $this->assign('news',$news);
 
 
