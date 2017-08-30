@@ -15,30 +15,22 @@ class Company extends Admin
 {
     /*企业详细列表*/
     public function index (){
-        $parkid =session("user_auth")['park_id'];
-        $companyList=ParkCompany::where(['park_id'=>$parkid])->order('id  asc')->paginate();
-
-
-
+        $parkid  =session("user_auth")['park_id'];
+        $companyList = ParkCompany::where(['park_id'=>$parkid])->order('id  asc')->paginate();
+        foreach ($companyList as $k=>$v){
+            $v['present'] = mb_substr(strip_tags($v['present']),0,30);
+        }
        /// dump($companyList);
         $this->assign('list',$companyList);
 
         return  $this->fetch();
     }
-    /*企业详情的添加及修改*/
+    /*企业详情展示*/
     public  function add(){
-        $id =input('id');
-        $companyInfo=ParkCompany::get($id);
-        $list = ParkProduct::where(['type'=>1,'company_id'=>$id])
-                ->order('create_time desc')
-                ->paginate();
-
-        $list1=ParkProduct::where(['type'=>2,'company_id'=>$id])
-            ->order('create_time desc')
-            ->paginate();
+        $id = input('id');
+        $companyInfo = ParkCompany::get($id);
         $this->assign('companyInfo',$companyInfo);
-        $this->assign('list',$list);
-        $this->assign('list1',$list1);
+
         return $this->fetch();
     }
     /*同步企业信息*/
@@ -82,35 +74,7 @@ class Company extends Admin
 
 
     }
-    /*修改企业简介*/
-    public function send(){
-        $id =input("id");
-        $content = input('content');
-        $res=ParkCompany::update(['present'=>$content],['id'=>$id]);
-        if ($res){
 
-            return $this->success("添加成功");
-        }else{
-
-            return  $this->error("添加失败");
-        }
-
-    }
-    /*修改企业关于我们*/
-    public function sendAbout(){
-
-        $id =input("id");
-        $about = input('abouts');
-        $res=ParkCompany::update(['about_us'=>$about],['id'=>$id]);
-        if ($res){
-
-            return $this->success("添加成功");
-        }else{
-
-            return  $this->error("添加失败");
-        }
-
-    }
     /*获取企业的服务或产品*/
     public function getCompanyserver(){
         $id=input("id");
@@ -121,7 +85,8 @@ class Company extends Admin
     public function updateCompany(){
         $id=input("id");
         //return  $_POST;
-        $res=ParkProduct::where(['id'=>$id])->update(input('post.'));
+        $parkProduct=new ParkProduct();
+        $res=$parkProduct->where(['id'=>$id])->update(input('post.'));
         if ($res){
 
             return $this->success("修改成功");
@@ -137,23 +102,21 @@ class Company extends Admin
         unset($_POST['file']);
         $_POST['create_time']=time();
         //return  $_POST;
-        $res=$parkcompany->save($_POST);
+        $res=$parkcompany->validate(true)->save($_POST);
         if ($res){
 
             $this->success("添加成功");
         }else{
 
-            $this->error("添加失败");
+            $this->error($parkcompany->getError());
         }
 
     }
-    /*修改企业头像及联系方式*/
-    public function companyMobile(){
+    /*修改企业信息*/
+    public function changeinfo(){
         $id=input("id");
-       // return dump($_POST);
         if(empty(input('img'))){
             $_POST['img'] =$_POST['images'];
-
         }
         unset($_POST['images']);
         $res=ParkCompany::where(['id'=>$id])->update($_POST);
@@ -168,11 +131,34 @@ class Company extends Admin
 
 
     }
+    /*产品服务列表*/
+    public function product(){
+        $id =input('id');
+        $list=ParkProduct::where(['company_id'=>$id,'status'=>0])
+            ->order('create_time desc')
+            ->paginate();
+        int_to_string($list,['type'=>[1=>"企业产品",2=>"企业服务"]]);
+        $this->assign('list',$list);
+        $this->assign('companyId',$id);
 
 
+        return $this->fetch();
+    }
 
 
+    /*删除产品或服务*/
+    public function moveToTrash() {
+        $ids = input('ids/a');
+        $result = ParkProduct::where('id', 'in', $ids)->update(['status' => -1]);
 
+        if($result) {
 
+            return $this->success('删除成功');
+
+        } else {
+
+            return $this->error('删除失败');
+        }
+    }
 
 }

@@ -19,278 +19,57 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            <h2>
+                <span style="color:#337ab7">企业信息</span>|<a href="{:Url('product')}?id={$companyInfo.id}" style="color:inherit">产品及服务</a>
+            </h2><br><br><br>
             <div>
                 <div class="row clearfix">
-                    <div class="col-md-8 column">
+                    <div class="col-md-10 column">
                         <div class="col-md-2 column">
                             <h3>企业头像</h3>
                         </div>
                         <div class="col-md-10 column">
                             <input  type="file" class="file input-file"><br>
+                            <sapn>
+                                <a class="front_cover" href="#">
+                                    <img class="front_cover_img" src="{$companyInfo.img}" width="100px"/>
+                                </a>
+                            </sapn>
                         </div>
+
                         <div class="col-md-2 column"><h3>联系电话</h3>
-                        </div>
+                        </div >
                         <div class="col-md-10 column">
                             <input type="number" class="form-control"   name="phone" value="{$companyInfo.mobile}" />
+                            <sapn style="height:40px;display: block" >
+                            </sapn>
                         </div >
-
+                        <div class="col-md-2 column"><h3>企业介绍</h3></div>
+                        <div class="col-md-10 column">
+                            <div class="mail-text h-200">
+                                <div class="summernote">{$companyInfo->present}</div>
+                                <div class="clearfix"></div>
+                                <input type="hidden" name="content">
+                                <input type="hidden" name="id" value="{$companyInfo->id}">
+                            </div>
+                            <sapn style="height:40px;display: block" >
+                            </sapn>
+                        </div>
+                        <div class="col-md-2 column"><h3>关于我们</h3></div>
+                        <div class="col-md-10 column">
+                            <div class="mail-text h-200">
+                                <div id="summernote" id="aboutus">{$companyInfo->about_us}</div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
                         <div class="col-md-12 column "><br>
+                            <a href="{:Url('index')}" class="btn btn-white btn-sm" style="float:right ;margin-left:5px ;" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
                             <a class="btn btn-sm btn-primary " style="float:right" onclick="companyMobile()"><i class="fa fa-reply"></i>&nbsp;发送</a>
+
                         </div>
                     </div>
-                    <div class="col-md-4 column">
-                        <sapn>
-                            <a class="front_cover" href="#">
-                                <img class="front_cover_img images3" src="{$companyInfo.img}" width="100px"/>
-                            </a>
-                        </sapn>
                     </div>
-                </div>
-
-
-
             </div>
-        </div>
-        <div class="mail-box-header">
-            <div>
-                <ul class="nav nav-tabs nav-justified" id="changelist">
-                    <!--<li class="active"><a href="#">企业头像</a></li>-->
-                    <li class="active"><a href="#">企业介绍</a></li>
-                    <li><a href="#">企业产品</a></li>
-                    <li><a href="#">企业服务</a></li>
-                    <li><a href="#">关于我们</a></li>
-                </ul>
-            </div>
-        </div>
-        <div id="changelist1" class="mail-box-header">
-            <!--企业头像-->
-           <!-- <div class="notices">
-                <div class="mail-header">
-                    <div>
-                        <input  type="file" class="file input-file">
-                        <sapn>
-
-                            <a class="front_cover" href="#">
-                                <img class="front_cover_img images3" src=""/>
-                            </a>
-
-                        </sapn>
-                    </div>
-                </div>
-                <div class="mail-body">
-                    <div>
-                        联系电话
-                    </div>
-                </div>
-
-            </div>-->
-            <!--企业介绍-->
-            <div class="notices ">
-                <form class="form-horizontal" method="post">
-                    <div class="mail-text h-200">
-                        <div class="summernote">{$companyInfo->present}</div>
-                        <div class="clearfix"></div>
-                        <input type="hidden" name="content">
-                        <input type="hidden" name="id" value="{$companyInfo->id}">
-                    </div>
-                    <div class="mail-body text-right tooltip-demo">
-                        <button url="{:Url('send')}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
-                                data-toggle="tooltip" data-placement="top" data-edit="content">
-                            <i class="fa fa-reply"></i> 发送
-                        </button>
-                        <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
-                    </div>
-                    <div class="clearfix"></div>
-                </form>
-            </div>
-            <!--企业产品-->
-            <div class="notices">
-                <div> <a data-toggle="modal" href="#modal-form2"  class="btn btn-sm btn-primary" > 添加</a></div>
-                <table class="table table-hover table-mail">
-                    <thead>
-                    <tr>
-                        <th>产品名称</th>
-                        <th>产品简介</th>
-                        <th>创建时间</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {volist name="list" id="vo"}
-                    <tr class="read">
-                        <td>{$vo.name}</td>
-                        <td>{$vo.content}</td>
-                        <td>{$vo.create_time}</td>
-                        <td>
-                            <a data-toggle="modal" style="color: #ffffff;" href="#modal-form"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}',1)"> 编辑</a>
-                        </td>
-                    </tr>
-                    {/volist}
-                    </tbody>
-                </table>
-                <div class="btn-group pull-right">{$list->render()}</div>
-            </div>
-            <!--企业服务-->
-            <div class="notices ">
-                <div> <a data-toggle="modal" href="#modal-form2"  class="btn btn-sm btn-primary" > 添加</a></div>
-                <table class="table table-hover table-mail">
-
-                    <thead>
-                    <tr>
-                        <th>产品名称</th>
-                        <th>产品简介</th>
-                        <th>创建时间</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {volist name="list1" id="vo"}
-                    <tr class="read">
-                        <td>{$vo.name}</td>
-                        <td>{$vo.content}</td>
-                        <td>{$vo.create_time}</td>
-                        <td>
-                            <a data-toggle="modal" style="color: #ffffff;" href="#modal-form1"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}',2)"> 编辑</a>
-                        </td>
-                    </tr>
-                    {/volist}
-                    </tbody>
-                </table>
-                <div class="btn-group pull-right">{$list->render()}</div>
-            </div>
-            <!--关于我们-->
-            <div class="notices ">
-                    <div class="mail-text h-200">
-                        <div id="summernote" id="aboutus">{$companyInfo->about_us}</div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="mail-body text-right tooltip-demo">
-                        <a class="btn btn-sm btn-primary " onclick="send()"><i class="fa fa-reply"></i>&nbsp;发送</a>
-                        <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
-                    </div>
-                    <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="modal-form" class="modal fade" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form class="form-horizontal" method="post" action="">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h3 class="modal-title text-center">企业产品</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">产品名称</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="name1"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">服务简介</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="detail1"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
-                        <div class="col-sm-10">
-                            <input  type="file" class="file input-file">
-                            <sapn>
-
-                                <a class="front_cover" href="#">
-                                    <img class="front_cover_img images1" src=""/>
-                                </a>
-
-                            </sapn>
-                        </div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">服务详情</label>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-10 present" name="present1"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-12"><input type="button"  class="form-control"   value="提交" onclick="update(1)"></div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div id="modal-form1" class="modal fade" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form class="form-horizontal" method="post" action="">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h3 class="modal-title text-center">企业服务</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">服务名称</label>
-                        <div class="col-sm-10 "><input type="text" class="form-control" required="" name="name2"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">服务简介</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="detail2"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
-                        <div class="col-sm-10">
-                            <input  type="file" class="file input-file">
-                            <sapn>
-
-                                <a class="front_cover" href="#">
-                                    <img class="front_cover_img images2" src=""   width="100px"/>
-                                </a>
-                            </sapn>
-                        </div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">服务详情</label>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-10 present" name="present2"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-12"><input type="button"  class="form-control"   value="提交" onclick="update(2)"></div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div id="modal-form2" class="modal fade" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form class="form-horizontal" method="post" action="">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h3 class="modal-title text-center">企业服务</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">服务名称</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="name"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">服务简介</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="detail"></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
-                        <div class="col-sm-10">
-                            <input type="file" class="file input-file">
-                            <sapn>
-
-                                <a class="front_cover" href="#">
-                                    <img class="front_cover_img" src=""  width="100px"/>
-                                </a>
-
-                            </sapn>
-                        </div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">服务详情</label>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-10 present " name="present" ></div>
-                        </div>
-                        <div class="form-group"><label class="col-sm-2 control-label"></label>
-                            <div class="col-sm-12"><input type="button"  class="form-control"   value="提交" onclick="addProduct()"></div>
-                        </div>
-                    </div>
-
-            </form>
-
         </div>
     </div>
 </div>
@@ -331,7 +110,6 @@
                 }
             });
         }
-
         $('.summernote').summernote({
             lang: 'zh-CN',
             height: 300,
@@ -353,118 +131,10 @@
             }
         });
 
-        $(".present").summernote({
-            lang: 'zh-CN',
-            height: 300,
-            minHeight: 210,
-            callbacks: {
-                onImageUpload: function (files) { //the onImageUpload API
-                    img = sendFile(files[0]);
-                }
-            }
-        });
-        $(".notices").hide();
-        $(".notices").eq(0).show();
-        $('#changelist li').click(function(){
-            $(".notices").hide();
-            var n=$(this).index();
-            $(this).addClass('active').siblings().removeClass('active');
-            $(".notices").eq(n).show();
-            types =$(this).index();
-        });
+
 
     });
-        /*修改企业关于我们*/
-    function send(){
-        var content =$('#summernote').summernote('code');
-        $.ajax({
-            data: {abouts:content,id:'{$companyInfo.id}'},
-            type: "POST",
-            url: "{:Url('Company/sendAbout')}",
-            success: function(data) {
-                if(data.code=1){
-                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
-                    setTimeout(function(){
-                        location.href=data.url;
-                    },3000);
-                }else {
-                    updateAlert(data.msg,'error');
-                }
-            }
-        });
-    }
-        /*获取企业产品或服务详细信息*/
-    function getCompanyserver(id,uid){
-        $.ajax({
-            data: {id:id},
-            type: "POST",
-            url: "{:Url('Company/getCompanyserver')}",
-            success: function(data) {
-               // console.log(data);
-                $("[name='name"+uid+"']").val(data.name);
-                $("[name='detail"+uid+"']").val(data.detail);
-                if (uid ==1){
-                    $('.present').summernote('code',data.content);
-                }else{
-                    $('.present').eq(1).summernote('code',data.content);
-                }
-                $("[name='id']").val(data.id);
-                $("input[name='front_cover']").val(data.front_cover);
-                $('.images'+uid+'').attr('src',data.front_cover);
-            }
-        });
-    }
-        /*修改企业产品或服务详细信息*/
-    function update(uid){
-        var id =   $("[name='id']").val();
-        var names=$("[name='name"+uid+"']").val();
-        var details=$("[name='detail"+uid+"']").val();
-        var image=$("input[name='front_cover']").val();
-        if (uid==1){
-            var presents = $('.present').summernote('code');
-        }else{
-            var presents = $('.present').eq(1).summernote('code');
-        }
-        $.ajax({
-            data: {id:id,name:names,content:presents,detail:details,type:types,front_cover:image},
-            type: "POST",
-            url: "{:Url('Company/updateCompany')}",
-            success: function(data) {
-                if(data.code=1){
-                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
-                    setTimeout(function(){
-                        location.href=data.url;
-                    },3000);
-                }else{
-                    updateAlert(data.msg,'error');
-                }
 
-            }
-        });
-    }
-        /*添加企业产品或服务*/
-    function addProduct(){
-        var names=$("[name='name']").val();
-        var contents=$('.present').eq(2).summernote('code');
-        var companyid ="{$companyInfo['id']}";
-        var details =$("[name='detail']").val();
-        var image=$("input[name='front_cover']").val();
-        $.ajax({
-            data: {name:names,content:contents,company_id:companyid,type:types,front_cover:image,detail:details},
-            type: "POST",
-            url: "{:Url('Company/edit')}",
-            success: function(data) {
-                if(data.code=1){
-                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
-                    setTimeout(function(){
-                        location.href=data.url;
-                    },3000);
-                }else{
-                    updateAlert(data.msg,'error');
-                }
-            }
-        });
-    }
 
     $(".input-file").fileinput({
         showPreview: false,
@@ -492,17 +162,18 @@
         alignment: 'center',       // Position - may be auto OR center.
         allowMultiple: false,
     });
-    /*添加企业头像和联系电话*/
+    /*添加企业信息*/
     function companyMobile(){
-
         var image=$("input[name='front_cover']").val();
         var phone = $("[name='phone']").val();
+        var contents =$('#summernote').summernote('code');
+        var presents =$('.summernote').summernote('code');
         $.ajax({
             type:"POST",
-            url:"{:Url('Company/companyMobile')}",
-            data:{id:'{$companyInfo.id}',img:image,mobile:phone,images:'{$companyInfo.img}'},
+            url:"{:Url('Company/changeinfo')}",
+            data:{id:'{$companyInfo.id}',img:image,mobile:phone,images:'{$companyInfo.img}',about_us:contents,present:presents},
             success:function (data) {
-                if(data.code=1){
+                if(data.code==1){
                     updateAlert(data.msg+ ' 页面即将自动跳转~','success');
                     setTimeout(function(){
                         location.href=data.url;
