@@ -60,7 +60,9 @@
 
         <div class="load-more">
             <span v-if="documents.length === 0">暂时啥都没有，快去评论吧！</span>
-            <mt-spinner :type="2"  v-if="canLoad && loading"></mt-spinner>
+            <div   v-if="canLoad && loading">
+                <mt-spinner :type="3"></mt-spinner>加载中...
+            </div>
             <span v-if="!canLoad">没有更多了</span>
         </div>
     </div>

@@ -1,0 +1,140 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>园区统计</title>
+<style>
+    .my-tabs{
+        display: -webkit-flex;
+        display: flex;
+        background: #fff;
+        border:1px solid #0A96E6;
+        color: #0A96E6;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .my-tabs1{
+        margin:1rem auto;
+        width:15rem;
+        height:2rem;
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+    .my-tabs2{
+        width:10rem;
+        height:1.5rem;
+        font-size: 1.3rem;
+        line-height: 1.5rem;
+        float: right;
+    }
+    .my-tabs2:after{
+        content: '';
+        display: block;
+    }
+    .my-tabs>li{
+        width:50%;
+        height:100%;
+        text-align: center;
+    }
+    .my-tabs>li:not(:last-child){
+        border-right: 1px solid #0A96E6;
+    }
+    .my-tabs>li.my-active{
+        background-color: #0A96E6;
+        color: #ffffff;
+    }
+
+    .my-park{
+        display: -webkit-flex;
+        display: flex;
+        padding:0 3.2vw;
+        height:5rem;
+        align-items: center;
+        justify-content: flex-end;
+        font-size: 1.5rem;
+        color: #666;
+    }
+    .my-park select{
+        background-color: #fff;
+        color: #666;
+        height: 2.5rem;
+        border-radius: 5px;
+        font-size: 14px;
+        border: 1px solid #e5e5e5;
+        outline: none;
+    }
+
+    .my-box{
+        border-bottom: 5px solid #f1f1f1;
+        padding:0 3.2vw 3.2vw;
+
+    }
+    .my-title{
+        font-size: 1.4rem;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <ul class="my-tabs my-tabs1">
+        <li :class="{'my-active':active=='tab-container1'}" @click="active = 'tab-container1'">园区统计</li>
+        <li :class="{'my-active':active=='tab-container2'}" @click="active = 'tab-container2'">园区列表</li>
+    </ul>
+    <mt-tab-container v-model="active">
+        <mt-tab-container-item id="tab-container1">
+            <div class="my-park">
+                    <span>当前：</span>
+                    <select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">
+                        <option :value="item.value" v-for="(item,key) in parks" >
+                            {{item.name}}
+                        </option>
+                    </select>
+                    <select   v-else>
+                        <option >
+                            希垦科技园
+                        </option>
+                    </select>
+            </div>
+            <div class="my-box">
+                <div class="my-title">园区基本信息统计</div>
+                <ul class="my-tabs my-tabs2">
+                    <li :class="{'my-active':active=='tab-container1'}">月</li>
+                    <li :class="{'my-active':active=='tab-container2'}">季</li>
+                    <li :class="{'my-active':active=='tab-container2'}">年</li>
+                </ul>
+            </div>
+        </mt-tab-container-item>
+        <mt-tab-container-item id="tab-container2">
+            <mt-cell v-for="n in 5" title="tab-container 2"></mt-cell>
+        </mt-tab-container-item>
+    </mt-tab-container>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+        active:'tab-container1',
+        nowPark:0,
+        parks:[
+            {name:'希垦科技园',value:0},
+            {name:'浙江互联网产业园',value:1},
+            {name:'人工智能产业园',value:2}
+        ],
+        baseData:{
+            isBoss:'yes'
+        }
+    },
+    methods:{
+        //园区选择
+        parkChange(){
+            this.$http.post('',{value:this.nowPark}).then(function (res) {
+                console.log(res)
+            })
+        }
+    }
+})
+</script>
+{/block}

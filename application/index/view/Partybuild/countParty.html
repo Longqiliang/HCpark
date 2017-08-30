@@ -2,81 +2,16 @@
 
 {block name="style"}
 <style>
-    body{
-        background-color: #f0eff5;
-    }
+    body{background-color: #f0eff5;}
     /*卡片样式*/
-    .card{
-        position: relative;
-        margin:10.5vw 2.4vw 0;
-        padding: 4vw 2.66vw 0;
-        font-size: 1.5rem;
-        border-radius: 5px;
-        background-color: #fff;
-    }
-    .card-tit:before{
-        content: '';
-        position: absolute;
-        left:-20px ;
-        top: -6px;
-        width: 14px;
-        height: 18px;
-        background: url("/index/images/service/card/icon-star.png") 0 0 no-repeat;
-        background-size:contain ;
-    }
-    .card-tit{
-        height: 8vw;
-        position: absolute;
-        top:-4vw;
-        width: 29.3vw;
-        transform: translateX(-50%);
-        left: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #fff;
-        border-radius: 100px;
-        font-size: 1.7rem;
-        color: #fcc44b;
-        box-shadow: 0 2px 4px #e8e8e8;;
-    }
-    .card-tit:after{
-        content: '';
-        position: absolute;
-        right:-20px ;
-        top: -6px;
-        width: 14px;
-        height: 18px;
-        background: url("/index/images/service/card/icon-star.png") 0 0 no-repeat;
-        background-size:contain ;
-        -webkit-transform: rotateY(180deg);
-        transform: rotateY(180deg);
-    }
-    .card-cell{
-        min-height: 49px;
-        border-bottom: 1px solid #f1f1f1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-    }
-    .my-party-sum{
-        padding: 1rem;
-        display: block;
-        text-align: center;
-        font-size: 4rem;
-        font-weight: bold;
-    }
-    #app{
-        padding-bottom: 2rem;
-    }
-
-    .gender{
-        display: -webkit-flex;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+    .card{position: relative;margin:10.5vw 2.4vw 0;padding: 4vw 2.66vw 0;font-size: 1.5rem;border-radius: 5px;background-color: #fff;}
+    .card-tit:before{content: '';position: absolute;left:-20px ;top: -6px;width: 14px;height: 18px;background: url("/index/images/service/card/icon-star.png") 0 0 no-repeat;background-size:contain ;}
+    .card-tit{height: 8vw;position: absolute;top:-4vw;width: 29.3vw;transform: translateX(-50%);left: 50%;display: flex;justify-content: center;align-items: center;background-color: #fff;border-radius: 100px;font-size: 1.7rem;color: #fcc44b;box-shadow: 0 2px 4px #e8e8e8;;}
+    .card-tit:after{content: '';position: absolute;right:-20px ;top: -6px;width: 14px;height: 18px;background: url("/index/images/service/card/icon-star.png") 0 0 no-repeat;background-size:contain ;-webkit-transform: rotateY(180deg);transform: rotateY(180deg);}
+    .card-cell{min-height: 49px;border-bottom: 1px solid #f1f1f1;display: flex;justify-content: space-between;align-items: center;}
+    .my-party-sum{padding: 1rem;display: block;text-align: center;font-size: 4rem;font-weight: bold;}
+    #app{padding-bottom: 2rem;}
+    .gender{display: -webkit-flex;display: flex;justify-content: center;align-items: center;}
 </style>
 {/block}
 
@@ -109,7 +44,7 @@
 {/block}
 
 {block name="script"}
-<script src="/static/echarts/echarts.min.js"></script>
+<script src="/static/echarts/echarts.simple.min.js"></script>
 <script>
     // 基于准备好的dom，初始化echarts实例
     var ageData={$data},
