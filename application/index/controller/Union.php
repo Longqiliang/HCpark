@@ -8,8 +8,8 @@
 namespace app\index\controller;
 use app\index\model\Union as UnionModel;
 use app\index\model\UnionLoabour as UnionLoabourModel;
-use app\index\model\Comment;
 use app\index\model\Collect;
+use app\common\model\UnionComment;
 class Union extends Base
 {
     public function index(){
@@ -85,7 +85,7 @@ class Union extends Base
         $map = [
             'target_id' => input('id')
         ];
-        $comments = Comment::where($map)->order('id desc')->select();
+        $comments = UnionComment::where($map)->order('id desc')->select();
 
         $list2=array();
         $count=count($comments);
@@ -126,42 +126,9 @@ class Union extends Base
         $res['title']=$res['title'];
         $this->assign('res',json_encode($res));
 
-
-        // 评论列表
-        $map = [
-            'target_id' => input('id')
-        ];
-        $comments = Comment::where($map)->order('id desc')->select();
-
-        $list2=array();
-        $count=count($comments);
-        if($count>0){
-            for($i=0;$i<6;$i++){
-                array_push($list2,$comments[$i]);
-            }
-            foreach( $list2 as $v){
-                $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
-                if(!empty($header)){
-                    $v['header']=$header;
-                }else {
-                    $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
-                }
-            }}
-
-        // 是否已经收藏
-        $collectMap = [
-            'target_id' => input('id'),
-            'user_id' => session('userId')
-        ];
-        $collect = Collect::where($collectMap)->find();
-        //echo json_encode($comments);
-        $this->assign('collect', json_encode($collect));
-
         // 添加阅读量
         UnionLoabourModel::where('id', input('id'))->setInc('views');
 
-        $this->assign('count', $count);
-        $this->assign('comments', json_encode($list2));
 
         return $this->fetch();
     }

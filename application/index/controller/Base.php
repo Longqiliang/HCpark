@@ -10,6 +10,7 @@ namespace app\index\controller;
 
 
 use app\common\model\PartyComment;
+use app\common\model\UnionComment;
 use think\Controller;
 use think\Loader;
 use wechat\TPWechat;
@@ -98,6 +99,33 @@ class Base extends Controller
         $userinfo = WechatUser::where('userid',session('userId'))->field('name,header,avatar')->find();
         $data['user_name'] = $userinfo['name'];
         $result = PartyComment::create($data);
+        if(!empty($userinfo['header'])){
+
+            $result['header']=$userinfo['header'];
+
+        }else{
+            $result['header']=!empty($userinfo['avatar'])?$userinfo['avatar']:"";
+
+        }
+        if($result) {
+
+            return $this->success('评论成功', '', $result);
+        } else {
+
+            return $this->error('评论失败');
+        }
+    }
+
+    //工会联盟添加评论
+    public function unionComments(){
+        $data = [
+            'target_id' => input('id'),
+            'user_id' => session('userId'),
+            'content' => input('content'),
+        ];
+        $userinfo = WechatUser::where('userid',session('userId'))->field('name,header,avatar')->find();
+        $data['user_name'] = $userinfo['name'];
+        $result = UnionComment::create($data);
         if(!empty($userinfo['header'])){
 
             $result['header']=$userinfo['header'];
