@@ -91,7 +91,7 @@
                         'type':type,
                         'content':_this.commentValue
                     };
-                    _this.$http.post('{:Url("Base/addComment")}',data).then(function (res) {
+                    _this.$http.post('{:Url("Base/unionComments")}',data).then(function (res) {
                         var data = res.data;
                         if(data.code === 1){
                             console.log(data);
