@@ -100,7 +100,19 @@ class Union extends Base
                 }else {
                     $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
                 }
-            }}
+            }}else{
+            for($i=0;$i<$count;$i++){
+                array_push($list2,$comments[$i]);
+            }
+            foreach( $list2 as $v){
+                $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
+                if(!empty($header)){
+                    $v['header']=$header;
+                }else {
+                    $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
+                }
+            }
+        }
 
         // 是否已经收藏
         $collectMap = [
@@ -115,7 +127,7 @@ class Union extends Base
         UnionLoabourModel::where('id', input('id'))->setInc('views');
 
         $this->assign('count', $count);
-        $this->assign('comments', json_encode($comments));
+        $this->assign('comments', json_encode($list2));
         $this->assign('news', $res);
         return $this->fetch();
     }
