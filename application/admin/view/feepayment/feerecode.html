@@ -41,6 +41,9 @@
     .list_banner {width: 80px}
     .list_type {width: 80px}
 
+    .fade{
+        height: 1000px;
+    }
 </style>
 {/block}
 
@@ -85,9 +88,12 @@
                     </td>
                     <td>
                         {eq name="$vo.status" value="1"}
-                        <a href="#" class="btn btn-primary" onclick="changeState('{$vo.id}')" style="color:#fff">审核</a>
+                        <a href="#" class="btn-sm btn-primary" onclick="changeState('{$vo.id}')" style="color:#fff">审核</a>
                         {else/}
-                        <button class="btn btn-info" >{$vo.status_text}</button>
+                        <button class="btn-sm btn-info" >{$vo.status_text}</button>
+                        {/eq}
+                        {eq name="$vo.status" value="2"}
+                        &nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" >查看凭证</a>
                         {/eq}
                     </td>
 
@@ -97,6 +103,25 @@
                 </tbody>
             </table>
             <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title text-center"  name="dialog-title">查看凭证</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group" id="showImg">
+
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -131,7 +156,18 @@
             }
         });
     }
+    function showImage(id) {
+        $.ajax({
+            data:{id:id},
+            url:"{:Url('showImage')}",
+            type:"post",
+            success:function(data){
+                $("#showImg").empty();
+               $("#showImg").append(data);
+            }
+        })
 
+    }
 
 </script>
 {/block}

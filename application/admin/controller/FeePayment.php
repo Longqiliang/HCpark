@@ -138,17 +138,35 @@ class FeePayment extends Admin
         $feepayment = new FeePaymentModel();
         $id = input('id');
         $company = ParkCompany::get($id);
-        $list=$feepayment->where(['company_id'=>$id])->paginate();
+        $list = $feepayment->where(['company_id'=>$id])->paginate();
         int_to_string($list,['type'=>[1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"],
                             'status'=>[-1=>"删除",0=>"进行中",1=>"审核中",2=>"已缴费",3=>"未缴费"]]);
+        foreach ($list as $k=>$v){
+            $v['payment_voucher'] = unserialize($v['payment_voucher']);
+        }
 
         $this->assign('company',$company);
         $this->assign('list',$list);
         return $this->fetch();
     }
 
+    /*显示凭证*/
+    public function showImage(){
+        $id = input("id");
+        $html="";
+        $feepayment = FeePaymentModel::get($id);
+        if ($feepayment['payment_voucher']){
+            $image = unserialize($feepayment['payment_voucher']);
 
+            foreach($image as $value){
+                $html .= "<div class='col-md-4'><img class='front_cover_img' src='$value' style='width: 150px;height: 200px;'></div>";
 
+            }
+        }
+
+        return $html;
+
+    }
 
 
 
