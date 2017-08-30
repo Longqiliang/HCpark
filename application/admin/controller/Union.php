@@ -7,7 +7,9 @@
  */
 namespace app\admin\controller;
 use app\common\model\Union as UnionModel;
-
+use think\Loader;
+use wechat\TPWechat;
+use app\common\model\WechatUser;
 class Union extends Admin
 {
     /*公告活动首页*/
@@ -77,24 +79,24 @@ class Union extends Admin
 
     /*推送*/
     public function send() {
-        $news = NewsModel::get(input('id'));
+        $news = UnionModel::get(input('id'));
         if ($news) {
             Loader::import('wechat\TPWechat', EXTEND_PATH);
-            $weObj = new TPWechat(config('wechat'));
+            $weObj = new TPWechat(config('news'));
 
             $des = msubstr(str_replace('&nbsp;','',strip_tags($news['content'])), 0, 36);
             $data = [
                 'safe' => 0,
                 'msgtype' => 'news',
-                'agentid' => '3',
+                'agentid' => '1000005',
                 'news' => [
                     'articles' => [[
                         'title' => $news['title'],
                         'description' => $des,
-                        'url' => config('web_url').'/index/news/detail/id/'.input('id'),
+                        'url' => 'http://xk.0519ztnet.com/index/news/detail/id/'.input('id'),
                         'picurl' => empty($news['front_cover'])
-                            ? config('web_url').'/index/images/news/news.jpg'
-                            : config('web_url').$news['front_cover']
+                            ? 'http://xk.0519ztnet.com/index/images/news/news.jpg'
+                            : 'http://xk.0519ztnet.com'.$news['front_cover']
                     ]]
                 ]
             ];
@@ -109,7 +111,7 @@ class Union extends Admin
             $result = $weObj->sendMessage($data);
 
             if ($result['errcode'] == 0 ) {
-                NewsModel::where('id', input('id'))->update(['is_send' => 1]);
+                UnionModel::where('id', input('id'))->update(['is_send' => 1]);
                 return $this->success('推送成功');
             } else {
                 return $this->error('推送失败');
@@ -117,36 +119,6 @@ class Union extends Admin
         } else {
             $this->error('参数错误');
         }
-    }
-    /*获取部门*/
-    public function getDepartment() {
-        Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $weObj = new TPWechat(config('wechat'));
-        $department = $weObj->getDepartment();
-
-        return json($department);
-    }
-    /*获取部门标签*/
-    public function getTag() {
-        Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $weObj = new TPWechat(config('wechat'));
-        $tag = $weObj->getTagList();
-
-        return json($tag);
-    }
-    /*政策法规*/
-    public function policyLaw(){
-        $parkid = session('user_auth')['park_id'];
-        $map = ['status'=> 1,'type'=>['>',3],'park_id'=>$parkid];
-        $search = input('search');
-        if ($search != '') {
-            $map['title'] = ['like','%'.$search.'%'];
-        }
-        $list = NewsModel::where($map)->order('id desc')->paginate();
-        $this->assign('list', $list);
-
-        return $this->fetch();
-
     }
 
 
