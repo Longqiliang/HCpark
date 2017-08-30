@@ -14,6 +14,9 @@ use app\index\model\Collect as CollectModel;
 use app\index\model\WechatUser;
 use app\index\model\WechatDepartment;
 use app\index\model\PersonalService;
+use app\index\model\CompanyService;
+use app\index\model\CompanyApplication;
+use think\Db;
 class Personal extends Base
 {
     public function  index(){
@@ -162,7 +165,10 @@ class Personal extends Base
             'type'=>0
         ];
         //物业服务
+
+
         $list=$service ->where($map)->select();
+
         foreach ($list  as $value){
             if($value['status']==0){
                 $value['status_text']='进行中';
@@ -172,9 +178,18 @@ class Personal extends Base
         }
         $this->assign('property',$list);
         //企业服务
-        $map['type']=1;
-        $list=$service ->where($map)->select();
+
+        $list = Db::table('tb_company_service')
+            ->alias('s')
+            ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
+            ->field('a.name as service_name,s.status,s.create_time')
+            ->where('s.user_id','eq',$userid)
+            ->where('s.status','neq',-1)
+            ->select();
+
         foreach ($list  as $value){
+            $value['create_time']=date("Y-m-d",$value['create_time']);
+
             if($value['status']==0){
                 $value['status_text']='进行中';
             } else{
