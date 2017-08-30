@@ -37,17 +37,27 @@ class Policy extends Base
         $news = NewsModel::where(['id' => $newsId])->find();
 
         $comments = CommentModel::where(['target_id' => $newsId])->order("create_time desc")->select();
+        foreach ($comments as $v) {
+            $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
+            if(!empty($header)){
+                $v['header']=$header;
+            }else {
+                $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
+            }
+        }
         $count = count($comments);
         $list = array();
-        if ($count > 0) {
+        if ($count > 6) {
             for ($i = 0; $i < 6; $i++) {
                 array_push($list, $comments[$i]);
             }
+            $this->assign('comments', json_encode($list));
+        }else{
+            $this->assign('comments', json_encode($comments));
+
         }
 
-        foreach ($list as $v) {
-            $v['header'] = isset($v->wechatuser->header) ? $v->wechatuser->header : "";
-        }
+
         //是否收藏
         $res = Collect::where(['user_id' => $userId, 'target_id' => $newsId])->find();
         if ($res) {
@@ -58,7 +68,7 @@ class Policy extends Base
         // 添加阅读量
         NewsModel::where('id', $newsId)->setInc('views');
 
-        $this->assign('comments', json_encode($comments));
+
         $this->assign('count', $count);
         $this->assign('news', $news);
 
@@ -105,6 +115,14 @@ class Policy extends Base
             ->limit($len, 6)
             ->select();
         if ($comments) {
+            foreach ($comments as $v) {
+                $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
+                if(!empty($header)){
+                    $v['header']=$header;
+                }else {
+                    $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
+                }
+            }
             return json(['code' => 1, 'data' => $comments]);
         } else {
             return json(['code' => 0, 'msg' => "没有更多内容了"]);
