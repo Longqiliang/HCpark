@@ -32,6 +32,7 @@ class Index extends Admin {
         foreach($department['department'] as $data){
             $users = $weObj->getUserListInfo($data['id'], 0, 1);
             foreach ($users['userlist'] as $user) {
+                $id =$this->findParkid($user['department'][0]);
                 $data = [
                     'userid' => $user['userid'],
                     'name' => $user['name'],
@@ -39,8 +40,8 @@ class Index extends Admin {
                     'gender' => $user['gender'],
                     'avatar' => $user['avatar'],
                     'department' => $user['department'][0], //只选第一个所属部门
+                    'park_id'=>$id
                 ];
-
                 $wechatUser = new WechatUser();
                 if ($wechatUser->checkUserExist($user['userid'])) {
                     $wechatUser->save($data, ['userid' => $user['userid']]);
@@ -169,4 +170,18 @@ class Index extends Admin {
 //        var_dump($result);
 
     }
+      //查找园区id
+     public  function  findParkid($Department){
+         if($Department==1){
+             return 1;
+         }
+         $WeDepartment=new WechatDepartment();
+         $de = $WeDepartment->where('id',$Department)->find();
+        if($de['parentid']==1){
+            return $de['id'];
+        }else{
+            return $this->findParkid($de['parentid']);
+        }
+     }
+
 }
