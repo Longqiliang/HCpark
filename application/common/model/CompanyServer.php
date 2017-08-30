@@ -11,6 +11,10 @@ use think\Model;
 
 class CompanyServer extends Model
 {
+    public function  parkid(){
 
+        return $this->hasOne('CompanyApplication','app_id','app_id');
+
+    }
 
 }

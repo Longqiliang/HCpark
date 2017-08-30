@@ -22,7 +22,7 @@
     <div class="comment-box">
         <p>共 {{count}} 条评论</p>
         <div class="comment">
-            <ul infinite-scroll-immediate-check =false
+            <ul
                 v-infinite-scroll="loadMore"
                 infinite-scroll-disabled="loading"
                 infinite-scroll-distance="6">
@@ -150,6 +150,10 @@
                 var  doc = _this.documents,
                         length = doc.length;
                 if(!length){
+                    return;
+                }else if(length >= _this.count){
+                    _this.loading = true;
+                    _this.loadOver = true;
                     return;
                 }
                 var  lastId =doc[length-1].id,

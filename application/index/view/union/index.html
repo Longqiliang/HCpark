@@ -19,7 +19,7 @@
                     <img src="/index/images/union/icon-more-1.png" alt="更多">
                 </span>
             </div>
-            <a href="" v-for="info of inform" class="list-item">
+            <a :href="'/index/Union/unionDetail?id='+info.id" v-for="info of inform" class="list-item">
                 <img :src="info.front_cover"  class="fl">
                 <span class="limit fl">{{info.title}}</span>
             </a>
@@ -33,7 +33,7 @@
                     <img src="/index/images/union/icon-more-3.png" alt="更多">
                 </span>
             </div>
-            <a href="" v-for="g of guild" class="list-item">
+            <a :href="'/index/Union/loabourDetail?id='+g.id" v-for="g of guild" class="list-item">
                 <img :src="g.front_cover"  class="fl">
                 <span class="limit fl">{{g.title}}</span>
             </a>
@@ -47,7 +47,7 @@
                     <img src="/index/images/union/icon-more-2.png" alt="更多">
                 </span>
             </div>
-            <a href="" v-for="item of activity" class="list-item">
+            <a :href="'/index/Union/unionDetail?id='+item.id" v-for="item of activity" class="list-item">
                 <img :src="item.front_cover"  class="fl">
                 <span class="limit fl">{{item.title}}</span>
             </a>
@@ -58,7 +58,6 @@
 
 {block name="script"}
 <script>
-console.log({$list1},{$list2},{$list3});
     var inform = {$list1},
             guild = {$list2},
             activity = {$list3};

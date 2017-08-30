@@ -81,24 +81,28 @@ class News extends Base
             'target_id' => input('id')
         ];
         $comments = Comment::where($map)->order('id desc')->select();
-
+        foreach( $comments as $v){
+            $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
+            if(!empty($header)){
+                $v['header']=$header;
+            }else {
+                $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
+            }
+        }
         $list2=array();
         $count=count($comments);
         if($count>6){
         for($i=0;$i<6;$i++){
             array_push($list2,$comments[$i]);
         }
-        foreach( $list2 as $v){
-           $header =isset($v->wechatuser->header)?$v->wechatuser->header:"";
-            if(!empty($header)){
-                $v['header']=$header;
-            }else {
-                $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
-            }
-        }}
+
+            $this->assign('comments', json_encode($list2));
+        }else{
+            $this->assign('comments', json_encode($comments));
+        }
 
         $this->assign('count', $count);
-        $this->assign('comments', json_encode($list2));
+
         // 是否已经收藏
         $collectMap = [
             'target_id' => input('id'),

@@ -2,6 +2,12 @@
 
 {block name="style"}
 <style>
+    .payment-img img{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        max-width: 200px;
+    }
     .mail-box .mail-ontact{
         width: 150px;
         min-width: 150px;
@@ -52,6 +58,31 @@
     <div class="row">
         <div class="mail-box-header">
             <h2>公共场所服务</h2>
+            <a href="{:Url('index')}"   class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 返回</a>
+        </div>
+        <div id="modal-form" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h3 class="modal-title text-center"  name="dialog-title">查看凭证</h3>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group"><label class="col-sm-2 control-label">支付凭证</label>
+                                <div class="col-sm-10 payment-img">
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="id" value="">
+                        </div>
+
+                </div>
+            </div>
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
@@ -88,8 +119,12 @@
                     <td>
                         {$vo.status}
                     </td>
+                    <td  hidden id="payment_voucher">
+                        {$vo.payment_voucher}
+                    </td>
                     <td>
-                        <a  href="{:Url('cancel','create_time='.$vo.time.'&&type='.$vo.type)}" >取消</a>
+                        <a  onclick="cancel(this)" data-time="{$vo.time}"  data-type="{$vo.type}" >取消</a>
+                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)" data-payment="{$vo.payment_voucher}" >查看凭证</a>
                     </td>
                 </tr>
                 {/volist}
@@ -104,6 +139,47 @@
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script>
+    function showpayment(a) {
+        var $this = $(a);
+        console.log($this);
+        var paymentHtml  = $this.parent('td').prev().html();
+        paymentHtml = JSON.parse(paymentHtml);
+        $(".payment-img").html('');
+        for(var i = 0,length = paymentHtml.length; i < length;i += 1){
+            var img = new Image();
+            img.src = paymentHtml[i];
+            $(".payment-img").append(img);
+        }
+
+        console.log(paymentHtml);
+        $(".form-horizontal").attr('action', '{:Url("Appmanage/editApp")}');
+    }
+
+    function cancel(a) {
+      var data ={
+         "type":$(a).attr('data-type'),
+         "create_time" :$(a).attr('data-time')
+      }
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: "{:Url('PublicArea/cancel')}",
+            success: function(data) {
+                if(data.code=1){
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
+                }else {
+                    updateAlert(data.msg,'error');
+                }
+            }
+
+        });
+
+
+    }
+
     $(document).ready(function(){
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
