@@ -127,12 +127,13 @@ class Company extends Admin
     }
     /*产品服务列表*/
     public function product(){
-        $id =input('id');
-        $list=ParkProduct::where(['company_id'=>$id,'status'=>0])
-            ->order('create_time desc')
-            ->paginate();
-        int_to_string($list,['type'=>[1=>"企业产品",2=>"企业服务"]]);
+        $id = input('id');
+        $type = input('type');
+        $list = ParkProduct::where(['company_id'=>$id,'status'=>0,'type'=>$type])
+                            ->order('create_time desc')
+                            ->paginate();
         $this->assign('list',$list);
+        $this->assign('type',$type );
         $this->assign('companyId',$id);
         return $this->fetch();
     }

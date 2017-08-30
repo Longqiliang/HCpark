@@ -53,7 +53,11 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <h2>  <a href="{:Url('add')}?id={$companyId}" style="color:inherit">企业信息</a>|<span style="color:#337ab7">产品及服务({$list->total()})</span></h2>
+          {eq name="$type" value="1"}
+            <h2>企业产品</h2>
+          {else/}
+            <h2>企业服务</h2>
+          {/eq}
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
@@ -71,7 +75,6 @@
                     <th></th>
                     <th>名称</th>
                     <th>简介</th>
-                    <th>类型</th>
                     <th>创建时间</th>
                     <th>操作</th>
                 </tr>
@@ -84,7 +87,6 @@
                     </td>
                     <td>{$vo.name}</td>
                     <td>{$vo.detail}</td>
-                    <td>{$vo.type_text}</td>
                     <td>{$vo.create_time}</td>
                     <td>
                         <a data-toggle="modal" style="color: #ffffff;" href="#modal-form"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}')"> 编辑</a>
@@ -123,13 +125,6 @@
 
                             </sapn>
                         </div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">类型</label>
-                        <div class="col-sm-10">
-                            企业产品&nbsp;<input type="radio"   name="type" value="1" id="type1" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            企业服务&nbsp;<input type="radio"   name="type" value="2" id="type2">
-                        </div>
-
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">详情</label>
                     </div>
@@ -172,13 +167,6 @@
 
                             </sapn>
                         </div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">类型</label>
-                        <div class="col-sm-10">
-                            企业产品&nbsp;<input type="radio"   name="type1" value="1"  checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            企业服务&nbsp;<input type="radio"   name="type1" value="2" >
-                        </div>
-
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">详情</label>
                     </div>
@@ -286,11 +274,6 @@
                 $("[name='id']").val(data.id);
                 $(".front_cover_img").attr("src",data.front_cover);
                 $("input[name='front_cover']").val(data.front_cover);
-                if(data.type==1){
-                    $('#type1').attr('checked',true);
-                }else{
-                    $('#type2').attr('checked',true);
-                    }
             }
         });
     }
@@ -301,7 +284,7 @@
         var names=$("[name='name']").val();
         var details=$("input[name='detail']").val();
         var image=$("input[name='front_cover']").val();
-        var types=$('[name=type]:checked').val();
+        var types="{$type}";
         var presents = $('.present').summernote('code');
         $.ajax({
             data: {id:ids,name:names,content:presents,detail:details,type:types,front_cover:image},
