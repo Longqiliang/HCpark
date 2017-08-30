@@ -1,17 +1,16 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ztos
- * Date: 2017/8/15
- * Time: 下午4:26
+ * User: shen
+ * Date: 2017/8/30
+ * Time: 下午5:13
  */
-
 namespace app\index\model;
 
 
 use think\Model;
 
-class CompanyService extends Model
+class FeePayment extends Model
 {
 
 

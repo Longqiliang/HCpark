@@ -8,17 +8,26 @@
 namespace app\admin\controller;
 
 use app\common\model\WaterService as WaterModel;
-
+use app\common\model\WechatUser;
+use think\Db;
 class WaterService extends Admin
 {
     public function index()
     {
+        $parkid =session("user_auth")['park_id'];
         $search = input('search');
-        $map['status']  = ['neq',-1];
+        $map['s.status']  = ['neq',-1];
         if ($search != '') {
-            $map['name'] = ['like','%'.$search.'%'];
+            $map['s.name'] = ['like','%'.$search.'%'];
         }
-        $list = WaterModel::where($map)->order('id desc')->paginate();
+        $list = Db::table('tb_water_service')
+            ->alias('s')
+            ->join('__WECHAT_USER__ w', 's.userid=w.userid')
+            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status')
+            ->where('w.park_id','eq',$parkid)
+            ->where($map)
+            ->order('create_time desc')
+            ->paginate();
 
         $this->assign('list',$list);
         return $this->fetch();
