@@ -69,6 +69,7 @@ body{
     white-space:nowrap;
     color: #333333;
     font-size: 1.4rem;
+    line-height: 1.5;
 }
 .content .notices .notice .list .time {
     font-size: 1.2rem;
