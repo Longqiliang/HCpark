@@ -46,8 +46,8 @@
                         </div >
                         <div class="col-md-2 column"><h3>企业介绍</h3></div>
                         <div class="col-md-10 column">
-                            <div class="mail-text h-200">
-                                <div class="summernote">{$companyInfo->present}</div>
+                            <div class="mail-text h-200" style="border:1px #888888 solid" >
+                                <div class="summernote" >{$companyInfo->present}</div>
                                 <div class="clearfix"></div>
                                 <input type="hidden" name="content">
                                 <input type="hidden" name="id" value="{$companyInfo->id}">
@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-md-2 column"><h3>关于我们</h3></div>
                         <div class="col-md-10 column">
-                            <div class="mail-text h-200">
+                            <div class="mail-text h-200" style="border:1px #888888 solid">
                                 <div id="summernote" id="aboutus">{$companyInfo->about_us}</div>
                                 <div class="clearfix"></div>
                             </div>
@@ -94,7 +94,7 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
 
-        function sendFile(file) {
+        function sendFile(file,uid) {
             var data = new FormData();
             data.append("file_data", file);
             $.ajax({
@@ -106,7 +106,13 @@
                 processData: false,
                 success: function(response) {
                     var data = $.parseJSON(response);
-                    $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+                    if (uid==1){
+                        $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+
+                    }else{
+                        $("#summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+
+                    }
                 }
             });
         }
@@ -116,7 +122,7 @@
             minHeight: 210,
             callbacks: {
                 onImageUpload: function (files) { //the onImageUpload API
-                    img = sendFile(files[0]);
+                    img = sendFile(files[0],1);
                 }
             }
         });
@@ -126,7 +132,7 @@
             minHeight: 210,
             callbacks: {
                 onImageUpload: function (files) { //the onImageUpload API
-                    img = sendFile(files[0]);
+                    img = sendFile(files[0],2);
                 }
             }
         });

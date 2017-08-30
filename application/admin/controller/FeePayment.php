@@ -72,6 +72,7 @@ class FeePayment extends Admin
                 $data = input('post.');
                 unset($data['uid']);
                 $data['status'] = 0;
+                $data['create_time']=time();
                 $re = $feepayment->validate(true)->save($data);
                 if ($re){
 
