@@ -4,10 +4,6 @@
 {block name="style"}
 <title>{$news->title}</title>
 <link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
-<link rel="stylesheet" href="/index/css/common/rem.css">
-<style>
-
-</style>
 {/block}
 
 {block name="body"}
@@ -24,9 +20,12 @@
         {$news->content}
     </section>
     <div class="comment-box">
-        <p>共 {{documents.length}} 条评论</p>
+        <p>共 {{count}} 条评论</p>
         <div class="comment">
-            <ul>
+            <ul infinite-scroll-immediate-check =false
+                v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-distance="6">
                 <li v-for="list in documents">
                     <div class="img-box">
                         <img :src="list.header==''?'/index/images/personal/personalinfo.png':list.header">
@@ -34,7 +33,6 @@
                     <div class="content-box">
                         <div class="top">
                             <span>{{list.user_name}}</span>
-                            <!--<span class="dislike" @click="like($event,list.id)">{{list.likes}}</span>-->
                         </div>
                         <div>{{list.content}}</div>
                         <div>{{list.create_time}}</div>
@@ -43,15 +41,22 @@
             </ul>
         </div>
         <div class="load-more" v-if="documents.length === 0">暂时啥都没有，快去评论吧！</div>
-        <div class="load-more" v-if="documents.length > 0" @click="loadMore($event)">加载更多...</div>
+        <div class="load-more" v-else >
+            <div v-if="loadOver">
+                没有更多了
+            </div>
+            <div v-show="loading" v-else>
+                <mt-spinner :type="3" color="#999" ></mt-spinner>加载中...
+            </div>
+        </div>
     </div>
     <div class="foot">
         <div class="collect-box">
             <img class="outcollect" v-if="!collection" @click="collect($event,{$news->id},{$news->type})" src="/index/images/detail/outcollect.png">
-            <img class="collect" v-if="collection" @click="collect($event,{$news->id},{$news->type})" src="/index/images/detail/collect.png">
+            <img class="collect" v-else @click="collect($event,{$news->id},{$news->type})" src="/index/images/detail/collect.png">
         </div>
         <div class="input-box">
-            <input type="text" placeholder="说说你的感想！">
+            <input type="text" placeholder="说说你的感想！" v-model="commentValue">
         </div>
         <div class="send" @click="send({$news->id},{$news->type})">发送</div>
     </div>
@@ -63,145 +68,116 @@
 
 {block name="script"}
 <script>
-    //    时间戳转换
-    Vue.filter("timeChange", function(value) {   //全局方法 Vue.filter() 注册一个自定义过滤器,必须放在Vue实例化前面
-        var time = new Date(parseInt(value)*1000);
-        return time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate();
-    });
-    var app=new Vue({
+    var vm = new Vue({
         el:'#comment',
         data:{
+            count:{$count},
             documents:{$comments},
-            collection:{$collect}
+            collection:{$collect},
+            value:'',
+            commentValue:'',
+            isCheck:true,
+            loadOver:false,
+            loading:false
         },
         methods:{
             send:function (id,type) {
-                var content = $('.input-box input').val(),
-                    vm = this.documents;
-                if(content == '' || !content){
+                var _this  =this;
+                if(_this.commentValue == '' || !_this.commentValue){
                     alert('评论不能为空！')
                 } else {
-                    $.ajax({
-                        type:'post',
-                        url:'{:Url("Base/addComment")}',
-                        data:{
-                            'targetId':id,
-                            'type':type,
-                            'content':content
-                        }
-                    }).done(function (data) {
+                    var data  = {
+                        'targetId':id,
+                        'type':type,
+                        'content':_this.commentValue
+                    };
+                    _this.$http.post('{:Url("Base/addComment")}',data).then(function (res) {
+                        var data = res.data;
                         if(data.code === 1){
-                            console.log(data)
-                            $('.input-box input').val('');
-                            data.data.likes = 0;
-                            vm.unshift(data.data);
+                            console.log(data);
+                            _this.commentValue = '';
+                            _this.count +=1;
+                            var extraObj = {
+                                like:0,
+                                header:''
+                            };
+                            var newData =  Object.assign(extraObj,data.data);
+                            _this.documents.unshift(newData);
                         }
-                    })
+                    },function (data) {
+                        alert("网络错误,请检查你的网络！");
+                    });
                 }
             },
             collect:function (event,id,type) {
-                var img = event.target,
-                    classname = $(img).attr('class');
-                if(classname === 'outcollect'){
-                    $.ajax({
-                        type:'post',
-                        url:'{:Url("Base/addCollect")}',
-                        data:{
-                            'targetId':id,
-                            'type':type
-                        }
-                    }).done(function (data) {
+                var _this = this;
+                if(!_this.isCheck ){
+                    return;
+                }
+                _this.isCheck = false;
+                var subData = {
+                    'targetId':id,
+                    'type':type
+                };
+                //console.log("collection:"+_this.collection);
+                if(!_this.collection){
+                    _this.$http.post('{:Url("Base/addCollect")}',subData).then(function (res) {
+                        var data = res.data;
                         if(data.code === 1){
-                            $(img).attr('class','collect');
-                            $(img).attr('src','/index/images/detail/collect.png');
+                            console.log(data);
+                            _this.isCheck = true;
+                            _this.collection =data.data;
                         }
+                    },function (res) {
+                        _this.isCheck = true;
                     });
                 }else{
-                    $.ajax({
-                        type:'post',
-                        url:'{:Url("Base/delCollect")}',
-                        data:{
-                            'targetId':id,
-                            'type':type
-                        }
-                    }).done(function (data) {
+                    _this.$http.post('{:Url("Base/delCollect")}',subData).then(function (res) {
+                        var data = res.data;
                         if(data.code === 1){
-                            $(img).attr('class','outcollect');
-                            $(img).attr('src','/index/images/detail/outcollect.png');
+                            console.log(data);
+                            _this.isCheck = true;
+                            _this.collection =null;
                         }
+                    },function (res) {
+                        _this.isCheck = true;
                     });
                 }
             },
             loadMore:function (event) {
-                var length = this.documents.length,
-                    lastId = this.documents[length-1].id,
-                    vm = this.documents;
-                console.log(lastId)
-                $.ajax({
-                    type:'post',
-                    url:'{:Url("Policy/moreComment")}',
-                    dataType:'json',
-                    data:{
-                        'length':length,
-//                        'lastId':lastId,
-//                       'targetId':1
-                        'news_id':'{$news.id}'
-                    }
-                }).done(function (data) {
-                    console.log(data);
-                    if(data.code === 0){
-                        $(event.target).text('已加载全部！')
-                    }else{
-                        $.each(data.data,function(index,array){
-                            vm.push(array);
-                        })
-                    }
-                });
-            },
-            like:function (event,id) {
-                var classname = $(event.target).attr('class'),
-                    likes = $(event.target).text();
-                if(classname === 'dislike'){
-                    $.ajax({
-                        type:'post',
-                        url:'{:Url("Base/likes")}',
-                        data:{'id':id}
-                    }).done(function (data) {
-                        if(data.code === 1){
-                            likes++;
-                            $(event.target).removeClass('dislike').addClass('like');
-                            $(event.target).text(likes);
-                        }
-                    });
-                } else {
-                    $.ajax({
-                        type:'post',
-                        url:'{:Url("Base/unlikes")}',
-                        data:{'id':id}
-                    }).done(function (data) {
-                        if(data.code === 1){
-                            likes--;
-                            $(event.target).removeClass('like').addClass('dislike');
-                            $(event.target).text(likes);
-                        }
-                    });
+                var _this = this;
+                _this.loading = true;
+                var  doc = _this.documents,
+                        length = doc.length;
+                if(!length){
+                    return;
                 }
+                var  lastId =doc[length-1].id,
+                        subData = {
+                            'lastId':lastId,
+                            'targetId':"{$news.id}"
+                        };
+                _this.$http.post('{:Url("Base/moreComment")}',subData).then(function (res) {
+                    var data =  res.data;
+                    if(data.total == 0 ){
+                        console.log(data.total);
+                        _this.loading = true;
+                        _this.loadOver = true;
+                    }else{
+                        console.log(data);
+                        var comments = data.comments;
+                        for(var i = 0,length  = comments.length;i < length; i += 1){
+                            doc.push(comments[i]);
+                        }
+                        _this.loading = false;
+                    }
+                },function (res) {
+                    alert("网络错误,请检查你的网络！");
+                    _this.loading = true;
+                    _this.loadOver = true;
+                });
             }
         }
-    });
-//修改图片自适应
-    $(function () {
-        $("section").find('img').each(function(){
-            $(this).css('width',"100%");
-        });
-
-////        第三方输入法遮挡输入解决
-//        $(".input-box>input").on('focus',function(){
-//            $(".foot").css({'position':'absolute','bottom':'16vw'});
-//        });
-//        $(".input-box>input").on('blur',function(){
-//            $(".foot").css({'position':'fixed','bottom':'0'});
-//        })
     });
 </script>
 {/block}

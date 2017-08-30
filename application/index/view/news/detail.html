@@ -148,12 +148,15 @@
                 var _this = this;
                 _this.loading = true;
                 var  doc = _this.documents,
-                        length = doc.length,
-                        lastId =doc[length-1].id,
-                        subData = {
-                            'lastId':lastId,
-                            'targetId':"{$news.id}"
-                        };
+                        length = doc.length;
+                if(!length){
+                    return;
+                }
+                 var  lastId =doc[length-1].id,
+                    subData = {
+                        'lastId':lastId,
+                        'targetId':"{$news.id}"
+                    };
                 _this.$http.post('{:Url("Base/moreComment")}',subData).then(function (res) {
                         var data =  res.data;
                         if(data.total == 0 ){
