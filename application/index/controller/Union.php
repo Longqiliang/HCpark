@@ -79,7 +79,7 @@ class Union extends Base
     public function unionDetail(){
         $map['id']=input('id');
         $res = UnionModel::where($map)->find();
-        $this->assign('res',json_encode($res));
+
 
         // 评论列表
         $map = [
@@ -115,9 +115,8 @@ class Union extends Base
         UnionLoabourModel::where('id', input('id'))->setInc('views');
 
         $this->assign('count', $count);
-        $this->assign('comments', json_encode($list2));
-
-
+        $this->assign('comments', json_encode($comments));
+        $this->assign('news', $res);
         return $this->fetch();
     }
 

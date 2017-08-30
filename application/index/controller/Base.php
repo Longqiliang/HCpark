@@ -119,7 +119,7 @@ class Base extends Controller
     //工会联盟添加评论
     public function unionComments(){
         $data = [
-            'target_id' => input('id'),
+            'target_id' => input('targetId'),
             'user_id' => session('userId'),
             'content' => input('content'),
         ];
