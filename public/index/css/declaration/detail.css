@@ -181,6 +181,9 @@ section img{
     text-align: center;
     font-size: 1.5rem;
 }
+.foot .send{
+    width: 17.33vw;
+}
 section img{
     display: block;
     max-width: 100%;
