@@ -127,7 +127,7 @@ section img{
     vertical-align: middle;
     margin-right: 5px;
 }
-.foot{
+.foot,.footer-box{
     position: fixed;
     display: flex;
     width: 100%;
@@ -138,6 +138,9 @@ section img{
     border-top: 1px solid #e5e5e5;
     overflow: hidden;
     background: #fff;
+}
+.footer-box{
+    justify-content: space-around;
 }
 .foot .collect-box{
     width: 13.33vw;
@@ -151,7 +154,11 @@ section img{
     width: 69.33vw;
     height: 100%;
 }
-.foot .input-box input{
+.footer-box .input-box{
+    width: 75vw;
+    height: 100%;
+}
+.foot .input-box input,.footer-box .input-box input{
     height: 7.4667vw;
     width: 65.3vw;
     background: #f2f2f2;
@@ -162,12 +169,14 @@ section img{
     margin: 1.6vw 0 2.4vw 0;
     font-size: 1.4rem;
 }
+.footer-box .input-box input{
+    width: 100%;
+}
 .foot .input-box input::-webkit-input-placeholder{
     font-size: 1.4rem;
     color: #b2b2b2;
 }
-.foot .send{
-    width: 17.33vw;
+.foot .send,.footer-box .send{
     line-height: 12vw;
     text-align: center;
     font-size: 1.5rem;
@@ -177,3 +186,6 @@ section img{
     max-width: 100%;
     margin: 0 auto;
 }
+
+
+

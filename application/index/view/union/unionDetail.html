@@ -50,20 +50,14 @@
             </div>
         </div>
     </div>
-    <div class="foot">
-        <div class="collect-box">
-            <img class="outcollect" v-if="!collection" @click="collect($event,{$news->id},{$news->type})" src="/index/images/detail/outcollect.png">
-            <img class="collect" v-else @click="collect($event,{$news->id},{$news->type})" src="/index/images/detail/collect.png">
-        </div>
+    <div class="footer-box">
         <div class="input-box">
             <input type="text" placeholder="说说你的感想！" v-model="commentValue">
         </div>
         <div class="send" @click="send({$news->id},{$news->type})">发送</div>
     </div>
 </div>
-<div>
 
-</div>
 {/block}
 
 {block name="script"}
@@ -106,41 +100,6 @@
                         }
                     },function (data) {
                         alert("网络错误,请检查你的网络！");
-                    });
-                }
-            },
-            collect:function (event,id,type) {
-                var _this = this;
-                if(!_this.isCheck ){
-                    return;
-                }
-                _this.isCheck = false;
-                var subData = {
-                    'targetId':id,
-                    'type':type
-                };
-                //console.log("collection:"+_this.collection);
-                if(!_this.collection){
-                    _this.$http.post('{:Url("Base/addCollect")}',subData).then(function (res) {
-                        var data = res.data;
-                        if(data.code === 1){
-                            console.log(data);
-                            _this.isCheck = true;
-                            _this.collection =data.data;
-                        }
-                    },function (res) {
-                        _this.isCheck = true;
-                    });
-                }else{
-                    _this.$http.post('{:Url("Base/delCollect")}',subData).then(function (res) {
-                        var data = res.data;
-                        if(data.code === 1){
-                            console.log(data);
-                            _this.isCheck = true;
-                            _this.collection =null;
-                        }
-                    },function (res) {
-                        _this.isCheck = true;
                     });
                 }
             },
