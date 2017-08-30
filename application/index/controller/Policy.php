@@ -92,7 +92,7 @@ class Policy extends Base
             }
 
         } else {
-            $list1 = NewsModel::where(['type' => 5])->limit($len, 6)->select();
+            $list1 = NewsModel::where(['type' => 5])->order("create_time desc")->limit($len, 6)->select();
             if ($list1) {
 
                 return json(['code' => 1, 'data' => $list1]);

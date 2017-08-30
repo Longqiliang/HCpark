@@ -54,8 +54,6 @@ class Company extends Admin
             }else{
                 $res=$parkCompany->data($data,true)->isUpdate($isUpdate)->save();
             }
-
-
         }
             $parkNumber=ParkCompany::where(['park_id'=>$parkid])->select();
             foreach($parkNumber as $k=>$v){
@@ -71,8 +69,6 @@ class Company extends Admin
             }
 
             return $this->success('同步成功');
-
-
     }
 
     /*获取企业的服务或产品*/
@@ -128,8 +124,6 @@ class Company extends Admin
             return $this->error("修改失败");
         }
 
-
-
     }
     /*产品服务列表*/
     public function product(){
@@ -140,8 +134,6 @@ class Company extends Admin
         int_to_string($list,['type'=>[1=>"企业产品",2=>"企业服务"]]);
         $this->assign('list',$list);
         $this->assign('companyId',$id);
-
-
         return $this->fetch();
     }
 

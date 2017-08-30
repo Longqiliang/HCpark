@@ -86,23 +86,11 @@
                     <td class="mail-subject">
                         <a href="{:Url('add','id='.$vo.id)}">{$vo.name}</a>
                     </td>
-                   <!--     <td>
-                            <select name="type" id="">
-                                <option value="1">水电费</option>
-                                <option value="2">物业费</option>
-                                <option value="3">房租费</option>
-                                <option value="4">公耗费</option>
-
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" name="fee">
-                        </td>-->
                     <td>
-                        <a  href="{:Url('add','id='.$vo.id)}" class="btn btn-info" style="color:#fff">点击进入</a>
+                        <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-info" style="color:#fff">点击进入</a>
                     </td>
                     <td>
-                        <a  href="{:Url('feerecode','id='.$vo.id)}" class="btn btn-info" style="color:#fff">查看</a>
+                        <a  href="{:Url('feerecode','id='.$vo.id)}" class="btn-sm btn-info" style="color:#fff">查看</a>
                     </td>
                 </tr>
                 {/volist}

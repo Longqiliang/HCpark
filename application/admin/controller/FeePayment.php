@@ -54,25 +54,25 @@ class FeePayment extends Admin
                 $data = input('post.');
                 unset($data['uid']);
                 /*修改输入当月的数据*/
-                    $enter_time =date("Y-m",strtotime(input('expiration_time')));
-                    $start_time =date("Y-m-d",strtotime($enter_time));
+                    $enter_time = date("Y-m",strtotime(input('expiration_time')));
+                    $start_time = date("Y-m-d",strtotime($enter_time));
                     $end_time = mktime(23, 59, 59, date('m', strtotime($start_time))+1, 00,date("y",strtotime($enter_time)));
                     $end_time = date("Y-m-d",$end_time);
-                    $re=$feepayment->validate(true)->where(['company_id'=>$id,'type'=>$type,'expiration_time'=>['between',[$start_time,$end_time]]])->update($data);
+                    $re = $feepayment->validate(true)->where(['company_id'=>$id,'type'=>$type,'expiration_time'=>['between',[$start_time,$end_time]]])->update($data);
 
                 if ($re){
 
                     return $this->success('修改成功');
                 }else{
 
-                    return $this->error("sorry !! ".$feepayment->getError());
+                    return $this->error("修改失败 ".$feepayment->getError());
                 }
 
             }else{
-                $data =input('post.');
+                $data = input('post.');
                 unset($data['uid']);
                 $data['status'] = 0;
-                $re=$feepayment->validate(true)->save($data);
+                $re = $feepayment->validate(true)->save($data);
                 if ($re){
 
                     return $this->success('添加成功');
@@ -86,10 +86,10 @@ class FeePayment extends Admin
             $status = [-1=>"删除",0=>"进行中",1=>"审核中",2=>"已缴费",3=>"审核失败"];
             $id = input('id');
             $company = ParkCompany::get($id);
-            $list1 =$feepayment->where(['company_id'=>$id,'type'=>1,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
-            $list2 =$feepayment->where(['company_id'=>$id,'type'=>2,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
-            $list3 =$feepayment->where(['company_id'=>$id,'type'=>3,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
-            $list4 =$feepayment->where(['company_id'=>$id,'type'=>4,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
+            $list1 = $feepayment->where(['company_id'=>$id,'type'=>1,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
+            $list2 = $feepayment->where(['company_id'=>$id,'type'=>2,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
+            $list3 = $feepayment->where(['company_id'=>$id,'type'=>3,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
+            $list4 = $feepayment->where(['company_id'=>$id,'type'=>4,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
             if ($list1){
                 $list1['state'] =$status[$list1['status']];
             }
@@ -102,8 +102,6 @@ class FeePayment extends Admin
             if ($list4){
                 $list4['state'] =$status[$list4['status']];
             }
-
-
 
             $this->assign('list1',$list1);
             $this->assign('list2',$list2);
