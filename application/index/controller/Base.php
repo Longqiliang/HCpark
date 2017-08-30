@@ -196,28 +196,5 @@ class Base extends Controller
         return json(['total'=>count($comments), 'comments'=>$comments]);
     }
 
-    //工会联盟评论分页
-    public function moreUnion() {
-        $lastId = input('lastId', 0);
-        $map = [
-            'target_id' => input('targetId')
-        ];
-        if ($lastId != 0) {  $map['id'] = ['<', $lastId]; }
-        $comments = UnionComment::where($map)->order('id desc')->limit(6)->select();
-        foreach ($comments as $value){
-            $userinfo['header']=isset($value->wechatuser->header)?$value->wechatuser->header:"";
-            $userinfo['avatar']=isset($value->wechatuser->avatar)?$value->wechatuser->avatar:"";
-            if(!empty($userinfo['header'])){
-
-                $value['header']=$userinfo['header'];
-
-            }else{
-                $value['header']=!empty($userinfo['avatar'])?$userinfo['avatar']:"";
-
-            }
-        }
-        return json(['total'=>count($comments), 'comments'=>$comments]);
-    }
-
 
 }
