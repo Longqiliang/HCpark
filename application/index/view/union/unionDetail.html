@@ -151,13 +151,17 @@
                         length = doc.length;
                 if(!length){
                     return;
+                }else if(length >= _this.count){
+                    _this.loading = true;
+                    _this.loadOver = true;
+                    return;
                 }
                 var  lastId =doc[length-1].id,
                         subData = {
                             'lastId':lastId,
                             'targetId':"{$news.id}"
                         };
-                _this.$http.post('{:Url("Base/moreComment")}',subData).then(function (res) {
+                _this.$http.post('{:Url("Union/moreUnion")}',subData).then(function (res) {
                     var data =  res.data;
                     if(data.total == 0 ){
                         console.log(data.total);

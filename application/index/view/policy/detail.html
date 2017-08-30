@@ -151,6 +151,10 @@
                         length = doc.length;
                 if(!length){
                     return;
+                }else if(length >= _this.count){
+                    _this.loading = true;
+                    _this.loadOver = true;
+                    return;
                 }
                 var  lastId =doc[length-1].id,
                         subData = {
