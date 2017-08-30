@@ -141,10 +141,10 @@
         <li :class="{active:isActive==3}" @click="changeTab(3)">联系我们</li>
     </ul>
     <ul class="my-content">
-        <li class="profile" :class="{'contentShow':isActive==0}" v-if="baseData.service!=''">
-            {{baseData.present}}
+        <li class="profile" :class="{'contentShow':isActive==0}" v-html="baseData.present">
+
         </li>
-        <li class="service" :class="{'contentShow':isActive==1}" >
+        <li class="service" :class="{'contentShow':isActive==1}" v-if="baseData.service!=''">
             <ul>
                 <li v-for="item in baseData.service" @click="jumpTo(item.id)">
                     <div class="my-content-img" v-if="!item.front_cover" :style="{backgroundImage:'url('+imgPath+')'}"></div>
@@ -168,8 +168,7 @@
                 </li>
             </ul>
         </li>
-        <li class="contact" :class="{'contentShow':isActive==3}">
-            {{baseData.about_us}}
+        <li class="contact" :class="{'contentShow':isActive==3}" v-html="baseData.about_us">
         </li>
     </ul>
 </div>
@@ -181,7 +180,8 @@ var app = new Vue({
     el:'#app',
     data:{
         isActive:0,
-        baseData:JSON.parse('{$info}'),
+        text:'<a>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores corporis culpa deserunt dolorum eum illum itaque, iure labore mollitia nam obcaecati odio placeat praesentium quaerat quibusdam quidem quos suscipit veritatis.</a>',
+        baseData:{$info},
         imgPath:'/index/images/feedback/indexbg.jpg',
         baseApi:'{:Url("Enterprise/detail")}'
     },

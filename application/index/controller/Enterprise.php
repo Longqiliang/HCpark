@@ -66,8 +66,8 @@ class Enterprise extends Base{
 
        $result=[
 
-           'present'=>$str= preg_replace("/<(.*?)>/","",$info['present']),
-           'about_us'=>$str= preg_replace("/<(.*?)>/","",$info['about_us']),
+           'present'=>$info['present'],
+           'about_us'=>$info['about_us'],
            'name'=>$info['name'],
            'mobile'=>$info['mobile'],
            'img'=>$info['img'],
