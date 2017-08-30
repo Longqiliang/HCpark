@@ -20,7 +20,7 @@ class Feedback extends Base
         $map = [
             'create_user' => session('userId'),
         ];
-        $list = FeedbackModel::where($map)->order('status')->select();
+        $list = FeedbackModel::where($map)->order('status asc ,create_time desc ')->select();
         $this->assign('list',$list);
 
         return $this->fetch();
