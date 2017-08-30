@@ -1,0 +1,349 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<style>
+    .mail-box .mail-ontact{
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+    .mail-box .mail-subject{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+    .mail-subject-div{
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-box .mail-main{
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-date{
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+    @media only screen and (max-width: 550px){
+        .mail-date{
+            display: none;
+        }
+    }
+    .list_banner {width: 80px}
+    .list_type {width: 80px}
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <h2>  <a href="{:Url('add')}?id={$companyId}" style="color:inherit">企业信息</a>|<span style="color:#337ab7">产品及服务({$list->total()})</span></h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+                <a data-toggle="modal" href="#modal-form1" class="btn btn-white btn-sm" ><i class="fa fa-file-text-o"></i> 添加</a>
+            </div>
+        </div>
+        <div class="mail-box">
+         <!--  <div> <a data-toggle="modal" href="#modal-form2"  class="btn btn-sm btn-primary" > 添加</a></div>-->
+            <table class="table table-hover table-mail">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>名称</th>
+                    <th>简介</th>
+                    <th>类型</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody name="product">
+                {volist name="list" id="vo"}
+                <tr class="read">
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                    </td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.detail}</td>
+                    <td>{$vo.type_text}</td>
+                    <td>{$vo.create_time}</td>
+                    <td>
+                        <a data-toggle="modal" style="color: #ffffff;" href="#modal-form"  class="btn btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}')"> 编辑</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">企业服务及产品</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="name"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">简介</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" name="detail" value=""></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">封面:</label>
+                        <div class="col-sm-10">
+                            <input type="file" class="file input-file">
+                            <sapn>
+
+                                <a class="front_cover" href="#">
+                                    <img class="front_cover_img" src=""  style="max-width: 100px;"/>
+                                </a>
+
+                            </sapn>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">类型</label>
+                        <div class="col-sm-10">
+                            企业产品&nbsp;<input type="radio"   name="type" value="1" id="type1" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            企业服务&nbsp;<input type="radio"   name="type" value="2" id="type2">
+                        </div>
+
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">详情</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 present " name="present" ></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-12"><input type="button"  class="form-control"   value="提交" onclick="update()"></div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<div id="modal-form1" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">企业产品及服务</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="name1"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">简介</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" required="" name="detail1"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">封面:</label>
+                        <div class="col-sm-10">
+                            <input  type="file" class="file input-file">
+                            <sapn>
+
+                                <a class="front_cover" href="#">
+                                    <img class="front_cover_img1 images" src="" style="max-width: 100px;"/>
+                                </a>
+
+                            </sapn>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">类型</label>
+                        <div class="col-sm-10">
+                            企业产品&nbsp;<input type="radio"   name="type1" value="1"  checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            企业服务&nbsp;<input type="radio"   name="type1" value="2" >
+                        </div>
+
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">详情</label>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-10 present" name="present1"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-12"><input type="button"  class="form-control"   value="提交" onclick="addProduct()"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="front_cover" value="">
+<input type="hidden" name="id" >
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+        function sendFile(file) {
+            var data = new FormData();
+            data.append("file_data", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "{:Url('Upload/picture')}",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var data = $.parseJSON(response);
+                    $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+                }
+            });
+        }
+
+        $(".present").summernote({
+            lang: 'zh-CN',
+            height: 300,
+            minHeight: 210,
+            callbacks: {
+                onImageUpload: function (files) { //the onImageUpload API
+                    img = sendFile(files[0]);
+                }
+            }
+        });
+
+    });
+    $(".input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $("input[name='front_cover']").val(response.data);
+            $('.front_cover_img').attr('src',response.data);
+            $('.front_cover_img1').attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+    /*获取企业产品或服务详细信息*/
+    function getCompanyserver(id){
+        $.ajax({
+            data: {id:id},
+            type: "POST",
+            url: "{:Url('Company/getCompanyserver')}",
+            success: function(data) {
+                 console.log(data);
+                $("[name='name']").val(data.name);
+                $("[name='detail']").val(data.detail);
+                $('.present').summernote('code',data.content);
+                $("[name='id']").val(data.id);
+                $(".front_cover_img").attr("src",data.front_cover);
+                $("input[name='front_cover']").val(data.front_cover);
+                if(data.type==1){
+                    $('#type1').attr('checked',true);
+                }else{
+                    $('#type2').attr('checked',true);
+                    }
+            }
+        });
+    }
+
+    /*修改企业产品或服务详细信息*/
+    function update(){
+        var ids=$("[name='id']").val();
+        var names=$("[name='name']").val();
+        var details=$("input[name='detail']").val();
+        var image=$("input[name='front_cover']").val();
+        var types=$('[name=type]:checked').val();
+        var presents = $('.present').summernote('code');
+        $.ajax({
+            data: {id:ids,name:names,content:presents,detail:details,type:types,front_cover:image},
+            type: "POST",
+            url: "{:Url('Company/updateCompany')}",
+            success: function(data) {
+                console.log(data);
+                if(data.code==1){
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
+                }else{
+                   updateAlert(data.msg,'error');
+                }
+
+            }
+        });
+    }
+    /*添加企业产品或服务*/
+    function addProduct(){
+        var names=$("[name='name1']").val();
+        var contents=$('.present').eq(1).summernote('code');
+        var companyid ="{$companyId}";
+        var details =$("[name='detail1']").val();
+        var image=$("input[name='front_cover']").val();
+        var types=$('[name=type1]:checked').val();
+        $.ajax({
+            data: {name:names,content:contents,company_id:companyid,type:types,front_cover:image,detail:details},
+            type: "POST",
+            url: "{:Url('Company/edit')}",
+            success: function(data) {
+                if(data.code==1){
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
+                }else{
+                    updateAlert(data.msg,'error');
+                }
+            }
+        });
+    }
+</script>
+    {/block}</div>

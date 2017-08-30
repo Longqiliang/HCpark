@@ -175,9 +175,9 @@ class Partybuild extends Base{
         $education[2] = WechatUser::where(['age'=>['>',0],'education'=>2])->count();
         $education[3] = WechatUser::where(['age'=>['>',0],'education'=>3])->count();
         $education[4] = WechatUser::where(['age'=>['>',0],'education'=>4])->count();
-        $this->assign('data',$data);
-        $this->assign('sex',$sex);
-        $this->assign('education',$education);
+        $this->assign('data',json_encode($data));
+        $this->assign('sex',json_encode($sex));
+        $this->assign('education',json_encode($education));
 
         return $this->fetch();
 
