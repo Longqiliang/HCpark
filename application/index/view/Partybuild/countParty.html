@@ -70,6 +70,13 @@
     #app{
         padding-bottom: 2rem;
     }
+
+    .gender{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 {/block}
 
@@ -87,8 +94,9 @@
     </div>
     <div class="card">
         <div class="card-tit">男女比例</div>
-        <div class="my-card-box">
-            <div id="gender" style="width: 100%;height:100vw;"></div>
+        <div class="my-card-box gender">
+            <div id="genderX" style="width: 50%;height:50vw;"></div>
+            <div id="genderO" style="width: 50%;height:50vw;"></div>
         </div>
     </div>
     <div class="card">
@@ -104,29 +112,22 @@
 <script src="/static/echarts/echarts.min.js"></script>
 <script>
     // 基于准备好的dom，初始化echarts实例
-    var ageData={$data};
-    var myAge = echarts.init(document.getElementById('age'));
-    var myGender = echarts.init(document.getElementById('gender'));
-    var myEducation = echarts.init(document.getElementById('education'));
+    var ageData={$data},
+            genderData={$sex},
+            educationData={$education};
+    var myAge = echarts.init(document.getElementById('age')),
+            myGenderX = echarts.init(document.getElementById('genderX')),
+            myGenderO = echarts.init(document.getElementById('genderO')),
+            myEducation = echarts.init(document.getElementById('education'));
     // 指定图表的配置项和数据  age
     var ageOption = {
-        title: {text: '年龄分布'},
+        title: {text: '年龄分布',show:false},
+        //提示框
         tooltip : {
-            trigger: 'item',
-            formatter: "{a}{b}"
+            trigger: 'axis  ',
+            formatter: "{b}：{c}人"
         },
-        legend: {
-            // orient: 'vertical',
-            // top: 'middle',
-            bottom: 10,
-            left: 'center',
-            data:['年龄分布'],
-                normal: {
-                    show: true,
-                    position: 'top'
-                }
-        },
-        color:['#fcc44b','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
+        color:['#8DD9CA','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
         xAxis: {
             data: ["20岁以下","20-30岁","30-40岁","40-50岁","50岁以上"],
             axisLabel:{
@@ -145,21 +146,30 @@
         },
         yAxis: {
             type:'value',
+            min:0,//最小值
+            max:10,//最大值
+            minInterval:1,//自动计算的坐标轴最小间隔大小。保证坐标轴分割刻度显示成整数。
+            interval:2,//强制设置坐标轴分割间隔。
             axisLabel:{
                 textStyle:{
                     color:'#666'
                 },
             },
             axisLine:{
+                show:true,
                 lineStyle:{
                     color:'#f1f1f1'
                 },
             }
         },
+
         series: [{
             name: '人数',
             type: 'bar',
             data: ageData,
+            itemStyle:{
+              border:'1'
+            },
             label: {
                 normal: {
                     show: true,
@@ -170,17 +180,13 @@
     };
     // 指定图表的配置项和数据  age
     var educationOption = {
-        title: {text: '学历分布',x:'center',y:'center'},
-        tooltip: {},
-        legend: {
-            data:['学历分布'],
-            normal: {
-                show: true,
-                position: 'top'
-            }
+        title: {text: '学历分布',show:false},
+        //提示框
+        tooltip : {
+            trigger: 'axis  ',
+            formatter: "{b}：{c}人"
         },
-        color:['#fcc44b','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
-
+        color:['#92D5C3','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
         xAxis: {
             data: ["初中以下","初中","高中","中专","大专","本科","硕士","硕士以上"],
             axisTick: {
@@ -201,15 +207,18 @@
             }
         },
         yAxis: {
+            type:'value',
+            min:0,//最小值
+            max:10,//最大值
+            minInterval:1,//自动计算的坐标轴最小间隔大小。保证坐标轴分割刻度显示成整数。
+            interval:2,//强制设置坐标轴分割间隔。
             axisLabel:{
                 textStyle:{
                     color:'#666'
                 },
             },
-            axisTick: {
-                alignWithLabel: true
-            },
             axisLine:{
+                show:true,
                 lineStyle:{
                     color:'#f1f1f1'
                 },
@@ -218,7 +227,7 @@
         series: [{
             name: '人数',
             type: 'bar',
-            data: ageData,
+            data: educationData,
             label: {
                 normal: {
                     show: true,
@@ -227,40 +236,94 @@
             },
         }]
     };
-    var genderOption={
-        tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-
-        calculable : true,
-        series : [
-            {
-                name:'男女比例',
-                type:'pie',
-                radius : ['50%', '70%'],
-                itemStyle : {
-                    normal : {
-                        label : {
-                            show : true
+    //环形图
+    function drawPie(num1,num2,name1,color) {
+        var genderOption = {
+            //提示文字
+//        tooltip: {
+//            trigger: 'item',
+//            formatter: [`{title|{b}}`, `{c} ({d}%)`].join('<br>'),
+//            rich:{
+//                title:{
+//                    color:'#f00',
+//                    align:'center'
+//                }
+//            },
+//            background:'#fff',
+//            position:{
+//                top:'center',
+//                left:'center'
+//            },
+//            backgroundColor:'rgba(0,0,0,0)',
+//            textStyle:{
+//                color:'#999'
+//            }
+//        },
+//        图例
+//        legend: {
+//            tooltip: {
+//                show: true
+//            },
+//            orient: 'vertical',
+//            left:10,
+//            data: [{name: '男'}, {name: '女'}]
+//        },
+            color:[color,'#e8e8e8'],
+            calculable: true,
+            series: [
+                {
+                    name: '男女比例',
+                    type: 'pie',
+                    radius: ['50%', '60%'],
+                    hoverAnimation:false,//取消hover动画
+                    legendHoverLink:false,//取消高亮 亲测无效！！！！
+                    itemStyle : {
+                        normal : {
+                            label : {
+                                show : true
+                            },
+                            labelLine : {
+                                show :false ,
+                            }
                         },
-                        labelLine : {
-                            show : true
-                        }
+
                     },
 
-                },
-                data:[
-                    {value:335, name:'男'},
-                    {value:310, name:'女'},
-                ]
-            }
-        ]
+                    data: [{
+                        value: genderData[num1], name: name1,
+                        label:{
+                            show:false,
+                            normal:{
+                                position:'center',
+                                formatter: [`{name|{d}%}`, `{value|{b}}`].join('\n'),
+                                rich:{
+                                    name:{
+                                        align:'center',
+                                        fontSize: 20,
+                                        fontWeight: 'bold'
+                                    },
+                                    value:{
+                                        align:'center',
+                                        fontSize:15,
+                                        lineHeight:20
+                                    }
+                                },
+                            }
+                        }
+                    },
+                        {value:genderData[num2]},]
+                }
+            ]
 
+        };
+        return genderOption
     }
+    var genderOptionX = drawPie(0,1,'男','#A3D7A9');
+    var genderOptionO = drawPie(1,0,'女','#69B1BF');
     // 使用刚指定的配置项和数据显示图表。
     myAge.setOption(ageOption);
-    myGender.setOption(genderOption);
+    myGenderX.setOption(genderOptionX);
+    myGenderO.setOption(genderOptionO);
     myEducation.setOption(educationOption);
 </script>
 
