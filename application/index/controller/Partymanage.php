@@ -19,12 +19,12 @@ class Partymanage extends Base
         return $this->fetch();
     }
     /***合同管理*/
-    public function manage(){
+    public function contract(){
         $data[0] = CompanyContract::where(["park_id"=>session("park_id"),'type'=>1])->count();
         $data[1] = CompanyContract::where(["park_id"=>session("park_id"),'type'=>2])->count();
-        $contract[0] = $data[0] + $data[1];
-        $contract[1] = 100*$data[0]/($data[0] + $data[1]);
-        $contract[2] = 100*$data[1]/($data[0] + $data[1]);
+            $contract[0] = $data[0] + $data[1];
+            @$contract[1] = 100*$data[0]/($data[0] + $data[1]);
+            @$contract[2] = 100*$data[1]/($data[0] + $data[1]);
 
         return $this->fetch();
     }
