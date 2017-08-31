@@ -40,15 +40,15 @@ class Communication extends Base
             $value['is_join'] = $is_join ? 1 : 0;
 
         }
-        $userinfo =$user->where('userid',$user_id)->find();
-        if(empty($userinfo['header'])){
-            $header=$userinfo['avatar'];
-        }else{
-            $header=$userinfo['header'];
+        $userinfo = $user->where('userid', $user_id)->find();
+        if (empty($userinfo['header'])) {
+            $header = $userinfo['avatar'];
+        } else {
+            $header = $userinfo['header'];
 
         }
 
-        $this->assign('header',$header);
+        $this->assign('header', $header);
         $this->assign('list', $groupList);
 
         return $this->fetch();
@@ -62,50 +62,52 @@ class Communication extends Base
         return $this->fetch();
     }
 
-    /*申请加入*/
-    public function application()
-    {
-        $group_id = input('group_id');
-        $user_id = session('userId');
-        $cgroup = new CommunicateGroup();
-        $wechat = new WechatUser();
-        $groupinfo = $cgroup->where('id', $group_id)->find();
-        $user = $wechat->where('userid', $user_id)->find();
-        $userinfo = [
-            'name' => $user['name'],
-            'mobile' => $user['mobile'],
-            'department' => isset($user->departmentName->name) ? $user->departmentName->name : ""
-        ];
-        $this->assign('group', $groupinfo);
-        $this->assign('user', $userinfo);
-        return $this->fetch();
-    }
-
     /*加入*/
     public function join()
     {
-        $user_id = session('userId');
-        $remark = input('remark');
+        $cgroup = new CommunicateGroup();
+        $wechat = new WechatUser();
         $cuser = new CommunicateUser();
-        $map = [
-            'group_id' => input('group_id'),
-            'user_id' => $user_id,
-            'status' => array('gt', 0)
-        ];
-        $is_join = $cuser->where($map)->find();
-        if ($is_join) {
-            return $this->error("已经加入或者正在审核中");
-        } else {
-            $map['status'] = 0;
-            $map['remark'] = $remark;
-            $reult = $cuser->save($map);
-            if ($reult) {
-                return $this->success("成功");
+        if (IS_POST) {
+            $user_id = session('userId');
+            $remark = input('remark');
+            $map = [
+                'group_id' => input('group_id'),
+                'user_id' => $user_id,
+                'status' => array('gt', 0)
+            ];
+            $is_join = $cuser->where($map)->find();
+            if ($is_join) {
+                return $this->error("已经加入或者正在审核中");
             } else {
-                return $this->error("申请失败");
+                $map['status'] = 0;
+                $map['remark'] = $remark;
+                $reult = $cuser->save($map);
+                if ($reult) {
+                    return $this->success("成功");
+                } else {
+                    return $this->error("申请失败");
+                }
             }
+        } else {
+            $group_id = input('group_id');
+            $user_id = session('userId');
+
+            $groupinfo = $cgroup->where('id', $group_id)->find();
+            $user = $wechat->where('userid', $user_id)->find();
+            $userinfo = [
+                'name' => $user['name'],
+                'mobile' => $user['mobile'],
+                'department' => isset($user->departmentName->name) ? $user->departmentName->name : ""
+            ];
+            $this->assign('group', $groupinfo);
+            $this->assign('user', $userinfo);
+            return $this->fetch();
+
+
         }
     }
+
     /*帖子列表*/
     public function postsList()
     {
@@ -149,33 +151,33 @@ class Communication extends Base
     /*写帖子页面*/
     public function writePost()
     {
-        $group_id = input('group_id');
-        $this->assign('group_id', $group_id);
-        return $this->fetch();
-
-    }
-
-    /*写*/
-    public function write()
-    {
         $post = new CommunicatePosts();
-        $data = input('');
-        $map = [
-            'title' => $data['title'],
-            'content' => $data['content'],
-            'img' => $data['img'],
-            'user_id' => session('userId'),
-            'group_id' => $data['group_id']
-        ];
-        $result = $post->save($map);
-        if ($result) {
-            return $this->success("成功");
-        } else {
+        if (IS_POST) {
+            $data = input('');
+            $map = [
+                'title' => $data['title'],
+                'content' => $data['content'],
+                'img' => $data['img'],
+                'user_id' => session('userId'),
+                'group_id' => $data['group_id']
+            ];
+            $result = $post->save($map);
+            if ($result) {
+                return $this->success("成功");
+            } else {
 
-            return $this->error("失败");
+                return $this->error("失败");
+            }
+
+        } else {
+            $group_id = input('group_id');
+            $this->assign('group_id', $group_id);
+            return $this->fetch();
         }
 
+
     }
+
 
     /*评论*/
     public function comment()
