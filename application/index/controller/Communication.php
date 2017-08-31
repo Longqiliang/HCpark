@@ -22,10 +22,10 @@ class Communication extends Base
         $user_id = session('userId');
         $cgroup = new CommunicateGroup();
         $cuser = new CommunicateUser();
+        $user = new WechatUser();
         $map2 = [
             'status' => 1,
             'park_id' => session('park_id')
-
         ];
         $groupList = $cgroup->where($map2)->select();
         $map = [
@@ -40,7 +40,15 @@ class Communication extends Base
             $value['is_join'] = $is_join ? 1 : 0;
 
         }
+        $userinfo =$user->where('userid',$user_id)->find();
+        if(empty($userinfo['header'])){
+            $header=$userinfo['avatar'];
+        }else{
+            $header=$userinfo['header'];
 
+        }
+
+        $this->assign('header',$header);
         $this->assign('list', $groupList);
 
         return $this->fetch();
