@@ -25,7 +25,13 @@ class Partymanage extends Base
         $contract[0] = $data[0] + $data[1];
         $contract[1] = $data[0];
         $contract[2] = $data[1];
-        $this->assign('info',$contract);
+        $array=[
+            'total'=>["总合同数"=>$contract[0]],
+            'rent'=>["租赁合同"=>$contract[1]],
+            'property'=>["物业合同"=>$contract[2]]
+        ];
+
+        $this->assign('info',json_encode($array));
 
         return $this->fetch();
     }
