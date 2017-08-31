@@ -18,6 +18,16 @@ use app\index\model\CompanyService;
 use app\index\model\CompanyApplication;
 use think\Db;
 use app\index\model\FeePayment;
+use app\index\model\PropertyServer;
+use app\index\model\WaterService;
+use app\index\model\CarparkRecord;
+use app\index\model\ElectricityService;
+use app\index\model\AdvertisingService;
+use app\index\model\AdvertisingRecord;
+use app\index\model\FunctionRoomRecord;
+use app\index\model\LedRecord;
+use app\index\model\BroadbandPhone;
+
 
 class Personal extends Base
 {
@@ -163,52 +173,285 @@ class Personal extends Base
 
     /*我的服务*/
     public function service(){
-        $service = new   PersonalService();
         $userid = session('userId');
-       /* $map=[
-            'userid'=>$userid,
-            'type'=>0
-        ];*/
-        //物业服务
-
-
-        //$list=$service ->where($map)->select();
 
         //费用缴纳
         $userinfo=WechatUser::where(['userid'=>$userid])->find();
         $departmentId =$userinfo['department'];
         $map = ['company_id'=>$departmentId,'status'=>['neq',-1]];
-        $list = FeePayment::where($map)->order('create_time desc')->field('type as service_name,status,create_time')->select();
-        foreach($list as $v){
-            switch ($v['service_name']){
-                case 1:
-                    $v['service_name']="费用缴纳（水电费)";
-                    break;
-                case 2:
-                    $v['service_name']="费用缴纳（物业费)";
-                case 3:
-                    $v['service_name']="费用缴纳（房租费)";
-                    break;
-                default :
-                    $v['service_name']="费用缴纳（公耗费)";
-                    break;
-            }
+        $list1 = FeePayment::where($map)->order('create_time desc')->field('type as service_name,status,create_time')->select();
+        $types=[1=>'费用缴纳（水电费)',2=>"费用缴纳（物业费)",3=>"费用缴纳（房租费)",4=>"费用缴纳（公耗费)"];
+        foreach($list1 as $k=>$v){
+            $v['service_name']=$types[$v['service_name']];
             if($v['status']==1){
                 $v['status']=0;
             }
+            if($v['status']==2){
+                $v['status']=1;
+            }
         };
 
+        //物业报修
+        $types=[1=>'物业报修（空调报修）',2=>"物业报修（电梯报修）",3=>"物业报修（其他报修）"];
+        $list2 = PropertyServer::where(['type'=>['<',4],'user_id'=>$userid,'status'=>['>=',0]])->order('create_time desc')->field('type as service_name,status,create_time')->select();
+        foreach($list2 as $k=>$v){
+            $v['service_name']=$types[$v['service_name']];
+        }
 
+        //饮水服务
+        $map = [
+            'status'=> array('neq',-1),
+            'userid'=>$userid,
+        ];
+        $list3 = WaterService::where($map)->order('create_time desc')->field('status,create_time')->select();
+        foreach($list3 as $k=>$v){
+            $v['service_name']="饮水服务";
+        }
+        //室内保洁
 
-        foreach ($list  as $value){
-            if($value['status']==0){
-                $value['status_text']='进行中';
-            } elseif($value['status']==3){
-                $value['status_text']='审核失败';
+        $list4 = PropertyServer::where(['type'=>['=',4],'user_id'=>$userid,'status'=>['>=',0]])->order('create_time desc')->field('type as service_name,status,create_time')->select();
+        foreach($list4 as $k=>$v){
+            $v['service_name']="保洁服务";
+        }
+
+        //车卡服务
+        $list5 = Db::table('tb_carpark_record')
+            ->alias('r')
+            ->join('__CARPARK_SERVICE__ s', 'r.carpark_id=s.id')
+            ->field('r.type as service_name,r.status,r.create_time')
+            ->where('s.user_id','eq',$userid)
+            ->where('r.status','neq',-1)
+            ->order('r.create_time desc')
+            ->select();
+        foreach($list5 as $k=>$v){
+            $v['service_name']==1?$list5[$k]['service_name']="车卡服务（新卡办理）":$list5[$k]['service_name']="车卡服务（旧卡续费）";
+            $list5[$k]['create_time']=date("Y-m-d",$v['create_time']);
+            if($list5[$k]['status']==0){
+                $list5[$k]['status_text']='进行中';
+            }elseif($list5[$k]['status']==1){
+                $list5[$k]['status_text']='已完成';
             }else{
-                $value['status_text']='已完成';
+                $list5[$k]['status_text']='审核失败';
             }
         }
+
+        //充电柱办公
+        $service =new ElectricityService;
+        $user_id= session('userId');
+        $map=[
+            'user_id'=>$user_id,
+            'status'=>array('neq',-1)
+        ];
+        $result=$service->where($map)->order('create_time desc')->select();
+        $record=array();
+        foreach ($result as $value){
+            array_push($record,$value->findRecord);
+        }
+        int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
+        $list6=array();
+        foreach ($record as $k=>$v){
+            foreach ($v as $val){
+                $list6[$k]['service_name']=$val['type']==1?"充电柱办公（新柱办理）":"充电柱办公（旧柱续费）";
+                $list6[$k]['create_time']=$val['create_time'];
+                $list6[$k]['status']=$val['status'];
+                if($list6[$k]['status']==0){
+                    $list6[$k]['status_text']='进行中';
+                }elseif($list6[$k]['status']==1){
+                    $list6[$k]['status_text']='已完成';
+                }else{
+                    $list6[$k]['status_text']='审核失败';
+                }
+            }
+        }
+
+        //公共服务
+
+
+        //大厅广告记录
+        $service = new AdvertisingService();
+        $ad=new AdvertisingRecord();
+        $fs = new FunctionRoomRecord();
+        $led = new LedRecord();
+
+        $data1=array();
+        $time=array();
+        $create_time=array();
+        $serviceInfo =$service->where('id',1)->find();
+        $list= $ad->where('create_user',$user_id)->order('create_time desc')->select();
+        //所有的创建时间
+        foreach ($list as $l){
+            array_push($create_time,$l['create_time']);
+        }
+
+        //数组去重
+        $time = array_values(array_unique ($create_time));
+
+        foreach ($time as $onetime){
+            $map =array();
+            foreach ($list as  $info){
+                if($info['create_time']==$onetime){
+                    array_push($map,$info);
+                }
+            }
+            $re=[
+                'create_time'=>strtotime($onetime)*1000,
+
+            ];
+
+            foreach ($map as  $k=>$value){
+                $re['service_name']="公共区服务（大厅广告位预约）";
+                $re['create_time']=$map[$k]['create_time'];
+            }
+            if($map[0]['status']==0){
+
+                $re['status']=2;
+            }else if($map[0]['status']==1){
+                $re['status']=0;
+
+            }else{
+                $re['status']=1;
+            }
+
+            array_push($data1,$re);
+
+        }
+
+        //二楼多功能厅
+        $data2=array();
+        $time=array();
+        $create_time=array();
+        $serviceInfo =$service->where('id',2)->find();
+        $list= $fs->where('create_user',$user_id)->order('create_time desc')->select();
+        //所有的创建时间
+        foreach ($list as $l){
+            array_push($create_time,$l['create_time']);
+        }
+        //数组去重
+        $time = array_values(array_unique ($create_time));
+
+        foreach ($time as $onetime){
+            $map =array();
+            foreach ($list as  $info){
+                if($info['create_time']==$onetime){
+                    array_push($map,$info);
+                }
+            }
+            $re=[
+                'create_time'=>strtotime($onetime)*1000,
+            ];
+
+            //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
+            $map_time=array();
+            foreach ($map as $m){
+                array_push($map_time,$m['order_time']);
+            }
+            $mtime_list = array_values(array_unique ($map_time));
+
+            foreach ($mtime_list as $k=>$value){
+                $re['service_name']="公共区服务（多功能厅预约）";
+                $re['create_time']=$map[$k]['create_time'];
+            }
+            if($map[0]['status']==0){
+
+                $re['status']=2;
+            }else if($map[0]['status']==1){
+                $re['status']=0;
+
+            }else{
+                $re['status']=1;
+            }
+
+            array_push($data2,$re);
+        }
+
+        //大堂led灯
+        $data3=array();
+        $time=array();
+        $create_time=array();
+        $serviceInfo =$service->where('id',3)->find();
+        $list= $led->where('create_user',$user_id)->order('create_time desc')->select();
+        //所有的创建时间
+        foreach ($list as $l){
+            array_push($create_time,$l['create_time']);
+        }
+        //数组去重
+        $time = array_values(array_unique ($create_time));
+
+        foreach ($time as $onetime){
+            $map =array();
+            foreach ($list as  $info){
+                if($info['create_time']==$onetime){
+                    array_push($map,$info);
+                }
+            }
+            $re=[
+                'create_time'=>strtotime($onetime)*1000,
+            ];
+
+            //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
+            $map_time=array();
+            foreach ($map as $m){
+                array_push($map_time,$m['order_time']);
+            }
+            $mtime_list = array_values(array_unique ($map_time));
+
+            foreach ($mtime_list as $k=>$value){
+                $re['service_name']="公共区服务（大堂led灯预约）";
+                $re['create_time']=$map[$k]['create_time'];
+            }
+            if($map[0]['status']==0){
+
+                $re['status']=2;
+            }else if($map[0]['status']==1){
+                $re['status']=0;
+
+            }else{
+                $re['status']=1;
+            }
+
+            array_push($data3,$re);
+
+        }
+
+        //电话宽带
+        $userid = session('userId');
+        //      echo  $userid;
+        $map = [
+            'status'=> array('neq',-1),
+            'user_id'=>$userid,
+        ];
+        $list7 = BroadbandPhone::where($map)->order('create_time desc')->select();
+
+        foreach($list7 as $k=>$v){
+            $list7[$k]=[
+                'create_time'=>$v['create_time'],
+                'status'=>$v['status'],
+                'service_name'=>"电话宽带",
+            ];
+        }
+
+        //合并所有物业服务的数组
+        $list=array_merge($list1,$list2,$list3,$list4,$list5,$list6,$data1,$data2,$data3,$list7);
+
+        //把数组按时间排序
+        usort($list, function($a, $b) {
+            $al = strtotime($a['create_time']);
+            $bl = strtotime($b['create_time']);
+            if ($al == $bl)
+                return 0;
+            return ($al > $bl) ? -1 : 1;
+        });
+
+        foreach ($list  as $k=>$value){
+            if($value['status']==0){
+                $list[$k]['status_text']='进行中';
+            }elseif($value['status']==1){
+                $list[$k]['status_text']='已完成';
+            }else{
+                $list[$k]['status_text']='审核失败';
+            }
+        }
+
         $this->assign('property',$list);
         //企业服务
 

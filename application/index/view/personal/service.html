@@ -24,7 +24,7 @@
                 <div class="info">
                     <div class="title">{$loo.service_name}</div>
                     <div class=" time">
-                        <span>{$loo.create_time}</span>
+                        <span>{$loo.create_time|strtotime|date="Y-m-d",###}</span>
                     </div>
                 </div>
                 <div class="state">
