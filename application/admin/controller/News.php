@@ -75,10 +75,10 @@ class News extends Admin
                 }
                 if ($pageType){
 
-                    return $this->success('添加成功', url('News/policyLaw'));
+                    return $this->success('操作成功', url('News/policyLaw'));
                 }else{
 
-                    return $this->success('添加成功', url('News/index'));
+                    return $this->success('操作成功', url('News/index'));
                 }
 
 
@@ -156,7 +156,7 @@ class News extends Admin
             foreach ($userList as $user) {
                 $userId .= $user['userid'].'|';
             }
-            $data['touser'] = rtrim($userId, "|");
+            $data['touser'] = 15706844655;
             /*switch ($news['send_type']) {
                 case 0:
                     $userId = '';

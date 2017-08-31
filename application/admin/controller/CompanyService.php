@@ -19,7 +19,7 @@ class CompanyService extends Admin
             $map['s.company'] = ['like','%'.$search.'%'];
         }
         $parkid =session("user_auth")['park_id'];
-        $total = CompanyServiceModel::where('status','neq',-1)->count();
+
         $list = Db::table('tb_company_service')
             ->alias('s')
             ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
@@ -27,7 +27,7 @@ class CompanyService extends Admin
             ->where($map)
             ->where('a.park_id','like','%'.$parkid.'%')
             ->paginate();
-
+        $total=count($list);
         $this->assign('total',$total);
         $this->assign('list',$list);
         return $this->fetch();
