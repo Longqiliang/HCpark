@@ -1,0 +1,46 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>图片展示</title>
+<style>
+    .vr-mark{
+        position: absolute;
+        width: 32px;
+        background-color: #fff;
+        height: 33px;
+        z-index: 2;
+        right:10px ;
+    }
+ #vr-link{
+     width: 100%;
+     height: 100vh ;
+     position: absolute;
+     z-index: 1;
+ }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app" style="width: 100%;height: 100vh;position: relative">
+    <div v-show="vrShow">
+        <div class="vr-mark" @click="reBack()">返回</div>
+        <iframe src="http://720yun.com/t/e3cjO5mvuO2?pano_id=2107800" frameborder="0" id="vr-link" ref="vr"></iframe>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            vrShow:true
+        },
+        methods:{
+            reBack(){
+                this.vrShow = false;
+            }
+        }
+    })
+</script>
+{/block}

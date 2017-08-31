@@ -34,12 +34,43 @@
 /*.content ul li .list_img>a>img{*/
     /*position:absolute;right:12px;top:13px;width:25px;*/
 /*}*/
-.content ul li> .list-item{
+.content ul li .list-item{
     height:85px;width:100%;display: block;position:relative;border-bottom:1px solid #f1f1f1;color: #333;
 }
-.content ul li>.list-item>img.fl{
+.content ul li .list-item>img.fl{
     width:60px;height:60px;border-radius: 3px;margin-left:11px;margin-top:12px;
 }
-.content ul li>.list-item>span.limit{
+.content ul li .list-item>span.limit{
     width:72%;display: block;font-size:14px;height:85px;line-height:85px;margin-left:11px;
+}
+.no-more{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+}
+.icon-time{
+    width: 20px;
+    height: 20px;
+    background-image: url(/index/images/union/icon-time.png);
+}
+.icon-tel{
+    width: 20px;
+    height: 20px;
+    background-image: url(/index/images/union/icon-tel.png);
+}
+.icon-name{
+    width: 20px;
+    height: 20px;
+    background-image: url(/index/images/union/icon-name.png);
+}
+.icon-house{
+    width: 20px;
+    height: 20px;
+    background-image: url(/index/images/union/icon-house.png);
+}
+.icon-class{
+    width: 20px;
+    height: 20px;
+    background-image: url(/index/images/union/icon-class.png);
 }
