@@ -78,8 +78,11 @@ class Partybuild extends Base{
         $comments = PartyComment::where($map)->order("create_time desc ")->limit(6)->select();
         foreach( $comments as $v){
             $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
-        }
-        foreach ($comments as $value){
+            $v['avatar']=isset($v->wechatuser->avatar)?$v->wechatuser->avatar:"";
+            if (empty($v['header'])){
+                $v['header'] = $v['avatar'];
+                unset($v['avatar']);
+            }
         }
         $this->assign('comments', json_encode($comments));
         $this->assign('id',$id);
@@ -91,12 +94,20 @@ class Partybuild extends Base{
         /*获取更多评论*/
     public function getMore(){
         $len = input("length");
-        $newsId = input("news_id");
+        $newsId = input("newsId");
         $comments = PartyComment::where(['target_id' => $newsId])
             ->order("create_time desc")
             ->limit($len, 6)
             ->select();
         if ($comments) {
+            foreach( $comments as $v){
+                $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
+                $v['avatar']=isset($v->wechatuser->avatar)?$v->wechatuser->avatar:"";
+                if (empty($v['header'])){
+                    $v['header'] = $v['avatar'];
+                    unset($v['avatar']);
+                }
+            }
 
             return json(['code' => 1, 'data' => $comments]);
         } else {

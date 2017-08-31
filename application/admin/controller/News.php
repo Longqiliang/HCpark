@@ -20,14 +20,19 @@ class News extends Admin
 {
     /*新闻通告首页面*/
     public function index() {
+        $type = input('type');
         $parkid = session('user_auth')['park_id'];
         $map = ['status'=> 1,'type'=>['<=',3],'park_id'=>$parkid];
+        if ($type){
+            $map['type'] = $type ;
+        }
         $search = input('search');
         if ($search != '') {
             $map['title'] = ['like','%'.$search.'%'];
         }
         $list = NewsModel::where($map)->order('id desc')->paginate();
         $this->assign('list', $list);
+        $this->assign('checkType',$type);
 
         return $this->fetch();
     }

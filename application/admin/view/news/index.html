@@ -78,10 +78,16 @@
                     <th>主题</th>
                     <th>新闻通告内容</th>
                     <th>是否轮播</th>
-                    <th>类型</th>
+                    <th>
+                        <select name="type" id="changeType" onchange="changeType()">
+                            <option value="0" {eq name="$checkType" value="0"}selected{/eq}>所有类型</option>
+                            <option value="1" {eq name="$checkType" value="1"}selected{/eq}>新闻速递</option>
+                            <option value="2" {eq name="$checkType" value="2"}selected{/eq}>园区通告</option>
+                            <option value="3" {eq name="$checkType" value="3"}selected{/eq}>好文分享</option>
+                        </select>
+                    </th>
                     <th>是否推送</th>
                     <th>创建时间</th>
-
                 </tr>
                 </thead>
 
@@ -133,5 +139,10 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
+        function changeType(){
+            var types = $('#changeType').val();
+            location.href = "{:Url('News/index')}?type="+types+"";
+
+        }
 </script>
 {/block}
