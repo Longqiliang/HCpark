@@ -80,7 +80,7 @@ class Communication extends Base
             if ($is_join) {
                 return $this->error("已经加入或者正在审核中");
             } else {
-                $map['status'] = 0;
+                $map['status'] = 1;
                 $map['remark'] = $remark;
                 $reult = $cuser->save($map);
                 if ($reult) {
@@ -92,8 +92,14 @@ class Communication extends Base
         } else {
             $group_id = input('group_id');
             $user_id = session('userId');
-
+            $map = [
+                'group_id' => $group_id,
+                'user_id' => $user_id,
+                'status' => array('gt', 0)
+            ];
             $groupinfo = $cgroup->where('id', $group_id)->find();
+            $status = $cuser->where($map)->field('status')->find();
+            $groupinfo['is_join'] = $status['status'] ? $status['status'] : 0;
             $user = $wechat->where('userid', $user_id)->find();
             $userinfo = [
                 'name' => $user['name'],
