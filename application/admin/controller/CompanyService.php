@@ -62,7 +62,13 @@ class CompanyService extends Admin
     public function complete() {
         $id = input('id');
         $result = CompanyServiceModel::where('id', 'in', $id)->update(['status' => 1]);
-        return $this->redirect('index');
+        if ($result){
+
+            $this->success("已审核");
+        }else{
+
+            $this->error("未成功");
+        }
     }
 
 
