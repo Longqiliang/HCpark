@@ -160,7 +160,6 @@ class FeePayment extends Admin
 
             foreach($image as $value){
                 $html .= "<div class='col-md-4'><img class='front_cover_img' src='$value' style='width: 150px;height: 200px;'></div>";
-
             }
         }
 

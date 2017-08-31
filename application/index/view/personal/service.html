@@ -29,9 +29,9 @@
                 </div>
                 <div class="state">
                     {eq name="loo.status" value="1"}
-                    <span class="end">已完成</span>
+                    <span class="end">{$loo.status_text}</span>
                     {else/}
-                    <span class="ing">进行中</span>
+                    <span class="ing">{$loo.status_text}</span>
                     {/eq}
                 </div>
             </a>
@@ -47,7 +47,7 @@
                 <div class="info">
                     <div class="title">{$lo.service_name}</div>
                     <div class="time">
-                        <span>{$lo.create_time}</span>
+                        <span>{$lo.create_time|date="Y-m-d",###}</span>
                     </div>
                 </div>
                 <div class="state">

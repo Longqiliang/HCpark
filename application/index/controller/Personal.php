@@ -17,6 +17,8 @@ use app\index\model\PersonalService;
 use app\index\model\CompanyService;
 use app\index\model\CompanyApplication;
 use think\Db;
+use app\index\model\FeePayment;
+
 class Personal extends Base
 {
     public function  index(){
@@ -152,7 +154,10 @@ class Personal extends Base
     }
     /*我的消息*/
     public function message(){
+        $list='';
 
+        $this->assign('list',$list);
+        $this->assign('id',$list);
         return  $this->fetch();
     }
 
@@ -160,19 +165,47 @@ class Personal extends Base
     public function service(){
         $service = new   PersonalService();
         $userid = session('userId');
-        $map=[
+       /* $map=[
             'userid'=>$userid,
             'type'=>0
-        ];
+        ];*/
         //物业服务
 
 
-        $list=$service ->where($map)->select();
+        //$list=$service ->where($map)->select();
+
+        //费用缴纳
+        $userinfo=WechatUser::where(['userid'=>$userid])->find();
+        $departmentId =$userinfo['department'];
+        $map = ['company_id'=>$departmentId,'status'=>['neq',-1]];
+        $list = FeePayment::where($map)->order('create_time desc')->field('type as service_name,status,create_time')->select();
+        foreach($list as $v){
+            switch ($v['service_name']){
+                case 1:
+                    $v['service_name']="费用缴纳（水电费)";
+                    break;
+                case 2:
+                    $v['service_name']="费用缴纳（物业费)";
+                case 3:
+                    $v['service_name']="费用缴纳（房租费)";
+                    break;
+                default :
+                    $v['service_name']="费用缴纳（公耗费)";
+                    break;
+            }
+            if($v['status']==1){
+                $v['status']=0;
+            }
+        };
+
+
 
         foreach ($list  as $value){
             if($value['status']==0){
                 $value['status_text']='进行中';
-            } else{
+            } elseif($value['status']==3){
+                $value['status_text']='审核失败';
+            }else{
                 $value['status_text']='已完成';
             }
         }
@@ -185,6 +218,7 @@ class Personal extends Base
             ->field('a.name as service_name,s.status,s.create_time')
             ->where('s.user_id','eq',$userid)
             ->where('s.status','neq',-1)
+            ->order('create_time desc')
             ->select();
 
         foreach ($list  as $value){

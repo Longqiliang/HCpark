@@ -8,17 +8,30 @@
 namespace app\admin\controller;
 
 use app\common\model\BroadbandPhone as BroadbandModel;
-
+use app\common\model\WechatUser;
+use think\Db;
 class BroadbandPhone extends Admin
 {
     public function index()
     {
-        $map['status']  = ['neq',-1];
+
+
+        $parkid =session("user_auth")['park_id'];
         $search = input('search');
+        $map['b.status']  = ['neq',-1];
         if ($search != '') {
-            $map['company'] = ['like','%'.$search.'%'];
+            $map['b.company'] = ['like','%'.$search.'%'];
         }
-        $list = BroadbandModel::where($map)->order('id desc')->paginate();
+        $list = Db::table('tb_broadband_phone')
+            ->alias('b')
+            ->join('__WECHAT_USER__ w', 'b.user_id=w.userid')
+            ->field('b.id,b.user_id,b.address,b.business,b.business_time,b.company,b.people,b.status,b.mobile,b.remark,b.create_time')
+            ->where('w.park_id','eq',$parkid)
+            ->where($map)
+            ->order('create_time desc')
+            ->paginate();
+
+
         $this->assign('list',$list);
         return $this->fetch();
     }
