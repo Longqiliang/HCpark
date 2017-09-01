@@ -25,7 +25,7 @@
             <ul
                 v-infinite-scroll="loadMore"
                 infinite-scroll-disabled="loading"
-                infinite-scroll-distance="6">
+                infinite-scroll-distance="40">
                 <li v-for="list in documents">
                     <div class="img-box">
                         <img :src="list.header==''?'/index/images/personal/personalinfo.png':list.header">

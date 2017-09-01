@@ -1,0 +1,146 @@
+*, ul, p, ul li {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+/*body{*/
+/*background-color: #f0eff5;*/
+/*}*/
+.img-responsive {
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+    display: block;
+}
+.header{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 1.5rem;
+    align-items: center;
+    padding: 0 3.2vw;
+    height: 5rem;
+    background-color: #fff;
+}
+.header select{
+    background-color: #fff;
+    color: #666;
+    height: 2.5rem;
+    border-radius: 5px;
+    font-size: 1.4rem;
+    border: 1px solid #e5e5e5;
+    outline: none;
+    padding: 0 5px;
+}
+.statistics-box{
+    background-color: #f0eff5;
+    padding-bottom: 1px;
+}
+.statistics-card{
+    position: relative;
+    padding: 4vw 2.66vw 0;
+    font-size: 1.5rem;
+    background-color: #fff;
+    margin-bottom: 2vw ;
+}
+.statistics-tit{
+    color: #333;
+    font-size: 1.4rem;
+    padding-left: 3vw;
+}
+.statistics-info{
+    height: 65vw;
+}
+.img-list{
+    margin:4vw 3.2vw;
+    border-radius: 5px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+}
+.img-list-item{
+    height: 34.67vw;
+    position: relative;
+}
+.item-img-marking{
+    position: absolute;
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 2rem;
+}
+.item-img-marking .marking-info{
+    position: relative;
+    width: 82.13vw;
+    text-align: center;
+}
+.marking-info:before,.marking-info:after{
+    height: 1px;
+    content: '';
+    position: absolute;
+    top:50%;
+    width: 30%;
+    background-color: #fff;
+    z-index: 1;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.marking-info:before{
+    left: 0;
+}
+.marking-info:after{
+    right: 0;
+}
+
+/*合同列表*/
+.contract-list{
+    box-sizing: border-box;
+    width: 100%;
+    padding:2rem 3.7vw ;
+}
+.contract-list>li{
+    margin-bottom: 2rem;
+    padding:0.8rem 3.7333333vw;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+}
+.contract-list>li:last-child{
+    margin-bottom: inherit;
+}
+.contract-info{
+    width: 100%;
+}
+.contract-info>li{
+    line-height: 2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.contract-info>li:first-child{
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333;
+}
+.contract-info>li:last-child{
+    font-size: 1.2rem;
+    color: #999;
+}
+.load-more {
+    width: 100%;
+    line-height: 40px;
+    text-align: center;
+    font-size: 1.4rem;
+    color: #ccc;
+}
+.load-more div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}

@@ -293,16 +293,21 @@ textarea::-webkit-input-placeholder {
     border-top-left-radius: 13px;
     border-top-right-radius: 13px;
 }
-.img-card-box:after{
+.img-card-box.after:after,.img-card-box.before:before{
     content: '';
     width: 11.5vw;
     height: 7.6vw;
     background: url("/index/images/service/card/icon-waveline.png");
     background-size: cover;
     position: absolute;
-    right:-5.9vw;
     top: -2.67vw;
     z-index: -1;
+}
+.img-card-box.after:after{
+    right:-5.9vw;
+}
+.img-card-box.before:before{
+    left:-5.9vw;
 }
 .img-card-info{
     height: 13.8vw  ;

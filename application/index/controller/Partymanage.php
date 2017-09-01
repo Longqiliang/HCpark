@@ -79,10 +79,10 @@ class Partymanage extends Base
                 $name = "物业合同";
                 break;
             case 3 :
-                $anme = "其他合同";
+                $name = "其他合同";
                 break;
         };
-        $this->assign('list',$list);
+        $this->assign('list',json_encode($list));
         $this->assign('name',$name);
 
         return $this->fetch();
