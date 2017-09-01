@@ -8,44 +8,50 @@ use think\Loader;
 use app\common\model\CompanyContract;
 use app\index\model\Park;
 use app\index\model\WechatTag;
+use think\Db;
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
     public function index(){
+        $userid=session('userId');
+        $park_id=session('park_id');
+        $res = Db::table('tb_wechat_user')
+            ->alias('u')
+            ->join('__WECHAT_DEPARTMENT__ d', 'u.department=d.id')
+            ->field('d.id,u.tagid')
+            ->where('u.userid','eq',$userid)
+            ->find();
+        $id=input('id');//选择园区
+        $departmentid=$res['id'];//部门ID
+        $tagid=$res['tagid'];//标签ID
+        //所有园区领导,能看到所有园区
+        if($departmentid==1 && $tagid==1){
+            $res = Park::field('id,name')->select();
+            if(input('id')){
+                $res = Park::where('id','eq',$id)->field('id,name')->select();
 
+            }
+        }else{
+            //只能看到自己园区
+            $res = Park::where('id', 'eq', $park_id)->field('id,name')->select();
+        }
+
+        $this->assign('res',json_encode($res));
         return $this->fetch();
     }
 
     /** 园区统计 **/
     public function statistics(){
-        $userid=session('userId');
-        $park_id=session('park_id');
+        //首页所选园区ID
         $id=input('id');
-        $park = new Park();
-        $list = $park->select();
-        foreach ($list as $k=>$v){
-            $data[$k] = [
-                'name' => $v['name'],
-                'address' => $v['address'],
 
-            ];
-        }
-        $tagid=WechatUser::where('userid','eq',$userid)->field('tagid')->find();
+        //园区统计
+        $res = Park::where('id', 'eq', $id)->field('id,name,address,images,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
 
-            if ($tagid['tagid'] == 1) {
-                $res = Park::field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
-                if(input('id')){
-                    $res = Park::where('id','eq',$id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
-                }
-            } else {
-                $res = Park::where('id', 'eq', $park_id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
-                $res = array($res);
-            }
-
-        $this->assign('list',$data);
         $this->assign('res',json_encode($res));
         return $this->fetch();
     }
+
     /***合同管理*/
     public function contract(){
         $data[0] = CompanyContract::where(["park_id"=>session("park_id"),'type'=>1])->count();

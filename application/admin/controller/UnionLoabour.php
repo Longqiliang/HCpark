@@ -10,7 +10,7 @@ use app\common\model\UnionLoabour as UnionLoabourModel;
 
 class UnionLoabour extends Admin
 {
-    /*公告活动首页*/
+    /*工会信息首页*/
     public function index() {
         $parkid = session('user_auth')['park_id'];
         $map = ['status'=> 1,'park_id'=>$parkid];
@@ -19,14 +19,12 @@ class UnionLoabour extends Admin
             $map['title'] = ['like','%'.$search.'%'];
         }
         $list = UnionLoabourModel::where($map)->order('create_time desc')->paginate();
-        int_to_string($list,array(
-            'type'=>array(1=>'通知公告',2=>'相关活动')
-        ));
+
         $this->assign('list', $list);
 
         return $this->fetch();
     }
-    /*通知公告，相关活动的添加及修改*/
+    /*修改*/
     public function add() {
         $parkid = session('user_auth')['park_id'];
 
