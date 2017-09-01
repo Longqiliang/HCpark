@@ -66,8 +66,6 @@ class Communication extends Base
         ];
 
         $count = $cuser->where($map)->count();
-        echo json_encode($count);
-
         //0 不是管理员 1 是管理员
         $is_manageer = $count > 0 ? 1 : 0;
 
@@ -287,10 +285,10 @@ class Communication extends Base
     public function myApplication()
     {
         $userid = session('useId');
-        $cuser = new CommunicatateUser();
+        $cuser = new CommunicateUser();
         $map = [
-            'use_id' => $userid,
-            status => array('lt', 3)
+            'user_id' => $userid,
+            'status' => array('lt', 3)
         ];
         $list = $cuser->where($map)->select();
         foreach ($list as $value) {
