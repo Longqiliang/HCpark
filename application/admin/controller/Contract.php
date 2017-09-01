@@ -20,6 +20,7 @@ class Contract extends Admin {
             'status' => 0
         ];
         $list = CompanyContract::where($map)->order("create_time desc")->paginate();
+        int_to_string($list,['type'=>[1=>"租赁合同",2=>"物业合同",3=>"其他合同",]]);
         $this->assign("list",$list);
         return $this->fetch();
     }
@@ -34,7 +35,8 @@ class Contract extends Admin {
                     'img' =>json_encode($data['img']),
                     'company' =>input('company'),
                     'type' =>input("type"),
-                    'remark'=>input('remark'),
+                    'remark' =>input('remark'),
+                    'number' =>input('number')
 
                 ];
                 $department = WechatDepartment::where("name",input('company'))->find();

@@ -78,6 +78,7 @@
                     <th style="width:10%"></th>
                     <th style="width:25%">企业名称</th>
                     <th style="width:15%">合同类型</th>
+                    <th style="width:20%">合同编号</th>
                     <th style="width:15%">备注</th>
                     <th style="width:15%">操作</th>
                 </tr>
@@ -92,7 +93,10 @@
                         <a href="{:Url('add','id='.$vo.id)}">{$vo.company}</a>
                     </td>
                     <td>
-                       {$vo.type}
+                       {$vo.type_text}
+                    </td>
+                    <td>
+                        {$vo.number}
                     </td>
                     <td>
                         {$vo.remark}

@@ -39,6 +39,12 @@
                             <input  type="text" class="form-control" name="name" value="{$info.company}"> <br>
                         </div>
                         <div class="col-md-2 column">
+                            <h3>合同编号</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <input  type="text" class="form-control" name="number" value="{$info.number}"> <br>
+                        </div>
+                        <div class="col-md-2 column">
                             <h3>合同图片</h3>
                         </div>
                         <div class="col-md-10 column">
@@ -150,16 +156,19 @@
         var companyName = $("input[name='name']").val();
         var types = $("[name='type']").val();
         var content = $("[name='extra']").val();
+        var orderNumber = $("[name='number']").val();
         if(companyName ==""){
             updateAlert("请添加公司名称","info");
             return "";
-        }
-        if (imgScrs.length == 0){
+        }else if (imgScrs.length == 0){
             updateAlert("请添加合同照片","info");
+            return "";
+        }else if(orderNumber == ""){
+            updateAlert("请添加合同编号","info");
             return "";
         }
         $.ajax({
-            data:{img:imgScrs,status:0,company:companyName,type:types,remark:content,id:id},
+            data:{img:imgScrs,status:0,company:companyName,type:types,remark:content,id:id,number:orderNumber},
             type:"post",
             url:"{:Url('add')}",
             success:function (data) {
