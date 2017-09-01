@@ -4,6 +4,9 @@
 <title>园区统计</title>
 <link rel="stylesheet" href="/index/css/personal/message.css">
 <style>
+    body{
+        background-color: #fff;
+    }
     .my-tabs{
         display: -webkit-flex;
         display: flex;
@@ -73,6 +76,9 @@
     }
 
 
+    .my-charts{
+        width: 100%;height:23rem;
+    }
     /*样式覆盖*/
     .msg-lists>li>div.msg-text>.msg-title>.msg-title-text{
         width: 100%;
@@ -109,12 +115,12 @@
                     <!--<li :class="{'my-active':active1=='3'}">年</li>-->
                 <!--</ul>-->
                 <!--<div  style="clear:both"></div>-->
-                <div id="area" style="width: 100%;height:60vw;margin-bottom: 20px"></div>
-                <div id="scale" style="width: 100%;height:60vw;"></div>
+                <div id="area" class="my-charts" style="margin-bottom: 20px"></div>
+                <div id="scale" class="my-charts"></div>
             </div>
             <div class="my-box">
                 <div class="my-title">园区基本信息统计</div>
-                <div id="types" style="width: 100%;height:60vw;"></div>
+                <div id="types" class="my-charts" ></div>
             </div>
         </mt-tab-container-item>
         <mt-tab-container-item id="tab-container2">
@@ -147,12 +153,12 @@ var app = new Vue({
             {name:'人工智能产业园',value:2}
         ],
         baseData:{
-            isBoss:'yes'
+            isBoss:'no'
         },
         area:{
             id:'area',
-            title:'总面积',
-            subtext:"33000km²",
+            title:'33000km²',
+            subtext:"总面积",
             label: '{c|{c}}km²\n{d|{d}%}',
             color:['#49CA91','#EDA10E'],
             legend:['已租面积','空置面积'],
@@ -164,28 +170,28 @@ var app = new Vue({
         scale:{
             id:'scale',
             unit:'',
-            title:'规模统计',
-            subtext:"",
-            label: '{c|{c}}km²\n{d|{d}%}',
+            title:'120家',
+            subtext:"规模统计",
+            label: '{c|{c}家}\n{d|{d}%}',
             color:['#4CD2C4','#439BC4','#A1CDE1'],
             legend:['100平米以下','100-300平米','300-600平米'],
             data:[
-                {value:5000, name:'100平米以下'},
-                {value:6000, name:'100-300平米'},
-                {value:4000, name:'300-600平米'},
+                {value:65, name:'100平米以下'},
+                {value:30, name:'100-300平米'},
+                {value:25, name:'300-600平米'},
             ]
         },
         types:{
             id:'types',
-            title:'类型统计',
-            subtext:"",
-            label: '{c|{c}}\n{d|{d}%}',
+            title:'120家',
+            subtext:"类型统计",
+            label: '{c|{c}家}\n{d|{d}%}',
             color:['#FB5E5E','#F4BDDC','#ff8866'],
             legend:['生活配套类','科技创新类','中介服务类'],
             data:[
-                {value:10, name:'生活配套类'},
-                {value:22, name:'科技创新类'},
-                {value:33, name:'中介服务类'},
+                {value:5, name:'生活配套类'},
+                {value:109, name:'科技创新类'},
+                {value:6, name:'中介服务类'},
             ]
         }
     },
