@@ -5,6 +5,8 @@ use wechat\TPWechat;
 use wechat\TPQYWechat;
 use think\Loader;
 use app\common\model\CompanyContract;
+use app\index\model\Park;
+
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -15,7 +17,9 @@ class Partymanage extends Base
 
     /** 园区统计 **/
     public function statistics(){
+        $res=Park::field('area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
 
+        $this->assign('res',json_encode($res));
         return $this->fetch();
     }
     /***合同管理*/

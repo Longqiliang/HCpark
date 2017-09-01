@@ -104,7 +104,7 @@
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.mobile}</a></td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.address}</a></td>
                     <td><a href="{:Url('add','id='.$vo.id)}"><span>{$vo.office_time_start|strtotime | date="H:i",###}</span>-<span>{$vo.office_time_end|strtotime | date="H:i",###}</span></a></td>
-                    <td class="text-right mail-date">{$vo.create_time}</td>
+                    <td class="text-right mail-date" style="white-space: nowrap">{$vo.create_time}</td>
                 </tr>
                 {/volist}
                 </tbody>

@@ -115,10 +115,10 @@
                         {eq name="vo.is_send" value="1"}
                         <span class="label label-info">已推送</span>
                         {else/}
-                        <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm">开始推送</a>
+                        <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm"><div class="mail-main">开始推送</div></a>
                         {/eq}
                     </td>
-                    <td class="text-right mail-date">{$vo.create_time}</td>
+                    <td class="text-right mail-date" style="white-space: nowrap">{$vo.create_time}</td>
                 </tr>
                 {/volist}
                 </tbody>
