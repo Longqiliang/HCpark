@@ -1,5 +1,6 @@
 <?php
 namespace app\index\controller;
+use app\index\model\WechatUser;
 use think\Controller;
 use wechat\TPWechat;
 use wechat\TPQYWechat;
@@ -82,5 +83,36 @@ class Partymanage extends Base
         ];
         $this->assign('info', json_encode($info) );
     }
+
+
+    /*招商管理*/
+   public  function  merchants(){
+    $userid=session('userId');
+    $weuser=new WechatUser();
+    $user=$weuser->where('userid',$userid)->find();
+    $is_boss=$user['tagid']==1?"yes":"no";
+    $this->assign('is_boss',$is_boss);
+    return $this->fetch();
+
+
+
+
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
