@@ -142,9 +142,11 @@ class Communication extends Base
                 'name' => isset($value->user->name) ? $value->user->name : "",
                 'title' => $value['title'],
                 'content' => $value['content'],
-                'img' => $value['img'],
+                'img' => !empty($value['img'])?json_decode($value['img']):"",
                 'comments' => $value['comments'],
                 'create_time' => $value['create_time']
+
+
             ];
             $avatar = isset($value->user->avatar) ? $value->user->avatar : "";
             $header = isset($value->user->header) ? $value->user->header : "";
@@ -162,6 +164,8 @@ class Communication extends Base
     public function postDetails()
     {
         $post = CommunicatePosts::get(input('id'));
+        $post['img']=!empty($value['img'])?json_decode($value['img']):"";
+
         $this->assign('post', $post);
 
         // 评论列表
@@ -193,7 +197,7 @@ class Communication extends Base
             $map = [
                 'title' => $data['title'],
                 'content' => $data['content'],
-                'img' => $data['img'],
+                'img' => json_encode($data['img']),
                 'user_id' => session('userId'),
                 'group_id' => $data['group_id']
             ];
@@ -327,7 +331,7 @@ class Communication extends Base
                 'name' => isset($value->user->name) ? $value->user->name : "",
                 'title' => $value['title'],
                 'content' => $value['content'],
-                'img' => $value['img'],
+                'img' => !empty($value['img'])?json_decode($value['img']):"",
                 'comments' => $value['comments'],
                 'create_time' => $value['create_time']
             ];
