@@ -1,0 +1,90 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    /*tab*/
+    .my-nav{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-around;
+        line-height: 5rem;
+        font-size: 1.5rem;
+        height:5rem;
+        border-bottom: 2px solid #f1f1f1;
+    }
+    .my-nav>li{
+        margin-bottom: -2px;
+        padding:0 1rem;
+    }
+    .my-nav>li.active{
+        color: #69b9f9;
+        border-bottom: 2px solid #69b9f9;
+    }
+
+    /*内容*/
+    .my-content>li{
+        display: none;
+    }
+    .my-charts{
+        padding:3.2vw;
+    }
+
+
+
+
+
+
+
+    .my-content .contentShow{
+        display: block;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <ul class="my-nav">
+        <li :class="{active:isActive==0}" @click="changeTab(0)">招商统计</li>
+        <li :class="{active:isActive==1}" @click="changeTab(1)">个人统计</li>
+        <li :class="{active:isActive==2}" @click="changeTab(2)">招商进度</li>
+        <li :class="{active:isActive==3}" @click="changeTab(3)">工作日志</li>
+    </ul>
+    <ul class="my-content">
+        <li class="merchants" :class="{'contentShow':isActive==0}">
+            <div class="my-charts"></div>
+        </li>
+        <li class="service" :class="{'contentShow':isActive==1}">
+            个人统计
+        </li>
+        <li class="product" :class="{'contentShow':isActive==2}">
+            招商进度
+        </li>
+        <li class="contact" :class="{'contentShow':isActive==3}">
+            工作日志
+        </li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            isActive:0
+        },
+        mounted(){
+        },
+        methods:{
+            changeTab(value){
+                if(value!=this.isActive){
+                    this.isActive=value;
+                }
+            },
+            jumpTo(id){
+                window.location.href='/index/enterprise/product/id/'+id
+            }
+        }
+    })
+</script>
+{/block}

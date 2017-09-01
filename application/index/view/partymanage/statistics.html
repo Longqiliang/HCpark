@@ -142,6 +142,7 @@
 {block name="script"}
 <script src="/static/echarts/echarts.min.1.js"></script>
 <script>
+    var res=JSON.parse('{$res}');
 var app = new Vue({
     el:'#app',
     data:{
@@ -153,47 +154,50 @@ var app = new Vue({
             {name:'人工智能产业园',value:2}
         ],
         baseData:{
-            isBoss:'no'
+            isBoss:'no',
         },
         area:{
             id:'area',
-            title:'33000km²',
+            title:res[0].area_total+'km²',
             subtext:"总面积",
             label: '{c|{c}}km²\n{d|{d}%}',
             color:['#49CA91','#EDA10E'],
             legend:['已租面积','空置面积'],
             data:[
-                {value:22000, name:'已租面积'},
-                {value:11000, name:'空置面积'}
+                {value:res[0].area_use, name:'已租面积'},
+                {value:res[0].area_other, name:'空置面积'}
             ]
         },
         scale:{
             id:'scale',
             unit:'',
-            title:'120家',
+            title:res[0].scale_one+res.scale_two+res.scale_three+'家',
             subtext:"规模统计",
             label: '{c|{c}家}\n{d|{d}%}',
             color:['#4CD2C4','#439BC4','#A1CDE1'],
             legend:['100平米以下','100-300平米','300-600平米'],
             data:[
-                {value:65, name:'100平米以下'},
-                {value:30, name:'100-300平米'},
-                {value:25, name:'300-600平米'},
+                {value:res[0].scale_one, name:'100平米以下'},
+                {value:res[0].scale_two, name:'100-300平米'},
+                {value:res[0].scale_three, name:'300-600平米'},
             ]
         },
         types:{
             id:'types',
-            title:'120家',
+            title:res[0].type_one+res[0].type_two+res[0].type_three+'家',
             subtext:"类型统计",
             label: '{c|{c}家}\n{d|{d}%}',
             color:['#FB5E5E','#F4BDDC','#ff8866'],
             legend:['生活配套类','科技创新类','中介服务类'],
             data:[
-                {value:5, name:'生活配套类'},
-                {value:109, name:'科技创新类'},
-                {value:6, name:'中介服务类'},
+                {value:res[0].type_one, name:'生活配套类'},
+                {value:res[0].type_two, name:'科技创新类'},
+                {value:res[0].type_three, name:'中介服务类'},
             ]
         }
+    },
+    computed:{
+
     },
     mounted(){
         this.drawPie(this.area);

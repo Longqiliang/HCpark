@@ -31,10 +31,12 @@ class Partymanage extends Base
                 $res = Park::field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
             } else {
                 $res = Park::where('id', 'eq', $park_id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+                $res = array($res);
             }
         }
 
         $this->assign('res',json_encode($res));
+        echo json_encode($res);
         return $this->fetch();
     }
     /***合同管理*/
