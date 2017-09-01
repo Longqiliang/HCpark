@@ -8,7 +8,7 @@
 
 namespace app\index\controller;
 
-use app\common\model\CommunicationUser;
+use app\index\model\CommunicationUser;
 use app\index\model\CommunicateGroup;
 use app\index\model\CommunicateUser;
 use app\index\model\WechatUser;
@@ -66,8 +66,10 @@ class Communication extends Base
         ];
 
         $count = $cuser->where($map)->count();
+        echo json_encode($count);
+
         //0 不是管理员 1 是管理员
-        $is_manageer = $$count > 0 ? 1 : 0;
+        $is_manageer = $count > 0 ? 1 : 0;
 
         $this->assign('is_manage', $is_manageer);
         return $this->fetch();
