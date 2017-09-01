@@ -23,11 +23,17 @@ class Partymanage extends Base
         $id=input('id');
         $tagid=WechatUser::where('userid','eq',$userid)->field('tagid')->find();
 
-        if($tagid=='1'){
-            $res=Park::where('id','eq',$id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
+        //echo json_encode($tagid);exit;
+        if(input('id')){
+            $res = Park::where('id','eq',$id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
         }else {
-            $res = Park::where('id','eq',$park_id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+            if ($tagid['tagid'] == 1) {
+                $res = Park::field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
+            } else {
+                $res = Park::where('id', 'eq', $park_id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+            }
         }
+
         $this->assign('res',json_encode($res));
         return $this->fetch();
     }
