@@ -7,7 +7,7 @@ use wechat\TPQYWechat;
 use think\Loader;
 use app\common\model\CompanyContract;
 use app\index\model\Park;
-
+use app\index\model\WechatTag;
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -18,8 +18,16 @@ class Partymanage extends Base
 
     /** 园区统计 **/
     public function statistics(){
-        $res=Park::field('area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+        $userid=session('userId');
+        $park_id=session('park_id');
+        $id=input('id');
+        $tagid=WechatUser::where('userid','eq',$userid)->field('tagid')->find();
 
+        if($tagid=='1'){
+            $res=Park::where('id','eq',$id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
+        }else {
+            $res = Park::where('id','eq',$park_id)->field('id,name,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+        }
         $this->assign('res',json_encode($res));
         return $this->fetch();
     }
