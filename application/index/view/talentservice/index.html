@@ -55,7 +55,6 @@
         padding: 1rem 0;
         text-align: center;
         color: #999;
-        text-align: center;
     }
     .my-footer>p{
         text-align: center;
@@ -74,14 +73,14 @@
 <div id="app">
     <img src="/index/images/cbd.jpg" class="my-banner" alt="">
 
-    <ul class="my-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+    <ul class="my-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
         <li v-for="item in article">
             <div class="content-box">
                 <p>{{item.title}}</p>
                 <span>{{item.create_time}}</span>
                 <span>{{parseInt(item.views)>999?'999+':item.views}}</span>
             </div>
-            <a :href="'/index/Partybuild/detail/id/'+item.id"></a>
+            <a :href="'/index/talentservice/detail/id/'+item.id"></a>
         </li>
     </ul>
     <div class="my-footer">
@@ -96,47 +95,49 @@
 
 {block name="script"}
 <script>
-var app = new Vue({
-    el:'#app',
-    data:{
-        loading:false,
-        canLoad:true,
-        article:{$list},
-        type:{$type}
-    },
-    mounted(){
-        if(this.article.length<6){
-            this.canLoad=false
-        }else{
-            this.canLoad=true
-        }
-    },
-    methods:{
-        loadMore(){
-            if(!this.loading && this.canLoad ){
-                this.loading = true;
-                this.$http.post('/index/partybuild/getMoreList',{type:this.type,length:this.article.length}).then(function (res) {
-                    console.log(res.data);
-
-                    if(res.data.code==0){
-                        this.canLoad=false
-                    }else{
-                        for( var i = 0 ;i < res.data.data.length;i++){
-                            this.article.push(res.data.data[i])
-                        }
-                        if(res.data.data.length<6){
-                            this.canLoad = false
-                        }
-                    }
-                    this.loading = false;
-                },function (res) {
-                    console.log(res.data);
-                    this.loading = false;
-
-                })
+    var app = new Vue({
+        el:'#app',
+        data:{
+            loading:false,
+            canLoad:'',
+//            article:$list,
+            article:[
+                {title:'title',create_time:'create_time',views:888,id:1}
+            ]
+        },
+        created(){
+            if(this.article.length<6){
+                this.canLoad=false
+            }else{
+                this.canLoad=true
             }
         },
-    }
-})
+        methods:{
+            loadMore(){
+                if(!this.loading && this.canLoad ){
+                    this.loading = true;
+                    this.$http.post('/index/talentservice/getMoreList',{type:this.type,length:this.article.length}).then(function (res) {
+                        console.log(res.data);
+
+                        if(res.data.code==0){
+                            this.canLoad=false
+                        }else{
+                            for( var i = 0 ;i < res.data.data.length;i++){
+                                this.article.push(res.data.data[i])
+                            }
+                            if(res.data.data.length<6){
+                                this.canLoad = false
+                            }
+                        }
+                        this.loading = false;
+                    },function (res) {
+                        console.log(res.data);
+                        this.loading = false;
+
+                    })
+                }
+            },
+        }
+    })
 </script>
 {/block}

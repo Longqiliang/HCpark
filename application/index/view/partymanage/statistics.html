@@ -2,7 +2,11 @@
 
 {block name="style"}
 <title>园区统计</title>
+<link rel="stylesheet" href="/index/css/personal/message.css">
 <style>
+    body{
+        background-color: #fff;
+    }
     .my-tabs{
         display: -webkit-flex;
         display: flex;
@@ -14,10 +18,10 @@
     }
     .my-tabs1{
         margin:1rem auto;
-        width:15rem;
-        height:2rem;
+        width:20rem;
+        height:3rem;
         font-size: 1.5rem;
-        line-height: 2rem;
+        line-height: 3rem;
     }
     .my-tabs2{
         width:10rem;
@@ -26,9 +30,8 @@
         line-height: 1.5rem;
         float: right;
     }
-    .my-tabs2:after{
-        content: '';
-        display: block;
+    .clear:after{
+        content:"."; display:block; height:0; visibility:hidden; clear:both;
     }
     .my-tabs>li{
         width:50%;
@@ -65,11 +68,20 @@
 
     .my-box{
         border-bottom: 5px solid #f1f1f1;
-        padding:0 3.2vw 3.2vw;
+        padding:3.2vw;
 
     }
     .my-title{
         font-size: 1.4rem;
+    }
+
+
+    .my-charts{
+        width: 100%;height:23rem;
+    }
+    /*样式覆盖*/
+    .msg-lists>li>div.msg-text>.msg-title>.msg-title-text{
+        width: 100%;
     }
 </style>
 {/block}
@@ -97,21 +109,38 @@
             </div>
             <div class="my-box">
                 <div class="my-title">园区基本信息统计</div>
-                <ul class="my-tabs my-tabs2">
-                    <li :class="{'my-active':active=='tab-container1'}">月</li>
-                    <li :class="{'my-active':active=='tab-container2'}">季</li>
-                    <li :class="{'my-active':active=='tab-container2'}">年</li>
-                </ul>
+                <!--<ul class="my-tabs my-tabs2">-->
+                    <!--<li :class="{'my-active':active1=='1'}">月</li>-->
+                    <!--<li :class="{'my-active':active1=='2'}">季</li>-->
+                    <!--<li :class="{'my-active':active1=='3'}">年</li>-->
+                <!--</ul>-->
+                <!--<div  style="clear:both"></div>-->
+                <div id="area" class="my-charts" style="margin-bottom: 20px"></div>
+                <div id="scale" class="my-charts"></div>
+            </div>
+            <div class="my-box">
+                <div class="my-title">园区基本信息统计</div>
+                <div id="types" class="my-charts" ></div>
             </div>
         </mt-tab-container-item>
         <mt-tab-container-item id="tab-container2">
-            <mt-cell v-for="n in 5" title="tab-container 2"></mt-cell>
+            <ul class="msg-lists">
+                <li v-for="item in 3">
+                <div :style="'background-image: url('+item.path+')'" class="msg-img"></div>
+                <div class="msg-text">
+                    <div class="msg-title"><span class="msg-title-text">希垦园区</span></div>
+                    <div class="msg-info">余杭区文一西路1338号</div>
+                </div>
+                <!--<a href=""></a>-->
+            </li>
+            </ul>
         </mt-tab-container-item>
     </mt-tab-container>
 </div>
 {/block}
 
 {block name="script"}
+<script src="/static/echarts/echarts.min.1.js"></script>
 <script>
 var app = new Vue({
     el:'#app',
@@ -124,8 +153,52 @@ var app = new Vue({
             {name:'人工智能产业园',value:2}
         ],
         baseData:{
-            isBoss:'yes'
+            isBoss:'no'
+        },
+        area:{
+            id:'area',
+            title:'33000km²',
+            subtext:"总面积",
+            label: '{c|{c}}km²\n{d|{d}%}',
+            color:['#49CA91','#EDA10E'],
+            legend:['已租面积','空置面积'],
+            data:[
+                {value:22000, name:'已租面积'},
+                {value:11000, name:'空置面积'}
+            ]
+        },
+        scale:{
+            id:'scale',
+            unit:'',
+            title:'120家',
+            subtext:"规模统计",
+            label: '{c|{c}家}\n{d|{d}%}',
+            color:['#4CD2C4','#439BC4','#A1CDE1'],
+            legend:['100平米以下','100-300平米','300-600平米'],
+            data:[
+                {value:65, name:'100平米以下'},
+                {value:30, name:'100-300平米'},
+                {value:25, name:'300-600平米'},
+            ]
+        },
+        types:{
+            id:'types',
+            title:'120家',
+            subtext:"类型统计",
+            label: '{c|{c}家}\n{d|{d}%}',
+            color:['#FB5E5E','#F4BDDC','#ff8866'],
+            legend:['生活配套类','科技创新类','中介服务类'],
+            data:[
+                {value:5, name:'生活配套类'},
+                {value:109, name:'科技创新类'},
+                {value:6, name:'中介服务类'},
+            ]
         }
+    },
+    mounted(){
+        this.drawPie(this.area);
+        this.drawPie(this.scale);
+        this.drawPie(this.types)
     },
     methods:{
         //园区选择
@@ -133,8 +206,78 @@ var app = new Vue({
             this.$http.post('',{value:this.nowPark}).then(function (res) {
                 console.log(res)
             })
+        },
+        //饼图
+        drawPie(data){
+            var myChart = echarts.init(document.getElementById(data.id));
+            var option = {
+                title:{
+                    show:true,
+                    text: data.title,
+                    subtext: data.subtext,
+                    textStyle:{
+                        fontSize:14,
+                        color:'#299FE8',
+                    },
+                    subtextStyle:{
+                        color:'#999',
+                        align:'center'
+                    },
+                    left: 'center',
+                    top:'92'
+                },
+                legend: {
+                    orient: 'horizontal',
+                    left:'center',
+                    bottom:0,
+                    data:data.legend
+                },
+                color:data.color,
+                calculable: true,
+                series: [
+                    {
+                        name:'园区面积',
+                        type:'pie',
+                        radius: ['45', '70'],
+                        center:['50%',100],
+                        avoidLabelOverlap: false,
+                        hoverAnimation:false,//取消hover动画
+                        label: {
+                            normal: {
+                                show: true,
+                                formatter: data.label,
+                                rich:{
+                                    d:{
+                                        align:'center',
+                                        padding:2,
+                                        color:'#999'
+
+                                    },
+                                    c:{
+                                        align:'center',
+                                        padding:[2,0],
+                                    }
+                                }
+                            },
+                            emphasis: {
+                                show: true,
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: true,
+                                length:15,
+                                length2:5
+                            }
+                        },
+                        data:data.data
+                    }
+                ]
+            };
+            myChart.setOption(option);
         }
     }
 })
+
 </script>
 {/block}

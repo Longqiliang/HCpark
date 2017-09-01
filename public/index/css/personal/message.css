@@ -20,8 +20,11 @@ body{
     left:-3.2vw;
     z-index: 999;
 }
-.msg-lists>li>div{
-    float: left;
+.msg-lists>li{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .msg-lists>li>div.msg-img{
     width:13.3vw;

@@ -8,16 +8,19 @@
 
 
 {block name="body"}
-<div class="banner" >
-    <img src="/index/images/feedback/policy.jpg">
+<div id="app">
+    <div class="banner" >
+        <img :src="data.front_cover">
+    </div>
+    <div class="table-view" >
+        <div class="table-view-cell"><i class="icon icon-house"></i><span>工会名称：{{data.title}}</span></div>
+        <div class="table-view-cell"><i class="icon icon-class"></i><span>工会类别：{{data.type}}</span></div>
+        <div class="table-view-cell"><i class="icon icon-name"></i><span>联系人：{{data.contact}}</span></div>
+        <div class="table-view-cell"><i class="icon icon-tel"></i><span>电话：{{data.mobile}}</span></div>
+        <div class="table-view-cell"><i class="icon icon-time"></i><span>办公时间：{{data.office_time_start}}-{{data.office_time_end}}</span></div>
+    </div>
 </div>
-<div class="table-view" id="app">
-    <div class="table-view-cell"><i class="icon icon-email"></i><span>工会名称：{{data.title}}</span></div>
-    <div class="table-view-cell"><i class="icon icon-email"></i><span>工会类别：{{data.type}}</span></div>
-    <div class="table-view-cell"><i class="icon icon-email"></i><span>联系人：{{data.contact}}</span></div>
-    <div class="table-view-cell"><i class="icon icon-phone"></i><span>电话：{{data.mobile}}</span></div>
-    <div class="table-view-cell"><i class="icon icon-email"></i><span>办公时间：{{data.office_time_start}}-{{data.office_time_end}}</span></div>
-</div>
+
 {/block}
 
 {block name="script"}

@@ -8,49 +8,64 @@
 
 {block name="body"}
 <div class="banner">
-    <img src="/index/images/feedback/policy.jpg" alt="">
+    <img src="/index/images/feedback/policy.jpg" >
 </div>
 <div class="content" id="app">
     <ul>
         <li>
             <div class="list_img">
-                <img src="/index/images/union/icon-tit-2.png" alt="">
-                <span @click="jump(1,6)">
+                <img src="/index/images/union/icon-tit-2.png" >
+                <span @click="jump(1,6)" v-show="inform.length > 0">
                     <img src="/index/images/union/icon-more-1.png" alt="更多">
                 </span>
             </div>
-            <a :href="'/index/Union/unionDetail?id='+info.id" v-for="info of inform" class="list-item">
-                <img :src="info.front_cover"  class="fl">
-                <span class="limit fl">{{info.title}}</span>
-            </a>
+            <div v-if="inform.length > 0">
+                <a :href="'/index/Union/unionDetail?id='+info.id" v-for="info of inform" class="list-item">
+                    <img :src="info.front_cover"  class="fl">
+                    <span class="limit fl">{{info.title}}</span>
+                </a>
+            </div>
+            <div v-else class="no-more">
+                暂无信息
+            </div>
         </li>
     </ul>
     <ul>
         <li>
             <div class="list_img">
-                <img src="/index/images/union/icon-tit-1.png" alt="">
-                <span @click="jump(2,6)">
+                <img src="/index/images/union/icon-tit-1.png" >
+                <span @click="jump(2,6)" v-show="guild.length > 0">
                     <img src="/index/images/union/icon-more-3.png" alt="更多">
                 </span>
             </div>
-            <a :href="'/index/Union/loabourDetail?id='+g.id" v-for="g of guild" class="list-item">
-                <img :src="g.front_cover"  class="fl">
-                <span class="limit fl">{{g.title}}</span>
-            </a>
+            <div v-if="guild.length > 0">
+                <a :href="'/index/Union/loabourDetail?id='+g.id" v-for="g of guild" class="list-item">
+                    <img :src="g.front_cover"  class="fl">
+                    <span class="limit fl">{{g.title}}</span>
+                </a>
+            </div>
+            <div v-else class="no-more">
+                暂无信息
+            </div>
         </li>
     </ul>
     <ul>
         <li>
             <div class="list_img">
-                <img src="/index/images/union/icon-tit-3.png" alt="">
-                <span @click="jump(3,6)">
+                <img src="/index/images/union/icon-tit-3.png" >
+                <span @click="jump(3,6)" v-show="activity.length > 0">
                     <img src="/index/images/union/icon-more-2.png" alt="更多">
                 </span>
             </div>
-            <a :href="'/index/Union/unionDetail?id='+item.id" v-for="item of activity" class="list-item">
-                <img :src="item.front_cover"  class="fl">
-                <span class="limit fl">{{item.title}}</span>
-            </a>
+            <div v-if="activity.length > 0">
+                <a :href="'/index/Union/unionDetail?id='+item.id" v-for="item of activity" class="list-item">
+                    <img :src="item.front_cover"  class="fl">
+                    <span class="limit fl">{{item.title}}</span>
+                </a>
+            </div>
+            <div v-else class="no-more">
+                暂无信息
+            </div>
         </li>
     </ul>
 </div>

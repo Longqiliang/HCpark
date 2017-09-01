@@ -1,0 +1,255 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>合同管理</title>
+<style>
+    *, ul, p, ul li {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+    /*body{*/
+        /*background-color: #f0eff5;*/
+    /*}*/
+    .img-responsive {
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+        display: block;
+    }
+    .header{
+        display: flex;
+        justify-content: flex-end;
+        font-size: 1.5rem;
+        align-items: center;
+        padding: 0 3.2vw;
+        height: 5rem;
+        background-color: #fff;
+    }
+    .header select{
+        background-color: #fff;
+        color: #666;
+        height: 2.5rem;
+        border-radius: 5px;
+        font-size: 1.4rem;
+        border: 1px solid #e5e5e5;
+        outline: none;
+        padding: 0 5px;
+    }
+  .statistics-card{
+      position: relative;
+      padding: 4vw 2.66vw 0;
+      font-size: 1.5rem;
+      border-radius: 5px;
+      background-color: #fff;
+      margin: 10.5vw 2.4vw 0;
+  }
+   .statistics-card .card-tit{
+       height: 8vw;
+       position: absolute;
+       top: -4vw;
+       padding:0 3vw ;
+       transform: translateX(-50%);
+       left: 50%;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       background-color: #fff;
+       border-radius: 100px;
+       font-size: 1.7rem;
+       color: #fcc44b;
+       box-shadow: 0 2px 4px #e8e8e8;
+   }
+    .statistics-info{
+        height: 50vw;
+    }
+    .img-list{
+        margin:4vw 3.2vw;
+        border-radius: 5px;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    }
+    .img-list-item{
+        height: 34.67vw;
+        position: relative;
+    }
+    .item-img-marking{
+        position: absolute;
+        border-radius: 5px;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0,0,0,.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 2rem;
+    }
+    .item-img-marking .marking-info{
+        position: relative;
+        width: 82.13vw;
+        text-align: center;
+    }
+    .marking-info:before,.marking-info:after{
+        height: 1px;
+        content: '';
+        position: absolute;
+        top:50%;
+        width: 30%;
+        background-color: #fff;
+        z-index: 1;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    .marking-info:before{
+        left: 0;
+    }
+    .marking-info:after{
+        right: 0;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="header">
+        <span>所属园区：</span>
+        <select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">
+            <option :value="item.value" v-for="(item,key) in parks" >
+                {{item.name}}
+            </option>
+        </select>
+        <select   v-else>
+            <option >
+                希垦科技园
+            </option>
+        </select>
+    </div>
+    <div class="statistics-card">
+        <div class="card-tit">合同类型统计</div>
+        <div class="statistics-info" id="contract" ref="contractChart">
+
+        </div>
+    </div>
+    <div class="img-list">
+        <a onclick="jumpTo()">
+            <div class="img-list-item">
+                <img src="/index/images/service/lifepay/utilities.png"  class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">租赁合同</span></div>
+            </div>
+        </a>
+    </div>
+    <div class="img-list">
+        <a onclick="jumpTo()">
+            <div class="img-list-item">
+                <img src="/index/images/service/lifepay/propertyfee.png" class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">物业合同</span></div>
+            </div>
+        </a>
+    </div>
+    <div class="img-list">
+        <a onclick="jumpTo()">
+            <div class="img-list-item">
+                <img src="/index/images/service/lifepay/residentialrent.png" class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">其他合同</span></div>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+{/block}
+
+{block name="script"}
+<script src="/static/echarts/echarts.min.1.js"></script>
+<script>
+console.log({$info});
+    var app = new Vue({
+        el:'#app',
+        data:{
+            chart:null,
+            nowPark:0,
+            info:{$info},
+            parks:[
+                {name:'希垦科技园',value:0},
+                {name:'浙江互联网产业园',value:1},
+                {name:'人工智能产业园',value:2}
+            ],
+            baseData:{
+                isBoss:'yes'
+            }
+        },
+        mounted(){
+            this.initChart();
+        },
+        methods:{
+            initChart(){
+                var _this = this;
+                _this.chart = echarts.init(_this.$refs.contractChart);
+                var contractOption = {
+                    title: {
+                        text: _this.info.total.count,
+                        subtext:_this.info.total.name,
+                        x:"49%",
+                        y:"35%",
+                        textAlign: "center",
+                        textStyle: {
+                            fontWeight: 'normal',
+                            fontSize: 15,
+                            color: '#3ea1ff'
+                        },
+                        subtextStyle:{
+                            color:"#333"
+                        }
+                    },
+                    color:['#6ae7d4','#eda10e'],
+                    legend: {
+                        orient: 'horizontal',
+                        selectedMode:false,
+                        left:0,
+                        bottom:0,
+                        itemGap:8,
+                        data:[_this.info.rent.name,_this.info.property.name]
+                    },
+                    series: [
+                        {
+                            hoverAnimation:false,//取消hover动画
+                            name:'合同类型统计',
+                            type:'pie',
+                            radius: ['50%', '70%'],
+                            label: {
+                                normal: {
+                                    formatter: [`{c|{c}}`, `{b}`].join('\n'),
+                                    rich:{
+                                        c:{
+                                            align:'center'
+                                        }
+                                    }
+                                }
+                            },
+                            data:[
+                                {value:50, name:_this.info.rent.name},
+                                {value:2, name:_this.info.property.name}
+                            ]
+                        }
+                    ]
+                };
+                this.chart.setOption(contractOption);
+            },
+            jumpTo(){
+                window.location.href="";
+            },
+            //园区选择
+            parkChange(){
+                console.log("11");
+                return;
+                this.$http.post('',{value:this.nowPark}).then(function (res) {
+                    console.log(res)
+                })
+            }
+        }
+    });
+</script>
+{/block}

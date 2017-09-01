@@ -1,21 +1,21 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>好文分享</title>
-<link rel="stylesheet" href="/index/css/common/rem.css">
+<title>内部通告</title>
 <link rel="stylesheet" href="/index/css/news/article.css">
 <style>
     .my-footer{
         padding: 1rem 0;
         text-align: center;
-        color:#999
+        color:#999;
+        font-size: 1.4rem;
     }
     .my-footer>p{
         text-align: center;
         font-size: 1.5rem;
         line-height: 80vh;
     }
-    .my-footer>div {
+    .my-footer div {
         display: inline-block;
         vertical-align: middle;
         margin-right: 5px;
@@ -26,9 +26,6 @@
 
 {block name="body"}
 <div id="app">
-    <div class="swiper-container" id="banner-1">
-        <img src="/index/images/feedback/policy.jpg">
-    </div>
     <div class="page">
         <div class="body">
             <ul  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
@@ -38,15 +35,16 @@
                         <span>{{item.create_time}}</span>
                         <span>{{parseInt(item.views)>999?'999+':item.views}}</span>
                     </div>
-                    <a :href="'/index/News/detail?id='+item.id"></a>
+                    <a :href="'/index/partymanage/detail?id='+item.id"></a>
                 </li>
 
             </ul>
         </div>
     </div>
     <div class="my-footer">
-        <span v-if="!canLoad">没有更多了</span>
-        <span v-if="canLoad && !loading">下拉加载更多</span>
+        <p v-if="article.length==0">暂无信息</p>
+        <span v-if="!canLoad && article.length>0">没有更多了</span>
+        <span v-if="canLoad && loading">下拉加载更多</span>
         <div  v-if="loading">
             <mt-spinner :type="3"></mt-spinner>加载中...
         </div>
@@ -60,8 +58,18 @@
         el:'#app',
         data:{
             loading:false,
-            canLoad:true,
-            article:{$article}
+            canLoad:'',
+            article:[]
+        },
+        created(){
+            console.log(this.canLoad)
+            if(this.article.length<6){
+                this.canLoad=false
+
+            }else{
+                this.canLoad=true
+            }
+            console.log(this.canLoad)
         },
         methods:{
             loadMore(){
@@ -77,9 +85,7 @@
                             this.loading = false;
                             this.canLoad=false;
                         }
-                        console.log(this.canLoad)
                     },function (res) {
-                        console.log(res.data);
                         this.loading = false;
 
                     })

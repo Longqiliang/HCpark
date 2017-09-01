@@ -1,0 +1,69 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>合作交流</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+<style type="text/css">
+    .head-img{
+        position: fixed;
+        top: 10px;
+        right: 0;
+        z-index: 999;
+        overflow: auto;
+    }
+    .head-img img{
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        position: relative;
+        z-index: 999;
+    }
+    .head-img span{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: #f6bb42;
+        position: relative;
+        top: 10px;
+        z-index: 998;
+    }
+    .head-img a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="head-img">
+        <img src="{$header}">
+        <span></span>
+        <a href="{:Url('Communication/personal')}"></a>
+    </div>
+    {volist name="list" id="list"}
+    <div class="img-card">
+        <a href="{:Url('Communication/join?group_id='.$list->id)}">
+            <div class="img-card-box">
+                <img src="{$list->img}"  class="img-responsive">
+                <div class="img-marking"><span class="marking-info">{$list->group_name}</span></div>
+            </div>
+
+            <div class="img-card-info">{eq name="$list->is_join" value="0"}前往申请{else/}进入论坛{/eq}</div>
+
+        </a>
+    </div>
+    {/volist}
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+
+{/block}
