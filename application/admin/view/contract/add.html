@@ -6,10 +6,14 @@
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
-    #image{
-        margin: 0 10px;
+    .del{
+       position: absolute;
+        right:50px;
+        top:18px;
     }
-
+    .parent{
+        position:relative ;
+    }
 </style>
 
 {/block}
@@ -25,7 +29,6 @@
             <h2>
                 企业信息
             </h2><br><br><br>
-
             <div>
                 <div class="row clearfix">
                     <div class="col-md-10 column">
@@ -63,7 +66,12 @@
                 </div>
                 <div class='row clearfix' >
                     <div class="col-md-10 column" id="image">
-
+                        {foreach name="img" item="vo"}
+                            <div class="col-md-3"  class="parent">
+                                <img src="{$vo}" alt="" style='width: 220px;height: 300px;margin: 10px' class="img">
+                                <div class="del"><img src="/admin/images/delete.png" alt="" width="40px height=40px"></div>
+                            </div>
+                        {/foreach}
 
                     </div>
                     <div class="col-md-10 column "><br>
@@ -112,7 +120,8 @@
         var response = $.parseJSON(data.response);
         if(response.code == 1) {
             var html = "<div class='col-md-3'>" +
-                            "<img src='"+response.data+"' alt='' style='width: 220px;height: 300px;margin: 10px'>" +
+                            "<img src='"+response.data+"' alt='' style='width: 220px;height: 300px;margin: 10px' class='img'>" +
+                            " <div class='del'><img src='/admin/images/delete.png' alt='' width='40px' height='40px'></div>"
                        "</div>";
             $('#image').append(html);
             imageArray.push(response.data);
@@ -132,22 +141,44 @@
     });
     //添加合同
     function addContract() {
+        var imgScrs=[];
+        var imgs = $('.img');
+        for(var i=0;i<imgs.length;i++){
+            imgScrs.push(imgs[i].src);
+        };
+        var id = "{$info.id}";
         var companyName = $("input[name='name']").val();
         var types = $("[name='type']").val();
         var content = $("[name='extra']").val();
+        if(companyName ==""){
+            updateAlert("请添加公司名称","info");
+            return "";
+        }
+        if (imgScrs.length == 0){
+            updateAlert("请添加合同照片","info");
+            return "";
+        }
         $.ajax({
-            data:{img:imageArray,status:0,company:companyName,type:types,remark:content},
+            data:{img:imgScrs,status:0,company:companyName,type:types,remark:content,id:id},
             type:"post",
             url:"{:Url('add')}",
             success:function (data) {
-                console.log(data);
                 if (data.code==1){
-                    updateAlert(data.msg,"success");
+                    updateAlert(data.msg+" 稍后自动刷新页面～","success");
+                    setTimeout(function () {
+                        location.href = data.url;
+                    },2000);
                 }else{
                     updateAlert(data.msg,"info");
                 }
             }
         });
     }
+    $('.del').click(function(){
+        $(this).parent().remove();
+    });
+
+
+
 </script>
 {/block}
