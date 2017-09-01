@@ -96,14 +96,9 @@
         <mt-tab-container-item id="tab-container1">
             <div class="my-park">
                     <span>当前：</span>
-                    <select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">
+                    <select name="" id="" v-model="nowPark" @change="parkChange">
                         <option :value="item.value" v-for="(item,key) in parks" >
                             {{item.name}}
-                        </option>
-                    </select>
-                    <select   v-else>
-                        <option >
-                            希垦科技园
                         </option>
                     </select>
             </div>
@@ -142,62 +137,74 @@
 {block name="script"}
 <script src="/static/echarts/echarts.min.1.js"></script>
 <script>
-    var res=JSON.parse('{$res}');
 var app = new Vue({
     el:'#app',
     data:{
         active:'tab-container1',
         nowPark:0,
-        parks:[
-            {name:'希垦科技园',value:0},
-            {name:'浙江互联网产业园',value:1},
-            {name:'人工智能产业园',value:2}
-        ],
-        baseData:{
-            isBoss:'no',
-        },
-        area:{
-            id:'area',
-            title:res[0].area_total+'km²',
-            subtext:"总面积",
-            label: '{c|{c}}km²\n{d|{d}%}',
-            color:['#49CA91','#EDA10E'],
-            legend:['已租面积','空置面积'],
-            data:[
-                {value:res[0].area_use, name:'已租面积'},
-                {value:res[0].area_other, name:'空置面积'}
-            ]
-        },
-        scale:{
-            id:'scale',
-            unit:'',
-            title:res[0].scale_one+res.scale_two+res.scale_three+'家',
-            subtext:"规模统计",
-            label: '{c|{c}家}\n{d|{d}%}',
-            color:['#4CD2C4','#439BC4','#A1CDE1'],
-            legend:['100平米以下','100-300平米','300-600平米'],
-            data:[
-                {value:res[0].scale_one, name:'100平米以下'},
-                {value:res[0].scale_two, name:'100-300平米'},
-                {value:res[0].scale_three, name:'300-600平米'},
-            ]
-        },
-        types:{
-            id:'types',
-            title:res[0].type_one+res[0].type_two+res[0].type_three+'家',
-            subtext:"类型统计",
-            label: '{c|{c}家}\n{d|{d}%}',
-            color:['#FB5E5E','#F4BDDC','#ff8866'],
-            legend:['生活配套类','科技创新类','中介服务类'],
-            data:[
-                {value:res[0].type_one, name:'生活配套类'},
-                {value:res[0].type_two, name:'科技创新类'},
-                {value:res[0].type_three, name:'中介服务类'},
-            ]
-        }
+        res:JSON.parse('{$res}')
     },
     computed:{
+        parks(){
+            var res=this.res;
+            for(var i=0,parks=[];i<res.length;i++){
+                var park={
+                    name:res[i].name,
+                    value:i
+                }
+                parks.push(park)
+            }
+            return parks;
+        },
+        area(){
+            var res=this.res,i=this.nowPark;
+            return{
+                id:'area',
+                title:res[i].area_total+'km²',
+                subtext:"总面积",
+                label: '{c|{c}}km²\n{d|{d}%}',
+                color:['#49CA91','#EDA10E'],
+                legend:['已租面积','空置面积'],
+                data:[
+                    {value:res[i].area_use, name:'已租面积'},
+                    {value:res[i].area_other, name:'空置面积'}
+                ]
+            }
+        },
+        scale(){
+            var i=this.nowPark,res=this.res;
 
+            return{
+                id:'scale',
+                unit:'',
+                title:res[i].scale_one+res[i].scale_two+res[i].scale_three+'家',
+                subtext:"规模统计",
+                label: '{c|{c}家}\n{d|{d}%}',
+                color:['#4CD2C4','#439BC4','#A1CDE1'],
+                legend:['100平米以下','100-300平米','300-600平米'],
+                data:[
+                    {value:res[i].scale_one, name:'100平米以下'},
+                    {value:res[i].scale_two, name:'100-300平米'},
+                    {value:res[i].scale_three, name:'300-600平米'},
+                ]
+            }
+        },
+        types(){
+            var i=this.nowPark,res=this.res;
+            return {
+                id:'types',
+                title:res[i].type_one+res[i].type_two+res[i].type_three+'家',
+                subtext:"类型统计",
+                label: '{c|{c}家}\n{d|{d}%}',
+                color:['#FB5E5E','#F4BDDC','#ff8866'],
+                legend:['生活配套类','科技创新类','中介服务类'],
+                data:[
+                    {value:res[i].type_one, name:'生活配套类'},
+                    {value:res[i].type_two, name:'科技创新类'},
+                    {value:res[i].type_three, name:'中介服务类'},
+                ]
+            }
+        }
     },
     mounted(){
         this.drawPie(this.area);
@@ -207,9 +214,9 @@ var app = new Vue({
     methods:{
         //园区选择
         parkChange(){
-            this.$http.post('',{value:this.nowPark}).then(function (res) {
-                console.log(res)
-            })
+            this.drawPie(this.area);
+            this.drawPie(this.types);
+            this.drawPie(this.scale);
         },
         //饼图
         drawPie(data){

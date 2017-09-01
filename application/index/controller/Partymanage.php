@@ -36,7 +36,6 @@ class Partymanage extends Base
         }
 
         $this->assign('res',json_encode($res));
-        echo json_encode($res);
         return $this->fetch();
     }
     /***合同管理*/
