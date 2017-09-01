@@ -8,6 +8,7 @@
 
 namespace app\index\controller;
 
+use app\common\model\CommunicationUser;
 use app\index\model\CommunicateGroup;
 use app\index\model\CommunicateUser;
 use app\index\model\WechatUser;
@@ -57,8 +58,18 @@ class Communication extends Base
     /*个人*/
     public function personal()
     {
+        $userid = session('userId');
+        $cuser = new CommunicationUser();
+        $map = [
+            'user_id' => $userid,
+            'status' => 3
+        ];
 
+        $count = $cuser->where($map)->count();
+        //0 不是管理员 1 是管理员
+        $is_manageer = $$count > 0 ? 1 : 0;
 
+        $this->assign('is_manage', $is_manageer);
         return $this->fetch();
     }
 
@@ -150,8 +161,27 @@ class Communication extends Base
     /*帖子详情*/
     public function postDetails()
     {
+        $post = CommunicatePosts::get(input('id'));
+        $this->assign('post', $post);
 
+        // 评论列表
+        $map = [
+            'target_id' => input('id')
+        ];
+        $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
+        $count = CommunicateComment::where($map)->count();
+        foreach ($comments as $v) {
+            $header = isset($v->wechatuser->header) ? $v->wechatuser->header : "";
+            if (!empty($header)) {
+                $v['header'] = $header;
+            } else {
+                $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
+            }
+        }
+        $this->assign('comments', $comments);
         return $this->fetch();
+
+
     }
 
     /*写帖子页面*/
@@ -189,13 +219,17 @@ class Communication extends Base
     public function comment()
     {
         $data = [
-            'target_id' => input('group_id'),
+            'target_id' => input('id'),
             'user_id' => session('userId'),
             'content' => input('content'),
+
         ];
         $userinfo = WechatUser::where('userid', session('userId'))->field('name,header,avatar')->find();
+        $post = CommunicatePosts::get(input('id'));
+
         $data['user_name'] = $userinfo['name'];
         $result = CommunicateComment::create($data);
+
         if (!empty($userinfo['header'])) {
 
             $result['header'] = $userinfo['header'];
@@ -205,7 +239,8 @@ class Communication extends Base
 
         }
         if ($result) {
-
+            $post['comments']++;
+            $post->save();
             return $this->success('评论成功', '', $result);
         } else {
 
@@ -245,6 +280,17 @@ class Communication extends Base
     /*我的申请*/
     public function myApplication()
     {
+        $userid = session('useId');
+        $cuser = new CommunicationUser();
+        $map = [
+            'use_id' => $userid,
+            status => array('lt', 3)
+        ];
+        $list = $cuser->where($map)->select();
+        foreach ($list as $value) {
+            $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
+        }
+        $this->assign('list', $list);
 
         return $this->fetch();
     }
@@ -252,6 +298,19 @@ class Communication extends Base
     /*我的审核*/
     public function myCheck()
     {
+        $userid = session('useId');
+        $cuser = new CommunicationUser();
+        //TODO  找他所有管理群的ID，再通过这个ID数组去把所有所属组的申请信息合在一起传出去
+
+        $map = [
+            'use_id' => $userid,
+            'status' => array('lt', 3)
+        ];
+        $list = $cuser->where($map)->select();
+        foreach ($list as $value) {
+            $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
+        }
+
 
         return $this->fetch();
     }
@@ -259,7 +318,26 @@ class Communication extends Base
     /*我的发布*/
     public function myRelease()
     {
+        $userid = session('useId');
+        $posts = new CommunicatePosts();
+        $myPosts = $posts->where('user_id', $userid)->select();
+        $postsList = array();
+        foreach ($myPosts as $value) {
+            $data = [
+                'name' => isset($value->user->name) ? $value->user->name : "",
+                'title' => $value['title'],
+                'content' => $value['content'],
+                'img' => $value['img'],
+                'comments' => $value['comments'],
+                'create_time' => $value['create_time']
+            ];
+            $avatar = isset($value->user->avatar) ? $value->user->avatar : "";
+            $header = isset($value->user->header) ? $value->user->header : "";
+            $data['header'] = empty($header) ? $avatar : $header;
+            array_push($postsList, $data);
+        }
 
+        $this->assign('list', $postsList);
         return $this->fetch();
     }
 
