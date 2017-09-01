@@ -307,7 +307,7 @@ class Communication extends Base
         //TODO  找他所有管理群的ID，再通过这个ID数组去把所有所属组的申请信息合在一起传出去
 
         $map = [
-            'use_id' => $userid,
+            'user_id' => $userid,
             'status' => array('lt', 3)
         ];
         $list = $cuser->where($map)->select();
