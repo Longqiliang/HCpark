@@ -8,7 +8,7 @@
 
 namespace app\index\controller;
 
-use app\index\model\CommunicationUser;
+
 use app\index\model\CommunicateGroup;
 use app\index\model\CommunicateUser;
 use app\index\model\WechatUser;
@@ -59,7 +59,7 @@ class Communication extends Base
     public function personal()
     {
         $userid = session('userId');
-        $cuser = new CommunicationUser();
+        $cuser = new CommunicateUser();
         $map = [
             'user_id' => $userid,
             'status' => 3
@@ -287,7 +287,7 @@ class Communication extends Base
     public function myApplication()
     {
         $userid = session('useId');
-        $cuser = new CommunicationUser();
+        $cuser = new CommunicatateUser();
         $map = [
             'use_id' => $userid,
             status => array('lt', 3)
@@ -305,7 +305,7 @@ class Communication extends Base
     public function myCheck()
     {
         $userid = session('useId');
-        $cuser = new CommunicationUser();
+        $cuser = new CommunicateUser();
         //TODO  找他所有管理群的ID，再通过这个ID数组去把所有所属组的申请信息合在一起传出去
 
         $map = [
