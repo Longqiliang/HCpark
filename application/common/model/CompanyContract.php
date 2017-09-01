@@ -11,7 +11,7 @@ use think\Model;
 
 class CompanyContract extends Model{
 
-
+    protected $dateFormat = "Y-m-d";
 
 
 

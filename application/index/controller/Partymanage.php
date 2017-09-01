@@ -21,6 +21,15 @@ class Partymanage extends Base
         $userid=session('userId');
         $park_id=session('park_id');
         $id=input('id');
+        $park = new Park();
+        $list = $park->select();
+        foreach ($list as $k=>$v){
+            $data[$k] = [
+                'name' => $v['name'],
+                'address' => $v['address'],
+
+            ];
+        }
         $tagid=WechatUser::where('userid','eq',$userid)->field('tagid')->find();
 
             if ($tagid['tagid'] == 1) {
@@ -33,7 +42,7 @@ class Partymanage extends Base
                 $res = array($res);
             }
 
-
+        $this->assign('list',$data);
         $this->assign('res',json_encode($res));
         return $this->fetch();
     }
@@ -61,8 +70,20 @@ class Partymanage extends Base
                                     ->order("create_time desc")
                                     ->limit(6)
                                     ->select();
-
+        $name = "";
+        switch ($type){
+            case 1 :
+                $name = "租赁合同";
+                break;
+            case 2 :
+                $name = "物业合同";
+                break;
+            case 3 :
+                $anme = "其他合同";
+                break;
+        };
         $this->assign('list',$list);
+        $this->assign('name',$name);
 
         return $this->fetch();
     }
@@ -97,10 +118,8 @@ class Partymanage extends Base
         ];
         $this->assign('info', json_encode($info) );
     }
-
-
     /*招商管理*/
-   public  function  merchants(){
+    public function merchants(){
     $userid=session('userId');
     $weuser=new WechatUser();
     $user=$weuser->where('userid',$userid)->find();
@@ -112,6 +131,21 @@ class Partymanage extends Base
 
 
    }
+    /*园区列表*/
+    public function parkList(){
+        $park = new Park();
+        $list = $park->select();
+        foreach ($list as $k=>$v){
+            $data[$k] = [
+                'name' => $v['name'],
+                'address' => $v['address'],
+
+            ];
+        }
+        $this->assign('list',$data);
+
+        return $this->fetch();
+    }
 
 
 
