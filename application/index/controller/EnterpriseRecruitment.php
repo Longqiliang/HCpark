@@ -1,21 +1,31 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: shen
+ * Date: 2017/9/2
+ * Time: 下午2:23
+ */
 namespace app\index\controller;
 use think\Controller;
-use app\index\model\ServiceInformation as ServiceModel;
+use app\index\model\EnterpriseRecruitment as EnterpriseModel;
 use app\index\model\Park;
 
-class ServiceInformation extends Base
+class EnterpriseRecruitment extends Base
 {
-    /**服务信息**/
+    /**企业招聘**/
     /** 首页列表 **/
     public function index(){
         $parkid =session('park_id');
+        $search = input('search');
         $map=array(
             'park_id'=>$parkid,
             'status'=>1,
         );
+        if ($search != '') {
+            $map['position'] = ['like','%'.$search.'%'];
+        }
 
-        $list = ServiceModel::where($map)->order('create_time  desc')->limit(6)->select();
+        $list = EnterpriseModel::where($map)->order('create_time  desc')->field('id,position,company,education,experience,number,wages')->limit(6)->select();
 
         $this->assign('list',json_encode($list));
         return $this->fetch();
@@ -30,13 +40,16 @@ class ServiceInformation extends Base
             'status'=>1,
         );
 
-        $list = ServiceModel::where($map)
+        $search = input('search');
+        if ($search != '') {
+            $map['position'] = ['like','%'.$search.'%'];
+        }
+        $list = EnterpriseModel::where($map)
             ->order("create_time desc")
             ->limit($len,6)
             ->select();
 
         if ($list){
-
             return json(['code' => 1, 'data' => json_encode($list)]);
         }else{
 
@@ -48,13 +61,9 @@ class ServiceInformation extends Base
     /*详情页*/
     public function detail(){
         $id = input('id');
-        $info = ServiceModel::get($id);
-        $parkid =session('park_id');
-        //发布园区
-        $park=Park::where('id','eq',$parkid)->field('name')->find();
-        //echo json_encode($info);exit;
-        $this->assign('park', $park['name']);
-        $this->assign('news', $info);
+        $info = EnterpriseModel::where('id',$id)->find();
+
+        $this->assign('info', $info);
         return $this->fetch();
     }
 

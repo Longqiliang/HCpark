@@ -75,13 +75,13 @@
                     <div class="form-group"><label class="col-sm-2 control-label">300-600平米企业:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" placeholder="300-600平米企业的数量"  name="scale_three" value='{$info.scale_three}'></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">生活配套类:</label>
+                    <div class="form-group"><label class="col-sm-2 control-label">生活配套类企业:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" placeholder="生活配套类企业的数量"  name="type_one" value='{$info.type_one}'></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">科技创新类:</label>
+                    <div class="form-group"><label class="col-sm-2 control-label">科技创新类企业:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" placeholder="科技创新类企业的数量"   name="type_two" value='{$info.type_two}'></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">中介服务类:</label>
+                    <div class="form-group"><label class="col-sm-2 control-label">中介服务类企业:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" placeholder="中介服务类企业的数量"   name="type_three" value='{$info.type_three}'></div>
                     </div>
 
@@ -96,20 +96,140 @@
                 </div>
                 <div class="clearfix"></div>
             </form>
+
+
+
+
+
         </div>
     </div>
+
+
+    <div class="row">
+        <div class="mail-box-header">
+            <h2>园区简介</h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizonta" method="post">
+                <div class="mail-body">
+                    <form class="form-horizontal" method="post">
+                        <div class="form-group"><label class="col-sm-2 control-label">园区全景图封面:</label>
+                            <div class="col-sm-10">
+                                <input placeholder="园区简介全景图的封面图片" class="input-file" type="file" class="file">
+                                <sapn>
+                                    {empty name="info.panorama_cover"}图片预览{else/}
+                                    <a class="front_cover" href="{$info.panorama_cover}">
+                                        <img class="front_cover_img" src="{$info.panorama_cover}"/>
+                                    </a>
+                                    {/empty}
+                                </sapn>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">园区全景图链接:</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="园区简介全景图的链接"   name="panorama_link" value='{$info.panorama_link}'></div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">园区简介内容:</label>
+                            <div class="col-sm-10" style="border:1px #888888 solid">
+                                <div class="summernote">{$info.content}</div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="mail-body text-right tooltip-demo">
+                    <button url="{:Url('parkProfile')}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizonta"
+                            data-toggle="tooltip" data-placement="top" data-edit="content">
+                        <i class="fa fa-reply"></i> 保存
+                    </button>
+                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                </div>
+                <div class="clearfix"></div>
+                <input type="hidden" name="id" value="{$info.id}">
+                <input type="hidden" name="content" class="to_hiden" value="">
+            </form>
+        </div>
+    </div>
+
+
+
 </div>
 {/block}
 
 {block name="script"}
 <script src="/static/summernote/summernote.min.js"></script>
 <script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script>
     $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green'
         });
+    });
+
+    $(document).ready(function () {
+
+        $('.summernote').summernote({
+            lang: 'zh-CN',
+            height: 300,
+            minHeight: 210,
+            callbacks: {
+                onImageUpload: function (files) { //the onImageUpload API
+                    img = sendFile(files[0]);
+                }
+            }
+        });
+
+        function sendFile(file) {
+            var data = new FormData();
+            data.append("file_data", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "{:Url('Upload/picture')}",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var data = $.parseJSON(response);
+                    $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+                }
+            });
+        }
+
+
+    });
+    $(".input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $("input[name='front_cover']").val(response.data);
+            $('.front_cover_img').attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
     });
 </script>
 {/block}
