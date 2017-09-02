@@ -184,8 +184,8 @@ class Communication extends Base
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         //$count = CommunicateComment::where($map)->count();
 
-        echo json_encode($post);
-        echo json_encode($comments);
+        //echo json_encode($post);
+        //echo json_encode($comments);
         $this->assign('comments', $comments);
         return $this->fetch();
     }
@@ -329,7 +329,7 @@ class Communication extends Base
             $data['header'] = empty($header) ? $avatar : $header;
             array_push($postsList, $data);
         }
-        echo  json_encode($postsList);
+        //echo  json_encode($postsList);
         $this->assign('list', $postsList);
         return $this->fetch();
     }
@@ -345,13 +345,28 @@ class Communication extends Base
         foreach ($commments as $value){
          array_push($group_ids,$value['target_id']);
         }
-        echo json_encode($group_ids);
+
         $ids = array_values(array_unique($group_ids));
-        $data['']=
-        $list =$cpost->where()->select();
-        echo json_encode($list);
+        $data['id']=array('in',$ids);
+        $list =$cpost->where($data)->select();
+        foreach ($list as $value){
+          $comments=$value->comment;
+            $myComments=array();
+            foreach ($comments as $comment){
+                if($comment['user_id']==$userid&&$comment['status']==1){
+                    array_push($myComments,$comment);
+                }
+            }
+            $value['mycomments']=$myComments;
+
+            $value['user_name']=isset($value->user->name)?$value->user->name:"";
+            $header = isset($value->user->header)?$value->user->header:"";
+            $avatar = isset($value->user->avatar)?$value->user->avatar:"";
+            $value['header']=!empty($header)?$header:$avatar;
+        }
 
 
+      /*  echo json_encode($list);*/
         return $this->fetch();
     }
 }
