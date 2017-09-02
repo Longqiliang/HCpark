@@ -12,84 +12,84 @@
 return [
     /* 模块配置 */
     // 默认模块名
-    'default_module'         => 'admin',
+    'default_module' => 'admin',
     // 禁止访问模块
-    'deny_module_list'       => ['common'],
+    'deny_module_list' => ['common'],
     // 默认控制器名
-    'default_controller'     => 'Index',
+    'default_controller' => 'Index',
     // 默认操作名
-    'default_action'         => 'index',
+    'default_action' => 'index',
     // 默认验证器
-    'default_validate'       => '',
+    'default_validate' => '',
     // 默认的空控制器名
-    'empty_controller'       => 'Error',
+    'empty_controller' => 'Error',
     // 操作方法后缀
-    'action_suffix'          => '',
+    'action_suffix' => '',
     // 自动搜索控制器
     'controller_auto_search' => false,
 
-    'http_exception_template'    =>  [
+    'http_exception_template' => [
         // 定义404错误的重定向页面地址
-        404 =>  APP_PATH.'admin/view/base/404.html',
+        404 => APP_PATH . 'admin/view/base/404.html',
         // 还可以定义其它的HTTP status
-        401 =>  APP_PATH.'admin/view/base/401.html',
-        500 =>  APP_PATH.'admin/view/base/500.html',
+        401 => APP_PATH . 'admin/view/base/401.html',
+        500 => APP_PATH . 'admin/view/base/500.html',
     ],
 
     /* 分页自定义 */
     'paginate' => [
-        'type'     => '\org\Page',
+        'type' => '\org\Page',
         'var_page' => 'page',
-        'list_rows'=> 12
+        'list_rows' => 12
     ],
-    'upload_drive'=>'local',
-    'upload_local_config'=>array(),
+    'upload_drive' => 'local',
+    'upload_local_config' => array(),
 
     /* 文件上传相关配置 */
     'download_upload' => array(
-        'mimes'    => '', //允许上传的文件MiMe类型
-        'maxSize'  => 20*1024*1024, //上传的文件大小限制 (0-不做限制)
-        'exts'     => 'jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,xml,mp4,avi,wav,remvb,', //允许上传的文件后缀
-        'autoSub'  => true, //自动子目录保存文件
-        'subName'  => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
+        'mimes' => '', //允许上传的文件MiMe类型
+        'maxSize' => 20 * 1024 * 1024, //上传的文件大小限制 (0-不做限制)
+        'exts' => 'jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,xml,mp4,avi,wav,remvb,', //允许上传的文件后缀
+        'autoSub' => true, //自动子目录保存文件
+        'subName' => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
         'rootPath' => './uploads/download/', //保存根路径
         'savePath' => '', //保存路径
         'saveName' => array('uniqid', ''), //上传文件命名规则，[0]-函数名，[1]-参数，多个参数使用数组
-        'saveExt'  => '', //文件保存后缀，空则使用原后缀
-        'replace'  => false, //存在同名是否覆盖
-        'hash'     => true, //是否生成hash编码
+        'saveExt' => '', //文件保存后缀，空则使用原后缀
+        'replace' => false, //存在同名是否覆盖
+        'hash' => true, //是否生成hash编码
         'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
     ),
 
     /* 图片上传相关配置 */
     'picture_upload' => array(
-        'mimes'    => '', //允许上传的文件MiMe类型
-        'maxSize'  => 10*1024*1024, //上传的文件大小限制 (0-不做限制)
-        'exts'     => 'jpg,gif,png,jpeg', //允许上传的文件后缀
-        'autoSub'  => true, //自动子目录保存文件
-        'subName'  => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
+        'mimes' => '', //允许上传的文件MiMe类型
+        'maxSize' => 10 * 1024 * 1024, //上传的文件大小限制 (0-不做限制)
+        'exts' => 'jpg,gif,png,jpeg', //允许上传的文件后缀
+        'autoSub' => true, //自动子目录保存文件
+        'subName' => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
         'rootPath' => 'uploads/picture/', //保存根路径
         'savePath' => '', //保存路径
         'saveName' => array('uniqid', ''), //上传文件命名规则，[0]-函数名，[1]-参数，多个参数使用数组
-        'saveExt'  => '', //文件保存后缀，空则使用原后缀
-        'replace'  => false, //存在同名是否覆盖
-        'hash'     => true, //是否生成hash编码
+        'saveExt' => '', //文件保存后缀，空则使用原后缀
+        'replace' => false, //存在同名是否覆盖
+        'hash' => true, //是否生成hash编码
         'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
     ),
 
     /* 编辑器图片上传相关配置 */
     'editor_upload' => array(
-        'mimes'    => '', //允许上传的文件MiMe类型
-        'maxSize'  => 10*1024*1024, //上传的文件大小限制 (0-不做限制)
-        'exts'     => 'jpg,gif,png,jpeg', //允许上传的文件后缀
-        'autoSub'  => true, //自动子目录保存文件
-        'subName'  => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
+        'mimes' => '', //允许上传的文件MiMe类型
+        'maxSize' => 10 * 1024 * 1024, //上传的文件大小限制 (0-不做限制)
+        'exts' => 'jpg,gif,png,jpeg', //允许上传的文件后缀
+        'autoSub' => true, //自动子目录保存文件
+        'subName' => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
         'rootPath' => 'uploads/editor/', //保存根路径
         'savePath' => '', //保存路径
         'saveName' => array('uniqid', ''), //上传文件命名规则，[0]-函数名，[1]-参数，多个参数使用数组
-        'saveExt'  => '', //文件保存后缀，空则使用原后缀
-        'replace'  => false, //存在同名是否覆盖
-        'hash'     => true, //是否生成hash编码
+        'saveExt' => '', //文件保存后缀，空则使用原后缀
+        'replace' => false, //存在同名是否覆盖
+        'hash' => true, //是否生成hash编码
         'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
     ),
 
@@ -107,13 +107,13 @@ return [
         'agentid' => 1000004
     ),
     'news' => [
-        "AppDesc"=>"新闻",
+        "AppDesc" => "新闻",
         'appid' => 'ww68db00a56b949cff',
         'appsecret' => 'JKhsF4Xp7MNlF7SK4twq1i5ZKHEcxpXsSPtL8qF2kv4',
         'agentid' => 1000005
     ],
     'feedback' => [
-        "AppDesc"=>"意见反馈",
+        "AppDesc" => "意见反馈",
         'appid' => 'ww68db00a56b949cff',
         'appsecret' => 'PJPyUUO1sTesUoyR9hhukvGVUZzQnMUDlFZNk16tcAU',
         'agentid' => 1000006
@@ -121,13 +121,13 @@ return [
 
 
     'reply' => array(
-        'AppDesc'=>"意见回复",
+        'AppDesc' => "意见回复",
         'appid' => 'ww68db00a56b949cff',
         'appsecret' => 'aKasEURFVx7QvZVOux4wsd6McsyJGC0iXEKun1KbpNM',
         'agentid' => 1000007
     ),
     'addressbook' => array(
-        "AppDesc"=>"通讯录",
+        "AppDesc" => "通讯录",
         'appid' => 'ww68db00a56b949cff',
         'appsecret' => '4Y_vfF2ovs1Bc_UmMsvLEZh3XQxczHdgOAUSzghr2BA',
         'agentid' => 1000004
@@ -139,17 +139,46 @@ return [
     ],
 
 //注册
-       'register'=>[
+    'register' => [
         'appid' => 'ww68db00a56b949cff',
-        'appsecret' =>  'pgdv-joifw5SlO7UCsUT8bISF7SA6tFk0ERTg_dkU4g',
+        'appsecret' => 'pgdv-joifw5SlO7UCsUT8bISF7SA6tFk0ERTg_dkU4g',
 
     ],
 
-    'weixinpay'       => [
-        'appid'       => 'ww61224724ee102fbc', // 微信支付appid
-        'mchid'       => '1486387062', // 微信支付mchid 商户收款账号
-        'key'         => 'e10adc3949ba59abbe56e057f20f883t', // 微信支付key
-        'appsecret'   => 'GcDM17DNMifgH7nMCGQ53qADpyyb9beSGvGGoWaK1HI', // 公众帐号secert (公众号支付专用)
+    'service' => [
+        "AppDesc" => "企业服务",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => '_zPlbZhA4x5YUcILX0KklYnIJ-biY18fm36TAoPkJ_Q',
+        'agentid' => 1000011
+
+    ],
+    'parkcompany' => [
+        "AppDesc" => "园区企业",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'Z2bVell8LAobRODWn_uZVpOi1H49sfGmhenJjS2eono',
+        'agentid' => 1000012
+
+    ],
+
+    'Communication' => [
+        "AppDesc" => "合作交流",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'UOm-1KYe_D3gCkH6VTRqciQmTdF39I2MA7Jty3Yt8YY',
+        'agentid' => 1000013
+
+    ],
+    'parkmanage' => [
+        "AppDesc" => "园区管理",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'pAxZpP_q4m4hOm563mxnhQgLDYtJnfAUy2WuxW5UqjE',
+        'agentid' => 1000014
+
+    ],
+    'weixinpay' => [
+        'appid' => 'ww61224724ee102fbc', // 微信支付appid
+        'mchid' => '1486387062', // 微信支付mchid 商户收款账号
+        'key' => 'e10adc3949ba59abbe56e057f20f883t', // 微信支付key
+        'appsecret' => 'GcDM17DNMifgH7nMCGQ53qADpyyb9beSGvGGoWaK1HI', // 公众帐号secert (公众号支付专用)
         'notify_url' => 'http://pointsmall.0571ztnet.com/index/wechat/notify', // 接收支付状态的连接
     ],
     /* UC用户中心配置 */
@@ -162,11 +191,11 @@ return [
     ],
 
     'log' => [
-        'type'                  =>  'socket',
-        'host'                  =>  'localhost',
-        'show_included_files'   =>  true,
-        'force_client_ids'      =>  ['game_1259'],
-        'allow_client_ids'      =>  ['game_1259'],
+        'type' => 'socket',
+        'host' => 'localhost',
+        'show_included_files' => true,
+        'force_client_ids' => ['game_1259'],
+        'allow_client_ids' => ['game_1259'],
     ],
-    'app_debug'=>true
+    'app_debug' => true
 ];
