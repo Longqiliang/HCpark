@@ -292,45 +292,46 @@ class Communication extends Base
     {
         $userid = session('userId');
         $cuser = new CommunicateUser();
-        if(IS_POST){
-            $id=input('id');
+        if (IS_POST) {
+            $id = input('id');
             $user = $cuser->get($id);
             //审核通过
-            if(input('type')==1){
-              $user['status']=2;
-              $user->save();
-            }
-            //审核失败
-            else{
-                $user['status']=-1;
+            if (input('type') == 1) {
+                $user['status'] = 2;
+                $user->save();
+            } //审核失败
+            else {
+                $user['status'] = -1;
                 $user->save();
             }
-        }else{
+                return $this->success("审核成功");
 
-        $map2 = [
-            'user_id' => $userid,
-            'status' => 3
-        ];
-        $group_id = array();
-        $list = $cuser->where($map2)->select();
-        foreach ($list as $value) {
-            array_push($group_id, $value['group_id']);
+        } else {
+
+            $map2 = [
+                'user_id' => $userid,
+                'status' => 3
+            ];
+            $group_id = array();
+            $list = $cuser->where($map2)->select();
+            foreach ($list as $value) {
+                array_push($group_id, $value['group_id']);
+            }
+
+            $map = [
+                'status' => array('lt', 3),
+                'group_id' => array('in', $group_id)
+            ];
+
+            $list = $cuser->where($map)->select();
+            foreach ($list as $value) {
+                $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
+                $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
+                $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
+            }
+            $this->assign('list', $list);
+            return $this->fetch();
         }
-
-        $map = [
-            'status' => array('lt', 3),
-            'group_id' => array('in', $group_id)
-        ];
-
-        $list = $cuser->where($map)->select();
-        foreach ($list as $value) {
-            $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
-            $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
-            $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
-        }
-        $this->assign('list', $list);
-        return $this->fetch();
-    }
     }
 
     /*我的发布*/
