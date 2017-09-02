@@ -119,6 +119,7 @@ class Communication extends Base
             ];
             $this->assign('group', $groupinfo);
             $this->assign('user', $userinfo);
+
             return $this->fetch();
 
 
@@ -135,7 +136,7 @@ class Communication extends Base
             'status' => 1
         ];
         $posts = $cp->where($map)->select();
-        $groupInfo = $cgroup->where('group_id', input('group_id'))->find();
+        $groupInfo = $cgroup->where('id', input('group_id'))->find();
         $postsList = array();
         foreach ($posts as $value) {
             $data = [
@@ -152,9 +153,13 @@ class Communication extends Base
             $header = isset($value->user->header) ? $value->user->header : "";
             $data['header'] = empty($header) ? $avatar : $header;
             array_push($postsList, $data);
+
+
         }
         unset($groupInfo['status']);
         unset($groupInfo['content']);
+
+        echo json_encode($postsList);
         $this->assign('list', $postsList);
         $this->assign('group', $groupInfo);
         return $this->fetch();
@@ -184,10 +189,7 @@ class Communication extends Base
         }
         $this->assign('comments', $comments);
         return $this->fetch();
-
-
     }
-
     /*写帖子页面*/
     public function writePost()
     {
