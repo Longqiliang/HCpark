@@ -143,7 +143,7 @@ class Communication extends Base
                 'name' => isset($value->user->name) ? $value->user->name : "",
                 'title' => $value['title'],
                 'content' => $value['content'],
-                'img' => !empty($value['img'])?json_decode($value['img']):"",
+                'img' => !empty($value['img']) ? json_decode($value['img']) : "",
                 'comments' => $value['comments'],
                 'create_time' => $value['create_time']
 
@@ -168,17 +168,21 @@ class Communication extends Base
     /*帖子详情*/
     public function postDetails()
     {
+        $weuser = new  WechatUser();
         $post = CommunicatePosts::get(input('id'));
-        $post['img']=!empty($value['img'])?json_decode($value['img']):"";
-
+        $post['img'] = !empty($value['img']) ? json_decode($value['img']) : "";
+        $post['user_name'] = isset($post->user->name) ? $post->user->name : "";
+        $header = isset($post->user->header) ? $post->user->header : "";
+        $avatar = isset($post->user->avatar) ? $post->user->avatar : "";
+        $post['header'] = empty($header) ? $avatar : $header;
+        unset($post['user']);
         $this->assign('post', $post);
-
         // 评论列表
         $map = [
             'target_id' => input('id')
         ];
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
-        $count = CommunicateComment::where($map)->count();
+        //$count = CommunicateComment::where($map)->count();
         foreach ($comments as $v) {
             $header = isset($v->wechatuser->header) ? $v->wechatuser->header : "";
             if (!empty($header)) {
@@ -187,9 +191,12 @@ class Communication extends Base
                 $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
             }
         }
+        echo json_encode($post);
+        echo json_encode($comments);
         $this->assign('comments', $comments);
         return $this->fetch();
     }
+
     /*写帖子页面*/
     public function writePost()
     {
@@ -232,17 +239,12 @@ class Communication extends Base
         ];
         $userinfo = WechatUser::where('userid', session('userId'))->field('name,header,avatar')->find();
         $post = CommunicatePosts::get(input('id'));
-
         $data['user_name'] = $userinfo['name'];
         $result = CommunicateComment::create($data);
-
         if (!empty($userinfo['header'])) {
-
             $result['header'] = $userinfo['header'];
-
         } else {
             $result['header'] = !empty($userinfo['avatar']) ? $userinfo['avatar'] : "";
-
         }
         if ($result) {
             $post['comments']++;
@@ -286,15 +288,17 @@ class Communication extends Base
     /*我的申请*/
     public function myApplication()
     {
-        $userid = session('useId');
+        $userid = session('userId');
         $cuser = new CommunicateUser();
+        $cgroup = new CommunicateGroup();
         $map = [
             'user_id' => $userid,
             'status' => array('lt', 3)
         ];
         $list = $cuser->where($map)->select();
         foreach ($list as $value) {
-            $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
+           $data =$data = $cgroup->get($value['group_id']);
+            $value['group_name'] = isset($data['group_name']) ? $data['group_name']: "";
         }
         $this->assign('list', $list);
 
@@ -333,7 +337,7 @@ class Communication extends Base
                 'name' => isset($value->user->name) ? $value->user->name : "",
                 'title' => $value['title'],
                 'content' => $value['content'],
-                'img' => !empty($value['img'])?json_decode($value['img']):"",
+                'img' => !empty($value['img']) ? json_decode($value['img']) : "",
                 'comments' => $value['comments'],
                 'create_time' => $value['create_time']
             ];
