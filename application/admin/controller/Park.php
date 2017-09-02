@@ -126,27 +126,63 @@ class Park extends Admin
     /*添加房屋出租信息*/
     public function addRent(){
         $id = input('id');
+        $parkRoom = new ParkRoom();
+        $parkRent = new ParkRent();
         if (IS_POST){
             if (input('id')){
+                $data = input('post.');
+                unset($data['floor']);
+                $rooms = $parkRoom->where(['room'=>input('room'),'build_block'=>input('build_block')])->find();
+                $data['room_id'] = $rooms['id'];
+                unset($data['room']);
+                $data['img'] = json_encode($data['img']);
+                $data['panorama'] = json_encode($data['panorama']);
+                //return dump($data);
+                $res = $parkRent->where('id',$id)->update($data);
+                if ($res){
 
+                    $this->success("修改成功");
+                }else{
+
+                    $this->error("修改失败");
+                }
             }else{
                 $data = input('post.');
-                return dump($data);
+                unset($data['id']);
+                unset($data['floor']);
+                $rooms = $parkRoom->where(['room'=>input('room'),'build_block'=>input('build_block')])->find();
+                $data['room_id'] = $rooms['id'];
+                $data['park_id'] = session("user_auth")['park_id'];
+                unset($data['room']);
+                $data['img'] = json_encode($data['img']);
+                $data['panorama'] = json_encode($data['panorama']);
+                $res = $parkRent->save($data);
+                if ($res){
+
+                    $this->success("添加成功");
+                }else{
+
+                    $this->error("添加失败");
+                }
             }
-            $data = input('post.');
-            return dump($data);
-
         }else{
+            $list = $parkRent->where('id',$id)->find();
+            $data = $list;
+            if ($list){
+                $roomId = $list['room_id'];
+                $roomInfo = ParkRoom::where('id',$roomId)->find();
+                $data['floor'] =  $roomInfo['floor'];
+                $data['room'] =  $roomInfo['room'];
+            }
+            $park = ParkModel::where('id',session("user_auth")['park_id'])->find();
+            $parkName = $park['name'];
+            $this->assign("info", $data);
+            $this->assign('parkName',$parkName);
+            $this->assign('panorama',json_decode($data['panorama']));
+            $this->assign('img',json_decode($data['img']));
 
+            return $this->fetch();
         }
-        $parkRent = new ParkRent();
-        $list = $parkRent->where('id',$id)->find();
-        $park = ParkModel::where('id',session("user_auth")['park_id'])->find();
-        $parkName = $park['name'];
-        $this->assign("info",$list);
-        $this->assign('parkName',$parkName);
-
-        return $this->fetch();
     }
 
     /*园区简介*/

@@ -34,7 +34,7 @@
                         <div class="col-sm-5"><input type="text" class="form-control"   value="{$parkName}" readonly></div>
                     </div>
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;大厦:</h3></label>
-                        <div class="col-sm-3"><input type="text" class="form-control"  name="name" value=""></div>
+                        <div class="col-sm-3"><input type="text" class="form-control"  name="name" value="{$info.name}"></div>
                         <div class="col-sm-4">
                             <select name="build_block" id="" style="width: 100px;height: 30px;">
                                 <option value="A"{eq name="$info.build_block" value="A"}selected{/eq}>A幢</option>
@@ -65,19 +65,25 @@
                     </div>
                     <div class="form-group ">
                         <div class="col-sm-6 panorama">
-                           <!-- <div class='col-sm-2'>
-                                <img src='' alt=''>
-                            </div>-->
+                            {foreach name="panorama" item="vo"}
+                            <div class="col-sm-3"  class="parent">
+                                <img src="{$vo}" alt="" style='width: 130px;height: 200px;margin-right: 10px' class="imgs">
+                                <div class="del"><img src="/admin/images/delete.png" alt="" width="20px" height="20px"></div>
+                            </div>
+                            {/foreach}
                         </div>
                     </div>
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;照片:</h3></label>
                         <div class="col-sm-5"> <input class="input-file" type="file" class="file" multiple></div>
                     </div>
                     <div class="form-group ">
-                        <div class="col-sm-6 image">
-                            <!-- <div class='col-sm-2'>
-                                 <img src='' alt=''>
-                             </div>-->
+                        <div class="col-sm-6 image" >
+                            {foreach name="img" item="vo"}
+                            <div class="col-sm-3"  class="parent">
+                                <img src="{$vo}" alt="" style='width: 130px;height: 200px;margin-right: 10px' class="img">
+                                <div class="del"><img src="/admin/images/delete.png" alt="" width="20px" height="20px"></div>
+                            </div>
+                            {/foreach}
                         </div>
                     </div>
                 </div>
@@ -200,7 +206,7 @@
             return "";
         }
         $.ajax({
-            data:{floor:floors,room:rooms,build_bolck:build,panorama:imgScrs,name:companyName,area:areas,price:prices,id:id,img:imgsSrc},
+            data:{floor:floors,room:rooms,build_block:build,panorama:imgScrs,name:companyName,area:areas,price:prices,id:id,img:imgsSrc},
             type:"post",
             url:"{:Url('addrent')}",
             success:function (data) {
