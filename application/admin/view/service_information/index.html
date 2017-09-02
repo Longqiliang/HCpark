@@ -98,7 +98,7 @@
                         </div>
                     </td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.title}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content | msubstr=0,50}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,50}</a></td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.source}</a></td>
 
                     {eq name="$vo.status" value="1"}

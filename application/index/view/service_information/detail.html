@@ -1,0 +1,53 @@
+
+{extend name="public/common"}
+
+{block name="style"}
+<title>{$news->title}</title>
+<link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
+<link rel="stylesheet" href="/index/css/common/rem.css">
+<style>
+    .foot{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .foot .input-box{
+        width:80vw;
+        height:auto;
+        padding-left: 3.2vw;
+    }
+    .foot .input-box input{
+        margin:0;
+        box-sizing: border-box;
+        width:100%;
+    }
+</style>
+
+{/block}
+
+{block name="body"}
+<div id="comment">
+    <div class="header">
+        <h2>{$news->title}</h2>
+        <p>
+            <span>{$park} / {$news->create_time | strtotime |date="Y-m-d",###}</span>
+            <span>{$news->views}</span>
+        </p>
+    </div>
+    <section>
+        {$news->content}
+    </section>
+
+
+</div>
+<div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+{/block}
