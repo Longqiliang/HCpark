@@ -23,26 +23,42 @@
         <div class="mail-box-header">
             <div class="pull-right tooltip-demo">
                 <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
-                        <!--target-form="form-horizontal" data-edit="content">-->
-                    <!--<i class="fa fa-pencil"></i> 保存草稿-->
+                <!--target-form="form-horizontal" data-edit="content">-->
+                <!--<i class="fa fa-pencil"></i> 保存草稿-->
                 <!--</button>-->
                 <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
             </div>
             {notempty name="$res.id"}
-                <h2>服务信息修改</h2>
+            <h2>企业招聘修改</h2>
             {/notempty}
             {empty name="$res.id"}
-            <h2>服务信息添加</h2>
+            <h2>企业招聘添加</h2>
             {/empty}
         </div>
         <div class="mail-box">
             <form class="form-horizontal" method="post">
                 <div class="mail-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">标题:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" name="title" value='{$res.title}'></div>
+                    <div class="form-group"><label class="col-sm-2 control-label">招聘职位:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" name="position" value='{$res.position}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">公司名称:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" name="company" value='{$res.company}'></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">发布人:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" name="source" value='{$res.source}'></div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">学历要求:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" name="education" value='{$res.education}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">工作经验:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" name="experience" value='{$res.experience}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">招聘人数:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" name="number" value='{$res.number}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">提供薪资:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" name="wages" value='{$res.wages}'></div>
                     </div>
 
                     <div class="form-group"><label class="col-sm-2 control-label">状态:</label>
@@ -65,20 +81,20 @@
 
                     <div class="mail-body text-right tooltip-demo">
 
-                    <button url="{:Url('add')}{notempty name='$pageType'}?page_type=1{/notempty}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
-                            data-toggle="tooltip" data-placement="top" data-edit="content">
-                        <i class="fa fa-reply"></i> 添加
-                    </button>
-                    <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
-                            <!--target-form="form-horizontal" data-edit="content">-->
+                        <button url="{:Url('add')}{notempty name='$pageType'}?page_type=1{/notempty}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
+                                data-toggle="tooltip" data-placement="top" data-edit="content">
+                            <i class="fa fa-reply"></i> 添加
+                        </button>
+                        <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
+                        <!--target-form="form-horizontal" data-edit="content">-->
                         <!--<i class="fa fa-pencil"></i> 保存草稿-->
-                    <!--</button>-->
-                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
-                </div>
-                <div class="clearfix"></div>
-                <input type="hidden" name="id" value="{$res.id}">
-                    <input type="hidden" name="content" class="to_hiden" value="">
+                        <!--</button>-->
+                        <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
                     </div>
+                    <div class="clearfix"></div>
+                    <input type="hidden" name="id" value="{$res.id}">
+                    <input type="hidden" name="content" class="to_hiden" value="">
+                </div>
             </form>
 
         </div>
@@ -130,6 +146,6 @@
 
 
 
-    highlight_subnav("{:Url('ServiceInformation/index')}");
+    highlight_subnav("{:Url('EnterpriseRecruitment/index')}");
 </script>
 {/block}

@@ -14,12 +14,12 @@ class ServiceInformation extends Validate
     protected $rule = [
         'title' =>  'require',
         'source' => 'require',
-        'content' => 'require',
+        'content' => 'require|min:12',
     ];
 
     protected $message = [
         'title.require' => '服务信息标题必须添加',
         'source.require' => '服务信息发布人必须添加',
-        'content.require' => '服务信息内容必须添加',
+        'content.min' => '服务信息内容必须添加',
     ];
 }
