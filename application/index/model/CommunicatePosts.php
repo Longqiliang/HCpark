@@ -25,4 +25,14 @@ class CommunicatePosts extends  Model
 
     }
 
+    public  function  comment(){
+
+
+
+
+        return $this->hasMany('CommunicateComment','target_id','id');
+
+    }
+
+
 }

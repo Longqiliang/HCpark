@@ -239,7 +239,7 @@ class Communication extends Base
         $data['user_name'] = $userinfo['name'];
         $result = CommunicateComment::create($data);
         if ($result) {
-            $post['comments']+=1;
+            $post['comments'] += 1;
             $post->save();
             return $this->success('评论成功', '', $result);
         } else {
@@ -278,11 +278,11 @@ class Communication extends Base
         ];
         $list = $cuser->where($map)->select();
         foreach ($list as $value) {
-           $data =$data = $cgroup->get($value['group_id']);
-            $value['group_name'] = isset($data['group_name']) ? $data['group_name']: "";
+
+            $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
         }
         $this->assign('list', $list);
-
+        echo json_encode($list);
         return $this->fetch();
     }
 
@@ -291,20 +291,28 @@ class Communication extends Base
     {
         $userid = session('userId');
         $cuser = new CommunicateUser();
-        //TODO  找他所有管理群的ID，再通过这个ID数组去把所有所属组的申请信息合在一起传出去
-
-
+        $map2 = [
+            'user_id' => $userid,
+            'status' => 3
+        ];
+        $group_id = array();
+        $list = $cuser->where($map2)->select();
+        foreach ($list as $value) {
+            array_push($group_id, $value['group_id']);
+        }
 
         $map = [
-            'user_id' => $userid,
-            'status' => array('lt', 3)
+            'status' => array('lt', 3),
+            'group_id' => array('in', $group_id)
         ];
+
         $list = $cuser->where($map)->select();
         foreach ($list as $value) {
             $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
+            $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
+            $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
         }
-
-
+        $this->assign('list', $list);
         return $this->fetch();
     }
 
@@ -337,36 +345,36 @@ class Communication extends Base
     /*我的评论*/
     public function myComment()
     {
-        $ccomment =new CommunicateComment();
+        $ccomment = new CommunicateComment();
         $cpost = new  CommunicatePosts();
-        $userid =session('userId');
-        $commments =$ccomment->where('user_id',$userid)->select();
-        $group_ids=array();
-        foreach ($commments as $value){
-         array_push($group_ids,$value['target_id']);
+        $userid = session('userId');
+        $commments = $ccomment->where('user_id', $userid)->select();
+        $group_ids = array();
+        foreach ($commments as $value) {
+            array_push($group_ids, $value['target_id']);
         }
 
         $ids = array_values(array_unique($group_ids));
-        $data['id']=array('in',$ids);
-        $list =$cpost->where($data)->select();
-        foreach ($list as $value){
-          $comments=$value->comment;
-            $myComments=array();
-            foreach ($comments as $comment){
-                if($comment['user_id']==$userid&&$comment['status']==1){
-                    array_push($myComments,$comment);
+        $data['id'] = array('in', $ids);
+        $list = $cpost->where($data)->select();
+        foreach ($list as $value) {
+            $comments = $value->comment;
+            $myComments = array();
+            foreach ($comments as $comment) {
+                if ($comment['user_id'] == $userid && $comment['status'] == 1) {
+                    array_push($myComments, $comment);
                 }
             }
-            $value['mycomments']=$myComments;
+            $value['mycomments'] = $myComments;
 
-            $value['user_name']=isset($value->user->name)?$value->user->name:"";
-            $header = isset($value->user->header)?$value->user->header:"";
-            $avatar = isset($value->user->avatar)?$value->user->avatar:"";
-            $value['header']=!empty($header)?$header:$avatar;
+            $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+            $header = isset($value->user->header) ? $value->user->header : "";
+            $avatar = isset($value->user->avatar) ? $value->user->avatar : "";
+            $value['header'] = !empty($header) ? $header : $avatar;
         }
 
-
-      /*  echo json_encode($list);*/
+        $this->assign('list', $list);
+        /*  echo json_encode($list);*/
         return $this->fetch();
     }
 }

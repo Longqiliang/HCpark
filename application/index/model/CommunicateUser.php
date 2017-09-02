@@ -17,4 +17,15 @@ class CommunicateUser extends  Model
         'create_time' => NOW_TIME,
 
     ];
+
+    public  function  group(){
+
+        return $this->hasOne('CommunicateGroup','id','group_id');
+
+    }
+    public  function  user(){
+
+        return $this->hasOne('WechatUser','userid','user_id');
+
+    }
 }

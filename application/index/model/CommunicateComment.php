@@ -23,4 +23,10 @@ class CommunicateComment extends  Model
         return $this->hasOne("WechatUser","userid","user_id");
     }
 
+
+    public  function  CommunicatePost(){
+
+
+        return $this->hasOne('CommunicatePosts','id','target_name');
+    }
 }
