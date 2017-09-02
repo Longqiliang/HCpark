@@ -14,6 +14,7 @@ use app\index\model\CommunicateUser;
 use app\index\model\WechatUser;
 use app\index\model\CommunicatePosts;
 use app\index\model\CommunicateComment;
+use function PHPSTORM_META\type;
 
 class Communication extends Base
 {
@@ -291,6 +292,21 @@ class Communication extends Base
     {
         $userid = session('userId');
         $cuser = new CommunicateUser();
+        if(IS_POST){
+            $id=input('id');
+            $user = $cuser->get($id);
+            //审核通过
+            if(input('type')==1){
+              $user['status']=2;
+              $user->save();
+            }
+            //审核失败
+            else{
+                $user['status']=-1;
+                $user->save();
+            }
+        }else{
+
         $map2 = [
             'user_id' => $userid,
             'status' => 3
@@ -314,6 +330,7 @@ class Communication extends Base
         }
         $this->assign('list', $list);
         return $this->fetch();
+    }
     }
 
     /*我的发布*/
