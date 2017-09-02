@@ -182,8 +182,9 @@
         var companyName = $("input[name='name']").val();
         var areas = $("[name='area']").val();
         var prices = $("[name='price']").val();
+        //alert(prices);return "";
         var floors = $("[name='floor']").val();
-        var rooms = $("[name='room]").val();
+        var rooms = $("[name='room']").val();
         var build = $("[name='build_block']").val();
         if(companyName ==""){
             updateAlert("请添加楼盘名称","info");
@@ -194,14 +195,14 @@
         }else if(areas == ""){
             updateAlert("请添加面积","info");
             return "";
-        }else if(price == ""){
+        }else if(prices == ""){
             updateAlert("请添加价格","info");
             return "";
         }
         $.ajax({
-            data:{img:imgScrs,status:0,company:companyName,type:types,remark:content,id:id,number:orderNumber},
+            data:{floor:floors,room:rooms,build_bolck:build,panorama:imgScrs,name:companyName,area:areas,price:prices,id:id,img:imgsSrc},
             type:"post",
-            url:"{:Url('add')}",
+            url:"{:Url('addrent')}",
             success:function (data) {
                 if (data.code==1){
                     updateAlert(data.msg+" 稍后自动刷新页面～","success");
