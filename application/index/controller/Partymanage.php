@@ -9,6 +9,9 @@ use app\common\model\CompanyContract;
 use app\index\model\Park;
 use app\index\model\WechatTag;
 use think\Db;
+use app\common\model\FeePayment;
+
+
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -114,15 +117,23 @@ class Partymanage extends Base
     public function manageDetail(){
         $id = input('id');
         $manageInfo = CompanyContract::get($id);
-        foreach($manageInfo as $v){
-            $v['img'] = unserialize($v['img']);
-
-        }
         $info = [
             'extra'=>$manageInfo['remark'],
-            'img'=>unserialize($manageInfo['img'])
+            'img'=>json_decode($manageInfo['img'])
         ];
-        $this->assign('info', json_encode($info) );
+        //$image = Image::open($info['img'][1]);
+       /* if ($info['img']){
+            foreach($info['img'] as $k=>$v){
+                $info['imgs'][$k]=str_replace(".","s.",$v);
+                $image =  Image::open("$v");
+                $image ->thumb(150,150)->save($info['imgs'][$k]);
+                echo $v;exit;
+            }
+        }*/
+
+        $this->assign('info', json_encode($info));
+
+        return $this->fetch();
     }
     /*招商管理*/
     public function merchants(){
@@ -131,6 +142,7 @@ class Partymanage extends Base
     $user=$weuser->where('userid',$userid)->find();
     $is_boss=$user['tagid']==1?"yes":"no";
     $this->assign('is_boss',$is_boss);
+
     return $this->fetch();
 
 
@@ -152,9 +164,65 @@ class Partymanage extends Base
 
         return $this->fetch();
     }
+    /*公司合同列表*/
+    public function serviceContract(){
+        $type = input('type');
+        $departmentId = input('id');
+        $map = [
+            'type' =>$type,
+            'department_id' =>$departmentId,
+        ];
+        if ($type == 3){
+            $info = CompanyContract::where($map)->select();
+        }
+        $info = CompanyContract::where($map)->find();
+
+        $this->assign('info',$info);
+
+        return $this->fetch();
+    }
+    /*公司缴费记录*/
+    public function feeRecord(){
+        $departmentId = input('id');
+        $map = ['company_id'=>$departmentId];
+        $list = FeePayment::where($map)->order('id desc')->limit(6);
+        foreach($list as $k=>$v){
+            $info[$k]=[
+                'id'=>$v['id'],
+                'name' =>$v['name'],
+                'status'=>$v['status'],
+                'time'=>$v['create_time'],
+                'pay'=>$v['fee'],
+            ];
+        }
+        $this->assign("info",json_encode($info));
+        return $this->fetch();
+    }
+    /*加载更多缴费记录*/
+    public function moreRecode(){
+        $departmentId = input('id');
+        $len = input("length");
+        $map = ['company_id'=>$departmentId];
+        $list = FeePayment::where($map)->order('id desc')->limit($len,6);
+        if ($list){
+            foreach($list as $k=>$v){
+                $info[$k]=[
+                    'id'=>$v['id'],
+                    'name' =>$v['name'],
+                    'status'=>$v['status'],
+                    'time'=>$v['create_time'],
+                    'pay'=>$v['fee'],
+                ];
+            }
+
+            $this->success(['code'=>1,'data'=>json_encode($info)]);
+        }else{
+
+            $this->error(['code'=>0,'data'=>"没有更多了"]);
+        }
 
 
-
+    }
 
 
 

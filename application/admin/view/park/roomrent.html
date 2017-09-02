@@ -1,0 +1,141 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style>
+    .mail-box .mail-ontact{
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+    .mail-box .mail-subject{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+    .mail-subject-div{
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-box .mail-main{
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-date{
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+    @media only screen and (max-width: 550px){
+        .mail-date{
+            display: none;
+        }
+    }
+    .list_banner {width: 80px}
+    .list_type {width: 80px}
+
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <form method="get" action="index.html" class="pull-right mail-search">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索标题">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
+                    </div>
+                </div>
+            </form>
+            <h2>房屋出租 ({$list->total()})</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+                <a href="{:Url('addrent')}" class="btn btn-white btn-sm" ><i class="fa fa-file-text-o"></i> 添加</a>
+            </div>
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+                <thead>
+                <tr>
+                    <th style="width:10%"></th>
+                    <th style="width:25%">企业名称</th>
+                    <th style="width:25%">楼盘名称</th>
+                    <th style="width:15%">房间号</th>
+                    <th style="width:15%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr class="read">
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                    </td>
+                    <td class="mail-subject">
+                        <a href="{:Url('addrent','id='.$vo.id)}"></a>
+                    </td>
+                    <td>
+                        <a href="{:Url('addrent','id='.$vo.id)}"></a>
+                    </td>
+                    <td>
+                        <a href="{:Url('addrent','id='.$vo.id)}"></a>
+                    </td>
+
+                    <td>
+                        <a  href="{:Url('addrent','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">查看信息</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+    function getCompany(){
+        $.ajax({
+            data: "",
+            type: "POST",
+            url: "{:Url('Company/getCompany')}",
+            success:function(data){
+                updateAlert(data.msg+' 页面稍后会自动跳转～',"success");
+                setTimeout(function(){
+                    location.href=data.url;
+                },2000);
+            }
+
+        })
+
+    }
+</script>
+{/block}

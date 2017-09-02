@@ -1,0 +1,78 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<style type="text/css">
+    .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <h2>园区信息</h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizontal" method="post">
+                <div class="mail-body">
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;园区名称:</h3></label>
+                        <div class="col-sm-5"><input type="text" class="form-control"   value="{$parkName}" readonly></div>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;大厦:</h3></label>
+                        <div class="col-sm-3"><input type="text" class="form-control"  name="name" value="{$info.name}"></div>
+                        <div class="col-sm-4">
+                            <select name="build_block" id="" style="width: 100px;height: 30px;">
+                                <option value="A"{eq name="$info.build_block" value="A"}selected{/eq}>A幢</option>
+                                <option value="B"{eq name="$info.build_block" value="B"}selected{/eq}>B幢</option>
+                                <option value="C"{eq name="$info.build_block" value="C"}selected{/eq}>C幢</option>
+                                <option value="D"{eq name="$info.build_block" value="D"}selected{/eq}>D幢</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;楼层:</h3></label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control"  name="floor" value="{$info.floor}">
+                        </div>
+                        <label class="col-md-1 "><h3>——楼——</h3></label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control"  name="room" value="{$info.room}">
+                        </div>
+                        <label class="col-md-1 "><h3>室</h3></label>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;企业名称:</h3></label>
+                        <div class="col-sm-5"><input type="text" class="form-control"  name="company_id" value="{$info.company_id}"></div>
+                    </div>
+                </div>
+                <input type="hidden" name="uid" value="{$info.id}">
+                <div class="mail-body text-right tooltip-demo">
+                    <button url="{:Url('roomManage')}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
+                            data-toggle="tooltip" data-placement="top" data-edit="content">
+                        <i class="fa fa-reply"></i> 保存
+                    </button>
+                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                </div>
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+    });
+</script>
+{/block}

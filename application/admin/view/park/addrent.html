@@ -1,0 +1,218 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style type="text/css">
+    .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+    .del{
+        position: absolute;
+        right:30px;
+        top:5px;
+    }
+    .parent{
+        position:relative ;
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <h2>园区信息</h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizontal" method="post">
+                <div class="mail-body">
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;园区名称:</h3></label>
+                        <div class="col-sm-5"><input type="text" class="form-control"   value="{$parkName}" readonly></div>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;大厦:</h3></label>
+                        <div class="col-sm-3"><input type="text" class="form-control"  name="name" value=""></div>
+                        <div class="col-sm-4">
+                            <select name="build_block" id="" style="width: 100px;height: 30px;">
+                                <option value="A"{eq name="$info.build_block" value="A"}selected{/eq}>A幢</option>
+                                <option value="B"{eq name="$info.build_block" value="B"}selected{/eq}>B幢</option>
+                                <option value="C"{eq name="$info.build_block" value="C"}selected{/eq}>C幢</option>
+                                <option value="D"{eq name="$info.build_block" value="D"}selected{/eq}>D幢</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;楼层:</h3></label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control"  name="floor" value="{$info.floor}">
+                        </div>
+                        <label class="col-md-1 "><h3>——楼——</h3></label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control"  name="room" value="{$info.room}">
+                        </div>
+                        <label class="col-md-1 "><h3>室</h3></label>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;面积:</h3></label>
+                        <div class="col-sm-5"><input type="text" class="form-control"  name="area" value="{$info.area}"></div>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;价格:</h3></label>
+                        <div class="col-sm-5"><input type="text" class="form-control"  name="price" value="{$info.price}"></div>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;全景:</h3></label>
+                        <div class="col-sm-5"> <input id="input-file" type="file" class="file" multiple></div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-sm-6 panorama">
+                           <!-- <div class='col-sm-2'>
+                                <img src='' alt=''>
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;照片:</h3></label>
+                        <div class="col-sm-5"> <input class="input-file" type="file" class="file" multiple></div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-sm-6 image">
+                            <!-- <div class='col-sm-2'>
+                                 <img src='' alt=''>
+                             </div>-->
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="uid" value="{$info.id}">
+                <div class="mail-body text-right tooltip-demo">
+                    <a href="javascript:void(0)" class="btn-sm btn-primary" onclick="addRent()"><i class="fa fa-reply"></i>&nbsp;发送</a>
+                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                </div>
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+    });
+
+    $("#input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+        maxFilesNum : 5,//上传最大的文件数量
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            var html = "<div class='col-sm-3 parent'>" +
+                "<img src='"+response.data+"' alt='' style='width: 130px;height: 200px;margin-right: 10px' class='imgs'>" +
+                " <div class='del'><img src='/admin/images/delete.png' alt='' width='20px' height='20px'></div>"
+            "</div>";
+            $('.panorama').append(html);
+            $('.del').click(function(){
+                $(this).parent().remove();
+            });
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+    $(".input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+        maxFilesNum : 5,//上传最大的文件数量
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            var html = "<div class='col-sm-3 parent'>" +
+                "<img src='"+response.data+"' alt='' style='width: 130px;height: 200px;margin-right: 10px' class='img'>" +
+                " <div class='del'><img src='/admin/images/delete.png' alt='' width='20px' height='20px'></div>"
+            "</div>";
+            $('.image').append(html);
+            $('.del').click(function(){
+                $(this).parent().remove();
+            });
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+    $('.del').click(function(){
+        $(this).parent().remove();
+    });
+    function addRent() {
+        var imgScrs=[];
+        var imgs = $('.imgs');
+        for(var i=0;i<imgs.length;i++){
+            imgScrs.push(imgs[i].src);
+        };
+        var imgsSrc=[];
+        var img=$('.img');
+        for(var i=0;i<img.length;i++){
+            imgsSrc.push(img[i].src);
+        };
+        var id = "{$info.id}";
+        var companyName = $("input[name='name']").val();
+        var areas = $("[name='area']").val();
+        var prices = $("[name='price']").val();
+        var floors = $("[name='floor']").val();
+        var rooms = $("[name='room]").val();
+        var build = $("[name='build_block']").val();
+        if(companyName ==""){
+            updateAlert("请添加楼盘名称","info");
+            return "";
+        }else if (imgScrs.length == 0){
+            updateAlert("请添加照片","info");
+            return "";
+        }else if(areas == ""){
+            updateAlert("请添加面积","info");
+            return "";
+        }else if(price == ""){
+            updateAlert("请添加价格","info");
+            return "";
+        }
+        $.ajax({
+            data:{img:imgScrs,status:0,company:companyName,type:types,remark:content,id:id,number:orderNumber},
+            type:"post",
+            url:"{:Url('add')}",
+            success:function (data) {
+                if (data.code==1){
+                    updateAlert(data.msg+" 稍后自动刷新页面～","success");
+                    setTimeout(function () {
+                        location.href = data.url;
+                    },2000);
+                }else{
+                    updateAlert(data.msg,"info");
+                }
+            }
+        });
+    }
+</script>
+{/block}

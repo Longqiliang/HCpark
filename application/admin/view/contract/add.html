@@ -55,7 +55,7 @@
                         </div>
                         <div class="col-md-10 column">
                             <select name="type" id="" class="col-md-4 column">
-                                <option value="1" {eq name="$info.type" value="1"}selected{/eq}>租赁合同</option>
+                                <option value="1"{eq name="$info.type" value="1"}selected{/eq}>租赁合同</option>
                                 <option value="2"{eq name="$info.type" value="2"}selected{/eq}>物业合同</option>
                                 <option value="3"{eq name="$info.type" value="3"}selected{/eq}>其他合同</option>
                             </select>
@@ -132,6 +132,9 @@
             $('#image').append(html);
             imageArray.push(response.data);
             $("input[name='front_cover']").val(response.data);
+            $('.del').click(function(){
+                $(this).parent().remove();
+            });
 
         } else {
             updateAlert(response.msg, 'warning');
