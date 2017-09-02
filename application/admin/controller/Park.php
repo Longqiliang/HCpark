@@ -125,11 +125,22 @@ class Park extends Admin
     }
     /*添加房屋出租信息*/
     public function addRent(){
+        $id = input('id');
         if (IS_POST){
+            if (input('id')){
+
+            }else{
+                $data = input('post.');
+                return dump($data);
+            }
+            $data = input('post.');
+            return dump($data);
+
+        }else{
 
         }
         $parkRent = new ParkRent();
-        $list = $parkRent->order('id desc')->find();
+        $list = $parkRent->where('id',$id)->find();
         $park = ParkModel::where('id',session("user_auth")['park_id'])->find();
         $parkName = $park['name'];
         $this->assign("info",$list);
