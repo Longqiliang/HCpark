@@ -13,5 +13,9 @@ use think\Model;
 
 class MerchantsDiary extends  Model
 {
+  public  function  user(){
 
+      return $this->hasOne('WechatUser','userid','user_id');
+
+  }
 }
