@@ -8,12 +8,13 @@
 namespace app\index\controller;
 use think\Controller;
 use app\index\model\EnterpriseRecruitment as EnterpriseModel;
+use app\index\model\ServiceInformation as ServiceModel;
 use app\index\model\Park;
 
-class EnterpriseRecruitment extends Base
+class Talentservice extends Base
 {
     /**企业招聘**/
-    /** 首页列表 **/
+    /** 企业招聘首页列表 **/
     public function index(){
         $parkid =session('park_id');
         $search = input('search');
@@ -31,7 +32,7 @@ class EnterpriseRecruitment extends Base
         return $this->fetch();
     }
 
-    /*首页列表下拉刷新*/
+    /*企业招聘列表下拉刷新*/
     public function listManage(){
         $len = input("length");
         $parkid =session('park_id');
@@ -58,13 +59,65 @@ class EnterpriseRecruitment extends Base
 
     }
 
-    /*详情页*/
+    /*企业招聘详情页*/
     public function detail(){
         $id = input('id');
         $info = EnterpriseModel::where('id',$id)->find();
-
         $this->assign('info', $info);
         return $this->fetch();
     }
+
+
+    /**服务信息**/
+    /** 服务信息首页列表 **/
+    public function serviceIndex(){
+        $parkid =session('park_id');
+        $map=array(
+            'park_id'=>$parkid,
+            'status'=>1,
+        );
+
+        $list = ServiceModel::where($map)->order('create_time  desc')->limit(6)->select();
+
+        $this->assign('list',json_encode($list));
+        return $this->fetch();
+    }
+
+    /*服务信息列表下拉刷新*/
+    public function serviceList(){
+        $len = input("length");
+        $parkid =session('park_id');
+        $map=array(
+            'park_id'=>$parkid,
+            'status'=>1,
+        );
+
+        $list = ServiceModel::where($map)
+            ->order("create_time desc")
+            ->limit($len,6)
+            ->select();
+
+        if ($list){
+
+            return json(['code' => 1, 'data' => json_encode($list)]);
+        }else{
+
+            return json(['code' => 0, 'msg' =>"没有更多内容了"]);
+        }
+
+    }
+
+    /*服务信息详情页*/
+    public function serviceDetail(){
+        $id = input('id');
+        $info = ServiceModel::get($id);
+        $parkid =session('park_id');
+        //发布园区
+        $park=Park::where('id','eq',$parkid)->field('name')->find();
+        $this->assign('park', $park['name']);
+        $this->assign('news', $info);
+        return $this->fetch();
+    }
+
 
 }
