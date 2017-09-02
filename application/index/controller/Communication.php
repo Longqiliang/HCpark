@@ -183,14 +183,7 @@ class Communication extends Base
         ];
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         //$count = CommunicateComment::where($map)->count();
-        foreach ($comments as $v) {
-            $header = isset($v->wechatuser->header) ? $v->wechatuser->header : "";
-            if (!empty($header)) {
-                $v['header'] = $header;
-            } else {
-                $v['header'] = isset($v->wechatuser->avatar) ? $v->wechatuser->avatar : "";
-            }
-        }
+
         echo json_encode($post);
         echo json_encode($comments);
         $this->assign('comments', $comments);
@@ -231,23 +224,22 @@ class Communication extends Base
     /*评论*/
     public function comment()
     {
+        $userinfo = WechatUser::where('userid', session('userId'))->field('name,header,avatar')->find();
         $data = [
             'target_id' => input('id'),
             'user_id' => session('userId'),
             'content' => input('content'),
-
         ];
-        $userinfo = WechatUser::where('userid', session('userId'))->field('name,header,avatar')->find();
+        if (!empty($userinfo['header'])) {
+            $data['header'] = $userinfo['header'];
+        } else {
+            $data['header'] = !empty($userinfo['avatar']) ? $userinfo['avatar'] : "";
+        }
         $post = CommunicatePosts::get(input('id'));
         $data['user_name'] = $userinfo['name'];
         $result = CommunicateComment::create($data);
-        if (!empty($userinfo['header'])) {
-            $result['header'] = $userinfo['header'];
-        } else {
-            $result['header'] = !empty($userinfo['avatar']) ? $userinfo['avatar'] : "";
-        }
         if ($result) {
-            $post['comments']++;
+            $post['comments']+=1;
             $post->save();
             return $this->success('评论成功', '', $result);
         } else {
@@ -269,18 +261,7 @@ class Communication extends Base
             $map['id'] = ['<', $lastId];
         }
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
-        foreach ($comments as $value) {
-            $userinfo['header'] = isset($value->wechatuser->header) ? $value->wechatuser->header : "";
-            $userinfo['avatar'] = isset($value->wechatuser->avatar) ? $value->wechatuser->avatar : "";
-            if (!empty($userinfo['header'])) {
 
-                $value['header'] = $userinfo['header'];
-
-            } else {
-                $value['header'] = $userinfo['avatar'];
-
-            }
-        }
         return json(['total' => count($comments), 'comments' => $comments]);
     }
 
@@ -308,9 +289,11 @@ class Communication extends Base
     /*我的审核*/
     public function myCheck()
     {
-        $userid = session('useId');
+        $userid = session('userId');
         $cuser = new CommunicateUser();
         //TODO  找他所有管理群的ID，再通过这个ID数组去把所有所属组的申请信息合在一起传出去
+
+
 
         $map = [
             'user_id' => $userid,
@@ -328,7 +311,7 @@ class Communication extends Base
     /*我的发布*/
     public function myRelease()
     {
-        $userid = session('useId');
+        $userid = session('userId');
         $posts = new CommunicatePosts();
         $myPosts = $posts->where('user_id', $userid)->select();
         $postsList = array();
@@ -346,7 +329,7 @@ class Communication extends Base
             $data['header'] = empty($header) ? $avatar : $header;
             array_push($postsList, $data);
         }
-
+        echo  json_encode($postsList);
         $this->assign('list', $postsList);
         return $this->fetch();
     }
@@ -354,6 +337,20 @@ class Communication extends Base
     /*我的评论*/
     public function myComment()
     {
+        $ccomment =new CommunicateComment();
+        $cpost = new  CommunicatePosts();
+        $userid =session('userId');
+        $commments =$ccomment->where('user_id',$userid)->select();
+        $group_ids=array();
+        foreach ($commments as $value){
+         array_push($group_ids,$value['target_id']);
+        }
+        echo json_encode($group_ids);
+        $ids = array_values(array_unique($group_ids));
+        $data['']=
+        $list =$cpost->where()->select();
+        echo json_encode($list);
+
 
         return $this->fetch();
     }
