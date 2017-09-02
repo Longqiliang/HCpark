@@ -1,10 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{extend name="public/common"}
 
-</body>
-</html>
+{block name="style"}
+<title>企业交流群</title>
+<link type="text/css" rel="stylesheet" href="/index/css/communication/post.css">
+<style type="text/css">
+    .group-list{
+        border-bottom: 1px solid #e8e8e8;
+    }
+    .post{
+        line-height: 40px;
+        padding: 0 12px;
+        background: #f0eff5;
+        margin-top: 12px;
+        font-size: 14px;
+        border-radius: 2px;
+        position: relative;
+    }
+    .post::before{
+        content: '';
+        border-bottom: 6px solid #f0eff5;
+        border-right: 6px solid transparent;
+        border-left: 6px solid transparent;
+        position: absolute;
+        top: -6px;
+
+    }
+    .post>div{
+        overflow: hidden;
+    }
+    .post span{
+        float: left;
+        display: inline-block;
+    }
+    .post span:first-child{
+        color: #69b9f9;
+        max-width: 72px;
+    }
+    .post span:last-child{
+        max-width: calc(100% - 72px);
+        color: #666;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="group-list">
+        <div class="list-head">
+            <img src="">
+            <div class="time-name">
+                <p>是是是</p>
+                <p>2017-08-12</p>
+            </div>
+        </div>
+        <div class="list-body">
+            <p>撒大声地群无无群</p>
+            <div class="post">
+                <div>
+                    <span>稍微但是：</span>
+                    <span>新闻大事件新闻大事件新闻大事件新闻大事件</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+
+{/block}

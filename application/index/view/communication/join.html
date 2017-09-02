@@ -12,28 +12,28 @@
         height: 100%;
     }
     .group{
-        padding: 10px 23px;
+        padding: 10px 18px;
     }
     .group p{
-        font-size: 18px;
-        font-weight: 600;
+        margin: 10px 0;
+        font-size: 22px;
         color: #333;
         text-align: center;
     }
     .group>div{
-        font-size: 14px;
+        font-size: 16px;
         padding-top: 16px;
     }
     .foot{
-        width: 70%;
+        width: calc(100% - 36px);
         line-height: 40px;
         position: fixed;
         bottom: 30px;
-        left: 15%;
+        left: 18px;
         text-align: center;
-        background: #259b24;
+        background: #69b9f9;
         color: #fff;
-        font-size: 16px;
+        font-size: 15px;
         border-radius: 4px;
         z-index: 2;
     }
@@ -81,7 +81,7 @@
     }
     .modal .button ul li:last-child{
         border-left: 1px solid #f1f1f1;
-        color: #259b24;
+        color: #69b9f9;
     }
     .modal .content{
         font-size: 15px;
@@ -104,7 +104,7 @@
     <div class="group">
         <p>{$group->group_name}</p>
         <div>
-            {$group->content}
+            {$group->content}{$group->is_join}
         </div>
     </div>
     {elt name="$group->is_join" value="0"}
@@ -132,7 +132,6 @@
 <script>
     $(function () {
         var id = {$group->id};
-        console.log(id);
         $("#foot").on('click',function () {
             $(".modal-box").fadeIn(200);
         });
@@ -166,7 +165,7 @@
         $(".modal").delegate('#button2 li','click',function () {
             var index = $(this).index();
             if(index === 0){
-                $(".foot").addClass('grey').attr('id','');
+                $(".foot").addClass('grey').attr('id','').text('申请审核中');
                 $(".modal-box").fadeOut(200);
             }else{
                 window.location.href = '{:Url("Communication/index")}';

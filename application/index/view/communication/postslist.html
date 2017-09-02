@@ -1,0 +1,137 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>企业交流群</title>
+<link type="text/css" rel="stylesheet" href="/index/css/communication/post.css">
+<style type="text/css">
+    .head{
+        width: 100%;
+        height: 50vw;
+        background: rgba(0,0,0,0.4);
+        position: relative;
+    }
+    .head img{
+        width: 100%;
+        height: 100%;
+        position: relative;
+        z-index: -1;
+    }
+    .head p{
+        width: 150px;
+        font-size: 18px;
+        color: #fff;
+        line-height: 1.4;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
+    .group-introduce{
+        border-bottom: 1px solid #e5e5e5;
+        padding: 0 16px;
+        line-height: 40px;
+        font-size: 15px;
+        background: url("/index/images/addressbook/right.png") calc(100% - 16px) no-repeat;
+        background-size: 5px;
+        position: relative;
+    }
+    .group-introduce a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
+    .group-list{
+        position: relative;
+    }
+    .group-list a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
+    .post{
+        width: 48px;
+        height: 48px;
+        border-radius: 24px;
+        box-shadow: 0 3px 10px rgba(105,185,249,1);
+        position: fixed;
+        bottom: 8.7vh;
+        right: 20px;
+        z-index: 9;
+    }
+    .post img{
+        width: 100%;
+        height: 100%;
+    }
+    .post a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 9;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="head">
+        <img src="{$group->img}">
+        <p>{$group->group_name}</p>
+    </div>
+    <div class="group-introduce">
+        群简介
+        <a href="{:Url('Communication/join?group_id='.$group->id)}"></a>
+    </div>
+    {volist name="list" id="vo"}
+    <div class="group-list">
+        <div class="list-head">
+            <img src="{$vo.header}">
+            <div class="time-name">
+                <p>{$vo.name}</p>
+                <p>{$vo.create_time || time_format="Y-m-d"}</p>
+                <span>{$vo.comments}</span>
+            </div>
+        </div>
+        <div class="list-body">
+            <p>{$vo.content}</p>
+            <div class="img-box">
+                <ul>
+                    <li>
+                        <img src="{$group->img}">
+                    </li>
+                    <li>
+                        <img src="{$group->img}">
+                    </li>
+                    <li>
+                        <img src="{$group->img}">
+                    </li>
+                    <li>
+                        <img src="{$group->img}">
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a href="{:Url('Communication/postDetails?id='.$vo.id)}"></a>
+    </div>
+    {/volist}
+    <div class="post" id="post">
+        <img src="/index/images/communication/post.png">
+        <a href="{:Url('Communication/writePost')}"></a>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+
+{/block}

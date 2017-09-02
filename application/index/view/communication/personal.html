@@ -3,14 +3,23 @@
 {block name="style"}
 <title>合作交流</title>
 <style type="text/css">
+    body{
+        background: #f0eff5;
+    }
     ul li{
-        border-bottom: 1px solid #f1f1f1;
-        padding: 0 20px;
-        line-height: 49px;
-        font-size: 16px;
-        background: url("/index/images/addressbook/right.png") calc(100% - 12px) no-repeat;
-        background-size: 6px;
+        line-height: 76px;
+        margin: 12px 12px 0 12px;
         position: relative;
+        background: #fff;
+        border-radius: 5px;
+    }
+    ul li img{
+        width: 40px;
+        margin: 18px 20px;
+    }
+    ul li span{
+        font-size: 18px;
+        color: #333;
     }
     ul li>a{
         width: 100%;
@@ -26,16 +35,26 @@
 {block name="body"}
 <div id="app">
     <ul>
-        <li>我的申请
+        <li>
+            <img src="/index/images/communication/personal-1.png">
+            <span>我的申请</span>
             <a href="{:Url('Communication/myApplication')}"></a>
         </li>
-        <li>我的审批
+        {eq name="is_manage" value="1"}
+        <li>
+            <img src="/index/images/communication/personal-2.png">
+            <span>我的审核</span>
             <a href="{:Url('Communication/myCheck')}"></a>
         </li>
-        <li>我的发布
+        {/eq}
+        <li>
+            <img src="/index/images/communication/personal-3.png">
+            <span>我的发布</span>
             <a href="{:Url('Communication/myRelease')}"></a>
         </li>
-        <li>我的评论
+        <li>
+            <img src="/index/images/communication/personal-4.png">
+            <span>我的评论</span>
             <a href="{:Url('Communication/myComment')}"></a>
         </li>
     </ul>

@@ -1,10 +1,284 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{extend name="public/common"}
 
-</body>
-</html>
+{block name="style"}
+<title>合作交流</title>
+<style type="text/css">
+    body{
+        background: #f0eff5;
+    }
+    .body ul li{
+        height: 76px;
+        margin: 12px 12px 0 12px;
+        padding: 0 15px;
+        position: relative;
+        background: #fff;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .body ul li>div{
+        padding: 16px 0;
+        width: calc(100% - 60px);
+        color: #333;
+        float: left;
+    }
+    .body ul li>div p:first-child{
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+    .body ul li>div p:last-child{
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    .body ul li img{
+        width: 50px;
+        float: left;
+        margin: 17px 0 17px 5px;
+    }
+    .body ul li span{
+        display: inline-block;
+        width: 50px;
+        line-height: 30px;
+        float: left;
+        margin: 22px 0 22px 5px;
+        background: #ffc21f;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    /*modal框*/
+    .modal-box{
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.4);
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9;
+    }
+    .modal-box .modal{
+        width: calc(100% - 36px);
+        margin: 15vh auto 0;
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px 0;
+        position: relative;
+    }
+    .modal>p{
+        line-height: 40px;
+        font-size: 17px;
+        text-align: center;
+    }
+    .name-mobile,.remark{
+        padding: 5px 18px;
+    }
+    .name-mobile ul li{
+        line-height: 40px;
+        border-bottom: 1px solid #f1f1f1;
+        overflow: hidden;
+    }
+    .name-mobile span{
+        display: inline-block;
+        font-size: 15px;
+        color: #333;
+    }
+    .name-mobile span:first-child{
+        float: left;
+        width: 62px;
+    }
+    .name-mobile span:last-child{
+        float: right;
+        width: calc(100% - 80px);
+        color: #666;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        text-align: right;
+    }
+    .remark p{
+        font-size: 15px;
+    }
+    .remark textarea{
+        border: 1px solid #e5e5e5;
+        height: 18vh;
+        border-radius: 5px;
+        width: calc(100% - 36px);
+        margin: 10px 7px;
+        padding: 5px 10px;
+    }
+    .modal .button{
+        margin: 20px 18px;
+    }
+    .modal .button ul{
+        overflow: auto;
+    }
+    .modal .button ul li{
+        width: calc(50% - 9px);
+        line-height: 40px;
+        float: left;
+        text-align: center;
+        font-size: 15px;
+        background: #fcc44b;
+        color: #fff;
+        border-radius: 5px;
+    }
+    .modal .button ul li:last-child{
+        float: right;
+        background: #69b9f9;
+    }
+    .modal .cancel{
+        position: absolute;
+        top: -50px;
+        right: 0;
+    }
+    .cancel>span:first-child{
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 15px;
+        border: 1px solid #fff;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+    }
+    .cancel i::before{
+        width: 20px;
+        height: 20px;
+        color: #fff;
+    }
+    .cancel>span:last-child{
+        display: inline-block;
+        height: 20px;
+        width: 0;
+        border-right: 1px solid #fff;
+        position: relative;
+        left: 14.5px;
+    }
+    @media screen and (max-height: 510px){
+        .modal .button{
+            margin: 10px 18px;
+        }
+        .remark textarea{
+            border: 1px solid #e5e5e5;
+            height: 18vh;
+            border-radius: 5px;
+            width: calc(100% - 36px);
+            margin: 10px 7px 0;
+            padding: 5px 10px;
+        }
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="body">
+        <ul>
+            {volist name="list" id="vo" key="k"}
+            <li id="li{$vo->id}">
+                <div>
+                    <p>申请群名：{$vo->group_name}</p>
+                    <p>{$vo->create_time || time_format="Y-m-d"}</p>
+                </div>
+                {switch name="$vo->status"}
+                {case value="-1"}
+                <img src="/index/images/communication/fail.png">
+                {/case}
+                {case value="2"}
+                <img src="/index/images/communication/success.png">
+                {/case}
+                {case value="1"}
+                <span data-id="{$vo->id}" data-company="{$vo->company}" data-mobile="{$vo->mobile}" data-name="{$vo->name}" data-remark="{$vo->remark}" onclick="check(event)">审核</span>
+                {/case}
+                {/switch}
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    <div class="modal-box" style="display: none;">
+        <div class="modal">
+            <p>申请人信息</p>
+            <div class="name-mobile">
+                <ul>
+                    <li>
+                        <span>姓名</span>
+                        <span id="name"></span>
+                    </li>
+                    <li>
+                        <span>手机</span>
+                        <span id="mobile"></span>
+                    </li>
+                    <li>
+                        <span>公司名称</span>
+                        <span id="company"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="remark">
+                <p>备注信息</p>
+                <textarea></textarea>
+            </div>
+            <div class="button">
+                <ul>
+                    <li>拒绝</li>
+                    <li>通过</li>
+                </ul>
+            </div>
+            <div class="cancel" onclick="cancel()">
+                <span><i class="iconfont hc-cha1"></i></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    function check(event) {
+        var id = $(event.target).attr('data-id'),
+            name = $(event.target).attr('data-name'),
+            mobile = $(event.target).attr('data-mobile'),
+            remark = $(event.target).attr('data-remark'),
+            company = $(event.target).attr('data-company');
+        $("#name").text(name);
+        $("#mobile").text(mobile);
+        $("#company").text(company);
+        $(".remark textarea").val(remark);
+        $(".modal-box").fadeIn(200);
+        pass(id);
+    }
+    function pass(id) {
+        $(".button").find('li').on('click',function () {
+            var index = $(this).index(),
+                type;
+            if(index === 0){
+                type = 2;
+            }else{
+                type = 1;
+            }
+            $.ajax({
+                type:'post',
+                url:'{:Url("Communication/myCheck")}',
+                data:{'id':id,'type':type}
+            }).done(function (data) {
+                if(data.code == 1){
+                    if(type === 1){
+                        var html = '<img src="/index/images/communication/success.png">';
+                    }else{
+                        var html = '<img src="/index/images/communication/fail.png">';
+                    }
+                    $("#li"+id+"").append(html).find('span').remove();
+                    $(".modal-box").fadeOut(200);
+                }
+            })
+        })
+    }
+    function cancel() {
+        $(".modal-box").fadeOut(200);
+    }
+</script>
+
+{/block}

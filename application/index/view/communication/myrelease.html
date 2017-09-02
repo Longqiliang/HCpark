@@ -1,10 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{extend name="public/common"}
 
-</body>
-</html>
+{block name="style"}
+<title>企业交流群</title>
+<link type="text/css" rel="stylesheet" href="/index/css/communication/post.css">
+<style type="text/css">
+    .group-list{
+        position: relative;
+    }
+    .group-list a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    {volist name="list" id="vo"}
+    <div class="group-list">
+        <div class="list-head">
+            <img src="{$vo.header}">
+            <div class="time-name">
+                <p>{$vo.name}</p>
+                <p>{$vo.create_time || time_format="Y-m-d"}</p>
+                <span>{$vo.comments}</span>
+            </div>
+        </div>
+        <div class="list-body">
+            <p>{$vo.content}</p>
+            <div class="img-box">
+                <ul>
+                    <li>
+                        <img src="">
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a href="{:Url('Communication/postDetails?id='.$vo.id)}"></a>
+    </div>
+    {/volist}
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+
+{/block}

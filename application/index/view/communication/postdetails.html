@@ -1,0 +1,75 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>贴子详情</title>
+<link type="text/css" rel="stylesheet" href="/index/css/communication/post.css">
+<style type="text/css">
+    .comment{
+        width: 100%;
+    }
+    .comment ul li{
+        padding: 15px 15px;
+        border-bottom: 1px solid #e8e8e8;
+    }
+    .comment .list-body p{
+        margin-left: 55px;
+        padding-top: 5px;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="group-list">
+        <div class="list-head">
+            <img src="{$post->header}">
+            <div class="time-name">
+                <p>{$post->user_name}</p>
+                <p>{$post->create_time || time_format="Y-m-d"}</p>
+                <span>{$post->comments}</span>
+            </div>
+        </div>
+        <div class="list-body">
+            <p>{$post->content}</p>
+            <div class="img-box">
+                <ul>
+                    {volist name="post->img" id="img"}
+                    <li>
+                        <img src="{$img}">
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="comment">
+        <ul>
+            {volist name="comments" id="vo"}
+            <li>
+                <div class="list-head">
+                    <img src="{$vo->header}">
+                    <div class="time-name">
+                        <p>{$vo->user_name}</p>
+                        <p>{$vo->create_time || time_format="Y-m-d"}</p>
+                    </div>
+                </div>
+                <div class="list-body">
+                    <p>{$vo->content}</p>
+                </div>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    <div class="foot"></div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    new Vue({
+        el: '#app',
+        data:{}
+    })
+</script>
+
+{/block}

@@ -14,7 +14,7 @@ use app\index\model\CommunicateUser;
 use app\index\model\WechatUser;
 use app\index\model\CommunicatePosts;
 use app\index\model\CommunicateComment;
-use function PHPSTORM_META\type;
+//use function PHPSTORM_META\type;
 
 class Communication extends Base
 {
@@ -146,8 +146,8 @@ class Communication extends Base
                 'content' => $value['content'],
                 'img' => !empty($value['img']) ? json_decode($value['img']) : "",
                 'comments' => $value['comments'],
-                'create_time' => $value['create_time']
-
+                'create_time' => $value['create_time'],
+                'id' => $value['id']
 
             ];
             $avatar = isset($value->user->avatar) ? $value->user->avatar : "";
@@ -160,7 +160,6 @@ class Communication extends Base
         unset($groupInfo['status']);
         unset($groupInfo['content']);
 
-        echo json_encode($postsList);
         $this->assign('list', $postsList);
         $this->assign('group', $groupInfo);
         return $this->fetch();
@@ -283,7 +282,7 @@ class Communication extends Base
             $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
         }
         $this->assign('list', $list);
-        echo json_encode($list);
+
         return $this->fetch();
     }
 
@@ -323,15 +322,16 @@ class Communication extends Base
                 'group_id' => array('in', $group_id)
             ];
 
-            $list = $cuser->where($map)->select();
-            foreach ($list as $value) {
-                $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
-                $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
-                $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
-            }
-            $this->assign('list', $list);
-            return $this->fetch();
+        $list = $cuser->where($map)->select();
+        foreach ($list as $value) {
+            $value['name'] = isset($value->user->name) ? $value->user->name : "";
+            $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
+            $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
+            $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
         }
+        $this->assign('list', $list);
+        return $this->fetch();
+    }
     }
 
     /*我的发布*/
@@ -348,7 +348,8 @@ class Communication extends Base
                 'content' => $value['content'],
                 'img' => !empty($value['img']) ? json_decode($value['img']) : "",
                 'comments' => $value['comments'],
-                'create_time' => $value['create_time']
+                'create_time' => $value['create_time'],
+                'id' => $value['id']
             ];
             $avatar = isset($value->user->avatar) ? $value->user->avatar : "";
             $header = isset($value->user->header) ? $value->user->header : "";

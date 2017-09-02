@@ -4,6 +4,9 @@
 <title>合作交流</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
 <style type="text/css">
+    #app{
+        padding-top: 7.2vw;
+    }
     .head-img{
         position: fixed;
         top: 10px;
@@ -35,6 +38,13 @@
         left: 0;
         z-index: 999;
     }
+    .img-card-info{
+        color: #69b9f9;
+    }
+    .img-card-box:after{
+        background: url("/index/images/communication/icon-waveline.png");
+        background-size: cover;
+    }
 </style>
 {/block}
 
@@ -45,16 +55,20 @@
         <span></span>
         <a href="{:Url('Communication/personal')}"></a>
     </div>
-    {volist name="list" id="list"}
+    {volist name="list" id="vo"}
     <div class="img-card">
-        <a href="{:Url('Communication/join?group_id='.$list->id)}">
+        {eq name="$vo->is_join" value="0"}
+        <a href="{:Url('Communication/join?group_id='.$vo->id)}">
+        {else/}
+        <a href="{:Url('Communication/postsList?group_id='.$vo->id)}">
+        {/eq}
             <div class="img-card-box">
-                <img src="{$list->img}"  class="img-responsive">
-                <div class="img-marking"><span class="marking-info">{$list->group_name}</span></div>
+                <img src="{$vo->img}"  class="img-responsive">
+                <div class="img-marking">
+                    <span class="marking-info">{$vo->group_name}</span>
+                </div>
             </div>
-
-            <div class="img-card-info">{eq name="$list->is_join" value="0"}前往申请{else/}进入论坛{/eq}</div>
-
+            <div class="img-card-info">{eq name="$vo->is_join" value="0"}前往申请{else/}进入论坛{/eq}</div>
         </a>
     </div>
     {/volist}

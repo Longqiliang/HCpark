@@ -1,10 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{extend name="public/common"}
 
-</body>
-</html>
+{block name="style"}
+<title>合作交流</title>
+<style type="text/css">
+    body{
+        background: #f0eff5;
+    }
+    ul li{
+        height: 76px;
+        margin: 12px 12px 0 12px;
+        padding: 0 15px;
+        position: relative;
+        background: #fff;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    ul li>div{
+        padding: 16px 0;
+        width: calc(100% - 60px);
+        color: #333;
+        float: left;
+    }
+    ul li>div p:first-child{
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+    ul li>div p:last-child{
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    ul li img{
+        width: 50px;
+        float: left;
+        margin: 17px 0 17px 5px;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <ul>
+        {volist name="list" id="vo"}
+        <li>
+            <div>
+                <p>申请群名：{$vo->group_name}</p>
+                <p>{$vo->create_time || time_format="Y-m-d"}</p>
+            </div>
+            {switch name="vo->status"}
+            {case value="-1"}
+            <img src="/index/images/communication/fail.png">
+            {/case}
+            {case value="1"}
+            <img src="/index/images/communication/waiting.png">
+            {/case}
+            {case value="2"}
+            <img src="/index/images/communication/success.png">
+            {/case}
+            {/switch}
+        </li>
+        {/volist}
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+
+{/block}
