@@ -149,9 +149,27 @@ class Park extends Admin
         return $this->fetch();
     }
 
+    /*园区简介*/
+    public function profile()
+    {
+        $parkid = session('user_auth')['park_id'];
+        if (IS_POST){
+            $park = new ParkModel();
+            $res=$park->allowField(true)->save(input("post."),['id'=>$parkid]);
+            if ($res){
+                $this->success("保存成功");
+            }else{
+                $this->error($park->getError());
+            }
+        }
 
+        $info=ParkModel::where(['id'=>$parkid])->find();
 
+        $this->assign('info',$info);
 
+        return $this->fetch();
+
+    }
 
 
 

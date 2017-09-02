@@ -105,56 +105,6 @@
     </div>
 
 
-    <div class="row">
-        <div class="mail-box-header">
-            <h2>园区简介</h2>
-        </div>
-        <div class="mail-box">
-            <form class="form-horizonta" method="post">
-                <div class="mail-body">
-                    <form class="form-horizontal" method="post">
-                        <div class="form-group"><label class="col-sm-2 control-label">园区全景图封面:</label>
-                            <div class="col-sm-10">
-                                <input placeholder="园区简介全景图的封面图片" class="input-file" type="file" class="file">
-                                <sapn>
-                                    {empty name="info.panorama_cover"}图片预览{else/}
-                                    <a class="front_cover" href="{$info.panorama_cover}">
-                                        <img class="front_cover_img" src="{$info.panorama_cover}"/>
-                                    </a>
-                                    {/empty}
-                                </sapn>
-                            </div>
-                        </div>
-
-                        <div class="form-group"><label class="col-sm-2 control-label">园区全景图链接:</label>
-                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="园区简介全景图的链接"   name="panorama_link" value='{$info.panorama_link}'></div>
-                        </div>
-                        <div class="form-group"><label class="col-sm-2 control-label">园区简介内容:</label>
-                            <div class="col-sm-10" style="border:1px #888888 solid">
-                                <div class="summernote">{$info.content}</div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-
-
-                    </form>
-                </div>
-                <div class="mail-body text-right tooltip-demo">
-                    <button url="{:Url('parkProfile')}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizonta"
-                            data-toggle="tooltip" data-placement="top" data-edit="content">
-                        <i class="fa fa-reply"></i> 保存
-                    </button>
-                    <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
-                </div>
-                <div class="clearfix"></div>
-                <input type="hidden" name="id" value="{$info.id}">
-                <input type="hidden" name="content" class="to_hiden" value="">
-            </form>
-        </div>
-    </div>
-
-
-
 </div>
 {/block}
 
