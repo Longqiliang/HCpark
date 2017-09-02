@@ -109,7 +109,7 @@
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.experience}</a></td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.number}</a></td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.wages}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|msubstr=0,40}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,40}</a></td>
 
 
                     {eq name="$vo.status" value="1"}
