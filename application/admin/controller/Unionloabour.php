@@ -29,6 +29,10 @@ class UnionLoabour extends Admin
         $parkid = session('user_auth')['park_id'];
 
         if(IS_POST) {
+
+            $_POST['office_time_start']=substr($_POST['office_time_start'],-8);
+
+            $_POST['office_time_end']=substr($_POST['office_time_end'],-8);
             $union = new UnionLoabourModel();
             if(input('id')) {
                 $_POST['status'] = 1;
@@ -42,7 +46,7 @@ class UnionLoabour extends Admin
             }
 
             if ($result) {
-                $this->success('添加成功', url('UnionLoabour/index'));
+                $this->success('添加成功', url('Unionloabour/index'));
             } elseif ($result === 0) {
                 $this->error('没有更新内容');
             } else {
@@ -65,7 +69,7 @@ class UnionLoabour extends Admin
 
         if($result) {
 
-            return $this->success('删除成功', url('UnionLoabour/index'));
+            return $this->success('删除成功', url('Unionloabour/index'));
 
         } elseif(!$result) {
 
