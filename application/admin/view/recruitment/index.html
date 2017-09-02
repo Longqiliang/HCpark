@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </form>
-            <h2>服务信息 ({$list->total()})</h2>
+            <h2>企业招聘 ({$list->total()})</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
@@ -76,9 +76,14 @@
                 <tr>
                     <th></th>
                     <th>ID</th>
-                    <th>标题</th>
-                    <th>内容</th>
+                    <th>招聘职位</th>
+                    <th>公司名称</th>
                     <th>发布人</th>
+                    <th>学历要求</th>
+                    <th>工作经验</th>
+                    <th>招聘人数</th>
+                    <th>提供薪资</th>
+                    <th>招聘内容</th>
                     <th>状态</th>
                     <th>创建时间</th>
                 </tr>
@@ -97,9 +102,15 @@
                             <a href="{:Url('add','id='.$vo.id)}">{$vo.id}</a>
                         </div>
                     </td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.title}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,50}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.position}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.company}</a></td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.source}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.education}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.experience}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.number}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.wages}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,40}</a></td>
+
 
                     {eq name="$vo.status" value="1"}
                     <td><span class="label label-info">启用</span></td>
@@ -124,7 +135,7 @@
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script>
-    highlight_subnav("{:Url('ServiceInformation/index')}");
+    highlight_subnav("{:Url('Recruitment/index')}");
     $(document).ready(function(){
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',

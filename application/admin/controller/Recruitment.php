@@ -9,7 +9,7 @@ namespace app\admin\controller;
 
 use app\common\model\EnterpriseRecruitment as EnterpriseModel;
 
-class EnterpriseRecruitment extends Admin
+class Recruitment extends Admin
 {
     public function index()
     {
@@ -44,7 +44,7 @@ class EnterpriseRecruitment extends Admin
 
             if ($result) {
 
-                return $this->success('添加成功', url('EnterpriseRecruitment/index'));
+                return $this->success('添加成功', url('Recruitment/index'));
             } elseif ($result === 0) {
 
                 return  $this->error('没有更新内容');
@@ -64,7 +64,7 @@ class EnterpriseRecruitment extends Admin
         $ids = input('ids/a');
         $result = EnterpriseModel::where('id', 'in', $ids)->update(['status' => -1]);
         if($result) {
-            return $this->success('删除成功', url('EnterpriseRecruitment/index'));
+            return $this->success('删除成功', url('Recruitment/index'));
         } elseif(!$result) {
             return $this->error('删除失败');
         }

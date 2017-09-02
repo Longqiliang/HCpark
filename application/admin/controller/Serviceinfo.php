@@ -9,7 +9,7 @@ namespace app\admin\controller;
 
 use app\common\model\ServiceInformation as ServiceModel;
 
-class ServiceInformation extends Admin
+class Serviceinfo extends Admin
 {
     public function index()
     {
@@ -45,7 +45,7 @@ class ServiceInformation extends Admin
 
             if ($result) {
 
-                return $this->success('添加成功', url('ServiceInformation/index'));
+                return $this->success('添加成功', url('Serviceinfo/index'));
             } elseif ($result === 0) {
 
                 return  $this->error('没有更新内容');
@@ -65,7 +65,7 @@ class ServiceInformation extends Admin
         $ids = input('ids/a');
         $result = ServiceModel::where('id', 'in', $ids)->update(['status' => -1]);
         if($result) {
-            return $this->success('删除成功', url('ServiceInformation/index'));
+            return $this->success('删除成功', url('Serviceinfo/index'));
         } elseif(!$result) {
             return $this->error('删除失败');
         }
