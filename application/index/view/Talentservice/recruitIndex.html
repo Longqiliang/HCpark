@@ -211,9 +211,14 @@
         },
         methods:{
             toBlur(){
-                console.log('isBlur');
-                this.inputStatus=false;
-                this.inputValue=''
+                var the=this;
+                setTimeout(function () {
+                    if(!the.isSearch){
+                        console.log('isBlur');
+                        the.inputStatus=false;
+                        the.inputValue=''
+                    }
+                },100)
 
             },
             toSearch(){
