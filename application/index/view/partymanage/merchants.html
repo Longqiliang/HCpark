@@ -30,12 +30,51 @@
     }
 
 
+    /*my-log*/
+    .my-log li{
+        padding:1.7rem 4vw;
+        height:4.5rem;
+        border-bottom: 1px solid #f1f1f1;
+        display: -webkit-flex;
+        display: flex;
+    }
 
+    .my-log  .my-icon{
+        height:2.2rem;
+        width:2.2rem;
+        background: url('') no-repeat center center;
+        background-size: cover;
+        margin-right: 3.2vw;
+    }
+    .my-log  .my-icon-suc{
+        background-image: url('/index/images/partymanage/suc.png');
+    }
+    .my-log .my-icon-ing{
+        background-image: url('/index/images/partymanage/ing.png');
+    }
+    .my-log .my-icon-err{
+        background-image: url('/index/images/partymanage/err.png');
+    }
+    .my-log .my-list{
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .my-log .my-list>div:first-child{
+        color: #333;
+        font-size: 1.5rem;
+        line-height: 2.2rem;
+    }
+    .my-log .my-list>div:first-child>span:first-child{
+        margin-right: 1.5rem;
+    }
+    .my-log .my-list>div:last-child{
+        font-size: 1.2rem;
+        color: #999;
+    }
 
-
-
-
-    .my-content .contentShow{
+         .my-content .contentShow{
         display: block;
     }
 </style>
@@ -59,8 +98,17 @@
         <li class="product" :class="{'contentShow':isActive==2}">
             招商进度
         </li>
-        <li class="contact" :class="{'contentShow':isActive==3}">
-            工作日志
+        <li class="my-log" :class="{'contentShow':isActive==3}">
+            <ul>
+                <li v-for="n in 7">
+                    <span class="my-icon my-icon-suc"></span>
+                    <div class="my-list">
+                        <div><span>工作日志</span><span>立柱</span></div>
+                        <div><span>创建日期：</span><span>2017-7-7</span></div>
+
+                    </div>
+                </li>
+            </ul>
         </li>
     </ul>
 </div>
