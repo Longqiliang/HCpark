@@ -1,0 +1,185 @@
+{extend name="public/common"}
+
+{block name="style"}
+		<title>我要租房</title>
+		<style>
+			*{
+		box-sizing: border-box;
+	}
+	ul,li{
+		margin: 0;
+		padding: 0;
+	}
+	p,h3,h4{
+		font-weight: normal;
+		margin: 0 auto;
+	}
+	body{
+		background-color: #F8F7FC;
+		color: #333;
+	}
+	
+			.header{
+				height: 14.67vw;
+				position: relative;
+			}
+			.header-icon{
+				width: 5.86vw;
+				height: 5.86vw;
+				position: absolute;
+				right: 0;
+				top:50%;
+				-webkit-transform: translateY(-50%);
+				transform: translateY(-50%);
+				z-index: 3;
+				background-color: #999;
+				border-width: 1px 0 1px 0;
+				border-color: rgba(0,0,0,0.08);
+				border-style: solid;
+			}
+			.header-icon:after{
+				content: '';
+				width: 7.73vw;
+				height: 7.73vw;
+				position: absolute;
+				top:50%;
+				border-radius:50% ;
+				box-shadow: 0 0 2px rgba(0,0,0,0.18);
+				-webkit-transform: translateY(-50%);
+				transform: translateY(-50%);
+				left: -7vw;
+				z-index: 2;
+				background-color: #fff;
+			}
+			.header:after{
+				content: '';
+				position: absolute;
+				width: 100%;
+				bottom: 0;
+				height: 1px;
+				background-color: #E8E8E8;
+			}
+			.list{
+				display: flex;
+				flex-wrap: wrap;
+				padding:0 3.2vw 4vw;
+				justify-content: space-between;
+			}
+			.list-item{
+				width: 45.33vw;
+				margin-top: 4vw;
+				box-shadow: 0 0 4px rgba(0,0,0,0.1);
+			}
+			.list-item .item-img{
+				height: 32vw;
+				display: flex;
+				align-items: center;
+			}
+			.list-item .item-img img{
+				width: 100%;
+				height: 100%;
+				display: block;
+			}
+			.list-item .item-info {
+				padding: 4vw 2.67vw;
+			}
+			.item-info h3{
+				font-size: 1.6rem;
+				line-height: 1.375;
+			}
+			.item-info p{
+				padding-top: 2.67vw;
+				font-size: 1.3rem;
+				line-height: 1.4;
+			}
+			.info-detail{
+				color: #52CC92 ;
+				padding-top: 2.67vw;
+				font-size: 1.2rem;
+				line-height: 1.4;
+				display: flex;
+				justify-content: space-between;
+			}
+		</style>
+{/block}
+
+{block name="body"}
+		<div class="content" id="app">
+			<div class="header">
+				<div class="header-icon"></div>
+			</div>
+			<ul class="list">
+				<li class="list-item">
+					<div class="item-img">
+						<img src="img/QYSB.PNG"  />
+					</div>
+					<div class="item-info">
+						<h3>A幢233室</h3>
+						<p>希垦科技园</p>
+						<div class="info-detail">
+							<span>480㎡</span>
+							<span>2元/㎡·天</span>
+						</div>
+					</div>
+				</li>
+				<li class="list-item">
+					<div class="item-img">
+						<img src="img/QYSB.PNG"  />
+					</div>
+					<div class="item-info">
+						<h3>A幢233室</h3>
+						<p>希垦科技园</p>
+						<div class="info-detail">
+							<span>480㎡</span>
+							<span>2元/㎡·天</span>
+						</div>
+					</div>
+				</li>
+				<li class="list-item">
+					<div class="item-img">
+						<img src="img/QYSB.PNG"  />
+					</div>
+					<div class="item-info">
+						<h3>A幢233室</h3>
+						<p>希垦科技园</p>
+						<div class="info-detail">
+							<span>480㎡</span>
+							<span>2元/㎡·天</span>
+						</div>
+					</div>
+				</li>
+				<li class="list-item">
+					<div class="item-img">
+						<img src="img/QYSB.PNG"  />
+					</div>
+					<div class="item-info">
+						<h3>A幢233室</h3>
+						<p>希垦科技园</p>
+						<div class="info-detail">
+							<span>480㎡</span>
+							<span>2元/㎡·天</span>
+						</div>
+					</div>
+				</li>
+				<li class="list-item">
+					<div class="item-img">
+						<img src="img/QYSB.PNG"  />
+					</div>
+					<div class="item-info">
+						<h3>A幢233室</h3>
+						<p>希垦科技园</p>
+						<div class="info-detail">
+							<span>480㎡</span>
+							<span>2元/㎡·天</span>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+{/block}
+
+{block name="script"}		
+		<script type="text/javascript">
+			
+		</script>
+{/block}
