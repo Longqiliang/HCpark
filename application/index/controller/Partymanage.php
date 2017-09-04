@@ -157,9 +157,7 @@ class Partymanage extends Base
         $userid = session('userId');
         $weuser = new WechatUser();
         $mCompany = new MerchantsCompany();
-        $mRecord = new MerchantsRecord();
         $mDiary = new MerchantsDiary();
-        $mPlan = new MerchantsPlan();
         $park_id = input('park_id');
         $user = $weuser->where('userid', $userid)->find();
         $is_boss = $user['tagid'] == 1 ? "yes" : "no";
@@ -188,7 +186,6 @@ class Partymanage extends Base
                     }
                 }
             }
-
             //个人统计
             if ($park_id == 1) {
                 $map = [
@@ -200,10 +197,7 @@ class Partymanage extends Base
                     'park_id' => $park_id
                 ];
             }
-
             $merchantUser = $weuser->where($map)->select();
-            $this->assign('personal_statistics', $merchantUser);
-
             $merchantUserid = array();
             foreach ($merchantUser as $value) {
                 array_push($merchantUserid, $value['userid']);
@@ -217,8 +211,6 @@ class Partymanage extends Base
             foreach ($diaryList as $value) {
                 $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
             }
-
-
         } else {
             //工作日志
             $diaryList = $mDiary->where('user_id', $userid)->order('create_time desc')->select();
@@ -235,18 +227,33 @@ class Partymanage extends Base
                 }
 
             }
+
             //TODO 招商人员的 个人统计
+            $date_str = date('Y-m-d', time());
+            //封装成数组
+            $arr = explode("-", $date_str);
+            //参数赋值
+            //年
+            $year = $arr[0];
+            //月，输出2位整型，不够2位右对齐
+            $month = sprintf('%02d', $arr[1]);
+            $personal = $this->statisticsCommon($userid, $year, $month);
 
         }
-
+        $personallist = isset($merchantUser) ? $merchantUser : "";
+        $personalinfo = isset($personal) ? $personal : "";
         //招商进度
         $this->assign('undone', json_encode($doing));
         $this->assign('finish', json_encode($finish));
         //工作日志
-        $this->assign('diaryList', $diaryList);
+        $this->assign('diaryList', json_encode($diaryList));
         //招商统计
         $this->assign('undone_num', count($doing));
-        $this->assign('finish', count($finish));
+        $this->assign('finish_num', count($finish));
+        //招商个人统计(个人)
+        $this->assign('personalinfo', $personalinfo);
+        //招商个人统计（领导）
+        $this->assign('personallist', json_encode($personallist));
         return $this->fetch();
     }
 
@@ -259,22 +266,93 @@ class Partymanage extends Base
         $Company = $mCompany->where('id', $id)->find();
         $Record = $mRecord->where('merchants_id', $id)->order('create_time')->select();
         $this->assign('company', $Company);
-        $this->assign('records', $Record);
+        $this->assign('records', json_encode($Record));
         return $this->fetch();
 
     }
-    //个人统计
-    public function personalStats()
+
+    //个人统计详情获取数据的公共方法
+    public function statisticsCommon($user_id, $year, $month)
     {
-        return $this->fetch();
+        $mDiary = new MerchantsDiary();
+        $mPlan = new MerchantsPlan();
+        $mCompany = new MerchantsCompany();
+        //年
+        if (empty($month)) {
+            $begindate = mktime(0, 0, 0, 1, 1, $year);
+            $enddate = mktime(0, 0, 0, 1, 1, $year + 1) - 1;
+
+        } //月
+        else {
+            $begindate = mktime(0, 0, 0, $month, 1, $year);
+            $enddate = mktime(0, 0, 0, $month + 1, 1, $year) - 1;
+        }
+        //招商日志填报情况
+        $days = ceil(abs($enddate - $begindate) / 86400);
+        $map['user_id'] = $user_id;
+        $map = ['create_time' => array('between', array($begindate, $enddate))];
+        $myDiary = $mDiary->where($map)->select();
+        $diary_num = array();
+        foreach ($myDiary as $value) {
+            $value['create_time'] = date('Y-m-d', $value['create_time']);
+            array_push($diary_num, $value['create_time']);
+        }
+        $num = count(array_values(array_unique($diary_num)));
+        unset($map['create_time']);
+        $map['time'] = array('between', array($begindate, $enddate));
+        $list = $mPlan->where($map)->select();
+        //招商计划回款
+        $price = 0;
+        //招商计划面积
+        $area = 0;
+        foreach ($list as $value) {
+            $area += $value['plan_area'];
+            $price += $value['plan_price'];
+        }
+        unset($map['time']);
+        $map['update_time'] = array('between', array($begindate, $enddate));
+        $list2 = $mCompany->where($map)->select();
+        //招商实际回款
+        $finish_price = 0;
+        //招商实际面积
+        $finish_area = 0;
+        foreach ($list2 as $value) {
+            $finish_area += $value['merchants_area'];
+            $finish_price += $value['merchants_price'];
+        }
+        $data = [
+            'total' => $days,
+            'dairy_num' => $num,
+            'price' => $price,
+            'area' => $area,
+            'finish_price' => $finish_price,
+            'finish_area' => $finish_area
+        ];
+        return $data;
     }
 
-    //个人统计详情
-    public function statisticsInfo($user_id)
+    //招商个人统计
+    public function statisticsInfo()
     {
+        $userid = session('userId');
+        if (IS_POST) {
+            $year = input('year');
+            $month = input('month');
+        }
+        if (empty($year)) {
+            $date_str = date('Y-m-d', time());
+            //封装成数组
+            $arr = explode("-", $date_str);
+            //参数赋值
+            //年
+            $year = $arr[0];
+            //月，输出2位整型，不够2位右对齐
+            $month = sprintf('%02d', $arr[1]);
+        }
+        $personalinfo = $this->statisticsCommon($userid, $year, $month);
+        $this->assign('personalinfo', $personalinfo);
+        return $this->fetch();
 
-
-        $this->fetch();
     }
 
 
@@ -288,6 +366,25 @@ class Partymanage extends Base
         $this->assign('info', $info);
         return $this->fetch();
 
+    }
+
+    public function writeDiary()
+    {
+        $user_id = session('userId');
+        $mDiary = new MerchantsDiary();
+        if (IS_POST) {
+            $data = input('');
+            $data['user_id'] = $user_id;
+            $reult = $mDiary->save($data);
+            if ($reult) {
+                return $this->success("yes");
+            } else {
+                return $this->error("no");
+            }
+
+        }
+
+        return $this->fetch();
     }
 
 
