@@ -14,12 +14,13 @@ class Parkprofile extends Base
 /*园区简介，前台加判断，如果没有全景图片，就不显示*/
     public function index(){
         //取线上url的park_id，先写死；
-        $parkid = input('3');
+        $parkid = input('park_id',3);
         $map=array(
             'id'=>$parkid,
         );
 
         $info = Park::where($map)->field('panorama_cover,panorama_link,content')->find();
+
         $this->assign('info',json_encode($info));
         return $this->fetch();
     }
