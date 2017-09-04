@@ -64,7 +64,7 @@
                     <div class="form-group"><label class="col-sm-2 control-label">状态:</label>
                         <div class="col-sm-10">
                             <label class="checkbox-inline i-checks">
-                                启用&nbsp;<input type="radio" value="1" name="status" {notpresent name="res.status"}checked{/notpresent} {eq  name="res.status"  value="1"}checked{/eq}>　
+                                启用&nbsp;<input type="radio" value="1" class="status1" name="status" {notpresent name="res.status"}checked{/notpresent} {eq  name="res.status"  value="1"}checked{/eq}>　
                             </label>
                             <label class="checkbox-inline i-checks">
                                 禁用&nbsp;<input type="radio" value="0" name="status" {eq  name="res.status"  value="0"}checked{/eq}>
@@ -73,28 +73,46 @@
                         </div>
                     </div>
 
-                    <label class="col-sm-2 control-label">状态:</label>
-                    <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
-                        <div class="summernote col-sm-10">{$res.content}</div>
-                        <div class="clearfix"></div>
+
+                    <label class="col-sm-2 control-label">职位描述:</label>
+                    <div class="col-md-10 column">
+                        <div class="mail-text h-200" style="border:1px #888888 solid" >
+                            <div class="summernote" >{$res.content}</div>
+                            <div class="clearfix"></div>
+                            <input type="hidden" name="content">
+                            <input type="hidden" name="id" value="{$res.id}">
+                        </div>
+                        <sapn style="height:40px;display: block" >
+                        </sapn>
+                    </div>
+                    <label class="col-sm-2 control-label">联系方式:</label>
+                    <div class="col-md-10 column">
+                        <div class="mail-text h-200" style="border:1px #888888 solid">
+                            <div id="summernote" id="aboutus">{$res.contact}</div>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
 
-                    <div class="mail-body text-right tooltip-demo">
 
-                        <button url="{:Url('add')}{notempty name='$pageType'}?page_type=1{/notempty}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
-                                data-toggle="tooltip" data-placement="top" data-edit="content">
-                            <i class="fa fa-reply"></i> 添加
-                        </button>
+
+                    <div class="col-md-12 column "><br>
+                        <a href="{:Url('index')}" class="btn btn-white btn-sm" style="float:right ;margin-left:5px ;" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                        <a class="btn btn-sm btn-primary " style="float:right" onclick="companyMobile()"><i class="fa fa-reply"></i>&nbsp;发送</a>
+
+                    </div>
                         <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
                         <!--target-form="form-horizontal" data-edit="content">-->
                         <!--<i class="fa fa-pencil"></i> 保存草稿-->
                         <!--</button>-->
                         <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
                     </div>
+
                     <div class="clearfix"></div>
                     <input type="hidden" name="id" value="{$res.id}">
                     <input type="hidden" name="content" class="to_hiden" value="">
-                </div>
+
+
+
             </form>
 
         </div>
@@ -119,7 +137,17 @@
             minHeight: 210,
             callbacks: {
                 onImageUpload: function (files) { //the onImageUpload API
-                    img = sendFile(files[0]);
+                    img = sendFile(files[0],1);
+                }
+            }
+        });
+        $('#summernote').summernote({
+            lang: 'zh-CN',
+            height: 300,
+            minHeight: 210,
+            callbacks: {
+                onImageUpload: function (files) { //the onImageUpload API
+                    img = sendFile(files[0],2);
                 }
             }
         });
@@ -144,6 +172,36 @@
 
     });
 
+    /*添加企业信息*/
+    function companyMobile(){
+
+
+        var position = $("[name='position']").val();
+        var company = $("[name='company']").val();
+        var source = $("[name='source']").val();
+        var education = $("[name='education']").val();
+        var experience = $("[name='experience']").val();
+        var number = $("[name='number']").val();
+        var wages = $("[name='wages']").val();
+        var status = $("input[name='status']:checked").val();
+        var  contact=$('#summernote').summernote('code');
+        var contents =$('.summernote').summernote('code');
+        $.ajax({
+            type:"POST",
+            url:"{:Url('Recruitment/add')}",
+            data:{id:'{$res.id}',company:company,position:position,source:source,education:education,experience:experience,number:number,wages:wages,status:status,content:contents,contact:contact},
+            success:function (data) {
+                if(data.code==1){
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },3000);
+                }else {
+                    updateAlert(data.msg,"error");
+                }
+            }
+        });
+    }
 
 
     highlight_subnav("{:Url('Recruitment/index')}");

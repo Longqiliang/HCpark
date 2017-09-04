@@ -20,7 +20,7 @@ class EnterpriseRecruitment extends Validate
         'number' => 'require',
         'wages' => 'require',
         'content' => 'require|min:12',
-
+        'contact' => 'require|min:12',
     ];
 
     protected $message = [
@@ -31,6 +31,7 @@ class EnterpriseRecruitment extends Validate
         'experience.require' => '工作经验必须添加',
         'number.require' => '招聘人数必须添加',
         'wages.require' => '提供薪资必须添加',
-        'content.min' => '招聘内容必须添加',
+        'content.min' => '职位描述必须添加',
+        'contact.min' => '联系方式必须添加',
     ];
 }
