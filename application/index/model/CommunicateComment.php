@@ -27,6 +27,6 @@ class CommunicateComment extends  Model
     public  function  CommunicatePost(){
 
 
-        return $this->hasOne('CommunicatePosts','id','target_name');
+        return $this->hasOne('CommunicatePosts','id','target_id');
     }
 }
