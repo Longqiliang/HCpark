@@ -32,15 +32,88 @@
         border-bottom: 2px solid #69b9f9;
     }
 
+    .my-tabs{
+        display: -webkit-flex;
+        display: flex;
+        background: #fff;
+        border:1px solid #69b9f9;
+        color: #0A96E6;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .my-tabs1{
+        margin:1rem auto;
+        width:20rem;
+        height:2.8rem;
+        font-size: 1.4rem;
+        line-height: 2.8rem;
+    }
+    .my-tabs>li{
+        width:50%;
+        height:100%;
+        text-align: center;
+    }
+    .my-tabs>li:not(:last-child){
+        border-right: 1px solid #69b9f9;
+    }
+    .my-tabs>li.my-active{
+        background-color: #69b9f9;
+        color: #ffffff;
+    }
+
     /*内容*/
     .my-content>li{
+        position: relative;
         display: none;
+    }
+    .my-box>li{
+        border-bottom: 5px solid #f1f1f1;
+    }
+    .my-chart{
+        padding:3.2vw;
+    }
+
+    .my-charts{
+        width:100%;
+        height:22rem;
+    }
+    .my-chart > .my-title{
+        font-size: 1.4rem;
+        font-weight: bold;
     }
     .my-charts{
         padding:3.2vw;
     }
 
 
+    /*personal*/
+    .my-personal>li{
+        padding: 1.2rem 0 1.2rem 4vw ;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        background-color: #fff;
+    }
+    .my-personal>li>img{
+        height:3rem;
+        width:3rem;
+        border:1px solid #f1f1f1;
+        margin-right: 1.9rem;
+    }
+    .my-personal>li>div{
+        line-height: 3rem;
+        color: #333;
+        flex-grow:1;
+        border-bottom: 1px solid #f1f1f1;
+        padding:0 1.5rem 0 0;
+        display: flex;
+        justify-content: space-between;
+    }
+    .my-personal>li>div>span:last-child{
+        color: #999;
+    }
     /*my-log*/
     .my-log li{
         padding:1.7rem 4vw;
@@ -85,7 +158,9 @@
         color: #999;
     }
 
-         .my-content .contentShow{
+    .my-content .contentShow{
+        border-top: 1px solid transparent;
+        margin-top: -1px;
         display: block;
     }
 
@@ -160,6 +235,28 @@
         text-align: center;
         font-size: 1.4rem;
     }
+    .searchList{
+        width:100%;
+        min-height:100vh;
+        position: absolute;
+        top:0;
+        left:0;
+    }
+    .searchList>li{
+        margin-bottom: 0;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .bgWhite{
+        background-color: rgba(0,0,0,0.5);
+    }
+    .searchList>li:first-child{
+        margin-top: 4.8rem;
+    }
+
+    .rate .searchList.my-list{
+        margin-top: 5rem;
+    }
+
     .my-list{
         padding:0.8rem 2.133vw;
     }
@@ -236,26 +333,92 @@
 {block name="body"}
 <div id="app">
     <ul class="my-nav">
-        <li :class="{active:isActive==0}" @click="changeTab(0)">招商统计</li>
+        <li :class="{active:isActive==0}" @click="changeTab(0)" v-if="is_boss=='yes'">招商统计</li>
         <li :class="{active:isActive==1}" @click="changeTab(1)">个人统计</li>
         <li :class="{active:isActive==2}" @click="changeTab(2)">招商进度</li>
         <li :class="{active:isActive==3}" @click="changeTab(3)">工作日志</li>
     </ul>
     <ul class="my-content">
+        <!--招商统计-->
         <li class="merchants" :class="{'contentShow':isActive==0}">
-            <div class="my-charts"></div>
+            <ul class="my-box">
+                <li class="my-chart">
+                    <div class="my-title">企业统计</div>
+                    <div id="types" class="my-charts"></div>
+                </li>
+                <li class="my-chart">
+                    <div class="my-title">企业统计</div>
+                    <div id="will" class="my-charts"></div>
+                    <div id="finish" class="my-charts"></div>
+                </li>
+            </ul>
         </li>
-        <li class="service" :class="{'contentShow':isActive==1}">
-            <div class="search" :class="{isClick:inputStatus}" >
-                <div class="searchBox" @click="isClick">
-                    <div class="searchText"><span class="searchText_c">请在此搜索人员</span></div>
-                    <input type="text" v-model="inputValue" class="searchInput" placeholder="请输入姓名" v-focus="inputStatus" v-on:blur="toBlur">
+        <!--个人统计-->
+        <li class="" :class="{'contentShow':isActive==1}">
+            <iframe src="/index/partymanage/personalStats" id="personalStats" frameborder="0" scrolling="no" width="100%" height="100%" onload="setIframeHeight(this)"></iframe>
+            <div v-if="is_boss=='no'">
+                <div class="search" :class="{isClick:inputStatus}" >
+                        <div class="searchBox" @click="isClick">
+                            <div class="searchText"><span class="searchText_c">请在此搜索姓名</span></div>
+                            <input type="text" v-model="inputValue" @keyup="toSearch(0)" class="searchInput" placeholder="请输入姓名" v-focus="inputStatus">
+                        </div>
+                        <div class="unBtn" @click="isCancel">取消</div>
                 </div>
-                <div class="unBtn" v-if="inputValue" @click="toSearch">搜索</div>
-                <div class="unBtn" v-if="!inputValue" @click="isCancel">取消</div>
+                <ul class="my-personal" >
+                    <li v-for="item in article">
+                        <img src="" alt="">
+                        <div>
+                            <span>沙瓦蒂卡</span><span>❯</span>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="searchList my-personal" :class="{bgWhite:inputStatus}" v-if="inputStatus">
+                    <li v-for="item in searchList">
+                        <img :src="item.path" alt="">
+                        <div>
+                            <span>{{item.name}}</span><span>❯</span>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <ul class="my-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
-                <li v-for="item in article">
+        </li>
+        <!--招商进度-->
+        <li class="rate" :class="{'contentShow':isActive==2}">
+            <ul class="my-tabs my-tabs1">
+                <li :class="{'my-active':rateActive==0}" @click="changeRateTab(0)">招商中</li>
+                <li :class="{'my-active':rateActive==1}" @click="changeRateTab(1)">已完成</li>
+            </ul>
+            <div class="search" :class="{isClick:inputStatus}">
+                <div class="searchBox" @click="isClick">
+                    <div class="searchText"><span class="searchText_c">请在此搜索姓名</span></div>
+                    <input type="text" v-model="inputValue" @keyup="toSearch(1)"  class="searchInput" placeholder="请输入姓名" v-focus="inputStatus">
+                </div>
+                <div class="unBtn" @click="isCancel">取消</div>
+            </div>
+            <div  v-if="rateActive==0">
+                <ul class="my-list" >
+                    <li v-for="item in undone">
+                        <div class="content-box">
+                            <div class="my-job"><span>{{item.company}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
+                        </div>
+                        <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
+                    </li>
+                </ul>
+            </div>
+            <div  v-if="rateActive==1">
+                <ul class="my-list">
+                    <li v-for="item in finish">
+                        <div class="content-box">
+                            <div class="my-job"><span>{{item.company}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
+                        </div>
+                        <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="searchList my-list" :class="{bgWhite:inputStatus}" v-if="inputStatus">
+                <li v-for="item in searchList">
                     <div class="content-box">
                         <div class="my-job"><span>{{item.job}}</span></div>
                         <div class="my-demand"><span>{{item.num}}</span></div>
@@ -263,91 +426,36 @@
                     <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
                 </li>
             </ul>
-            <div class="my-footer">
-                <span v-if="canLoad && !loading">下拉加载更多</span>
-                <span v-if="!canLoad">没有更多啦！</span>
-                <div   v-if="canLoad && loading">
-                    <mt-spinner :type="3"></mt-spinner>加载中...
-                </div>
-            </div>
-        </li>
-        <!--招商进度-->
-        <li class="product" :class="{'contentShow':isActive==2}">
-            <div class="search" :class="{isClick:inputStatus}" >
-                <div class="searchBox" @click="isClick">
-                    <div class="searchText"><span class="searchText_c">请在此搜索公司</span></div>
-                    <input type="text" v-model="inputValue" class="searchInput" placeholder="请输入公司名" v-focus="inputStatus" v-on:blur="toBlur">
-                </div>
-                <div class="unBtn" v-if="inputValue" @click="toSearch">搜索</div>
-                <div class="unBtn" v-if="!inputValue" @click="isCancel">取消</div>
-            </div>
-            <ul class="my-nav my-rate-nav">
-                <li :class="{active:rateActive==0}" @click="changeRateTab(0)">招商中</li>
-                <li :class="{active:rateActive==1}" @click="changeRateTab(1)">已完成</li>
-            </ul>
-            <div  v-if="rateActive==0">
-                <ul class="my-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
-                    <li v-for="item in article">
-                        <div class="content-box">
-                            <div class="my-job"><span>{{item.job}}</span></div>
-                            <div class="my-demand"><span>{{item.num}}</span></div>
-                        </div>
-                        <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
-                    </li>
-                </ul>
-                <div class="my-footer">
-                    <span v-if="canLoad && !loading">下拉加载更多</span>
-                    <span v-if="!canLoad">没有更多啦！</span>
-                    <div   v-if="canLoad && loading">
-                        <mt-spinner :type="3"></mt-spinner>加载中...
-                    </div>
-                </div>
-            </div>
-            <div  v-if="rateActive==1">
-                <ul class="my-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
-                    <li v-for="item in article">
-                        <div class="content-box">
-                            <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.num}}</span></div>
-                        </div>
-                        <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
-                    </li>
-                </ul>
-                <div class="my-footer">
-                    <span v-if="canLoad && !loading">下拉加载更多</span>
-                    <span v-if="!canLoad">没有更多啦！</span>
-                    <div   v-if="canLoad && loading">
-                        <mt-spinner :type="3"></mt-spinner>加载中...
-                    </div>
-                </div>
-            </div>
         </li>
         <!--工作日志-->
         <li class="my-log" :class="{'contentShow':isActive==3}">
-            <ul  v-infinite-scroll="loadMore(logLoading,logCanLoad,'index/partymanage/',log)" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
-                <li v-for="item in log" >
+            <ul>
+                <li v-for="item in diaryList" >
                     <span class="my-icon my-icon-suc"></span>
                     <div class="my-list">
-                        <div><span>工作日志</span><span>立柱</span></div>
-                        <div><span>创建日期：</span><span>2017-7-7</span></div>
+                        <div><span>工作日志</span><span>{{item.content}}</span></div>
+                        <div><span>创建日期：</span><span>{{item.create_time}}</span></div>
                     </div>
+                    <a :href="'/index/partymanage/logdetail/id'+item.id"></a>
                 </li>
             </ul>
-            <div class="my-footer">
-                <p v-if="log.length==0">暂无信息</p>
-                <span v-if="!logCanLoad && log.length>0">没有更多了</span>
-                <span v-if="logCanLoad && logLoading">下拉加载更多</span>
-                <div  v-if="logLoading">
-                    <mt-spinner :type="3"></mt-spinner>加载中...
-                </div>
-            </div>
         </li>
     </ul>
 </div>
 {/block}
 
 {block name="script"}
+<script src="/static/echarts/echarts.min.1.js"></script>
+
 <script>
+   function setIframeHeight(iframe) {
+        if (iframe) {
+            var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+            if (iframeWin.document.body) {
+                iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+            }
+        }
+    };
     Vue.directive('focus', {
         // When the bound element is inserted into the DOM...
         update: function (el,value) {
@@ -360,10 +468,55 @@
     var app = new Vue({
         el:'#app',
         data:{
-            logLoading:false,
-            logCanLoad:'',
+            is_boss:'{$is_boss}',
+            types:{
+                id:'types',
+                title:100+'家',
+                subtext:"企业总数",
+                label: '{c|{c}家}\n{d|{d}%}',
+                color:['#6DC98F','#68D1CB','#ff8866'],
+                legend:['意向招商','完成招商'],
+                data:[
+                    {value:{$undone_num}, name:'意向招商'},
+                    {value:{$finish_num}, name:'完成招商'}
+                ]
+            },
+            will:{
+                id:'will',
+                legend:{
+                    name:'意向招商'
+                },
+                series:{
+                    name:'意向招商'
+                },
+                color:['#6DC98F'],
+                data:[80,50,60,20,30,40,70,90,11,5,88,5]
+            },
+            finish1:{
+                id:'finish',
+                legend:{
+                    name:'完成招商'
+                },
+                series:{
+                    name:'完成招商'
+                },
+                color:['#68D1CB'],
+                data:[30,40,70,90,50,15,88,50,80,50,60,20]
+            },
+//            工作日志
+            diaryList:{$diaryList},
+//            招商统计
+            finish_num:{$finish_num},
+            undone_num:{$undone_num},
+            //招商进度
+            undone:{$undone},
+            finish:{$finish},
+
+            searchList:[],
+
             log:[],
             isActive:0,
+
 
             rateActive:0,
             inputStatus:false,
@@ -377,12 +530,24 @@
             ]
         },
         mounted(){
+            console.log(this.diaryList)
+            this.drawPie(this.types);
+            this.drawLine(this.will);
+            this.drawLine(this.finish1);
+//                this.setIframeHeight(document.getElementById('personalStats'));
         },
         methods:{
+
+
+
 //            切换tab
             changeTab(value){
                 if(value!=this.isActive){
                     this.isActive=value;
+                    if(this.inputStatus){
+                        this.inputStatus=false;
+                        this.inputValue='';
+                    }
                 }
             },
             changeRateTab(value){
@@ -392,6 +557,171 @@
             },
             jumpTo(id){
                 window.location.href='/index/enterprise/product/id/'+id
+            },
+            drawLine(data){
+                var myChart = echarts.init(document.getElementById(data.id));
+                var option=
+                {
+
+                    tooltip:{
+                        show:true,
+                        tigger:'axis',
+                        formatter: '{b}月:{c}家'
+                    },
+                    legend:{
+                        show:true,
+                        type:'plain',
+                        top:10,
+                        left:10,
+                        data:[
+                            {
+                                name:data.legend.name,
+                                icon:'roundRect',
+                                textStyle:{
+                                    fontSize:14
+                                }
+                            }
+                        ]
+                    },
+                    axisPointer:{show:true},
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap : false,
+                        axisLine:{
+                            lineStyle:{
+                                color:'#999'
+                            },
+                        },
+                        data: [1,2,3,4,5,6,7,8,9,10,11,12]
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLine:{
+                            lineStyle:{
+                                color:'#999'
+                            },
+                        },
+
+                    },
+                    color:data.color,
+                    series: [
+                        {
+                            name:data.series.name,
+                            type:'line',
+                            smooth:true,
+                            symbol: 'circle',//标记点的样式
+                            sampling: 'average',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'top'
+                                }
+                            },
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: data.color
+                                    }, {
+                                        offset: 1,
+                                        color: '#fff',
+                                    }])
+                                }
+                            },
+                            data: data.data
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+
+
+            },
+            drawPie(data){
+                var myChart = echarts.init(document.getElementById(data.id));
+                var option = {
+                    title:{
+                        show:true,
+                        text: data.title,
+                        subtext: data.subtext,
+                        textStyle:{
+                            fontSize:14,
+                            color:'#299FE8',
+                        },
+                        subtextStyle:{
+                            color:'#999',
+                            align:'center'
+                        },
+                        left: 'center',
+                        top:'92'
+                    },
+                    legend: {
+                        orient: 'horizontal',
+                        left:'center',
+                        bottom:0,
+                        data:data.legend
+                    },
+                    color:data.color,
+                    calculable: true,
+                    series: [
+                        {
+                            name:'园区面积',
+                            type:'pie',
+                            radius: ['45', '70'],
+                            center:['50%',100],
+                            avoidLabelOverlap: false,
+                            hoverAnimation:false,//取消hover动画
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: data.label,
+                                    rich:{
+                                        d:{
+                                            align:'center',
+                                            padding:2,
+                                            color:'#999'
+
+                                        },
+                                        c:{
+                                            align:'center',
+                                            padding:[2,0],
+                                        }
+                                    }
+                                },
+                                emphasis: {
+                                    show: true,
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: true,
+                                    length:15,
+                                    length2:5
+                                }
+                            },
+                            data:data.data
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            },
+            toSearch:function (list) {
+                console.log(list)
+                if(list===0){
+                    let list=this.finish_num
+                }else{
+                    let list=this.undone_num
+                }
+                let reg=new RegExp(this.inputValue);
+                this.searchList=[];
+                if(!this.inputValue){
+                    this.searchList=[];
+                }else{
+                    for(let i=0;i<list.length;i++){
+                        if(reg.test(list[i].name)){
+                            this.searchList.push(list[i])
+                        }
+                    }
+                }
             },
             toBlur(){
                 var the=this;
@@ -403,62 +733,12 @@
                     }
                 },100)
             },
-            toSearch(api,list,canLoad){
-                if(!this.isSearch){
-                    this.isSearch=true
-                    console.log('正在搜索');
-                    var data={
-                        input:this.inputValue
-                    }
-                    this.$indicator.open({
-                        text: '加载中...',
-                        spinnerType: 'fading-circle'
-                    });
-                    this.$http.post(api,data).then(function (res) {
-                        this.$indicator.close();
-                        this.isSearch=false
-                        for(var i=0;i<res.data.length;i++){
-                           list.push(res.data[i])
-                        }
-                        if(res.data.length>=6){
-                            canLoad=true
-                        }
-                    },function (res) {
-                        this.$indicator.close();
-                        this.isSearch=false;
-                        this.$toast('加载失败，请重试')
-                    })
-                }
-            },
             isClick:function () {
                 this.inputStatus=true;
             },
             isCancel:function () {
                 this.inputStatus=false;
                 this.inputValue=''
-            },
-
-//
-
-            loadMore(loading,canLoad,api,list){
-                if((!loading) && canLoad ){
-                    this.loading = true;
-                    this.$http.post(api,{length:list.length}).then(function (res) {
-                        if(res.data.code!=0){
-                            for(var i=0;i<res.data.data.length;i++){
-                                list.push(res.data.data[i])
-                            }
-                            loading = false;
-                        }else{
-                            loading = false;
-                            canLoad=false;
-                        }
-                    },function (res) {
-                        loading = false;
-
-                    })
-                    loading = false;
-                }
             },
         }
     })

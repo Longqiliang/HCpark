@@ -34,7 +34,7 @@ class Talentservice extends Base
     public function detail(){
         $id = input('id');
         $info = EnterpriseModel::where('id',$id)->find();
-        $this->assign('info', $info);
+        $this->assign('info', json_encode($info));
         return $this->fetch();
     }
 
@@ -70,7 +70,7 @@ class Talentservice extends Base
 
         if ($list){
 
-            return json(['code' => 1, 'data' => json_encode($list)]);
+            return json(['code' => 1, 'data' => $list]);
         }else{
 
             return json(['code' => 0, 'msg' =>"没有更多内容了"]);
