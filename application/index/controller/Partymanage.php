@@ -2,6 +2,7 @@
 
 namespace app\index\controller;
 
+use app\common\model\ParkRoom;
 use app\index\model\WechatUser;
 use think\Controller;
 use wechat\TPWechat;
@@ -474,8 +475,45 @@ class Partymanage extends Base
             $this->error(['code' => 0, 'data' => "没有更多了"]);
         }
 
-
     }
 
+    /*企业楼房表*/
+    public function compamyFloor(){
+        $parkId = session('park_id');
+        $parkRoom = new ParkRoom();
+        $map = [
+            'park_id'=>$parkId,
+        ];
+        $list = $parkRoom->distinct(true)->field('floor')->select();
+        foreach($list as $k=>$v){
+            $floor[$k] = $v['floor'];
+        }
+        foreach( $floor as $k=>$v){
+            $roomList = $parkRoom->where('floor',$v)->select();
+            foreach($roomList as $k1=>$v1){
+                if ($v1['company_id']){
+                    $v1['company_id'] = false;
+                }else{
+                    $v1['company_id'] = true;
+                }
+                $roomArray[$k][$k1] = ['room'=>$v1['room'],'empty'=>$v1['company_id']];
+            }
+
+        }
+        foreach($floor as $k=>$v){
+            $newArr[$k]['floor'] = $v;
+            $newArr[$k]['rooms'] = $roomArray[$k];
+        }
+
+        $this->assign('list',json_encode($newArr));
+        echo json_encode($newArr);
+       // return $this->fetch();
+
+
+
+
+
+
+    }
 
 }

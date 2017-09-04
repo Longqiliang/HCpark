@@ -11,7 +11,6 @@ namespace app\index\controller;
 
 use app\common\model\PartyComment;
 use app\common\model\UnionComment;
-use function GuzzleHttp\Psr7\str;
 use think\Controller;
 use think\Loader;
 use wechat\TPWechat;

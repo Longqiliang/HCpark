@@ -12,12 +12,12 @@ class ParkRoom extends Validate{
     protected $rule = [
         'floor'  =>  'require',
         'room' => 'require',
-        'company_id' =>  'require',
+
     ];
 
     protected $message = [
         'floor.require' => '楼层必须添加',
         'room.require' => '房间号必须添加',
-        'company_id' => '企业必须添加',
+
     ];
 }
