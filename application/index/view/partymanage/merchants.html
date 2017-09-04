@@ -116,6 +116,7 @@
     }
     /*my-log*/
     .my-log li{
+        box-sizing:content-box;
         padding:1.7rem 4vw;
         height:4.5rem;
         border-bottom: 1px solid #f1f1f1;
@@ -140,6 +141,7 @@
         background-image: url('/index/images/partymanage/err.png');
     }
     .my-log .my-list{
+        padding:0;
         display: -webkit-flex;
         display: flex;
         flex-direction: column;
@@ -355,7 +357,7 @@
         </li>
         <!--个人统计-->
         <li class="" :class="{'contentShow':isActive==1}">
-            <iframe src="/index/partymanage/personalStats" id="personalStats" frameborder="0" scrolling="no" width="100%" height="100%" onload="setIframeHeight(this)"></iframe>
+            <iframe src="/index/partymanage/statisticsInfo" id="personalStats" frameborder="0" scrolling="no" width="100%" height="100%" onload="setIframeHeight(this)"></iframe>
             <div v-if="is_boss=='no'">
                 <div class="search" :class="{isClick:inputStatus}" >
                         <div class="searchBox" @click="isClick">
@@ -528,6 +530,15 @@
             article:[
                 {job:'销售经理',salary:'7K-10K',company:'杭州天隽科技有限公司',num:'1',time:'3年以上',student:'本科',id:1}
             ]
+        },
+        computed:{
+            isActive(){
+                if(this.is_boss=='yes'){
+                    return 0;
+                }else{
+                    return 1;
+                }
+            }
         },
         mounted(){
             console.log(this.diaryList)
