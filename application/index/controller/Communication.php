@@ -15,7 +15,7 @@ use app\index\model\WechatUser;
 use app\index\model\CommunicatePosts;
 use app\index\model\CommunicateComment;
 
-//use function PHPSTORM_META\type;
+
 
 class Communication extends Base
 {
@@ -374,7 +374,7 @@ class Communication extends Base
         $ccomment = new CommunicateComment();
         $cpost = new  CommunicatePosts();
         $userid = session('userId');
-        $commments = $ccomment->where('user_id', $userid)->order('id desc')->limit(6)->select();
+        $commments = $ccomment->where('user_id', $userid)->order('create_time desc')->select();
         $myComments = array();
         foreach ($commments as $value) {
             $status = isset($value->CommunicatePost->status) ? $value->CommunicatePost->status : "";
@@ -414,8 +414,8 @@ class Communication extends Base
 
           $this->assign('list', $list);
 
-         echo json_encode($list);*/
-//          echo json_encode($myComments);
+         echo json_encode($list);
+          */ // echo json_encode($myComments);
         $this->assign('list', $myComments);
         return $this->fetch();
     }

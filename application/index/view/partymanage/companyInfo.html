@@ -1,0 +1,38 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    .my-banner{
+        width:100vw;
+        height:50vw;
+    }
+
+
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <img src="/index/images/cbd.jpg" class="my-banner" alt="">
+    <ul class="company-info">
+        <li>
+            <div class="info-tit">联系方式</div>
+        </li>
+        <li></li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+
+    },
+    methods:{
+        
+    }
+})
+</script>
+{/block}

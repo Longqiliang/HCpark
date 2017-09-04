@@ -16,7 +16,6 @@ use app\index\model\MerchantsDiary;
 use app\index\model\MerchantsRecord;
 use app\index\model\MerchantsCompany;
 use app\common\model\FeePayment;
-
 use org\ImageImagick;
 
 class Partymanage extends Base
@@ -210,10 +209,17 @@ class Partymanage extends Base
             $diaryList = $mDiary->where($data)->order('create_time desc')->select();
             foreach ($diaryList as $value) {
                 $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+                unset($value['user']);
             }
+
         } else {
+
             //工作日志
             $diaryList = $mDiary->where('user_id', $userid)->order('create_time desc')->select();
+            foreach ($diaryList as $value){
+                $value['user_name']=isset($value->user->name)?$value->user->name:"";
+               unset($value['user']);
+            }
             //招商进度
             $all_company = $mCompany->where('user_id', $userid)->select();
             $doing = array();
@@ -245,6 +251,7 @@ class Partymanage extends Base
         //招商进度
         $this->assign('undone', json_encode($doing));
         $this->assign('finish', json_encode($finish));
+
         //工作日志
         $this->assign('diaryList', json_encode($diaryList));
         //招商统计
@@ -367,7 +374,7 @@ class Partymanage extends Base
         return $this->fetch();
 
     }
-
+    //写日志
     public function writeDiary()
     {
         $user_id = session('userId');

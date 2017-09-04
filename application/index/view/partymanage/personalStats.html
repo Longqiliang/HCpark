@@ -1,0 +1,245 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    *{
+        color: #333;
+        box-sizing: border-box;
+    }
+    .my-chart{
+        display: block;margin:0 auto;
+    }
+    .my-box>li{
+        border-bottom: 5px solid #f1f1f1;
+    }
+    .my-box>li>p{
+        text-align: center;
+        font-size: 1.5rem;
+        line-height: 2;
+        color: #333;
+    }
+    .my-box>.my-charts{
+        padding-top: 1.2rem;
+        padding-bottom:1rem;
+
+    }
+    .my-charts-title{
+        display: -webkit-flex;
+        padding:0 1.2rem;
+        font-size: 1.5rem;
+        line-height: 2;
+    }
+
+
+    /*my-log*/
+    .my-log-title{
+        padding:0 4vw;
+        font-size: 1.5rem;
+        font-weight:bold;
+        line-height: 2.5;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .my-log li{
+        padding:1.2rem 4vw;
+        border-bottom: 1px solid #f1f1f1;
+        display: -webkit-flex;
+        display: flex;
+    }
+
+    .my-log  .my-icon{
+        height:2.2rem;
+        width:2.2rem;
+        background: url('') no-repeat center center;
+        background-size: cover;
+        margin-right: 3.2vw;
+    }
+    .my-log  .my-icon-suc{
+        background-image: url('/index/images/partymanage/suc.png');
+    }
+    .my-log .my-icon-ing{
+        background-image: url('/index/images/partymanage/ing.png');
+    }
+    .my-log .my-icon-err{
+        background-image: url('/index/images/partymanage/err.png');
+    }
+    .my-log .my-list{
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .my-log .my-list>div:first-child{
+        color: #333;
+        font-size: 1.5rem;
+        line-height: 2.2rem;
+        margin-bottom: 0.4rem;
+    }
+    .my-log .my-list>div:first-child>span:first-child{
+        margin-right: 1.5rem;
+    }
+    .my-log .my-list>div:last-child{
+        font-size: 1.2rem;
+        color: #999;
+    }
+
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <ul class="my-box">
+        <li class="my-charts">
+            <div class="my-charts-title"><span>招商日志填报情况</span></div>
+            <canvas id="c1" width="300" height="200" class="my-chart"></canvas>
+            <p>应记录：<span>30</span>天</p>
+            <p>实际记录：<span>27</span>天</p>
+        </li>
+        <li class="my-charts">
+            <div class="my-charts-title"><span>招商日志填报情况</span></div>
+            <canvas id="c2" width="300" height="200" class="my-chart"></canvas>
+            <p>计划完成面积：<span>30</span>天</p>
+            <p>实际完成面积：<span>27</span>天</p>
+        </li>
+        <li class="my-charts">
+            <div class="my-charts-title"><span>招商日志填报情况</span></div>
+            <canvas id="c3" width="300" height="200" class="my-chart"></canvas>
+            <p>计划完成金额：<span>30</span>天</p>
+            <p>实际完成金额：<span>27</span>天</p>
+        </li>
+        <li>
+            <div class="my-log-title">日志记录</div>
+            <ul class="my-log">
+                <li v-for="n in 6" >
+                    <span class="my-icon my-icon-suc"></span>
+                    <div class="my-list">
+                        <div><span>工作日志</span><span>立柱</span></div>
+                        <div><span>创建日期：</span><span>2017-7-7</span></div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <div class="my-log-title">工作日志</div>
+            <ul class="my-log">
+                <li v-for="n in 6" >
+                    <span class="my-icon my-icon-suc"></span>
+                    <div class="my-list">
+                        <div><span>工作日志</span><span>立柱</span></div>
+                        <div><span>创建日期：</span><span>2017-7-7</span></div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+   function drawRoundRect(cxt, x, y, width, height, radius){
+        cxt.beginPath();
+        cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);
+        cxt.lineTo(width - radius + x, y);
+        cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
+        cxt.lineTo(width + x, height + y - radius);
+        cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);
+        cxt.lineTo(radius + x, height +y);
+        cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);
+        cxt.closePath();
+    }
+var app = new Vue({
+    el:'#app',
+    data:{
+
+    },
+    mounted(){
+        this.drawCharts('c1',80,10,13,45,'日志完整性',200.5,'rgba(118,202,153,0.2)','rgba(118,202,153,1)');
+        this.drawCharts('c2',80,10,13,45,'面积完成率',80.5,'rgba(128,206,205,0.2)','rgba(128,206,205,1)');
+        this.drawCharts('c3',80,10,13,45,'回款完成率',70.5,'rgba(240,171,65,0.2)','rgba(240,171,65,1)');
+    },
+    methods:{
+         drawCharts(id,r,borderW,fontSize1,fontSize2,text,value,color,color2){
+            var el=document.getElementById(id);
+            var ctx = el.getContext('2d');
+            var elW=el.width,
+                    elH=el.height;
+            //绘制可以前进的圆拱进度条
+            var startAngle = -225; //圆拱的起始角度
+            var endAngle = -225;  //圆拱的终点角度
+            var centerX=elW/2,centerY=elH/2,r=r,borderW=borderW,color=color,color2=color2,bgColor='#fff',fontSize1=fontSize1
+            //清除画布中已有内容
+            ctx.clearRect(0,0,elW,elH);
+            var timer = setInterval(function(){
+                //清除画布中已有内容
+                ctx.clearRect(0,0,elW,elH);
+
+                //重新绘制底盘圆圈
+                ctx.beginPath();
+                ctx.arc(centerX,centerY, r, 0, 2*Math.PI);
+                ctx.lineWidth = borderW;
+                ctx.strokeStyle = color;
+                ctx.stroke();
+
+                //重新绘制下部90度圆
+                ctx.beginPath();
+                ctx.arc(centerX,centerY, r, -316*Math.PI/180, -225*Math.PI/180);
+                ctx.lineWidth = borderW+1;
+                ctx.strokeStyle = bgColor;
+                ctx.stroke();
+                if(endAngle>-316 && endAngle < 45 ){
+                    //绘制进度条圆圈 —— 开始新路径
+                    ctx.beginPath();
+                    ctx.arc(centerX,centerY,r,startAngle*Math.PI/180,endAngle*Math.PI/180);
+                    ctx.strokeStyle = color2;
+                    ctx.stroke();
+                }else{
+                    //绘制进度条圆圈 —— 开始新路径
+                    ctx.beginPath();
+                    ctx.arc(centerX,centerY,r,startAngle*Math.PI/180,45*Math.PI/180);
+                    ctx.strokeStyle = color2;
+                    ctx.stroke();
+                }
+                endAngle += 1;
+
+                //绘制底部标题背景
+                var x1=Math.sin(45)*(r),y1=Math.cos(45)*(r+15);
+                drawRoundRect(ctx,centerX-x1+fontSize1*2,centerY+y1+3,2*x1-fontSize1*4,fontSize1+10,(fontSize1+10)/2);
+                ctx.fillStyle = color2;
+                ctx.fill();
+
+                //绘制指示性（xx%）文字
+                var val= Math.floor((endAngle-startAngle)*100/270*10)/10 ;
+
+                //绘制标题文字
+                ctx.fillStyle = '#fff';
+                var title = text;
+                ctx.font = fontSize1+'px SimSong';
+                ctx.textBaseline = 'top';
+                var titleWidth = ctx.measureText(title).width;
+                ctx.fillText(title, centerX-titleWidth/2, centerY+Math.cos(45)*r+fontSize1);
+                if(val>=value){
+                    var txt =value + '%';
+                    ctx.fillStyle = color2;
+                    ctx.font = fontSize2+'px SimHei';
+                    ctx.textBaseline = 'top';
+                    var txtWidth = ctx.measureText(txt).width;
+                    ctx.fillText(txt, centerX-txtWidth/2, centerY-fontSize2/2);
+                    clearInterval(timer)
+                }else{
+                    var txt =val + '%';
+                    ctx.fillStyle = color2;
+                    ctx.font = fontSize2+'px SimHei';
+                    ctx.textBaseline = 'top';
+                    var txtWidth = ctx.measureText(txt).width;
+                    ctx.fillText(txt, centerX-txtWidth/2, centerY-fontSize2/2);
+                }
+            },1);
+        }
+    }
+})
+</script>
+{/block}

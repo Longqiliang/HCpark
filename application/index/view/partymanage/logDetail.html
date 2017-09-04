@@ -1,0 +1,128 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    .main{
+        padding-top:1.33vw;
+    }
+    .list{
+        padding:3.2vw;
+    }
+    .list>li:not(:last-child){
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .list>li{
+        padding:1.2rem 3.2vw 1.2rem 3.2vw;
+        display: flex;
+        font-size: 1.5rem;
+
+    }
+    .list>li:after{
+        display: table;
+        content: '';
+        clear: both;
+    }
+    .list>li>div:first-child{
+        width:35%;
+    }
+    .list>li>div:last-child{
+        width:63%;
+        word-wrap: break-word;
+    }
+    .img-list{
+        display: block!important;
+    }
+    .imgBox{
+        width:100% !important;
+        display: flex;
+        justify-content: center;
+        margin-top: 1.2rem;
+    }
+    .imgBox>.img{
+        width:80px;
+        height: 80px;
+        border:1px solid #b2b2b2;
+        position: relative;
+    }
+    .imgBox>.img:not(:first-child){
+        margin-left: 10px;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="main">
+        <ul class="list">
+            <li class="must">
+                <div><span>招商人员：</span></div>
+                <div>$info.name</div>
+            </li>
+            <li class="must">
+                <div><span>招商日期：</span></div>
+                <div>$info.legal_representative</div>
+            </li>
+            <li class="must">
+                <div><span>招商企业：</span></div>
+                <div>$info.telephone</div>
+            </li>
+            <li class="must">
+                <div><span>招商地点：</span></div>
+                <div>$info.mobile</div>
+            </li>
+            <li class="must">
+                <div><span>联系人姓名：</span></div>
+                <div class="openning_hours">$info.openning_hours</div>
+            </li>
+            <li class="must">
+                <div><span>联系人电话：</span></div>
+                <div>
+                   000
+                </div>
+            </li>
+            <li class="must">
+                <div><span>招商进度：</span></div>
+                <div>
+                    555
+                </div>
+            </li>
+            <li class="must">
+                <div><span>完成招商面积：</span></div>
+                <div>4</div>
+            </li>
+            <li class="must">
+                <div><span>完成回款数量：</span></div>
+                <div>14544</div>
+            </li>
+            <li class="must">
+                <div><span>跟进情况：</span></div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum maiores nisi, perspiciatis saepe sapiente sunt tenetur. Accusamus commodi eligendi exercitationem id laborum nemo quam ratione tempora! Aspernatur possimus sequi temporibus.</div>
+            </li>
+            <li class="img-list">
+                <div><span>图片描述：</span></div>
+                <div class="imgBox">
+                    <img src="$vo|get_cover='path'" class="img" alt="">
+                    <img src="$vo|get_cover='path'" class="img" alt="">
+                    <img src="$vo|get_cover='path'" class="img" alt="">
+                    <img src="$vo|get_cover='path'" class="img" alt="">
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+
+    },
+    methods:{
+        
+    }
+})
+</script>
+{/block}

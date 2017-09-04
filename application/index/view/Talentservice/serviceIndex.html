@@ -117,8 +117,6 @@
                 if(!this.loading && this.canLoad ){
                     this.loading = true;
                     this.$http.post('/index/Talentservice/serviceList',{length:this.article.length}).then(function (res) {
-                        console.log(res.data);
-
                         if(res.data.code==0){
                             this.canLoad=false
                         }else{
