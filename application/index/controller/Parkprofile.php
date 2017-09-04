@@ -13,7 +13,8 @@ class Parkprofile extends Base
 {
 /*园区简介，前台加判断，如果没有全景图片，就不显示*/
     public function index(){
-        $parkid = input('park_id');
+        //取线上url的park_id，先写死；
+        $parkid = input('3');
         $map=array(
             'id'=>$parkid,
         );

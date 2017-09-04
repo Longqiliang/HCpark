@@ -17,47 +17,18 @@ class Talentservice extends Base
     /** 企业招聘首页列表 **/
     public function index(){
         $parkid =session('park_id');
-        $search = input('search');
         $map=array(
             'park_id'=>$parkid,
             'status'=>1,
         );
-        if ($search != '') {
-            $map['position'] = ['like','%'.$search.'%'];
-        }
 
-        $list = EnterpriseModel::where($map)->order('create_time  desc')->field('id,position,company,education,experience,number,wages')->limit(6)->select();
-
+        $list = EnterpriseModel::where($map)->order('create_time  desc')->field('id,position,company,education,experience,number,wages')->select();
+echo json_encode($list);exit;
         $this->assign('list',json_encode($list));
         return $this->fetch();
     }
 
-    /*企业招聘列表下拉刷新*/
-    public function listManage(){
-        $len = input("length");
-        $parkid =session('park_id');
-        $map=array(
-            'park_id'=>$parkid,
-            'status'=>1,
-        );
 
-        $search = input('search');
-        if ($search != '') {
-            $map['position'] = ['like','%'.$search.'%'];
-        }
-        $list = EnterpriseModel::where($map)
-            ->order("create_time desc")
-            ->limit($len,6)
-            ->select();
-
-        if ($list){
-            return json(['code' => 1, 'data' => json_encode($list)]);
-        }else{
-
-            return json(['code' => 0, 'msg' =>"没有更多内容了"]);
-        }
-
-    }
 
     /*企业招聘详情页*/
     public function detail(){
