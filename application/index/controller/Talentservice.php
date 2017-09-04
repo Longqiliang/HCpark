@@ -23,7 +23,7 @@ class Talentservice extends Base
         );
 
         $list = EnterpriseModel::where($map)->order('create_time  desc')->field('id,position,company,education,experience,number,wages')->select();
-echo json_encode($list);exit;
+
         $this->assign('list',json_encode($list));
         return $this->fetch();
     }
