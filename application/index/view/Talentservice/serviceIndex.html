@@ -80,7 +80,7 @@
                 <span>{{item.create_time}}</span>
                 <span>{{parseInt(item.views)>999?'999+':item.views}}</span>
             </div>
-            <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
+            <a :href="'/index/Talentservice/serviceDetail/id/'+item.id"></a>
         </li>
     </ul>
     <div class="my-footer">
@@ -100,10 +100,10 @@
         data:{
             loading:false,
             canLoad:'',
-//            article:$list,
-            article:[
-                {title:'title',create_time:'create_time',views:888,id:1}
-            ]
+            article:{$list},
+//            article:[
+//                {title:'title',create_time:'create_time',views:888,id:1}
+//            ]
         },
         created(){
             if(this.article.length<6){
@@ -116,7 +116,7 @@
             loadMore(){
                 if(!this.loading && this.canLoad ){
                     this.loading = true;
-                    this.$http.post('/index/ServiceInformation/getMoreList',{type:this.type,length:this.article.length}).then(function (res) {
+                    this.$http.post('/index/Talentservice/serviceList',{length:this.article.length}).then(function (res) {
                         console.log(res.data);
 
                         if(res.data.code==0){

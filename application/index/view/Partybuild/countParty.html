@@ -82,9 +82,9 @@
         yAxis: {
             type:'value',
             min:0,//最小值
-            max:10,//最大值
+            max:'dataMax',//最大值
             minInterval:1,//自动计算的坐标轴最小间隔大小。保证坐标轴分割刻度显示成整数。
-            interval:2,//强制设置坐标轴分割间隔。
+//            interval:2,//强制设置坐标轴分割间隔。
             axisLabel:{
                 textStyle:{
                     color:'#666'
@@ -144,9 +144,9 @@
         yAxis: {
             type:'value',
             min:0,//最小值
-            max:10,//最大值
+            max:'dataMax',//最大值
             minInterval:1,//自动计算的坐标轴最小间隔大小。保证坐标轴分割刻度显示成整数。
-            interval:2,//强制设置坐标轴分割间隔。
+//            interval:2,//强制设置坐标轴分割间隔。
             axisLabel:{
                 textStyle:{
                     color:'#666'
@@ -174,35 +174,6 @@
     //环形图
     function drawPie(num1,num2,name1,color) {
         var genderOption = {
-            //提示文字
-//        tooltip: {
-//            trigger: 'item',
-//            formatter: [`{title|{b}}`, `{c} ({d}%)`].join('<br>'),
-//            rich:{
-//                title:{
-//                    color:'#f00',
-//                    align:'center'
-//                }
-//            },
-//            background:'#fff',
-//            position:{
-//                top:'center',
-//                left:'center'
-//            },
-//            backgroundColor:'rgba(0,0,0,0)',
-//            textStyle:{
-//                color:'#999'
-//            }
-//        },
-//        图例
-//        legend: {
-//            tooltip: {
-//                show: true
-//            },
-//            orient: 'vertical',
-//            left:10,
-//            data: [{name: '男'}, {name: '女'}]
-//        },
             color:[color,'#e8e8e8'],
             calculable: true,
             series: [
