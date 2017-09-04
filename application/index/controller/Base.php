@@ -219,7 +219,7 @@ class Base extends Controller
         $tn = imagecreatetruecolor($width, $height); //创建缩略图
         $res = imagecopyresampled($tn, $im, 0, 0, 0, 0, $width, $height, $src_W, $src_H); //复制图像并改变大小
         //dump($res);
-        imagejpeg($tn, $small_img); //输出图像
+        @imagejpeg($tn, $small_img); //输出图像
         return $small_img;
     }
 

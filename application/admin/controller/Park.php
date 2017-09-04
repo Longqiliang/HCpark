@@ -130,6 +130,10 @@ class Park extends Admin
     {
         $parkRent = new ParkRent();
         $list = $parkRent->order('id desc')->paginate();
+        foreach($list as $k=>$v){
+            $room = ParkRoom::where('id',$v['room_id'])->find();
+            $v['room_id'] = $room['build_block'].$room['room'];
+        }
 
         $this->assign('list', $list);
 

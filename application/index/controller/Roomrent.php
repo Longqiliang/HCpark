@@ -10,6 +10,7 @@ namespace app\index\controller;
 
 use app\common\model\ParkRent;
 use app\common\model\ParkRoom;
+use app\common\model\PeopleRent;
 use app\index\model\Park;
 
 class Roomrent extends Base
@@ -157,6 +158,22 @@ class Roomrent extends Base
         return $this->fetch();
 
     }
+    /*预约信息*/
+    public function peopleRent(){
+       $data = input('post.');
+       $people = new PeopleRent();
+       $res = $people->save($data);
+       if ($res){
+
+           $this->success('提交成功');
+       }else{
+
+           $this->error("提交失败");
+       }
+
+    }
+
+
 
 
 }

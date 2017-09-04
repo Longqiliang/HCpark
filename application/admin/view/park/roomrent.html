@@ -75,9 +75,10 @@
                 <thead>
                 <tr>
                     <th style="width:10%"></th>
-                    <th style="width:25%">企业名称</th>
                     <th style="width:25%">楼盘名称</th>
                     <th style="width:15%">房间号</th>
+                    <th>面积</th>
+                    <th>价格</th>
                     <th style="width:15%">操作</th>
                 </tr>
                 </thead>
@@ -87,16 +88,19 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
-                    <td class="mail-subject">
-                        <a href="{:Url('addrent','id='.$vo.id)}"></a>
-                    </td>
-                    <td>
-                        <a href="{:Url('addrent','id='.$vo.id)}"></a>
-                    </td>
-                    <td>
-                        <a href="{:Url('addrent','id='.$vo.id)}"></a>
-                    </td>
 
+                    <td>
+                        <a href="{:Url('addrent','id='.$vo.id)}">{$vo.name}</a>
+                    </td>
+                    <td>
+                        <a href="{:Url('addrent','id='.$vo.id)}">{$vo.room_id}</a>
+                    </td>
+                    <td>
+                        <a href="{:Url('addrent','id='.$vo.id)}">{$vo.area}㎡</a>
+                    </td>
+                    <td>
+                        <a href="{:Url('addrent','id='.$vo.id)}">{$vo.price}元/㎡·天</a>
+                    </td>
                     <td>
                         <a  href="{:Url('addrent','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">查看信息</a>
                     </td>
