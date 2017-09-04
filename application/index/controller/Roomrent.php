@@ -157,11 +157,11 @@ class Roomrent extends Base
             $roomList = $parkRoom->where('floor', $v)->select();
             foreach ($roomList as $k1 => $v1) {
                 if ($v1['company_id']) {
-                    $v1['company_id'] = false;
+                    $status = false;
                 } else {
-                    $v1['company_id'] = true;
+                    $status = true;
                 }
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $v1['company_id']];
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status,'id' =>$v1['company_id']];
             }
 
         }
