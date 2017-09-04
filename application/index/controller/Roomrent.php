@@ -35,13 +35,13 @@ class Roomrent extends Base
         ];
         if ($data['img']) {
             foreach ($data['img'] as $k => $v) {
-                $small_img = $this->getThumb($v, 100, 100);
+                $small_img = $this->getThumb($v, 375, 188);
                 $data['img'][$k] = $small_img;
             }
         }
         if ($data['panorama']) {
             foreach ($data['panorama'] as $k => $v) {
-                $small_img = $this->getThumb($v, 100, 100);
+                $small_img = $this->getThumb($v, 375, 188);
                 $data['panorama'][$k] = $small_img;
             }
         }
@@ -77,13 +77,13 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $small_img = $this->getThumb($v1, 100, 100);
+                    $small_img = $this->getThumb($v1, 170, 120);
                     $data[$k]['img'][$k1] = $small_img;
                 }
             }
             if ($data[$k]['panorama']) {
                 foreach ($data[$k]['panorama'] as $k1 => $v1) {
-                    $small_img = $this->getThumb($v1, 100, 100);
+                    $small_img = $this->getThumb($v1, 170, 120);
                     $data[$k]['panorama'][$k1] = $small_img;
                 }
             }
