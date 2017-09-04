@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
 
-</body>
-</html>
+{extend name="public/common"}
+
+{block name="style"}
+<title>园区简介</title>
+<link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
+{/block}
+
+{block name="body"}
+<div id="comment">
+    <div class="banner">
+        {eq name="info.panorama_cover" value=""}
+            <img src="{$info.panorama_cover}" alt="">
+        {/eq}
+    </div>
+    <section>
+        {$info->content}
+    </section>
+</div>
+<div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+{/block}
