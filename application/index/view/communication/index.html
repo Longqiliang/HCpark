@@ -2,48 +2,76 @@
 
 {block name="style"}
 <title>合作交流</title>
-<link rel="stylesheet" href="/index/css/service/detail.css">
 <style type="text/css">
-    #app{
-        padding-top: 7.2vw;
-    }
     .head-img{
+        width: 48px;
+        height: 48px;
         position: fixed;
-        top: 10px;
+        z-index: 99;
         right: 0;
-        z-index: 999;
-        overflow: auto;
+        top: 4vw;
+        border-top-left-radius: 24px;
+        border-bottom-left-radius: 24px;
+        background: -webkit-linear-gradient(left,#81e4fe,#6eb8ff);
     }
-    .head-img img{
-        width: 40px;
-        height: 40px;
-        border-radius: 20px;
-        position: relative;
-        z-index: 999;
+    .head-img>img{
+        width: 38px;
+        height: 38px;
+        border-radius: 19px;
+        margin: 5px 5px;
     }
-    .head-img span{
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background: #f6bb42;
-        position: relative;
-        top: 10px;
-        z-index: 998;
-    }
-    .head-img a{
+    .head-img>a{
+        position: absolute;
         width: 100%;
         height: 100%;
-        position: absolute;
         top: 0;
         left: 0;
-        z-index: 999;
+        z-index: 100;
     }
-    .img-card-info{
-        color: #69b9f9;
+    .img-card{
+        width: 92vw;
+        height: 35vw;
+        margin: 4vw 4vw;
+        background: rgba(0,0,0,0.3);
+        border-radius: 5px;
+        position: relative;
     }
-    .img-card-box:after{
-        background: url("/index/images/communication/icon-waveline.png");
-        background-size: cover;
+    .img-card img{
+        width: 100%;
+        height: 100%;
+        position: relative;
+        z-index: -1;
+        border-radius: 5px;
+    }
+    .img-card>div{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        text-align: center;
+    }
+    .img-card>div>p{
+        color: #fff;
+        font-size: 20px;
+    }
+    .img-card>div>span{
+        text-align: center;
+        display: inline-block;
+        width: 60px;
+        line-height: 18px;
+        border-radius: 30px;
+        background: #fff;
+        color: #333;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    .img-card>a{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 10;
     }
 </style>
 {/block}
@@ -52,24 +80,22 @@
 <div id="app">
     <div class="head-img">
         <img src="{$header}">
-        <span></span>
         <a href="{:Url('Communication/personal')}"></a>
     </div>
     {volist name="list" id="vo"}
     <div class="img-card">
-        {eq name="$vo->is_join" value="0"}
-        <a href="{:Url('Communication/join?group_id='.$vo->id)}">
+        <img src="{$vo->img}">
+        <div>
+            <p>{$vo->group_name}</p>
+            {eq name="vo->is_join" value="0"}
+            <span>申请加入</span>
+            {/eq}
+        </div>
+        {eq name="vo->is_join" value="0"}
+        <a href="{:Url('Communication/join?group_id='.$vo->id)}"></a>
         {else/}
-        <a href="{:Url('Communication/postsList?group_id='.$vo->id)}">
+        <a href="{:Url('Communication/postslist?group_id='.$vo->id)}"></a>
         {/eq}
-            <div class="img-card-box">
-                <img src="{$vo->img}"  class="img-responsive">
-                <div class="img-marking">
-                    <span class="marking-info">{$vo->group_name}</span>
-                </div>
-            </div>
-            <div class="img-card-info">{eq name="$vo->is_join" value="0"}前往申请{else/}进入论坛{/eq}</div>
-        </a>
     </div>
     {/volist}
 </div>

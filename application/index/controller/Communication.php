@@ -183,11 +183,14 @@ class Communication extends Base
             'target_id' => input('id')
         ];
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
+        foreach ($comments as $value){
+            $value['create_time'] = date("Y-m-d",$value['create_time']);
+        }
         //$count = CommunicateComment::where($map)->count();
 
         //echo json_encode($post);
         //echo json_encode($comments);
-        $this->assign('comments', $comments);
+        $this->assign('comments', json_encode($comments));
         return $this->fetch();
     }
 
@@ -239,6 +242,7 @@ class Communication extends Base
         $post = CommunicatePosts::get(input('id'));
         $data['user_name'] = $userinfo['name'];
         $result = CommunicateComment::create($data);
+        $result['create_time'] = date("Y-m-d",$result['create_time']);
         if ($result) {
             $post['comments'] += 1;
             $post->save();
@@ -256,13 +260,15 @@ class Communication extends Base
     {
         $lastId = input('lastId', 0);
         $map = [
-            'target_id' => input('group_id')
+            'target_id' => input('id')
         ];
         if ($lastId != 0) {
             $map['id'] = ['<', $lastId];
         }
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
-
+        foreach ($comments as $value){
+            $value['create_time'] = date("Y-m-d",$value['create_time']);
+        }
         return json(['total' => count($comments), 'comments' => $comments]);
     }
 
@@ -368,7 +374,7 @@ class Communication extends Base
         $ccomment = new CommunicateComment();
         $cpost = new  CommunicatePosts();
         $userid = session('userId');
-        $commments = $ccomment->where('user_id', $userid)->limit(6)->select();
+        $commments = $ccomment->where('user_id', $userid)->order('id desc')->limit(6)->select();
         $myComments = array();
         foreach ($commments as $value) {
             $status = isset($value->CommunicatePost->status) ? $value->CommunicatePost->status : "";
@@ -408,8 +414,8 @@ class Communication extends Base
 
           $this->assign('list', $list);
 
-         echo json_encode($list);
-          /*  echo json_encode($list);*/
+         echo json_encode($list);*/
+//          echo json_encode($myComments);
         $this->assign('list', $myComments);
         return $this->fetch();
     }

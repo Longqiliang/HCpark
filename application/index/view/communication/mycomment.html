@@ -43,29 +43,39 @@
         text-overflow:ellipsis;
         white-space: nowrap;
     }
+    .load-more{
+        width: 100%;
+        line-height: 40px;
+        text-align: center;
+        font-size: 14px;
+        color: #999;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
+    {volist name="list" id="vo"}
     <div class="group-list">
         <div class="list-head">
-            <img src="">
+            <img src="{$vo->header}">
             <div class="time-name">
-                <p>是是是</p>
-                <p>2017-08-12</p>
+                <p>{$vo->user_name}</p>
+                <p>{$vo->create_time || time_format="Y-m-d"}</p>
             </div>
         </div>
         <div class="list-body">
-            <p>撒大声地群无无群</p>
+            <p>{$vo->content}</p>
             <div class="post">
                 <div>
-                    <span>稍微但是：</span>
-                    <span>新闻大事件新闻大事件新闻大事件新闻大事件</span>
+                    <span>{$vo->post->user_name}：</span>
+                    <span>{$vo->post->content}</span>
                 </div>
             </div>
         </div>
     </div>
+    {/volist}
+    <!--<div class="load-more"  onclick="loadMore($event)">加载更多...</div>-->
 </div>
 {/block}
 

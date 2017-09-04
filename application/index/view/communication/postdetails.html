@@ -15,6 +15,46 @@
         margin-left: 55px;
         padding-top: 5px;
     }
+    .foot{
+        width: 100%;
+        height: 50px;
+        overflow: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        background: #fff;
+        box-shadow: 0 -2px 2px rgba(0,0,0,0.1);
+    }
+    .foot .input-box{
+        width: calc(100% - 90px);
+        float: left;
+        padding-left: 20px;
+    }
+    .foot .input-box>input{
+        width: calc(100% - 25px);
+        height: 32px;
+        margin: 8px 0;
+        background: #f2f2f2;
+        padding: 0 10px 0 15px;
+        border-radius: 5px;
+    }
+    .foot .send{
+        width: 70px;
+        float: left;
+        font-size: 15px;
+        color: #333;
+        text-align: center;
+        padding: 15px 0;
+    }
+    .load-more{
+        width: 100%;
+        line-height: 40px;
+        text-align: center;
+        font-size: 14px;
+        color: #999;
+        margin-bottom: 50px;
+    }
 </style>
 {/block}
 
@@ -44,31 +84,104 @@
     </div>
     <div class="comment">
         <ul>
-            {volist name="comments" id="vo"}
-            <li>
+            <li v-for="list in comments">
                 <div class="list-head">
-                    <img src="{$vo->header}">
+                    <img :src="list.header">
                     <div class="time-name">
-                        <p>{$vo->user_name}</p>
-                        <p>{$vo->create_time || time_format="Y-m-d"}</p>
+                        <p>{{list.user_name}}</p>
+                        <p>{{list.create_time}}</p>
                     </div>
                 </div>
                 <div class="list-body">
-                    <p>{$vo->content}</p>
+                    <p>{{list.content}}</p>
                 </div>
             </li>
-            {/volist}
         </ul>
     </div>
-    <div class="foot"></div>
+    <div class="load-more" v-if="comments.length === 0">暂时啥都没有，快去评论吧！</div>
+    <div class="load-more" v-if="comments.length > 0" @click="loadMore($event)">加载更多...</div>
+    <div class="foot">
+        <div class="input-box">
+            <input type="text" placeholder="说说你的感想！" ref="inputs">
+        </div>
+        <div class="send" @click="send()">
+            发送
+        </div>
+    </div>
 </div>
 {/block}
 
 {block name="script"}
 <script>
+    var id = {$post.id};
+    console.log(id);
     new Vue({
         el: '#app',
-        data:{}
+        data:{
+            comments:{$comments}
+        },
+        methods:{
+            send: function () {
+                var content = this.$refs.inputs,
+                    vm = this.comments,
+                    _this = this;
+                _this.$indicator.open({
+                    text: '评论提交中',
+                    spinnerType: 'triple-bounce'
+                });
+                $.ajax({
+                    type:'post',
+                    url:'{:Url("Communication/comment")}',
+                    dataType:'json',
+                    data:{'id':id,'content':$(content).val()}
+                }).done(function (data) {
+                    _this.$indicator.close();
+                    if(data.code == 1){
+                        _this.$toast({
+                            message:"评论成功！",
+                            duration:1000
+                        });
+                        vm.unshift(data.data);
+                        $(content).val('');
+                    }else{
+                        _this.$toast({
+                            message:"评论失败！",
+                            duration:1000
+                        });
+                    }
+
+                })
+            },
+            loadMore: function (event) {
+                var length = this.comments.length,
+                    lastId = this.comments[length-1].id,
+                    vm = this.comments,
+                    _this = this;
+                _this.$indicator.open({
+                    text: '加载中...',
+                    spinnerType: 'triple-bounce'
+                });
+                $.ajax({
+                    type:'post',
+                    url:'{:Url("Communication/moreComment")}',
+                    dataType:'json',
+                    data:{
+                        'lastId':lastId,
+                        'id':id
+                    }
+                }).done(function (data) {
+                    _this.$indicator.close();
+                    if(data.total === 0){
+                        $(event.target).text('已加载全部！')
+                    }else{
+                        $.each(data.comments,function(index,array){
+                            vm.push(array);
+                        })
+                    }
+                });
+            }
+        }
+
     })
 </script>
 
