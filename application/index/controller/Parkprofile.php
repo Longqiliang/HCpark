@@ -21,7 +21,7 @@ class Parkprofile extends Base
 
         $info = Park::where($map)->field('panorama_cover,panorama_link,content')->find();
 
-        $this->assign('info',json_encode($info));
+        $this->assign('info',$info);
         return $this->fetch();
     }
 
