@@ -1,0 +1,143 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>楼盘表</title>
+<link rel="stylesheet" href="/index/css/roomrent/index.css">
+<style>
+
+</style>
+{/block}
+
+{block name="body"}
+<div class="content" id="app">
+    <div class="header">
+        <i class="header-icon icon-tab">
+            <img src="/index/images/roomrent/icon-list.png" alt="">
+        </i>
+        <h2 @click="checkPark" class="header-tit">
+            <span >海创大厦A幢</span> <i class="allow-down"></i>
+        </h2>
+        <div class="houses-icon-box">
+            <span ><i class="houses-icon"></i>可租</span>
+            <span ><i class="houses-icon"></i>已租</span>
+        </div>
+        <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+            <div class="picker-toolbar">
+                <span class="mint-datetime-action mint-datetime-cancel" @click="cancelPark">取消</span>
+                <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
+            </div>
+            <mt-picker :slots="slots" @change="onParkChange" ></mt-picker>
+        </mt-popup>
+    </div>
+    <div class="houses-list" v-for="item of list.items">
+        <div class="houses-list-tit">
+            {{item.floor}}楼
+        </div>
+        <div class="houses-list-item">
+            <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">{{rooms.room}}</span>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    var list = {$list};
+     list = {
+        items:[
+            {
+                floor:11,
+                rooms:[
+                    {
+                        room:1101,
+                        department_id:1,
+                        empty:true
+                    },{
+                        room:1102,
+                        empty:true
+                    },{
+                        room:1103,
+                        empty:true
+                    },{
+                        room:1104,
+                        empty:true
+                    },{
+                        room:1105,
+                        empty:true
+                    },{
+                        room:1106,
+                        empty:true
+                    },{
+                        room:1107,
+                        empty:true
+                    },{
+                        room:1108,
+                        empty:true
+                    },{
+                        room:1109,
+                        empty:true
+                    }
+
+                ]
+            },
+            {
+                floor:10,
+                rooms:[
+                    {
+                        room:1001,
+                        empty:true
+                    },
+                    {
+                        room:1002,
+                        empty:true
+                    },
+                    {
+                        room:1003,
+                        empty:false
+                    }
+                ]
+            }
+        ]
+    };
+    console.log(list);
+    var vm =  new Vue({
+        el:'#app',
+        data:{
+            list:list,
+            popupVisible:false,
+            parkPicker:'',
+            parkTxt:'',
+            slots: [
+                {
+                    values: ['1','2']
+                }
+            ]
+        },
+        methods:{
+            cancelPark:function () {
+                this.popupVisible = false;
+            },
+            selectPark:function () {
+                this.popupVisible = false;
+
+            },
+            onParkChange:function (picker,values) {
+                this.parkPicker =  picker;
+                this.parkTxt = values[0];
+                console.log(values[0]);
+            },
+            checkPark:function () {
+                this.popupVisible = true;
+                this.parkPicker.setSlotValue(0, '1');
+            },
+            jump:function (id,empty) {
+                if(!id){
+                    return;
+                }
+                console.log(id,empty);
+            }
+        }
+    });
+
+</script>
+{/block}

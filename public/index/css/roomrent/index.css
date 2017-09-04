@@ -1,0 +1,160 @@
+
+*,ul,p,ul li{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+h2,p,h3,h4{
+    font-weight: normal;
+    margin: 0 auto;
+}
+body{
+    background-color: #F8F7FC;
+    color: #333;
+}
+
+.header{
+    /*height: 14.67vw;*/
+    position: relative;
+}
+.header-tit{
+    font-size: 1.8rem;
+    line-height: 14.67vw;
+    text-align: center;
+}
+.header-icon{
+    width: 11.2vw;
+    height: 7.73vw;
+    position: absolute;
+    right: 0;
+    top:30%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    background-repeat:no-repeat;
+    background-size: contain;
+    z-index: 3;
+    border-width: 1px 0 1px 0;
+    border-color: rgba(0,0,0,0.08);
+    border-style: solid;
+}
+
+.header-icon.icon-tab{
+    background-image: url("/index/images/roomrent/icon-tab.png") ;
+}
+.header-icon.icon-list{
+    background-image: url("/index/images/roomrent/icon-list.png") ;
+}
+/*.header-icon img{*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /**/
+/*}*/
+.header:after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    height: 1px;
+    background-color: #E8E8E8;
+}
+.list{
+    display: flex;
+    flex-wrap: wrap;
+    padding:0 3.2vw 4vw;
+    justify-content: space-between;
+}
+.list-item{
+    width: 45.33vw;
+    margin-top: 4vw;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+.list-item .item-img{
+    height: 32vw;
+    display: flex;
+    align-items: center;
+}
+.list-item .item-img img{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.list-item .item-info {
+    padding: 4vw 2.67vw;
+}
+.item-info h3{
+    font-size: 1.6rem;
+    line-height: 1.375;
+}
+.item-info p{
+    padding-top: 2.67vw;
+    font-size: 1.3rem;
+    line-height: 1.4;
+}
+.info-detail{
+    color: #52CC92 ;
+    padding-top: 2.67vw;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    display: flex;
+    justify-content: space-between;
+}
+.allow-down{
+    display: inline-block;
+    margin:0 0 1vw 3.2vw;
+    border-width:7px 7px 0  ;
+    border-color: #333 transparent transparent transparent;
+    border-style: solid;
+}
+/*楼盘表*/
+.houses-icon-box{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 3.2vw;
+}
+.houses-icon-box span{
+    font-size: 1.5rem;
+    line-height: 1.4;
+    margin: 0 8vw;
+}
+.houses-icon{
+    display: inline-block;
+    width:5.86vw;
+    height:4.8vw;
+    margin-right:4vw;
+    vertical-align: middle;
+    background-color: #eee;
+}
+.houses-list-tit{
+    font-size: 1.8rem;
+    line-height: 1.4;
+    padding: 2vw 2.67vw;
+}
+.houses-list-item{
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 1px;
+}
+.houses-list-item span{
+    width: 14.93vw;
+    height: 9.6vw;
+    background-color: #fff;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    border-radius: 3px;
+    margin: 0.8vw;
+    font-size: 1.5rem;
+    line-height: 9.6vw;
+    text-align: center;
+}
+.houses-list-item span.selectable{
+    color: #fff;
+    background-color: #52CC92;
+}
+/*mint-ui popup样式修改*/
+.mint-popup, .picker-slot{
+    width: 100%;
+}
+.mint-popup .picker-slot-wrapper, .page-popup .mint-popup .picker-item {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}

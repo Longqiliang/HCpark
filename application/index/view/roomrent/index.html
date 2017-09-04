@@ -1,0 +1,168 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>图片展示</title>
+<link rel="stylesheet" href="/static/viewer/viewer.min.css">
+<link rel="stylesheet" href="/static/swiper/swiper.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_355905_js6086l9et81tt9.css">
+<style>
+
+    .vr-mark{
+        position: absolute;
+        width: 32px;
+        background-color: #fff;
+        height: 33px;
+        z-index: 2;
+        right:10px ;
+    }
+    #vr-link{
+        width: 100%;
+        height: 100vh ;
+        position: absolute;
+        z-index: 1;
+    }
+    #app li{
+        width: 200px;
+        height: 200px;
+    }
+    #app li img{
+        width: 100%;
+    }
+    .viewer-canvas{
+        width: 100vw;
+    }
+    .lookVR{
+        width: 50px;
+        height: 50px;
+        position: fixed;
+        bottom: 52px;
+        background: red;
+        z-index: 2016;
+    }
+    .icon-back,.icon-go{
+        display: block;
+        width: 40px;
+        height: 40px;
+        background-color: transparent;
+        color: #fff;
+        font-size: 2.6rem;
+        position: fixed;
+        top:calc(50% - 52px);
+        transform: translateY(-50%);
+        z-index: 2016;
+        text-align: center;
+        line-height: 40px;
+    }
+    .icon-back{
+        left: 1vw;
+    }
+    .icon-go{
+        right: 1vw;
+    }
+</style>
+{/block}
+
+
+{block name="body"}
+<!--<div id="app" style="width: 100%;height: 100vh;position: relative">-->
+<!--<div v-show="vrShow">-->
+<!--<div class="vr-mark" @click="reBack()">返回</div>-->
+<!--<iframe src="http://720yun.com/t/e3cjO5mvuO2?pano_id=2107800" frameborder="0" id="vr-link" ref="vr"></iframe>-->
+<!--</div>-->
+<!--</div>-->
+<div id="app">
+    <ul ref="test" @click="show($event)">
+        <li><img data-original="/index/images/service/lifepay/utilities.png" src="/index/images/index/code.png"></li>
+        <li><img data-original="/index/images/enterprise/p2.png" src="/index/images/index/icon-no.png"></li>
+        <li><img data-original="/index/images/enterprise/p3.png" src="/index/images/index/select.png"></li>
+    </ul>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img data-src="/index/images/enterprise/p1.png" class="swiper-lazy">
+                <div class="swiper-lazy-preloader"></div>
+            </div>
+            <div class="swiper-slide">
+                <img data-src="/index/images/enterprise/p2.png" class="swiper-lazy">
+                <div class="swiper-lazy-preloader"></div>
+            </div>
+        </div>
+    </div>
+    <div class="icon-box" v-if="lookVR">
+        <i class="iconfont icon-back" @click="prev"></i>
+        <i class="iconfont icon-go" @click="next"></i>
+    </div>
+    <div class="lookVR" v-if="lookVR"></div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/swiper/swiper.min.js"></script>
+<script src="/static/viewer/viewer.min.js"></script>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            vrShow:true,
+            lookVR:false,
+            viewer:null
+        },
+        mounted(){
+            var _this = this;
+            _this.viewer =  new Viewer(_this.$refs.test,{
+                url:'data-original',
+                toolbar:false,
+                title:false,
+                movable:false,
+                fullscreen:false,
+                show:function () {
+                    _this.lookVR = true;
+                },
+                view: function(e) {
+                    console.log(e.detail.index);
+                    console.log("view",e);
+                },
+                hide:function (e) {
+                    _this.lookVR = false;
+                }
+            });
+
+            var mySwiper = new Swiper('.swiper-container',{
+                lazyLoading : true,
+                lazyLoadingInPrevNext : true
+            })
+        },
+        methods:{
+            reBack(){
+                this.vrShow = false;
+            },
+            show(event){
+                console.log(event);
+            },
+            next(){
+                var _this = this,
+                        viewer = _this.viewer;
+                viewer.next();
+                console.log(viewer);
+                console.log(viewer.images.length);
+            },
+            prev(){
+                var _this = this,
+                        viewer = _this.viewer;
+                viewer.prev(function () {
+                    console.log(viewer.images.length);
+                    if(viewer.images.length){
+                        if(viewer.index === 0){
+                            viewer.view(viewer.images.length - 1);
+                        }
+                    }
+                });
+                console.log(viewer);
+                console.log(viewer.images.length);
+
+                console.log(viewer.index);
+            }
+        }
+    })
+</script>
+{/block}

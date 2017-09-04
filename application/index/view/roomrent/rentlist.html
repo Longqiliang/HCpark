@@ -1,0 +1,111 @@
+{extend name="public/common"}
+
+{block name="style"}
+		<title>我要租房</title>
+<link rel="stylesheet" href="/index/css/roomrent/index.css">
+		<style>
+
+		</style>
+{/block}
+
+{block name="body"}
+		<div class="content" id="app">
+			<div class="header">
+				<i class="header-icon icon-list"></i>
+				<h2 @click="checkPark" class="header-tit">
+					<span >海创大厦A幢</span> <i class="allow-down"></i>
+            	</h2>
+				<mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+					<div class="picker-toolbar">
+						<span class="mint-datetime-action mint-datetime-cancel" @click="cancelPark">取消</span>
+						<span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
+					</div>
+					<mt-picker :slots="slots" @change="onParkChange" ></mt-picker>
+				</mt-popup>
+			</div>
+			<ul class="list" v-if="list.length > 0"
+				v-infinite-scroll="loadMore"
+				infinite-scroll-disabled="loading"
+				infinite-scroll-distance="40">
+				<li class="list-item" v-for="item of list">
+					<div class="item-img">
+						<img :src="item.img[0]"  />
+					</div>
+					<div class="item-info">
+						<h3>{{item.room}}</h3>
+						<p>{{item.name}}</p>
+						<div class="info-detail">
+							<span>{{item.area}}</span>
+							<span>{{item.price}}</span>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+{/block}
+
+{block name="script"}		
+		<script type="text/javascript">
+			var list = {$list};
+			console.log(list);
+			var vm =  new Vue({
+				el:'#app',
+				data:{
+					list:list,
+					popupVisible:false,
+					parkPicker:'',
+					parkTxt:'',
+					loadOver:false,
+					loading:false,
+					canload:true,
+					slots: [
+						{
+							values: ['1','2']
+						}
+					]
+				},
+				methods:{
+					cancelPark:function () {
+						this.popupVisible = false;
+					},
+					selectPark:function () {
+						this.popupVisible = false;
+
+					},
+					onParkChange:function (picker,values) {
+						this.parkPicker =  picker;
+						this.parkTxt = values[0];
+						console.log(values[0]);
+					},
+					checkPark:function () {
+						this.popupVisible = true;
+						this.parkPicker.setSlotValue(0, '1');
+					},
+					loadMore:function (event) {
+						if(!this.loading && this.list.length>0 && this.canLoad ){
+							this.loading = true;
+							this.$http.post('/index/Roomrent/moreList',{build:'A',length:this.list.length}).then(function (res) {
+								console.log(res.data);
+								if(res.data.code==0){
+									this.canLoad=false
+								}else{
+									for( var i = 0 ;i < res.data.data.length;i++){
+										this.documents.push(res.data.data[i])
+									}
+									if(res.data.data.length<6){
+										this.canLoad = false
+									}
+								}
+								this.loading = false;
+							},function (res) {
+								console.log(res.data);
+								this.loading = false;
+
+							})
+						}
+					}
+				}
+			});
+
+		</script>
+{/block}
