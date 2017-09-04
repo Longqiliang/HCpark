@@ -42,12 +42,13 @@ class Roomrent extends Base
     /*租房详细列表*/
     public function rentList()
     {
+        $data = [];
         $parkId = session("park_id");
         $build = input('build');
         if ($build) {
             $build = "A";
         }
-        $map = ['park_id' => $parkId, 'build_block' => $build];
+        $map = ['park_id' => $parkId];
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRent = new ParkRent();
         $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
@@ -56,8 +57,8 @@ class Roomrent extends Base
             $data[$k] = [
                 'img' => json_decode($v['img']),
                 'panorama' => json_decode($v['panorama']),
-                'area' => $v['area'],
-                'price' => $v['price'],
+                'area' => $v['area']."㎡",
+                'price' => $v['price']."元/㎡·天",
                 'name' => $parkInfo['name'],
                 'id' => $v['id'],
             ];
