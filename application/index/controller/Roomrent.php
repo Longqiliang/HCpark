@@ -33,6 +33,18 @@ class Roomrent extends Base
             'panorama' => json_decode($roomInfo['panorama']),
 
         ];
+        if ($data['img']) {
+            foreach ($data['img'] as $k => $v) {
+                $small_img = $this->getThumb($v, 100, 100);
+                $data['img'][$k] = $small_img;
+            }
+        }
+        if ($data['panorama']) {
+            foreach ($data['panorama'] as $k => $v) {
+                $small_img = $this->getThumb($v, 100, 100);
+                $data['panorama'][$k] = $small_img;
+            }
+        }
         //return dump($data);
         $this->assign('info', json_encode($data));
 
@@ -45,10 +57,10 @@ class Roomrent extends Base
         $data = [];
         $parkId = session("park_id");
         $build = input('build');
-        if ($build) {
+        if (empty($build)) {
             $build = "A";
         }
-        $map = ['park_id' => $parkId];
+        $map = ['park_id' => $parkId, "build_block" => "A"];
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRent = new ParkRent();
         $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
@@ -57,15 +69,27 @@ class Roomrent extends Base
             $data[$k] = [
                 'img' => json_decode($v['img']),
                 'panorama' => json_decode($v['panorama']),
-                'area' => $v['area']."㎡",
-                'price' => $v['price']."元/㎡·天",
+                'area' => $v['area'] . "㎡",
+                'price' => $v['price'] . "元/㎡·天",
                 'name' => $parkInfo['name'],
                 'id' => $v['id'],
-                'room' => $room['build_block']."幢".$room['room']."室"
+                'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
+            if ($data[$k]['img']) {
+                foreach ($data[$k]['img'] as $k1 => $v1) {
+                    $small_img = $this->getThumb($v1, 100, 100);
+                    $data[$k]['img'][$k1] = $small_img;
+                }
+            }
+            if ($data[$k]['panorama']) {
+                foreach ($data[$k]['panorama'] as $k1 => $v1) {
+                    $small_img = $this->getThumb($v1, 100, 100);
+                    $data[$k]['panorama'][$k1] = $small_img;
+                }
+            }
         }
         $this->assign('list', json_encode($data));
-        //return dump($data);
+        return dump($data);
 
         return $this->fetch();
     }
@@ -83,20 +107,36 @@ class Roomrent extends Base
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRent = new ParkRent();
         $list = $parkRent->where($map)->order('id desc')->limit($len, 6)->select();
-        foreach ($list as $k => $v) {
-            $room = ParkRoom::where('id', $v['room_id'])->find();
-            $data[$k] = [
-                'img' => json_decode($v['img']),
-                'panorama' => json_decode($v['panorama']),
-                'area' => $v['area'],
-                'price' => $v['price'],
-                'name' => $parkInfo['name'],
-                'id' => $v['id'],
-            ];
+        if ($list) {
+            foreach ($list as $k => $v) {
+                $room = ParkRoom::where('id', $v['room_id'])->find();
+                $data[$k] = [
+                    'img' => json_decode($v['img']),
+                    'panorama' => json_decode($v['panorama']),
+                    'area' => $v['area'],
+                    'price' => $v['price'],
+                    'name' => $parkInfo['name'],
+                    'id' => $v['id'],
+                ];
+                if ($data[$k]['img']) {
+                    foreach ($data[$k]['img'] as $k1 => $v1) {
+                        $small_img = $this->getThumb($v1, 100, 100);
+                        $data[$k]['img'][$k1] = $small_img;
+                    }
+                }
+                if ($data[$k]['panorama']) {
+                    foreach ($data[$k]['panorama'] as $k1 => $v1) {
+                        $small_img = $this->getThumb($v1, 100, 100);
+                        $data[$k]['panorama'][$k1] = $small_img;
+                    }
+                }
+            }
+
+            $this->success(['code' => 1, 'data' => json_encode($data)]);
+        } else {
+
+            $this->error(['code' => 0, 'data' => "没有更多数据了"]);
         }
-
-        return json_encode($data);
-
 
     }
 

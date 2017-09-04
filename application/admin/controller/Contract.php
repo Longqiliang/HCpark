@@ -31,6 +31,9 @@ class Contract extends Admin {
         if (IS_POST){
             if (input("id")){
                 $data = input('post.');
+                foreach($data['img'] as $k=>$v){
+                    $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                }
                 $update = [
                     'img' =>json_encode($data['img']),
                     'company' =>input('company'),
@@ -54,6 +57,9 @@ class Contract extends Admin {
                 }
             }else{
                 $data = input('post.');
+                foreach($data['img'] as $k=>$v){
+                    $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                }
                 $data['create_time'] = time();
                 $data['park_id'] = session("user_auth")['park_id'];
                 $department = WechatDepartment::where("name",input('company'))->find();

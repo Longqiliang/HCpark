@@ -18,6 +18,7 @@ use app\index\model\MerchantsCompany;
 use app\common\model\FeePayment;
 
 use org\ImageImagick;
+
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -134,19 +135,17 @@ class Partymanage extends Base
         $manageInfo = CompanyContract::get($id);
         $info = [
             'extra' => $manageInfo['remark'],
-            'img' => json_decode($manageInfo['img'])
+            'img' => json_decode($manageInfo['img']),
+            'imgs' => []
         ];
-        $a = new ImageImagick( $info['img'][0]);exit;
-        //$image = Image::open($info['img'][1]);
-        /* if ($info['img']){
-             foreach($info['img'] as $k=>$v){
-                 $info['imgs'][$k]=str_replace(".","s.",$v);
-                 $image =  Image::open("$v");
-                 $image ->thumb(150,150)->save($info['imgs'][$k]);
-                 echo $v;exit;
-             }
-         }*/
 
+        if ($info['img']) {
+            foreach ($info['img'] as $k => $v) {
+                $small_img = $this->getThumb($v, 100, 100);
+                $info['imgs'][$k] = $small_img;
+            }
+        }
+        //return  dump($info);
         $this->assign('info', json_encode($info));
 
         return $this->fetch();

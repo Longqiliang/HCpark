@@ -149,6 +149,12 @@ class Park extends Admin
                 $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block')])->find();
                 $data['room_id'] = $rooms['id'];
                 unset($data['room']);
+                foreach($data['img'] as $k=>$v){
+                    $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                }
+                foreach($data['panorama'] as $k=>$v){
+                    $data['panorama'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                }
                 $data['img'] = json_encode($data['img']);
                 $data['panorama'] = json_encode($data['panorama']);
                 //return dump($data);
@@ -168,6 +174,12 @@ class Park extends Admin
                 $data['room_id'] = $rooms['id'];
                 $data['park_id'] = session("user_auth")['park_id'];
                 unset($data['room']);
+                foreach($data['img'] as $k=>$v){
+                    $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                }
+                foreach($data['panorama'] as $k=>$v){
+                    $data['panorama'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                }
                 $data['img'] = json_encode($data['img']);
                 $data['panorama'] = json_encode($data['panorama']);
                 $res = $parkRent->save($data);
