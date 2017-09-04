@@ -144,36 +144,55 @@ class Roomrent extends Base
     /*楼盘表*/
     public function housesList()
     {
-        $parkRent = new ParkRent();
-        $list = $parkRent->order('id desc')->select();
-        $roomArray = [];
+        $parkId = session('park_id');
+        $parkRoom = new ParkRoom();
+        $map = [
+            'park_id' => $parkId,
+        ];
+        $list = $parkRoom->distinct(true)->field('floor')->select();
         foreach ($list as $k => $v) {
-            $room = ParkRoom::where('id', $v['room_id'])->find();
-            $roomArray[$k]['room'] = $room['room'];
-            $roomArray[$k]['id'] = $v['id'];
+            $floor[$k] = $v['floor'];
         }
-        //return dump($roomArray);
-        $this->assign('list', json_encode($roomArray));
+        foreach ($floor as $k => $v) {
+            $roomList = $parkRoom->where('floor', $v)->select();
+            foreach ($roomList as $k1 => $v1) {
+                if ($v1['company_id']) {
+                    $v1['company_id'] = false;
+                } else {
+                    $v1['company_id'] = true;
+                }
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $v1['company_id']];
+            }
+
+        }
+        foreach ($floor as $k => $v) {
+            $newArr[$k]['floor'] = $v;
+            $newArr[$k]['rooms'] = $roomArray[$k];
+        }
+
+        $this->assign('list', json_encode($newArr));
+        echo json_encode($newArr);
 
         return $this->fetch();
 
+
     }
+
     /*预约信息*/
-    public function peopleRent(){
-       $data = input('post.');
-       $people = new PeopleRent();
-       $res = $people->save($data);
-       if ($res){
+    public function peopleRent()
+    {
+        $data = input('post.');
+        $people = new PeopleRent();
+        $res = $people->save($data);
+        if ($res) {
 
-           $this->success('提交成功');
-       }else{
+            $this->success('提交成功');
+        } else {
 
-           $this->error("提交失败");
-       }
+            $this->error("提交失败");
+        }
 
     }
-
-
 
 
 }

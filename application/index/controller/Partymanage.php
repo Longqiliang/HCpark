@@ -217,9 +217,9 @@ class Partymanage extends Base
 
             //工作日志
             $diaryList = $mDiary->where('user_id', $userid)->order('create_time desc')->select();
-            foreach ($diaryList as $value){
-                $value['user_name']=isset($value->user->name)?$value->user->name:"";
-               unset($value['user']);
+            foreach ($diaryList as $value) {
+                $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+                unset($value['user']);
             }
             //招商进度
             $all_company = $mCompany->where('user_id', $userid)->select();
@@ -375,6 +375,7 @@ class Partymanage extends Base
         return $this->fetch();
 
     }
+
     //写日志
     public function writeDiary()
     {
@@ -478,40 +479,38 @@ class Partymanage extends Base
     }
 
     /*企业楼房表*/
-    public function compamyFloor(){
+    public function compamyFloor()
+    {
         $parkId = session('park_id');
         $parkRoom = new ParkRoom();
         $map = [
-            'park_id'=>$parkId,
+            'park_id' => $parkId,
         ];
         $list = $parkRoom->distinct(true)->field('floor')->select();
-        foreach($list as $k=>$v){
+        foreach ($list as $k => $v) {
             $floor[$k] = $v['floor'];
         }
-        foreach( $floor as $k=>$v){
-            $roomList = $parkRoom->where('floor',$v)->select();
-            foreach($roomList as $k1=>$v1){
-                if ($v1['company_id']){
+        foreach ($floor as $k => $v) {
+            $roomList = $parkRoom->where('floor', $v)->select();
+            foreach ($roomList as $k1 => $v1) {
+                if ($v1['company_id']) {
                     $v1['company_id'] = false;
-                }else{
+                } else {
                     $v1['company_id'] = true;
                 }
-                $roomArray[$k][$k1] = ['room'=>$v1['room'],'empty'=>$v1['company_id']];
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $v1['company_id']];
             }
 
         }
-        foreach($floor as $k=>$v){
+        foreach ($floor as $k => $v) {
             $newArr[$k]['floor'] = $v;
             $newArr[$k]['rooms'] = $roomArray[$k];
         }
 
-        $this->assign('list',json_encode($newArr));
+        $this->assign('list', json_encode($newArr));
         echo json_encode($newArr);
-       // return $this->fetch();
 
-
-
-
+         return $this->fetch();
 
 
     }
