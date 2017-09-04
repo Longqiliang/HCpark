@@ -14,6 +14,7 @@ use app\index\model\CommunicateUser;
 use app\index\model\WechatUser;
 use app\index\model\CommunicatePosts;
 use app\index\model\CommunicateComment;
+
 //use function PHPSTORM_META\type;
 
 class Communication extends Base
@@ -303,7 +304,7 @@ class Communication extends Base
                 $user['status'] = -1;
                 $user->save();
             }
-                return $this->success("审核成功");
+            return $this->success("审核成功");
 
         } else {
 
@@ -322,16 +323,16 @@ class Communication extends Base
                 'group_id' => array('in', $group_id)
             ];
 
-        $list = $cuser->where($map)->select();
-        foreach ($list as $value) {
-            $value['name'] = isset($value->user->name) ? $value->user->name : "";
-            $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
-            $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
-            $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
+            $list = $cuser->where($map)->select();
+            foreach ($list as $value) {
+                $value['name'] = isset($value->user->name) ? $value->user->name : "";
+                $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
+                $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
+                $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
+            }
+            $this->assign('list', $list);
+            return $this->fetch();
         }
-        $this->assign('list', $list);
-        return $this->fetch();
-    }
     }
 
     /*我的发布*/
@@ -367,33 +368,49 @@ class Communication extends Base
         $ccomment = new CommunicateComment();
         $cpost = new  CommunicatePosts();
         $userid = session('userId');
-        $commments = $ccomment->where('user_id', $userid)->select();
-        $group_ids = array();
+        $commments = $ccomment->where('user_id', $userid)->limit(6)->select();
+        $myComments = array();
         foreach ($commments as $value) {
-            array_push($group_ids, $value['target_id']);
-        }
-
-        $ids = array_values(array_unique($group_ids));
-        $data['id'] = array('in', $ids);
-        $list = $cpost->where($data)->select();
-        foreach ($list as $value) {
-            $comments = $value->comment;
-            $myComments = array();
-            foreach ($comments as $comment) {
-                if ($comment['user_id'] == $userid && $comment['status'] == 1) {
-                    array_push($myComments, $comment);
-                }
+            $status = isset($value->CommunicatePost->status) ? $value->CommunicatePost->status : "";
+            $value['post'] = isset($value->CommunicatePost) ? $value->CommunicatePost : "";
+            if ($status == 1) {
+                $value['post']['user_name'] = isset($value['CommunicatePost']->user->name) ? $value['CommunicatePost']->user->name : "";
+                $header = isset($value['post']->user->header) ? $value['CommunicatePost']->user->header : "";
+                $avatar = isset($value['post']->user->avatar) ? $value['CommunicatePost']->user->avatar : "";
+                $value['post']['header'] = !empty($header) ? $header : $avatar;
+                unset($value['post']['user']);
+                unset($value['CommunicatePost']);
+                array_push($myComments, $value);
             }
-            $value['mycomments'] = $myComments;
-
-            $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
-            $header = isset($value->user->header) ? $value->user->header : "";
-            $avatar = isset($value->user->avatar) ? $value->user->avatar : "";
-            $value['header'] = !empty($header) ? $header : $avatar;
         }
 
-        $this->assign('list', $list);
-        /*  echo json_encode($list);*/
+        /*  foreach ($commments as $value) {
+              array_push($group_ids, $value['target_id']);
+          }
+          $ids = array_values(array_unique($group_ids));
+          $data['id'] = array('in', $ids);
+          $list = $cpost->where($data)->select();
+          foreach ($list as $value) {
+              $comments = $value->comment;
+              $myComments = array();
+              foreach ($comments as $comment) {
+                  if ($comment['user_id'] == $userid && $comment['status'] == 1) {
+                      array_push($myComments, $comment);
+                  }
+              }
+              $value['mycomments'] = $myComments;
+
+              $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+              $header = isset($value->user->header) ? $value->user->header : "";
+              $avatar = isset($value->user->avatar) ? $value->user->avatar : "";
+              $value['header'] = !empty($header) ? $header : $avatar;
+          }
+
+          $this->assign('list', $list);
+
+         echo json_encode($list);
+          /*  echo json_encode($list);*/
+        $this->assign('list', $myComments);
         return $this->fetch();
     }
 }
