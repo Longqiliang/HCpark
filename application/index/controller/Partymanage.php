@@ -17,7 +17,7 @@ use app\index\model\MerchantsRecord;
 use app\index\model\MerchantsCompany;
 use app\common\model\FeePayment;
 
-
+use org\ImageImagick;
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -136,6 +136,7 @@ class Partymanage extends Base
             'extra' => $manageInfo['remark'],
             'img' => json_decode($manageInfo['img'])
         ];
+        $a = new ImageImagick( $info['img'][0]);exit;
         //$image = Image::open($info['img'][1]);
         /* if ($info['img']){
              foreach($info['img'] as $k=>$v){
@@ -235,7 +236,7 @@ class Partymanage extends Base
                 }
 
             }
-         //TODO 招商人员的 个人统计
+            //TODO 招商人员的 个人统计
 
         }
 
@@ -250,37 +251,40 @@ class Partymanage extends Base
         return $this->fetch();
     }
 
-   //企业详情
-    public  function  companyInfo(){
-    $id = input('id');
-    $mCompany = new MerchantsCompany();
-    $mRecord = new MerchantsRecord();
-    $Company=$mCompany->where('id',$id)->find();
-    $Record = $mRecord->where('merchants_id',$id)->order('create_time')->select();
-    $this->assign('company',$Company);
-    $this->assign('records',$Record);
-    return $this->fetch();
+    //企业详情
+    public function companyInfo()
+    {
+        $id = input('id');
+        $mCompany = new MerchantsCompany();
+        $mRecord = new MerchantsRecord();
+        $Company = $mCompany->where('id', $id)->find();
+        $Record = $mRecord->where('merchants_id', $id)->order('create_time')->select();
+        $this->assign('company', $Company);
+        $this->assign('records', $Record);
+        return $this->fetch();
 
     }
+
     //个人统计详情
-    public  function  statisticsInfo($user_id){
+    public function statisticsInfo($user_id)
+    {
 
 
-    $this->fetch();
+        $this->fetch();
     }
 
 
     //工作日志详情
-   public  function  diaryInfo(){
-        $id =input('id');
+    public function diaryInfo()
+    {
+        $id = input('id');
         $mDiary = new MerchantsDiary();
-        $info = $mDiary->where('id',$id)->find();
-        $info['user_name']=isset($info->user->name)?$info->user->name:"";
-        $this->assign('info',$info);
+        $info = $mDiary->where('id', $id)->find();
+        $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
+        $this->assign('info', $info);
         return $this->fetch();
 
-   }
-
+    }
 
 
     /*园区列表*/
