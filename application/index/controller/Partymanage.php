@@ -543,9 +543,10 @@ class Partymanage extends Base
     }
     //工作日志详情
     public function diaryInfo()
-    {   $user_id=input('user_id');
+    {   $user_id = empty(input('user_id'))?session('userId'):input('user_id');
         $id = input('id');
         $mDiary = new MerchantsDiary();
+
         if(empty($id)){
             $data = input('');
             $data['user_id'] = $user_id;
@@ -555,17 +556,26 @@ class Partymanage extends Base
             } else {
                 return $this->error("no");
             }
-
         }else {
             $info = $mDiary->where('id', $id)->find();
+            $list =$mDiary->where('user_id',$user_id)->select();
+            foreach ($list as $value){
+                $value['create_time']=strtotime($value['create_time']);
+            }
             $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
+            //该用户总共写的日志详情
+            $this->assign('list',json_encode($list));
+            //当前日志详情
             $this->assign('info', $info);
             return $this->fetch();
         }
 
     }
 
-
+    public function write()
+    {
+        return $this->fetch();
+    }
 
 
     /*园区列表*/
