@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>个人统计</title>
 <style>
     *{
         color: #333;
@@ -132,6 +133,11 @@
         font-size: 1.2rem;
         color: #999;
     }
+    .no-log{
+        line-height: 3rem;
+        font-size: 1.3rem;
+        color: #999;
+    }
 </style>
 {/block}
 
@@ -157,41 +163,43 @@
         <li class="my-charts">
             <div class="my-charts-title"><span>招商日志填报情况</span></div>
             <canvas id="c1" width="300" height="200" class="my-chart"></canvas>
-            <p>应记录：<span>30</span>天</p>
-            <p>实际记录：<span>27</span>天</p>
+            <p>应记录：<span>{{personalInfo.total}}</span>天</p>
+            <p>实际记录：<span>{{personalInfo.dairy_num}}</span>天</p>
         </li>
         <li class="my-charts">
-            <div class="my-charts-title"><span>招商日志填报情况</span></div>
+            <div class="my-charts-title"><span>招商面积完成情况</span></div>
             <canvas id="c2" width="300" height="200" class="my-chart"></canvas>
-            <p>计划完成面积：<span>30</span>天</p>
-            <p>实际完成面积：<span>27</span>天</p>
+            <p>计划完成面积：<span>{{personalInfo.area}}</span>平米</p>
+            <p>实际完成面积：<span>{{personalInfo.finish_area}}</span>平米</p>
         </li>
         <li class="my-charts">
-            <div class="my-charts-title"><span>招商日志填报情况</span></div>
+            <div class="my-charts-title"><span>招商回款情况</span></div>
             <canvas id="c3" width="300" height="200" class="my-chart"></canvas>
-            <p>计划完成金额：<span>30</span>天</p>
-            <p>实际完成金额：<span>27</span>天</p>
+            <p>计划完成金额：<span>{{personalInfo.price}}</span>万元</p>
+            <p>实际完成金额：<span>{{personalInfo.finish_price}}</span>万元</p>
         </li>
         <li>
             <div class="my-log-title">日志记录</div>
             <ul class="my-log">
-                <li v-for="n in 6" >
+                <li v-if="personalInfo.records.length==0" class="no-log">暂无日志</li>
+                <li v-for="item in personalInfo.records" >
                     <span class="my-icon my-icon-suc"></span>
                     <div class="my-list">
-                        <div><span>工作日志</span><span>立柱</span></div>
+                        <div><span>工作日志</span><span>{{item.merchants_place | timeToString}}</span></div>
                         <div><span>创建日期：</span><span>2017-7-7</span></div>
                     </div>
                 </li>
             </ul>
         </li>
-        <li>
+        <li v-if="isBoss=='yes'">
             <div class="my-log-title">工作日志</div>
             <ul class="my-log">
-                <li v-for="n in 6" >
+                <li v-if="personalInfo.diary.length==0" class="no-log">暂无日志</li>
+                <li v-for="item in personalInfo.diary" >
                     <span class="my-icon my-icon-suc"></span>
                     <div class="my-list">
-                        <div><span>工作日志</span><span>立柱</span></div>
-                        <div><span>创建日期：</span><span>2017-7-7</span></div>
+                        <div><span>工作日志</span><span>{{item.name}}</span></div>
+                        <div><span>创建日期：</span><span>{{item.create_time}}</span></div>
                     </div>
                 </li>
             </ul>
@@ -214,6 +222,21 @@
         cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);
         cxt.closePath();
     }
+   Vue.filter('timeToString', function(time) {
+       if(time){
+           var newTime = new Date(time*1000);
+           var m = newTime.getMonth()+1,
+                   dt=newTime.getDate(),
+                   y=newTime.getFullYear();
+           if(dt<10){
+               dt='0'+dt;
+           }
+           if(m<10){
+               m='0'+m;
+           }
+           return y+'-'+m+'-'+dt
+       }
+   });
 var app = new Vue({
     el:'#app',
     data:{
@@ -221,6 +244,8 @@ var app = new Vue({
         active:1,
         yearSelected:0,
         monthSelected:0,
+        personalInfo:{$personalinfo},
+        isBoss:'{$is_boss}'
     },
     computed:{
         year(){
@@ -268,12 +293,17 @@ var app = new Vue({
             return month
         }
     },
-  created(){
-    },
     mounted(){
-        this.drawCharts('c1',80,10,13,45,'日志完整性',200.5,'rgba(118,202,153,0.2)','rgba(118,202,153,1)');
-        this.drawCharts('c2',80,10,13,45,'面积完成率',80.5,'rgba(128,206,205,0.2)','rgba(128,206,205,1)');
-        this.drawCharts('c3',80,10,13,45,'回款完成率',70.5,'rgba(240,171,65,0.2)','rgba(240,171,65,1)');
+        var info=this.personalInfo;
+        var log=parseInt(info.dairy_num / info.total),
+                area=parseInt(info.finish_area / info.area),
+                price=parseInt(info.finish_price / info.price);
+            log=isNaN(log)?0:log;
+            area=isNaN(area)?0:area;
+            price=isNaN(price)?0:price;
+        this.drawCharts('c1',80,10,13,45,'日志完整性',log,'rgba(118,202,153,0.2)','rgba(118,202,153,1)');
+        this.drawCharts('c2',80,10,13,45,'面积完成率',area,'rgba(128,206,205,0.2)','rgba(128,206,205,1)');
+        this.drawCharts('c3',80,10,13,45,'回款完成率',price,'rgba(240,171,65,0.2)','rgba(240,171,65,1)');
     },
     methods:{
         timeChange(){
@@ -284,9 +314,31 @@ var app = new Vue({
                 var data= this.month[this.monthSelected]
 
             }
-            console.log(data)
+            console.log(data);
+            this.$indicator.open({
+                text: '加载中...',
+                spinnerType: 'fading-circle'
+            });
             this.$http.post('/index/partymanage/statisticsInfo',data).then(function (res) {
-                console.log(res)
+                if(res.data.code==1){
+                    this.personalInfo=res.data.data;
+                    var info=this.personalInfo;
+                    var log=parseInt(info.dairy_num / info.total),
+                            area=parseInt(info.finish_area / info.area),
+                            price=parseInt(info.finish_price / info.price);
+                    log=isNaN(log)?0:log;
+                    area=isNaN(area)?0:area;
+                    price=isNaN(price)?0:price;
+                    this.drawCharts('c1',80,10,13,45,'日志完整性',log,'rgba(118,202,153,0.2)','rgba(118,202,153,1)');
+                    this.drawCharts('c2',80,10,13,45,'面积完成率',area,'rgba(128,206,205,0.2)','rgba(128,206,205,1)');
+                    this.drawCharts('c3',80,10,13,45,'回款完成率',price,'rgba(240,171,65,0.2)','rgba(240,171,65,1)');
+                }else{
+                    this.$toast('请其失败，请重试')
+                }
+                this.$indicator.close()
+            },function (res) {
+                this.$indicator.close()
+                this.$toast('请其失败，请重试')
             })
         },
          drawCharts(id,r,borderW,fontSize1,fontSize2,text,value,color,color2){
