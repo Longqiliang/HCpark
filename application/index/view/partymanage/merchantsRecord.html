@@ -1,0 +1,391 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>新建日志</title>
+<style>
+    .main{
+        padding-top:1.33vw;
+        padding-bottom: 4rem;
+    }
+    .list{
+        padding:3.2vw;
+    }
+    .list>li:not(:last-child){
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .list>li{
+        padding:1.2rem 3.2vw 1.2rem 3.2vw;
+        font-size: 1.5rem;
+    }
+    .list>li:not(:last-child){
+        display: flex;
+    }
+    .list>li:not(:last-child)>div:first-child{
+        width:8rem
+    }
+    .list>li:not(:last-child)>div:last-child{
+        flex-grow: 1;
+
+        word-wrap: break-word;
+    }
+
+    .list>li.my-Follow{
+        display: block;
+    }
+    input{
+        /*border:1px solid #f1f1f1;*/
+        /*padding:3px;*/
+        /*border-radius: 3px;*/
+    }
+    textarea{
+        box-sizing: border-box;
+        padding:1rem;
+        border-radius: 5px;
+        border:1px solid #f1f1f1;
+        font-size: 1.5rem;
+        line-height: 1.5;
+        margin-top:1rem;
+        width:100%;
+    }
+    .img-list{
+        display: block!important;
+    }
+
+    .my-Progress{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .my-Progress>span{
+        border-radius: 5px;
+        text-align: center;
+        line-height: 2rem;
+        height:2rem;
+        width:5rem;
+        background: #e8e8e8;
+        color: #fff;
+    }
+    .my-Progress>span.active{
+        background: #69B9F9;
+    }
+
+    .card-upload{
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+    }
+    .card-upload>div:not(:last-child){
+        margin-right: 1rem;
+    }
+    .card-area .group-area{
+        margin:5vw 0 0 0;
+        width: 100%;
+        height: 21.3vw;
+    }
+    .card-more{
+        display: flex;
+        justify-content: center;
+        margin: 4vw 0;
+    }
+    .card-more button{
+        min-width: 26.7vw;
+        border-radius: 15px;
+    }
+    .upload-img{
+        border:1px solid #e8e8e8;
+        border-radius: 5px;
+        width: 20vw;
+        height: 20vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .upload-img img{
+        border-radius: 5px;
+    }
+    .upload-img .del-img{
+        position: absolute;
+        right: -1px;
+        top: -1px;
+        width: 20%;
+        height: 20%;
+        border-top-right-radius: 5px;
+        background: url("/index/images/service/card/icon-del.png")0 0 no-repeat;
+        background-size: cover;
+    }
+    .upload-box{
+        border:2px dashed #e8e8e8;
+        border-radius: 5px;
+        width: 20vw;
+        height: 20vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .upload-box>.iconfont{
+        font-size: 4rem;
+        color: #e8e8e8;
+    }
+    .img-responsive{
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+        display: block;
+    }
+    .hide{
+        display: none!important;
+    }
+    .toSubmit{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border:none;
+        outline: none;
+        width:100%;
+        height:4rem;
+        line-height: 4rem;
+        text-align: center;
+        font-size: 1.8rem;
+        color: #ffffff;
+        background: #69B9F9;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="main">
+        <ul class="list">
+            <li >
+                <div><span>招商人员：</span></div>
+                <input type="text" v-model="info.p1">
+            </li>
+            <li >
+                <div><span>招商日期：</span></div>
+                <input type="text" v-model="info.p2">
+            </li>
+            <li >
+                <div><span>招商企业：</span></div>
+                <input type="text" v-model="info.p3">
+            </li>
+            <li >
+                <div><span>招商地点：</span></div>
+                <input type="text" v-model="info.p4">
+            </li>
+            <li >
+                <div><span>联系人姓名：</span></div>
+                <input type="text" v-model="info.p5">
+            </li>
+            <li >
+                <div><span>联系人电话：</span></div>
+                <input type="text" v-model="info.p6">
+            </li>
+            <li >
+                <div><span>招商进度：</span></div>
+                <div class="my-Progress">
+                    <span :class="{active:progress==0}" @click="changeProgress(0)">招商中</span>
+                    <span :class="{active:progress==1}" @click="changeProgress(1)">已完成</span>
+                </div>
+            </li>
+            <li >
+                <div><span>完成招商面积：</span></div>
+                <input type="text" v-model="info.p7">
+            </li>
+            <li >
+                <div><span>完成回款面积：</span></div>
+                <input type="text" v-model="info.p8">
+            </li>
+            <li class="my-Follow">
+                <div><span>跟进情况：</span></div>
+                <div>
+                    <textarea cols="" rows="3" placeholder="请输入跟进情况描述" v-model="info.p9"></textarea>
+                </div>
+
+            </li>
+            <li class="img-list">
+                <div><span>图片描述：</span></div>
+                <div class="imgBox">
+                    <div class="card-upload">
+                        <div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">
+                            <i class="del-img" @click="delImg(index)"></i>
+                            <img :src="imgUrl" class="img-responsive">
+                        </div>
+                        <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
+                            <i class="iconfont hc-jia"></i>
+                        </div>
+                    </div>
+                    <form ref="myform">
+                        <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <button class="toSubmit" @click="toSubmit">提交</button>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+        isSubmit:false,
+        info:{
+            p1:'111',
+            p2:'',
+            p3:'',
+            p4:'',
+            p5:'',
+            p6:'',
+            p7:'',
+            p9:''
+        },
+        popupVisible:'1111',
+        progress:0,
+        imgList:[],
+        imgSrc:{
+            imgLength:4,
+            dataUrl:[],
+            imgName:[]
+        }
+    },
+    methods:{
+        toSubmit(){
+            if(!this.isSubmit){
+                if(this.info.p1==''){
+                    this.$toast({message: '请填写招商人员', position: 'bottom', duration: 2000})
+                }else if(this.info.p2==''){
+                    this.$toast({message: '请填写招商日期', position: 'bottom', duration: 2000})
+                }else if(this.info.p3==''){
+                    this.$toast({message: '请填写招商企业', position: 'bottom', duration: 2000})
+                }else if(this.info.p4==''){
+                    this.$toast({message: '请填写招商地点', position: 'bottom', duration: 2000})
+                }else if(this.info.p5==''){
+                    this.$toast({message: '请填写联系人姓名', position: 'bottom', duration: 2000})
+                }else if(this.info.p6==''){
+                    this.$toast({message: '请填写联系人电话', position: 'bottom', duration: 2000})
+                }else if(this.info.p9==''){
+                    this.$toast({message: '请填写跟进情况', position: 'bottom', duration: 2000})
+                }else{
+                    console.log(this.info.p9);
+                    var data=this.info;
+                    data.push(this.imgList)
+                    this.$indicator.open({
+                        text: '提交中...',
+                        spinnerType: 'triple-bounce'
+                    });
+                    this.$http.post('',data).then(function (res) {
+                        if(res.data.code){
+                            swal({
+                                title:"提交成功!",
+                                html:true,
+                                type:"success",
+                                confirmButtonColor: "#69B9F9"
+                            },function () {
+                                window.history.back();
+                            });
+                        }else{
+                            this.$toast({message: '提交失败，请重试', position: 'bottom', duration: 2000})
+                        }
+                    },function (res) {
+                        this.$toast({message: '提交失败，刷新并请重试', position: 'bottom', duration: 2000})
+                    })
+                }
+            }else{
+                this.$toast({message: '提交中，请勿重复提交', position: 'bottom', duration: 2000})
+            }
+        },
+        changeProgress(i){
+            this.progress=i
+        },
+        delImg: function (e) {
+            this.imgSrc.dataUrl.splice(e,1);
+            this.imgList.splice(e,1);
+            this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
+        },
+        imgPreview (file,path,name) {
+            var self = this;
+            if(self.imgSrc.dataUrl.length >= self.imgSrc.imgLength){
+                return;
+            }
+            // 是否支持FileReader
+            if (!file || !window.FileReader){
+                if(path){
+                    self.imgSrc.dataUrl.push(path) ;
+                }
+                return;
+            }
+
+            if (/^image/.test(file.type)) {
+                // 创建一个reader
+                var reader = new FileReader();
+                // 将图片将转成 base64 格式
+                reader.readAsDataURL(file);
+                // 读取成功后的回调
+                reader.onloadend = function () {
+                    self.imgSrc.dataUrl.push(this.result) ; //64格式图片数组
+                    if(name && path){
+                        var imgObj = {
+                            name:name,
+                            path:path,
+                            base:this.result
+                        };
+                        self.imgSrc.imgName.push(imgObj);
+                    }
+                }
+            }
+        },
+        imgUpload:function () {
+            var upImg = this.$refs.upimg;
+            upImg.click();
+        },
+        handleFileChange:function (e) {
+            var _this = this;
+            var upImg = _this.$refs.upimg;
+            var img = upImg.files[0];
+            if(img){
+                var newSize = (img.size/1024).toFixed(2);
+                if(newSize <= 10240){
+                    _this.$indicator.open({
+                        text: '图片上传中',
+                        spinnerType: 'triple-bounce'
+                    });
+                    _this.isSubmit = false;
+                    var formData = new FormData();
+                    formData.append("picture",img);
+                    _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
+                        var data = JSON.parse(res.data);
+                        console.log(data);
+                        _this.isSubmit = true;
+                        if(data.code == 1){
+                            // 在获取到文件对象进行预览
+                            _this.$indicator.close();
+                            _this.imgList.push(data.data.path); //上传后图片路径
+                            _this.imgPreview(img,data.data.path,name);
+                        }else{
+                            _this.$indicator.close();
+                            _this.$toast({
+                                message:"上传失败，请重新上传！",
+                                duration:1000
+                            });
+                        }
+                    },function (res) {
+                        _this.isSubmit = true;
+                        _this.$indicator.close();
+                        _this.$toast({
+                            message:"上传失败，请重新上传！",
+                            duration:1000
+                        });
+                    });
+                }else{
+                    _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
+                }
+            }
+        },
+    }
+})
+</script>
+{/block}
