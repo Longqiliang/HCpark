@@ -1,0 +1,94 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>合同详情</title>
+<link rel="stylesheet" href="/static/swiper/swiper-3.3.1.min.css">
+<link rel="stylesheet" href="/index/css/partymanage/contract/index.css">
+<style>
+    .swiper-slide {
+        overflow: hidden;
+        width: 40vw;
+        height:56vw;
+    }
+    .swiper-slide img{
+        width: 100%;
+    }
+    .group-box{
+        padding:0 4vw 5.33vw;
+        font-size: 1.5rem;
+        position: relative;
+    }
+    .group-box:after{
+        content: '';
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        height: 1px;
+        background-color: #E8E8E8;
+        left: 0;
+    }
+    .group-box:last-child:after{
+        height: 0;
+    }
+    .group-box .group-tit{
+        line-height: 1.4;
+        padding:4vw 0;
+    }
+    .group-box .group-remark{
+        display: block;
+        height: 40vw;
+        border: 1px solid #e8e8e8;
+        width: 100%;
+        padding: 2vw;
+        font-size: 1.5rem;
+    }
+
+
+</style>
+{/block}
+
+{block name="body"}
+<div id="app" class="content">
+    <div class="group-box">
+        <div class="group-tit">合同照片</div>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="img of list">
+                    <img :src="img">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-box">
+        <div class="group-tit">备注信息</div>
+        <textarea class="group-remark">
+        </textarea>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
+<script>
+    var img = ['/index/images/enterprise/p4.png','/index/images/enterprise/p3.png','/index/images/enterprise/p2.png','/index/images/enterprise/p1.png'];
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            list:img
+        },
+        mounted(){
+            var swiper = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                loop: true,
+                slidesPerView: 'auto',
+                centeredSlides: true,
+                paginationClickable: true,
+                spaceBetween: 35
+            });
+        },
+        methods:{
+
+        }
+    })
+</script>
+{/block}

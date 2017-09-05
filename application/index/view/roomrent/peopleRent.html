@@ -1,0 +1,45 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title></title>
+<link rel="stylesheet" href="/index/css/roomrent/index.css">
+<style>
+    body{
+        background-color: #fff;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app" class="content">
+    <div class="form-group">
+        <div class="form-cell">
+            <label for="name">姓名</label>
+            <input type="text" id="name" placeholder="请输入姓名">
+        </div>
+        <div class="form-cell">
+            <label for="phone">手机</label>
+            <input type="number" id="phone" placeholder="请输入手机号">
+        </div>
+        <div class="form-cell none">备注信息</div>
+        <textarea class="form-remark"></textarea>
+    </div>
+    <div class="rent-btn-box">
+        <button class="btn btn-block btn-green">租房申请</button>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+
+        },
+        methods:{
+
+        }
+    })
+</script>
+{/block}

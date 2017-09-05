@@ -5,6 +5,13 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
+button{
+    outline: none;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: #999!important;
+}
 h2,p,h3,h4{
     font-weight: normal;
     margin: 0 auto;
@@ -287,11 +294,11 @@ body{
     color: #999;
 }
 .rent-btn-box{
-    position: absolute;
+    position: fixed;
     width: 100%;
     bottom: 0;
     left: 0;
-   padding:0 4.8vw 8vw;
+   padding:8vw 4.8vw ;
 }
 .btn{
     border-radius: 5px;
@@ -326,6 +333,34 @@ i.icon-photo{
     height: 7.73vw;
     background:url("/index/images/roomrent/icon-photo.png") no-repeat;
     background-size:100%;
+}
+/*租房信息填写*/
+.form-group{
+    padding: 0 4vw 5.33vw;
+    font-size: 1.5rem;
+}
+.form-cell{
+    min-height: 49px;
+    border-bottom: 1px solid #f1f1f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+ .form-cell.none{
+    border-bottom: none;
+}
+.form-cell input {
+    font-size: 1.5rem;
+    text-align: right;
+    width: 50vw;
+}
+.form-group .form-remark {
+    display: block;
+    height: 40vw;
+    border: 1px solid #e8e8e8;
+    width: 100%;
+    padding: 2vw;
+    font-size: 1.5rem;
 }
 /*mint-ui popup样式修改*/
 .mint-popup, .picker-slot{
