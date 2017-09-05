@@ -57,11 +57,7 @@ class Roomrent extends Base
     {
         $data = [];
         $parkId = session("park_id");
-        $build = input('build');
-        if (empty($build)) {
-            $build = "A";
-        }
-        $map = ['park_id' => $parkId, "build_block" => $build];
+        $map = ['park_id' => $parkId, "build_block" => "A"];
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRent = new ParkRent();
         $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
@@ -89,8 +85,35 @@ class Roomrent extends Base
                 }
             }
         }
+        $map1 = ['park_id' => $parkId, "build_block" => "B"];
+        $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
+        foreach ($list1 as $k => $v) {
+            $room = ParkRoom::where('id', $v['room_id'])->find();
+            $data1[$k] = [
+                'img' => json_decode($v['img']),
+                'panorama' => json_decode($v['panorama']),
+                'area' => $v['area'] . "㎡",
+                'price' => $v['price'] . "元/㎡·天",
+                'name' => $parkInfo['name'],
+                'id' => $v['id'],
+                'room' => $room['build_block'] . "幢" . $room['room'] . "室"
+            ];
+            if ($data1[$k]['img']) {
+                foreach ($data1[$k]['img'] as $k1 => $v1) {
+                    $small_img = $this->getThumb($v1, 170, 120);
+                    $data1[$k]['img'][$k1] = $small_img;
+                }
+            }
+            if ($data1[$k]['panorama']) {
+                foreach ($data1[$k]['panorama'] as $k1 => $v1) {
+                    $small_img = $this->getThumb($v1, 170, 120);
+                    $data1[$k]['panorama'][$k1] = $small_img;
+                }
+            }
+        }
         $this->assign('list', json_encode($data));
-        //return dump($data);
+        $this->assign('list1', json_encode($data1));
+        //return dump($data1);
 
         return $this->fetch();
     }
