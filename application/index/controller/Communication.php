@@ -193,7 +193,6 @@ class Communication extends Base
         $this->assign('comments', json_encode($comments));
         return $this->fetch();
     }
-
     /*写帖子页面*/
     public function writePost()
     {
@@ -214,17 +213,12 @@ class Communication extends Base
 
                 return $this->error("失败");
             }
-
         } else {
             $group_id = input('group_id');
             $this->assign('group_id', $group_id);
             return $this->fetch();
         }
-
-
     }
-
-
     /*评论*/
     public function comment()
     {
