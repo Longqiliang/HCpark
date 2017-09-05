@@ -52,9 +52,9 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <form method="get" action="index.html" class="pull-right mail-search">
+            <form method="get" action="roomrent.html" class="pull-right mail-search">
                 <div class="input-group">
-                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索标题">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索房间号">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                     </div>
@@ -90,7 +90,7 @@
                     </td>
 
                     <td>
-                        <a href="{:Url('addrent','id='.$vo.id)}">{$parkName}</a>
+                        <a href="{:Url('addrent','id='.$vo.id)}">{$parkName}{$vo.build}幢</a>
                     </td>
                     <td>
                         <a href="{:Url('addrent','id='.$vo.id)}">{$vo.room_id}</a>

@@ -62,6 +62,15 @@ class Park extends Admin
                 }
             } else {
                 $data = input('post.');
+                $maps = [
+                    'build_block' => $data['build_block'],
+                    'room' => $data['room'],
+                ];
+                $roomId = ParkRoom::where($maps)->find();
+                if ($roomId){
+
+                    $this->error("该信息已存在，无法添加");
+                }
                 $data['park_id'] = session("user_auth")['park_id'];
                 $data['status'] = 1;
                 $data['company'] = $data['company_id'];
@@ -96,9 +105,14 @@ class Park extends Admin
 
     public function roomList()
     {
+        $search = input('search');
         $map = [
             "park_id" => session("user_auth")['park_id'],
+            'del' => 0,
         ];
+        if ($search){
+            $map['room'] = $search;
+        }
         $list = ParkRoom::where($map)->order('id desc')->paginate();
         foreach ($list as $k => $v) {
             $department = WechatDepartment::where('id', $v['company_id'])->find();
@@ -116,7 +130,7 @@ class Park extends Admin
     public function moveToTrash()
     {
         $ids = input('ids/a');
-        $result = ParkRoom::where('id', 'in', $ids)->update(['status' => -1]);
+        $result = ParkRoom::where('id', 'in', $ids)->update(['del' => -1]);
 
         if ($result) {
 
@@ -131,13 +145,24 @@ class Park extends Admin
     /*房屋出租信息*/
     public function roomRent()
     {
+        $search = input('search');
         $parkRent = new ParkRent();
-        $list = $parkRent->order('id desc')->paginate();
+        $map = ['park_id' => session("user_auth")['park_id']];
+        if ($search){
+            $res = ParkRoom::where('room',$search)->select();
+            foreach($res as $k=>$v){
+                $seachArr[$k] = $v['id'];
+            }
+            $map['room_id'] = ['in',$seachArr] ;
+        }
+        $list = $parkRent->where($map)->order('id desc')->paginate();
         foreach ($list as $k => $v) {
             $room = ParkRoom::where('id', $v['room_id'])->find();
-            $v['room_id'] = $room['build_block'] . $room['room'];
+            $v['room_id'] = $room['room'];
+            $v['build'] = $room['build_block'];
         }
-        $park = ParkModel::where('id', session("user_auth")['park_id'])->find();
+        $map = ['id' => session("user_auth")['park_id']];
+        $park = ParkModel::where(['id' => session("user_auth")['park_id']])->find();
         $parkName = $park['name'];;
         $this->assign('parkName', $parkName);
         $this->assign('list', $list);

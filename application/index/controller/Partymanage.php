@@ -530,14 +530,14 @@ class Partymanage extends Base
             $floor[$k] = $v['floor'];
         }
         foreach ($floor as $k => $v) {
-            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A",])->select();
+            $roomList = $parkRoom->where(['floor'=>$v,'build_block' => "A",'del'=>0])->select();
             foreach ($roomList as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status = false;
                 } else {
                     $status = true;
                 }
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id']];
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status,'id' =>$v1['company_id']];
             }
 
         }
@@ -550,18 +550,20 @@ class Partymanage extends Base
             'build_block' => "B",
         ];
         $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->select();
+        //return  dump($list1);
         foreach ($list1 as $k => $v) {
             $floor1[$k] = $v['floor'];
         }
+        //return dump($floor1);
         foreach ($floor1 as $k => $v) {
-            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B",])->select();
+            $roomList1 = $parkRoom->where(['floor'=>$v,'build_block' => "B",'del'=>0])->select();
             foreach ($roomList1 as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status1 = false;
                 } else {
                     $status1 = true;
                 }
-                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id']];
+                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1,'id' =>$v1['company_id']];
             }
 
         }

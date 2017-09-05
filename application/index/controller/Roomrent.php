@@ -21,8 +21,8 @@ class Roomrent extends Base
         $id = input('id');
         $parkId = session("park_id");
         $park = Park::where('id', $parkId)->find();
-        $roomInfo = ParkRent::where('id', $id)->find();
-        $room = ParkRoom::where('id', $roomInfo['room_id'])->find();
+        $roomInfo = ParkRent::where('room_id', $id)->find();
+        $room = ParkRoom::where('id', $id)->find();
         $data = [
             'position' => $room['build_block'] . $room['room'] . "室",
             'area' => $roomInfo['area'],
@@ -155,14 +155,14 @@ class Roomrent extends Base
             $floor[$k] = $v['floor'];
         }
         foreach ($floor as $k => $v) {
-            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A",])->select();
+            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->select();
             foreach ($roomList as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status = false;
                 } else {
                     $status = true;
                 }
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id']];
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'department_id' => $v1['company_id'], 'id' => $v1['id']];
             }
 
         }
@@ -179,14 +179,14 @@ class Roomrent extends Base
             $floor1[$k] = $v['floor'];
         }
         foreach ($floor1 as $k => $v) {
-            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B",])->select();
+            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->select();
             foreach ($roomList1 as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status1 = false;
                 } else {
                     $status1 = true;
                 }
-                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id']];
+                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'department_id' => $v1['company_id'], 'id' => $v1['id']];
             }
 
         }
