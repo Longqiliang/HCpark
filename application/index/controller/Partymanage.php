@@ -387,6 +387,10 @@ class Partymanage extends Base
         $info = $mRecord->where('id', $Record_id)->find();
         $info['company_name'] = isset($info->merchantsCompany->company) ? $info->merchantsCompany->company : "";
         $info['merchants_user'] = isset($info->merchantsCompany->user->name) ? $info->merchantsCompany->user->name : "";
+        $info['merchants_area'] = isset($info->merchantsCompany->merchants_area) ? $info->merchantsCompany->merchants_area : "";
+        $info['merchants_money'] = isset($info->merchantsCompany->merchants_money) ? $info->merchantsCompany->merchants_money : "";
+        unset($info['merchantsCompany']);
+        echo json_encode($info);
         $this->assign('info', json_encode($info));
         return $this->fetch();
     }
@@ -537,25 +541,12 @@ class Partymanage extends Base
             return $this->fetch();
         }
     }
-
-
     //工作日志详情
     public function diaryInfo()
-    {
+    {   $user_id=input('user_id');
         $id = input('id');
         $mDiary = new MerchantsDiary();
-        $info = $mDiary->where('id', $id)->find();
-        $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
-        $this->assign('info', $info);
-        return $this->fetch();
-    }
-
-    //写日志
-    public function writeDiary()
-    {
-        $user_id = session('userId');
-        $mDiary = new MerchantsDiary();
-        if (IS_POST) {
+        if(empty($id)){
             $data = input('');
             $data['user_id'] = $user_id;
             $reult = $mDiary->save($data);
@@ -564,9 +555,17 @@ class Partymanage extends Base
             } else {
                 return $this->error("no");
             }
+
+        }else {
+            $info = $mDiary->where('id', $id)->find();
+            $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
+            $this->assign('info', $info);
+            return $this->fetch();
         }
-        return $this->fetch();
+
     }
+
+
 
 
     /*园区列表*/
