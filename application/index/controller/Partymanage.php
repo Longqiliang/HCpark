@@ -324,6 +324,7 @@ class Partymanage extends Base
         $mDiary = new MerchantsDiary();
         $mPlan = new MerchantsPlan();
         $mCompany = new MerchantsCompany();
+        $mRecord  =new MerchantsRecord();
         //年
         if (empty($month)) {
             $begindate = mktime(0, 0, 0, 1, 1, $year);
@@ -383,6 +384,7 @@ class Partymanage extends Base
     //招商个人统计
     public function statisticsInfo()
     {
+        $userid = session('userId');
         if (IS_POST) {
             $year = input('year');
             $month = input('month');
@@ -396,7 +398,6 @@ class Partymanage extends Base
 
         } else {
             $weuser=new WechatUser();
-            $userid = session('userId');
             $user = $weuser->where('userid', $userid)->find();
             $is_boss = $user['tagid'] == 1 ? "yes" : "no";
             $this->assign('is_boss', $is_boss);
