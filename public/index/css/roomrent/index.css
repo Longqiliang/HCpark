@@ -28,28 +28,21 @@ body{
     height: 7.73vw;
     position: absolute;
     right: 0;
-    top:30%;
+    top:50%;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
     background-repeat:no-repeat;
-    background-size: contain;
+    background-size: 100%;
     z-index: 3;
-    border-width: 1px 0 1px 0;
-    border-color: rgba(0,0,0,0.08);
-    border-style: solid;
 }
 
 .header-icon.icon-tab{
     background-image: url("/index/images/roomrent/icon-tab.png") ;
+    top:32%;
 }
 .header-icon.icon-list{
     background-image: url("/index/images/roomrent/icon-list.png") ;
 }
-/*.header-icon img{*/
-    /*width: 100%;*/
-    /*height: 100%;*/
-    /**/
-/*}*/
 .header:after{
     content: '';
     position: absolute;
@@ -123,7 +116,14 @@ body{
     height:4.8vw;
     margin-right:4vw;
     vertical-align: middle;
-    background-color: #eee;
+    background-size:100%;
+    background-repeat:no-repeat;
+}
+.icon-renewable{
+    background-image: url('/index/images/roomrent/icon-renewable.png');
+}
+.icon-rentable{
+    background-image: url('/index/images/roomrent/icon-rentable.png');
 }
 .houses-list-tit{
     font-size: 1.8rem;
@@ -149,6 +149,126 @@ body{
 .houses-list-item span.selectable{
     color: #fff;
     background-color: #52CC92;
+}
+/*园区列表*/
+.list-card{
+    margin: 3.46vw 4.8vw 5.33vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 5px;
+}
+.list-card-img{
+   margin: 2.93vw 4vw;
+    width:30.4vw;
+    height:26.13vw;
+    background: url('/index/images/roomrent/icon-park.png') no-repeat;
+    background-size:100%;
+}
+.list-card-info{
+    padding:0 6.67vw;
+}
+.list-card-info.right{
+    text-align: right;
+}
+.list-card-info .info-tit{
+    font-size: 2.2rem;
+    line-height: 1.4;
+    padding-bottom: 1.6vw ;
+}
+.list-card-info .info-label{
+    color: #999;
+    font-size: 1.4rem;
+    line-height: 1.4;
+}
+.list-card-info .info-line{
+    display: inline-block;
+    background-color: #69B9F9;
+    border-radius: 16px;
+    height: 1vw;
+    width: 6.67vw;
+
+}
+/*租房列表*/
+.banner{
+    width: 100%;
+    height: 50vw;
+}
+.banner-icon{
+    width: 16.53vw;
+    height: 7.73vw;
+    position: absolute;
+    right: 0;
+    top:5%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    background-repeat:no-repeat;
+    background-size: 100%;
+    z-index: 3;
+}
+.banner-icon.icon-vr{
+    background-image: url('/index/images/roomrent/icon-vr.png');
+}
+.banner img{
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+}
+.table-view{
+    padding: 5.33vw;
+    font-size: 1.4rem;
+}
+.table-view-cell{
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+}
+.icon{
+    display: inline-block;
+    background-size: 100%;
+    margin-right: 3.2vw;
+    background-repeat: no-repeat;
+}
+.icon-email{
+    width: 20px;
+    height: 15px;
+    background-image: url("/index/images/service/card/icon-email.png");
+}
+.icon-phone{
+    width: 20px;
+    height: 15px;
+    background-image: url("/index/images/service/card/icon-phone.png");
+}
+.icon-ads{
+    width: 18px;
+    height: 20px;
+    background-image: url("/index/images/service/card/icon-ads.png");
+}
+.cell-tit{
+    color: #999;
+}
+.rent-btn-box{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+   padding:0 4.8vw 8vw;
+}
+.btn{
+    border-radius: 5px;
+    text-align: center;
+    border: none;
+    height: 10.67vw;
+    font-size: 1.5rem;
+}
+.btn-block{
+    width: 100%;
+}
+.btn-green{
+    background-color: #52CC92;
+    color: #fff;
+    font-size: 1.5rem;
 }
 /*mint-ui popup样式修改*/
 .mint-popup, .picker-slot{

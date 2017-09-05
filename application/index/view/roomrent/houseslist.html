@@ -11,15 +11,13 @@
 {block name="body"}
 <div class="content" id="app">
     <div class="header">
-        <i class="header-icon icon-tab">
-            <img src="/index/images/roomrent/icon-list.png" alt="">
-        </i>
+        <i class="header-icon icon-tab" @click="parkToggle"></i>
         <h2 @click="checkPark" class="header-tit">
-            <span >海创大厦A幢</span> <i class="allow-down"></i>
+            <span >{{parkName}}</span> <i class="allow-down"></i>
         </h2>
         <div class="houses-icon-box">
-            <span ><i class="houses-icon"></i>可租</span>
-            <span ><i class="houses-icon"></i>已租</span>
+            <span ><i class="houses-icon icon-rentable"></i>可租</span>
+            <span ><i class="houses-icon icon-renewable"></i>已租</span>
         </div>
         <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
             <div class="picker-toolbar">
@@ -29,76 +27,35 @@
             <mt-picker :slots="slots" @change="onParkChange" ></mt-picker>
         </mt-popup>
     </div>
-    <div class="houses-list" v-for="item of list.items">
+
+    <div class="houses-list" v-for="item of showList">
         <div class="houses-list-tit">
-            {{item.floor}}楼
+        {{item.floor}}楼
         </div>
         <div class="houses-list-item">
             <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">{{rooms.room}}</span>
         </div>
     </div>
+
+    <!--<div class="houses-list" v-for="item of list">-->
+        <!--<div class="houses-list-tit">-->
+            <!--{{item.floor}}楼-->
+        <!--</div>-->
+        <!--<div class="houses-list-item">-->
+            <!--<span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">{{rooms.room}}</span>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
 {/block}
 
 {block name="script"}
 <script type="text/javascript">
     var list = {$list};
-     list = {
-        items:[
-            {
-                floor:11,
-                rooms:[
-                    {
-                        room:1101,
-                        department_id:1,
-                        empty:true
-                    },{
-                        room:1102,
-                        empty:true
-                    },{
-                        room:1103,
-                        empty:true
-                    },{
-                        room:1104,
-                        empty:true
-                    },{
-                        room:1105,
-                        empty:true
-                    },{
-                        room:1106,
-                        empty:true
-                    },{
-                        room:1107,
-                        empty:true
-                    },{
-                        room:1108,
-                        empty:true
-                    },{
-                        room:1109,
-                        empty:true
-                    }
-
-                ]
-            },
-            {
-                floor:10,
-                rooms:[
-                    {
-                        room:1001,
-                        empty:true
-                    },
-                    {
-                        room:1002,
-                        empty:true
-                    },
-                    {
-                        room:1003,
-                        empty:false
-                    }
-                ]
-            }
-        ]
-    };
+    var values = [];
+    for(var i in list){
+        values.push(i);
+    }
+    console.log(values);
     console.log(list);
     var vm =  new Vue({
         el:'#app',
@@ -106,34 +63,71 @@
             list:list,
             popupVisible:false,
             parkPicker:'',
-            parkTxt:'',
+            name:values,
+            parkName:values[0],
+            parkTxt:{
+                index:0,
+                txt:values[0]
+            },
             slots: [
                 {
-                    values: ['1','2']
+                    values: values
                 }
             ]
         },
+        computed:{
+          showList:function () {
+              var _this = this;
+              for(var arr in _this.list){
+                  if(_this.parkName == arr){
+                      return _this.list[arr];
+                  }
+              }
+          }  
+        },
         methods:{
+            parkToggle:function () {
+                var  rentList= window.sessionStorage.getItem("rentList");
+                window.sessionStorage.setItem("housesList",true);
+                if(rentList){
+                    window.sessionStorage.removeItem("rentList");
+                    window.history.go(-1);
+                }else{
+                    window.location.href="/index/roomrent/rentlist";
+                }
+            },
             cancelPark:function () {
                 this.popupVisible = false;
             },
             selectPark:function () {
-                this.popupVisible = false;
-
+                var _this = this;
+                _this.popupVisible = false;
+                _this.parkName = _this.parkTxt.txt;
             },
             onParkChange:function (picker,values) {
-                this.parkPicker =  picker;
-                this.parkTxt = values[0];
-                console.log(values[0]);
+                var _this = this;
+                _this.parkPicker =  picker;
+                var length =  _this.name.length;
+                for(var j = 0; j < length; j += 1){
+                    if(values[0] == _this.name[j]){
+                        _this.parkTxt = {
+                            index:j,
+                            txt:values[0]
+                        }
+                    }
+                }
             },
             checkPark:function () {
-                this.popupVisible = true;
-                this.parkPicker.setSlotValue(0, '1');
+                var _this =this;
+                _this.popupVisible = true;
+                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
             jump:function (id,empty) {
-                if(!id){
-                    return;
-                }
+//                if(empty){
+//                    window.location.href = "/index/roomrent/index";
+//                }else{
+//
+//                }
                 console.log(id,empty);
             }
         }
