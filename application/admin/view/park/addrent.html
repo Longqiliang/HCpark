@@ -31,10 +31,7 @@
             <form class="form-horizontal" method="post">
                 <div class="mail-body">
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;园区名称:</h3></label>
-                        <div class="col-sm-5"><input type="text" class="form-control"   value="{$parkName}" readonly></div>
-                    </div>
-                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;大厦:</h3></label>
-                        <div class="col-sm-3"><input type="text" class="form-control"  name="name" value="{$info.name}"></div>
+                        <div class="col-sm-4"><input type="text" class="form-control"   value="{$parkName}" readonly></div>
                         <div class="col-sm-4">
                             <select name="build_block" id="" style="width: 100px;height: 30px;">
                                 <option value="A"{eq name="$info.build_block" value="A"}selected{/eq}>A幢</option>
@@ -187,17 +184,13 @@
             imgsSrc.push(img[i].src);
         };
         var id = "{$info.id}";
-        var companyName = $("input[name='name']").val();
         var areas = $("[name='area']").val();
         var prices = $("[name='price']").val();
         //alert(prices);return "";
         var floors = $("[name='floor']").val();
         var rooms = $("[name='room']").val();
         var build = $("[name='build_block']").val();
-        if(companyName ==""){
-            updateAlert("请添加楼盘名称","info");
-            return "";
-        }else if (imgScrs.length == 0){
+        if (imgScrs.length == 0){
             updateAlert("请添加全景照片","info");
             return "";
         }else if (imgsSrc.length == 0){
@@ -211,7 +204,7 @@
             return "";
         }
         $.ajax({
-            data:{floor:floors,room:rooms,build_block:build,panorama:imgScrs,name:companyName,area:areas,price:prices,id:id,img:imgsSrc},
+            data:{floor:floors,room:rooms,build_block:build,panorama:imgScrs,area:areas,price:prices,id:id,img:imgsSrc},
             type:"post",
             url:"{:Url('addrent')}",
             success:function (data) {

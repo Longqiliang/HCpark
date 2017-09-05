@@ -47,7 +47,7 @@ class Park extends Admin
             if (input('uid')) {
                 $data = input('post.');
                 $info = WechatDepartment::where('name', $data['company_id'])->find();
-                $data['company'] = $data['company_id'];
+                //$data['company'] = $data['company_id'];
                 if ($info) {
                     $data['company_id'] = $info['id'];
                 } else {
@@ -104,6 +104,9 @@ class Park extends Admin
             $department = WechatDepartment::where('id', $v['company_id'])->find();
             $v['company_id'] = $department['name'];
         }
+        $park = ParkModel::where('id', session("user_auth")['park_id'])->find();
+        $parkName = $park['name'];
+        $this->assign('parkName', $parkName);
         $this->assign('list', $list);
         //return dump($_SESSION);
         return $this->fetch();
@@ -130,11 +133,13 @@ class Park extends Admin
     {
         $parkRent = new ParkRent();
         $list = $parkRent->order('id desc')->paginate();
-        foreach($list as $k=>$v){
-            $room = ParkRoom::where('id',$v['room_id'])->find();
-            $v['room_id'] = $room['build_block'].$room['room'];
+        foreach ($list as $k => $v) {
+            $room = ParkRoom::where('id', $v['room_id'])->find();
+            $v['room_id'] = $room['build_block'] . $room['room'];
         }
-
+        $park = ParkModel::where('id', session("user_auth")['park_id'])->find();
+        $parkName = $park['name'];;
+        $this->assign('parkName', $parkName);
         $this->assign('list', $list);
 
         return $this->fetch();
@@ -153,11 +158,11 @@ class Park extends Admin
                 $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block')])->find();
                 $data['room_id'] = $rooms['id'];
                 unset($data['room']);
-                foreach($data['img'] as $k=>$v){
-                    $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                foreach ($data['img'] as $k => $v) {
+                    $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
-                foreach($data['panorama'] as $k=>$v){
-                    $data['panorama'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                foreach ($data['panorama'] as $k => $v) {
+                    $data['panorama'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
                 $data['img'] = json_encode($data['img']);
                 $data['panorama'] = json_encode($data['panorama']);
@@ -178,11 +183,11 @@ class Park extends Admin
                 $data['room_id'] = $rooms['id'];
                 $data['park_id'] = session("user_auth")['park_id'];
                 unset($data['room']);
-                foreach($data['img'] as $k=>$v){
-                    $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                foreach ($data['img'] as $k => $v) {
+                    $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
-                foreach($data['panorama'] as $k=>$v){
-                    $data['panorama'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                foreach ($data['panorama'] as $k => $v) {
+                    $data['panorama'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
                 $data['img'] = json_encode($data['img']);
                 $data['panorama'] = json_encode($data['panorama']);
@@ -241,12 +246,15 @@ class Park extends Admin
     public function roomOrder()
     {
         $parkid = session('user_auth')['park_id'];
+        $park = ParkModel::where('id', session("user_auth")['park_id'])->find();
+        $parkName = $park['name'];
         $map = ['park_id' => $parkid];
         $list = PeopleRent::where($map)->order('id desc')->paginate();
+
         foreach ($list as $k => $v) {
             $parkRent = ParkRent::where('id', $v['rent_id'])->find();
             $parkRoom = ParkRoom::where('id', $parkRent['room_id'])->find();
-            $v['rent_id'] = $parkRoom['name'] . $parkRoom['build_block'] . $parkRoom['room'];
+            $v['rent_id'] = $parkName . $parkRoom['build_block'] . "幢" . $parkRoom['room'] . "室";
         }
         int_to_string($list, ['status' => [1 => "未联系", 2 => "已联系"]]);
         $this->assign('list', $list);
@@ -258,11 +266,11 @@ class Park extends Admin
     public function changeStatus()
     {
         $id = input('id');
-        $res = PeopleRent::where('id',$id)->update(['status'=>2]);
-        if ($res){
+        $res = PeopleRent::where('id', $id)->update(['status' => 2]);
+        if ($res) {
 
             $this->success("修改成功");
-        }else{
+        } else {
 
             $this->error("修改失败");
         }
