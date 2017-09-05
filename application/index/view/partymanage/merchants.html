@@ -558,6 +558,8 @@
 //            招商统计
             finish_num:{$finish_num},
             undone_num:{$undone_num},
+            undone2:{$undone2},
+            finish2:{$finish2},
             //招商进度
             undone:{$undone},
             finish:{$finish},
@@ -591,6 +593,18 @@
             }
         },
         mounted(){
+            var w=[],e=[];
+            for( x in this.undone2 ){
+                w.push(this.undone2[x])
+            }
+            console.log(w)
+            for( x in this.finish2 ){
+                e.push(this.finish2[x])
+            }
+            console.log(e)
+
+            this.will.data=w;
+            this.finish1.data=e;
             console.log(this.diaryList)
             this.drawPie(this.types);
             this.drawLine(this.will);
