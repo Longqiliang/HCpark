@@ -325,6 +325,7 @@ class Partymanage extends Base
         $mPlan = new MerchantsPlan();
         $mCompany = new MerchantsCompany();
         $mRecord  =new MerchantsRecord();
+
         //年
         if (empty($month)) {
             $begindate = mktime(0, 0, 0, 1, 1, $year);
@@ -337,17 +338,29 @@ class Partymanage extends Base
         }
         //招商日志填报情况
         $days = ceil(abs($enddate - $begindate) / 86400);
-        $map['user_id'] = $user_id;
-        $map = ['create_time' => array('between', array($begindate, $enddate))];
-        $myDiary = $mDiary->where($map)->select();
-        $diary_num = array();
-        foreach ($myDiary as $value) {
-
-            $time = date('Y-m-d', strtotime($value['create_time']));
-            array_push($diary_num, $time);
+        $merchants_ids=array();
+        $ids = $mCompany->where('user_id',$user_id)->select();
+        foreach ($ids as   $value){
+         array_push($merchants_ids,$value['id']);
         }
-        $num = count(array_values(array_unique($diary_num)));
-        unset($map['create_time']);
+        $map['merchants_id'] = array('in',$merchants_ids);
+        $map['merchants_date'] = array('between', array($begindate, $enddate));
+        //招商日志
+        $myRecord = $mRecord->where($map)->select();
+        $record_num = array();
+        foreach ($myRecord as $value) {
+            $time = date('Y-m-d', strtotime($value['merchants_date']));
+            array_push($record_num, $time);
+        }
+        $num = count(array_values(array_unique($record_num)));
+        unset($map['merchants_id']);
+        unset($map['merchants_date']);
+        //工作日志
+        $map['create_time']=array('between', array($begindate, $enddate));
+        $map['user_id']=$user_id;
+        $myDiary = $mDiary->where($map)->select();
+        //清空map
+        $map=[];
         $map['time'] = array('between', array($begindate, $enddate));
         $list = $mPlan->where($map)->select();
         //招商计划回款
@@ -376,7 +389,8 @@ class Partymanage extends Base
             'area' => $area,
             'finish_price' => $finish_price,
             'finish_area' => $finish_area,
-
+            'records' => json_encode($myRecord),
+             'diary' =>json_encode($myDiary)
         ];
         return $data;
     }
