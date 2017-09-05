@@ -18,7 +18,7 @@ use app\index\model\MerchantsRecord;
 use app\index\model\MerchantsCompany;
 use app\common\model\FeePayment;
 use org\ImageImagick;
-
+use app\index\model\News;
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -26,26 +26,57 @@ class Partymanage extends Base
     {
         $userid = session('userId');
         $park_id = session('park_id');
-        $res = Db::table('tb_wechat_user')
-            ->alias('u')
-            ->join('__WECHAT_DEPARTMENT__ d', 'u.department=d.id')
-            ->field('d.id,u.tagid')
-            ->where('u.userid', 'eq', $userid)
-            ->find();
-        $id = input('id');//选择园区
-        $departmentid = $res['id'];//部门ID
-        $tagid = $res['tagid'];//标签ID
+        $user=WechatUser::where('userid', 'eq', $userid)->field('department,tagid')->find();
+        $map = [
+            'type' => 2,
+            'status' => 1,
+        ];
         //所有园区领导,能看到所有园区
-        if ($departmentid == 1 && $tagid == 1) {
-            $res = Park::field('id,name')->select();
-            if (input('id')) {
-                $res = Park::where('id', 'eq', $id)->field('id,name')->select();
-
-            }
+        if ($user['department'] == 1 && $user['tagid'] == 1) {
+            $res = Park::where('status','eq',1)->field('id,name')->select();
+            $news=News::where($map)->order('create_time desc')->field('id,title')->find();
         } else {
             //只能看到自己园区
-            $res = Park::where('id', 'eq', $park_id)->field('id,name')->select();
+            $res = Park::where('id', 'eq', $park_id)->where('status','eq',1)->field('id,name')->select();
+            $news = News::where($map)->where('park_id',session("park_id"))->order('create_time desc')->field('id,title')->find();
         }
+
+        $this->assign('res', json_encode($res));
+        return $this->fetch();
+    }
+
+    /** 园区内部通告列表 **/
+    public function newslist()
+    {
+        //首页所选园区ID
+        $parkid= input('id');
+        if($parkid=='a'){
+            $map = [
+                'type' => 2,
+                'status' => 1,
+            ];
+        }else {
+            $map = [
+                'park_id' => $parkid,
+                'type' => 2,
+                'status' => 1,
+            ];
+        }
+        $list=News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->select();
+        $this->assign('list', json_encode($list));
+        return $this->fetch();
+    }
+
+    /** 内部通告详情页 **/
+    public function newsdetail()
+    {
+       $id=input('id');
+        $map = [
+            'id' => $id,
+            'type' => 2,
+            'status' => 1,
+        ];
+        $res=News::where($map)->find();
 
         $this->assign('res', json_encode($res));
         return $this->fetch();
@@ -56,10 +87,17 @@ class Partymanage extends Base
     {
         //首页所选园区ID
         $id = input('id');
+        if($id=='a') {
+            //园区统计
+            $res = Park::field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+            $list = Park::field('id,name,address,images')->select();
 
-        //园区统计
-        $res = Park::where('id', 'eq', $id)->field('id,name,address,images,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->select();
+            }else{
+            $res = Park::where('id', 'eq', $id)->field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+            $list = Park::where('id','eq',$id)->field('id,name,address,images')->find();
+        }
 
+        $this->assign('list', json_encode($list));
         $this->assign('res', json_encode($res));
         return $this->fetch();
     }
