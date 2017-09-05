@@ -72,54 +72,55 @@
         <ul class="list">
             <li class="must">
                 <div><span>招商人员：</span></div>
-                <div>$info.name</div>
+                <div>{{info.merchants_user}}</div>
             </li>
             <li class="must">
                 <div><span>招商日期：</span></div>
-                <div>$info.legal_representative</div>
+                <div>{{info.merchants_date}}</div>
             </li>
             <li class="must">
                 <div><span>招商企业：</span></div>
-                <div>$info.telephone</div>
+                <div>{{info.company_name}}</div>
             </li>
             <li class="must">
                 <div><span>招商地点：</span></div>
-                <div>$info.mobile</div>
+                <div>{{info.merchants_place}}</div>
             </li>
             <li class="must">
                 <div><span>联系人姓名：</span></div>
-                <div class="openning_hours">$info.openning_hours</div>
+                <div class="openning_hours">{{info.contact_people}}</div>
             </li>
             <li class="must">
                 <div><span>联系人电话：</span></div>
                 <div>
-                   000
+                   {{info.mobile}}
                 </div>
             </li>
             <li class="must">
                 <div><span>招商进度：</span></div>
                 <div>
-                    555
+                    <span v-if="info.status==1">招商中</span>
+                    <span v-else>已完成</span>
                 </div>
             </li>
             <li class="must">
                 <div><span>完成招商面积：</span></div>
-                <div>4</div>
+                <div>{{info.merchants_area}}</div>
             </li>
             <li class="must">
                 <div><span>完成回款数量：</span></div>
-                <div>14544</div>
+                <div>{{info.merchants_money}}</div>
             </li>
             <li class="must">
                 <div><span>跟进情况：</span></div>
-                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum maiores nisi, perspiciatis saepe sapiente sunt tenetur. Accusamus commodi eligendi exercitationem id laborum nemo quam ratione tempora! Aspernatur possimus sequi temporibus.</div>
+                <div>{{info.content}}</div>
             </li>
             <li class="img-list">
                 <div><span>图片描述：</span></div>
                 <div class="imgBox">
                     <div class="card-upload">
-                        <div class="upload-img">
-                            <img src="/index/images/cbd.jpg" class="img-responsive">
+                        <div class="upload-img"  v-for="item in info.img">
+                            <img :src="item" class="img-responsive">
                         </div>
                     </div>
                 </div>
@@ -143,6 +144,7 @@ var app = new Vue({
         console.log(viewer)
     },
     data:{
+        info:{$info}
     },
     methods:{
         

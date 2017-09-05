@@ -160,47 +160,47 @@
         <ul class="list">
             <li >
                 <div><span>招商人员：</span></div>
-                <input type="text" v-model="info.p1">
+                <input type="text" v-model="info.merchants_user">
             </li>
             <li >
                 <div><span>招商日期：</span></div>
-                <input type="text" v-model="info.p2">
+                <input type="date" v-model="info.merchants_date">
             </li>
             <li >
                 <div><span>招商企业：</span></div>
-                <input type="text" v-model="info.p3">
+                <input type="text" v-model="info.company_name">
             </li>
             <li >
                 <div><span>招商地点：</span></div>
-                <input type="text" v-model="info.p4">
+                <input type="text" v-model="info.merchants_place">
             </li>
             <li >
                 <div><span>联系人姓名：</span></div>
-                <input type="text" v-model="info.p5">
+                <input type="text" v-model="info.contact_people">
             </li>
             <li >
                 <div><span>联系人电话：</span></div>
-                <input type="text" v-model="info.p6">
+                <input type="text" v-model="info.mobile">
             </li>
             <li >
                 <div><span>招商进度：</span></div>
                 <div class="my-Progress">
-                    <span :class="{active:progress==0}" @click="changeProgress(0)">招商中</span>
-                    <span :class="{active:progress==1}" @click="changeProgress(1)">已完成</span>
+                    <span :class="{active:progress==1}" @click="changeProgress(1)">招商中</span>
+                    <span :class="{active:progress==2}" @click="changeProgress(2)">已完成</span>
                 </div>
             </li>
-            <li >
+            <li v-if="progress==2">
                 <div><span>完成招商面积：</span></div>
-                <input type="text" v-model="info.p7">
+                <input type="text" v-model="info.merchants_area">
             </li>
-            <li >
-                <div><span>完成回款面积：</span></div>
-                <input type="text" v-model="info.p8">
+            <li v-if="progress==2">
+                <div><span>完成回款数量：</span></div>
+                <input type="text" v-model="info.merchants_money">
             </li>
             <li class="my-Follow">
                 <div><span>跟进情况：</span></div>
                 <div>
-                    <textarea cols="" rows="3" placeholder="请输入跟进情况描述" v-model="info.p9"></textarea>
+                    <textarea cols="" rows="3" placeholder="请输入跟进情况描述" v-model="info.content"></textarea>
                 </div>
 
             </li>
@@ -234,17 +234,18 @@ var app = new Vue({
     data:{
         isSubmit:false,
         info:{
-            p1:'111',
-            p2:'',
-            p3:'',
-            p4:'',
-            p5:'',
-            p6:'',
-            p7:'',
-            p9:''
+            merchants_user:'111',
+            merchants_date:'',
+            company_name:'',
+            merchants_place:'',
+            contact_people:'',
+            mobile:'',
+            merchants_area:'',
+            merchants_money:'',
+            content:''
         },
         popupVisible:'1111',
-        progress:0,
+        progress:1,
         imgList:[],
         imgSrc:{
             imgLength:4,
@@ -252,32 +253,39 @@ var app = new Vue({
             imgName:[]
         }
     },
+    created(){
+        this.info.company_name=JSON.parse('{$info}').company
+    },
     methods:{
         toSubmit(){
             if(!this.isSubmit){
-                if(this.info.p1==''){
+                if(this.info.merchants_user==''){
                     this.$toast({message: '请填写招商人员', position: 'bottom', duration: 2000})
-                }else if(this.info.p2==''){
+                }else if(this.info.merchants_date==''){
                     this.$toast({message: '请填写招商日期', position: 'bottom', duration: 2000})
-                }else if(this.info.p3==''){
+                }else if(this.info.company_name==''){
                     this.$toast({message: '请填写招商企业', position: 'bottom', duration: 2000})
-                }else if(this.info.p4==''){
+                }else if(this.info.merchants_place==''){
                     this.$toast({message: '请填写招商地点', position: 'bottom', duration: 2000})
-                }else if(this.info.p5==''){
+                }else if(this.info.contact_people==''){
                     this.$toast({message: '请填写联系人姓名', position: 'bottom', duration: 2000})
-                }else if(this.info.p6==''){
+                }else if(this.info.mobile==''){
                     this.$toast({message: '请填写联系人电话', position: 'bottom', duration: 2000})
-                }else if(this.info.p9==''){
+                }else if(this.info.content==''){
                     this.$toast({message: '请填写跟进情况', position: 'bottom', duration: 2000})
                 }else{
-                    console.log(this.info.p9);
+                    this.isSubmit=true
                     var data=this.info;
-                    data.push(this.imgList)
+                    data.img=this.imgList;
+                    data.status=this.progress;
+                    data.merchants_date=Date.parse(new Date(this.info.merchants_date))/1000;
+                    console.log(data);
                     this.$indicator.open({
                         text: '提交中...',
                         spinnerType: 'triple-bounce'
                     });
-                    this.$http.post('',data).then(function (res) {
+                    this.$http.post('/index/partymanage/merchantsRecord',data).then(function (res) {
+                        this.$indicator.close();
                         if(res.data.code){
                             swal({
                                 title:"提交成功!",
@@ -288,9 +296,12 @@ var app = new Vue({
                                 window.history.back();
                             });
                         }else{
+                            this.isSubmit=false
+                            this.$indicator.close();
                             this.$toast({message: '提交失败，请重试', position: 'bottom', duration: 2000})
                         }
                     },function (res) {
+                        this.isSubmit=false
                         this.$toast({message: '提交失败，刷新并请重试', position: 'bottom', duration: 2000})
                     })
                 }

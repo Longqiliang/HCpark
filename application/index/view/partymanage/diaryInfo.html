@@ -42,9 +42,9 @@
     .my-baseInfo>li:first-child{
         width:60%;
     }
-    .my-baseInfo>li:last-child{
-        width:40%;
-    }
+    /*.my-baseInfo>li:last-child{*/
+        /*width:40%;*/
+    /*}*/
     .my-title{
         padding:1.2rem 0;
     }
@@ -183,7 +183,7 @@
     <div class="my-box">
      <ul class="my-baseInfo">
             <li>招商人员姓名：<span>沙瓦蒂卡</span></li>
-            <li>日期：<span>{{ currentYear }}-{{ currentMonth }}-{{currentDay}}</span></li>
+            <!--<li>日期：<span>{{ currentYear }}-{{ currentMonth }}-{{currentDay}}</span></li>-->
         </ul>
         <div class="my-title">工作日志内容</div>
         <textarea id="" cols="30" rows="10" placeholder="请输入工作日志内容"></textarea>
@@ -209,9 +209,25 @@
 
 {block name="script"}
 <script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time*1000);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    y=newTime.getFullYear();
+            if(dt<10){
+                dt='0'+dt;
+            }
+            if(m<10){
+                m='0'+m;
+            }
+            return y+'-'+m+'-'+dt
+        }
+    });
     var app=new Vue({
         el:'#app',
         data:{
+            nowDate:'',
             isShow:false,
             isSubmit:false,
             info:{
