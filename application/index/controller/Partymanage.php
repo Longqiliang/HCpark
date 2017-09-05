@@ -180,7 +180,7 @@ class Partymanage extends Base
 
         if ($info['img']) {
             foreach ($info['img'] as $k => $v) {
-                $small_img = $this->getThumb($v, 100, 100);
+                $small_img = $this->getThumb($v, 163, 230);
                 $info['imgs'][$k] = $small_img;
             }
         }
@@ -324,7 +324,7 @@ class Partymanage extends Base
         $mDiary = new MerchantsDiary();
         $mPlan = new MerchantsPlan();
         $mCompany = new MerchantsCompany();
-        $mRecord  =new MerchantsRecord();
+        $mRecord = new MerchantsRecord();
 
         //年
         if (empty($month)) {
@@ -338,12 +338,12 @@ class Partymanage extends Base
         }
         //招商日志填报情况
         $days = ceil(abs($enddate - $begindate) / 86400);
-        $merchants_ids=array();
-        $ids = $mCompany->where('user_id',$user_id)->select();
-        foreach ($ids as   $value){
-         array_push($merchants_ids,$value['id']);
+        $merchants_ids = array();
+        $ids = $mCompany->where('user_id', $user_id)->select();
+        foreach ($ids as $value) {
+            array_push($merchants_ids, $value['id']);
         }
-        $map['merchants_id'] = array('in',$merchants_ids);
+        $map['merchants_id'] = array('in', $merchants_ids);
         $map['merchants_date'] = array('between', array($begindate, $enddate));
         //招商日志
         $myRecord = $mRecord->where($map)->select();
@@ -356,11 +356,11 @@ class Partymanage extends Base
         unset($map['merchants_id']);
         unset($map['merchants_date']);
         //工作日志
-        $map['create_time']=array('between', array($begindate, $enddate));
-        $map['user_id']=$user_id;
+        $map['create_time'] = array('between', array($begindate, $enddate));
+        $map['user_id'] = $user_id;
         $myDiary = $mDiary->where($map)->select();
         //清空map
-        $map=[];
+        $map = [];
         $map['time'] = array('between', array($begindate, $enddate));
         $list = $mPlan->where($map)->select();
         //招商计划回款
@@ -390,7 +390,7 @@ class Partymanage extends Base
             'finish_price' => $finish_price,
             'finish_area' => $finish_area,
             'records' => json_encode($myRecord),
-             'diary' =>json_encode($myDiary)
+            'diary' => json_encode($myDiary)
         ];
         return $data;
     }
@@ -411,7 +411,7 @@ class Partymanage extends Base
             }
 
         } else {
-            $weuser=new WechatUser();
+            $weuser = new WechatUser();
             $user = $weuser->where('userid', $userid)->find();
             $is_boss = $user['tagid'] == 1 ? "yes" : "no";
             $this->assign('is_boss', $is_boss);

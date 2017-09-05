@@ -56,6 +56,7 @@ class Roomrent extends Base
     public function rentList()
     {
         $data = [];
+        $data1 = [];
         $parkId = session("park_id");
         $map = ['park_id' => $parkId, "build_block" => "A"];
         $parkInfo = Park::where('id', $parkId)->find();
@@ -111,9 +112,10 @@ class Roomrent extends Base
                 }
             }
         }
+        //return dump($data);
+        $this->assign('name', $parkInfo['name']);
         $this->assign('list', json_encode($data));
         $this->assign('list1', json_encode($data1));
-        //return dump($data1);
 
         return $this->fetch();
     }

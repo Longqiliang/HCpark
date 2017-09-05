@@ -205,6 +205,9 @@ class Park extends Admin
                 unset($data['id']);
                 unset($data['floor']);
                 $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block')])->find();
+                if (!$rooms){
+                    $this->error('该楼室不存在');
+                }
                 $data['room_id'] = $rooms['id'];
                 $data['park_id'] = session("user_auth")['park_id'];
                 unset($data['room']);

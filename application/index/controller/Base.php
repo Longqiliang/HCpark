@@ -198,7 +198,7 @@ class Base extends Controller
     //生成缩略图
     public function getThumb($big_img, $width, $height){
         $path = str_replace(".","_s.",$big_img);
-        $small_img = $path;
+        $small_img = PUBLIC_PATH.$path;
         $imgage = getimagesize(PUBLIC_PATH.$big_img); //得到原始大图片
         switch ($imgage[2]) { // 图像类型判断
             case 1:
@@ -219,7 +219,7 @@ class Base extends Controller
         $res = imagecopyresampled($tn, $im, 0, 0, 0, 0, $width, $height, $src_W, $src_H); //复制图像并改变大小
         //dump($res);
         @imagejpeg($tn, $small_img); //输出图像
-        return $small_img;
+        return $path;
     }
 
 }
