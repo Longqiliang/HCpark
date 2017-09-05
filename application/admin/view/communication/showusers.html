@@ -1,0 +1,256 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style>
+
+    .mail-box .mail-subject{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+
+
+    @media only screen and (max-width: 550px){
+        .mail-date{
+            display: none;
+        }
+    }
+
+
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <form method="get" action="index.html" class="pull-right mail-search">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索群名" value="{$search}">
+                    <input type="hidden" class="form-control input-sm" name="id" placeholder="搜索群名" value="{$group_id}">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
+                    </div>
+                </div>
+            </form>
+            <h2>合作交流管理</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+                <a href="{:Url('add')}" class="btn btn-white btn-sm" ><i class="fa fa-file-text-o"></i> 添加</a>
+            </div>
+        </div>
+
+        <div id="modal-form" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="post" action="{:Url('Communication/edit')}">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h3 class="modal-title text-center"  name="dialog-title">审核入群申请</h3>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group"><label class="col-sm-2 control-label">申请人</label>
+                                <div class="col-sm-10"><input type="text" placeholder="申请人 " class="form-control" required="" name="user"></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">手机</label>
+                                <div class="col-sm-10"><input type="text" placeholder="手机" class="form-control" required="" name="mobile"></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">公司</label>
+                                <div class="col-sm-10"><input type="text" placeholder="公司" class="form-control" required="" name="company"></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                                <div class="col-sm-10"><input type="text" placeholder="备注" class="form-control" required="" name="remark"></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">状态</label>
+                                <div class="col-sm-10"><select class="form-control m-b" name="status">
+                                    <option value="-1">申请失败</option>
+                                    <option value="1">申请中</option>
+                                    <option value="2">普通成员</option>
+                                    <option value="3">管理员</option>
+                                </select></div>
+                            </div>
+                            <input type="hidden"  name="img">
+                            <!-- 富文本框<div class="mail-text h-200">
+                                 <div class="summernote"></div>
+                                 <div class="clearfix"></div>
+                             </div>-->
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-primary ajax-post" type="submit" target-form="form-horizontal">保存</button>
+
+                            <input type="hidden" name="id" value="">
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>id</th>
+                    <th>用户</th>
+                    <th>电话</th>
+                    <th>公司</th>
+                    <th>备注</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr class="read">
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                    </td>
+                    <td class="mail-subject">
+                        {$vo.id}
+                    </td>
+                    <td>
+                        {$vo.user_name}
+                    </td>
+                    <td>
+                        {$vo.mobile}
+                    </td>
+                    <td>
+                        {$vo.company}
+                    </td>
+                    <td>
+                        {$vo.remark}
+                    </td>
+                    <td>
+                        {$vo.status_text}
+                    </td>
+                    <td>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-username="{$vo.user_name}"  data-mobile="{$vo.mobile}"   data-company="{$vo.company}"  data-status="{$vo.status}"   data-remark="{$vo.remark}"    >审核</a>
+
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+
+    $('.summernote').summernote({
+        lang: 'zh-CN',
+        height: 300,
+        minHeight: 210,
+        callbacks: {
+            onImageUpload: function (files) { //the onImageUpload API
+                img = sendFile(files[0]);
+            }
+        }
+    });
+    function edit(a) {
+
+        var name =$(a).attr('data-name');
+        $("input[name='user_name']").val($(a).attr('data-username'));
+        $("input[name='mobile']").val($(a).attr('data-mobile'));
+        $("input[name='company']").val($(a).attr('data-company'));
+        $("select[name='status']").val($(a).attr('data-status'));
+        $("select[name='park_id']").val($(a).attr('data-park'));
+        var pic = document.getElementById("group_img");
+        pic.src=$(a).attr('data-img');
+
+
+    }
+    function add() {
+
+
+    }
+
+
+    function sendFile(file) {
+        var data = new FormData();
+        data.append("file_data", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: "{:Url('Upload/picture')}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                var data = $.parseJSON(response);
+                $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+            }
+        });
+    }
+
+    $("#input-file").fileinput({
+
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("/admin/Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        console.log(response);
+
+        if(response.code == 1) {
+            $("input[name='front_cover']").val(response.data);
+            $("input[name='img']").val(response.data);
+            console.log( $("input[name='img']").val());
+            var pic = document.getElementById("group_img");
+            pic.src=response.data;
+
+        } else {
+
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+</script>
+{/block}
