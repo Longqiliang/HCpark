@@ -19,6 +19,7 @@ use app\index\model\MerchantsCompany;
 use app\common\model\FeePayment;
 use org\ImageImagick;
 use app\index\model\News;
+
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -26,19 +27,19 @@ class Partymanage extends Base
     {
         $userid = session('userId');
         $park_id = session('park_id');
-        $user=WechatUser::where('userid', 'eq', $userid)->field('department,tagid')->find();
+        $user = WechatUser::where('userid', 'eq', $userid)->field('department,tagid')->find();
         $map = [
             'type' => 2,
             'status' => 1,
         ];
         //所有园区领导,能看到所有园区
         if ($user['department'] == 1 && $user['tagid'] == 1) {
-            $res = Park::where('status','eq',1)->field('id,name')->select();
-            $news=News::where($map)->order('create_time desc')->field('id,title')->find();
+            $res = Park::where('status', 'eq', 1)->field('id,name')->select();
+            $news = News::where($map)->order('create_time desc')->field('id,title')->find();
         } else {
             //只能看到自己园区
-            $res = Park::where('id', 'eq', $park_id)->where('status','eq',1)->field('id,name')->select();
-            $news = News::where($map)->where('park_id',session("park_id"))->order('create_time desc')->field('id,title')->find();
+            $res = Park::where('id', 'eq', $park_id)->where('status', 'eq', 1)->field('id,name')->select();
+            $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->find();
         }
 
         $this->assign('res', json_encode($res));
@@ -49,20 +50,20 @@ class Partymanage extends Base
     public function newslist()
     {
         //首页所选园区ID
-        $parkid= input('id');
-        if($parkid=='a'){
+        $parkid = input('id');
+        if ($parkid == 'a') {
             $map = [
                 'type' => 2,
                 'status' => 1,
             ];
-        }else {
+        } else {
             $map = [
                 'park_id' => $parkid,
                 'type' => 2,
                 'status' => 1,
             ];
         }
-        $list=News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->select();
+        $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->select();
         $this->assign('list', json_encode($list));
         return $this->fetch();
     }
@@ -70,13 +71,13 @@ class Partymanage extends Base
     /** 内部通告详情页 **/
     public function newsdetail()
     {
-       $id=input('id');
+        $id = input('id');
         $map = [
             'id' => $id,
             'type' => 2,
             'status' => 1,
         ];
-        $res=News::where($map)->find();
+        $res = News::where($map)->find();
 
         $this->assign('res', json_encode($res));
         return $this->fetch();
@@ -87,14 +88,14 @@ class Partymanage extends Base
     {
         //首页所选园区ID
         $id = input('id');
-        if($id=='a') {
+        if ($id == 'a') {
             //园区统计
             $res = Park::field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
             $list = Park::field('id,name,address,images')->select();
 
-            }else{
+        } else {
             $res = Park::where('id', 'eq', $id)->field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
-            $list = Park::where('id','eq',$id)->field('id,name,address,images')->find();
+            $list = Park::where('id', 'eq', $id)->field('id,name,address,images')->find();
         }
 
         $this->assign('list', json_encode($list));
@@ -310,7 +311,7 @@ class Partymanage extends Base
         $mCompany = new MerchantsCompany();
         $mRecord = new MerchantsRecord();
         $Company = $mCompany->where('id', $id)->find();
-        $Record = $mRecord->where('merchants_id', $id)->order('create_time')->select();
+        $Record = $mRecord->where('merchants_id', $id)->order('merchants_date desc')->select();
         $this->assign('company', $Company);
         $this->assign('records', json_encode($Record));
         return $this->fetch();
@@ -340,8 +341,9 @@ class Partymanage extends Base
         $myDiary = $mDiary->where($map)->select();
         $diary_num = array();
         foreach ($myDiary as $value) {
-            $value['create_time'] = date('Y-m-d', $value['create_time']);
-            array_push($diary_num, $value['create_time']);
+
+            $time = date('Y-m-d', strtotime($value['create_time']));
+            array_push($diary_num, $time);
         }
         $num = count(array_values(array_unique($diary_num)));
         unset($map['create_time']);
@@ -372,7 +374,8 @@ class Partymanage extends Base
             'price' => $price,
             'area' => $area,
             'finish_price' => $finish_price,
-            'finish_area' => $finish_area
+            'finish_area' => $finish_area,
+
         ];
         return $data;
     }
@@ -380,25 +383,38 @@ class Partymanage extends Base
     //招商个人统计
     public function statisticsInfo()
     {
-        $userid = session('userId');
         if (IS_POST) {
             $year = input('year');
             $month = input('month');
-        }
-        if (empty($year)) {
-            $date_str = date('Y-m-d', time());
-            //封装成数组
-            $arr = explode("-", $date_str);
-            //参数赋值
-            //年
-            $year = $arr[0];
-            //月，输出2位整型，不够2位右对齐
-            $month = sprintf('%02d', $arr[1]);
-        }
-        $personalinfo = $this->statisticsCommon($userid, $year, $month);
-        $this->assign('personalinfo', $personalinfo);
-        return $this->fetch();
+            $personalinfo = $this->statisticsCommon($userid, $year, $month);
+            if ($personalinfo) {
+                return $this->success("成功", '', $personalinfo);
 
+            } else {
+                return $this->error("失败");
+            }
+
+        } else {
+            $weuser=new WechatUser();
+            $userid = session('userId');
+            $user = $weuser->where('userid', $userid)->find();
+            $is_boss = $user['tagid'] == 1 ? "yes" : "no";
+            $this->assign('is_boss', $is_boss);
+            if (empty($year)) {
+                $date_str = date('Y-m-d', time());
+                //封装成数组
+                $arr = explode("-", $date_str);
+                //参数赋值
+                //年
+                $year = $arr[0];
+                //月，输出2位整型，不够2位右对齐
+                $month = sprintf('%02d', $arr[1]);
+            }
+            $personalinfo = $this->statisticsCommon($userid, $year, $month);
+            $this->assign('personalinfo', $personalinfo);
+            return $this->fetch();
+
+        }
     }
 
 
@@ -530,14 +546,14 @@ class Partymanage extends Base
             $floor[$k] = $v['floor'];
         }
         foreach ($floor as $k => $v) {
-            $roomList = $parkRoom->where(['floor'=>$v,'build_block' => "A",'del'=>0])->select();
+            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->select();
             foreach ($roomList as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status = false;
                 } else {
                     $status = true;
                 }
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status,'id' =>$v1['company_id']];
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id']];
             }
 
         }
@@ -556,14 +572,14 @@ class Partymanage extends Base
         }
         //return dump($floor1);
         foreach ($floor1 as $k => $v) {
-            $roomList1 = $parkRoom->where(['floor'=>$v,'build_block' => "B",'del'=>0])->select();
+            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->select();
             foreach ($roomList1 as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status1 = false;
                 } else {
                     $status1 = true;
                 }
-                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1,'id' =>$v1['company_id']];
+                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id']];
             }
 
         }
