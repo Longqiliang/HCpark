@@ -13,5 +13,9 @@ use think\Model;
 
 class MerchantsRecord extends  Model
 {
+public  function  merchantsCompany(){
 
+
+    return $this->hasOne('MerchantsCompany','id','merchants_id');
+}
 }

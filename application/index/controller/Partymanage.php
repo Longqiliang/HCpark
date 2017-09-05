@@ -271,9 +271,7 @@ class Partymanage extends Base
                 } else if ($value['status'] == 2) {
                     array_push($finish, $value);
                 }
-
             }
-
             //TODO 招商人员的 个人统计
             $date_str = date('Y-m-d', time());
             //封装成数组
@@ -317,6 +315,53 @@ class Partymanage extends Base
         return $this->fetch();
 
     }
+
+    //查看招商日志详情
+    public function recordDetail()
+    {
+        $user_id = session('userId');
+        $mRecord = new MerchantsRecord();
+        $mCompany = new MerchantsCompany();
+        $Record_id = input('id');
+        $info = $mRecord->where('id', $Record_id)->find();
+        $info['company_name'] = isset($info->merchantsCompany->company) ? $info->merchantsCompany->company : "";
+        $info['merchants_user'] = isset($info->merchantsCompany->user->name) ? $info->merchantsCompany->user->name : "";
+    }
+
+    //写招商日志
+    public function merchantsRecord()
+    {
+        $user_id = session('user_id');
+        $merchaants_id = input('merchaants_id');
+        $mCompany = new MerchantsCompany();
+        $mRecord = new MerchantsRecord();
+        if (IS_POST) {
+            $data = input('');
+            $list = $mRecord->save($data);
+            if ($data['status'] == 2) {
+                $map = [
+                    'update_time' => $data['merchants_date'],
+                    'merchants_area' => $data['merchants_area'],
+                    'merchants_money' => $data['merchants_money'],
+                    'status' => 2
+                ];
+                $result = $mCompany->where('id', $merchaants_id)->update($map);
+            }
+            if ($list) {
+                return $this->success("完成");
+            } else {
+                return $this->error("失败");
+            }
+        } else {
+            $info = $mCompany->where('id', $merchaants_id)->find();
+            $this->assign('info', $info);
+            return $this->fetch();
+
+        }
+
+
+    }
+
 
     //个人统计详情获取数据的公共方法
     public function statisticsCommon($user_id, $year, $month)
@@ -389,8 +434,8 @@ class Partymanage extends Base
             'area' => $area,
             'finish_price' => $finish_price,
             'finish_area' => $finish_area,
-            'records' => json_encode($myRecord),
-            'diary' => json_encode($myDiary)
+            'records' => $myRecord,
+            'diary' => $myDiary
         ];
         return $data;
     }
@@ -409,7 +454,6 @@ class Partymanage extends Base
             } else {
                 return $this->error("失败");
             }
-
         } else {
             $weuser = new WechatUser();
             $user = $weuser->where('userid', $userid)->find();
@@ -428,7 +472,6 @@ class Partymanage extends Base
             $personalinfo = $this->statisticsCommon($userid, $year, $month);
             $this->assign('personalinfo', $personalinfo);
             return $this->fetch();
-
         }
     }
 
@@ -442,7 +485,6 @@ class Partymanage extends Base
         $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
         $this->assign('info', $info);
         return $this->fetch();
-
     }
 
     //写日志
@@ -459,9 +501,7 @@ class Partymanage extends Base
             } else {
                 return $this->error("no");
             }
-
         }
-
         return $this->fetch();
     }
 
@@ -475,11 +515,9 @@ class Partymanage extends Base
             $data[$k] = [
                 'name' => $v['name'],
                 'address' => $v['address'],
-
             ];
         }
         $this->assign('list', $data);
-
         return $this->fetch();
     }
 
