@@ -197,11 +197,7 @@ class Roomrent extends Base
             $newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $resArr = array_merge(["$parkName A"=>$newArr],["$parkName B"=>$newArr1]);
-        echo json_encode($resArr);exit;
-        $this->assign('list', json_encode($newArr));
-        $this->assign('list1', json_encode($newArr1));
-        echo json_encode($newArr);
-        echo json_encode($newArr1);
+        $this->assign('list', json_encode($resArr));
 
         return $this->fetch();
 
