@@ -40,11 +40,11 @@
         border-bottom: 1px solid #f1f1f1;
     }
     .my-baseInfo>li:first-child{
-        width:60%;
+        width:55%;
     }
-    /*.my-baseInfo>li:last-child{*/
-        /*width:40%;*/
-    /*}*/
+    .my-baseInfo>li:last-child{
+        width:45%;
+    }
     .my-title{
         padding:1.2rem 0;
     }
@@ -156,7 +156,7 @@
             <!--点击会触发pickpre函数，重新刷新当前日期 -->
             <li class="arrow" @click="pickPre(currentYear,currentMonth)" :class="{hide:!isShow}">❮</li>
             <li class="year-month" @click="toShow">
-                <span class="choose-year">{{ currentYear }}-{{ currentMonth }}-{{currentDay}}</span>
+                <span class="choose-year">{{ currentYear }}-{{ currentMonth }}</span>
             </li>
             <li class="arrow" @click="pickNext(currentYear,currentMonth)" :class="{hide:!isShow}">❯</li>
         </ul>
@@ -182,14 +182,17 @@
     </div>
     <div class="my-box">
      <ul class="my-baseInfo">
-            <li>招商人员姓名：<span>沙瓦蒂卡</span></li>
-            <!--<li>日期：<span>{{ currentYear }}-{{ currentMonth }}-{{currentDay}}</span></li>-->
+            <li>招商人员姓名：<span>{{baseInfo.user_name}}</span></li>
+            <li>日期：
+                <span v-if="baseInfo.create_time">{{baseInfo.create_time | timeToString}}</span>
+                <span v-else>{{ Date.parse( new Date() ) | timeToString}}</span>
+            </li>
         </ul>
         <div class="my-title">工作日志内容</div>
-        <textarea id="" cols="30" rows="10" placeholder="请输入工作日志内容"></textarea>
-        <div class="my-title"><span>上传图片：</span></div>
+        <textarea id="" cols="30" rows="10" placeholder="请输入工作日志内容" v-model="baseInfo.content" v-bind:readonly="!isWrite"></textarea>
+        <div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img">图片</span></div>
         <div class="imgBox">
-            <div class="card-upload">
+            <div class="card-upload" v-if="isWrite">
                 <div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">
                     <i class="del-img" @click="delImg(index)"></i>
                     <img :src="imgUrl" class="img-responsive">
@@ -198,12 +201,17 @@
                     <i class="iconfont hc-jia"></i>
                 </div>
             </div>
+            <div class="card-upload" v-if="!isWrite">
+                <div class="upload-img" v-for="item in baseInfo.img">
+                    <img :src="item" class="img-responsive">
+                </div>
+            </div>
             <form ref="myform">
                 <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
             </form>
         </div>
     </div>
-    <button class="toSubmit" @click="toSubmit">添加</button>
+    <button class="toSubmit" @click="toSubmit" v-if="isWrite">添加</button>
 </div>
 {/block}
 
@@ -227,19 +235,12 @@
     var app=new Vue({
         el:'#app',
         data:{
+            isBoos:false,
+            isWrite:false,
+            baseInfo:{$info},
             nowDate:'',
             isShow:false,
             isSubmit:false,
-            info:{
-                p1:'111',
-                p2:'',
-                p3:'',
-                p4:'',
-                p5:'',
-                p6:'',
-                p7:'',
-                p9:''
-            },
             popupVisible:'1111',
             progress:0,
             imgList:[],
@@ -256,7 +257,12 @@
             checkedList:[1504540800000,1504454400000,1504617185000]
         },
         created(){
-            this.initData(null);
+            if(this.baseInfo.content || this.isBoos==true){
+                this.isWrite=false;
+            }else{
+                this.isWrite=true;
+            }
+            this.initData(this.baseInfo.create_time*1000);
         },
         methods:{
             toShow(){
@@ -324,7 +330,40 @@
                 return false
             },
             toCheck:function (key) {
-
+                console.log(key);
+                if(this.isSubmit){
+                    this.$toast('提交中，请稍等')
+                    return
+                }
+                this.$indicator.open({
+                    text: '提交中...',
+                    spinnerType: 'triple-bounce'
+                });
+                this.isSubmit=true;
+                var time=this.days[key]/1000;
+                console.log(time);
+                var data={
+                    time:time,
+                    user_id:this.baseInfo.user_id
+                }
+                this.$http.post('/info/partymanage/changeTime',data).then(function (res) {
+                    if(res.data.code){
+                        this.isSubmit=false;
+                        this.$indicator.close();
+                        if(this.baseInfo.content || this.isBoos==true){
+                            this.isWrite=false;
+                        }else{
+                            this.isWrite=true;
+                        }
+                        this.baseInfo=res.data.data
+                    }else{
+                        this.$toast('请求失败，请重试')
+                    }
+                },function (res) {
+                    this.$toast('请求失败，请退出页面重试')
+                    this.isSubmit=false;
+                    this.$indicator.close();
+                })
             },
             pickPre: function(year, month) {
                 // setDate(0); 上月最后一天
@@ -351,7 +390,35 @@
                 return y+"-"+m+"-"+d
             },
             toSubmit(){
-
+                if(this.isSubmit){
+                    this.$toast('提交中，请稍等')
+                    return
+                }
+                this.$indicator.open({
+                    text: '提交中...',
+                    spinnerType: 'triple-bounce'
+                });
+                this.isSubmit=true;
+                var data=this.baseInfo;
+                data.img=this.imgList;
+                this.$http.post('/info/partymanage/changeTime',data).then(function (res) {
+                    if(res.data.code){
+                        this.isSubmit=false;
+                        this.$indicator.close();
+                        if(this.baseInfo.content || this.isBoos==true){
+                            this.isWrite=false;
+                        }else{
+                            this.isWrite=true;
+                        }
+                        this.baseInfo=res.data.data
+                    }else{
+                        this.$toast('请求失败，请重试')
+                    }
+                },function (res) {
+                    this.$toast('请求失败，请退出页面重试')
+                    this.isSubmit=false;
+                    this.$indicator.close();
+                })
             },
             delImg: function (e) {
                 this.imgSrc.dataUrl.splice(e,1);
