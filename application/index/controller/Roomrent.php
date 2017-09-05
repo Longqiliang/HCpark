@@ -61,7 +61,7 @@ class Roomrent extends Base
         if (empty($build)) {
             $build = "A";
         }
-        $map = ['park_id' => $parkId, "build_block" => "A"];
+        $map = ['park_id' => $parkId, "build_block" => $build];
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRent = new ParkRent();
         $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
@@ -90,7 +90,7 @@ class Roomrent extends Base
             }
         }
         $this->assign('list', json_encode($data));
-        return dump($data);
+        //return dump($data);
 
         return $this->fetch();
     }
@@ -145,8 +145,8 @@ class Roomrent extends Base
     public function housesList()
     {
         $parkId = session('park_id');
-        $parkInfo = Park::where('id',$parkId)->find();
-        $parkName =$parkInfo['name'];
+        $parkInfo = Park::where('id', $parkId)->find();
+        $parkName = $parkInfo['name'];
         $parkRoom = new ParkRoom();
         $map = [
             'park_id' => $parkId,
@@ -196,7 +196,7 @@ class Roomrent extends Base
             $newArr1[$k]['floor'] = $v;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
         }
-        $resArr = array_merge(["$parkName A"=>$newArr],["$parkName B"=>$newArr1]);
+        $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
         $this->assign('list', json_encode($resArr));
 
         return $this->fetch();
