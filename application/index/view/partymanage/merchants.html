@@ -394,7 +394,7 @@
                         <div class="unBtn" @click="isCancel">取消</div>
                 </div>
                 <ul class="my-personal" >
-                    <li v-for="item in personallist">
+                    <li v-for="item in personallist" @click="window.location.href='/index/partymanage/statisticsInfo?id='+item.id">
                         <img :src="item.avatar" alt="头像" v-if="item.avatar!=null">
                         <img src="/index/images/cbd.jpg" alt="头像" v-else>
                         <div>
@@ -403,7 +403,7 @@
                     </li>
                 </ul>
                 <ul class="searchList my-personal" :class="{bgWhite:inputStatus}" v-if="inputStatus">
-                    <li v-for="item in searchList">
+                    <li v-for="item in searchList"  @click="window.location.href='/index/partymanage/statisticsInfo?id='+item.id">
                         <img :src="item.avatar" alt="头像">
                         <div>
                             <span>{{item.name}}</span><span>❯</span>
