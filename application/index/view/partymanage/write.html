@@ -1,0 +1,427 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>工作日志</title>
+<style>
+    .my-box{
+        padding:0 1.2rem;
+        font-size: 1.5rem;
+    }
+    .month{width:100%;height:5.5rem;background:#f8f7fc}
+    .month ul{margin:0;padding:0;display:flex;height:100%;justify-content:space-between;align-items:center}
+    .month ul>li{line-height:5.5rem;vertical-align:middle}
+    .year-month{color:#333;font-size:1.8rem}
+    .month .arrow{padding:0 3rem;color:#666}
+    .month ul li{color:#333;font-size:20px;text-transform:uppercase;letter-spacing:3px}
+    .weekdays{margin:0;padding:10px 0;background-color:#f8f7fc;display:flex;flex-wrap:wrap;color:#333;font-size:1.5rem;justify-content:space-around}
+    .weekdays li{display:inline-block;width:13.6%;text-align:center}
+    .days{padding-bottom:10px;background:#f8f7fc;margin:0;display:flex;flex-wrap:wrap}
+    .days li{ position:relative;list-style-type:none;display:inline-flex;justify-content:center;align-items:center;width:14.2857143vw;height:13.2857143vw;text-align:center;font-size:1.5rem;color:#000}
+    .days li .active{padding:6px 10px;border-radius:50%;background:#00B8EC;color:#fff}
+    .days li.other-month{color:#dcdcdc}
+    .days li>span{display:block;height:3.4rem;width:3.4rem;line-height:3.4rem;border-radius:100%}
+    .isBespeak span{color:#999;background-color:#e8e8e8}
+    .isChecked{
+        position: absolute;
+        top:5px;
+        right:5px;
+        display: block;
+        background: #69B9F9;
+        border-radius: 5px;
+        width:5px;
+        height:5px;
+    }
+    .my-baseInfo{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding:1.2rem 0;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .my-baseInfo>li:first-child{
+        width:60%;
+    }
+    .my-baseInfo>li:last-child{
+        width:40%;
+    }
+    .my-title{
+        padding:1.2rem 0;
+    }
+    input{
+        /*border:1px solid #f1f1f1;*/
+        /*padding:3px;*/
+        /*border-radius: 3px;*/
+    }
+    textarea{
+        box-sizing: border-box;
+        padding:1rem;
+        border-radius: 5px;
+        border:1px solid #f1f1f1;
+        font-size: 1.5rem;
+        line-height: 1.5;
+        width:100%;
+    }
+    /**图片**/
+    .card-upload{
+        display: flex;
+        align-items: center;
+        /*padding: 1rem 0;*/
+    }
+    .card-upload>div:not(:last-child){
+        margin-right: 1rem;
+    }
+    .card-area .group-area{
+        margin:5vw 0 0 0;
+        width: 100%;
+        height: 21.3vw;
+    }
+    .card-more{
+        display: flex;
+        justify-content: center;
+        margin: 4vw 0;
+    }
+    .card-more button{
+        min-width: 26.7vw;
+        border-radius: 15px;
+    }
+    .upload-img{
+        border:1px solid #e8e8e8;
+        border-radius: 5px;
+        width: 20vw;
+        height: 20vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .upload-img img{
+        border-radius: 5px;
+    }
+    .upload-img .del-img{
+        position: absolute;
+        right: -1px;
+        top: -1px;
+        width: 20%;
+        height: 20%;
+        border-top-right-radius: 5px;
+        background: url("/index/images/service/card/icon-del.png")0 0 no-repeat;
+        background-size: cover;
+    }
+    .upload-box{
+        border:2px dashed #e8e8e8;
+        border-radius: 5px;
+        width: 20vw;
+        height: 20vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .upload-box>.iconfont{
+        font-size: 4rem;
+        color: #e8e8e8;
+    }
+    .img-responsive{
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+        display: block;
+    }
+    .hide{
+        display: none!important;
+    }
+    .toSubmit{
+        display: block;
+        border:none;
+        outline: none;
+        width:93.6vw;
+        height:4rem;
+        border-radius: 5px;
+        line-height: 4rem;
+        text-align: center;
+        font-size: 1.8rem;
+        color: #ffffff;
+        margin: 0 auto;
+        margin-top: 4rem;
+        background: #69B9F9;
+    }
+</style>
+{/block}
+
+
+{block name="body"}
+<div id="app">
+    <div class="month" >
+        <ul>
+            <!--点击会触发pickpre函数，重新刷新当前日期 -->
+            <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
+            <li class="year-month" @click="toShow">
+                <span class="choose-year">{{ currentYear }}-{{ currentMonth }}-{{currentDay}}</span>
+            </li>
+            <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
+        </ul>
+    </div>
+    <div :class="{hide:!isShow}">
+        <!-- 星期 -->
+        <ul class="weekdays">
+            <li>SUN</li>
+            <li>MON</li>
+            <li>TUE</li>
+            <li>WED</li>
+            <li>THE</li>
+            <li>FRI</li>
+            <li>SAT</li>
+        </ul>
+        <!-- 日期 -->
+        <ul class="days">
+            <li  v-for="(dayobject,key) in days" @click="toCheck(key)" >
+                <span>{{dayobject.day == '' ? '': new Date(dayobject.day).getDate() }}</span>
+                <i :class="{isChecked:dayobject.isChecked}"></i>
+            </li>
+        </ul>
+    </div>
+    <div class="my-box">
+     <ul class="my-baseInfo">
+            <li>招商人员姓名：<span>沙瓦蒂卡</span></li>
+            <li>日期：<span>2017-01-01</span></li>
+        </ul>
+        <div class="my-title">工作日志内容</div>
+        <textarea id="" cols="30" rows="10" placeholder="请输入工作日志内容"></textarea>
+        <div class="my-title"><span>上传图片：</span></div>
+        <div class="imgBox">
+            <div class="card-upload">
+                <div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">
+                    <i class="del-img" @click="delImg(index)"></i>
+                    <img :src="imgUrl" class="img-responsive">
+                </div>
+                <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
+                    <i class="iconfont hc-jia"></i>
+                </div>
+            </div>
+            <form ref="myform">
+                <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
+            </form>
+        </div>
+    </div>
+    <button class="toSubmit" @click="toSubmit">添加</button>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app=new Vue({
+        el:'#app',
+        data:{
+            isShow:false,
+            isSubmit:false,
+            info:{
+                p1:'111',
+                p2:'',
+                p3:'',
+                p4:'',
+                p5:'',
+                p6:'',
+                p7:'',
+                p9:''
+            },
+            popupVisible:'1111',
+            progress:0,
+            imgList:[],
+            imgSrc:{
+                imgLength:4,
+                dataUrl:[],
+                imgName:[]
+            },
+            currentDay: 1,
+            currentMonth: 1,
+            currentYear: 1970,
+            currentWeek: 1,
+            days: [],
+            checkedList:[1504540800000,1504454400000,1504617185000]
+        },
+        created(){
+            this.initData(null);
+        },
+        methods:{
+            toShow(){
+                    this.isShow=!this.isShow
+            },
+            //生成月份数据 初始传null
+            initData: function(cur) {
+                var date;
+                if (cur) {
+                    date = new Date(cur);
+                } else {
+                    var now=new Date();
+                    var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1));
+                    d.setDate(41);
+                    date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                }
+                this.currentDay = date.getDate();
+                this.currentYear = date.getFullYear();
+                this.currentMonth = date.getMonth() + 1;
+                this.currentWeek = date.getDay(); // 1...6,0
+
+                var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay);
+                this.days.length = 0;
+                // 今天是周日，放在第一行第7个位置，前面6个
+                //初始化本周
+                for (var i = this.currentWeek; i >= 0; i--) {
+                    var d = new Date(str);
+                    d=d.setDate(d.getDate() - i);
+//                    console.log(new Date(d))
+                    if(new Date(d).getMonth()!=this.currentMonth-1){
+                        var dayobject={day:''}
+                    }else{
+                        var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
+                        dayobject.day=d;
+                        dayobject.isChecked=this.isChecked(d);
+                    }
+                    this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
+                }
+                //其他周
+                for (var i = 1; i <= 41 - this.currentWeek; i++) {
+                    var d = new Date(str);
+                    d= d.setDate(d.getDate() + i);
+                    var dayobject={};
+                    dayobject.day=d;
+                    dayobject.isChecked=this.isChecked(d);
+                    if(new Date(d).getMonth()==this.currentMonth-1){
+                        this.days.push(dayobject);
+                    }
+                }
+
+            },
+            //是否为用户选中
+            isChecked:function (data) {
+                console.log('isCheck work');
+                var dataTime=new Date(parseInt(data));
+                var year1=dataTime.getFullYear(),month1=dataTime.getMonth(),day1=dataTime.getDate();
+                for(var i=0;i<this.checkedList.length;i++){
+                    var dataTime1=new Date(parseInt(this.checkedList[i]));
+                    var year2=dataTime1.getFullYear(),month2=dataTime1.getMonth(),day2=dataTime1.getDate();
+                    if(year1==year2&&month1==month2&&day1==day2) {
+                        console.log(i)
+                        return true
+                    }
+                }
+                return false
+            },
+            toCheck:function (key) {
+
+            },
+            pickPre: function(year, month) {
+                // setDate(0); 上月最后一天
+                // setDate(-1); 上月倒数第二天
+                // setDate(dx) 参数dx为 上月最后一天的前后dx天
+
+                        var d = new Date(this.formatDate(year , month , 1));
+                        d.setDate(0);
+                        this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+            },
+            pickNext: function(year, month) {
+                        var d = new Date(this.formatDate(year , month , 1));
+                        d.setDate(35);
+                        this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+            },
+
+            // 返回 2017-01-01 格式的字符串
+            formatDate: function(year,month,day){
+                var y = year;
+                var m = month;
+                if(m<10) m = "0" + m;
+                var d = day;
+                if(d<10) d = "0" + d;
+                return y+"-"+m+"-"+d
+            },
+            toSubmit(){
+
+            },
+            delImg: function (e) {
+                this.imgSrc.dataUrl.splice(e,1);
+                this.imgList.splice(e,1);
+                this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
+            },
+            imgPreview (file,path,name) {
+                var self = this;
+                if(self.imgSrc.dataUrl.length >= self.imgSrc.imgLength){
+                    return;
+                }
+                // 是否支持FileReader
+                if (!file || !window.FileReader){
+                    if(path){
+                        self.imgSrc.dataUrl.push(path) ;
+                    }
+                    return;
+                }
+
+                if (/^image/.test(file.type)) {
+                    // 创建一个reader
+                    var reader = new FileReader();
+                    // 将图片将转成 base64 格式
+                    reader.readAsDataURL(file);
+                    // 读取成功后的回调
+                    reader.onloadend = function () {
+                        self.imgSrc.dataUrl.push(this.result) ; //64格式图片数组
+                        if(name && path){
+                            var imgObj = {
+                                name:name,
+                                path:path,
+                                base:this.result
+                            };
+                            self.imgSrc.imgName.push(imgObj);
+                        }
+                    }
+                }
+            },
+            imgUpload:function () {
+                var upImg = this.$refs.upimg;
+                upImg.click();
+            },
+            handleFileChange:function (e) {
+                var _this = this;
+                var upImg = _this.$refs.upimg;
+                var img = upImg.files[0];
+                if(img){
+                    var newSize = (img.size/1024).toFixed(2);
+                    if(newSize <= 10240){
+                        _this.$indicator.open({
+                            text: '图片上传中',
+                            spinnerType: 'triple-bounce'
+                        });
+                        _this.isSubmit = false;
+                        var formData = new FormData();
+                        formData.append("picture",img);
+                        _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
+                            var data = JSON.parse(res.data);
+                            console.log(data);
+                            _this.isSubmit = true;
+                            if(data.code == 1){
+                                // 在获取到文件对象进行预览
+                                _this.$indicator.close();
+                                _this.imgList.push(data.data.path); //上传后图片路径
+                                _this.imgPreview(img,data.data.path,name);
+                            }else{
+                                _this.$indicator.close();
+                                _this.$toast({
+                                    message:"上传失败，请重新上传！",
+                                    duration:1000
+                                });
+                            }
+                        },function (res) {
+                            _this.isSubmit = true;
+                            _this.$indicator.close();
+                            _this.$toast({
+                                message:"上传失败，请重新上传！",
+                                duration:1000
+                            });
+                        });
+                    }else{
+                        _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
+                    }
+                }
+            },
+        }
+    })
+</script>
+{/block}
