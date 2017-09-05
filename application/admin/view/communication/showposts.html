@@ -41,67 +41,20 @@
                     </div>
                 </div>
             </form>
-            <h2>合作交流管理</h2>
+            <h2>查看发帖</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
-                <a href="{:Url('add')}" class="btn btn-white btn-sm" ><i class="fa fa-file-text-o"></i> 添加</a>
             </div>
         </div>
 
         <div id="modal-form" class="modal fade" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form class="form-horizontal" method="post" action="{:Url('Communication/edit')}">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h3 class="modal-title text-center"  name="dialog-title">编辑群信息</h3>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
-                                <div class="col-sm-10">
-                                    <input id="input-file" type="file" class="file">
-                                    <sapn>
 
-                                        <img class="front_cover_img" name="group_img"  id ="group_img" src="" />
-
-                                    </sapn>
-                                </div>
-                            </div>
-                            <div class="form-group"><label class="col-sm-2 control-label">群名称</label>
-                                <div class="col-sm-10"><input type="text" placeholder="服务简介" class="form-control" required="" name="group_name"></div>
-                            </div>
-                            <div class="form-group"><label class="col-sm-2 control-label">群简介</label>
-                                <div class="col-sm-10"><input type="text" placeholder="群简介" class="form-control" required="" name="content"></div>
-                            </div>
-                            <div class="form-group"><label class="col-sm-2 control-label">所属园区</label>
-                                <div class="col-sm-10"><select class="form-control m-b" name="park_id">
-                                    <option value="3">希垦园区</option>
-
-                                </select></div>
-                            </div>
-                            <div class="form-group"><label class="col-sm-2 control-label">状态</label>
-                                <div class="col-sm-10"><select class="form-control m-b" name="status">
-                                    <option value="1">启用</option>
-                                    <option value="0">禁用</option>
-                                </select></div>
-                            </div>
-                            <input type="hidden"  name="img">
-                            <!-- 富文本框<div class="mail-text h-200">
-                                 <div class="summernote"></div>
-                                 <div class="clearfix"></div>
-                             </div>-->
-                        </div>
-
-                        <div class="modal-footer">
-                            <button class="btn btn-primary ajax-post" type="submit" target-form="form-horizontal">保存</button>
-                            <input type="hidden" name="id" value="">
-
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -112,9 +65,9 @@
                 <tr>
                     <th></th>
                     <th>id</th>
-                    <th>群名</th>
-                    <th>群介绍</th>
-                    <th>所属园区</th>
+                    <th>标题</th>
+                    <th>内容</th>
+                    <th>评论数</th>
                     <th>状态</th>
                     <th>操作</th>
                 </tr>
@@ -129,21 +82,19 @@
                         {$vo.id}
                     </td>
                     <td>
-                        {$vo.group_name}
+                        {$vo.title}
                     </td>
                     <td>
                         {$vo.content}
                     </td>
                     <td>
-                        {$vo.park_id_text}
+                        {$vo.comments}
                     </td>
                     <td>
                         {$vo.status_text}
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-groupname="{$vo.group_name}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"    >编辑</a>
-                        <a   href="{:Url('showusers','id='.$vo.id  )}" >查看成员</a>
-                        <a  href="{:Url('showposts','id='.$vo.id  )}" >查看发帖</a>
+                        <a   href="{:Url('detail','id='.$vo.id  )}" >详情</a>
                     </td>
                 </tr>
                 {/volist}
