@@ -169,6 +169,10 @@ class Roomrent extends Base
     /*楼盘表*/
     public function housesList()
     {
+        $floor = [];
+        $floor1 = [];
+        $newArr = [];
+        $newArr1 = [];
         $parkId = session('park_id');
         $parkInfo = Park::where('id', $parkId)->find();
         $parkName = $parkInfo['name'];
@@ -182,7 +186,7 @@ class Roomrent extends Base
             $floor[$k] = $v['floor'];
         }
         foreach ($floor as $k => $v) {
-            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->select();
+            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
             foreach ($roomList as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status = false;
@@ -206,7 +210,7 @@ class Roomrent extends Base
             $floor1[$k] = $v['floor'];
         }
         foreach ($floor1 as $k => $v) {
-            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->select();
+            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status1 = false;

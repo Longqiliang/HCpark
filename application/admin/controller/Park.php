@@ -46,8 +46,9 @@ class Park extends Admin
         if (IS_POST) {
             if (input('uid')) {
                 $data = input('post.');
-                $info = WechatDepartment::where('name', $data['company_id'])->find();
-                //$data['company'] = $data['company_id'];
+                $like = mb_substr($data['company_id'],0,6);
+                $info =  WechatDepartment::where(['name'=> ['like',"%$like%"]])->find();
+                $data['company'] = $data['company_id'];
                 if ($info) {
                     $data['company_id'] = $info['id'];
                 } else {
@@ -74,7 +75,8 @@ class Park extends Admin
                 $data['park_id'] = session("user_auth")['park_id'];
                 $data['status'] = 1;
                 $data['company'] = $data['company_id'];
-                $info = WechatDepartment::where('name', $data['company_id'])->find();
+                $like = mb_substr($data['company_id'],0,6);
+                $info = WechatDepartment::where(['name'=> ['like',"%$like%"]])->find();
                 if ($info) {
                     $data['company_id'] = $info['id'];
                 } else {

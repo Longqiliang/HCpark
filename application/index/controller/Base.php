@@ -199,7 +199,10 @@ class Base extends Controller
     public function getThumb($big_img, $width, $height){
         $path = str_replace(".","_s.",$big_img);
         $small_img = PUBLIC_PATH.$path;
-        $imgage = getimagesize(PUBLIC_PATH.$big_img); //得到原始大图片
+        $imgage = @getimagesize(PUBLIC_PATH.$big_img); //得到原始大图片
+        if (!$imgage){
+            return false;
+        }
         switch ($imgage[2]) { // 图像类型判断
             case 1:
                 $im = imagecreatefromgif(PUBLIC_PATH.$big_img);
