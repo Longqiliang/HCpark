@@ -202,7 +202,7 @@ class Partymanage extends Base
         $is_boss = $user['tagid'] == 1 ? "yes" : "no";
         $this->assign('is_boss', $is_boss);
         //领导权限
-        if ( $user['tagid'] == 1) {
+        if ($user['tagid'] == 1) {
             $all_company = $mCompany->select();
             $doing = array();
             $finish = array();
@@ -227,8 +227,8 @@ class Partymanage extends Base
                 }
             }
             //招商统计图表所需数据格式
-              $finish2=$this->merchantsComment($finish,1);
-              $doing2 =$this->merchantsComment($doing,2);
+            $finish2 = $this->merchantsComment($finish, 1);
+            $doing2 = $this->merchantsComment($doing, 2);
 
             //个人统计
             if ($park_id == 1) {
@@ -257,10 +257,9 @@ class Partymanage extends Base
                 unset($value['user']);
             }
             echo "领导权限";
-        }
-        //个人权限
+        } //个人权限
         else {
-              echo "个人权限";
+            echo "个人权限";
             //工作日志
             $diaryList = $mDiary->where('user_id', $userid)->order('create_time desc')->select();
             foreach ($diaryList as $value) {
@@ -357,13 +356,14 @@ class Partymanage extends Base
                 }
             }
         }
-      foreach ($data as $key=>$value) {
-          $data[$key] = count($data[$key]);
-      }
+        foreach ($data as $key => $value) {
+            $data[$key] = count($data[$key]);
+        }
 
 
-      return $data;
+        return $data;
     }
+
     //企业详情
     public function companyInfo()
     {
@@ -541,13 +541,14 @@ class Partymanage extends Base
             return $this->fetch();
         }
     }
+
     //工作日志详情
     public function diaryInfo()
-    {   $user_id = empty(input('user_id'))?session('userId'):input('user_id');
+    {
+        $user_id = empty(input('user_id')) ? session('userId') : input('user_id');
         $id = input('id');
         $mDiary = new MerchantsDiary();
-
-        if(empty($id)){
+        if (IS_POST) {
             $data = input('');
             $data['user_id'] = $user_id;
             $reult = $mDiary->save($data);
@@ -556,89 +557,81 @@ class Partymanage extends Base
             } else {
                 return $this->error("no");
             }
-        }else {
-            $info = $mDiary->where('id', $id)->find();
-            $list =$mDiary->where('user_id',$user_id)->select();
-            foreach ($list as $value){
-                $value['create_time']=strtotime($value['create_time']);
+        } else {
+            if (empty($id)) {
+                $list = $mDiary->where('user_id', $user_id)->select();
+                foreach ($list as $value) {
+                    $value['create_time'] = strtotime($value['create_time']);
+                }
+                //该用户总共写的日志详情
+                $this->assign('list', json_encode($list));
+                return $this->fetch();
+            } else {
+                $info = $mDiary->where('id', $id)->find();
+                $list = $mDiary->where('user_id', $user_id)->select();
+                foreach ($list as $value) {
+                    $value['create_time'] = strtotime($value['create_time']);
+                }
+                $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
+                //该用户总共写的日志详情
+                $this->assign('list', json_encode($list));
+                //当前日志详情
+                $this->assign('info', $info);
+                return $this->fetch();
             }
-            $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
-            //该用户总共写的日志详情
-            $this->assign('list',json_encode($list));
-            //当前日志详情
-            $this->assign('info', $info);
+
+        }
+    }
+        public
+        function write()
+        {
             return $this->fetch();
         }
 
-    }
 
-    public function write()
-    {
-        return $this->fetch();
-    }
+        /*园区列表*/
+        public
+        function parkList()
+        {
+            $park = new Park();
+            $list = $park->select();
+            foreach ($list as $k => $v) {
+                $data[$k] = [
+                    'name' => $v['name'],
+                    'address' => $v['address'],
+                ];
+            }
+            $this->assign('list', $data);
+            return $this->fetch();
+        }
 
-
-    /*园区列表*/
-    public function parkList()
-    {
-        $park = new Park();
-        $list = $park->select();
-        foreach ($list as $k => $v) {
-            $data[$k] = [
-                'name' => $v['name'],
-                'address' => $v['address'],
+        /*公司合同列表*/
+        public
+        function serviceContract()
+        {
+            $type = input('type');
+            $departmentId = input('id');
+            $map = [
+                'type' => $type,
+                'department_id' => $departmentId,
             ];
+            if ($type == 3) {
+                $info = CompanyContract::where($map)->select();
+            }
+            $info = CompanyContract::where($map)->find();
+
+            $this->assign('info', $info);
+
+            return $this->fetch();
         }
-        $this->assign('list', $data);
-        return $this->fetch();
-    }
 
-    /*公司合同列表*/
-    public function serviceContract()
-    {
-        $type = input('type');
-        $departmentId = input('id');
-        $map = [
-            'type' => $type,
-            'department_id' => $departmentId,
-        ];
-        if ($type == 3) {
-            $info = CompanyContract::where($map)->select();
-        }
-        $info = CompanyContract::where($map)->find();
-
-        $this->assign('info', $info);
-
-        return $this->fetch();
-    }
-
-    /*公司缴费记录*/
-    public function feeRecord()
-    {
-        $departmentId = input('id');
-        $map = ['company_id' => $departmentId];
-        $list = FeePayment::where($map)->order('id desc')->limit(6);
-        foreach ($list as $k => $v) {
-            $info[$k] = [
-                'id' => $v['id'],
-                'name' => $v['name'],
-                'status' => $v['status'],
-                'time' => $v['create_time'],
-                'pay' => $v['fee'],
-            ];
-        }
-        $this->assign("info", json_encode($info));
-        return $this->fetch();
-    }
-
-    /*加载更多缴费记录*/
-    public function moreRecode()
-    {
-        $departmentId = input('id');
-        $len = input("length");
-        $map = ['company_id' => $departmentId];
-        $list = FeePayment::where($map)->order('id desc')->limit($len, 6);
-        if ($list) {
+        /*公司缴费记录*/
+        public
+        function feeRecord()
+        {
+            $departmentId = input('id');
+            $map = ['company_id' => $departmentId];
+            $list = FeePayment::where($map)->order('id desc')->limit(6);
             foreach ($list as $k => $v) {
                 $info[$k] = [
                     'id' => $v['id'],
@@ -648,78 +641,101 @@ class Partymanage extends Base
                     'pay' => $v['fee'],
                 ];
             }
-
-            $this->success(['code' => 1, 'data' => json_encode($info)]);
-        } else {
-
-            $this->error(['code' => 0, 'data' => "没有更多了"]);
+            $this->assign("info", json_encode($info));
+            return $this->fetch();
         }
 
-    }
-
-    /*企业楼房表*/
-    public function companyFloor()
-    {
-        $parkId = session('park_id');
-        $parkRoom = new ParkRoom();
-        $map = [
-            'park_id' => $parkId,
-            'build_block' => "A",
-        ];
-        $list = $parkRoom->where($map)->distinct(true)->field('floor')->select();
-        foreach ($list as $k => $v) {
-            $floor[$k] = $v['floor'];
-        }
-        foreach ($floor as $k => $v) {
-            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
-            foreach ($roomList as $k1 => $v1) {
-                if ($v1['company_id']) {
-                    $status = false;
-                } else {
-                    $status = true;
+        /*加载更多缴费记录*/
+        public
+        function moreRecode()
+        {
+            $departmentId = input('id');
+            $len = input("length");
+            $map = ['company_id' => $departmentId];
+            $list = FeePayment::where($map)->order('id desc')->limit($len, 6);
+            if ($list) {
+                foreach ($list as $k => $v) {
+                    $info[$k] = [
+                        'id' => $v['id'],
+                        'name' => $v['name'],
+                        'status' => $v['status'],
+                        'time' => $v['create_time'],
+                        'pay' => $v['fee'],
+                    ];
                 }
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id']];
+
+                $this->success(['code' => 1, 'data' => json_encode($info)]);
+            } else {
+
+                $this->error(['code' => 0, 'data' => "没有更多了"]);
             }
 
         }
-        foreach ($floor as $k => $v) {
-            $newArr[$k]['floor'] = $v;
-            $newArr[$k]['rooms'] = $roomArray[$k];
-        }
-        $map1 = [
-            'park_id' => $parkId,
-            'build_block' => "B",
-        ];
-        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->select();
-        //return  dump($list1);
-        foreach ($list1 as $k => $v) {
-            $floor1[$k] = $v['floor'];
-        }
-        //return dump($floor1);
-        foreach ($floor1 as $k => $v) {
-            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
-            foreach ($roomList1 as $k1 => $v1) {
-                if ($v1['company_id']) {
-                    $status1 = false;
-                } else {
-                    $status1 = true;
-                }
-                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id']];
+
+        /*企业楼房表*/
+        public
+        function companyFloor()
+        {
+            $parkId = session('park_id');
+            $parkRoom = new ParkRoom();
+            $map = [
+                'park_id' => $parkId,
+                'build_block' => "A",
+            ];
+            $list = $parkRoom->where($map)->distinct(true)->field('floor')->select();
+            foreach ($list as $k => $v) {
+                $floor[$k] = $v['floor'];
             }
+            foreach ($floor as $k => $v) {
+                $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
+                foreach ($roomList as $k1 => $v1) {
+                    if ($v1['company_id']) {
+                        $status = false;
+                    } else {
+                        $status = true;
+                    }
+                    $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id']];
+                }
+
+            }
+            foreach ($floor as $k => $v) {
+                $newArr[$k]['floor'] = $v;
+                $newArr[$k]['rooms'] = $roomArray[$k];
+            }
+            $map1 = [
+                'park_id' => $parkId,
+                'build_block' => "B",
+            ];
+            $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->select();
+            //return  dump($list1);
+            foreach ($list1 as $k => $v) {
+                $floor1[$k] = $v['floor'];
+            }
+            //return dump($floor1);
+            foreach ($floor1 as $k => $v) {
+                $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
+                foreach ($roomList1 as $k1 => $v1) {
+                    if ($v1['company_id']) {
+                        $status1 = false;
+                    } else {
+                        $status1 = true;
+                    }
+                    $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id']];
+                }
+
+            }
+            foreach ($floor1 as $k => $v) {
+                $newArr1[$k]['floor'] = $v;
+                $newArr1[$k]['rooms'] = $roomArray1[$k];
+            }
+            $this->assign('list', json_encode($newArr));
+            $this->assign('list1', json_encode($newArr1));
+            echo json_encode($newArr);
+            echo json_encode($newArr1);
+
+            return $this->fetch();
+
 
         }
-        foreach ($floor1 as $k => $v) {
-            $newArr1[$k]['floor'] = $v;
-            $newArr1[$k]['rooms'] = $roomArray1[$k];
-        }
-        $this->assign('list', json_encode($newArr));
-        $this->assign('list1', json_encode($newArr1));
-        echo json_encode($newArr);
-        echo json_encode($newArr1);
-
-        return $this->fetch();
-
 
     }
-
-}
