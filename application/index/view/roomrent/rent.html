@@ -1,0 +1,179 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>园区企业</title>
+<link rel="stylesheet" href="/static/viewer/viewer.min.css">
+<link rel="stylesheet" href="/static/swiper/swiper.min.css">
+<link rel="stylesheet" href="/index/css/roomrent/index.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_355905_js6086l9et81tt9.css">
+<style>
+    body{
+        background-color: #fff;
+    }
+    .banner .swiper-container{
+        width: 100%;
+        height: 50vw;
+    }
+    .banner .pagination {
+        position: absolute;
+        left: 0;
+        text-align: center;
+        bottom: 5px;
+        width: 100%;
+        z-index: 999;
+    }
+     .swiper-pagination-bullet{
+        background: #fff;
+    }
+    .vr-mark{
+        position: absolute;
+        width: 32px;
+        background-color: #fff;
+        height: 33px;
+        z-index: 2;
+        right:10px ;
+    }
+
+    .viewer-canvas{
+        width: 100vw;
+    }
+    .icon-back,.icon-go{
+        display: block;
+        width: 40px;
+        height: 40px;
+        background-color: transparent;
+        color: #fff;
+        font-size: 2.6rem;
+        position: fixed;
+        top:calc(50% - 52px);
+        transform: translateY(-50%);
+        z-index: 2016;
+        text-align: center;
+        line-height: 40px;
+    }
+    .icon-back{
+        left: 1vw;
+    }
+    .icon-go{
+        right: 1vw;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div class="content" id="app">
+    <div class="banner">
+        <!--<span class=""></span>-->
+        <div class="banner-icon icon-vr" @click="looVR('http://720yun.com/t/e3cjO5mvuO2?pano_id=2107800')"></div>
+        <div class="swiper-container" @click="show($event)" ref="banner">
+            <div class="swiper-wrapper">
+                <div v-for="(img,index) of info.img" class="swiper-slide">
+                    <img :data-src="img" class="swiper-lazy" :data-original="info.panorama[index]">
+                    <div class="swiper-lazy-preloader"></div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <!--<img :src="info.img"  >-->
+    </div>
+    <div class="table-view">
+        <div class="table-view-cell">
+            <i class="icon icon-ads"></i><span>位置：</span><span>{{info.position}}</span>
+        </div>
+        <div class="table-view-cell">
+            <i class="icon icon-ads"></i><span>面积：</span><span>{{info.area}}</span>
+        </div>
+        <div class="table-view-cell">
+            <i class="icon icon-ads "></i><span>价格：</span><span>{{info.price}}</span>
+        </div>
+        <div class="table-view-cell">
+            <i class="icon icon-ads"></i><span>园区：</span><span>{{info.park}}</span>
+        </div>
+        <div class="table-view-cell">
+            <i class="icon icon-ads"></i><span>地址：</span><span>{{info.address}}</span>
+        </div>
+        <div class="table-view-cell">
+            <i class="icon icon-phone"></i><span>电话：</span><span>{{info.moblie}}</span>
+        </div>
+    </div>
+    <div class="rent-btn-box">
+        <button class="btn btn-block btn-green">租房申请</button>
+    </div>
+    <div class="icon-box" v-if="lookVR">
+        <i class="iconfont icon-back" @click="prev"></i>
+        <i class="iconfont icon-go" @click="next"></i>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/swiper/swiper.min.js"></script>
+<script src="/static/viewer/viewer.min.js"></script>
+<script>
+    console.log({$info});
+    var info ={$info};
+    info.img =['/index/images/service/lifepay/utilities.png','/index/images/enterprise/p2.png'];
+    info.panorama = ['/index/images/index/icon-no.png','/index/images/index/select.png'];
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            info:info,
+            vrShow:true,
+            lookVR:false,
+            viewer:null,
+            mySwiper:null
+        },
+        mounted(){
+            var _this = this;
+            _this.viewer =  new Viewer(_this.$refs.banner,{
+                url:'data-original',
+                toolbar:false,
+                title:false,
+                movable:false,
+                fullscreen:false,
+                show:function () {
+                    _this.lookVR = true;
+                },
+                hide:function (e) {
+                    _this.lookVR = false;
+                    _this.mySwiper.startAutoplay();
+                }
+            });
+
+             _this.mySwiper = new Swiper('.swiper-container',{
+                lazyLoading : true,
+                lazyLoadingInPrevNext : true,
+                 autoplay:3000,
+                pagination: '.swiper-pagination',
+                autoplayDisableOnInteraction: false,
+                onSlideChangeEnd:function(e){
+                    console.log(e.activeIndex);
+                }
+            })
+        },
+        methods:{
+            reBack(){
+                this.vrShow = false;
+            },
+            looVR:function (e) {
+              console.log("11");
+                window.location.href='/index/roomrent/index?link='+e;
+            },
+            show(event){
+                this.mySwiper.stopAutoplay();
+                //console.log(event);
+            },
+            next(){
+                var _this = this,
+                        viewer = _this.viewer;
+                viewer.next();
+            },
+            prev(){
+                var _this = this,
+                        viewer = _this.viewer;
+                viewer.prev();
+            }
+        }
+    })
+</script>
+{/block}

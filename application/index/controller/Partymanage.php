@@ -296,7 +296,7 @@ class Partymanage extends Base
         $this->assign('undone_num', count($doing));
         $this->assign('finish_num', count($finish));
         //招商个人统计(个人)
-        $this->assign('personalinfo', $personalinfo);
+        $this->assign('personalinfo', json_encode($personalinfo));
         //招商个人统计（领导）
         $this->assign('personallist', json_encode($personallist));
         return $this->fetch();
@@ -326,6 +326,8 @@ class Partymanage extends Base
         $info = $mRecord->where('id', $Record_id)->find();
         $info['company_name'] = isset($info->merchantsCompany->company) ? $info->merchantsCompany->company : "";
         $info['merchants_user'] = isset($info->merchantsCompany->user->name) ? $info->merchantsCompany->user->name : "";
+        $this->assign('info', json_encode($info));
+        return $this->fetch();
     }
 
     //写招商日志
@@ -470,7 +472,7 @@ class Partymanage extends Base
                 $month = sprintf('%02d', $arr[1]);
             }
             $personalinfo = $this->statisticsCommon($userid, $year, $month);
-            $this->assign('personalinfo', $personalinfo);
+            $this->assign('personalinfo', json_encode($personalinfo));
             return $this->fetch();
         }
     }

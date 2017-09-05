@@ -97,72 +97,10 @@
 {/block}
 
 {block name="script"}
-<script src="/static/swiper/swiper.min.js"></script>
-<script src="/static/viewer/viewer.min.js"></script>
 <script>
     var vm = new Vue({
         el:'#app',
-        data:{
-            vrShow:true,
-            lookVR:false,
-            viewer:null
-        },
-        mounted(){
-            var _this = this;
-            _this.viewer =  new Viewer(_this.$refs.test,{
-                url:'data-original',
-                toolbar:false,
-                title:false,
-                movable:false,
-                fullscreen:false,
-                show:function () {
-                    _this.lookVR = true;
-                },
-                view: function(e) {
-                    console.log(e.detail.index);
-                    console.log("view",e);
-                },
-                hide:function (e) {
-                    _this.lookVR = false;
-                }
-            });
 
-            var mySwiper = new Swiper('.swiper-container',{
-                lazyLoading : true,
-                lazyLoadingInPrevNext : true
-            })
-        },
-        methods:{
-            reBack(){
-                this.vrShow = false;
-            },
-            show(event){
-                console.log(event);
-            },
-            next(){
-                var _this = this,
-                        viewer = _this.viewer;
-                viewer.next();
-                console.log(viewer);
-                console.log(viewer.images.length);
-            },
-            prev(){
-                var _this = this,
-                        viewer = _this.viewer;
-                viewer.prev(function () {
-                    console.log(viewer.images.length);
-                    if(viewer.images.length){
-                        if(viewer.index === 0){
-                            viewer.view(viewer.images.length - 1);
-                        }
-                    }
-                });
-                console.log(viewer);
-                console.log(viewer.images.length);
-
-                console.log(viewer.index);
-            }
-        }
     })
 </script>
 {/block}

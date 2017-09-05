@@ -11,7 +11,7 @@
 {block name="body"}
 		<div class="content" id="app">
 			<div class="header">
-				<i class="header-icon icon-list"></i>
+				<i class="header-icon icon-list" @click="parkToggle"></i>
 				<h2 @click="checkPark" class="header-tit">
 					<span >海创大厦A幢</span> <i class="allow-down"></i>
             	</h2>
@@ -65,6 +65,16 @@
 					]
 				},
 				methods:{
+					parkToggle:function () {
+						var housesList = window.sessionStorage.getItem("housesList");
+						window.sessionStorage.setItem("rentList",true);
+						if(housesList){
+							window.sessionStorage.removeItem("housesList");
+							window.history.go(1);
+						}else{
+							window.location.href="/index/roomrent/houseslist";
+						}
+					},
 					cancelPark:function () {
 						this.popupVisible = false;
 					},
