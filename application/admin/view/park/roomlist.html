@@ -89,7 +89,9 @@
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
                     <td class="mail-subject">
-                        <a href="{:Url('roommanage','id='.$vo.id)}">{$vo.company_id}</a>
+                        <a href="{:Url('roommanage','id='.$vo.id)}">
+                            {$vo.company_id}{empty name="$vo.company_id"}待租{/empty}
+                        </a>
                     </td>
                     <td>
                         <a href="{:Url('roommanage','id='.$vo.id)}">{$vo.name}{$vo.build_block}幢</a>

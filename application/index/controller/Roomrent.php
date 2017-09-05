@@ -148,20 +148,21 @@ class Roomrent extends Base
         $parkRoom = new ParkRoom();
         $map = [
             'park_id' => $parkId,
+            'build_block' => "A",
         ];
-        $list = $parkRoom->distinct(true)->field('floor')->select();
+        $list = $parkRoom->where($map)->distinct(true)->field('floor')->select();
         foreach ($list as $k => $v) {
             $floor[$k] = $v['floor'];
         }
         foreach ($floor as $k => $v) {
-            $roomList = $parkRoom->where('floor', $v)->select();
+            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A",])->select();
             foreach ($roomList as $k1 => $v1) {
                 if ($v1['company_id']) {
                     $status = false;
                 } else {
                     $status = true;
                 }
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status,'id' =>$v1['company_id']];
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id']];
             }
 
         }
@@ -169,9 +170,34 @@ class Roomrent extends Base
             $newArr[$k]['floor'] = $v;
             $newArr[$k]['rooms'] = $roomArray[$k];
         }
+        $map1 = [
+            'park_id' => $parkId,
+            'build_block' => "B",
+        ];
+        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->select();
+        foreach ($list1 as $k => $v) {
+            $floor1[$k] = $v['floor'];
+        }
+        foreach ($floor1 as $k => $v) {
+            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B",])->select();
+            foreach ($roomList1 as $k1 => $v1) {
+                if ($v1['company_id']) {
+                    $status1 = false;
+                } else {
+                    $status1 = true;
+                }
+                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id']];
+            }
 
+        }
+        foreach ($floor1 as $k => $v) {
+            $newArr1[$k]['floor'] = $v;
+            $newArr1[$k]['rooms'] = $roomArray1[$k];
+        }
         $this->assign('list', json_encode($newArr));
+        $this->assign('list1', json_encode($newArr1));
         echo json_encode($newArr);
+        echo json_encode($newArr1);
 
         return $this->fetch();
 
