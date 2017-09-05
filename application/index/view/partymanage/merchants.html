@@ -114,6 +114,13 @@
     .my-personal>li>div>span:last-child{
         color: #999;
     }
+
+
+    /**rate**/
+    .rate .my-list li{
+        border-bottom: 1px solid #f1f1f1;
+    }
+
     /*my-log*/
     .my-log li{
         box-sizing:content-box;
@@ -260,16 +267,16 @@
     }
 
     .my-list{
-        padding:0.8rem 2.133vw;
+        /*padding:0.8rem 2.133vw;*/
     }
     .my-list li{
         width: 100%;
-        height:7.5rem;
+        height:6.5rem;
         overflow: hidden;
         position: relative;
         background: #fff;
-        margin-bottom: 1.2rem;
-        border-radius: 0.3rem;
+        /*margin-bottom: 1.2rem;*/
+        /*border-radius: 0.3rem;*/
     }
     .my-list li .content-box{
         height: 100%;
@@ -357,8 +364,8 @@
         </li>
         <!--个人统计-->
         <li class="" :class="{'contentShow':isActive==1}">
-            <iframe src="/index/partymanage/statisticsInfo" id="personalStats" frameborder="0" scrolling="no" width="100%" height="100%" onload="setIframeHeight(this)"></iframe>
-            <div v-if="is_boss=='no'">
+            <iframe src="/index/partymanage/statisticsInfo" v-if="is_boss=='no'" id="personalStats" frameborder="0" scrolling="no" width="100%" height="100%" onload="setIframeHeight(this)"></iframe>
+            <div v-if="is_boss=='yes'">
                 <div class="search" :class="{isClick:inputStatus}" >
                         <div class="searchBox" @click="isClick">
                             <div class="searchText"><span class="searchText_c">请在此搜索姓名</span></div>
@@ -367,16 +374,17 @@
                         <div class="unBtn" @click="isCancel">取消</div>
                 </div>
                 <ul class="my-personal" >
-                    <li v-for="item in article">
-                        <img src="" alt="">
+                    <li v-for="item in personallist">
+                        <img :src="item.avatar" alt="头像" v-if="item.avatar!=null">
+                        <img src="/index/images/cbd.jpg" alt="头像" v-else>
                         <div>
-                            <span>沙瓦蒂卡</span><span>❯</span>
+                            <span>{{item.name}}</span><span>❯</span>
                         </div>
                     </li>
                 </ul>
                 <ul class="searchList my-personal" :class="{bgWhite:inputStatus}" v-if="inputStatus">
                     <li v-for="item in searchList">
-                        <img :src="item.path" alt="">
+                        <img :src="item.avatar" alt="头像">
                         <div>
                             <span>{{item.name}}</span><span>❯</span>
                         </div>
@@ -404,7 +412,7 @@
                             <div class="my-job"><span>{{item.company}}</span></div>
                             <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
-                        <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
+                        <a :href="'/index/partymanage/detail/id/'+item.id"></a>
                     </li>
                 </ul>
             </div>
@@ -415,17 +423,17 @@
                             <div class="my-job"><span>{{item.company}}</span></div>
                             <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
-                        <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
+                        <a :href="'/index/partymanage/detail/id/'+item.id"></a>
                     </li>
                 </ul>
             </div>
             <ul class="searchList my-list" :class="{bgWhite:inputStatus}" v-if="inputStatus">
                 <li v-for="item in searchList">
                     <div class="content-box">
-                        <div class="my-job"><span>{{item.job}}</span></div>
-                        <div class="my-demand"><span>{{item.num}}</span></div>
+                        <div class="my-job"><span>{{item.company}}</span></div>
+                        <div class="my-demand"><span>{{item.create_time}}</span></div>
                     </div>
-                    <a :href="'/index/ServiceInformation/detail/id/'+item.id"></a>
+                    <a :href="'/index/partymanage/detail/id/'+item.id"></a>
                 </li>
             </ul>
         </li>
@@ -513,11 +521,13 @@
             //招商进度
             undone:{$undone},
             finish:{$finish},
-
+            //个人统计
+            personallist:{$personallist},
+            isActive:1,
             searchList:[],
 
             log:[],
-            isActive:0,
+//            isActive:0,
 
 
             rateActive:0,
@@ -532,12 +542,12 @@
             ]
         },
         computed:{
-            isActive(){
-                if(this.is_boss=='yes'){
-                    return 0;
-                }else{
-                    return 1;
-                }
+        },
+        created(){
+            if(this.is_boss=='yes'){
+                this.isActive=0
+            }else{
+                this.isActive=1
             }
         },
         mounted(){
@@ -715,23 +725,38 @@
                 };
                 myChart.setOption(option);
             },
-            toSearch:function (list) {
-                console.log(list)
-                if(list===0){
-                    let list=this.finish_num
-                }else{
-                    let list=this.undone_num
-                }
-                let reg=new RegExp(this.inputValue);
+            toSearch:function (l) {
+                var reg=new RegExp(this.inputValue),list=[];
                 this.searchList=[];
                 if(!this.inputValue){
                     this.searchList=[];
                 }else{
-                    for(let i=0;i<list.length;i++){
-                        if(reg.test(list[i].name)){
-                            this.searchList.push(list[i])
+                    console.log(list);
+                    if(l===0){
+                        list=this.personallist;
+                        for(let i=0;i<list.length;i++){
+                            if(reg.test(list[i].name)){
+                                this.searchList.push(list[i])
+                            }
+                        }
+                    }else{
+                        if(this.rateActive===0){
+                            list=this.undone;
+                            for(let i=0;i<list.length;i++){
+                                if(reg.test(list[i].company)){
+                                    this.searchList.push(list[i])
+                                }
+                            }
+                        }else if(this.rateActive===1){
+                            list=this.finish;
+                            for(let i=0;i<list.length;i++){
+                                if(reg.test(list[i].company)){
+                                    this.searchList.push(list[i])
+                                }
+                            }
                         }
                     }
+
                 }
             },
             toBlur(){

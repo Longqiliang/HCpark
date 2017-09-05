@@ -6,6 +6,54 @@
         color: #333;
         box-sizing: border-box;
     }
+
+
+    .my-tabs{
+        display: -webkit-flex;
+        display: flex;
+        background: #fff;
+        border:1px solid #69B9F9;
+        color: #69B9F9;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .my-tabs1{
+        width:8rem;
+        height:3rem;
+        font-size: 1.5rem;
+        line-height: 3rem;
+    }
+
+    .my-tabs>li{
+        width:50%;
+        height:100%;
+        text-align: center;
+    }
+    .my-tabs>li:not(:last-child){
+        border-right: 1px solid #69B9F9;
+    }
+    .my-tabs>li.my-active{
+        background-color: #69B9F9;
+        color: #ffffff;
+    }
+    .my-pack{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding:1rem;
+
+    }
+    select{
+        background-color: #fff;
+        color: #666;
+        height: 2.5rem;
+        border-radius: 5px;
+        font-size: 14px;
+        border: 1px solid #e5e5e5;
+        outline: none;
+    }
+
     .my-chart{
         display: block;margin:0 auto;
     }
@@ -84,12 +132,27 @@
         font-size: 1.2rem;
         color: #999;
     }
-
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
+    <div class="my-pack">
+        <ul class="my-tabs my-tabs1">
+            <li :class="{'my-active':active==1}" @click="active = 1; selectList=year">年</li>
+            <li :class="{'my-active':active==2}" @click="active = 2 ;selectList=month">月</li>
+        </ul>
+        <select name="" v-model="yearSelected" @change="timeChange" v-if="active == 1">
+            <option :value="key" v-for="(item,key) in year" >
+                {{item}}年
+            </option>
+        </select>
+        <select name="" v-model="monthSelected" @change="timeChange" v-if="active == 2">
+            <option :value="key" v-for="(item,key) in month" >
+                {{item.year}}年{{item.month}}月
+            </option>
+        </select>
+    </div>
     <ul class="my-box">
         <li class="my-charts">
             <div class="my-charts-title"><span>招商日志填报情况</span></div>
@@ -154,7 +217,58 @@
 var app = new Vue({
     el:'#app',
     data:{
-
+        startTime:1483200000000,
+        active:1,
+        yearSelected:0,
+        monthSelected:0,
+    },
+    computed:{
+        year(){
+            var year=[];
+            var nowY=new Date().getFullYear(),startY=new Date(this.startTime).getFullYear();
+            for(var i=nowY;i>=startY;i--){
+                year.push(i)
+                console.log(i)
+            }
+            return year
+        },
+        month(){
+            var month=[];
+            var end=new Date();
+            var start=new Date(this.startTime)
+            var endY=end.getFullYear(),
+                    endM=end.getMonth()+1,
+                    startY=start.getFullYear(),
+                    startM=start.getMonth()+1;
+                if(endY==startY){
+                    for(var o = endM-1; o >= startM;o--){
+                        var date={year:startY,month:o}
+                        month.push(date)
+                    }
+                }else if(endY>startY){
+                    for(var i=endY;i>=startY;i--){
+                        if(i==startY){
+                            for(var o=12;o>=startM;o--){
+                                var date={year:startY,month:o}
+                                month.push(date)
+                            }
+                        }else if(i==endY){
+                            for(var o=endM-1;o>=1;o--){
+                                var date={year:endY,month:o}
+                                month.push(date)
+                            }
+                        }else{
+                            for(var o=12;o>=1;o--){
+                                var date={year:i,month:o}
+                                month.push(date)
+                            }
+                        }
+                    }
+                }
+            return month
+        }
+    },
+  created(){
     },
     mounted(){
         this.drawCharts('c1',80,10,13,45,'日志完整性',200.5,'rgba(118,202,153,0.2)','rgba(118,202,153,1)');
@@ -162,6 +276,19 @@ var app = new Vue({
         this.drawCharts('c3',80,10,13,45,'回款完成率',70.5,'rgba(240,171,65,0.2)','rgba(240,171,65,1)');
     },
     methods:{
+        timeChange(){
+            console.log(this.selected)
+            if(this.active===1){
+                var data=this.year[this.yearSelected]
+            }else{
+                var data= this.month[this.monthSelected]
+
+            }
+            console.log(data)
+            this.$http.post('/index/partymanage/statisticsInfo',data).then(function (res) {
+                console.log(res)
+            })
+        },
          drawCharts(id,r,borderW,fontSize1,fontSize2,text,value,color,color2){
             var el=document.getElementById(id);
             var ctx = el.getContext('2d');

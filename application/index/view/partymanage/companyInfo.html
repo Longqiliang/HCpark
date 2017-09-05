@@ -2,36 +2,248 @@
 
 {block name="style"}
 <style>
+    body{
+        color: #333;
+        box-sizing: border-box;
+    }
     .my-banner{
         width:100vw;
         height:50vw;
     }
+    .company-info{
+    }
+    .company-info>li{
+        padding:0 4vw;
+    }
+    .company-info>li:not(:last-child){
+        border-bottom: 8px solid #F0EFF5;
+    }
+    .info-tit{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding:15px 0;
+        font-size: 1.6rem;
+        border-bottom: 1px solid #e8e8e8;
+    }
+    .no-border{
+        border:none;
+    }
+    .info-tit>span{
+        padding-left: 2.6rem;
+        background: url('') no-repeat left center;
+        background-size: 1.6rem 1.6rem;
+    }
+    .info-tit>img{
+        width:1.6rem;
+        height:0.7rem;
+        transition: all 200ms;
+        -moz-transition: all 200ms;	/* Firefox 4 */
+        -webkit-transition: all 200ms;	/* Safari 和 Chrome */
+        -o-transition: all 200ms;	/* Opera */
+    }
+    .info-tit>img.rotato{
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+    .info-tit>a{
+        color: #69B9F9;
+        font-size: 1.4rem;
+    }
+    .info-tit>span.icon-info{
+        background-image: url("/index/images/partymanage/ci1.png");
+    }
+    .info-tit>span.icon-record{
+        background-image: url("/index/images/partymanage/ci2.png");
+    }
+
+    .company-info-content{
+        padding:1rem 0 1.5rem 0;
+    }
+    .company-info-record{
+        position: relative;
+    }
+
+    .hidden{
+        height:0;
+        overflow: hidden;
+    }
 
 
+    .img-response{
+        display: block;
+        width: 100%;
+        margin: 0 auto;
+    }
+    .timeline{
+        margin: 16px 0;
+        position: relative;
+    }
+    .line-dashed{
+        position: absolute;
+        width: 0;
+        border-right: 1px dashed #e8e8e8;
+        left: 9.6rem;
+        top: 23px;
+    }
+    .timeline-item{
+        position: relative;
+        margin-bottom: 19px;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        width:100%;
+
+    }
+    .timeline-time{
+        font-size: 1.4rem;
+        text-align: center;
+        width: 7.2rem;
+        margin-top: 18px;
+    }
+    .timeline-item .timeline-icon{
+        width: 1.8rem;
+        height: 1.8rem;
+        margin-top: 18px ;
+        z-index: 100;
+        margin-left: 1.5rem;
+    }
+    .timeline-icon img{
+        width: 100%;
+        margin: 0 auto;
+        display: block;
+    }
+    .timeline-item .timeline-content{
+        width:200px;
+        box-sizing: border-box;
+        flex-grow:1;
+        position: relative;
+        border: 1px solid #e2e2e2;
+        border-radius:2px ;
+        padding:10px;
+        min-height: 57px;
+        margin-left: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #ffffff;
+    }
+    .timeline-content:before{
+        content: '';
+        position: absolute;
+        top:0;
+        right: 100%;
+        height: 8px;
+        width: 8px;
+        border-width: 1px 0 0 1px;
+        border-radius: 2px;
+        border-color: #e2e2e2;
+        border-style: solid;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        /*-webkit-transform: translateY(-50%);
+        transform: translateY(-50%);*/
+        margin: 22px -3px 0 0;
+        background-color: #fff;
+    }
+    .timeline-content .content-tit{
+        font-size: 1.3rem;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;
+        line-height: 1.4;
+    }
+    .timeline-content .content-info{
+        font-size: 12px;
+        color: #999;
+        margin-top: 10px;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
-    <img src="/index/images/cbd.jpg" class="my-banner" alt="">
+    <img src="/index/images/service/publicservice/i1.jpeg" class="my-banner" alt="">
     <ul class="company-info">
         <li>
-            <div class="info-tit">联系方式</div>
+            <div class="info-tit" @click="toshow" :class="{'no-border':isClick}">
+                <span class="icon-info">企业信息</span>
+                <img src="/index/images/partymanage/jt.png" alt="" :class="{rotato:isClick}">
+            </div>
+            <div class="company-info-content" :class="{hidden:isClick}">
+                {$company.content}
+            </div>
         </li>
-        <li></li>
+        <li>
+            <div class="info-tit">
+                <span class="icon-record">招商记录</span>
+                <a href="">新建日志</a>
+            </div>
+            <div class="company-info-record">
+                <div class="timeline">
+                    <div class="line-dashed"></div>
+                    <div class="timeline-item" v-for="item in record" @click="jumpTo(item.id)">
+                        <div class="timeline-time" >{{item.merchants_date | timeToString}}</div>
+                        <div class="timeline-icon">
+                            <img src="\index\images\partymanage\ci1.png" v-if="item.status==1"/>
+                            <img src="\index\images\partymanage\ci2.png" v-else/>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="content-tit">
+                                {{item.content}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
     </ul>
 </div>
 {/block}
 
 {block name="script"}
 <script>
+    $(function(){
+        //设置虚线高度
+        var boxHeight =$(".timeline").height();
+        var lastItemHeight = $(".timeline .timeline-item").last().height();
+        var lineHeight = boxHeight - lastItemHeight;
+        $(".line-dashed").height(lineHeight);
+    })
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time*1000);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    y=newTime.getFullYear();
+            if(dt<10){
+                dt='0'+dt;
+            }
+            if(m<10){
+                m='0'+m;
+            }
+            return y+'-'+m+'-'+dt
+        }
+    });
 var app = new Vue({
     el:'#app',
     data:{
-
+        isClick:true,
+        record:{$records}
     },
     methods:{
-        
+        toshow(){
+            this.isClick=!this.isClick;
+        },
+        jumpTo(id){
+            window.location.href='/index/partymanage/./id'+id
+        }
     }
 })
 </script>
