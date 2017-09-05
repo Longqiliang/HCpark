@@ -34,9 +34,11 @@
             <p>{$vo.content}</p>
             <div class="img-box">
                 <ul>
+                    {volist name="vo.img" id="image"}
                     <li>
-                        <img src="">
+                        <img src="{$image}">
                     </li>
+                    {/volist}
                 </ul>
             </div>
         </div>

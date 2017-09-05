@@ -63,7 +63,7 @@
         position: fixed;
         bottom: 8.7vh;
         right: 20px;
-        z-index: 9;
+        z-index: 999;
     }
     .post img{
         width: 100%;
@@ -75,7 +75,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 9;
+        z-index: 999;
     }
 </style>
 {/block}
@@ -104,18 +104,11 @@
             <p>{$vo.content}</p>
             <div class="img-box">
                 <ul>
+                    {volist name="vo.img" id="image"}
                     <li>
-                        <img src="{$group->img}">
+                        <img src="{$image}">
                     </li>
-                    <li>
-                        <img src="{$group->img}">
-                    </li>
-                    <li>
-                        <img src="{$group->img}">
-                    </li>
-                    <li>
-                        <img src="{$group->img}">
-                    </li>
+                    {/volist}
                 </ul>
             </div>
         </div>
@@ -124,7 +117,7 @@
     {/volist}
     <div class="post" id="post">
         <img src="/index/images/communication/post.png">
-        <a href="{:Url('Communication/writePost')}"></a>
+        <a href="{:Url('Communication/writePost?group_id='.$group->id)}"></a>
     </div>
 </div>
 {/block}

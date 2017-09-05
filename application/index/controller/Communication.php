@@ -160,7 +160,7 @@ class Communication extends Base
         }
         unset($groupInfo['status']);
         unset($groupInfo['content']);
-
+//        dump($postsList);
         $this->assign('list', $postsList);
         $this->assign('group', $groupInfo);
         return $this->fetch();
@@ -171,7 +171,7 @@ class Communication extends Base
     {
         $weuser = new  WechatUser();
         $post = CommunicatePosts::get(input('id'));
-        $post['img'] = !empty($value['img']) ? json_decode($value['img']) : "";
+        $post['img'] = !empty($post['img']) ? json_decode($post['img']) : "";
         $post['user_name'] = isset($post->user->name) ? $post->user->name : "";
         $header = isset($post->user->header) ? $post->user->header : "";
         $avatar = isset($post->user->avatar) ? $post->user->avatar : "";
@@ -199,13 +199,13 @@ class Communication extends Base
     {
         $post = new CommunicatePosts();
         if (IS_POST) {
-            $data = input('');
+//            $data = input('data');
             $map = [
-                'title' => $data['title'],
-                'content' => $data['content'],
-                'img' => json_encode($data['img']),
+                'title' => input('title'),
+                'content' => input('content'),
+                'img' => input('img'),
                 'user_id' => session('userId'),
-                'group_id' => $data['group_id']
+                'group_id' => input('group_id')
             ];
             $result = $post->save($map);
             if ($result) {
