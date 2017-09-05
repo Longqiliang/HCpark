@@ -215,6 +215,44 @@ body{
     height: 100%;
     vertical-align: middle;
 }
+.banner .swiper-container{
+    width: 100%;
+    height: 50vw;
+}
+.banner .pagination {
+    position: absolute;
+    left: 0;
+    text-align: center;
+    bottom: 5px;
+    width: 100%;
+    z-index: 999;
+}
+.swiper-pagination-bullet{
+    background: #fff;
+}
+.viewer-canvas{
+    width: 100vw;
+}
+.icon-back,.icon-go{
+    display: block;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: #fff;
+    font-size: 2.6rem;
+    position: fixed;
+    top:calc(50% - 52px);
+    transform: translateY(-50%);
+    z-index: 2016;
+    text-align: center;
+    line-height: 40px;
+}
+.icon-back{
+    left: 1vw;
+}
+.icon-go{
+    right: 1vw;
+}
 .table-view{
     padding: 5.33vw;
     font-size: 1.4rem;
@@ -269,6 +307,25 @@ body{
     background-color: #52CC92;
     color: #fff;
     font-size: 1.5rem;
+}
+/*全景展示*/
+.vr-mark{
+    position: absolute;
+    z-index: 20;
+    width: 20vw;
+    height: 10vw;
+    right: 0;
+    top: 10%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+i.icon-photo{
+    display: inline-block;
+    width: 16.53vw;
+    height: 7.73vw;
+    background:url("/index/images/roomrent/icon-photo.png") no-repeat;
+    background-size:100%;
 }
 /*mint-ui popup样式修改*/
 .mint-popup, .picker-slot{
