@@ -201,8 +201,8 @@ class Partymanage extends Base
         $user = $weuser->where('userid', $userid)->find();
         $is_boss = $user['tagid'] == 1 ? "yes" : "no";
         $this->assign('is_boss', $is_boss);
-        //总领导
-        if ($user['department'] == 1 && $user['tagid'] == 1) {
+        //领导权限
+        if ( $user['tagid'] == 1) {
             $all_company = $mCompany->select();
             $doing = array();
             $finish = array();
@@ -216,6 +216,7 @@ class Partymanage extends Base
                     }
                 }
             } else {
+
                 foreach ($all_company as $value) {
                     if ($value['status'] == 1 && $value->user->park_id == $park_id) {
                         array_push($doing, $value);
@@ -225,6 +226,10 @@ class Partymanage extends Base
                     }
                 }
             }
+            //招商统计图表所需数据格式
+              $finish2=$this->merchantsComment($finish,1);
+              $doing2 =$this->merchantsComment($doing,2);
+
             //个人统计
             if ($park_id == 1) {
                 $map = [
@@ -251,9 +256,11 @@ class Partymanage extends Base
                 $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
                 unset($value['user']);
             }
-
-        } else {
-
+            echo "领导权限";
+        }
+        //个人权限
+        else {
+              echo "个人权限";
             //工作日志
             $diaryList = $mDiary->where('user_id', $userid)->order('create_time desc')->select();
             foreach ($diaryList as $value) {
@@ -289,19 +296,74 @@ class Partymanage extends Base
         //招商进度
         $this->assign('undone', json_encode($doing));
         $this->assign('finish', json_encode($finish));
-
+        //招商统计图
+        $this->assign('undone2', json_encode($doing2));
+        $this->assign('finish2', json_encode($finish2));
         //工作日志
         $this->assign('diaryList', json_encode($diaryList));
         //招商统计
         $this->assign('undone_num', count($doing));
         $this->assign('finish_num', count($finish));
         //招商个人统计(个人)
-        $this->assign('personalinfo', json_encode($personalinfo));
+        $this->assign('personalinfo', $personalinfo);
         //招商个人统计（领导）
         $this->assign('personallist', json_encode($personallist));
         return $this->fetch();
     }
 
+    //招商统计图表所需数据格式
+    public function merchantsComment($mCompany, $type)
+    {
+        $data = [
+            '01' => array(),
+            '02' => array(),
+            '03' => array(),
+            '04' => array(),
+            '05' => array(),
+            '06' => array(),
+            '07' => array(),
+            '08' => array(),
+            '09' => array(),
+            '10' => array(),
+            '11' => array(),
+            '12' => array(),
+        ];
+        //今年开始的时间戳
+        $begindate = mktime(0, 0, 0, 1, 1, date('Y'));
+        //已完成招商分月份
+        if ($type == 1) {
+            foreach ($mCompany as $value) {
+                //今年
+                if ($value['update_time'] > $begindate) {
+                    //月
+                    $month = date('Y', $value['update_time']);
+
+                    array_push($data[$month], $value);
+                }
+
+            }
+            //未完成招商分月份
+        } else {
+            foreach ($mCompany as $value) {
+                //今年
+                if (strtotime($value['create_time']) > $begindate) {
+                    $date_str = date('Y-m-d', strtotime($value['create_time']));
+                    //封装成数组
+                    $arr = explode("-", $date_str);
+                    //参数赋值
+                    //月，输出2位整型，不够2位右对齐
+                    $month = sprintf('%02d', $arr[1]);
+                    array_push($data[$month], $value);
+                }
+            }
+        }
+      foreach ($data as $key=>$value) {
+          $data[$key] = count($data[$key]);
+      }
+
+
+      return $data;
+    }
     //企业详情
     public function companyInfo()
     {
@@ -313,7 +375,6 @@ class Partymanage extends Base
         $this->assign('company', $Company);
         $this->assign('records', json_encode($Record));
         return $this->fetch();
-
     }
 
     //查看招商日志详情
