@@ -8,7 +8,7 @@
         font-size: 1.5rem;
     }
     .month{width:100%;height:5.5rem;background:#f8f7fc}
-    .month ul{margin:0;padding:0;display:flex;height:100%;justify-content:space-between;align-items:center}
+    .month ul{margin:0;padding:0;display:flex;height:100%;justify-content:space-around;align-items:center}
     .month ul>li{line-height:5.5rem;vertical-align:middle}
     .year-month{color:#333;font-size:1.8rem}
     .month .arrow{padding:0 3rem;color:#666}
@@ -154,11 +154,11 @@
     <div class="month" >
         <ul>
             <!--点击会触发pickpre函数，重新刷新当前日期 -->
-            <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
+            <li class="arrow" @click="pickPre(currentYear,currentMonth)" :class="{hide:!isShow}">❮</li>
             <li class="year-month" @click="toShow">
                 <span class="choose-year">{{ currentYear }}-{{ currentMonth }}-{{currentDay}}</span>
             </li>
-            <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
+            <li class="arrow" @click="pickNext(currentYear,currentMonth)" :class="{hide:!isShow}">❯</li>
         </ul>
     </div>
     <div :class="{hide:!isShow}">
@@ -183,7 +183,7 @@
     <div class="my-box">
      <ul class="my-baseInfo">
             <li>招商人员姓名：<span>沙瓦蒂卡</span></li>
-            <li>日期：<span>2017-01-01</span></li>
+            <li>日期：<span>{{ currentYear }}-{{ currentMonth }}-{{currentDay}}</span></li>
         </ul>
         <div class="my-title">工作日志内容</div>
         <textarea id="" cols="30" rows="10" placeholder="请输入工作日志内容"></textarea>
@@ -253,7 +253,7 @@
                     date = new Date(cur);
                 } else {
                     var now=new Date();
-                    var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1));
+                    var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , now.getDate()));
                     d.setDate(41);
                     date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
                 }
