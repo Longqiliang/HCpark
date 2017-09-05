@@ -34,18 +34,34 @@
     }
     .imgBox{
         width:100% !important;
-        display: flex;
-        justify-content: center;
         margin-top: 1.2rem;
     }
-    .imgBox>.img{
-        width:80px;
-        height: 80px;
-        border:1px solid #b2b2b2;
+    .card-upload{
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+    }
+    .card-upload>div:not(:last-child){
+        margin-right: 1rem;
+    }
+    .upload-img{
+        border:1px solid #e8e8e8;
+        border-radius: 5px;
+        width: 20vw;
+        height: 20vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: relative;
     }
-    .imgBox>.img:not(:first-child){
-        margin-left: 10px;
+    .upload-img img{
+        border-radius: 5px;
+    }
+    .img-responsive{
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+        display: block;
     }
 </style>
 {/block}
@@ -101,10 +117,11 @@
             <li class="img-list">
                 <div><span>图片描述：</span></div>
                 <div class="imgBox">
-                    <img src="$vo|get_cover='path'" class="img" alt="">
-                    <img src="$vo|get_cover='path'" class="img" alt="">
-                    <img src="$vo|get_cover='path'" class="img" alt="">
-                    <img src="$vo|get_cover='path'" class="img" alt="">
+                    <div class="card-upload">
+                        <div class="upload-img">
+                            <img src="/index/images/cbd.jpg" class="img-responsive">
+                        </div>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -114,11 +131,18 @@
 {/block}
 
 {block name="script"}
+<script src="/static/viewer/viewer.min.js"></script>
 <script>
 var app = new Vue({
     el:'#app',
+    mounted(){
+            var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
+                toolbar:2,
+                title:2,
+            });
+        console.log(viewer)
+    },
     data:{
-
     },
     methods:{
         
