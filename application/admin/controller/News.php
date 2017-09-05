@@ -15,7 +15,7 @@ use app\common\model\WechatUser;
 use app\index\model\Collect;
 use think\Loader;
 use wechat\TPWechat;
-
+use think\Db;
 class News extends Admin
 {
     /*新闻通告首页面*/
@@ -47,6 +47,10 @@ class News extends Admin
                 $_POST['status'] = 1;
                 $_POST['park_id']=$parkid;
                 $result = $news->validate(true)->save($_POST, ['id'=>input('id')]);
+                //修改新闻时推送
+                if($_POST['is_send']==1 && $result) {
+                    $this->send(input('id'));
+                }
                 $type = $_POST['type'];
                 /*当修改新闻类型时候修改已收藏的新闻的type值*/
                 $collect = new Collect();
@@ -58,6 +62,12 @@ class News extends Admin
                 $_POST['park_id']=$parkid;
                 unset($_POST['id']);
                 $result = $news->validate(true)->save($_POST);
+                $inputid=Db::name('news')->getLastInsID();
+                //添加新闻时推送
+                if($_POST['is_send']==1 && $result) {
+                    $id=$inputid;
+                    $this->send($id);
+                }
             }
 
             if($result) {
@@ -129,8 +139,12 @@ class News extends Admin
     }
 
     /*推送*/
-    public function send() {
+    public function send($id) {
+
         $news = NewsModel::get(input('id'));
+        if($id){
+            $news = NewsModel::get($id);
+        }
         if ($news) {
             Loader::import('wechat\TPWechat', EXTEND_PATH);
             $weObj = new TPWechat(config('news'));
@@ -156,7 +170,7 @@ class News extends Admin
             foreach ($userList as $user) {
                 $userId .= $user['userid'].'|';
             }
-            $data['touser'] = 15706844655;
+            $data['touser'] = rtrim($userId, "|");
             /*switch ($news['send_type']) {
                 case 0:
                     $userId = '';
@@ -180,7 +194,7 @@ class News extends Admin
 //            var_dump($weObj->errCode.'|'.$weObj->errMsg);
             if ($result['errcode'] == 0 ) {
              NewsModel::where('id', input('id'))->update(['is_send' => 1]);
-                return $this->success('推送成功');
+                return $this->success('推送成功','News/index');
             } else {
                 return $this->error('推送失败');
             }
