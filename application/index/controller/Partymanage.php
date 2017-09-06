@@ -41,7 +41,7 @@ class Partymanage extends Base
             $res = Park::where('id', 'eq', $park_id)->where('status', 'eq', 1)->field('id,name')->select();
             $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->select();
         }
-
+        $this->assign('news', json_encode($news));
         $this->assign('res', json_encode($res));
         return $this->fetch();
     }
@@ -116,7 +116,7 @@ class Partymanage extends Base
             'rent' => ['name' => "租赁合同", 'count' => $contract[1]],
             'property' => ['name' => "物业合同", 'count' => $contract[2]]
         ];
-        return json_encode($array);
+//        return json_encode($array);
         $this->assign('info', json_encode($array));
 
         return $this->fetch();
