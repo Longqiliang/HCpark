@@ -2,6 +2,7 @@
 
 {block name="style"}
 <title>工作日志</title>
+<link rel="stylesheet" href="/static/viewer/viewer.min.css">
 <style>
     .my-box{
         padding:0 1.2rem;
@@ -201,7 +202,7 @@
                     <i class="iconfont hc-jia"></i>
                 </div>
             </div>
-            <div class="card-upload" v-if="!isWrite">
+            <div class="card-upload" v-if="!isWrite" id="img">
                 <div class="upload-img" v-for="item in baseInfo.img">
                     <img :src="item" class="img-responsive">
                 </div>
@@ -216,6 +217,7 @@
 {/block}
 
 {block name="script"}
+<script src="/static/viewer/viewer.min.js"></script>
 <script>
     Vue.filter('timeToString', function(time) {
         if(time){
@@ -241,7 +243,6 @@
             nowDate:'',
             isShow:false,
             isSubmit:false,
-            popupVisible:'1111',
             progress:0,
             imgList:[],
             imgSrc:{
@@ -254,18 +255,33 @@
             currentYear: 1970,
             currentWeek: 1,
             days: [],
-            checkedList:[1504540800000,1504454400000,1504617185000]
+            checkedList:{$list}
         },
         created(){
             //领导不能写日志判断
-            if(!this.baseInfo.content && this.isBoss=='yes'){
-                this.isWrite=false;
+            if(this.isBoss=='yes'){
+                this.isWrite=false
+            }else if(this.baseInfo.content){
+                this.isWrite=false
             }else{
                 this.isWrite=true;
             }
+//            if(this.baseInfo.img){
+//                console.log(this.baseInfo.img)
+////                this.baseInfo.img=JSON.parse(this.baseInfo.img )
+//            }
             console.log(' this.isWrite=' + this.isWrite)
             console.log('this.baseInfo.create_time = '+this.baseInfo.create_time);
             this.initData(this.baseInfo.create_time);
+
+        },
+        mounted(){
+            if(this.isWrite==false && this.baseInfo.img){
+                var viewer = new Viewer(document.getElementById('img'),{
+                    toolbar:2,
+                    title:2,
+                });
+            }
         },
         methods:{
             toShow(){
@@ -395,24 +411,33 @@
                 if(this.isSubmit){
                     this.$toast('提交中，请稍等')
                     return
+                }else if(!this.baseInfo.content){
+                    this.$toast('请填写日志内容')
+                    return
                 }
                 this.$indicator.open({
                     text: '提交中...',
                     spinnerType: 'triple-bounce'
                 });
+
                 this.isSubmit=true;
-                var data=this.baseInfo;
-                data.img=this.imgList;
-                this.$http.post('/info/partymanage/changeTime',data).then(function (res) {
+                var data={
+                    img:JSON.stringify(this.imgList),
+                    content:this.baseInfo.content,
+                    user_id:this.baseInfo.user_id
+                };
+                this.$http.post('/index/partymanage/diaryInfo',data).then(function (res) {
                     if(res.data.code){
                         this.isSubmit=false;
                         this.$indicator.close();
-                        if(this.baseInfo.content || this.isBoss==true){
-                            this.isWrite=false;
-                        }else{
-                            this.isWrite=true;
-                        }
-                        this.baseInfo=res.data.data
+                        swal({
+                            title:"提交成功!",
+                            html:true,
+                            type:"success",
+                            confirmButtonColor: "#69B9F9"
+                        },function () {
+                            window.history.back();
+                        });
                     }else{
                         this.$toast('请求失败，请重试')
                     }
@@ -474,13 +499,13 @@
                             text: '图片上传中',
                             spinnerType: 'triple-bounce'
                         });
-                        _this.isSubmit = false;
+                        _this.isSubmit = true;
                         var formData = new FormData();
                         formData.append("picture",img);
                         _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
                             var data = JSON.parse(res.data);
                             console.log(data);
-                            _this.isSubmit = true;
+                            _this.isSubmit = false;
                             if(data.code == 1){
                                 // 在获取到文件对象进行预览
                                 _this.$indicator.close();
@@ -494,7 +519,7 @@
                                 });
                             }
                         },function (res) {
-                            _this.isSubmit = true;
+                            _this.isSubmit = false;
                             _this.$indicator.close();
                             _this.$toast({
                                 message:"上传失败，请重新上传！",
@@ -508,5 +533,6 @@
             },
         }
     })
+
 </script>
 {/block}

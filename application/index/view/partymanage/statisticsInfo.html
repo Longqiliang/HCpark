@@ -183,7 +183,7 @@
             <ul class="my-log">
                 <li v-if="personalInfo.records.length==0" class="no-log">暂无日志</li>
                 <li v-for="item in personalInfo.records" >
-                    <span class="my-icon my-icon-suc"></span>
+                    <span class="my-icon " :class="{'my-icon-suc':item.status==1,'my-icon-ing':item.status==2}"></span>
                     <div class="my-list">
                         <div><span>工作日志</span><span>{{item.merchants_place}}</span></div>
                         <div><span>创建日期：</span><span>{{item.create_time | timeToString}}</span></div>
@@ -195,7 +195,7 @@
             <div class="my-log-title">工作日志</div>
             <ul class="my-log">
                 <li v-if="personalInfo.diary.length==0" class="no-log">暂无日志</li>
-                <li v-for="item in personalInfo.diary" >
+                <li v-for="item in personalInfo.diary" @click="window.location.href='/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id">
                     <span class="my-icon my-icon-suc"></span>
                     <div class="my-list">
                         <div><span>工作日志</span><span>{{item.name}}</span></div>

@@ -127,7 +127,6 @@
         position: relative;
         box-sizing:content-box;
         padding:1.7rem 4vw;
-        height:4.5rem;
         border-bottom: 1px solid #f1f1f1;
 
     }
@@ -160,6 +159,7 @@
     }
     .my-log .my-list{
         padding:0;
+        flex-grow:1;
         display: -webkit-flex;
         display: flex;
         flex-direction: column;
@@ -169,9 +169,19 @@
         color: #333;
         font-size: 1.5rem;
         line-height: 2.2rem;
+        display: -webkit-flex;
+        display: flex;
     }
     .my-log .my-list>div:first-child>span:first-child{
         margin-right: 1.5rem;
+        width:5rem;
+    }
+    .my-log .my-list>div:first-child>span:last-child{
+        flex-grow:1;
+        width:45vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .my-log .my-list>div:last-child{
         font-size: 1.2rem;
@@ -430,7 +440,7 @@
                     <li v-for="item in undone">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
@@ -471,8 +481,8 @@
                     <a :href="'/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id"></a>
                 </li>
             </ul>
-            <a :href="'/index/partymanage/diaryInfo'" class="addDdiary">
-                <img src="/index/images/partymanage/add.png" alt="">
+            <a :href="'/index/partymanage/diaryInfo'" class="addDdiary"  v-if="is_boss!='yes'">
+                <img src="/index/images/partymanage/add.png" alt="添加日志">
             </a>
         </li>
     </ul>
@@ -493,7 +503,7 @@
     };
    Vue.filter('timeToString', function(time) {
        if(time){
-           var newTime = new Date(time*1000);
+           var newTime = new Date(time);
            var m = newTime.getMonth()+1,
                    dt=newTime.getDate(),
                    y=newTime.getFullYear();
@@ -521,7 +531,7 @@
             is_boss:'{$is_boss}',
             types:{
                 id:'types',
-                title:100+'家',
+                title:{$undone_num}+{$finish_num}+'家',
                 subtext:"企业总数",
                 label: '{c|{c}家}\n{d|{d}%}',
                 color:['#6DC98F','#68D1CB','#ff8866'],
@@ -567,25 +577,15 @@
             personallist:{$personallist},
             isActive:1,
             searchList:[],
-
-            log:[],
-//            isActive:0,
-
-
             rateActive:0,
             inputStatus:false,
             inputValue:'',
-            loading:false,
-            canLoad:'',
             isSearch:false,
-//            article:$list,
-            article:[
-                {job:'销售经理',salary:'7K-10K',company:'杭州天隽科技有限公司',num:'1',time:'3年以上',student:'本科',id:1}
-            ]
         },
         computed:{
         },
         created(){
+            console.log(this.diaryList)
             if(this.is_boss=='yes'){
                 this.isActive=0
             }else{

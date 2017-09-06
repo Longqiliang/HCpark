@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<link rel="stylesheet" href="/static/viewer/viewer.min.css">
 <style>
     .main{
         padding-top:1.33vw;
@@ -118,7 +119,7 @@
             <li class="img-list">
                 <div><span>图片描述：</span></div>
                 <div class="imgBox">
-                    <div class="card-upload">
+                    <div class="card-upload" id="img">
                         <div class="upload-img"  v-for="item in info.img">
                             <img :src="item" class="img-responsive">
                         </div>
@@ -137,7 +138,7 @@
 var app = new Vue({
     el:'#app',
     mounted(){
-            var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
+            var viewer = new Viewer(document.getElementById('img'),{
                 toolbar:2,
                 title:2,
             });
