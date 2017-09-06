@@ -57,6 +57,7 @@ class Roomrent extends Base
     {
         $data = [];
         $data1 = [];
+        $type = input('type');
         $parkId = session("park_id");
         $map = ['park_id' => $parkId, "build_block" => "A"];
         $parkInfo = Park::where('id', $parkId)->find();
@@ -104,6 +105,7 @@ class Roomrent extends Base
         //return dump($data);
         $this->assign('name', $parkInfo['name']);
         $parkName = $parkInfo['name'];
+        $this->assign("type",$type);
         $this->assign('list', json_encode(["$parkName A幢" => $data]));
         $this->assign('list1', json_encode(["$parkName B幢" => $data1]));
 
@@ -157,6 +159,7 @@ class Roomrent extends Base
         $floor1 = [];
         $newArr = [];
         $newArr1 = [];
+        $type = input('type');
         $parkId = session('park_id');
         if ($parkId == 3) {
             $common = "（公共区域)";
@@ -225,6 +228,7 @@ class Roomrent extends Base
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
         //echo json_encode($resArr);exit;
+        $this->assign('type',$type);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr));
 
