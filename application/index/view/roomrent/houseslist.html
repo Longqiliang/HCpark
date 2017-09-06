@@ -32,8 +32,15 @@
         <div class="houses-list-tit">
         {{item.floor}}楼
         </div>
-        <div class="houses-list-item">
-            <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">{{rooms.room}}</span>
+        <div class="houses-list-item" v-if="!item.combine">
+            <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">
+                {{rooms.room}}
+            </span>
+        </div>
+        <div class="houses-list-item" v-else>
+            <span class="block">
+                {{parkName}}{{item.floor}}
+            </span>
         </div>
     </div>
 
@@ -83,7 +90,8 @@
                       return _this.list[arr];
                   }
               }
-          }  
+          }
+
         },
         methods:{
             parkToggle:function () {
@@ -123,12 +131,10 @@
                 _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
             jump:function (id,empty) {
-//                if(empty){
-//                    window.location.href = "/index/roomrent/index";
-//                }else{
-//
-//                }
-                console.log(id,empty);
+                if(!empty){
+                    return;
+                }
+                window.location.href = "/index/roomrent/rent?id="+id;
             }
         }
     });
