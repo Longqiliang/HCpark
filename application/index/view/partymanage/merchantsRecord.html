@@ -160,15 +160,15 @@
         <ul class="list">
             <li >
                 <div><span>招商人员：</span></div>
-                <input type="text" v-model="info.merchants_user">
+                <input type="text" readonly v-model="info.merchants_user" >
             </li>
             <li >
                 <div><span>招商日期：</span></div>
-                <input type="text" v-model="info.merchants_date">
+                <input type="date" v-model="info.merchants_date">
             </li>
             <li >
                 <div><span>招商企业：</span></div>
-                <input type="text" v-model="info.company_name">
+                <input type="text"  readonly v-model="info.company_name">
             </li>
             <li >
                 <div><span>招商地点：</span></div>
@@ -256,6 +256,7 @@ var app = new Vue({
     created(){
         this.info.company_name=JSON.parse('{$info}').company;
         this.info.id=JSON.parse('{$info}').id;
+        this.info.merchants_user=JSON.parse('{$info}').merchants_user;
         console.log({$info})
     },
     methods:{
@@ -277,8 +278,17 @@ var app = new Vue({
                     this.$toast({message: '请填写跟进情况', position: 'bottom', duration: 2000})
                 }else{
                     this.isSubmit=true;
-                    var data=this.info;
-                    data.img=JSON.stringify(this.imgList);
+                    var data={
+                        merchants_id:this.info.id,
+                        merchants_date:Date.parse(this.info.merchants_date),
+                        contact_people:this.info.contact_people,
+                        mobile:this.info.mobile,
+                        merchants_place:this.info.merchants_place,
+                        content:this.info.content,
+                        merchants_area:this.info.merchants_area,
+                        merchants_money:this.info.merchants_money,
+                    };
+                    data.img=this.imgList;
                     data.status=this.progress;
                     console.log(data);
                     this.$indicator.open({
