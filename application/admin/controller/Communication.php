@@ -64,7 +64,9 @@ class Communication extends Admin
         $user = new  WechatUser();
         if (IS_POST) {
             $id = input('id');
-            $result = $cuser->where('id', $id)->update(['status' => '2']);
+            $status=input('status');
+            $remark=input('remark');
+            $result = $cuser->where('id', $id)->update(['status' => $status,'remark'=>$remark]);
             if ($result) {
                 return $this->success("成功");
             } else {
@@ -88,7 +90,6 @@ class Communication extends Admin
             }
             $data['group_id'] = $id;
             $list = $cuser->where($data)->paginate();
-            echo json_encode($cuser->getLastSql());
             int_to_string($list, $map = array('status' => array(-1 => '申请失败', 1 => '申请中', 2 => '普通成员', 3 => '管理员')));
             foreach ($list as $value) {
                 $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
