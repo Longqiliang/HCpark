@@ -21,9 +21,17 @@ class Addressbook extends Base
         //全部的部门
         $department = $this->findChild($hand);
         $sd = $this->mydeparment();
-        if(count($sd)!=4){
-            return $this->error("该用户所属部门结构不为4层（例：智新则地/希垦园区/运营团队/其他员工）");
+
+        if($user['tagid']==1){
+            $this->assign('department', $department);
+
+
         }else {
+            if(count($sd)!=4){
+                return $this->error("该用户所属部门结构不为4层（例：智新则地/希垦园区/运营团队/其他员工）");
+            }
+
+
             //所在园区id
             $parkid = $sd[1];
             $parkdeparment = WechatDepartment::where('parentid', $parkid)->select();
