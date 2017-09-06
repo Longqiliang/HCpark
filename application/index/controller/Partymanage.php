@@ -563,21 +563,29 @@ class Partymanage extends Base
             $user = $weuser->where('userid', session('userId'))->find();
             $is_boss = $user['tagid'] == 1 ? "yes" : "no";
             $this->assign('is_boss', $is_boss);
-            $info['user_id'] = $user_id;
-            $info['user_name'] = $user['name'];
+            $diary['user_id'] = $user_id;
+            $diary['user_name'] = $user['name'];
             //领导或者个人查看日志
             if (!empty($id)) {
                 $info = $mDiary->where('id', $id)->find();
-                $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
+                $diary = [
+                    'id' => $info['id'],
+                    'user_name' => isset($info->user->name) ? $info->user->name : "",
+                    'img' => json_decode($info['img']),
+                    'user_id' => $info['user_id'],
+                    'content' => $info['content'],
+                    'create_time' => strtotime($info['create_time']) * 1000];
             }
+
             $list = $mDiary->where('user_id', $user_id)->select();
             $time = array();
             foreach ($list as $value) {
                 array_push($time, strtotime($value['create_time']) * 1000);
             }
-            unset($info['user']);
+
             //当前日志详情
-            $this->assign('info', json_encode($info));
+            echo json_encode($diary);
+            $this->assign('info', json_encode($diary));
             //该用户总共写的日志
             $this->assign('list', json_encode($time));
             return $this->fetch();
@@ -601,12 +609,12 @@ class Partymanage extends Base
         $day = $arr[2];
         $begindate = mktime(0, 0, 0, $month, $day, $year);
         $enddate = mktime(23, 59, 59, $month, $day, $year);
-        $map['user_id']=$user_id;
-        $map['create_timne']=array('between',array($begindate,$enddate));
+        $map['user_id'] = $user_id;
+        $map['create_timne'] = array('between', array($begindate, $enddate));
         $info = $mDiary->where($map)->find();
-        if(!$info){
-         $info['user_id']=$user_id;
-         $info['create_time']=$begindate*1000;
+        if (!$info) {
+            $info['user_id'] = $user_id;
+            $info['create_time'] = $begindate * 1000;
         }
         return json_encode($info);
 
