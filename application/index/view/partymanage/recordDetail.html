@@ -64,6 +64,13 @@
         vertical-align: middle;
         display: block;
     }
+
+    .my-status1{
+        color: #57CB97;
+    }
+    .my-status2{
+        color: #FDA61A;
+    }
 </style>
 {/block}
 
@@ -100,8 +107,8 @@
             <li class="must">
                 <div><span>招商进度：</span></div>
                 <div>
-                    <span v-if="info.status==1">招商中</span>
-                    <span v-else>已完成</span>
+                    <span v-if="info.status==1" class="my-status2">招商中</span>
+                    <span class="my-status1" v-else >已完成</span>
                 </div>
             </li>
             <li class="must">

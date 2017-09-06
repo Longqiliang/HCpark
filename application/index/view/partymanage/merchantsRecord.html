@@ -276,9 +276,9 @@ var app = new Vue({
                 }else if(this.info.content==''){
                     this.$toast({message: '请填写跟进情况', position: 'bottom', duration: 2000})
                 }else{
-                    this.isSubmit=true
+                    this.isSubmit=true;
                     var data=this.info;
-                    data.img=this.imgList;
+                    data.img=JSON.stringify(this.imgList);
                     data.status=this.progress;
                     console.log(data);
                     this.$indicator.open({
@@ -366,13 +366,13 @@ var app = new Vue({
                         text: '图片上传中',
                         spinnerType: 'triple-bounce'
                     });
-                    _this.isSubmit = false;
+                    _this.isSubmit = true;
                     var formData = new FormData();
                     formData.append("picture",img);
                     _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
                         var data = JSON.parse(res.data);
                         console.log(data);
-                        _this.isSubmit = true;
+                        _this.isSubmit = false;
                         if(data.code == 1){
                             // 在获取到文件对象进行预览
                             _this.$indicator.close();
@@ -386,7 +386,7 @@ var app = new Vue({
                             });
                         }
                     },function (res) {
-                        _this.isSubmit = true;
+                        _this.isSubmit = false;
                         _this.$indicator.close();
                         _this.$toast({
                             message:"上传失败，请重新上传！",

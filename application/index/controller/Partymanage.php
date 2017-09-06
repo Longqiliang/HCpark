@@ -400,7 +400,7 @@ class Partymanage extends Base
     public function merchantsRecord()
     {
         $user_id = session('user_id');
-        $merchaants_id = input('merchaants_id');
+        $merchaants_id = input('id');
         $mCompany = new MerchantsCompany();
         $mRecord = new MerchantsRecord();
         if (IS_POST) {
@@ -422,7 +422,7 @@ class Partymanage extends Base
             }
         } else {
             $info = $mCompany->where('id', $merchaants_id)->find();
-            $this->assign('info', $info);
+            $this->assign('info', json_encode($info));
             return $this->fetch();
 
         }

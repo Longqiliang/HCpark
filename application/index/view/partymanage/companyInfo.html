@@ -192,8 +192,8 @@
                     <div class="timeline-item" v-for="item in record" @click="jumpTo(item.id)">
                         <div class="timeline-time" >{{item.merchants_date | timeToString}}</div>
                         <div class="timeline-icon">
-                            <img src="\index\images\partymanage\ci1.png" v-if="item.status==1"/>
-                            <img src="\index\images\partymanage\ci2.png" v-else/>
+                            <img src="\index\images\partymanage\ci2.png" v-if="item.status==1"/>
+                            <img src="\index\images\partymanage\ci1.png" v-else/>
                         </div>
                         <div class="timeline-content">
                             <div class="content-tit">
