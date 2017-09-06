@@ -137,7 +137,7 @@ class Communication extends Base
             'group_id' => input('group_id'),
             'status' => 1
         ];
-        $posts = $cp->where($map)->select();
+        $posts = $cp->where($map)->order('id desc')->select();
         $groupInfo = $cgroup->where('id', input('group_id'))->find();
         $postsList = array();
         foreach ($posts as $value) {
@@ -181,12 +181,13 @@ class Communication extends Base
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         foreach ($comments as $value){
 
-             $value['create_time']=date("Y-m-d H:m:s",$value['create_time']);
+             $value['create_time']=date("Y-m-d H:m",$value['create_time']);
         }
         //$count = CommunicateComment::where($map)->count();
         //echo json_encode($post);
-        //echo json_encode($comments);
+//        echo json_encode($comments);
         $this->assign('comments', json_encode($comments));
+
         return $this->fetch();
     }
     /*写帖子页面*/
@@ -234,6 +235,7 @@ class Communication extends Base
         $result = CommunicateComment::create($data);
         if ($result) {
             $post['comments'] += 1;
+            $result['create_time']=date("Y-m-d H:m",$result['create_time']);
             $post->save();
             return $this->success('评论成功', '', $result);
         } else {
@@ -252,7 +254,7 @@ class Communication extends Base
         }
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         foreach ($comments as $value){
-            $value['create_time'] = date("Y-m-d",$value['create_time']);
+            $value['create_time'] = date("Y-m-d H:m",$value['create_time']);
         }
         return json(['total' => count($comments), 'comments' => $comments]);
     }
@@ -268,7 +270,7 @@ class Communication extends Base
             'user_id' => $userid,
             'status' => array('lt', 4)
         ];
-        $list = $cuser->where($map)->select();
+        $list = $cuser->where($map)->order('id desc')->select();
         foreach ($list as $value) {
 
             $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
@@ -304,7 +306,7 @@ class Communication extends Base
                 'status' => 3
             ];
             $group_id = array();
-            $list = $cuser->where($map2)->select();
+            $list = $cuser->where($map2)->order('id desc')->select();
             foreach ($list as $value) {
                 array_push($group_id, $value['group_id']);
             }
@@ -324,7 +326,7 @@ class Communication extends Base
                 unset($value['group']);
             }
 
-            echo json_encode($list);
+//            echo json_encode($list);
             $this->assign('list', $list);
             return $this->fetch();
         }
@@ -335,7 +337,7 @@ class Communication extends Base
     {
         $userid = session('userId');
         $posts = new CommunicatePosts();
-        $myPosts = $posts->where('user_id', $userid)->select();
+        $myPosts = $posts->where('user_id', $userid)->order('id desc')->select();
         $postsList = array();
         foreach ($myPosts as $value) {
             $data = [

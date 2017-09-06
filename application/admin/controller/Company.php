@@ -133,7 +133,7 @@ class Company extends Admin
                             ->order('create_time desc')
                             ->paginate();
         $this->assign('list',$list);
-        $this->assign('type',$type );
+        $this->assign('type',$type);
         $this->assign('companyId',$id);
         return $this->fetch();
     }
