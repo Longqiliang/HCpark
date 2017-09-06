@@ -198,12 +198,14 @@ class Roomrent extends Base
                 } else {
                     $status = true;
                 }
+
                 $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'department_id' => $v1['company_id'], 'id' => $v1['id']];
             }
 
         }
         foreach ($floor as $k => $v) {
             $newArr[$k]['floor'] = $v;
+            $newArr[$k]['combine'] = false;
             $newArr[$k]['rooms'] = $roomArray[$k];
         }
         $map1 = [
