@@ -53,7 +53,7 @@ class Roomrent extends Base
     }
 
     /*租房详细列表*/
-    public function rentList()
+   /* public function rentList()
     {
         $data = [];
         $data1 = [];
@@ -80,7 +80,6 @@ class Roomrent extends Base
                     $data[$k]['img'][$k1] = $small_img;
                 }
             }
-
         }
         $map1 = ['park_id' => $parkId, "build_block" => "B"];
         $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
@@ -102,15 +101,14 @@ class Roomrent extends Base
                 }
             }
         }
-        //return dump($data);
-        $this->assign('name', $parkInfo['name']);
         $parkName = $parkInfo['name'];
+        $resArr =  array_merge(["$parkName A幢" => $data],["$parkName B幢" => $data1]);
         $this->assign("type",$type);
-        $this->assign('list', json_encode(["$parkName A幢" => $data]));
-        $this->assign('list1', json_encode(["$parkName B幢" => $data1]));
+        $this->assign('list', json_encode($resArr));
+
 
         return $this->fetch();
-    }
+    }*/
 
     /*楼盘列表下拉刷新*/
     public function moreList()
@@ -227,10 +225,60 @@ class Roomrent extends Base
 
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
-        //echo json_encode($resArr);exit;
+        //rentlist
+        $data = [];
+        $data1 = [];
+        $type = input('type');
+        $parkId = session("park_id");
+        $map = ['park_id' => $parkId, "build_block" => "A"];
+        $parkInfo = Park::where('id', $parkId)->find();
+        $parkRent = new ParkRent();
+        $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
+        foreach ($list as $k => $v) {
+            $room = ParkRoom::where('id', $v['room_id'])->find();
+            $data[$k] = [
+                'img' => json_decode($v['img']),
+                'panorama' => $v['panorama'],
+                'area' => $v['area'] . "㎡",
+                'price' => $v['price'] . "元/㎡·天",
+                'name' => $parkInfo['name'],
+                'id' => $v['id'],
+                'room' => $room['build_block'] . "幢" . $room['room'] . "室"
+            ];
+            if ($data[$k]['img']) {
+                foreach ($data[$k]['img'] as $k1 => $v1) {
+                    $small_img = $this->getThumb($v1, 170, 120);
+                    $data[$k]['img'][$k1] = $small_img;
+                }
+            }
+        }
+        $map1 = ['park_id' => $parkId, "build_block" => "B"];
+        $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
+        foreach ($list1 as $k => $v) {
+            $room = ParkRoom::where('id', $v['room_id'])->find();
+            $data1[$k] = [
+                'img' => json_decode($v['img']),
+                'panorama' => $v['panorama'],
+                'area' => $v['area'] . "㎡",
+                'price' => $v['price'] . "元/㎡·天",
+                'name' => $parkInfo['name'],
+                'id' => $v['id'],
+                'room' => $room['build_block'] . "幢" . $room['room'] . "室"
+            ];
+            if ($data1[$k]['img']) {
+                foreach ($data1[$k]['img'] as $k1 => $v1) {
+                    $small_img = $this->getThumb($v1, 170, 120);
+                    $data1[$k]['img'][$k1] = $small_img;
+                }
+            }
+        }
+        $parkName = $parkInfo['name'];
+        $resArr1 =  array_merge(["$parkName A幢" => $data],["$parkName B幢" => $data1]);
+        //echo json_encode($resArr1);exit;
         $this->assign('type',$type);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr));
+        $this->assign('list1', json_encode($resArr1));
 
         return $this->fetch();
 
