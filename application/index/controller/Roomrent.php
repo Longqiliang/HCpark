@@ -22,17 +22,17 @@ class Roomrent extends Base
         $park = Park::where('id', $parkId)->find();
         $roomId = input("room_id");
         $rentId = input("rent_id");
-        if ($roomId){
+        if ($roomId) {
             $roomInfo = ParkRent::where('room_id', $roomId)->find();
             $room = ParkRoom::where('id', $roomId)->find();
-        }else{
-            $roomInfo = ParkRent::where('id',  $rentId)->find();
+        } else {
+            $roomInfo = ParkRent::where('id', $rentId)->find();
             $room = ParkRoom::where('id', $roomInfo['room_id'])->find();
         }
         $data = [
             'position' => $room['build_block'] . $room['room'] . "室",
-            'area' => $roomInfo['area']."㎡",
-            'price' => $roomInfo['price']."元/㎡·天",
+            'area' => $roomInfo['area'] . "㎡",
+            'price' => $roomInfo['price'] . "元/㎡·天",
             'park' => $park['name'],
             'address' => $park['address'],
             'moblie' => $park['property_phone'],
@@ -103,8 +103,9 @@ class Roomrent extends Base
         }
         //return dump($data);
         $this->assign('name', $parkInfo['name']);
-        $this->assign('list', json_encode($data));
-        $this->assign('list1', json_encode($data1));
+        $parkName = $parkInfo['name'];
+        $this->assign('list', json_encode(["$parkName A幢" => $data]));
+        $this->assign('list1', json_encode(["$parkName B幢" => $data1]));
 
         return $this->fetch();
     }
@@ -218,7 +219,7 @@ class Roomrent extends Base
             if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
                 $newArr1[$k]['combine'] = true;
                 $newArr1[$k]['depart'] = $roomArray1[$k][0]['department_id'];
-                $newArr1[$k]['rooms'] ="B$v";
+                $newArr1[$k]['rooms'] = "B$v";
             }
 
         }
