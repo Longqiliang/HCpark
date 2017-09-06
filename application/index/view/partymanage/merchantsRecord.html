@@ -164,7 +164,7 @@
             </li>
             <li >
                 <div><span>招商日期：</span></div>
-                <input type="date" v-model="info.merchants_date">
+                <input type="text" v-model="info.merchants_date">
             </li>
             <li >
                 <div><span>招商企业：</span></div>
@@ -234,7 +234,7 @@ var app = new Vue({
     data:{
         isSubmit:false,
         info:{
-            merchants_user:'111',
+            merchants_user:'',
             merchants_date:'',
             company_name:'',
             merchants_place:'',
@@ -254,7 +254,9 @@ var app = new Vue({
         }
     },
     created(){
-        this.info.company_name=JSON.parse('{$info}').company
+        this.info.company_name=JSON.parse('{$info}').company;
+        this.info.id=JSON.parse('{$info}').id;
+        console.log({$info})
     },
     methods:{
         toSubmit(){
@@ -278,7 +280,6 @@ var app = new Vue({
                     var data=this.info;
                     data.img=this.imgList;
                     data.status=this.progress;
-                    data.merchants_date=Date.parse(new Date(this.info.merchants_date))/1000;
                     console.log(data);
                     this.$indicator.open({
                         text: '提交中...',
@@ -301,6 +302,7 @@ var app = new Vue({
                             this.$toast({message: '提交失败，请重试', position: 'bottom', duration: 2000})
                         }
                     },function (res) {
+                        this.$indicator.close();
                         this.isSubmit=false
                         this.$toast({message: '提交失败，刷新并请重试', position: 'bottom', duration: 2000})
                     })

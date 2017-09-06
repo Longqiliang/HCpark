@@ -364,19 +364,14 @@
                     user_id:this.baseInfo.user_id
                 }
                 console.log('post-time : ' + time);
-                this.$http.post('/info/partymanage/changeTime',data).then(function (res) {
+                this.$http.post('/index/partymanage/changeDiary',data).then(function (res) {
+                    console.log(JSON.parse(res.data))
+                    this.isSubmit=false;
+                    this.$indicator.close();
                     if(res.data.code){
-                        this.isSubmit=false;
-                        this.$indicator.close();
-                        if(this.baseInfo.content || this.isBoss==true){
-                            this.isWrite=false;
-                        }else{
-                            this.isWrite=true;
-                        }
-                        this.baseInfo=res.data.data
-                    }else{
-                        this.$toast('请求失败，请重试')
+
                     }
+
                 },function (res) {
                     this.$toast('请求失败，请退出页面重试')
                     this.isSubmit=false;
