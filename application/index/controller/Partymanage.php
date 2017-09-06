@@ -665,6 +665,7 @@ class Partymanage extends Base
     /*公司缴费记录*/
     public function feeRecord()
     {
+        $info = [];
         $departmentId = input('id');
         $map = ['company_id' => $departmentId];
         $list = FeePayment::where($map)->order('id desc')->limit(6);
@@ -684,6 +685,7 @@ class Partymanage extends Base
     /*加载更多缴费记录*/
     public function moreRecode()
     {
+        $info = [];
         $departmentId = input('id');
         $len = input("length");
         $map = ['company_id' => $departmentId];
