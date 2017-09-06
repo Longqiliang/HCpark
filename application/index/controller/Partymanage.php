@@ -36,7 +36,7 @@ class Partymanage extends Base
         if ($user['department'] == 1 && $user['tagid'] == 1) {
 
             $res = Park::field('id,name')->select();
-            $news = News::where($map)->order('create_time desc')->field('id,title')->select();
+            $news = News::where($map)->order('create_time desc')->field('id,title')->limit(2)->select();
             $all=[
                 'id'=>"a",
                 'name'=>"全部"
@@ -45,8 +45,9 @@ class Partymanage extends Base
         } else {
             //只能看到自己园区
             $res = Park::where('id', 'eq', $park_id)->field('id,name')->select();
-            $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->select();
+            $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->limit(2)->select();
         }
+
         $this->assign('news', json_encode($news));
         $this->assign('res', json_encode($res));
         return $this->fetch();

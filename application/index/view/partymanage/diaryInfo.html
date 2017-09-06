@@ -367,11 +367,12 @@
                 }
                 console.log('post-time : ' + time);
                 this.$http.post('/index/partymanage/changeDiary',data).then(function (res) {
-                    var data=JSON.parse(res.data)
+                    var data=JSON.parse(res.data);
+                    console.log(data)
                     this.isSubmit=false;
                     this.$indicator.close();
-                    console.log(this.baseInfo)
-                    this.baseInfo.create_time=data.time;
+                    this.baseInfo.create_time=data.create_time;
+                    console.log('data.time:'+data.create_time);
                     this.baseInfo.content=data.content;
                     this.baseInfo.img=data.img;
                     console.log(this.baseInfo.img)
