@@ -147,7 +147,7 @@ class Communication extends Base
                 'content' => $value['content'],
                 'img' => !empty($value['img']) ? json_decode($value['img']) : "",
                 'comments' => $value['comments'],
-                'create_time' => $value['create_time'],
+                'create_time' => strtotime($value['create_time']),
                 'id' => $value['id']
 
             ];
@@ -177,6 +177,7 @@ class Communication extends Base
         $avatar = isset($post->user->avatar) ? $post->user->avatar : "";
         $post['header'] = empty($header) ? $avatar : $header;
         unset($post['user']);
+
         $this->assign('post', $post);
         // 评论列表
         $map = [
@@ -184,8 +185,9 @@ class Communication extends Base
         ];
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         foreach ($comments as $value){
-            $value['create_time'] = date("Y-m-d",$value['create_time']);
+            $value['create_time'] = strtotime($value['create_time']);
         }
+
         //$count = CommunicateComment::where($map)->count();
 
         //echo json_encode($post);
@@ -236,7 +238,6 @@ class Communication extends Base
         $post = CommunicatePosts::get(input('id'));
         $data['user_name'] = $userinfo['name'];
         $result = CommunicateComment::create($data);
-        $result['create_time'] = date("Y-m-d",$result['create_time']);
         if ($result) {
             $post['comments'] += 1;
             $post->save();
