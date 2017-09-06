@@ -13,5 +13,8 @@ use think\Model;
 
 class CommunicateGroup extends  Model
 {
+    protected  $type=[
 
+        'create_time'=>'strtotime'
+    ];
 }

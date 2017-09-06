@@ -405,12 +405,18 @@ class Partymanage extends Base
         $mRecord = new MerchantsRecord();
         if (IS_POST) {
             $data = input('');
+            $data['merchants_date']=$data['merchants_date']/1000;
+            $merchants_area =$data['merchants_area'];
+            $merchants_money =$data['merchants_money'];
+            $data['img']=empty($data['img'])?"":json_encode($data['img']);
+            unset($data['merchants_area']);
+            unset($data['merchants_money']);
             $list = $mRecord->save($data);
             if ($data['status'] == 2) {
                 $map = [
                     'update_time' => $data['merchants_date'],
-                    'merchants_area' => $data['merchants_area'],
-                    'merchants_money' => $data['merchants_money'],
+                    'merchants_area' => $merchants_area,
+                    'merchants_money' => $merchants_money,
                     'status' => 2
                 ];
                 $result = $mCompany->where('id', $merchaants_id)->update($map);
@@ -422,6 +428,7 @@ class Partymanage extends Base
             }
         } else {
             $info = $mCompany->where('id', $merchaants_id)->find();
+            $info['merchants_user']=isset($info->user->name)?$info->user->name:"";
             $this->assign('info', json_encode($info));
             return $this->fetch();
 
@@ -658,6 +665,7 @@ class Partymanage extends Base
     /*公司缴费记录*/
     public function feeRecord()
     {
+        $info = [];
         $departmentId = input('id');
         $map = ['company_id' => $departmentId];
         $list = FeePayment::where($map)->order('id desc')->limit(6);
@@ -677,6 +685,7 @@ class Partymanage extends Base
     /*加载更多缴费记录*/
     public function moreRecode()
     {
+        $info = [];
         $departmentId = input('id');
         $len = input("length");
         $map = ['company_id' => $departmentId];
@@ -738,6 +747,7 @@ class Partymanage extends Base
         }
         foreach ($floor as $k => $v) {
             $newArr[$k]['floor'] = $v;
+            $newArr[$k]['combine'] = false;
             $newArr[$k]['rooms'] = $roomArray[$k];
         }
         $map1 = [

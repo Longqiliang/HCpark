@@ -20,7 +20,7 @@ class Park extends Admin
     /*园区信息添加及修改*/
     public function index()
     {
-        $parkid = 3;
+        $parkid = session("user_auth")['park_id'];
         if (IS_POST) {
             $park = new ParkModel();
             $res = $park->allowField(true)->validate(true)->save(input("post."), ['id' => $parkid]);
@@ -188,11 +188,7 @@ class Park extends Admin
                 foreach ($data['img'] as $k => $v) {
                     $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
-                foreach ($data['panorama'] as $k => $v) {
-                    $data['panorama'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
-                }
                 $data['img'] = json_encode($data['img']);
-                $data['panorama'] = json_encode($data['panorama']);
                 //return dump($data);
                 $res = $parkRent->where('id', $id)->update($data);
                 if ($res) {
@@ -216,11 +212,7 @@ class Park extends Admin
                 foreach ($data['img'] as $k => $v) {
                     $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
-                foreach ($data['panorama'] as $k => $v) {
-                    $data['panorama'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
-                }
                 $data['img'] = json_encode($data['img']);
-                $data['panorama'] = json_encode($data['panorama']);
                 $res = $parkRent->save($data);
                 if ($res) {
 
@@ -243,7 +235,6 @@ class Park extends Admin
             $parkName = $park['name'];
             $this->assign("info", $data);
             $this->assign('parkName', $parkName);
-            $this->assign('panorama', json_decode($data['panorama']));
             $this->assign('img', json_decode($data['img']));
 
             return $this->fetch();

@@ -30,7 +30,7 @@
         <div class="mail-box">
             <form class="form-horizontal" method="post">
                 <div class="mail-body">
-                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;园区名称:</h3></label>
+                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;园区:</h3></label>
                         <div class="col-sm-4"><input type="text" class="form-control"   value="{$parkName}" readonly></div>
                         <div class="col-sm-4">
                             <select name="build_block" id="" style="width: 100px;height: 30px;">
@@ -45,33 +45,24 @@
                         <div class="col-sm-2">
                             <input type="text" class="form-control"  name="floor" value="{$info.floor}">
                         </div>
-                        <label class="col-md-1 "><h3>——楼——</h3></label>
+                        <label class="col-md-1" style="width: 60px"><h3>&nbsp;&nbsp;楼&nbsp;&nbsp;</h3></label>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control"  name="room" value="{$info.room}">
+                            <input type="text" class="form-control"  name="room" value="{$info.room}" >
                         </div>
                         <label class="col-md-1 "><h3>室</h3></label>
                     </div>
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;面积:</h3></label>
                         <div class="col-sm-5"><input type="text" class="form-control"  name="area" value="{$info.area}"></div>
-                        <div class="col-sm-1"><h3>单位（㎡）</h3></div>
+                        <div class="col-sm-2"><h3>单位（㎡）</h3></div>
                     </div>
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;价格:</h3></label>
                         <div class="col-sm-5"><input type="text" class="form-control"  name="price" value="{$info.price}"></div>
                         <div class="col-sm-2"><h3>单位（元/㎡·天）</h3></div>
                     </div>
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;全景:</h3></label>
-                        <div class="col-sm-5"> <input id="input-file" type="file" class="file" multiple></div>
+                        <div class="col-sm-5"> <input type="text" class="form-control"  name="panorama" value="{$info.panorama}"></div>
                     </div>
-                    <div class="form-group ">
-                        <div class="col-sm-6 panorama">
-                            {foreach name="panorama" item="vo"}
-                            <div class="col-sm-3"  class="parent">
-                                <img src="{$vo}" alt="" style='width: 130px;height: 200px;margin-right: 10px' class="imgs">
-                                <div class="del"><img src="/admin/images/delete.png" alt="" width="20px" height="20px"></div>
-                            </div>
-                            {/foreach}
-                        </div>
-                    </div>
+
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;照片:</h3></label>
                         <div class="col-sm-5"> <input class="input-file" type="file" class="file" multiple></div>
                     </div>
@@ -113,30 +104,6 @@
         });
     });
 
-    $("#input-file").fileinput({
-        showPreview: false,
-        language: 'zh', //设置语言
-        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
-        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
-        maxFileSize: 1024 * 200,
-        maxFilesNum : 5,//上传最大的文件数量
-    }).on("filebatchselected", function(event, files) {
-        $(this).fileinput("upload");
-    }).on('fileuploaded', function(event, data, previewId, index) {
-        var response = $.parseJSON(data.response);
-        if(response.code == 1) {
-            var html = "<div class='col-sm-3 parent'>" +
-                "<img src='"+response.data+"' alt='' style='width: 130px;height: 200px;margin-right: 10px' class='imgs'>" +
-                " <div class='del'><img src='/admin/images/delete.png' alt='' width='20px' height='20px'></div>"
-            "</div>";
-            $('.panorama').append(html);
-            $('.del').click(function(){
-                $(this).parent().remove();
-            });
-        } else {
-            updateAlert(response.msg, 'warning');
-        }
-    });
     $(".input-file").fileinput({
         showPreview: false,
         language: 'zh', //设置语言
@@ -173,16 +140,12 @@
         $(this).parent().remove();
     });
     function addRent() {
-        var imgScrs=[];
-        var imgs = $('.imgs');
-        for(var i=0;i<imgs.length;i++){
-            imgScrs.push(imgs[i].src);
-        };
         var imgsSrc=[];
         var img=$('.img');
         for(var i=0;i<img.length;i++){
             imgsSrc.push(img[i].src);
         };
+        var panoramas = $("[name='panorama']").val();
         var id = "{$info.id}";
         var areas = $("[name='area']").val();
         var prices = $("[name='price']").val();
@@ -190,11 +153,11 @@
         var floors = $("[name='floor']").val();
         var rooms = $("[name='room']").val();
         var build = $("[name='build_block']").val();
-        if (imgScrs.length == 0){
-            updateAlert("请添加全景照片","info");
+        if (floors == ""){
+            updateAlert("请添加楼层","info");
             return "";
-        }else if (imgsSrc.length == 0){
-            updateAlert("请添加照片","info");
+        }else if(rooms == ""){
+            updateAlert("请添加房间号","info");
             return "";
         }else if(areas == ""){
             updateAlert("请添加面积","info");
@@ -202,9 +165,15 @@
         }else if(prices == ""){
             updateAlert("请添加价格","info");
             return "";
+        }else if (panoramas == ""){
+            updateAlert("请添加全景照片链接","info");
+            return "";
+        }else if (imgsSrc.length == 0){
+            updateAlert("请添加照片","info");
+            return "";
         }
         $.ajax({
-            data:{floor:floors,room:rooms,build_block:build,panorama:imgScrs,area:areas,price:prices,id:id,img:imgsSrc},
+            data:{floor:floors,room:rooms,build_block:build,panorama:panoramas,area:areas,price:prices,id:id,img:imgsSrc},
             type:"post",
             url:"{:Url('addrent')}",
             success:function (data) {

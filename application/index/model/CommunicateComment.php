@@ -17,7 +17,10 @@ class CommunicateComment extends  Model
         'create_time' => NOW_TIME,
         'status' => 1
     ];
+    protected  $type=[
 
+        'create_time'=>'strtotime'
+    ];
     public function wechatuser(){
 
         return $this->hasOne("WechatUser","userid","user_id");

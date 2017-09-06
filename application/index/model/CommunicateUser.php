@@ -15,7 +15,11 @@ class CommunicateUser extends  Model
 {
     protected $insert = [
         'create_time' => NOW_TIME,
+    ];
 
+    protected  $type=[
+
+       'create_time'=>'strtotime'
     ];
 
     public  function  group(){
