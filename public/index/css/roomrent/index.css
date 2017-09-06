@@ -5,6 +5,9 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
+a{
+    color: #333;
+}
 button{
     outline: none;
 }
@@ -152,6 +155,9 @@ body{
     font-size: 1.5rem;
     line-height: 9.6vw;
     text-align: center;
+}
+.houses-list-item span.block{
+    width: 98.4vw;
 }
 .houses-list-item span.selectable{
     color: #fff;

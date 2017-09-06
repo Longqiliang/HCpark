@@ -12,6 +12,10 @@ h1,p,h2,h3,h4,h5{
 body{
     background-color: #F8F7FC;
 }
+.content{
+    color: #333;
+    font-size: 1.5rem;
+}
 .banner{
     width: 100%;
     height:50vw;
@@ -142,7 +146,7 @@ body{
     align-items: center;
 }
 .card-list .card-img-box img{
-    width: 100%;
+    width: 14.93vw;
 }
 .card-list .card-img-box img.small{
     width: 13.33vw;

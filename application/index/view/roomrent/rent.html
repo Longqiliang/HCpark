@@ -50,7 +50,7 @@
         </div>
     </div>
     <div class="rent-btn-box">
-        <button class="btn btn-block btn-green">租房申请</button>
+        <button class="btn btn-block btn-green" @click="jump">租房申请</button>
     </div>
     <div class="icon-box" v-if="lookVR">
         <i class="iconfont icon-back" @click="prev"></i>
@@ -100,31 +100,33 @@
                 pagination: '.swiper-pagination',
                 autoplayDisableOnInteraction: false,
                 onSlideChangeEnd:function(e){
-                    console.log(e.activeIndex);
                 }
             })
         },
         methods:{
-            reBack(){
+            reBack:function () {
                 this.vrShow = false;
             },
             looVR:function (e) {
               console.log("11");
                 window.location.href='/index/roomrent/index?link='+e;
             },
-            show(event){
+            show:function (event){
                 this.mySwiper.stopAutoplay();
                 //console.log(event);
             },
-            next(){
+            next:function () {
                 var _this = this,
                         viewer = _this.viewer;
                 viewer.next();
             },
-            prev(){
+            prev:function () {
                 var _this = this,
                         viewer = _this.viewer;
                 viewer.prev();
+            },
+            jump:function () {
+                window.location.href ='/index/roomrent/peoplerent';
             }
         }
     })

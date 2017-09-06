@@ -10,8 +10,8 @@
 <div id="app" class="content">
     <div class="banner">
         <div class="header">
-            <select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">
-                <option :value="item.value" v-for="(item,key) in parks" >
+            <select name="" id="" v-model="nowPark" @change="parkChange" v-if="parks.length > 0">
+                <option :value="item.id" v-for="(item,key) in parks" >
                     {{item.name}}
                 </option>
             </select>
@@ -32,40 +32,40 @@
             <div class="list-tit">
                 <i class="icon-notice"></i>
             </div>
-            <div class="list-group">
+            <div class="list-group" @click="jump('/index/partymanage/newslist')">
                 <div class="swiper-container" id="listSwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="item of list.arr">
-                            <div class="list-item">{{item}}</div>
+                    <div class="swiper-wrapper" v-if="news.length > 0">
+                        <div class="swiper-slide" v-for="item of news">
+                            <div class="list-item">{{item.title}}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="group-card">
-        <div class="card-list">
+    <div class="group-card" >
+        <div class="card-list" @click="jump('/index/partymanage/contract')">
             <h3 class="card-tit">园区概览</h3>
             <div class="card-img-box">
                 <img src="/index/images/partymanage/img-statistics.png" class="small">
             </div>
             <span class="card-label">园区概况一目了然</span>
         </div>
-        <div class="card-list">
+        <div class="card-list" @click="jump('/index/partymanage/merchants')">
             <h3 class="card-tit">招商管理</h3>
             <div class="card-img-box">
                 <img src="/index/images/partymanage/img-partymanage.png" class="small">
             </div>
             <span class="card-label">招商情况尽在手中</span>
         </div>
-        <div class="card-list">
+        <div class="card-list" @click="jump('/index/partymanage/contract')">
             <h3 class="card-tit">合同管理</h3>
             <div class="card-img-box ">
                 <img src="/index/images/partymanage/img-contract.png" class="small">
             </div>
             <span class="card-label">各类合同便携管理</span>
         </div>
-        <div class="card-list">
+        <div class="card-list" @click="jump('/index/addressbook/index')">
             <h3 class="card-tit">园区通讯录</h3>
             <div class="card-img-box img-communicate">
                 <img src="/index/images/partymanage/img-communicate.png" >
@@ -79,10 +79,13 @@
 {block name="script"}
 <script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
 <script>
-    var arr =['测试1稍多少多稍多少多稍多少多稍多少多稍多少多萨达收到三十多岁的收到','测试2','测试3','测试4'];
-    var list ={
-        arr:arr
-    };
+    var res ={$res};
+    var nowPark = null;
+    if(res.length){
+        nowPark = res[0].id;
+    }
+    console.log({$res});
+    console.log({$news});
 var vm = new Vue({
     el:'#app',
     mounted(){
@@ -96,25 +99,19 @@ var vm = new Vue({
         })
     },
     data:{
-        list:list,
-        nowPark:0,
-        parks:[
-            {name:'希垦科技园',value:0},
-            {name:'浙江互联网产业园',value:1},
-            {name:'人工智能产业园',value:2}
-        ],
-        baseData:{
-            isBoss:'yes'
-        }
+        nowPark:nowPark,
+        parks:{$res},
+        news:{$news}
     },
     methods:{
         //园区选择
         parkChange:function () {
-            console.log("11");
-            return;
-            this.$http.post('',{value:this.nowPark}).then(function (res) {
-                console.log(res)
-            })
+            console.log(this.nowPark);
+        },
+        jump:function (href) {
+            if(this.nowPark && href){
+                window.location.href = href+"?park_id="+this.nowPark;
+            }
         }
     }
 })

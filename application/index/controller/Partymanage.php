@@ -54,7 +54,7 @@ class Partymanage extends Base
     }
 
     /** 园区内部通告列表 **/
-    public function newslist()
+    public function notify()
     {
         //首页所选园区ID
         $parkid = input('park_id');
@@ -70,13 +70,45 @@ class Partymanage extends Base
                 'status' => 1,
             ];
         }
-        $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->select();
+        $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->limit(6)->select();
         $this->assign('list', json_encode($list));
+        $this->assign('park_id',json_encode($parkid));
         return $this->fetch();
     }
 
+    /*园区内部通告下拉刷新*/
+    public function getMoreList(){
+        $len = input("length");
+        $parkid = input('park_id');
+        if ($parkid == '1') {
+            $map = [
+                'type' => 2,
+                'status' => 1,
+            ];
+        } else {
+            $map = [
+                'park_id' => $parkid,
+                'type' => 2,
+                'status' => 1,
+            ];
+        }
+
+        $list = News::where($map)
+            ->order("create_time desc")
+            ->limit($len,6)
+            ->select();
+        if ($list){
+
+            return json(['code' => 1, 'data' => $list]);
+        }else{
+
+            return json(['code' => 0, 'msg' =>"没有更多内容了"]);
+        }
+
+    }
+
     /** 内部通告详情页 **/
-    public function newsdetail()
+    public function detail()
     {
         $id = input('id');
         $map = [
@@ -87,6 +119,7 @@ class Partymanage extends Base
         $res = News::where($map)->find();
 
         $this->assign('res', json_encode($res));
+        echo json_encode($res);
         return $this->fetch();
     }
 
@@ -123,7 +156,7 @@ class Partymanage extends Base
             'rent' => ['name' => "租赁合同", 'count' => $contract[1]],
             'property' => ['name' => "物业合同", 'count' => $contract[2]]
         ];
-        return json_encode($array);
+//        return json_encode($array);
         $this->assign('info', json_encode($array));
 
         return $this->fetch();
@@ -586,7 +619,6 @@ class Partymanage extends Base
                     'content' => $info['content'],
                     'create_time' => $info['create_time']*1000 ];
             }
-
             $list = $mDiary->where('user_id', $user_id)->select();
             $time = array();
             foreach ($list as $value) {
