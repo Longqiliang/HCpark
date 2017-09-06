@@ -59,7 +59,6 @@ class Communication extends Admin
 
     public function showUsers()
     {
-
         $cuser = new CommunicateUser();
         $user = new  WechatUser();
         if (IS_POST) {
@@ -75,19 +74,20 @@ class Communication extends Admin
         } else {
 
             $id = input('id');
+
             $serch = input('search');
             if (!empty($serch)) {
-
                 $map['name'] = array('like', '%' . $serch . "%");
                 $userlist = $user->where($map)->select();
                 $ids = array();
                 foreach ($userlist as $value) {
                     array_push($ids, $value['userid']);
-                } 
+                }
                 if (count($ids) > 0) {
                     $data['user_id'] = array('in', $ids);
                 }
             }
+
             $data['group_id'] = $id;
             $list = $cuser->where($data)->paginate();
             int_to_string($list, $map = array('status' => array(-1 => '申请失败', 1 => '申请中', 2 => '普通成员', 3 => '管理员')));
@@ -96,7 +96,6 @@ class Communication extends Admin
                 $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
                 $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
             }
-            echo json_encode($id);
             $this->assign('group_id',$id );
             $this->assign('search', $serch);
             $this->assign('list', $list);
@@ -111,21 +110,14 @@ class Communication extends Admin
             $id = input('id');
             $serch = input('search');
             if (!empty($serch)) {
-                $map['title'] = array('like', '%' . $serch . "%");
-                $userlist = $user->where($map)->select();
-                $ids = array();
-                foreach ($userlist as $value) {
-                    array_push($ids, $value['userid']);
-                }
-                if (count($ids) > 0) {
-                    $data['user_id'] = array('in', $ids);
-                }
+                $data['title'] = array('like', '%' . $serch . "%");
+
             }
             $data['group_id'] = $id;
             $list = $posts->where($data)->where('status','neq',-1)->paginate();
 
             int_to_string($list, $map = array('status' => array(-1 => '删除', 1 => '审核中', 2 => '审核成功', 3 => '审核失败')));
-
+        $this->assign('group_id',$id );
             $this->assign('search', $serch);
             $this->assign('list', $list);
             return $this->fetch();

@@ -33,16 +33,17 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <form method="get" action="index.html" class="pull-right mail-search">
+            <form method="get" action="{:Url('Communication/showUsers')}" class="pull-right mail-search">
                 <div class="input-group">
-                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索群名" value="{$search}">
-                    <input type="hidden" class="form-control input-sm" name="id" placeholder="搜索群名" value="{$group_id}">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索用户" value="{$search}">
+                    <input type="hidden" class="form-control input-sm" name="id" placeholder="搜索用户" value="{$group_id}">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                     </div>
                 </div>
             </form>
-            <h2>合作交流管理</h2>
+
+            <h2>查看成员</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
@@ -253,5 +254,6 @@
         alignment: 'center',       // Position - may be auto OR center.
         allowMultiple: false,
     });
+    highlight_subnav("{:Url('Communication/index')}");
 </script>
 {/block}
