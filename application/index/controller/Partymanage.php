@@ -340,7 +340,6 @@ class Partymanage extends Base
 
                     array_push($data[$month], $value);
                 }
-
             }
             //未完成招商分月份
         } else {
@@ -360,8 +359,6 @@ class Partymanage extends Base
         foreach ($data as $key => $value) {
             $data[$key] = count($data[$key]);
         }
-
-
         return $data;
     }
 
@@ -431,11 +428,9 @@ class Partymanage extends Base
             $info['merchants_user']=isset($info->user->name)?$info->user->name:"";
             $this->assign('info', json_encode($info));
             return $this->fetch();
-
         }
-
-
     }
+
 
 
     //个人统计详情获取数据的公共方法
@@ -582,13 +577,13 @@ class Partymanage extends Base
                     'img' => json_decode($info['img']),
                     'user_id' => $info['user_id'],
                     'content' => $info['content'],
-                    'create_time' => strtotime($info['create_time']) * 1000];
+                    'create_time' => $info['create_time']*1000 ];
             }
 
             $list = $mDiary->where('user_id', $user_id)->select();
             $time = array();
             foreach ($list as $value) {
-                array_push($time, strtotime($value['create_time']) * 1000);
+                array_push($time, $value['create_time'] * 1000);
             }
 
             //当前日志详情
@@ -604,7 +599,7 @@ class Partymanage extends Base
     public function changeDiary()
     {
         $user_id = input('user_id');
-        $time = input('create_time') / 1000;
+        $time = input('time')/1000;
         $mDiary = new MerchantsDiary();
         $date_str = date('Y-m-d', $time);
         //封装成数组
@@ -623,10 +618,16 @@ class Partymanage extends Base
         if (!$info) {
             $info['user_id'] = $user_id;
             $info['create_time'] = $begindate * 1000;
+        }else{
+            $info['img']=json_decode($info['img']);
+            $info['create_time']=$info['create_time']*1000;
         }
+
         return json_encode($info);
 
     }
+
+
 
     /*园区列表*/
     public function parkList()
