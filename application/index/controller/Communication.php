@@ -147,16 +147,13 @@ class Communication extends Base
                 'content' => $value['content'],
                 'img' => !empty($value['img']) ? json_decode($value['img']) : "",
                 'comments' => $value['comments'],
-                'create_time' => strtotime($value['create_time']),
+                'create_time' => $value['create_time'],
                 'id' => $value['id']
-
             ];
             $avatar = isset($value->user->avatar) ? $value->user->avatar : "";
             $header = isset($value->user->header) ? $value->user->header : "";
             $data['header'] = empty($header) ? $avatar : $header;
             array_push($postsList, $data);
-
-
         }
         unset($groupInfo['status']);
         unset($groupInfo['content']);
@@ -165,7 +162,6 @@ class Communication extends Base
         $this->assign('group', $groupInfo);
         return $this->fetch();
     }
-
     /*帖子详情*/
     public function postDetails()
     {
@@ -177,7 +173,6 @@ class Communication extends Base
         $avatar = isset($post->user->avatar) ? $post->user->avatar : "";
         $post['header'] = empty($header) ? $avatar : $header;
         unset($post['user']);
-
         $this->assign('post', $post);
         // 评论列表
         $map = [
@@ -185,11 +180,10 @@ class Communication extends Base
         ];
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         foreach ($comments as $value){
-            $value['create_time'] = strtotime($value['create_time']);
+
+             $value['create_time']=date("Y-m-d H:m:s",$value['create_time']);
         }
-
         //$count = CommunicateComment::where($map)->count();
-
         //echo json_encode($post);
         //echo json_encode($comments);
         $this->assign('comments', json_encode($comments));
@@ -243,13 +237,9 @@ class Communication extends Base
             $post->save();
             return $this->success('评论成功', '', $result);
         } else {
-
             return $this->error('评论失败');
         }
-
     }
-
-
     //评论分页
     public function moreComment()
     {
@@ -276,7 +266,7 @@ class Communication extends Base
         $cgroup = new CommunicateGroup();
         $map = [
             'user_id' => $userid,
-            'status' => array('lt', 3)
+            'status' => array('lt', 4)
         ];
         $list = $cuser->where($map)->select();
         foreach ($list as $value) {
@@ -323,14 +313,18 @@ class Communication extends Base
                 'status' => array('lt', 3),
                 'group_id' => array('in', $group_id)
             ];
-
             $list = $cuser->where($map)->select();
             foreach ($list as $value) {
                 $value['name'] = isset($value->user->name) ? $value->user->name : "";
                 $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
                 $value['company'] = isset($value->user->departmentName->name) ? $value->user->departmentName->name : "";
                 $value['mobile'] = isset($value->user->mobile) ? $value->user->mobile : "";
+
+                unset($value['user']);
+                unset($value['group']);
             }
+
+            echo json_encode($list);
             $this->assign('list', $list);
             return $this->fetch();
         }

@@ -13,12 +13,19 @@ use think\Model;
 
 class CommunicatePosts extends  Model
 {
-    protected $dateFormat="Y-m-d";
+
+
     protected $insert = [
         'create_time' => NOW_TIME,
         'comments' => 0,
         'status'=>1
     ];
+
+    protected  $type=[
+
+        'create_time'=>'strtotime'
+    ];
+
     public  function  user(){
 
         return $this->hasOne('WechatUser','userid','user_id');
