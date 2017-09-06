@@ -41,6 +41,8 @@
                         <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                     </div>
                 </div>
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                        class="fa fa-times"></i> 关闭</a>
             </form>
 
             <h2>查看成员</h2>
@@ -65,7 +67,7 @@
                         <div class="modal-body">
 
                             <div class="form-group"><label class="col-sm-2 control-label">申请人</label>
-                                <div class="col-sm-10"><input type="text" placeholder="申请人 " class="form-control" required="" name="user"></div>
+                                <div class="col-sm-10"><input type="text" placeholder="申请人 " class="form-control" required="" name="user_name"></div>
                             </div>
                             <div class="form-group"><label class="col-sm-2 control-label">手机</label>
                                 <div class="col-sm-10"><input type="text" placeholder="手机" class="form-control" required="" name="mobile"></div>
@@ -187,6 +189,7 @@
 
         var name =$(a).attr('data-name');
         $("input[name='id']").val($(a).attr('data-id'));
+        $("input[name='remark']").val($(a).attr('data-remark'));
         $("input[name='user_name']").val($(a).attr('data-username'));
         $("input[name='mobile']").val($(a).attr('data-mobile'));
         $("input[name='company']").val($(a).attr('data-company'));
