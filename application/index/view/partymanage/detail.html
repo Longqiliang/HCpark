@@ -28,15 +28,14 @@
 {block name="body"}
 <div id="app">
     <div class="header">
-        <h2>documents.title</h2>
+        <h2>{{documents.title}}</h2>
         <p>
             <span>{{documents.create_time}}</span>
             <span>{{documents.source}}</span>
             <span>{{documents.views}}</span>
         </p>
     </div>
-    <section>
-       {{documents.content}}
+    <section v-html="documents.content">
     </section>
 </div>
 <div>

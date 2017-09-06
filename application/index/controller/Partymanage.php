@@ -70,7 +70,7 @@ class Partymanage extends Base
                 'status' => 1,
             ];
         }
-        $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->select();
+        $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->limit(6)->select();
         $this->assign('list', json_encode($list));
         $this->assign('park_id',json_encode($parkid));
         return $this->fetch();
