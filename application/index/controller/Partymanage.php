@@ -668,7 +668,13 @@ class Partymanage extends Base
     /*企业楼房表*/
     public function companyFloor()
     {
+        $floor = [];
+        $floor1 = [];
+        $newArr = [];
+        $newArr1 = [];
         $parkId = session('park_id');
+        $parkInfo = Park::where('id', $parkId)->find();
+        $parkName = $parkInfo['name'];
         $parkRoom = new ParkRoom();
         $map = [
             'park_id' => $parkId,
@@ -743,12 +749,12 @@ class Partymanage extends Base
             $newArr1[$k]['floor'] = $v;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
         }
+        $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
         $this->assign('list', json_encode($newArr));
         $this->assign('list1', json_encode($newArr1));
-        echo json_encode($newArr);
-        echo json_encode($newArr1);
-        exit;
-        return $this->fetch();
+        echo json_encode($resArr);
+
+        //return $this->fetch();
 
 
     }
