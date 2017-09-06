@@ -745,6 +745,7 @@ class Partymanage extends Base
         }
         foreach ($floor as $k => $v) {
             $newArr[$k]['floor'] = $v;
+            $newArr[$k]['combine'] = false;
             $newArr[$k]['rooms'] = $roomArray[$k];
         }
         $map1 = [
