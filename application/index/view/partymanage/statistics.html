@@ -147,6 +147,9 @@ var app = new Vue({
     computed:{
         parks(){
             var res=this.res;
+            if(!res){
+                return;
+            }
             for(var i=0,parks=[];i<res.length;i++){
                 var park={
                     name:res[i].name,
