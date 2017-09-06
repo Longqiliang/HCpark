@@ -145,8 +145,8 @@
 <div id="app">
     <div class="my-pack">
         <ul class="my-tabs my-tabs1">
-            <li :class="{'my-active':active==1}" @click="active = 1; selectList=year">年</li>
-            <li :class="{'my-active':active==2}" @click="active = 2 ;selectList=month">月</li>
+            <li :class="{'my-active':active==1}" @click="active = 1;timeChange()">年</li>
+            <li :class="{'my-active':active==2}" @click="active = 2;timeChange()">月</li>
         </ul>
         <select name="" v-model="yearSelected" @change="timeChange" v-if="active == 1">
             <option :value="key" v-for="(item,key) in year" >
@@ -185,8 +185,8 @@
                 <li v-for="item in personalInfo.records" >
                     <span class="my-icon my-icon-suc"></span>
                     <div class="my-list">
-                        <div><span>工作日志</span><span>{{item.merchants_place | timeToString}}</span></div>
-                        <div><span>创建日期：</span><span>2017-7-7</span></div>
+                        <div><span>工作日志</span><span>{{item.merchants_place}}</span></div>
+                        <div><span>创建日期：</span><span>{{item.create_time | timeToString}}</span></div>
                     </div>
                 </li>
             </ul>
@@ -241,7 +241,7 @@ var app = new Vue({
     el:'#app',
     data:{
         startTime:1483200000000,
-        active:1,
+        active:2,
         yearSelected:0,
         monthSelected:0,
         personalInfo:{$personalinfo},
@@ -307,10 +307,14 @@ var app = new Vue({
     },
     methods:{
         timeChange(){
-            console.log(this.selected)
+            console.log(this.yearSelected);
             if(this.active===1){
+                console.log('this.yearSelected__'+this.yearSelected);
+
                 var data=this.year[this.yearSelected]
             }else{
+                console.log('this.monthSelected'+this.monthSelected);
+
                 var data= this.month[this.monthSelected]
 
             }

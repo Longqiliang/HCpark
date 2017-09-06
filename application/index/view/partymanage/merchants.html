@@ -430,7 +430,7 @@
                     <li v-for="item in undone">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>

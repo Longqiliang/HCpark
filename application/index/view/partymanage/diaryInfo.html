@@ -189,7 +189,7 @@
             </li>
         </ul>
         <div class="my-title">工作日志内容</div>
-        <textarea id="" cols="30" rows="10" placeholder="请输入工作日志内容" v-model="baseInfo.content" v-bind:readonly="!isWrite"></textarea>
+        <textarea id="" cols="30" rows="10" :placeholder="isWrite==true?'请输入工作日志内容':'暂无日志内容'" v-model="baseInfo.content" v-bind:readonly="!isWrite"></textarea>
         <div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img">图片</span></div>
         <div class="imgBox">
             <div class="card-upload" v-if="isWrite">
@@ -219,7 +219,7 @@
 <script>
     Vue.filter('timeToString', function(time) {
         if(time){
-            var newTime = new Date(time*1000);
+            var newTime = new Date(time);
             var m = newTime.getMonth()+1,
                     dt=newTime.getDate(),
                     y=newTime.getFullYear();
@@ -235,7 +235,7 @@
     var app=new Vue({
         el:'#app',
         data:{
-            isBoos:false,
+            isBoss:'{$is_boss}',
             isWrite:false,
             baseInfo:{$info},
             nowDate:'',
@@ -257,12 +257,15 @@
             checkedList:[1504540800000,1504454400000,1504617185000]
         },
         created(){
-            if(this.baseInfo.content || this.isBoos==true){
+            //领导不能写日志判断
+            if(!this.baseInfo.content && this.isBoss=='yes'){
                 this.isWrite=false;
             }else{
                 this.isWrite=true;
             }
-            this.initData(this.baseInfo.create_time*1000);
+            console.log(' this.isWrite=' + this.isWrite)
+            console.log('this.baseInfo.create_time = '+this.baseInfo.create_time);
+            this.initData(this.baseInfo.create_time);
         },
         methods:{
             toShow(){
@@ -312,7 +315,6 @@
                         this.days.push(dayobject);
                     }
                 }
-
             },
             //是否为用户选中
             isChecked:function (data) {
@@ -340,17 +342,17 @@
                     spinnerType: 'triple-bounce'
                 });
                 this.isSubmit=true;
-                var time=this.days[key]/1000;
-                console.log(time);
+                var time=new Date(this.days[key].day).setHours(0,0,0,0);
                 var data={
                     time:time,
                     user_id:this.baseInfo.user_id
                 }
+                console.log('post-time : ' + time);
                 this.$http.post('/info/partymanage/changeTime',data).then(function (res) {
                     if(res.data.code){
                         this.isSubmit=false;
                         this.$indicator.close();
-                        if(this.baseInfo.content || this.isBoos==true){
+                        if(this.baseInfo.content || this.isBoss==true){
                             this.isWrite=false;
                         }else{
                             this.isWrite=true;
@@ -405,7 +407,7 @@
                     if(res.data.code){
                         this.isSubmit=false;
                         this.$indicator.close();
-                        if(this.baseInfo.content || this.isBoos==true){
+                        if(this.baseInfo.content || this.isBoss==true){
                             this.isWrite=false;
                         }else{
                             this.isWrite=true;
