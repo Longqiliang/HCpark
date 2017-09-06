@@ -34,12 +34,14 @@ class Partymanage extends Base
         ];
         //所有园区领导,能看到所有园区
         if ($user['department'] == 1 && $user['tagid'] == 1) {
+
             $res = Park::field('id,name')->select();
             $news = News::where($map)->order('create_time desc')->field('id,title')->select();
-            $res[]=[
+            $all=[
                 'id'=>"a",
                 'name'=>"全部"
             ];
+            array_unshift($res,$all);
         } else {
             //只能看到自己园区
             $res = Park::where('id', 'eq', $park_id)->field('id,name')->select();
