@@ -282,14 +282,12 @@ class Partymanage extends Base
                 }
             }
             //TODO 招商人员的 个人统计
-            $date_str = date('Y-m-d', time());
-            //封装成数组
-            $arr = explode("-", $date_str);
             //参数赋值
             //年
-            $year = $arr[0];
+            $year = date('Y');
             //月，输出2位整型，不够2位右对齐
-            $month = sprintf('%02d', $arr[1]);
+            $month = date('m');
+
             $personal = $this->statisticsCommon($userid, $year, $month);
 
         }
@@ -495,7 +493,7 @@ class Partymanage extends Base
         $finish_area = 0;
         foreach ($list2 as $value) {
             $finish_area += $value['merchants_area'];
-            $finish_price += $value['merchants_price'];
+            $finish_price += $value['merchants_money'];
         }
         $data = [
             'total' => $days,
