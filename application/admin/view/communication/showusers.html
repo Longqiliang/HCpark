@@ -33,6 +33,14 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            <div class="pull-right tooltip-demo">
+                <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
+                <!--target-form="form-horizontal" data-edit="content">-->
+                <!--<i class="fa fa-pencil"></i> 保存草稿-->
+                <!--</button>-->
+                <a href="javascript:history.go(-1)" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                        class="fa fa-times"></i> 关闭</a>
+            </div>
             <form method="get" action="{:Url('Communication/showUsers')}" class="pull-right mail-search">
                 <div class="input-group">
                     <input type="text" class="form-control input-sm" name="search" placeholder="搜索用户" value="{$search}">
@@ -41,9 +49,8 @@
                         <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                     </div>
                 </div>
-                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
-                        class="fa fa-times"></i> 关闭</a>
             </form>
+
 
             <h2>查看成员</h2>
             <div class="mail-tools tooltip-demo m-t-md">
