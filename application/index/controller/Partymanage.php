@@ -210,7 +210,6 @@ class Partymanage extends Base
                 foreach ($all_company as $value) {
                     if ($value['status'] == 1) {
                         array_push($doing, $value);
-
                     } else {
                         array_push($finish, $value);
                     }
@@ -220,7 +219,6 @@ class Partymanage extends Base
                 foreach ($all_company as $value) {
                     if ($value['status'] == 1 && $value->user->park_id == $park_id) {
                         array_push($doing, $value);
-
                     } else if ($value['status'] == 2 && $value->user->park_id == $park_id) {
                         array_push($finish, $value);
                     }
@@ -270,6 +268,9 @@ class Partymanage extends Base
             $all_company = $mCompany->where('user_id', $userid)->select();
             $doing = array();
             $finish = array();
+            //招商统计图表所需数据格式
+            $finish2 = $this->merchantsComment($finish, 1);
+            $doing2 = $this->merchantsComment($doing, 2);
             foreach ($all_company as $value) {
                 if ($value['status'] == 1) {
                     array_push($doing, $value);
@@ -548,6 +549,8 @@ class Partymanage extends Base
         $user_id = empty(input('user_id')) ? session('userId') : input('user_id');
         $id = input('id');
         $mDiary = new MerchantsDiary();
+        $weuser =  new WechatUser();
+        //
         if (IS_POST) {
             $data = input('');
             $data['user_id'] = $user_id;
@@ -558,40 +561,31 @@ class Partymanage extends Base
                 return $this->error("no");
             }
         } else {
-            if (empty($id)) {
-                $list = $mDiary->where('user_id', $user_id)->select();
-                foreach ($list as $value) {
-                    $value['create_time'] = strtotime($value['create_time']);
-                }
-                //该用户总共写的日志详情
-                $this->assign('list', json_encode($list));
-                return $this->fetch();
-            } else {
+            $user = $weuser->where('userid',session('userId') )->find();
+            $is_boss = $user['tagid'] == 1 ? "yes" : "no";
+            $this->assign('is_boss', $is_boss);
+            $info=array();
+            //领导或者个人查看日志
+            if (!empty($id)) {
                 $info = $mDiary->where('id', $id)->find();
-                $list = $mDiary->where('user_id', $user_id)->select();
-                foreach ($list as $value) {
-                    $value['create_time'] = strtotime($value['create_time']);
-                }
                 $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
-                //该用户总共写的日志详情
-                $this->assign('list', json_encode($list));
-                //当前日志详情
-                $this->assign('info', $info);
-                return $this->fetch();
             }
-
-        }
-    }
-        public
-        function write()
-        {
+            $list = $mDiary->where('user_id', $user_id)->select();
+            foreach ($list as $value) {
+                $value['create_time'] = strtotime($value['create_time'])*1000;
+            }
+            //当前日志详情
+            $this->assign('info', $info);
+            //该用户总共写的日志
+            $this->assign('list', json_encode($list));
             return $this->fetch();
         }
+    }
+
 
 
         /*园区列表*/
-        public
-        function parkList()
+        public function parkList()
         {
             $park = new Park();
             $list = $park->select();
@@ -606,8 +600,7 @@ class Partymanage extends Base
         }
 
         /*公司合同列表*/
-        public
-        function serviceContract()
+        public function serviceContract()
         {
             $type = input('type');
             $departmentId = input('id');
@@ -626,8 +619,7 @@ class Partymanage extends Base
         }
 
         /*公司缴费记录*/
-        public
-        function feeRecord()
+        public function feeRecord()
         {
             $departmentId = input('id');
             $map = ['company_id' => $departmentId];
@@ -646,8 +638,7 @@ class Partymanage extends Base
         }
 
         /*加载更多缴费记录*/
-        public
-        function moreRecode()
+        public function moreRecode()
         {
             $departmentId = input('id');
             $len = input("length");
@@ -673,8 +664,7 @@ class Partymanage extends Base
         }
 
         /*企业楼房表*/
-        public
-        function companyFloor()
+        public function companyFloor()
         {
             $parkId = session('park_id');
             $parkRoom = new ParkRoom();
