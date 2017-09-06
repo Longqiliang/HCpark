@@ -88,7 +88,7 @@
                 <span @click="delImg(index)"><i class="iconfont hc-cha"></i></span>
                 <img :src="imgUrl">
             </li>
-            <li class="add" @click="imgUpload">
+            <li class="add" @click="imgUpload" v-if="imgSrc.dataUrl.length < 4">
                 <i class="iconfont hc-jia"></i>
             </li>
         </ul>
@@ -110,7 +110,7 @@
         data:{
             img:[],
             imgSrc:{
-                imgLength:3,
+                imgLength:4,
                 dataUrl:[],
                 imgName:[]
             },
@@ -164,6 +164,7 @@
                 var img = upImg.files[0];
                 if(img){
                     var newSize = (img.size/1024).toFixed(2);
+                    console.log(img)
                     if(newSize <= 10240){
                         _this.$indicator.open({
                             text: '图片上传中',
@@ -201,7 +202,7 @@
                 var _this= this,
                     content = _this.content;
                 if(!content) {
-                    _this.$toast('请填写车牌号码');
+                    _this.$toast('请说些什么吧！');
                 }else{
                     var data = {
                         'title':'',
