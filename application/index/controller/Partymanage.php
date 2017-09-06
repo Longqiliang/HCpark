@@ -671,6 +671,11 @@ class Partymanage extends Base
         $newArr = [];
         $newArr1 = [];
         $parkId = session('park_id');
+        if ($parkId == 3){
+            $common = "（公共区域)";
+        }else{
+            $common = "";
+        }
         $parkInfo = Park::where('id', $parkId)->find();
         $parkName = $parkInfo['name'];
         $parkRoom = new ParkRoom();
@@ -702,7 +707,7 @@ class Partymanage extends Base
             'park_id' => $parkId,
             'build_block' => "B",
         ];
-        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor asc')->select();
+        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor desc')->select();
         //return  dump($list1);
         foreach ($list1 as $k => $v) {
             $floor1[$k] = $v['floor'];
@@ -727,7 +732,7 @@ class Partymanage extends Base
             'park_id' => $parkId,
             'build_block' => "B",
         ];
-        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor asc')->select();
+        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor desc')->select();
         foreach ($list1 as $k => $v) {
             $floor1[$k] = $v['floor'];
         }
@@ -748,8 +753,8 @@ class Partymanage extends Base
             $newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
-        $this->assign('list', json_encode($newArr));
-        $this->assign('list1', json_encode($newArr1));
+        $this->assign('commonArea',$common);
+        $this->assign('list', json_encode($resArr));
         echo json_encode($resArr);
 
         //return $this->fetch();

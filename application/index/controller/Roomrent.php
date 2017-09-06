@@ -174,6 +174,11 @@ class Roomrent extends Base
         $newArr = [];
         $newArr1 = [];
         $parkId = session('park_id');
+        if ($parkId == 3){
+            $common = "（公共区域)";
+        }else{
+            $common = "";
+        }
         $parkInfo = Park::where('id', $parkId)->find();
         $parkName = $parkInfo['name'];
         $parkRoom = new ParkRoom();
@@ -181,7 +186,7 @@ class Roomrent extends Base
             'park_id' => $parkId,
             'build_block' => "A",
         ];
-        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor asc')->select();
+        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
         foreach ($list as $k => $v) {
             $floor[$k] = $v['floor'];
         }
@@ -205,7 +210,7 @@ class Roomrent extends Base
             'park_id' => $parkId,
             'build_block' => "B",
         ];
-        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor asc')->select();
+        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor desc')->select();
         foreach ($list1 as $k => $v) {
             $floor1[$k] = $v['floor'];
         }
@@ -226,6 +231,7 @@ class Roomrent extends Base
             $newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
+        $this->assign('commonArea',$common);
         $this->assign('list', json_encode($resArr));
 
         return $this->fetch();
@@ -236,17 +242,20 @@ class Roomrent extends Base
     /*预约信息*/
     public function peopleRent()
     {
-        $data = input('post.');
-        $people = new PeopleRent();
-        $res = $people->save($data);
-        if ($res) {
+        if (IS_POST) {
+            $data = input('post.');
+            $people = new PeopleRent();
+            $res = $people->save($data);
+            if ($res) {
 
-            $this->success('提交成功');
-        } else {
+                $this->success('提交成功');
+            } else {
 
-            $this->error("提交失败");
+                $this->error("提交失败");
+            }
         }
 
+        return $this->fetch();
     }
 
 
