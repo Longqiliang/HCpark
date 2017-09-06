@@ -73,8 +73,38 @@ class Partymanage extends Base
         $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->select();
         $this->assign('list', json_encode($list));
         $this->assign('park_id',json_encode($parkid));
-        echo json_encode($list);
         return $this->fetch();
+    }
+
+    /*园区内部通告下拉刷新*/
+    public function getMoreList(){
+        $len = input("length");
+        $parkid = input('park_id');
+        if ($parkid == '1') {
+            $map = [
+                'type' => 2,
+                'status' => 1,
+            ];
+        } else {
+            $map = [
+                'park_id' => $parkid,
+                'type' => 2,
+                'status' => 1,
+            ];
+        }
+
+        $list = News::where($map)
+            ->order("create_time desc")
+            ->limit($len,6)
+            ->select();
+        if ($list){
+
+            return json(['code' => 1, 'data' => $list]);
+        }else{
+
+            return json(['code' => 0, 'msg' =>"没有更多内容了"]);
+        }
+
     }
 
     /** 内部通告详情页 **/
