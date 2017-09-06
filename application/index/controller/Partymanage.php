@@ -564,20 +564,23 @@ class Partymanage extends Base
             $user = $weuser->where('userid', session('userId'))->find();
             $is_boss = $user['tagid'] == 1 ? "yes" : "no";
             $this->assign('is_boss', $is_boss);
-            $info = array();
+            $info['user_id'] =$user_id;
+            $info['user_name']=$user['name'];
             //领导或者个人查看日志
             if (!empty($id)) {
                 $info = $mDiary->where('id', $id)->find();
                 $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
             }
             $list = $mDiary->where('user_id', $user_id)->select();
+            $time=array();
             foreach ($list as $value) {
-                $value['create_time'] = strtotime($value['create_time']) * 1000;
+               array_push($time,strtotime($value['create_time'])*1000);
             }
+            unset($info['user']);
             //当前日志详情
-            $this->assign('info', $info);
+            $this->assign('info', json_encode($info));
             //该用户总共写的日志
-            $this->assign('list', json_encode($list));
+            $this->assign('list', json_encode($time));
             return $this->fetch();
         }
 
