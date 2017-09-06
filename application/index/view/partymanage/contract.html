@@ -7,19 +7,7 @@
 
 {block name="body"}
 <div id="app">
-    <div class="header">
-        <span>所属园区：</span>
-        <select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">
-            <option :value="item.value" v-for="(item,key) in parks" >
-                {{item.name}}
-            </option>
-        </select>
-        <select   v-else>
-            <option >
-                希垦科技园
-            </option>
-        </select>
-    </div>
+
     <div class="statistics-box">
         <div class="statistics-card">
             <div class="statistics-tit">合同类型统计</div>
@@ -64,16 +52,7 @@ console.log({$info});
         el:'#app',
         data:{
             chart:null,
-            nowPark:0,
-            info:{$info},
-            parks:[
-                {name:'希垦科技园',value:0},
-                {name:'浙江互联网产业园',value:1},
-                {name:'人工智能产业园',value:2}
-            ],
-            baseData:{
-                isBoss:'yes'
-            }
+            info:{$info}
         },
         mounted(){
             this.initChart();
@@ -134,14 +113,6 @@ console.log({$info});
             },
             jumpTo(type){
                 window.location.href="/index/partymanage/managelist?type="+type;
-            },
-            //园区选择
-            parkChange(){
-                console.log("11");
-                return;
-                this.$http.post('',{value:this.nowPark}).then(function (res) {
-                    console.log(res)
-                })
             }
         }
     });
