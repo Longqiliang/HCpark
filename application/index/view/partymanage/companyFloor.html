@@ -11,9 +11,8 @@
 {block name="body"}
 <div class="content" id="app">
     <div class="header">
-        <i class="header-icon icon-tab" @click="parkToggle"></i>
         <h2 @click="checkPark" class="header-tit">
-            <span >{{parkName}}</span> <i class="allow-down"></i>
+            <span >{{parkName.txt}}</span> <i class="allow-down"></i>
         </h2>
         <div class="houses-icon-box">
             <span ><i class="houses-icon icon-rentable"></i>可租</span>
@@ -32,8 +31,15 @@
         <div class="houses-list-tit">
             {{item.floor}}楼
         </div>
-        <div class="houses-list-item">
-            <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">{{rooms.room}}</span>
+        <div class="houses-list-item" v-if="!item.combine">
+            <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">
+                {{rooms.room}}
+            </span>
+        </div>
+        <div class="houses-list-item" v-else>
+            <span class="block" >
+                {{item.rooms}}
+            </span>
         </div>
     </div>
 
@@ -55,8 +61,8 @@
     for(var i in list){
         values.push(i);
     }
-    console.log(values);
-    console.log(list);
+    //    console.log(values);
+       console.log(list);
     var vm =  new Vue({
         el:'#app',
         data:{
@@ -64,7 +70,10 @@
             popupVisible:false,
             parkPicker:'',
             name:values,
-            parkName:values[0],
+            parkName:{
+                index:0,
+                txt:values[0]
+            },
             parkTxt:{
                 index:0,
                 txt:values[0]
@@ -79,30 +88,21 @@
             showList:function () {
                 var _this = this;
                 for(var arr in _this.list){
-                    if(_this.parkName == arr){
+                    if(_this.parkName.txt == arr){
                         return _this.list[arr];
                     }
                 }
             }
+
         },
         methods:{
-            parkToggle:function () {
-                var  rentList= window.sessionStorage.getItem("rentList");
-                window.sessionStorage.setItem("housesList",true);
-                if(rentList){
-                    window.sessionStorage.removeItem("rentList");
-                    window.history.go(-1);
-                }else{
-                    window.location.href="/index/roomrent/rentlist";
-                }
-            },
             cancelPark:function () {
                 this.popupVisible = false;
             },
             selectPark:function () {
                 var _this = this;
                 _this.popupVisible = false;
-                _this.parkName = _this.parkTxt.txt;
+                _this.parkName = _this.parkTxt;
             },
             onParkChange:function (picker,values) {
                 var _this = this;
@@ -123,12 +123,11 @@
                 _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
             jump:function (id,empty) {
-//                if(empty){
-//                    window.location.href = "/index/roomrent/index";
-//                }else{
-//
-//                }
-                console.log(id,empty);
+                if(!empty){
+                    window.location.href = "/index/partymanage/parklist?id="+id;
+                    return;
+                }
+                window.location.href = "/index/roomrent/rent?id="+id;
             }
         }
     });

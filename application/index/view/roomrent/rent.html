@@ -8,7 +8,112 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_355905_js6086l9et81tt9.css">
 <style>
     body{
+
         background-color: #fff;
+    }
+    /*modal框*/
+    .modal-box{
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.4);
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9;
+    }
+    .modal-box .modal{
+        width: calc(100% - 36px);
+        margin: 15vh auto 0;
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px 0;
+        position: relative;
+    }
+    .modal>p{
+        line-height: 40px;
+        font-size: 17px;
+        text-align: center;
+    }
+    .name-mobile,.remark{
+        padding: 5px 18px;
+    }
+    .name-mobile ul li{
+        line-height: 40px;
+        border-bottom: 1px solid #f1f1f1;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+    }
+    .name-mobile span{
+        display: inline-block;
+        font-size: 15px;
+        color: #333;
+    }
+    .name-mobile span:first-child{
+        float: left;
+        width: 62px;
+    }
+    .name-mobile input{
+        text-align: right;
+    }
+    .remark p{
+        font-size: 15px;
+    }
+    .remark textarea{
+        border: 1px solid #e5e5e5;
+        height: 18vh;
+        border-radius: 5px;
+        width: calc(100% - 14px);
+        margin: 10px 7px;
+        padding: 5px 10px;
+    }
+    .modal .button{
+        margin: 20px 18px;
+    }
+    .modal .button ul{
+        overflow: auto;
+    }
+    .modal .button ul li{
+        width: calc(50% - 9px);
+        line-height: 40px;
+        float: left;
+        text-align: center;
+        font-size: 15px;
+        background: #fcc44b;
+        color: #fff;
+        border-radius: 5px;
+    }
+    .modal .button ul li:last-child{
+        float: right;
+        background: #69b9f9;
+    }
+    .cancel{
+        position: absolute;
+        top: -50px;
+        right: 0;
+    }
+    .cancel>span:first-child{
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 15px;
+        border: 1px solid #fff;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+    }
+    .cancel i::before{
+        width: 20px;
+        height: 20px;
+        color: #fff;
+    }
+    .cancel>span:last-child{
+        display: inline-block;
+        height: 22px;
+        width: 0;
+        border-right: 1px solid #fff;
+        position: relative;
+        left: 14.5px;
     }
 </style>
 {/block}
@@ -50,11 +155,43 @@
         </div>
     </div>
     <div class="rent-btn-box">
-        <button class="btn btn-block btn-green" @click="jump">租房申请</button>
+        <button class="btn btn-block btn-green" @click="showRent">租房申请</button>
     </div>
     <div class="icon-box" v-if="lookVR">
         <i class="iconfont icon-back" @click="prev"></i>
         <i class="iconfont icon-go" @click="next"></i>
+    </div>
+    <div class="cancel" onclick="cancel()">
+        <span><i class="iconfont hc-cha1"></i></span>
+        <span></span>
+    </div>
+    <div class="modal-box" v-show="rentShow">
+        <div class="modal">
+            <p>申请人信息</p>
+            <div class="name-mobile">
+                <ul>
+                    <li>
+                        <span>姓名</span>
+                        <input type="text" id="name" placeholder="请输入姓名" v-model="subData.name">
+                    </li>
+                    <li>
+                        <span>手机</span>
+                        <input type="number" id="mobile" placeholder="请输入手机号" v-model="subData.mobile">
+                    </li>
+                </ul>
+            </div>
+            <div class="remark">
+                <p>备注信息</p>
+                <textarea v-model="subData.remark"></textarea>
+            </div>
+            <div class="btn-box">
+                <button class="btn btn-block btn-green" @click="subRent">提交申请</button>
+            </div>
+            <div class="cancel" @click="hideRent">
+                <span><i class="iconfont hc-cha1"></i></span>
+                <span></span>
+            </div>
+        </div>
     </div>
 </div>
 {/block}
@@ -74,7 +211,14 @@
             vrShow:true,
             lookVR:false,
             viewer:null,
-            mySwiper:null
+            mySwiper:null,
+            rentShow:false,
+            subData:{
+                rent_id:{$rent_id},
+                mobile:'',
+                name:'',
+                remark:''
+            }
         },
         mounted(){
             var _this = this;
@@ -125,8 +269,30 @@
                         viewer = _this.viewer;
                 viewer.prev();
             },
-            jump:function () {
-                window.location.href ='/index/roomrent/peoplerent';
+            showRent:function () {
+                this.rentShow = true;
+            },
+            hideRent:function () {
+                this.rentShow = false;
+            },
+            subRent:function () {
+                var _this = this;
+                console.log(_this.subData);
+                if(!_this.subData.name){
+                    _this.$toast("请输入您的姓名！");
+                    return;
+                }
+                if(!_this.subData.mobile){
+                    _this.$toast("请输入正确的电话！");
+                    return;
+                }
+                var data = JSON.parse(JSON.stringify(_this.subData));
+                console.log(data);
+                _this.$http.post('index/roomrent/peopleRent',data).then(function (res) {
+                    console.log(res.data);
+                },function (e) {
+
+                })
             }
         }
     })

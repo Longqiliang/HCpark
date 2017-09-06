@@ -13,7 +13,7 @@
     <div class="header">
         <i class="header-icon icon-tab" @click="parkToggle"></i>
         <h2 @click="checkPark" class="header-tit">
-            <span >{{parkName}}</span> <i class="allow-down"></i>
+            <span >{{parkName.txt}}</span> <i class="allow-down"></i>
         </h2>
         <div class="houses-icon-box">
             <span ><i class="houses-icon icon-rentable"></i>可租</span>
@@ -38,8 +38,8 @@
             </span>
         </div>
         <div class="houses-list-item" v-else>
-            <span class="block">
-                {{parkName}}{{item.floor}}
+            <span>
+                {{item.rooms}}
             </span>
         </div>
     </div>
@@ -62,8 +62,8 @@
     for(var i in list){
         values.push(i);
     }
-    console.log(values);
-    console.log(list);
+//    console.log(values);
+//    console.log(list);
     var vm =  new Vue({
         el:'#app',
         data:{
@@ -71,7 +71,10 @@
             popupVisible:false,
             parkPicker:'',
             name:values,
-            parkName:values[0],
+            parkName:{
+                index:0,
+                txt:values[0]
+            },
             parkTxt:{
                 index:0,
                 txt:values[0]
@@ -86,7 +89,7 @@
           showList:function () {
               var _this = this;
               for(var arr in _this.list){
-                  if(_this.parkName == arr){
+                  if(_this.parkName.txt == arr){
                       return _this.list[arr];
                   }
               }
@@ -101,7 +104,7 @@
                     window.sessionStorage.removeItem("rentList");
                     window.history.go(-1);
                 }else{
-                    window.location.href="/index/roomrent/rentlist";
+                    window.location.href="/index/roomrent/rentlist?type="+this.parkTxt.index;
                 }
             },
             cancelPark:function () {
@@ -110,7 +113,7 @@
             selectPark:function () {
                 var _this = this;
                 _this.popupVisible = false;
-                _this.parkName = _this.parkTxt.txt;
+                _this.parkName = _this.parkTxt;
             },
             onParkChange:function (picker,values) {
                 var _this = this;
@@ -134,7 +137,7 @@
                 if(!empty){
                     return;
                 }
-                window.location.href = "/index/roomrent/rent?id="+id;
+                window.location.href = "/index/roomrent/rent?rent_id="+id;
             }
         }
     });
