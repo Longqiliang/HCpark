@@ -36,7 +36,7 @@ class Partymanage extends Base
         if ($user['department'] == 1 && $user['tagid'] == 1) {
 
             $res = Park::field('id,name')->select();
-            $news = News::where($map)->order('create_time desc')->field('id,title')->limit(2)->select();
+            $news = News::where($map)->order('create_time desc')->field('id,title')->limit(4)->select();
             $all=[
                 'id'=>"a",
                 'name'=>"全部"
@@ -45,7 +45,7 @@ class Partymanage extends Base
         } else {
             //只能看到自己园区
             $res = Park::where('id', 'eq', $park_id)->field('id,name')->select();
-            $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->limit(2)->select();
+            $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->limit(4)->select();
         }
 
         $this->assign('news', json_encode($news));
@@ -57,7 +57,7 @@ class Partymanage extends Base
     public function newslist()
     {
         //首页所选园区ID
-        $parkid = input('id');
+        $parkid = input('park_id');
         if ($parkid == 'a') {
             $map = [
                 'type' => 2,
@@ -94,7 +94,7 @@ class Partymanage extends Base
     public function statistics()
     {
         //首页所选园区ID
-        $id = input('id');
+        $id = input('park_id');
         if ($id == 'a') {
             //园区统计
             $res = Park::field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
