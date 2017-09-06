@@ -611,7 +611,7 @@ class Partymanage extends Base
         $begindate = mktime(0, 0, 0, $month, $day, $year);
         $enddate = mktime(23, 59, 59, $month, $day, $year);
         $map['user_id'] = $user_id;
-        $map['create_timne'] = array('between', array($begindate, $enddate));
+        $map['create_time'] = array('between', array($begindate, $enddate));
         $info = $mDiary->where($map)->find();
         if (!$info) {
             $info['user_id'] = $user_id;
