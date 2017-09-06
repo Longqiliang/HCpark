@@ -532,7 +532,6 @@ class Partymanage extends Base
                 //封装成数组
                 $arr = explode("-", $date_str);
                 //参数赋值
-                //年
                 $year = $arr[0];
                 //月，输出2位整型，不够2位右对齐
                 $month = sprintf('%02d', $arr[1]);
@@ -564,17 +563,17 @@ class Partymanage extends Base
             $user = $weuser->where('userid', session('userId'))->find();
             $is_boss = $user['tagid'] == 1 ? "yes" : "no";
             $this->assign('is_boss', $is_boss);
-            $info['user_id'] =$user_id;
-            $info['user_name']=$user['name'];
+            $info['user_id'] = $user_id;
+            $info['user_name'] = $user['name'];
             //领导或者个人查看日志
             if (!empty($id)) {
                 $info = $mDiary->where('id', $id)->find();
                 $info['user_name'] = isset($info->user->name) ? $info->user->name : "";
             }
             $list = $mDiary->where('user_id', $user_id)->select();
-            $time=array();
+            $time = array();
             foreach ($list as $value) {
-               array_push($time,strtotime($value['create_time'])*1000);
+                array_push($time, strtotime($value['create_time']) * 1000);
             }
             unset($info['user']);
             //当前日志详情
@@ -586,6 +585,32 @@ class Partymanage extends Base
 
     }
 
+    public function changeDiary()
+    {
+        $user_id = input('user_id');
+        $time = input('create_time') / 1000;
+        $mDiary = new MerchantsDiary();
+        $date_str = date('Y-m-d', $time);
+        //封装成数组
+        $arr = explode("-", $date_str);
+        //参数赋值
+        $year = $arr[0];
+        //月
+        $month = $arr[1];
+        //天
+        $day = $arr[2];
+        $begindate = mktime(0, 0, 0, $month, $day, $year);
+        $enddate = mktime(23, 59, 59, $month, $day, $year);
+        $map['user_id']=$user_id;
+        $map['create_timne']=array('between',array($begindate,$enddate));
+        $info = $mDiary->where($map)->find();
+        if(!$info){
+         $info['user_id']=$user_id;
+         $info['create_time']=$begindate*1000;
+        }
+        return json_encode($info);
+
+    }
 
     /*园区列表*/
     public function parkList()
@@ -674,9 +699,9 @@ class Partymanage extends Base
         $newArr = [];
         $newArr1 = [];
         $parkId = session('park_id');
-        if ($parkId == 3){
+        if ($parkId == 3) {
             $common = "（公共区域)";
-        }else{
+        } else {
             $common = "";
         }
         $parkInfo = Park::where('id', $parkId)->find();
@@ -756,7 +781,7 @@ class Partymanage extends Base
             $newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
-        $this->assign('commonArea',$common);
+        $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr));
         echo json_encode($resArr);
 
