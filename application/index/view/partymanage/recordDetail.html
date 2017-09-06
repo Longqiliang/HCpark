@@ -111,11 +111,11 @@
                     <span class="my-status1" v-else >已完成</span>
                 </div>
             </li>
-            <li class="must">
+            <li class="must" v-if="info.status==2">
                 <div><span>完成招商面积：</span></div>
                 <div>{{info.merchants_area}}</div>
             </li>
-            <li class="must">
+            <li class="must" v-if="info.status==2">
                 <div><span>完成回款数量：</span></div>
                 <div>{{info.merchants_money}}</div>
             </li>
@@ -149,6 +149,7 @@ var app = new Vue({
                 toolbar:2,
                 title:2,
             });
+        this.info.img=JSON.parse(this.info.img)
         console.log(viewer)
     },
     data:{

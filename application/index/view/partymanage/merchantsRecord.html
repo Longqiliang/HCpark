@@ -3,6 +3,9 @@
 {block name="style"}
 <title>新建日志</title>
 <style>
+    body{
+        color: #333;
+    }
     .main{
         padding-top:1.33vw;
         padding-bottom: 4rem;
@@ -21,11 +24,10 @@
         display: flex;
     }
     .list>li:not(:last-child)>div:first-child{
-        width:8rem
+        width:12rem
     }
     .list>li:not(:last-child)>div:last-child{
         flex-grow: 1;
-
         word-wrap: break-word;
     }
 
@@ -33,6 +35,9 @@
         display: block;
     }
     input{
+        display: block;
+        flex-grow: 1;
+        font-size: 1.4rem;
         /*border:1px solid #f1f1f1;*/
         /*padding:3px;*/
         /*border-radius: 3px;*/
@@ -144,8 +149,8 @@
         border:none;
         outline: none;
         width:100%;
-        height:4rem;
-        line-height: 4rem;
+        height:5rem;
+        line-height: 5rem;
         text-align: center;
         font-size: 1.8rem;
         color: #ffffff;
@@ -261,6 +266,7 @@ var app = new Vue({
     },
     methods:{
         toSubmit(){
+            var the=this;
             if(!this.isSubmit){
                 if(this.info.merchants_user==''){
                     this.$toast({message: '请填写招商人员', position: 'bottom', duration: 2000})
@@ -304,7 +310,7 @@ var app = new Vue({
                                 type:"success",
                                 confirmButtonColor: "#69B9F9"
                             },function () {
-                                window.history.back();
+                                window.location.href='/index/partymanage/companyInfo?id='+ the.info.id
                             });
                         }else{
                             this.isSubmit=false

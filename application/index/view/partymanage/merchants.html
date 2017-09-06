@@ -174,11 +174,11 @@
     }
     .my-log .my-list>div:first-child>span:first-child{
         margin-right: 1.5rem;
-        width:5rem;
+        width:7rem;
     }
     .my-log .my-list>div:first-child>span:last-child{
         flex-grow:1;
-        width:45vw;
+        width:40vw;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -332,9 +332,9 @@
         display: flex;
         justify-content: space-between;
     }
-    .my-job>span:last-child{
-        color: #52CC92;
-    }
+    /*.my-job>span:last-child{*/
+        /*color: #52CC92;*/
+    /*}*/
     .my-demand{
         font-size: 1.2rem;
         display: -webkit-flex;
@@ -353,6 +353,10 @@
         z-index: 2;
     }
 
+    #personalStats{
+        position: inherit;
+    }
+    
     /**加载中**/
     .my-footer{
         padding: 1rem 0;
@@ -444,7 +448,7 @@
                     <li v-for="item in undone">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
@@ -455,7 +459,7 @@
                     <li v-for="item in finish">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
@@ -465,7 +469,7 @@
                 <li v-for="item in searchList">
                     <div class="content-box">
                         <div class="my-job"><span>{{item.company}}</span></div>
-                        <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                        <div class="my-demand"><span>{{item.create_time}}</span></div>
                     </div>
                     <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                 </li>
@@ -479,7 +483,7 @@
                         <span class="my-icon my-icon-suc"></span>
                         <div class="my-list">
                             <div><span>工作日志</span><span>{{item.content}}</span></div>
-                            <div><span>创建日期：</span><span>{{item.create_time | timeToString}}</span></div>
+                            <div><span>创建日期：</span><span>{{item.create_time}}</span></div>
                         </div>
                     </div>
                     <a :href="'/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id"></a>
