@@ -35,11 +35,11 @@ class Partymanage extends Base
         //所有园区领导,能看到所有园区
         if ($user['department'] == 1 && $user['tagid'] == 1) {
             $res = Park::where('status', 'eq', 1)->field('id,name')->select();
-            $news = News::where($map)->order('create_time desc')->field('id,title')->find();
+            $news = News::where($map)->order('create_time desc')->field('id,title')->select();
         } else {
             //只能看到自己园区
             $res = Park::where('id', 'eq', $park_id)->where('status', 'eq', 1)->field('id,name')->select();
-            $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->find();
+            $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->select();
         }
 
         $this->assign('res', json_encode($res));
