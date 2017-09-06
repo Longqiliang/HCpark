@@ -174,9 +174,9 @@ class Roomrent extends Base
         $newArr = [];
         $newArr1 = [];
         $parkId = session('park_id');
-        if ($parkId == 3){
+        if ($parkId == 3) {
             $common = "（公共区域)";
-        }else{
+        } else {
             $common = "";
         }
         $parkInfo = Park::where('id', $parkId)->find();
@@ -228,10 +228,16 @@ class Roomrent extends Base
         }
         foreach ($floor1 as $k => $v) {
             $newArr1[$k]['floor'] = $v;
+            $newArr1[$k]['combine'] = false;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
+            if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
+                $newArr1[$k]['combine'] = true;
+            }
+
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
-        $this->assign('commonArea',$common);
+        //echo json_encode($resArr);exit;
+        $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr));
 
         return $this->fetch();

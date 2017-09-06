@@ -786,7 +786,11 @@ class Partymanage extends Base
         }
         foreach ($floor1 as $k => $v) {
             $newArr1[$k]['floor'] = $v;
+            $newArr1[$k]['combine'] = false;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
+            if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
+                $newArr1[$k]['combine'] = true;
+            }
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
         $this->assign('commonArea', $common);
