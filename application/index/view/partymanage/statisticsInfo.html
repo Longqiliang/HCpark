@@ -182,11 +182,11 @@
             <div class="my-log-title">日志记录</div>
             <ul class="my-log">
                 <li v-if="personalInfo.records.length==0" class="no-log">暂无日志</li>
-                <li v-for="item in personalInfo.records" >
+                <li v-for="item in personalInfo.records" @click="window.location.href='/index/partymanage/companyInfo/id/'+item.id">
                     <span class="my-icon " :class="{'my-icon-ing':item.status==1,'my-icon-suc':item.status==2}"></span>
                     <div class="my-list">
-                        <div><span>工作日志</span><span>{{item.merchants_place}}</span></div>
-                        <div><span>创建日期：</span><span>{{item.create_time | timeToString}}</span></div>
+                        <div><span>招商日志</span><span>{{item.merchants_place}}</span></div>
+                        <div><span>创建日期：</span><span>{{item.merchants_date * 1000 | timeToString}}</span></div>
                     </div>
                 </li>
             </ul>
@@ -224,7 +224,7 @@
     }
    Vue.filter('timeToString', function(time) {
        if(time){
-           var newTime = new Date(time*1000);
+           var newTime = new Date(time);
            var m = newTime.getMonth()+1,
                    dt=newTime.getDate(),
                    y=newTime.getFullYear();
@@ -266,7 +266,7 @@ var app = new Vue({
                     startY=start.getFullYear(),
                     startM=start.getMonth()+1;
                 if(endY==startY){
-                    for(var o = endM-1; o >= startM;o--){
+                    for(var o = endM; o >= startM;o--){
                         var date={year:startY,month:o}
                         month.push(date)
                     }
@@ -294,10 +294,13 @@ var app = new Vue({
         }
     },
     mounted(){
+        window.onscroll=function () {
+            console.log(window.scrollTop())
+        }
         var info=this.personalInfo;
-        var log=parseInt(info.dairy_num / info.total),
-                area=parseInt(info.finish_area / info.area),
-                price=parseInt(info.finish_price / info.price);
+        var log=parseInt(info.dairy_num / info.total * 100),
+                area=parseInt(info.finish_area / info.area * 100),
+                price=parseInt(info.finish_price / info.price * 100);
             log=isNaN(log)?0:log;
             area=isNaN(area)?0:area;
             price=isNaN(price)?0:price;

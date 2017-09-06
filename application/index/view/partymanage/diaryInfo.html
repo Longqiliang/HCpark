@@ -53,6 +53,7 @@
         /*border:1px solid #f1f1f1;*/
         /*padding:3px;*/
         /*border-radius: 3px;*/
+        font-size: 1.5rem;
     }
     textarea{
         box-sizing: border-box;
@@ -145,6 +146,7 @@
         margin: 0 auto;
         margin-top: 4rem;
         background: #69B9F9;
+        margin-bottom: 2rem;
     }
 </style>
 {/block}
@@ -354,7 +356,7 @@
                     return
                 }
                 this.$indicator.open({
-                    text: '提交中...',
+                    text: '加载中...',
                     spinnerType: 'triple-bounce'
                 });
                 this.isSubmit=true;
@@ -365,13 +367,18 @@
                 }
                 console.log('post-time : ' + time);
                 this.$http.post('/index/partymanage/changeDiary',data).then(function (res) {
-                    console.log(JSON.parse(res.data))
+                    var data=JSON.parse(res.data)
                     this.isSubmit=false;
                     this.$indicator.close();
-                    if(res.data.code){
-
+                    console.log(this.baseInfo)
+                    this.baseInfo.create_time=data.time;
+                    this.baseInfo.content=data.content;
+                    this.baseInfo.img=data.img;
+                    if(this.baseInfo.content){
+                        this.isWrite=false
+                    }else{
+                        this.isWrite=true;
                     }
-
                 },function (res) {
                     this.$toast('请求失败，请退出页面重试')
                     this.isSubmit=false;
