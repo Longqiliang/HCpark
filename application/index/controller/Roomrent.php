@@ -12,6 +12,7 @@ use app\common\model\ParkRent;
 use app\common\model\ParkRoom;
 use app\common\model\PeopleRent;
 use app\index\model\Park;
+use think\Image;
 
 class Roomrent extends Base
 {
@@ -53,7 +54,7 @@ class Roomrent extends Base
     }
 
     /*租房详细列表*/
-   /* public function rentList()
+    public function rentList()
     {
         $data = [];
         $data1 = [];
@@ -76,8 +77,10 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $small_img = $this->getThumb($v1, 170, 120);
-                    $data[$k]['img'][$k1] = $small_img;
+                    $path = str_replace(".","_s.",$v1);
+                    $image = Image::open(PUBLIC_PATH.$v1);
+                    $image->thumb(170,120)->save(PUBLIC_PATH.$path);
+                    $data[$k]['img'][$k1] = $path;
                 }
             }
         }
@@ -94,10 +97,12 @@ class Roomrent extends Base
                 'id' => $v['id'],
                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
-            if ($data1[$k]['img']) {
-                foreach ($data1[$k]['img'] as $k1 => $v1) {
-                    $small_img = $this->getThumb($v1, 170, 120);
-                    $data1[$k]['img'][$k1] = $small_img;
+            if ($data[$k]['img']) {
+                foreach ($data[$k]['img'] as $k1 => $v1) {
+                    $path = str_replace(".","_s.",$v1);
+                    $image = Image::open(PUBLIC_PATH.$v1);
+                    $image->thumb(170,120)->save(PUBLIC_PATH.$path);
+                    $data[$k]['img'][$k1] = $path;
                 }
             }
         }
@@ -108,7 +113,7 @@ class Roomrent extends Base
 
 
         return $this->fetch();
-    }*/
+    }
 
     /*楼盘列表下拉刷新*/
     public function moreList()
@@ -247,8 +252,10 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $small_img = $this->getThumb($v1, 170, 120);
-                    $data[$k]['img'][$k1] = $small_img;
+                    $path = str_replace(".","_s.",$v1);
+                    $image = Image::open(PUBLIC_PATH.$v1);
+                    $image->thumb(170,120)->save(PUBLIC_PATH.$path);
+                    $data[$k]['img'][$k1] = $path;
                 }
             }
         }
@@ -265,10 +272,12 @@ class Roomrent extends Base
                 'id' => $v['id'],
                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
-            if ($data1[$k]['img']) {
-                foreach ($data1[$k]['img'] as $k1 => $v1) {
-                    $small_img = $this->getThumb($v1, 170, 120);
-                    $data1[$k]['img'][$k1] = $small_img;
+            if ($data[$k]['img']) {
+                foreach ($data[$k]['img'] as $k1 => $v1) {
+                    $path = str_replace(".","_s.",$v1);
+                    $image = Image::open(PUBLIC_PATH.$v1);
+                    $image->thumb(170,120)->save(PUBLIC_PATH.$path);
+                    $data[$k]['img'][$k1] = $path;
                 }
             }
         }
