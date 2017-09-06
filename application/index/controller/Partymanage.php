@@ -54,7 +54,7 @@ class Partymanage extends Base
     }
 
     /** 园区内部通告列表 **/
-    public function newslist()
+    public function notify()
     {
         //首页所选园区ID
         $parkid = input('park_id');
@@ -72,11 +72,13 @@ class Partymanage extends Base
         }
         $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->select();
         $this->assign('list', json_encode($list));
+        $this->assign('park_id',json_encode($parkid));
+        echo json_encode($list);
         return $this->fetch();
     }
 
     /** 内部通告详情页 **/
-    public function newsdetail()
+    public function detail()
     {
         $id = input('id');
         $map = [
@@ -87,6 +89,7 @@ class Partymanage extends Base
         $res = News::where($map)->find();
 
         $this->assign('res', json_encode($res));
+        echo json_encode($res);
         return $this->fetch();
     }
 
@@ -586,7 +589,6 @@ class Partymanage extends Base
                     'content' => $info['content'],
                     'create_time' => $info['create_time']*1000 ];
             }
-
             $list = $mDiary->where('user_id', $user_id)->select();
             $time = array();
             foreach ($list as $value) {
