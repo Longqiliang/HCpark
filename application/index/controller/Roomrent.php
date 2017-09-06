@@ -181,14 +181,14 @@ class Roomrent extends Base
             'park_id' => $parkId,
             'build_block' => "A",
         ];
-        $list = $parkRoom->where($map)->distinct(true)->field('floor')->select();
+        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor asc')->select();
         foreach ($list as $k => $v) {
             $floor[$k] = $v['floor'];
         }
         foreach ($floor as $k => $v) {
             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
             foreach ($roomList as $k1 => $v1) {
-                if ($v1['company_id']) {
+                if ($v1['company']) {
                     $status = false;
                 } else {
                     $status = true;
@@ -205,14 +205,14 @@ class Roomrent extends Base
             'park_id' => $parkId,
             'build_block' => "B",
         ];
-        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->select();
+        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor asc')->select();
         foreach ($list1 as $k => $v) {
             $floor1[$k] = $v['floor'];
         }
         foreach ($floor1 as $k => $v) {
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
-                if ($v1['company_id']) {
+                if ($v1['company']) {
                     $status1 = false;
                 } else {
                     $status1 = true;

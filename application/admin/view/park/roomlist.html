@@ -54,7 +54,7 @@
         <div class="mail-box-header">
             <form method="get" action="roomlist.html" class="pull-right mail-search">
                 <div class="input-group">
-                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索标题">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索房间号">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                     </div>
@@ -90,7 +90,7 @@
                     </td>
                     <td class="mail-subject">
                         <a href="{:Url('roommanage','id='.$vo.id)}">
-                            {$vo.company_id}{empty name="$vo.company_id"}待租{/empty}
+                            {$vo.company}{empty name="$vo.company"}待租{/empty}
                         </a>
                     </td>
                     <td>
