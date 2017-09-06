@@ -38,7 +38,7 @@ class Partymanage extends Base
             $res = Park::field('id,name')->select();
             $news = News::where($map)->order('create_time desc')->field('id,title')->limit(4)->select();
             $all=[
-                'id'=>"a",
+                'id'=>"1",
                 'name'=>"全部"
             ];
             array_unshift($res,$all);
@@ -58,7 +58,7 @@ class Partymanage extends Base
     {
         //首页所选园区ID
         $parkid = input('park_id');
-        if ($parkid == 'a') {
+        if ($parkid == '1') {
             $map = [
                 'type' => 2,
                 'status' => 1,
