@@ -46,7 +46,7 @@
         <li>
             <div>
                 <p>申请群名：{$vo->group_name}</p>
-                <p>{$vo->create_time || time_format="Y-m-d"}</p>
+                <p>{$vo->create_time || time_format="Y-m-d H:m"}</p>
             </div>
             {switch name="vo->status"}
             {case value="-1"}
@@ -55,7 +55,7 @@
             {case value="1"}
             <img src="/index/images/communication/waiting.png">
             {/case}
-            {case value="2"}
+            {case value="2 | 3"}
             <img src="/index/images/communication/success.png">
             {/case}
             {/switch}
