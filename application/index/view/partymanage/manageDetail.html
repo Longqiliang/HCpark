@@ -14,6 +14,20 @@
     .swiper-slide img{
         width: 100%;
     }
+    .group-view{
+        padding: 0 4vw;
+        font-size: 1.5rem;
+    }
+    .group-view-cell{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: 1.4rem;
+        padding:4vw 0;
+    }
+    .group-view-cell span:last-child{
+        color: #999;
+    }
     .group-box{
         padding:0 4vw 5.33vw;
         font-size: 1.5rem;
@@ -31,7 +45,7 @@
     .group-box:last-child:after{
         height: 0;
     }
-    .group-box .group-tit{
+     .group-tit{
         line-height: 1.4;
         padding:4vw 0;
     }
@@ -50,6 +64,12 @@
 
 {block name="body"}
 <div id="app" class="content">
+    <div class="group-view">
+        <div class="group-view-cell">
+            <span>合同编号:{{info.number}}</span>
+            <span>{{info.create_time}}</span>
+        </div>
+    </div>
     <div class="group-box">
         <div class="group-tit">合同照片</div>
         <div class="swiper-container" ref="imgList">

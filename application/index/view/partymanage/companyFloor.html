@@ -118,6 +118,9 @@
                 _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
             jump:function (id,empty) {
+                if(!id){
+                    return;
+                }
                 if(!empty){
                     window.location.href = "/index/partymanage/parklist?id="+id;
                     return;
