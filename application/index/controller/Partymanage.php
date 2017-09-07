@@ -119,7 +119,7 @@ class Partymanage extends Base
         $res = News::where($map)->find();
 
         $this->assign('res', json_encode($res));
-        echo json_encode($res);
+//        echo json_encode($res);
         return $this->fetch();
     }
 
@@ -140,13 +140,14 @@ class Partymanage extends Base
 
         $this->assign('list', json_encode($list));
         $this->assign('res', json_encode($res));
-        echo json_encode($list);
+//        echo json_encode($list);
         return $this->fetch();
     }
 
     /***合同管理*/
     public function contract()
     {
+        $type =input('type');
         $data[0] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 1])->count();
         $data[1] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 2])->count();
         $contract[0] = $data[0] + $data[1];
@@ -158,6 +159,7 @@ class Partymanage extends Base
             'property' => ['name' => "物业合同", 'count' => $contract[2]]
         ];
 //        return json_encode($array);
+        $this->assign('type',$type);
         $this->assign('info', json_encode($array));
 
         return $this->fetch();
@@ -227,7 +229,7 @@ class Partymanage extends Base
                 $info['imgs'][$k] = $small_img;
             }
         }
-        return  dump($info);
+//        return  dump($info);
         $this->assign('info', json_encode($info));
 
         return $this->fetch();
@@ -675,6 +677,7 @@ class Partymanage extends Base
     public function parkList()
     {
         $park = new Park();
+        $id = input('id');
         $list = $park->select();
         foreach ($list as $k => $v) {
             $data[$k] = [
@@ -683,7 +686,16 @@ class Partymanage extends Base
             ];
         }
         $this->assign('list', $data);
+        $this->assign('id',$id);
         return $this->fetch();
+    }
+    /*公司详情列表*/
+    public function detailList(){
+        $id = input('id');
+
+        $this->assign('id',$id);
+
+        return  $this->fetch();
     }
 
     /*公司合同列表*/
@@ -711,7 +723,7 @@ class Partymanage extends Base
         $info = [];
         $departmentId = input('id');
         $map = ['company_id' => $departmentId];
-        $list = FeePayment::where($map)->order('id desc')->limit(6);
+        $list = FeePayment::where($map)->order('id desc')->limit(6)->select();
         foreach ($list as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
@@ -857,5 +869,10 @@ class Partymanage extends Base
 
 
     }
+    public  function  otherList(){
+        $id = input('id');
+        $this->assign("id", $id);
 
+        return $this->fetch();
+    }
 }
