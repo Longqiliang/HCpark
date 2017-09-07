@@ -169,7 +169,7 @@ class Partymanage extends Base
         $type = input("type");
         $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
             ->order("create_time desc")
-            ->limit(6)
+            ->limit(7)
             ->select();
         $name = "";
         switch ($type) {
@@ -196,7 +196,7 @@ class Partymanage extends Base
         $len = input("length");
         $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
             ->order("create_time desc")
-            ->limit($len, 6)
+            ->limit($len, 7)
             ->select();
         if ($list) {
 
@@ -849,9 +849,9 @@ class Partymanage extends Base
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr));
-        echo json_encode($resArr);
+        //echo json_encode($resArr);
 
-        //return $this->fetch();
+        return $this->fetch();
 
 
     }

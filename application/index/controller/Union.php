@@ -124,7 +124,7 @@ class Union extends Base
         $this->assign('collect', json_encode($collect));
 
         // 添加阅读量
-        UnionLoabourModel::where('id', input('id'))->setInc('views');
+        UnionModel::where('id', input('id'))->setInc('views');
 
         $this->assign('count', $count);
         $this->assign('comments', json_encode($list2));
@@ -138,7 +138,8 @@ class Union extends Base
         $this->assign('res',json_encode($res));
 
         // 添加阅读量
-        UnionLoabourModel::where('id', input('id'))->setInc('views');
+       $res = UnionModel::where('id', input('id'))->setInc('views');
+
 
 
         return $this->fetch();
