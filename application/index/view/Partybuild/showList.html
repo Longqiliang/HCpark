@@ -110,6 +110,15 @@ var app = new Vue({
         }else{
             this.canLoad=true
         }
+        var title='';
+        if(this.type==1){
+            title='支部活动'
+        }else if(this.type==2){
+            title='两学一做'
+        }else{
+            title='党员风采'
+        }
+        document.title=title;
     },
     methods:{
         loadMore(){
