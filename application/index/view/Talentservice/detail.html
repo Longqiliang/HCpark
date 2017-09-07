@@ -83,22 +83,38 @@
 		
 	}
 	.icon{
-		background-color: #999;
 		display: inline-block;
 		width: 16px;
 		height: 16px;
 		margin-right:2.13vw ;
 		vertical-align: -2px;
+		background-size:100%;
 	}
 	.icon-less{
 		width: 13px;
 		height: 13px;
 	}
+	.icon-education{
+		background-image:url('/index/images/talentservice/icon-education.png') ;
+	}
+	.icon-people{
+		background-image:url('/index/images/talentservice/icon-people.png') ;
+	}
+	.icon-job{
+		background-image:url('/index/images/talentservice/icon-job.png') ;
+	}
+	.icon-experience{
+		background-image:url('/index/images/talentservice/icon-experience.png') ;
+	}
+	.icon-message{
+		background-image:url('/index/images/talentservice/icon-message.png') ;
+	}
 </style>
 {/block}
 
 {block name="body"}
-	<div class="content" id="app">
+<div id="app">
+	<div class="content" v-if="info">
 		<div class="info info-top">
 			<div class="top-tit">
 				<h3>
@@ -109,24 +125,25 @@
 				</h3>
 				<h4>{{info.company}}</h4>
 				<p>
-					<span><i class="icon icon-less"></i>{{info.number}}人</span>
-					<span class="tit-mar"><i class="icon icon-less"></i>{{info.experience}}</span>
-					<span><i class="icon icon-less"></i>{{info.education}}</span>
+					<span><i class="icon icon-less icon-people"></i>{{info.number}}人</span>
+					<span class="tit-mar"><i class="icon icon-less icon-experience"></i>{{info.experience}}</span>
+					<span><i class="icon icon-less icon-education"></i>{{info.education}}</span>
 				</p>
 			</div>
 		</div>
 		<div class="info info-center">
-			<div class="info-tit"><i class="icon"></i>职位详情</div>
+			<div class="info-tit"><i class="icon icon-job"></i>职位详情</div>
 			<div class="info-detail" v-html="info.content"></div>
 			<!--<div class="info-detail-down" @click="lookDetail" v-if="isShow"><i class="icon"></i></div>-->
 			<!--<div class="info-detail-up" @click="closeDetail" v-else><i class="icon"></i></div>-->
 		</div>
 		<div class="info info-bottom">
-			<div class="info-tit"><i class="icon"></i>联系方式</div>
+			<div class="info-tit"><i class="icon icon-message"></i>联系方式</div>
 			<div class="info-detail" v-html="info.contact"></div>
 		</div>
-		
 	</div>
+</div>
+
 {/block}
 
 {block name="script"}

@@ -180,8 +180,11 @@ class Communication extends Base
         ];
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         foreach ($comments as $value){
-
-             $value['create_time']=date("Y-m-d H:m",$value['create_time']);
+            $userinfo = WechatUser::where('userid', $value['user_id'])->field('header,avatar')->find();
+            $head=isset($userinfo['header'])?$userinfo['header']:"";
+            $ava =isset($userinfo['avatar'])?$userinfo['avatar']:"";
+            $value['header'] =empty($head)?$ava:$head;
+            $value['create_time']=date("Y-m-d H:m",$value['create_time']);
         }
         //$count = CommunicateComment::where($map)->count();
         //echo json_encode($post);
@@ -254,6 +257,11 @@ class Communication extends Base
         }
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         foreach ($comments as $value){
+            $userinfo = WechatUser::where('userid', $value['user_id'])->field('header,avatar')->find();
+            $head=isset($userinfo['header'])?$userinfo['header']:"";
+            $ava =isset($userinfo['avatar'])?$userinfo['avatar']:"";
+            $value['header'] =empty($head)?$ava:$head;
+
             $value['create_time'] = date("Y-m-d H:m",$value['create_time']);
         }
         return json(['total' => count($comments), 'comments' => $comments]);
@@ -366,8 +374,12 @@ class Communication extends Base
         $cpost = new  CommunicatePosts();
         $userid = session('userId');
         $commments = $ccomment->where('user_id', $userid)->order('create_time desc')->select();
+        $userinfo = WechatUser::where('userid', session('userId'))->field('header,avatar')->find();
+        $head=isset($userinfo['header'])?$userinfo['header']:"";
+        $ava =isset($userinfo['avatar'])?$userinfo['avatar']:"";
         $myComments = array();
         foreach ($commments as $value) {
+            $value['header'] =empty($head)?$ava:$head;
             $status = isset($value->CommunicatePost->status) ? $value->CommunicatePost->status : "";
             $value['post'] = isset($value->CommunicatePost) ? $value->CommunicatePost : "";
             if ($status == 1) {

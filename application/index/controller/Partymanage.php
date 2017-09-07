@@ -595,7 +595,7 @@ class Partymanage extends Base
         if (IS_POST) {
             $data = input('');
             $data['user_id'] = $user_id;
-            $data['create_time']= mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+            $data['create_time']= empty(input('create_time')) ? mktime(0, 0, 0, date('m'), date('d'), date('Y')) : input('create_time')/1000;
             $reult = $mDiary->save($data);
             if ($reult) {
                 return $this->success("yes");

@@ -13,6 +13,8 @@
     .my-footer>p{
         text-align: center;
         font-size: 1.5rem;
+    }
+    .my-footer>p>.no-more{
         line-height: 80vh;
     }
     .my-footer div {
@@ -28,7 +30,7 @@
 <div id="app">
     <div class="page">
         <div class="body">
-            <ul  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
+            <ul  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="4">
             <!--<ul>-->
                 <li  v-for="item in article">
                     <div class="content-box">
@@ -43,12 +45,17 @@
         </div>
     </div>
     <div class="my-footer">
-        <p v-if="article.length==0">暂无信息</p>
-        <span v-if="!canLoad && article.length>0">没有更多了</span>
-        <span v-if="canLoad && loading">下拉加载更多</span>
-        <div  v-if="loading">
-            <mt-spinner :type="3"></mt-spinner>加载中...
+        <div v-if="canLoad">
+            <div v-if="loading">
+                <mt-spinner :type="3"></mt-spinner>加载中...
+            </div>
+            <span v-else>下拉加载更多</span>
         </div>
+        <p v-else>
+            <span v-if="article.length==0" class="no-more">暂无信息</span>
+            <span v-else>没有更多了</span>
+        </p>
+
     </div>
 </div>
 {/block}
@@ -64,10 +71,8 @@
             park_id:{$park_id}
         },
         created(){
-            console.log(this.canLoad)
             if(this.article.length<6){
                 this.canLoad=false
-
             }else{
                 this.canLoad=true
             }
@@ -75,23 +80,24 @@
         },
         methods:{
             loadMore(){
-                if((!this.loading) && this.canLoad ){
-                    this.loading = true;
-                    this.$http.post('/index/partymanage/getMoreList',{park_id:this.park_id,length:this.article.length}).then(function (res) {
+                var the=this;
+                if((!the.loading) && the.canLoad ){
+                    the.loading = true;
+                    console.log(the.loading)
+                    the.$http.post('/index/partymanage/getMoreList',{park_id:the.park_id,length:the.article.length}).then(function (res) {
+                        the.loading = false;
                         if(res.data.code!=0){
                             for(var i=0;i<res.data.data.length;i++){
-                                this.article.push(res.data.data[i])
+                                the.article.push(res.data.data[i])
                             }
-                            this.loading = false;
                         }else{
-                            this.loading = false;
-                            this.canLoad=false;
+                            the.canLoad=false;
                         }
                     },function (res) {
-                        this.loading = false;
+                        the.loading = false;
 
                     })
-                    this.loading = false;
+                    the.loading = false;
                 }
             },
         }

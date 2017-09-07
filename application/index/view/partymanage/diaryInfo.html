@@ -4,6 +4,9 @@
 <title>工作日志</title>
 <link rel="stylesheet" href="/static/viewer/viewer.min.css">
 <style>
+    #app{
+        padding-bottom: 2rem;
+    }
     .my-box{
         padding:0 1.2rem;
         font-size: 1.5rem;
@@ -239,24 +242,30 @@
     var app=new Vue({
         el:'#app',
         data:{
+            //权限判断
             isBoss:'{$is_boss}',
+            //是否能编辑
             isWrite:false,
-            baseInfo:{$info},
-            nowDate:'',
+            //是否显示日历
             isShow:false,
             isSubmit:false,
-            progress:0,
+            baseInfo:{$info},
+            //点击日历后记录的index
+            nowDateIndex:'',
             imgList:[],
             imgSrc:{
                 imgLength:4,
                 dataUrl:[],
                 imgName:[]
             },
+            //当前年、月、日、周
             currentDay: 1,
             currentMonth: 1,
             currentYear: 1970,
             currentWeek: 1,
+            //日历数组
             days: [],
+            //写过日志的时间戳数组
             checkedList:{$list}
         },
         created(){
@@ -294,6 +303,7 @@
                 var date;
                 if (cur) {
                     date = new Date(cur);
+                    date=new Date(date.setDate(1));
                 } else {
                     var now=new Date();
                     var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , now.getDate()));
@@ -350,7 +360,10 @@
                 return false
             },
             toCheck:function (key) {
-                console.log(key);
+                if(!this.days[key].day){
+                    return;
+                }
+                console.log(this.days[key].day)
                 if(this.isSubmit){
                     this.$toast('提交中，请稍等')
                     return
@@ -359,6 +372,7 @@
                     text: '加载中...',
                     spinnerType: 'triple-bounce'
                 });
+                this.nowDateIndex=key;
                 this.isSubmit=true;
                 var time=new Date(this.days[key].day).setHours(0,0,0,0);
                 var data={
@@ -391,15 +405,14 @@
                 // setDate(0); 上月最后一天
                 // setDate(-1); 上月倒数第二天
                 // setDate(dx) 参数dx为 上月最后一天的前后dx天
-
-                        var d = new Date(this.formatDate(year , month , 1));
-                        d.setDate(0);
-                        this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                var d = new Date(this.formatDate(year , month , 1));
+                d.setDate(0);
+                this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
             },
             pickNext: function(year, month) {
-                        var d = new Date(this.formatDate(year , month , 1));
-                        d.setDate(35);
-                        this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                var d = new Date(this.formatDate(year , month , 1));
+                d.setDate(35);
+                this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
             },
 
             // 返回 2017-01-01 格式的字符串
@@ -412,43 +425,56 @@
                 return y+"-"+m+"-"+d
             },
             toSubmit(){
-                if(this.isSubmit){
-                    this.$toast('提交中，请稍等')
+                var the=this;
+                if(the.isSubmit){
+                    the.$toast('提交中，请稍等')
                     return
-                }else if(!this.baseInfo.content){
-                    this.$toast('请填写日志内容')
+                }else if(!the.baseInfo.content){
+                    the.$toast('请填写日志内容')
                     return
                 }
-                this.$indicator.open({
+                the.$indicator.open({
                     text: '提交中...',
                     spinnerType: 'triple-bounce'
                 });
 
-                this.isSubmit=true;
+                the.isSubmit=true;
                 var data={
-                    img:JSON.stringify(this.imgList),
-                    content:this.baseInfo.content,
-                    user_id:this.baseInfo.user_id
+                    img:JSON.stringify(the.imgList),
+                    content:the.baseInfo.content,
+                    user_id:the.baseInfo.user_id,
+                    create_time:the.baseInfo.create_time
                 };
-                this.$http.post('/index/partymanage/diaryInfo',data).then(function (res) {
+                the.$http.post('/index/partymanage/diaryInfo',data).then(function (res) {
                     if(res.data.code){
-                        this.isSubmit=false;
-                        this.$indicator.close();
+                        the.isSubmit=false;
+                        the.$indicator.close();
                         swal({
                             title:"提交成功!",
                             html:true,
                             type:"success",
                             confirmButtonColor: "#69B9F9"
                         },function () {
-                            window.history.back();
+                           the.isWrite=false;
+                            the.baseInfo.img=the.imgList;
+                            the.imgList=[];
+                            the.imgSrc={
+                                imgLength:4,
+                                dataUrl:[],
+                                imgName:[]
+                            };
+                            the.checkedList.push(the.baseInfo.create_time);
+                            if(the.nowDateIndex){
+                                the.days[the.nowDateIndex].isChecked=true;
+                            }
                         });
                     }else{
-                        this.$toast('请求失败，请重试')
+                        the.$toast('请求失败，请重试')
                     }
                 },function (res) {
-                    this.$toast('请求失败，请退出页面重试')
-                    this.isSubmit=false;
-                    this.$indicator.close();
+                    the.$toast('请求失败，请退出页面重试')
+                    the.isSubmit=false;
+                    the.$indicator.close();
                 })
             },
             delImg: function (e) {

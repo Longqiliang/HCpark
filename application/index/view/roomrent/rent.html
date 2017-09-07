@@ -67,26 +67,6 @@
         margin: 10px 7px;
         padding: 5px 10px;
     }
-    .modal .button{
-        margin: 20px 18px;
-    }
-    .modal .button ul{
-        overflow: auto;
-    }
-    .modal .button ul li{
-        width: calc(50% - 9px);
-        line-height: 40px;
-        float: left;
-        text-align: center;
-        font-size: 15px;
-        background: #fcc44b;
-        color: #fff;
-        border-radius: 5px;
-    }
-    .modal .button ul li:last-child{
-        float: right;
-        background: #69b9f9;
-    }
     .cancel{
         position: absolute;
         top: -50px;
@@ -113,7 +93,7 @@
         width: 0;
         border-right: 1px solid #fff;
         position: relative;
-        left: 14.5px;
+        left: 50%;
     }
 </style>
 {/block}
@@ -136,22 +116,22 @@
     </div>
     <div class="table-view">
         <div class="table-view-cell">
-            <i class="icon icon-ads"></i><span>位置：</span><span>{{info.position}}</span>
+            <span><i class="icon rent-house"></i></span><span>位置：</span><span>{{info.position}}</span>
         </div>
         <div class="table-view-cell">
-            <i class="icon icon-ads"></i><span>面积：</span><span>{{info.area}}</span>
+            <span><i class="icon rent-area"></i></span><span>面积：</span><span>{{info.area}}</span>
         </div>
         <div class="table-view-cell">
-            <i class="icon icon-ads "></i><span>价格：</span><span>{{info.price}}</span>
+            <span><i class="icon rent-price "></i></span><span>价格：</span><span>{{info.price}}</span>
         </div>
         <div class="table-view-cell">
-            <i class="icon icon-ads"></i><span>园区：</span><span>{{info.park}}</span>
+            <span><i class="icon rent-park"></i></span><span>园区：</span><span>{{info.park}}</span>
         </div>
         <div class="table-view-cell">
-            <i class="icon icon-ads"></i><span>地址：</span><span>{{info.address}}</span>
+            <span><i class="icon rent-ads"></i></span><span>地址：</span><span>{{info.address}}</span>
         </div>
         <div class="table-view-cell">
-            <i class="icon icon-phone"></i><span>电话：</span><span>{{info.moblie}}</span>
+            <span><i class="icon rent-phone"></i></span><span>电话：</span><span>{{info.moblie}}</span>
         </div>
     </div>
     <div class="rent-btn-box">
@@ -213,6 +193,7 @@
             viewer:null,
             mySwiper:null,
             rentShow:false,
+            isSubmit:true,
             subData:{
                 rent_id:info.rent_id,
                 mobile:'',
@@ -252,7 +233,6 @@
                 this.vrShow = false;
             },
             looVR:function (e) {
-              console.log("11");
                 window.location.href='/index/roomrent/index?link='+e;
             },
             show:function (event){
@@ -286,12 +266,49 @@
                     _this.$toast("请输入正确的电话！");
                     return;
                 }
+                if(!_this.isSubmit){
+                    return;
+                }
+                _this.isSubmit = false;
                 var data = JSON.parse(JSON.stringify(_this.subData));
-                console.log(data);
+                //console.log(data);
                 _this.$http.post('/index/roomrent/peoplerent',data).then(function (res) {
-                    console.log(res.data);
-                },function (e) {
-
+                    var data  = res.data;
+                    _this.isSubmit = true;
+                    if(data.code == 1){
+                        var msg = data.data;
+                        var newMsg =  msg.split(";");
+                        msg =  newMsg.join("<br/>");
+                        swal({
+                            title:data.msg,
+                            text:msg,
+                            html:true,
+                            type:"success",
+                            confirmButtonColor: "#52CC92"
+                        },function () {
+                            _this.rentShow = false;
+                            window.location.href='/index/roomrent/houseslist'
+                        });
+                    }else{
+                        swal({
+                            title:"提交失败!",
+                            text:"请重新提交！",
+                            type:"error",
+                            confirmButtonColor: "#52CC92"
+                        },function () {
+                            window.location.reload();
+                        });
+                    }
+                },function (res) {
+                    _this.isSubmit = true;
+                    swal({
+                        title:"提交失败!",
+                        text:'请重新提交！',
+                        type:"error",
+                        confirmButtonColor: "#52CC92"
+                    },function () {
+                        window.location.reload();
+                    });
                 })
             }
         }

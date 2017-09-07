@@ -275,26 +275,48 @@ body{
     min-height: 40px;
     align-items: center;
 }
+.table-view-cell span:first-child{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 3.2vw;
+    width: 20px;
+    height: 20px;
+}
 .icon{
     display: inline-block;
     background-size: 100%;
-    margin-right: 3.2vw;
     background-repeat: no-repeat;
 }
-.icon-email{
-    width: 20px;
-    height: 15px;
-    background-image: url("/index/images/service/card/icon-email.png");
-}
-.icon-phone{
-    width: 20px;
-    height: 15px;
-    background-image: url("/index/images/service/card/icon-phone.png");
-}
-.icon-ads{
+.rent-park{
     width: 18px;
     height: 20px;
-    background-image: url("/index/images/service/card/icon-ads.png");
+    background-image: url("/index/images/roomrent/rent-park.png");
+}
+.rent-phone{
+    width: 20px;
+    height: 15px;
+    background-image: url("/index/images/roomrent/rent-phone.png");
+}
+.rent-ads{
+    width: 18px;
+    height: 20px;
+    background-image: url("/index/images/roomrent/rent-adress.png");
+}
+.rent-area{
+    width: 20px;
+    height: 20px;
+    background-image: url("/index/images/roomrent/rent-area.png");
+}
+.rent-house{
+    width: 20px;
+    height: 20px;
+    background-image: url("/index/images/roomrent/rent-house.png");
+}
+.rent-price{
+    width: 20px;
+    height: 17px;
+    background-image: url("/index/images/roomrent/rent-price.png");
 }
 .cell-tit{
     color: #999;

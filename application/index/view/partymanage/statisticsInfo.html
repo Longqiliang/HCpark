@@ -182,7 +182,7 @@
             <div class="my-log-title">日志记录</div>
             <ul class="my-log">
                 <li v-if="personalInfo.records.length==0" class="no-log">暂无日志</li>
-                <li v-for="item in personalInfo.records" @click="window.location.href='/index/partymanage/companyInfo/id/'+item.id">
+                <li v-for="item in personalInfo.records" @click="window.parent.location.href='/index/partymanage/recordDetail/id/'+item.id">
                     <span class="my-icon " :class="{'my-icon-ing':item.status==1,'my-icon-suc':item.status==2}"></span>
                     <div class="my-list">
                         <div><span>招商日志</span><span>{{item.merchants_place}}</span></div>
@@ -195,7 +195,7 @@
             <div class="my-log-title">工作日志</div>
             <ul class="my-log">
                 <li v-if="personalInfo.diary.length==0" class="no-log">暂无日志</li>
-                <li v-for="item in personalInfo.diary" @click="window.location.href='/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id">
+                <li v-for="item in personalInfo.diary" @click="window.parent.location.href='/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id">
                     <span class="my-icon my-icon-suc"></span>
                     <div class="my-list">
                         <div><span>工作日志</span><span>{{item.name}}</span></div>
@@ -294,8 +294,10 @@ var app = new Vue({
         }
     },
     mounted(){
-        window.onscroll=function () {
-            console.log(window.scrollTop())
+        if(window.parent){
+            console.log(window.parent.location.href);
+        }else{
+            console.log('no parent')
         }
         var info=this.personalInfo;
         var log=parseInt(info.dairy_num / info.total * 100),
@@ -330,9 +332,9 @@ var app = new Vue({
                 if(res.data.code==1){
                     this.personalInfo=res.data.data;
                     var info=this.personalInfo;
-                    var log=parseInt(info.dairy_num / info.total),
-                            area=parseInt(info.finish_area / info.area),
-                            price=parseInt(info.finish_price / info.price);
+                    var log=parseInt(info.dairy_num / info.total * 100),
+                            area=parseInt(info.finish_area / info.area * 100),
+                            price=parseInt(info.finish_price / info.price * 100);
                     log=isNaN(log)?0:log;
                     area=isNaN(area)?0:area;
                     price=isNaN(price)?0:price;
