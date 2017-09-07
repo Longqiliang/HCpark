@@ -32,6 +32,7 @@ body{
     font-size: 1.8rem;
     line-height: 14.67vw;
     text-align: center;
+    position: relative;
 }
 .header-icon{
     width: 11.2vw;
@@ -48,7 +49,6 @@ body{
 
 .header-icon.icon-tab{
     background-image: url("/index/images/roomrent/icon-tab.png") ;
-    top:32%;
 }
 .header-icon.icon-list{
     background-image: url("/index/images/roomrent/icon-list.png") ;

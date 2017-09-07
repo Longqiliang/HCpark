@@ -11,11 +11,12 @@
 {block name="body"}
 <div class="content" id="app">
     <div class="header">
-        <i class="header-icon icon-tab" @click="parkToggle"></i>
+
         <h2 @click="checkPark" class="header-tit">
             <span >{{parkName.txt}}</span> <i class="allow-down"></i>
+            <i class="header-icon" @click.stop="parkToggle" :class="[isRentList ? 'icon-tab' : 'icon-list']"></i>
         </h2>
-        <div class="houses-icon-box">
+        <div class="houses-icon-box" v-show="isRentList">
             <span ><i class="houses-icon icon-rentable"></i>可租</span>
             <span ><i class="houses-icon icon-renewable"></i>已租</span>
         </div>
@@ -28,22 +29,41 @@
         </mt-popup>
     </div>
 
-    <div class="houses-list" v-for="item of showList">
+    <div class="houses-list" v-for="item of showhouseList" v-show="isRentList">
         <div class="houses-list-tit">
         {{item.floor}}楼
         </div>
-        <div class="houses-list-item" v-if="!item.combine">
+        <div class="houses-list-item" >
             <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">
                 {{rooms.room}}
             </span>
         </div>
-        <div class="houses-list-item" v-else>
-            <span>
-                {{item.rooms}}
-            </span>
-        </div>
+        <!--<div class="houses-list-item" v-else>-->
+            <!--<span>-->
+                <!--{{item.rooms}}-->
+            <!--</span>-->
+        <!--</div>-->
     </div>
-
+    <ul class="list" v-if="showrentList.length > 0"
+        v-infinite-scroll="loadMore"
+        infinite-scroll-disabled="loading"
+        infinite-scroll-distance="40">
+        <li class="list-item" v-for="item of showrentList" v-show="!isRentList">
+            <a :href="'/index/roomrent/rent?room_id='+item.id">
+                <div class="item-img">
+                    <img :src="item.img[0]"  />
+                </div>
+                <div class="item-info">
+                    <h3>{{item.room}}</h3>
+                    <p>{{item.name}}</p>
+                    <div class="info-detail">
+                        <span>{{item.area}}</span>
+                        <span>{{item.price}}</span>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
     <!--<div class="houses-list" v-for="item of list">-->
         <!--<div class="houses-list-tit">-->
             <!--{{item.floor}}楼-->
@@ -58,6 +78,7 @@
 {block name="script"}
 <script type="text/javascript">
     var list = {$list};
+    console.log(list);
     var values = [];
     for(var i in list){
         values.push(i);
@@ -67,6 +88,7 @@
     var vm =  new Vue({
         el:'#app',
         data:{
+            isRentList:false,
             list:list,
             popupVisible:false,
             parkPicker:'',
@@ -83,29 +105,41 @@
                 {
                     values: values
                 }
-            ]
+            ],
+            loadOver:false,
+            loading:false,
+            canload:true
         },
         computed:{
-          showList:function () {
+            showhouseList:function () {
               var _this = this;
               for(var arr in _this.list){
                   if(_this.parkName.txt == arr){
-                      return _this.list[arr];
+                      return _this.list[arr].houselist;
                   }
               }
-          }
-
+            },
+            showrentList:function () {
+                var _this = this;
+                for(var arr in _this.list){
+                    if(_this.parkName.txt == arr){
+                        return _this.list[arr].rentlist;
+                    }
+                }
+            }
         },
         methods:{
             parkToggle:function () {
-                var  rentList= window.sessionStorage.getItem("rentList");
-                window.sessionStorage.setItem("housesList",true);
-                if(rentList){
-                    window.sessionStorage.removeItem("rentList");
-                    window.history.go(-1);
-                }else{
-                    window.location.href="/index/roomrent/rentlist?type="+this.parkTxt.index;
-                }
+                var _this = this;
+                _this.isRentList =!_this.isRentList;
+//                var  rentList= window.sessionStorage.getItem("rentList");
+//                window.sessionStorage.setItem("housesList",true);
+//                if(rentList){
+//                    window.sessionStorage.removeItem("rentList");
+//                    window.history.go(-1);
+//                }else{
+//                    window.location.href="/index/roomrent/rentlist?type="+this.parkTxt.index;
+//                }
             },
             cancelPark:function () {
                 this.popupVisible = false;
@@ -138,6 +172,29 @@
                     return;
                 }
                 window.location.href = "/index/roomrent/rent?rent_id="+id;
+            },
+            loadMore:function (event) {
+                if(!this.loading && this.list.length>0 && this.canLoad ){
+                    this.loading = true;
+                    this.$http.post('/index/Roomrent/moreList',{build:'A',length:this.list.length}).then(function (res) {
+                        console.log(res.data);
+                        if(res.data.code==0){
+                            this.canLoad=false
+                        }else{
+                            for( var i = 0 ;i < res.data.data.length;i++){
+                                this.documents.push(res.data.data[i])
+                            }
+                            if(res.data.data.length<6){
+                                this.canLoad = false
+                            }
+                        }
+                        this.loading = false;
+                    },function (res) {
+                        console.log(res.data);
+                        this.loading = false;
+
+                    })
+                }
             }
         }
     });
