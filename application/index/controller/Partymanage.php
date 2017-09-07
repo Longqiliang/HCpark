@@ -168,6 +168,8 @@ class Partymanage extends Base
     /*合同列表*/
     public function managelist()
     {
+        $id =input('id');
+
         $type = input("type");
         $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
             ->order("create_time desc")
@@ -224,9 +226,11 @@ class Partymanage extends Base
         ];
 
         if ($info['img']) {
-            foreach ($info['img'] as $k => $v) {
-                $small_img = $this->getThumb($v, 163, 230);
-                $info['imgs'][$k] = $small_img;
+            foreach ($info['img'] as $k1 => $v1) {
+                $path = str_replace(".", "_s.", $v1);
+                $image = Image::open(PUBLIC_PATH . $v1);
+                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                $info['img'][$k1] = $path;
             }
         }
 //        return  dump($info);
@@ -707,12 +711,26 @@ class Partymanage extends Base
             'type' => $type,
             'department_id' => $departmentId,
         ];
-        if ($type == 3) {
-            $info = CompanyContract::where($map)->select();
-        }
-        $info = CompanyContract::where($map)->find();
+        $manageInfo = CompanyContract::where($map)->find();
+        $info = [
+            'extra' => $manageInfo['remark'],
+            'img' => json_decode($manageInfo['img']),
+            'imgs' => [],
+            'number' => $manageInfo['number'],
+            'create_time' => $manageInfo['create_time'],
+        ];
 
-        $this->assign('info', $info);
+        if ($info['img']) {
+            foreach ($info['img'] as $k1 => $v1) {
+                $path = str_replace(".", "_s.", $v1);
+                $image = Image::open(PUBLIC_PATH . $v1);
+                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                $info['img'][$k1] = $path;
+            }
+        }
+//        return  dump($info);
+        $this->assign('info', json_encode($info));
+
 
         return $this->fetch();
     }
@@ -875,4 +893,5 @@ class Partymanage extends Base
 
         return $this->fetch();
     }
+
 }

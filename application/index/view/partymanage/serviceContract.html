@@ -1,0 +1,129 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>合同详情</title>
+<link rel="stylesheet" href="/static/viewer/viewer.min.css">
+<link rel="stylesheet" href="/static/swiper/swiper-3.3.1.min.css">
+<link rel="stylesheet" href="/index/css/partymanage/contract/index.css">
+<style>
+    .swiper-slide {
+        overflow: hidden;
+        width: 40vw;
+        height:56vw;
+    }
+    .swiper-slide img{
+        width: 100%;
+    }
+    .group-view{
+        padding: 0 4vw;
+        font-size: 1.5rem;
+    }
+    .group-view-cell{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: 1.4rem;
+        padding:4vw 0;
+    }
+    .group-view-cell span:last-child{
+        color: #999;
+    }
+    .group-box{
+        padding:0 4vw 5.33vw;
+        font-size: 1.5rem;
+        position: relative;
+    }
+    .group-box:after{
+        content: '';
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        height: 1px;
+        background-color: #E8E8E8;
+        left: 0;
+    }
+    .group-box:last-child:after{
+        height: 0;
+    }
+    .group-tit{
+        line-height: 1.4;
+        padding:4vw 0;
+    }
+    .group-box .group-remark{
+        display: block;
+        height: 40vw;
+        border: 1px solid #e8e8e8;
+        width: 100%;
+        padding: 2vw;
+        font-size: 1.5rem;
+    }
+
+
+</style>
+{/block}
+
+{block name="body"}
+<div id="app" class="content">
+    <div class="group-view">
+        <div class="group-view-cell">
+            <span>合同编号:{{info.number}}</span>
+            <span>{{info.create_time}}</span>
+        </div>
+    </div>
+    <div class="group-box">
+        <div class="group-tit">合同照片</div>
+        <div class="swiper-container" ref="imgList">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="(thumb,index) of info.imgs">
+                    <img :src="thumb" :data-original="info.img[index]">
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+    <div class="group-box">
+        <div class="group-tit">备注信息</div>
+        <textarea class="group-remark" readonly="readonly" v-html="info.extra">
+        </textarea>
+    </div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/swiper/swiper.min.js"></script>
+<script src="/static/viewer/viewer.min.js"></script>
+<script>
+    var info = {$info};
+    console.log(info);
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            info:info,
+            viewer:null,
+            swiper:null
+        },
+        mounted(){
+            var _this = this;
+            _this.swiper = new Swiper('.swiper-container', {
+                pagination : '.swiper-pagination',
+                paginationType : 'fraction',
+                slidesPerView: 'auto',
+                centeredSlides: true,
+                paginationClickable: true,
+                spaceBetween: 35
+            });
+            _this.viewer =  new Viewer(_this.$refs.imgList,{
+                url:'data-original',
+                toolbar:false,
+                title:false,
+                movable:false,
+                fullscreen:false
+            });
+        },
+        methods:{
+
+        }
+    })
+</script>
+{/block}
