@@ -51,7 +51,7 @@ class PartyBuilding extends Admin{
                     return $this->success("添加成功！");
                 }else{
 
-                    return $this->error("添加失败");
+                    return $this->error($partyBuilding->getError());
                 }
             }
 

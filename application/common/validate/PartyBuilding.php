@@ -12,7 +12,7 @@ class PartyBuilding extends Validate{
     protected $rule = [
         'title' =>  'require|max:100',
         'source' => 'require|max:50',
-        'content'  =>  'require',
+        'content'  =>  'require|min:12',
     ];
 
     protected $message = [
@@ -20,7 +20,7 @@ class PartyBuilding extends Validate{
         'title.max' => '标题最大50个字符',
         'source.require' => '发布人名称必须添加',
         'source.max' => '发布人最大20个字符',
-        'content' => '消息内容必须添加',
+        'content.min' => '新闻内容字数过少，请继续添加',
     ];
 
 
