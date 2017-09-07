@@ -308,8 +308,8 @@ class Roomrent extends Base
             $people = new PeopleRent();
             $res = $people->save($data);
             if ($res) {
-
-                $this->success('提交成功');
+                $msg = "您已申请成功;稍后我们的工作人员会电话联系您！";
+                $this->success('提交成功','',$msg);
             } else {
 
                 $this->error("提交失败");
@@ -318,6 +318,10 @@ class Roomrent extends Base
 
         return $this->fetch();
     }
-    /**/
+
+
+
+
+
 
 }
