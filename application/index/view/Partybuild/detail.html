@@ -40,7 +40,7 @@
         {$news->content}
     </section>
     <div class="comment-box">
-        <p>共 {{documents.length}} 条评论</p>
+        <p>共 {{count}} 条评论</p>
         <div class="comment">
             <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
                 <li v-for="list in documents" >
@@ -83,6 +83,7 @@
     new Vue({
         el:'#comment',
         data:{
+            count:{$count},
             canLoad:true,
             loading:false,
             documents:{$comments},
@@ -113,6 +114,7 @@
                             });
                             this.documents.unshift(res.data.data);
                             this.content=''
+                            this.count+=1
                         }
                     },function (res) {
                         this.$toast({message:'发送失败，请重新发送',position:'bottom',duration:1000});

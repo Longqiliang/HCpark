@@ -197,7 +197,7 @@
         </ul>
         <div class="my-title">工作日志内容</div>
         <textarea id="" cols="30" rows="10" :placeholder="isWrite==true?'请输入工作日志内容':'暂无日志内容'" v-model="baseInfo.content" v-bind:readonly="!isWrite"></textarea>
-        <div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img">图片</span></div>
+        <div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img.length">图片</span></div>
         <div class="imgBox">
             <div class="card-upload" v-if="isWrite">
                 <div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">
@@ -273,43 +273,40 @@
             hasViewer:false,
         },
         created(){
-            console.log(this.baseInfo)
+            var the=this;
+            if(!the.baseInfo.img){
+                the.baseInfo.img=[]
+            }
             //领导不能写日志判断
-            if(this.isBoss=='yes'){
-                this.isWrite=false
-            }else if(this.baseInfo.content){
-                this.isWrite=false
+            the.canWrite();
+            console.log(the.isWrite)
+            if(!the.baseInfo.create_time){
+                the.date=Date.parse(new Date())
             }else{
-                this.isWrite=true;
+                the.date=the.baseInfo.create_time;
             }
-//            if(this.baseInfo.img){
-//                console.log(this.baseInfo.img)
-////                this.baseInfo.img=JSON.parse(this.baseInfo.img )
-//            }
-            if(!this.baseInfo.create_time){
-                this.date=Date.parse(new Date())
-            }else{
-                this.date=this.baseInfo.create_time;
-            }
-            console.log('this.baseInfo.create_time = '+this.baseInfo.create_time);
-            this.initData(this.baseInfo.create_time);
+            the.initData(the.baseInfo.create_time);
 
         },
         mounted(){
-//            if(this.baseInfo.img){
-//                 var viewer = new Viewer(document.getElementById('img'),{
-//                    toolbar:2,
-//                    title:2,
-//                });
-//                this.hasViewer=true;
-//            }
             this.createView();
         },
         methods:{
+            canWrite(){
+                var the=this;
+                //领导不能写日志判断
+                if(the.isBoss=='yes'){
+                    the.isWrite=false
+                }else if(the.baseInfo.content){
+                    the.isWrite=false
+                }else{
+                    the.isWrite=true;
+                }
+            },
             createView(){
                 var the=this;
                 console.log(the.baseInfo.img)
-                if(!the.hasViewer && this.baseInfo.img){
+                if(!the.hasViewer && this.baseInfo.img.length){
                     setTimeout(function () {
                     var viewer = new Viewer(document.getElementById('img'),{
                         toolbar:2,
@@ -367,16 +364,14 @@
                     }
                 }
             },
-            //是否为用户选中
+            //是否已写日志判断
             isChecked:function (data) {
-                console.log('isCheck work');
                 var dataTime=new Date(parseInt(data));
                 var year1=dataTime.getFullYear(),month1=dataTime.getMonth(),day1=dataTime.getDate();
                 for(var i=0;i<this.checkedList.length;i++){
                     var dataTime1=new Date(parseInt(this.checkedList[i]));
                     var year2=dataTime1.getFullYear(),month2=dataTime1.getMonth(),day2=dataTime1.getDate();
                     if(year1==year2&&month1==month2&&day1==day2) {
-                        console.log(i)
                         return true
                     }
                 }
@@ -402,7 +397,6 @@
                     time:time,
                     user_id:this.baseInfo.user_id
                 };
-                console.log('post-time : ' + time);
                 this.$http.post('/index/partymanage/changeDiary',data).then(function (res) {
                     var data=JSON.parse(res.data);
                     console.log(data)
@@ -411,13 +405,9 @@
                     this.baseInfo.create_time=data.create_time;
                     this.date=data.create_time;
                     this.baseInfo.content=data.content;
-                    this.baseInfo.img=data.img;
-                    console.log(this.baseInfo.img)
-                    if(this.baseInfo.content){
-                        this.isWrite=false
-                    }else{
-                        this.isWrite=true;
-                    }
+                    this.baseInfo.img=data.img ? data.img : [];
+                    console.log(this.baseInfo)
+                    this.canWrite();
                     this.createView();
                 },function (res) {
                     this.$toast('请求失败，请退出页面重试')
