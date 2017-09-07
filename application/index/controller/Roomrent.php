@@ -44,13 +44,13 @@ class Roomrent extends Base
         ];
         if ($data['img']) {
             foreach ($data['img'] as $k1 => $v1) {
-                $path = str_replace(".","_s.",$v1);
-                $image = Image::open(PUBLIC_PATH.$v1);
-                $image->thumb(355,188)->save(PUBLIC_PATH.$path);
+                $path = str_replace(".", "_s.", $v1);
+                $image = Image::open(PUBLIC_PATH . $v1);
+                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
                 $data['img'][$k1] = $path;
             }
         }
-        //return dump($data);
+        return dump($data);
         $this->assign('info', json_encode($data));
 
         return $this->fetch();
@@ -80,9 +80,9 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $path = str_replace(".","_s.",$v1);
-                    $image = Image::open(PUBLIC_PATH.$v1);
-                    $image->thumb(170,120)->save(PUBLIC_PATH.$path);
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
                     $data[$k]['img'][$k1] = $path;
                 }
             }
@@ -102,16 +102,16 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $path = str_replace(".","_s.",$v1);
-                    $image = Image::open(PUBLIC_PATH.$v1);
-                    $image->thumb(170,120)->save(PUBLIC_PATH.$path);
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
                     $data[$k]['img'][$k1] = $path;
                 }
             }
         }
         $parkName = $parkInfo['name'];
-        $resArr =  array_merge(["$parkName A幢" => $data],["$parkName B幢" => $data1]);
-        $this->assign("type",$type);
+        $resArr = array_merge(["$parkName A幢" => $data], ["$parkName B幢" => $data1]);
+        $this->assign("type", $type);
         $this->assign('list', json_encode($resArr));
 
 
@@ -225,15 +225,16 @@ class Roomrent extends Base
             $newArr1[$k]['floor'] = $v;
             $newArr1[$k]['combine'] = false;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
-           /* $newArr1[$k]['rooms'] = $roomArray1[$k];
-            if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
-                $newArr1[$k]['combine'] = true;
-                $newArr1[$k]['depart'] = $roomArray1[$k][0]['department_id'];
-                $newArr1[$k]['rooms'] = "B$v";
-            }*/
+            /* $newArr1[$k]['rooms'] = $roomArray1[$k];
+             if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
+                 $newArr1[$k]['combine'] = true;
+                 $newArr1[$k]['depart'] = $roomArray1[$k][0]['department_id'];
+                 $newArr1[$k]['rooms'] = "B$v";
+             }*/
 
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
+        //echo json_encode($resArr);exit;
         //rentlist
         $data = [];
         $data1 = [];
@@ -256,9 +257,9 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $path = str_replace(".","_s.",$v1);
-                    $image = Image::open(PUBLIC_PATH.$v1);
-                    $image->thumb(170,120)->save(PUBLIC_PATH.$path);
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
                     $data[$k]['img'][$k1] = $path;
                 }
             }
@@ -278,17 +279,17 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $path = str_replace(".","_s.",$v1);
-                    $image = Image::open(PUBLIC_PATH.$v1);
-                    $image->thumb(170,120)->save(PUBLIC_PATH.$path);
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
                     $data[$k]['img'][$k1] = $path;
                 }
             }
         }
         $parkName = $parkInfo['name'];
-        $resArr1 =  array_merge(["$parkName A幢" => $data],["$parkName B幢" => $data1]);
+        $resArr1 = array_merge(["$parkName A幢" => $data], ["$parkName B幢" => $data1]);
         //echo json_encode($resArr1);exit;
-        $this->assign('type',$type);
+        $this->assign('type', $type);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr));
         $this->assign('list1', json_encode($resArr1));
@@ -309,7 +310,7 @@ class Roomrent extends Base
             $res = $people->save($data);
             if ($res) {
                 $msg = "您已申请成功;稍后我们的工作人员会电话联系您！";
-                $this->success('提交成功','',$msg);
+                $this->success('提交成功', '', $msg);
             } else {
 
                 $this->error("提交失败");
@@ -319,9 +320,78 @@ class Roomrent extends Base
         return $this->fetch();
     }
 
+    /*拼数组*/
+    public function gaoshiqing()
+    {
+
+        $list = ParkRoom::where(['company_id' => ['>', 0], 'build_block' => "A"])->distinct(true)->field('company_id,floor')->select();
+        foreach ($list as $k => $v) {
+            $arr[$k] = $v['company_id'];
+        }
+        dump($arr);
+        foreach ($arr as $k => $v) {
+            $room = ParkRoom::where('company_id', $v)->order('room asc')->select();
+            foreach ($room as $k1 => $v1) {
+                $rooms[$k][$k1] = ['floor' => $v1['floor'], 'room' => $v1['room'], 'deparment_id' => $v];
+                $roomsss[$k][$k1] = $v1['room'];
+            };
+        }
+        //$rooms用来循环生成楼盘表；
+
+        //接下来需要一个算法生成区间房间号
+        foreach ($roomsss as $k => $v) {
+
+            $roomsss[$k] = $this->getArea($v);
+
+        }
 
 
+        //dump($rooms);
 
+    }
+
+    /*数组生成区间*$arr是一个一维数组*/
+    function getArea($arr)
+    {
+        // $arr = ["201","202","204","207"];
+        $news = [];
+        $string = "";
+        for ($k = 1; $k < count($arr); $k++) {
+            if ($arr[$k] - 1 != ($arr[$k - 1])) {
+                $news[] = $k;
+            }
+        }
+        //return dump($news);
+        if ($news) {
+            array_unshift($news, 0);
+            array_push($news, count($arr));
+            foreach ($news as $k => $v) {
+                if ($k < count($news) - 1) {
+                    $newArr[] = array_slice($arr, $news[$k], $news[$k + 1] - $news[$k]);
+                }
+
+            }
+            foreach ($newArr as $k => $v) {
+                if (count($v) > 1) {
+                    $string .= reset($v) . "-" . end($v) . ",";
+                } else {
+                    $string .= reset($v) . ",";
+                }
+            }
+
+            return $string;
+        } else {
+            if (count($arr) > 1) {
+
+                $string .= reset($arr) . "-" . end($arr);
+            } else {
+                $string .= $arr[0];
+            }
+
+            return $string;
+        }
+
+    }
 
 
 }

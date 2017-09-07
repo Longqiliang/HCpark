@@ -77,10 +77,10 @@ class Park extends Admin
                 $data['company'] = $data['company_id'];
                 $like = mb_substr($data['company_id'],0,6);
                 $info = WechatDepartment::where(['name'=> ['like',"%$like%"]])->find();
-                if ($info) {
+                if ($info && $data['company_id'] !="") {
                     $data['company_id'] = $info['id'];
                 } else {
-                    $data['company_id'] = "";
+                    $data['company_id'] = 0;
                 }
                 unset($data['uid']);
                 $res = $parkRoom->validate(true)->save($data);
