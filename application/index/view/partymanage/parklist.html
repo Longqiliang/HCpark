@@ -10,7 +10,7 @@
 
 {block name="body"}
 <div class="content" id="app">
-    <div class="list-card">
+    <div class="list-card" @click="">
         <div class="list-card-info">
             <h3 class="info-tit">公司详情</h3>
             <p class="info-label">公司信息尽在掌握</p>
@@ -46,7 +46,17 @@
 
 {block name="script"}
 <script type="text/javascript">
+    var vm = new Vue({
+        el:'#app',
+        data:{
 
+        },
+        methods:{
+            jump:function (href) {
+                window.location.href=''
+            }
+        }
+    })
 
 </script>
 {/block}

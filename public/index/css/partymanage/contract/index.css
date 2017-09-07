@@ -60,6 +60,9 @@
     height: 34.67vw;
     position: relative;
 }
+.img-list-item img{
+    border-radius: 5px;
+}
 .item-img-marking{
     position: absolute;
     border-radius: 5px;
