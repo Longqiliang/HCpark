@@ -26,7 +26,7 @@
     </ul>
     <div class="load-more" v-if="contractList.length === 0">暂无合同！</div>
     <div class="load-more" v-else >
-        <div v-show="loading"v-if="!loadOver">
+        <div v-show="!loading" v-if="!loadOver">
             <mt-spinner :type="3" color="#999" ></mt-spinner>加载中...
         </div>
     </div>
