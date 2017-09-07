@@ -222,11 +222,12 @@ class Roomrent extends Base
             $newArr1[$k]['floor'] = $v;
             $newArr1[$k]['combine'] = false;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
+           /* $newArr1[$k]['rooms'] = $roomArray1[$k];
             if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
                 $newArr1[$k]['combine'] = true;
                 $newArr1[$k]['depart'] = $roomArray1[$k][0]['department_id'];
                 $newArr1[$k]['rooms'] = "B$v";
-            }
+            }*/
 
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
