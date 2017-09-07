@@ -12,6 +12,7 @@ use app\common\model\ParkRent;
 use app\common\model\ParkRoom;
 use app\common\model\PeopleRent;
 use app\index\model\Park;
+use think\Db;
 use think\Image;
 
 class Roomrent extends Base
@@ -144,8 +145,10 @@ class Roomrent extends Base
                 ];
                 if ($data[$k]['img']) {
                     foreach ($data[$k]['img'] as $k1 => $v1) {
-                        $small_img = $this->getThumb($v1, 100, 100);
-                        $data[$k]['img'][$k1] = $small_img;
+                        $path = str_replace(".", "_s.", $v1);
+                        $image = Image::open(PUBLIC_PATH . $v1);
+                        $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                        $data[$k]['img'][$k1] = $path;
                     }
                 }
             }
@@ -329,12 +332,15 @@ class Roomrent extends Base
     /*拼数组*/
     public function gaoshiqing()
     {
-
-        $list = ParkRoom::where(['company_id' => ['>', 0], 'build_block' => "A"])->distinct(true)->field('company_id,floor')->select();
+        $ParkRoom = new ParkRoom();
+        $subQuery = $ParkRoom->where(['company_id' => ['>', 0], 'build_block' => "A"])->order('floor desc')->buildSql();
+        //dump($subQuery );exit;
+        //echo $subQuery;
+        $list = Db::table($subQuery . ' a')->distinct(true)->field('a.company_id')->select();
         foreach ($list as $k => $v) {
             $arr[$k] = $v['company_id'];
         }
-        dump($arr);
+        //dump($arr);
         foreach ($arr as $k => $v) {
             $room = ParkRoom::where('company_id', $v)->order('room asc')->select();
             foreach ($room as $k1 => $v1) {
@@ -346,13 +352,29 @@ class Roomrent extends Base
 
         //接下来需要一个算法生成区间房间号
         foreach ($roomsss as $k => $v) {
-
             $roomsss[$k] = $this->getArea($v);
-
         }
+        foreach ($rooms as $k => $v) {
+            $rooms[$k][0]['number'] = $roomsss[$k];
+        }
+        foreach ($rooms as $k => $v) {
+            $rooms[$k] = $v[0];
+        }
+        for ($i = 1; $i < 14; $i++) {
+            foreach ($rooms as $k => $v) {
+                if ($v['floor'] == $i) {
+                    /*$finallArr[$i] = [
+                        'floor' =>$i,
+                        'rooms' =>['room'=>$v['room'],'department_id'=>$v['deparment_id'],'number'=>$v['number']],
+                    ];*/
+                    $finallArr['floor'] = $i;
+                    $finallArr['rooms'][$k] = ['room' => $v['room'], 'department_id' => $v['deparment_id'], 'number' => $v['number']];
+                }
 
+            }
+        }
+        echo json_encode($finallArr);
 
-        //dump($rooms);
 
     }
 
@@ -391,6 +413,7 @@ class Roomrent extends Base
 
                 $string .= reset($arr) . "-" . end($arr);
             } else {
+
                 $string .= $arr[0];
             }
 
