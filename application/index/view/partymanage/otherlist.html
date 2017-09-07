@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>园区管理</title>
+<title>合同查看</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
     .list-card-info {
@@ -35,7 +35,7 @@
         },
         methods:{
             jump:function (href,id) {
-                window.location.href = href+"/id?"+id
+                window.location.href = href+"/?id="+id
             }
         }
     })
