@@ -13,5 +13,13 @@ use think\Model;
 
 class MerchantsRecord extends  Model
 {
+    protected  $type=[
 
+        'create_time'=>'strtotime'
+    ];
+    public  function  merchantsCompany(){
+
+
+        return $this->hasOne('MerchantsCompany','id','merchants_id');
+    }
 }

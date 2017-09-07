@@ -1,0 +1,123 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style type="text/css">
+    .note-editor.note-frame {
+        border-radius: 0;
+        border: 0;
+        margin-bottom: 0;
+    }
+
+    .front_cover_img {
+        height: 40px;
+        width: 40px;
+        margin-top: 4px
+    }
+
+    .send_type_label {
+        padding-left: 12px;
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <div class="pull-right tooltip-demo">
+
+                <a href="javascript:history.go(-1)" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                        class="fa fa-times"></i> 关闭</a>
+            </div>
+            <h2>招商日志详情</h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizontal" method="post">
+                <div class="mail-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">招商人员:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control" placeholder="{$info.merchants_user}">
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">招商日期:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.merchants_date|| time_format='Y-m-d '}"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">招商企业:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.company_name}"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">招商地点:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.merchants_place}"></div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">联系人姓名:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.contact_people}"></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">联系人电话:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.mobile}"></div>
+                    </div>
+
+
+                    <div class="form-group"><label class="col-sm-2 control-label">招商进度:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.status}"></div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">完成招商面积:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.merchants_area}平米"></div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">完成回款金额:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.merchants_money}万元"></div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">跟进情况:</label>
+                        <div class="col-sm-10"><input type="text" readonly class="form-control"
+                                                      placeholder="{$info.content}"></div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">图片描述:</label>
+                        {volist name="info.img" id="re"}
+                        <img width="200px" height="200px" src="{$re}">
+                        {/volist}
+                    </div>
+
+                </div>
+
+                <div class="mail-body text-right tooltip-demo">
+                    <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
+                    <!--target-form="form-horizontal" data-edit="content">-->
+                    <!--<i class="fa fa-pencil"></i> 保存草稿-->
+                    <!--</button>-->
+
+                </div>
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    highlight_subnav("{:Url('communication/index')}");
+</script>
+{/block}

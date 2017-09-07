@@ -33,16 +33,18 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <form method="get" action="index.html" class="pull-right mail-search">
-                <div class="input-group">
-                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索招商人员" value="{$search}">
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
-                    </div>
-                </div>
-            </form>
-            <h2>招商管理</h2>
 
+            <h2>招商管理</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+                <a class="btn btn-white btn-sm" data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)"><i class="fa fa-file-text-o"></i> 添加</a>
+                <a href="javascript:history.go(-1)" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                        class="fa fa-times"></i> 关闭</a>
+            </div>
         </div>
 
         <div id="modal-form" class="modal fade" aria-hidden="true">
@@ -104,10 +106,12 @@
                 <tr>
                     <th></th>
                     <th>id</th>
-                    <th>招商人员</th>
-                    <th>招商人员电话</th>
-                    <th>本月日志完成数量</th>
-                    <th>本月招商公司数量</th>
+                    <th>招商时间</th>
+                    <th>招商地点</th>
+                    <th>联系人</th>
+                    <th>联系人电话</th>
+                    <th>创建时间</th>
+                    <th>状态</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -118,24 +122,29 @@
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
                     <td class="mail-subject">
-                        {$vo.userid}
+                        {$vo.id}
                     </td>
                     <td>
-                        {$vo.name}
+                        {$vo.merchants_date|| time_format="Y-m-d "}
+                    </td>
+                    <td>
+                        {$vo.merchants_place}
+                    </td>
+                    <td>
+                        {$vo.contact_people}
                     </td>
                     <td>
                         {$vo.mobile}
                     </td>
                     <td>
-                       0
+                        {$vo.create_time|| time_format="Y-m-d "}
                     </td>
+                    <td>
+                        {$vo.status}
+                    </td>
+                    <td>
+                        <a   href="{:Url('recordInfo','id='.$vo.id  )}" >查看详情</a>
 
-                    <td>
-                       0
-                    </td>
-                    <td>
-                        <a   href="{:Url('merchantsPlan','user_id='.$vo.userid  )}" >指定招商计划</a>
-                        <a   href="{:Url('showDiary','user_id='.$vo.userid  )}" >查看工作日志</a>
 
                     </td>
                 </tr>
