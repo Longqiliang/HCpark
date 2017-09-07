@@ -19,6 +19,9 @@
         vertical-align: middle;
         margin-right: 5px;
     }
+    .houses-list-box{
+        padding-bottom: 4vw;
+    }
 </style>
 {/block}
 
@@ -42,22 +45,24 @@
             <mt-picker :slots="slots" @change="onParkChange" ></mt-picker>
         </mt-popup>
     </div>
-
-    <div class="houses-list" v-for="item of showhouseList" v-show="isHouseList">
-        <div class="houses-list-tit">
-        {{item.floor}}楼
-        </div>
-        <div class="houses-list-item" >
+    <div v-show="isHouseList" class="houses-list-box">
+        <div class="houses-list" v-for="item of showhouseList" >
+            <div class="houses-list-tit">
+                {{item.floor}}楼
+            </div>
+            <div class="houses-list-item" >
             <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">
                 {{rooms.room}}
             </span>
-        </div>
-        <!--<div class="houses-list-item" v-else>-->
+            </div>
+            <!--<div class="houses-list-item" v-else>-->
             <!--<span>-->
-                <!--{{item.rooms}}-->
+            <!--{{item.rooms}}-->
             <!--</span>-->
-        <!--</div>-->
+            <!--</div>-->
+        </div>
     </div>
+
     <div v-show="!isHouseList">
         <ul class="list" v-if="showrentList.length > 0"
             v-infinite-scroll="loadMore"
@@ -79,13 +84,6 @@
                 </a>
             </li>
         </ul>
-        <div class="my-footer">
-            <span v-if="!canLoad">没有更多了</span>
-            <span v-if="canLoad && !loading">下拉加载更多</span>
-            <div  v-if="loading">
-                <mt-spinner :type="3"></mt-spinner>加载中...
-            </div>
-        </div>
     </div>
 
 </div>
@@ -122,9 +120,7 @@
                     values: values
                 }
             ],
-            loadOver:false,
-            loading:false,
-            canLoad:true
+            loading:false
         },
         computed:{
             showhouseList:function () {
@@ -164,6 +160,7 @@
                 var _this = this;
                 _this.popupVisible = false;
                 _this.parkName = _this.parkTxt;
+                _this.loading = false;
             },
             onParkChange:function (picker,values) {
                 var _this = this;
@@ -196,10 +193,8 @@
 //                    console.log("11");
 //                    return;
 //                }
-                if((!_this.loading) && (_this.canLoad) && !_this.isHouseList){
+                if((!_this.loading) && !_this.isHouseList){
                     _this.loading = true;
-                    console.log("111");
-                    console.log(_this.parkName.txt);
                     var build = _this.parkName.txt.substr(-2,1);
                     var rentList =null;
                     for(var arr in _this.list){
@@ -207,9 +202,7 @@
                             rentList = _this.list[arr].rentlist;
                         }
                     }
-                    if(!rentList || rentList.length%6 !=0 ){
-                        _this.loading = true;
-                        _this.loadOver = true;
+                    if(!rentList || rentList.length % 6 !=0 ){
                         return;
                     }
                     var data = {
@@ -217,12 +210,15 @@
                         length:rentList.length
                     };
                     console.log(data);
+                    _this.$indicator.open({
+                        text: '加载中',
+                        spinnerType: 'triple-bounce'
+                    });
                     _this.$http.post('/index/Roomrent/moreList',data).then(function (res) {
+                        _this.$indicator.close();
                         console.log(res.data);
                         console.log(res.data.data);
-
                         if(res.data.code==0){
-                            _this.canLoad=false;
 
                         }else{
                             var list = JSON.parse(res.data.data);
@@ -230,13 +226,11 @@
                                 console.log(list[i]);
                                 rentList.push(list[i]);
                             }
-                            if(list.length<6){
-                                _this.canLoad = false
-                            }
+                            _this.loading = false;
                         }
-                        _this.loading = false;
+
                     },function (res) {
-                        console.log(res.data);
+                        _this.$indicator.close();
                         _this.loading = false;
 
                     })
