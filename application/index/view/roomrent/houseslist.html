@@ -4,7 +4,21 @@
 <title>楼盘表</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
-
+    .my-footer{
+        padding: 1rem 0;
+        text-align: center;
+        color:#999
+    }
+    .my-footer>p{
+        text-align: center;
+        font-size: 1.5rem;
+        line-height: 80vh;
+    }
+    .my-footer>div {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
 </style>
 {/block}
 
@@ -14,9 +28,9 @@
 
         <h2 @click="checkPark" class="header-tit">
             <span >{{parkName.txt}}</span> <i class="allow-down"></i>
-            <i class="header-icon" @click.stop="parkToggle" :class="[isRentList ? 'icon-tab' : 'icon-list']"></i>
+            <i class="header-icon" @click.stop="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list']"></i>
         </h2>
-        <div class="houses-icon-box" v-show="isRentList">
+        <div class="houses-icon-box" v-show="isHouseList">
             <span ><i class="houses-icon icon-rentable"></i>可租</span>
             <span ><i class="houses-icon icon-renewable"></i>已租</span>
         </div>
@@ -29,7 +43,7 @@
         </mt-popup>
     </div>
 
-    <div class="houses-list" v-for="item of showhouseList" v-show="isRentList">
+    <div class="houses-list" v-for="item of showhouseList" v-show="isHouseList">
         <div class="houses-list-tit">
         {{item.floor}}楼
         </div>
@@ -44,34 +58,36 @@
             <!--</span>-->
         <!--</div>-->
     </div>
-    <ul class="list" v-if="showrentList.length > 0"
-        v-infinite-scroll="loadMore"
-        infinite-scroll-disabled="loading"
-        infinite-scroll-distance="40">
-        <li class="list-item" v-for="item of showrentList" v-show="!isRentList">
-            <a :href="'/index/roomrent/rent?room_id='+item.id">
-                <div class="item-img">
-                    <img :src="item.img[0]"  />
-                </div>
-                <div class="item-info">
-                    <h3>{{item.room}}</h3>
-                    <p>{{item.name}}</p>
-                    <div class="info-detail">
-                        <span>{{item.area}}</span>
-                        <span>{{item.price}}</span>
+    <div v-show="!isHouseList">
+        <ul class="list" v-if="showrentList.length > 0"
+            v-infinite-scroll="loadMore"
+            infinite-scroll-disabled="loading"
+            infinite-scroll-distance="40">
+            <li class="list-item" v-for="item of showrentList" >
+                <a :href="'/index/roomrent/rent?room_id='+item.id">
+                    <div class="item-img">
+                        <img :src="item.img[0]" v-if="item.img" />
                     </div>
-                </div>
-            </a>
-        </li>
-    </ul>
-    <!--<div class="houses-list" v-for="item of list">-->
-        <!--<div class="houses-list-tit">-->
-            <!--{{item.floor}}楼-->
-        <!--</div>-->
-        <!--<div class="houses-list-item">-->
-            <!--<span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">{{rooms.room}}</span>-->
-        <!--</div>-->
-    <!--</div>-->
+                    <div class="item-info">
+                        <h3>{{item.room}}</h3>
+                        <p>{{item.name}}</p>
+                        <div class="info-detail">
+                            <span>{{item.area}}</span>
+                            <span>{{item.price}}</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <div class="my-footer">
+            <span v-if="!canLoad">没有更多了</span>
+            <span v-if="canLoad && !loading">下拉加载更多</span>
+            <div  v-if="loading">
+                <mt-spinner :type="3"></mt-spinner>加载中...
+            </div>
+        </div>
+    </div>
+
 </div>
 {/block}
 
@@ -88,7 +104,7 @@
     var vm =  new Vue({
         el:'#app',
         data:{
-            isRentList:false,
+            isHouseList:false,
             list:list,
             popupVisible:false,
             parkPicker:'',
@@ -108,7 +124,7 @@
             ],
             loadOver:false,
             loading:false,
-            canload:true
+            canLoad:true
         },
         computed:{
             showhouseList:function () {
@@ -131,7 +147,7 @@
         methods:{
             parkToggle:function () {
                 var _this = this;
-                _this.isRentList =!_this.isRentList;
+                _this.isHouseList =!_this.isHouseList;
 //                var  rentList= window.sessionStorage.getItem("rentList");
 //                window.sessionStorage.setItem("housesList",true);
 //                if(rentList){
@@ -174,24 +190,54 @@
                 window.location.href = "/index/roomrent/rent?rent_id="+id;
             },
             loadMore:function (event) {
-                if(!this.loading && this.list.length>0 && this.canLoad ){
-                    this.loading = true;
-                    this.$http.post('/index/Roomrent/moreList',{build:'A',length:this.list.length}).then(function (res) {
+                var _this = this;
+                console.log(_this.loading,_this.canLoad,_this.isHouseList);
+//                if(){
+//                    console.log("11");
+//                    return;
+//                }
+                if((!_this.loading) && (_this.canLoad) && !_this.isHouseList){
+                    _this.loading = true;
+                    console.log("111");
+                    console.log(_this.parkName.txt);
+                    var build = _this.parkName.txt.substr(-2,1);
+                    var rentList =null;
+                    for(var arr in _this.list){
+                        if(_this.parkName.txt == arr){
+                            rentList = _this.list[arr].rentlist;
+                        }
+                    }
+                    if(!rentList || rentList.length%6 !=0 ){
+                        _this.loading = true;
+                        _this.loadOver = true;
+                        return;
+                    }
+                    var data = {
+                        build:build,
+                        length:rentList.length
+                    };
+                    console.log(data);
+                    _this.$http.post('/index/Roomrent/moreList',data).then(function (res) {
                         console.log(res.data);
+                        console.log(res.data.data);
+
                         if(res.data.code==0){
-                            this.canLoad=false
+                            _this.canLoad=false;
+
                         }else{
-                            for( var i = 0 ;i < res.data.data.length;i++){
-                                this.documents.push(res.data.data[i])
+                            var list = JSON.parse(res.data.data);
+                            for( var i = 0 ;i < list.length;i++){
+                                console.log(list[i]);
+                                rentList.push(list[i]);
                             }
-                            if(res.data.data.length<6){
-                                this.canLoad = false
+                            if(list.length<6){
+                                _this.canLoad = false
                             }
                         }
-                        this.loading = false;
+                        _this.loading = false;
                     },function (res) {
                         console.log(res.data);
-                        this.loading = false;
+                        _this.loading = false;
 
                     })
                 }
