@@ -216,7 +216,9 @@ class Partymanage extends Base
         $info = [
             'extra' => $manageInfo['remark'],
             'img' => json_decode($manageInfo['img']),
-            'imgs' => []
+            'imgs' => [],
+            'number' => $manageInfo['number'],
+            'create_time' => $manageInfo['create_time'],
         ];
 
         if ($info['img']) {
@@ -225,7 +227,7 @@ class Partymanage extends Base
                 $info['imgs'][$k] = $small_img;
             }
         }
-        //return  dump($info);
+        return  dump($info);
         $this->assign('info', json_encode($info));
 
         return $this->fetch();
