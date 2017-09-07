@@ -190,8 +190,9 @@
      <ul class="my-baseInfo">
             <li>招商人员姓名：<span>{{baseInfo.user_name}}</span></li>
             <li>日期：
-                <span v-if="baseInfo.create_time">{{baseInfo.create_time | timeToString}}</span>
-                <span v-else>{{ Date.parse( new Date() ) | timeToString}}</span>
+                <!--<span v-if="baseInfo.create_time">{{baseInfo.create_time | timeToString}}</span>-->
+                <!--<span v-else>{{ Date.parse( new Date() ) | timeToString}}</span>-->
+                <span>{{ date | timeToString}}</span>
             </li>
         </ul>
         <div class="my-title">工作日志内容</div>
@@ -252,6 +253,7 @@
             baseInfo:{$info},
             //点击日历后记录的index
             nowDateIndex:'',
+            date:'',
             imgList:[],
             imgSrc:{
                 imgLength:4,
@@ -266,9 +268,12 @@
             //日历数组
             days: [],
             //写过日志的时间戳数组
-            checkedList:{$list}
+            checkedList:{$list},
+            //有没有创建图片查看器
+            hasViewer:false,
         },
         created(){
+            console.log(this.baseInfo)
             //领导不能写日志判断
             if(this.isBoss=='yes'){
                 this.isWrite=false
@@ -281,20 +286,38 @@
 //                console.log(this.baseInfo.img)
 ////                this.baseInfo.img=JSON.parse(this.baseInfo.img )
 //            }
-            console.log(' this.isWrite=' + this.isWrite)
+            if(!this.baseInfo.create_time){
+                this.date=Date.parse(new Date())
+            }else{
+                this.date=this.baseInfo.create_time;
+            }
             console.log('this.baseInfo.create_time = '+this.baseInfo.create_time);
             this.initData(this.baseInfo.create_time);
 
         },
         mounted(){
-            if(this.isWrite==false && this.baseInfo.img){
-                var viewer = new Viewer(document.getElementById('img'),{
-                    toolbar:2,
-                    title:2,
-                });
-            }
+//            if(this.baseInfo.img){
+//                 var viewer = new Viewer(document.getElementById('img'),{
+//                    toolbar:2,
+//                    title:2,
+//                });
+//                this.hasViewer=true;
+//            }
+            this.createView();
         },
         methods:{
+            createView(){
+                var the=this;
+                console.log(the.baseInfo.img)
+                if(!the.hasViewer && this.baseInfo.img){
+                    setTimeout(function () {
+                    var viewer = new Viewer(document.getElementById('img'),{
+                        toolbar:2,
+                        title:2,
+                    });
+                        the.hasViewer=true;},1000)
+                }
+            },
             toShow(){
                     this.isShow=!this.isShow
             },
@@ -378,7 +401,7 @@
                 var data={
                     time:time,
                     user_id:this.baseInfo.user_id
-                }
+                };
                 console.log('post-time : ' + time);
                 this.$http.post('/index/partymanage/changeDiary',data).then(function (res) {
                     var data=JSON.parse(res.data);
@@ -386,7 +409,7 @@
                     this.isSubmit=false;
                     this.$indicator.close();
                     this.baseInfo.create_time=data.create_time;
-                    console.log('data.time:'+data.create_time);
+                    this.date=data.create_time;
                     this.baseInfo.content=data.content;
                     this.baseInfo.img=data.img;
                     console.log(this.baseInfo.img)
@@ -395,6 +418,7 @@
                     }else{
                         this.isWrite=true;
                     }
+                    this.createView();
                 },function (res) {
                     this.$toast('请求失败，请退出页面重试')
                     this.isSubmit=false;
@@ -464,8 +488,11 @@
                                 imgName:[]
                             };
                             the.checkedList.push(the.baseInfo.create_time);
+                            the.createView();
                             if(the.nowDateIndex){
                                 the.days[the.nowDateIndex].isChecked=true;
+                            }else{
+                               window.history.back();
                             }
                         });
                     }else{
