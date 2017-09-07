@@ -770,7 +770,7 @@ class Partymanage extends Base
             'park_id' => $parkId,
             'build_block' => "A",
         ];
-        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor asc')->select();
+        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
         foreach ($list as $k => $v) {
             $floor[$k] = $v['floor'];
         }
