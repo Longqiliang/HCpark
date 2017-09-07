@@ -77,6 +77,9 @@ class Merchants extends Admin
       $mPlan =new  MerchantsPlan();
         $user_id =input('user_id');
         $list = $mPlan->where('user_id',$user_id)->order('time desc')->paginate();
+        foreach ($list as $value){
+            $value['user_name']=isset($value->user->name)?$value->user->name:"";
+        }
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -86,7 +89,10 @@ class Merchants extends Admin
     {
         $mDiary =new  MerchantsDiary();
         $user_id =input('user_id');
-        $list = $mDiary->where('user_id',$user_id)->order('craete_time desc')->paginate();
+        $list = $mDiary->where('user_id',$user_id)->order('create_time desc')->paginate();
+        foreach ($list as $value){
+          $value['user_name']=isset($value->user->name)?$value->user->name:"";
+        }
         $this->assign('list',$list);
         return $this->fetch();
     }

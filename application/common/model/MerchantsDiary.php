@@ -20,5 +20,11 @@ class MerchantsDiary extends  Model
         'create_time'=>'strtotime'
     ];
 
+    public  function  user(){
+
+        return $this->hasOne('WechatUser','userid','user_id');
+
+    }
+
 
 }
