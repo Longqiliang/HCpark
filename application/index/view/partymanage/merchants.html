@@ -284,6 +284,7 @@
         position: absolute;
         top:0;
         left:0;
+        z-index: 998;
     }
     .searchList>li{
         margin-bottom: 0;
@@ -448,7 +449,7 @@
                     <li v-for="item in undone">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
@@ -459,7 +460,7 @@
                     <li v-for="item in finish">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
@@ -469,7 +470,7 @@
                 <li v-for="item in searchList">
                     <div class="content-box">
                         <div class="my-job"><span>{{item.company}}</span></div>
-                        <div class="my-demand"><span>{{item.create_time}}</span></div>
+                        <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
                     </div>
                     <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                 </li>
@@ -483,7 +484,7 @@
                         <span class="my-icon my-icon-suc"></span>
                         <div class="my-list">
                             <div><span>工作日志</span><span>{{item.content}}</span></div>
-                            <div><span>创建日期：</span><span>{{item.create_time}}</span></div>
+                            <div><span>创建日期：</span><span>{{item.create_time*1000 | timeToString}}</span></div>
                         </div>
                     </div>
                     <a :href="'/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id"></a>
