@@ -24,7 +24,7 @@
         </a>
     </div>
     <div class="img-list">
-        <a @click="jumpTo('/index/partymanage/managelist/type=3',id)">
+        <a @click="jumpTo('/index/partyManage/otherList',id)">
             <div class="img-list-item">
                 <img src="/index/images/partymanage/contract-img3.jpg" class="img-responsive">
                 <div class="item-img-marking"><span class="marking-info">其他合同</span></div>
@@ -47,7 +47,7 @@
             jumpTo(href,id){
 
                 if(id){
-                    window.location.href=href+"/id="+id;
+                    window.location.href=href+"?id="+id;
                 }
             }
         }
