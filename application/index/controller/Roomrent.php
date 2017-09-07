@@ -142,6 +142,7 @@ class Roomrent extends Base
                     'price' => $v['price'],
                     'name' => $parkInfo['name'],
                     'id' => $v['id'],
+                    'room' => $room['build_block'] . "幢" . $room['room'] . "室"
                 ];
                 if ($data[$k]['img']) {
                     foreach ($data[$k]['img'] as $k1 => $v1) {

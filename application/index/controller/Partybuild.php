@@ -8,6 +8,7 @@
 namespace app\index\controller;
 use  app\common\model\PartyBuilding as PartyBuildingModel;
 use app\common\model\PartyComment;
+use app\index\model\WechatDepartment;
 use app\index\model\WechatUser;
 
 class Partybuild extends Base{
@@ -188,6 +189,9 @@ class Partybuild extends Base{
         $education[2] = WechatUser::where(['age'=>['>',0],'education'=>2])->count();
         $education[3] = WechatUser::where(['age'=>['>',0],'education'=>3])->count();
         $education[4] = WechatUser::where(['age'=>['>',0],'education'=>4])->count();
+        /*党支部统计*/
+        $count = WechatUser::where(['age'=>['>',0]])->group('party_branch')->count();
+        $this->assign("countParty",$count);
         $this->assign('data',json_encode($data));
         $this->assign('sex',json_encode($sex));
         $this->assign('education',json_encode($education));
