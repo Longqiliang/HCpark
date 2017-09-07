@@ -153,10 +153,10 @@ class Roomrent extends Base
                 }
             }
 
-            $this->success(['code' => 1, 'data' => json_encode($data)]);
+            return  ['code'=>1,'data'=>json_encode($data)];
         } else {
 
-            $this->error(['code' => 0, 'data' => "没有更多数据了"]);
+            return ['code' => 0, 'data' => "没有更多数据了"];
         }
 
     }
