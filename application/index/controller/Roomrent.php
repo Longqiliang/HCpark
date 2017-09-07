@@ -39,12 +39,15 @@ class Roomrent extends Base
             'moblie' => $park['property_phone'],
             'img' => json_decode($roomInfo['img']),
             'panorama' => $roomInfo['panorama'],
+            'id' => $roomInfo['id'],
 
         ];
         if ($data['img']) {
-            foreach ($data['img'] as $k => $v) {
-                $small_img = $this->getThumb($v, 375, 188);
-                $data['img'][$k] = $small_img;
+            foreach ($data['img'] as $k1 => $v1) {
+                $path = str_replace(".","_s.",$v1);
+                $image = Image::open(PUBLIC_PATH.$v1);
+                $image->thumb(355,188)->save(PUBLIC_PATH.$path);
+                $data['img'][$k1] = $path;
             }
         }
         //return dump($data);
@@ -270,7 +273,7 @@ class Roomrent extends Base
                 'area' => $v['area'] . "㎡",
                 'price' => $v['price'] . "元/㎡·天",
                 'name' => $parkInfo['name'],
-                'id' => $v['id'],
+                'rent_id' => $v['id'],
                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
             if ($data[$k]['img']) {
@@ -298,9 +301,10 @@ class Roomrent extends Base
     /*预约信息*/
     public function peopleRent()
     {
-        $id = input("id");
         if (IS_POST) {
             $data = input('post.');
+            $data['status'] = 1;
+            $data['park_id'] = session("park_id");
             $people = new PeopleRent();
             $res = $people->save($data);
             if ($res) {
