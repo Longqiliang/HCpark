@@ -71,12 +71,23 @@ class Merchants extends Admin
         return $this->fetch();
     }
 
-    //招商计划
+    //用户招商计划
     public function merchantsPlan()
     {
-
-
+      $mPlan =new  MerchantsPlan();
+        $user_id =input('user_id');
+        $list = $mPlan->where('user_id',$user_id)->order('time desc')->paginate();
+        $this->assign('list',$list);
+        return $this->fetch();
     }
 
-
+    //用户工作日志
+    public function showDiary()
+    {
+        $mDiary =new  MerchantsDiary();
+        $user_id =input('user_id');
+        $list = $mDiary->where('user_id',$user_id)->order('craete_time desc')->paginate();
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
 }

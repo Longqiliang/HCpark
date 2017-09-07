@@ -41,19 +41,20 @@ class Communication extends Admin
 
         $cgroup = new CommunicateGroup();
         $data = input('');
-        $id = $data['id'];
+        $id = isset($data['id'])?$data['id']:"";
         if($id) {
             $reult = $cgroup->save($data, ['id' => $id]);
         }else{
             unset($data['id']);
-            $reult = $cgroup->save($data);
+
+            $reult = $cgroup->validate(true)->save($data);
         }
         if ($reult) {
             return $this->success("成功");
 
         } else {
 
-            return $this->error("失败");
+            return $this->error($cgroup->getError());
         }
     }
 
@@ -126,7 +127,7 @@ class Communication extends Admin
     //逻辑删除
     public function delete() {
         $ids = input('ids/a');
-var_dump($ids);exit;
+
         $result = CommunicatePosts::where('id', 'in', $ids)->update(['status' => -1]);
         if($result) {
             return $this->success('删除成功', url('Communication/showposts'));

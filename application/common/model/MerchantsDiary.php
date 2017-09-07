@@ -14,4 +14,11 @@ use think\Model;
 class MerchantsDiary extends  Model
 {
 
+
+    protected  $type=[
+
+        'create_time'=>'strtotime'
+    ];
+
+
 }

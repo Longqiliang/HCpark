@@ -29,8 +29,9 @@ class Enterprise extends Base{
         $CompanyProduct= new ParkProduct();
         $map=[
          'company_id'=>$id,
-         'type'=>'1'
-     ];
+         'type'=>'1',
+         'status'=>0
+        ];
         //企业产品
         $product =  $CompanyProduct->where($map)->select();
         //企业服务
@@ -51,6 +52,7 @@ class Enterprise extends Base{
             'company_id'=>$id,
             'type'=>1,
             'status'=>0
+
         ];
         //企业产品
         $product =  $CompanyProduct->where($map)->select();

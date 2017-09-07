@@ -112,9 +112,9 @@
                     <th></th>
                     <th>id</th>
                     <th>招商人员</th>
-                    <th>招商人员电话</th>
-                    <th>本月日志完成数量</th>
-                    <th>本月招商公司数量</th>
+                    <th>计划招商面积</th>
+                    <th>计划招商回款</th>
+                    <th>计划时间</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -125,24 +125,20 @@
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
                     <td class="mail-subject">
-                        {$vo.userid}
+                        {$vo.user_name}
                     </td>
                     <td>
-                        {$vo.name}
+                        {$vo.plan_area}
                     </td>
                     <td>
-                        {$vo.mobile}
+                        {$vo.plan_price}
                     </td>
                     <td>
-                       0
+                        {$vo.time|| time_format="Y-m"}
                     </td>
+                    <td>
+                        <a   href="{:Url('editPlan','id='.$vo.id  )}" >编辑</a>
 
-                    <td>
-                       0
-                    </td>
-                    <td>
-                        <a   href="{:Url('merchantsPlan','user_id='.$vo.userid  )}" >指定招商计划</a>
-                        <a   href="{:Url('showDiary','user_id='.$vo.userid  )}" >查看工作日志</a>
 
                     </td>
                 </tr>
