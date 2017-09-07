@@ -73,9 +73,10 @@ class Partybuild extends Base{
         $this->assign('news', $news);
         // 评论列表
         $map = [
-            'target_id' => input('id')
+            'target_id' => $id
         ];
         $comments = PartyComment::where($map)->order("create_time desc ")->limit(6)->select();
+        $count = PartyComment::where($map)->count();
         foreach( $comments as $v){
             $v['header']=isset($v->wechatuser->header)?$v->wechatuser->header:"";
             $v['avatar']=isset($v->wechatuser->avatar)?$v->wechatuser->avatar:"";
@@ -84,6 +85,7 @@ class Partybuild extends Base{
                 unset($v['avatar']);
             }
         }
+        $this->assign('count',$count);
         $this->assign('comments', json_encode($comments));
         $this->assign('id',$id);
         // 添加阅读量
