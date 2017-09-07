@@ -39,7 +39,7 @@ class Roomrent extends Base
             'moblie' => $park['property_phone'],
             'img' => json_decode($roomInfo['img']),
             'panorama' => $roomInfo['panorama'],
-            'id' => $roomInfo['id'],
+            'rent_id' => $roomInfo['id'],
 
         ];
         if ($data['img']) {
@@ -318,6 +318,6 @@ class Roomrent extends Base
 
         return $this->fetch();
     }
-
+    /**/
 
 }

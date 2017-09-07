@@ -214,7 +214,7 @@
             mySwiper:null,
             rentShow:false,
             subData:{
-                rent_id:{$rent_id},
+                rent_id:info.rent_id,
                 mobile:'',
                 name:'',
                 remark:''
@@ -288,7 +288,7 @@
                 }
                 var data = JSON.parse(JSON.stringify(_this.subData));
                 console.log(data);
-                _this.$http.post('index/roomrent/peopleRent',data).then(function (res) {
+                _this.$http.post('/index/roomrent/peoplerent',data).then(function (res) {
                     console.log(res.data);
                 },function (e) {
 
