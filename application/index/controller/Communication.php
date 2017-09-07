@@ -257,6 +257,11 @@ class Communication extends Base
         }
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
         foreach ($comments as $value){
+            $userinfo = WechatUser::where('userid', $value['user_id'])->field('header,avatar')->find();
+            $head=isset($userinfo['header'])?$userinfo['header']:"";
+            $ava =isset($userinfo['avatar'])?$userinfo['avatar']:"";
+            $value['header'] =empty($head)?$ava:$head;
+
             $value['create_time'] = date("Y-m-d H:m",$value['create_time']);
         }
         return json(['total' => count($comments), 'comments' => $comments]);
