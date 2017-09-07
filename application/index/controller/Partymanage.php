@@ -140,6 +140,7 @@ class Partymanage extends Base
 
         $this->assign('list', json_encode($list));
         $this->assign('res', json_encode($res));
+        echo json_encode($list);
         return $this->fetch();
     }
 
