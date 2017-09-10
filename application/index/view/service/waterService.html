@@ -20,7 +20,7 @@
         </div>
         <div class="card-cell">
             <label for="num">送水桶数</label>
-            <input type="text" placeholder="请输入送水桶数" id="num" v-model="defaultData.number">
+            <input type="number" placeholder="请输入送水桶数" id="num" v-model="defaultData.number">
         </div>
         <div class="card-cell">
             <label for="name">联系人员</label>
@@ -65,7 +65,7 @@
                     return;
                 }
                 if(!_this.defaultData.number){
-                    _this.$toast('请输入送水桶数');
+                    _this.$toast('请输入正确的送水桶数');
                     return;
                 }
                 if(!_this.defaultData.name){
