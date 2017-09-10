@@ -209,8 +209,8 @@
                 </div>
             </div>
             <div class="card-upload" v-if="!isWrite" id="img">
-                <div class="upload-img" v-for="item in baseInfo.img">
-                    <img :src="item" class="img-responsive">
+                <div class="upload-img" v-for="(item,key) in baseInfo.img">
+                    <img :src="item" class="img-responsive" >
                 </div>
             </div>
             <form ref="myform">
@@ -269,8 +269,8 @@
             days: [],
             //写过日志的时间戳数组
             checkedList:{$list},
-            //有没有创建图片查看器
-            hasViewer:false,
+//            //有没有创建图片查看器
+//            hasViewer:false,
         },
         created(){
             var the=this;
@@ -279,7 +279,6 @@
             }
             //领导不能写日志判断
             the.canWrite();
-            console.log(the.isWrite)
             if(!the.baseInfo.create_time){
                 the.date=Date.parse(new Date())
             }else{
@@ -289,6 +288,9 @@
 
         },
         mounted(){
+            this.createView();
+        },
+        updated(){
             this.createView();
         },
         methods:{
@@ -303,16 +305,16 @@
                     the.isWrite=true;
                 }
             },
-            createView(){
+            createView(key){
                 var the=this;
-                console.log(the.baseInfo.img)
-                if(!the.hasViewer && this.baseInfo.img.length){
-                    setTimeout(function () {
-                    var viewer = new Viewer(document.getElementById('img'),{
-                        toolbar:2,
-                        title:2,
-                    });
-                        the.hasViewer=true;},1000)
+                if(the.baseInfo.img.length){
+                    var el = document.getElementsByClassName('upload-img');
+                    for(var i=0;i<el.length;i++){
+                        var viewer = new Viewer(el[i],{
+                            toolbar:false,
+                            title:false,
+                        });
+                    }
                 }
             },
             toShow(){
@@ -408,7 +410,7 @@
                     this.baseInfo.img=data.img ? data.img : [];
                     console.log(this.baseInfo)
                     this.canWrite();
-                    this.createView();
+//                    this.createView();
                 },function (res) {
                     this.$toast('请求失败，请退出页面重试')
                     this.isSubmit=false;
@@ -551,7 +553,6 @@
                         formData.append("picture",img);
                         _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
                             var data = JSON.parse(res.data);
-                            console.log(data);
                             _this.isSubmit = false;
                             if(data.code == 1){
                                 // 在获取到文件对象进行预览

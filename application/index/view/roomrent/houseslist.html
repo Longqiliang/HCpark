@@ -84,6 +84,9 @@
                 </a>
             </li>
         </ul>
+        <div v-else class="center">
+            暂无信息
+        </div>
     </div>
 
 </div>
@@ -92,7 +95,7 @@
 {block name="script"}
 <script type="text/javascript">
     var list = {$list};
-//    console.log(list);
+    console.log(list);
     var values = [];
     for(var i in list){
         values.push(i);
@@ -135,6 +138,8 @@
                 var _this = this;
                 for(var arr in _this.list){
                     if(_this.parkName.txt == arr){
+                        console.log(arr);
+                        console.log(_this.list[arr].rentlist);
                         return _this.list[arr].rentlist;
                     }
                 }
@@ -198,21 +203,22 @@
                             rentList = _this.list[arr].rentlist;
                         }
                     }
-                    if(!rentList || rentList.length % 6 !=0 ){
+                    console.log(rentList.length);
+                    if(!rentList || rentList.length % 6 !=0 || rentList.length === 0){
                         return;
                     }
                     var data = {
                         build:build,
                         length:rentList.length
                     };
-//                    console.log(data);
+                    console.log(data);
                     _this.$indicator.open({
                         text: '加载中',
                         spinnerType: 'triple-bounce'
                     });
                     _this.$http.post('/index/Roomrent/moreList',data).then(function (res) {
                         _this.$indicator.close();
-//                        console.log(res.data);
+                        console.log(res.data);
 //                        console.log(res.data.data);
                         if(res.data.code==0){
 
@@ -220,6 +226,7 @@
                             var list = JSON.parse(res.data.data);
                             for( var i = 0 ;i < list.length;i++){
 //                                console.log(list[i]);
+                                console.log(rentList);
                                 rentList.push(list[i]);
                             }
                             _this.loading = false;
