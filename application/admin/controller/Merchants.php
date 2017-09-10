@@ -165,7 +165,7 @@ class Merchants extends Admin
 
         $result = $mCompany->where('id', 'in', $ids)->update(['status' => -1]);
         if($result) {
-            return $this->success('删除成功', url('Merchants/index'));
+            return $this->success('删除成功');
         } elseif(!$result) {
             return $this->error('删除失败');
         }
@@ -173,12 +173,28 @@ class Merchants extends Admin
     }
     //删除工作日志
     public  function  deleteDiary(){
+        $ids = input('ids/a');
+        $mDiary = new MerchantsDiary();
 
+        $result = $mDiary->where('id', 'in', $ids)->delete();
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
 
     }
     //删除招商日志
     public  function  deleteRecord(){
+        $ids = input('ids/a');
+        $mRecord = new MerchantsRecord();
 
+        $result = $mRecord->where('id', 'in', $ids)->delete();
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
 
     }
 
