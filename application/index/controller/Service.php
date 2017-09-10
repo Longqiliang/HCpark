@@ -1328,7 +1328,7 @@ class Service extends Base{
             $info[$k]=[
                 'id'=>$v['id'],
                 'type'=>$types[$v['type']],
-                'time'=>date('Y-m-d',$v['clear_time']),
+                'time'=>date('Y-m-d',$v['create_time']),
                 'status'=>$v['status'],
             ];
         }
