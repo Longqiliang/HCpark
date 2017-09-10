@@ -37,6 +37,10 @@ class Service extends Base{
          $user =new WechatUser();
          $app= new  CompanyApplication();
          $info=$user->where('userid',$user_id)->find();
+        $map = ['type '=> 0];
+         if (!$info['fee_status']){
+             $map['app_id'] =['>',1];
+         }
          /*if($info['tagid']==1){
 
                  $map=[
@@ -53,7 +57,7 @@ class Service extends Base{
 
          }else{*/
              //物业服务
-             $serviceApps= $app->where('type',0)->order('id asc')->select();
+             $serviceApps= $app->where($map)->order('id asc')->select();
              $PropertyServices=array();
              foreach ($serviceApps as $value){
 

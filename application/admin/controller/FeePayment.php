@@ -9,6 +9,8 @@ namespace app\admin\controller;
 
 use app\common\model\ParkCompany;
 use app\common\model\FeePayment as FeePaymentModel;
+use app\index\model\WechatDepartment;
+use app\index\model\WechatUser;
 
 
 class FeePayment extends Admin
@@ -166,9 +168,29 @@ class FeePayment extends Admin
         return $html;
 
     }
+    /*权限管理*/
+    public function manageuser(){
+        $id = input('id');
+        $list = WechatUser::where('department',$id)->order('id asc')->paginate();
+
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+
+    public function lookState(){
+        $id = input('id');
+        $uid =input('uid');
+        $res = WechatUser::where('id',$id)->update(['fee_status'=>$uid]);
+        if ($res){
+
+            $this->success("设置成功");
+        }else{
+
+            $this->error("设置失败");
+        }
 
 
-
+    }
 
 
 
