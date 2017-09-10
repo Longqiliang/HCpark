@@ -451,12 +451,14 @@ class Partymanage extends Base
     public function merchantsRecord()
     {
         $user_id = session('user_id');
-        $merchaants_id = input('id');
+
         $mCompany = new MerchantsCompany();
         $mRecord = new MerchantsRecord();
         if (IS_POST) {
             $data = input('');
-            $data['merchants_date'] = $data['merchants_date'] / 1000;
+            $merchants_id = $data['merchants_id'];
+            unset($data['merchaants_id']);
+            $data['merchants_date'] = $data['merchants_date']/1000;
             $merchants_area = $data['merchants_area'];
             $merchants_money = $data['merchants_money'];
             $data['img'] = empty($data['img']) ? "" : json_encode($data['img']);
@@ -470,14 +472,15 @@ class Partymanage extends Base
                     'merchants_money' => $merchants_money,
                     'status' => 2
                 ];
-                $result = $mCompany->where('id', $merchaants_id)->update($map);
-            }
+                $result = $mCompany->save($map, ['id' => $merchants_id]);
+           }
             if ($list) {
-                return $this->success("完成");
+                return $this->success("完成",'',$mCompany->getLastSql());
             } else {
                 return $this->error("失败");
             }
         } else {
+            $merchaants_id = input('id');
             $info = $mCompany->where('id', $merchaants_id)->find();
             $info['merchants_user'] = isset($info->user->name) ? $info->user->name : "";
             $this->assign('info', json_encode($info));
