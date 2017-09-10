@@ -82,9 +82,12 @@ class Talentservice extends Base
     public function serviceDetail(){
         $id = input('id');
         $info = ServiceModel::get($id);
+        $info['views']=$info['views']+1;
+        $info->save();
         $parkid =session('park_id');
         //发布园区
         $park=Park::where('id','eq',$parkid)->field('name')->find();
+
         $this->assign('park', $park['name']);
         $this->assign('news', $info);
         return $this->fetch();
