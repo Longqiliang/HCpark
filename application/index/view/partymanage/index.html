@@ -101,12 +101,32 @@ var vm = new Vue({
     data:{
         nowPark:nowPark,
         parks:{$res},
-        news:{$news}
+        news:{$news},
+        isCheck:true
     },
     methods:{
         //园区选择
         parkChange:function () {
-            console.log(this.nowPark);
+            var _this = this;
+            if(!_this.isCheck){
+                return;
+            }
+            _this.isCheck = false;
+            var data = {
+                park_id:_this.nowPark
+            };
+            _this.$http.post('/index/partymanage/index',data).then(function (res) {
+                //console.log(res.data);
+                _this.isCheck = true;
+                var data = res.data;
+                if(data.code == 1){
+                    var list =JSON.parse(data.data);
+                    _this.news = list;
+                    //console.log(_this.news);
+                }
+            },function (res) {
+                _this.isCheck = true;
+            })
         },
         jump:function (href) {
             if(this.nowPark && href){
