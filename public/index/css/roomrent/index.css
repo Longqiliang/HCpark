@@ -295,6 +295,9 @@ body{
     width: 20px;
     height: 20px;
 }
+.table-view-cell span:nth-child(2){
+    min-width: 45px;
+}
 .icon{
     display: inline-block;
     background-size: 100%;
