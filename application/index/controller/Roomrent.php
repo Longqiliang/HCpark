@@ -340,7 +340,13 @@ class Roomrent extends Base
 
         return $this->fetch();
     }
+    /*全景照片*/
+    public function panorama(){
+        $link = input('link');
+        $this->assign('link',$link);
 
+        return $this->fetch();
+    }
     /*拼数组*/
     public function gaoshiqing()
     {
