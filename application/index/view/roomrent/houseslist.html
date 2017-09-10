@@ -69,7 +69,7 @@
             infinite-scroll-disabled="loading"
             infinite-scroll-distance="40">
             <li class="list-item" v-for="item of showrentList" >
-                <a :href="'/index/roomrent/rent?room_id='+item.id">
+                <a :href="'/index/roomrent/rent?rent_id='+item.id">
                     <div class="item-img">
                         <img :src="item.img[0]" v-if="item.img" />
                     </div>
@@ -184,7 +184,7 @@
                 if(!empty){
                     return;
                 }
-                window.location.href = "/index/roomrent/rent?rent_id="+id;
+                window.location.href = "/index/roomrent/rent?room_id="+id;
             },
             loadMore:function (event) {
                 var _this = this;
