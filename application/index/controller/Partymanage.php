@@ -20,6 +20,7 @@ use app\common\model\FeePayment;
 use org\ImageImagick;
 use app\index\model\News;
 use think\Image;
+
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -37,11 +38,11 @@ class Partymanage extends Base
 
             $res = Park::field('id,name')->select();
             $news = News::where($map)->order('create_time desc')->field('id,title')->limit(4)->select();
-            $all=[
-                'id'=>"1",
-                'name'=>"全部"
+            $all = [
+                'id' => "1",
+                'name' => "全部"
             ];
-            array_unshift($res,$all);
+            array_unshift($res, $all);
         } else {
             //只能看到自己园区
             $res = Park::where('id', 'eq', $park_id)->field('id,name')->select();
@@ -72,12 +73,13 @@ class Partymanage extends Base
         }
         $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->limit(6)->select();
         $this->assign('list', json_encode($list));
-        $this->assign('park_id',json_encode($parkid));
+        $this->assign('park_id', json_encode($parkid));
         return $this->fetch();
     }
 
     /*园区内部通告下拉刷新*/
-    public function getMoreList(){
+    public function getMoreList()
+    {
         $len = input("length");
         $parkid = input('park_id');
         if ($parkid == '1') {
@@ -95,14 +97,14 @@ class Partymanage extends Base
 
         $list = News::where($map)
             ->order("create_time desc")
-            ->limit($len,6)
+            ->limit($len, 6)
             ->select();
-        if ($list){
+        if ($list) {
 
             return json(['code' => 1, 'data' => $list]);
-        }else{
+        } else {
 
-            return json(['code' => 0, 'msg' =>"没有更多内容了"]);
+            return json(['code' => 0, 'msg' => "没有更多内容了"]);
         }
 
     }
@@ -147,19 +149,22 @@ class Partymanage extends Base
     /***合同管理*/
     public function contract()
     {
-        $type =input('type');
+        $type = input('type');
         $data[0] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 1])->count();
         $data[1] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 2])->count();
-        $contract[0] = $data[0] + $data[1];
+        $data[2] = CompanyContract::where(["park_id" => session("park_id"), 'type' => ['>', 2]])->count();
+        $contract[0] = $data[0] + $data[1] + $data[2];
         $contract[1] = $data[0];
         $contract[2] = $data[1];
+        $contract[3] = $data[2];
         $array = [
             'total' => ['name' => "总合同数", 'count' => $contract[0]],
             'rent' => ['name' => "租赁合同", 'count' => $contract[1]],
-            'property' => ['name' => "物业合同", 'count' => $contract[2]]
+            'property' => ['name' => "物业合同", 'count' => $contract[2]],
+            'other' => ['name' => "其他合同", 'count' => $contract[3]],
         ];
 //        return json_encode($array);
-        $this->assign('type',$type);
+        $this->assign('type', $type);
         $this->assign('info', json_encode($array));
 
         return $this->fetch();
@@ -168,7 +173,7 @@ class Partymanage extends Base
     /*合同列表*/
     public function managelist()
     {
-        $id =input('id');
+        $id = input('id');
 
         $type = input("type");
         $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
@@ -227,10 +232,12 @@ class Partymanage extends Base
 
         if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
-                $path = str_replace(".", "_s.", $v1);
-                $image = Image::open(PUBLIC_PATH . $v1);
-                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                $info['img'][$k1] = $path;
+                if (is_file(PUBLIC_PATH . $v1)) {
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                    $info['img'][$k1] = $path;
+                }
             }
         }
 //        return  dump($info);
@@ -449,10 +456,10 @@ class Partymanage extends Base
         $mRecord = new MerchantsRecord();
         if (IS_POST) {
             $data = input('');
-            $data['merchants_date']=$data['merchants_date']/1000;
-            $merchants_area =$data['merchants_area'];
-            $merchants_money =$data['merchants_money'];
-            $data['img']=empty($data['img'])?"":json_encode($data['img']);
+            $data['merchants_date'] = $data['merchants_date'] / 1000;
+            $merchants_area = $data['merchants_area'];
+            $merchants_money = $data['merchants_money'];
+            $data['img'] = empty($data['img']) ? "" : json_encode($data['img']);
             unset($data['merchants_area']);
             unset($data['merchants_money']);
             $list = $mRecord->save($data);
@@ -472,12 +479,11 @@ class Partymanage extends Base
             }
         } else {
             $info = $mCompany->where('id', $merchaants_id)->find();
-            $info['merchants_user']=isset($info->user->name)?$info->user->name:"";
+            $info['merchants_user'] = isset($info->user->name) ? $info->user->name : "";
             $this->assign('info', json_encode($info));
             return $this->fetch();
         }
     }
-
 
 
     //个人统计详情获取数据的公共方法
@@ -602,7 +608,7 @@ class Partymanage extends Base
         if (IS_POST) {
             $data = input('');
             $data['user_id'] = $user_id;
-            $data['create_time']= empty(input('create_time')) ? mktime(0, 0, 0, date('m'), date('d'), date('Y')) : input('create_time')/1000;
+            $data['create_time'] = empty(input('create_time')) ? mktime(0, 0, 0, date('m'), date('d'), date('Y')) : input('create_time') / 1000;
             $reult = $mDiary->save($data);
             if ($reult) {
                 return $this->success("yes");
@@ -624,7 +630,7 @@ class Partymanage extends Base
                     'img' => json_decode($info['img']),
                     'user_id' => $info['user_id'],
                     'content' => $info['content'],
-                    'create_time' => $info['create_time']*1000 ];
+                    'create_time' => $info['create_time'] * 1000];
             }
             $list = $mDiary->where('user_id', $user_id)->select();
             $time = array();
@@ -645,7 +651,7 @@ class Partymanage extends Base
     public function changeDiary()
     {
         $user_id = input('user_id');
-        $time = input('time')/1000;
+        $time = input('time') / 1000;
         $mDiary = new MerchantsDiary();
         $date_str = date('Y-m-d', $time);
         //封装成数组
@@ -664,15 +670,14 @@ class Partymanage extends Base
         if (!$info) {
             $info['user_id'] = $user_id;
             $info['create_time'] = $begindate * 1000;
-        }else{
-            $info['img']=json_decode($info['img']);
-            $info['create_time']=$info['create_time']*1000;
+        } else {
+            $info['img'] = json_decode($info['img']);
+            $info['create_time'] = $info['create_time'] * 1000;
         }
 
         return json_encode($info);
 
     }
-
 
 
     /*园区列表*/
@@ -688,16 +693,18 @@ class Partymanage extends Base
             ];
         }
         $this->assign('list', $data);
-        $this->assign('id',$id);
+        $this->assign('id', $id);
         return $this->fetch();
     }
+
     /*公司详情列表*/
-    public function detailList(){
+    public function detailList()
+    {
         $id = input('id');
 
-        $this->assign('id',$id);
+        $this->assign('id', $id);
 
-        return  $this->fetch();
+        return $this->fetch();
     }
 
     /*公司合同列表*/
@@ -720,10 +727,12 @@ class Partymanage extends Base
 
         if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
-                $path = str_replace(".", "_s.", $v1);
-                $image = Image::open(PUBLIC_PATH . $v1);
-                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                $info['img'][$k1] = $path;
+                if (@getimagesize(PUBLIC_PATH . $v1)) {
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                    $info['img'][$k1] = $path;
+                }
             }
         }
 //        return  dump($info);
@@ -870,11 +879,11 @@ class Partymanage extends Base
             $newArr1[$k]['floor'] = $v;
             $newArr1[$k]['combine'] = false;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
-           /* if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
-                $newArr1[$k]['combine'] = true;
-                $newArr1[$k]['depart'] = $roomArray1[$k][0]['department_id'];
-                $newArr1[$k]['rooms'] = "B$v";
-            }*/
+            /* if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
+                 $newArr1[$k]['combine'] = true;
+                 $newArr1[$k]['depart'] = $roomArray1[$k][0]['department_id'];
+                 $newArr1[$k]['rooms'] = "B$v";
+             }*/
         }
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
         $this->assign('commonArea', $common);
@@ -885,7 +894,9 @@ class Partymanage extends Base
 
 
     }
-    public  function  otherList(){
+
+    public function otherList()
+    {
         $id = input('id');
         $this->assign("id", $id);
 

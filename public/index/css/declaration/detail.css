@@ -30,6 +30,14 @@ ul li{
     padding:0 0 0 1.9rem;
     background-size: 1.3rem;
 }
+.banner{
+    width: 100%;
+    height: 50vw;
+}
+.banner img{
+    width: 100%;
+    height: 100%;
+}
 section{
     padding:0 4vw 5.33vw 4vw;
     font-size:1.4rem;

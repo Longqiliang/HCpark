@@ -114,7 +114,8 @@
                 dataUrl:[],
                 imgName:[]
             },
-            content:''
+            content:'',
+            isSubmit:true
         },
         methods: {
             delImg: function (e) {
@@ -210,12 +211,17 @@
                         'img':JSON.stringify(_this.img),
                         'group_id':id
                     };
-                    console.log(data)
+                    console.log(data);
+                    if(!_this.isSubmit){
+                        return;
+                    }
+                    _this.isSubmit = false;
                     $.ajax({
                         type:'post',
                         url:'{:Url("Communication/writePost")}',
                         data:data
                     }).done(function (data) {
+                        _this.isSubmit = true;
                         if(data.code == 1){
                             _this.$toast({
                                 message:"发帖成功，跳回首页！",

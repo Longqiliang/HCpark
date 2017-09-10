@@ -2,6 +2,7 @@
 
 {block name="style"}
 <link rel="stylesheet" href="/static/viewer/viewer.min.css">
+<title>日志详情</title>
 <style>
     .main{
         padding-top:1.33vw;
@@ -84,7 +85,7 @@
             </li>
             <li class="must">
                 <div><span>招商日期：</span></div>
-                <div>{{info.merchants_date}}</div>
+                <div>{{info.merchants_date*1000 | timeToString}}</div>
             </li>
             <li class="must">
                 <div><span>招商企业：</span></div>
@@ -142,6 +143,21 @@
 {block name="script"}
 <script src="/static/viewer/viewer.min.js"></script>
 <script>
+Vue.filter('timeToString', function(time) {
+    if(time){
+        var newTime = new Date(time);
+        var m = newTime.getMonth()+1,
+                dt=newTime.getDate(),
+                y=newTime.getFullYear();
+        if(dt<10){
+            dt='0'+dt;
+        }
+        if(m<10){
+            m='0'+m;
+        }
+        return y+'-'+m+'-'+dt
+    }
+});
 var app = new Vue({
     el:'#app',
     mounted(){

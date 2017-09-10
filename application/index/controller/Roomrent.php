@@ -45,10 +45,14 @@ class Roomrent extends Base
         ];
         if ($data['img']) {
             foreach ($data['img'] as $k1 => $v1) {
-                $path = str_replace(".", "_s.", $v1);
-                $image = Image::open(PUBLIC_PATH . $v1);
-                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                $data['img'][$k1] = $path;
+                if (is_file(PUBLIC_PATH . $v1)){
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                    $data['imgs'][$k1] = $path;
+                }else{
+                    $data['imgs'][$k1] = $data['img'][$k1];
+                }
             }
         }
         $this->assign('info', json_encode($data));
@@ -102,10 +106,12 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $path = str_replace(".", "_s.", $v1);
-                    $image = Image::open(PUBLIC_PATH . $v1);
-                    $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                    $data[$k]['img'][$k1] = $path;
+                    if (is_file(PUBLIC_PATH . $v1)){
+                        $path = str_replace(".", "_s.", $v1);
+                        $image = Image::open(PUBLIC_PATH . $v1);
+                        $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                        $data[$k]['img'][$k1] = $path;
+                    }
                 }
             }
         }
@@ -145,10 +151,12 @@ class Roomrent extends Base
                 ];
                 if ($data[$k]['img']) {
                     foreach ($data[$k]['img'] as $k1 => $v1) {
-                        $path = str_replace(".", "_s.", $v1);
-                        $image = Image::open(PUBLIC_PATH . $v1);
-                        $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                        $data[$k]['img'][$k1] = $path;
+                        if (is_file(PUBLIC_PATH . $v1)){
+                            $path = str_replace(".", "_s.", $v1);
+                            $image = Image::open(PUBLIC_PATH . $v1);
+                            $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                            $data[$k]['img'][$k1] = $path;
+                        }
                     }
                 }
             }
@@ -260,10 +268,12 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $path = str_replace(".", "_s.", $v1);
-                    $image = Image::open(PUBLIC_PATH . $v1);
-                    $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                    $data[$k]['img'][$k1] = $path;
+                    if(is_file(PUBLIC_PATH . $v1)){
+                        $path = str_replace(".", "_s.", $v1);
+                        $image = Image::open(PUBLIC_PATH . $v1);
+                        $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                        $data[$k]['imgs'][$k1] = $path;
+                    }
                 }
             }
         }
@@ -282,10 +292,12 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $path = str_replace(".", "_s.", $v1);
-                    $image = Image::open(PUBLIC_PATH . $v1);
-                    $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                    $data[$k]['img'][$k1] = $path;
+                    if(is_file(PUBLIC_PATH . $v1)){
+                        $path = str_replace(".", "_s.", $v1);
+                        $image = Image::open(PUBLIC_PATH . $v1);
+                        $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                        $data[$k]['imgs'][$k1] = $path;
+                    }
                 }
             }
         }
@@ -328,7 +340,13 @@ class Roomrent extends Base
 
         return $this->fetch();
     }
+    /*全景照片*/
+    public function panorama(){
+        $link = input('link');
+        $this->assign('link',$link);
 
+        return $this->fetch();
+    }
     /*拼数组*/
     public function gaoshiqing()
     {

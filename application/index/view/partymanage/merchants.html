@@ -285,6 +285,7 @@
         top:0;
         left:0;
         z-index: 998;
+        overflow: scroll!important;
     }
     .searchList>li{
         margin-bottom: 0;
@@ -294,7 +295,7 @@
         background-color: rgba(0,0,0,0.5);
     }
     .searchList>li:first-child{
-        margin-top: 4.8rem;
+        margin-top: 4.7rem;
     }
 
     .rate .searchList.my-list{
@@ -357,7 +358,9 @@
     #personalStats{
         position: inherit;
     }
-    
+    .my-hide{
+        display: none;
+    }
     /**加载中**/
     .my-footer{
         padding: 1rem 0;
@@ -392,7 +395,7 @@
             <ul class="my-box">
                 <li class="my-chart">
                     <div class="my-title">企业统计</div>
-                    <div id="types" class="my-charts"></div>
+                    <div id="types" class="my-charts" style="height:25rem" ></div>
                 </li>
                 <li class="my-chart">
                     <div class="my-title">企业统计</div>
@@ -412,7 +415,7 @@
                         </div>
                         <div class="unBtn" @click="isCancel">取消</div>
                 </div>
-                <ul class="my-personal" >
+                <ul class="my-personal" :class="{'my-hide':inputStatus}">
                     <li v-for="item in personallist" @click="window.location.href='/index/partymanage/statisticsInfo?id='+item.id">
                         <img :src="item.avatar" alt="头像" v-if="item.avatar!=null">
                         <img src="/index/images/cbd.jpg" alt="头像" v-else>
@@ -445,22 +448,22 @@
                 <div class="unBtn" @click="isCancel">取消</div>
             </div>
             <div  v-if="rateActive==0">
-                <ul class="my-list" >
+                <ul class="my-list" :class="{'my-hide':inputStatus}">
                     <li v-for="item in undone">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
                 </ul>
             </div>
             <div  v-if="rateActive==1">
-                <ul class="my-list">
+                <ul class="my-list" :class="{'my-hide':inputStatus}">
                     <li v-for="item in finish">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
@@ -470,7 +473,7 @@
                 <li v-for="item in searchList">
                     <div class="content-box">
                         <div class="my-job"><span>{{item.company}}</span></div>
-                        <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                        <div class="my-demand"><span>{{item.create_time}}</span></div>
                     </div>
                     <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                 </li>
@@ -490,7 +493,7 @@
                     <a :href="'/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id"></a>
                 </li>
             </ul>
-            <a :href="'/index/partymanage/diaryInfo'" class="addDdiary"  v-if="is_boss!='yes'">
+            <a :href="'/index/partymanage/diaryInfo'" class="addDdiary"  v-if="canWrite">
                 <img src="/index/images/partymanage/add.png" alt="添加日志">
             </a>
         </li>
@@ -574,6 +577,7 @@
             },
 //            工作日志
             diaryList:{$diaryList},
+            canWrite:true,
 //            招商统计
             finish_num:{$finish_num},
             undone_num:{$undone_num},
@@ -594,7 +598,7 @@
         computed:{
         },
         created(){
-            console.log(this.diaryList)
+            //初始Tab
             if(this.is_boss=='yes'){
                 this.isActive=0
             }else{
@@ -602,6 +606,7 @@
             }
         },
         mounted(){
+            //初始数据处理
             var w=[],e=[];
             for( x in this.undone2 ){
                 w.push(this.undone2[x])
@@ -611,19 +616,23 @@
                 e.push(this.finish2[x])
             }
             console.log(e)
-
             this.will.data=w;
             this.finish1.data=e;
             console.log(this.diaryList)
+            //能否写日志判断
+            if(this.is_boss=='yes'){
+                this.canWrite=false
+            }else if(new Date(this.diaryList[0].create_time*1000).setHours(0,0,0,0)==new Date().setHours(0,0,0,0)) {
+                this.canWrite=false
+            }else{
+                this.canWrite=true
+            }
             this.drawPie(this.types);
             this.drawLine(this.will);
             this.drawLine(this.finish1);
 //                this.setIframeHeight(document.getElementById('personalStats'));
         },
         methods:{
-
-
-
 //            切换tab
             changeTab(value){
                 if(value!=this.isActive){
@@ -834,10 +843,15 @@
             },
             isClick:function () {
                 this.inputStatus=true;
+//                document.getElementsByTagName("body")[0].setAttribute("style","height:100vh");
+//                document.getElementsByTagName("body")[0].setAttribute("style","overflow:hidden");
             },
             isCancel:function () {
                 this.inputStatus=false;
-                this.inputValue=''
+                this.inputValue='';
+                this.searchList.length=0;
+//                document.getElementsByTagName("body")[0].setAttribute("style","height:auto");
+//                document.getElementsByTagName("body")[0].setAttribute("style","overflow:auto");
             },
         }
     })
