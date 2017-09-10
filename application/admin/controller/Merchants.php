@@ -56,6 +56,7 @@ class Merchants extends Admin
         }
         int_to_string($all_company, array('status' => array(1 => '招商中', 2 => '已招商')));
 
+        echo json_encode($userlist);
         $this->assign('userlist',$userlist);
         $this->assign('search', $search);
         $this->assign('list', $all_company);
@@ -116,8 +117,6 @@ class Merchants extends Admin
         return $this->fetch();
     }
 
-
-
     //招商人员
     public function user()
     {
@@ -137,20 +136,26 @@ class Merchants extends Admin
         $this->assign('list', $user);
         return $this->fetch();
     }
-
     //用户招商计划
     public function merchantsPlan()
     {
         $mPlan = new  MerchantsPlan();
+        $weuser = new WechatUser();
         $user_id = input('user_id');
+        $user = $weuser->where('userid',$user_id)->find();
+        echo json_encode($user['name']);
+        $this->assign('name',$user['name']);
+
+
         $list = $mPlan->where('user_id', $user_id)->order('time desc')->paginate();
         foreach ($list as $value) {
             $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+            $value['time']=date('Y-m',$value['time']);
         }
+
         $this->assign('list', $list);
         return $this->fetch();
     }
-
     //用户工作日志
     public function showDiary()
     {
@@ -163,27 +168,39 @@ class Merchants extends Admin
         $this->assign('list', $list);
         return $this->fetch();
     }
-
     //招商人员指定招商计划 编辑和修改
     public  function  editPlan(){
         $id = input('id');
         $data = input('');
-        $mCompany = new MerchantsCompany();
+        $mPlan = new MerchantsPlan();
         //新增
         if (empty($id)) {
+            $data['time']=strtotime($data['time']);
+            $map =[
+                'user_id'=>$data['user_id'],
+                'time'=>$data['time']
 
+            ];
+            $is_has = $mPlan->where($map)->select();
+            if(count($is_has)>0){
 
-            $info = $mCompany->allowField(true)->save($data);
+               return $this->error('当前时间已经计划');
+            }
+            $info = $mPlan->allowField(true)->save($data);
         } //编辑
         else {
             unset($data['id']);
-            $info = $mCompany->allowField(true)->save($data, ['id' => $id]);
+            $data['time']=strtotime($data['time']);
+            $info = $mPlan->allowField(true)->save($data, ['id' => $id]);
         }
-        if ($info) {
-            return $this->success("成功");
-        } else {
-            return $this->error('失败','',$mCompany->getError());
-        }
+          if($info){
+              return $this->success("成功");
+          }
+            else{
+
+              return $this->error('失败','',$mPlan->getError());
+            }
+
     }
 
 

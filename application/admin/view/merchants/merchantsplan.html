@@ -51,7 +51,7 @@
         <div id="modal-form" class="modal fade" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="form-horizontal" method="post" action="{:Url('Merchants/editPlan')}">
+                    <form class="form-horizontal" method="post" action="{:Url('Merchants/editPlan')}">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                             <h3 class="modal-title text-center"  name="dialog-title">招商指标</h3>
@@ -59,21 +59,16 @@
                         <div class="modal-body">
 
                             <div class="form-group"><label class="col-sm-2 control-label">招商人员</label>
-                                <div class="col-sm-10"><input type="text" readonly class="form-control"  name="user_name"></div>
+                                <div class="col-sm-10"><input type="text" readonly class="form-control"  name="name" ></div>
                             </div>
                             <div class="form-group"><label class="col-sm-2 control-label">计划招商面积</label>
-                                <div class="col-sm-10"><input type="text" placeholder="群简介" class="form-control" required="" name="plan_area"></div>
+                                <div class="col-sm-10"><input type="text" placeholder="计划招商面积" class="form-control" required="" name="plan_area"></div>
                             </div>
                             <div class="form-group"><label class="col-sm-2 control-label">计划招商金额</label>
-                                <div class="col-sm-10"><input type="text" placeholder="群简介" class="form-control" required="" name="plan_price"></div>
+                                <div class="col-sm-10"><input type="text" placeholder="计划招商金额" class="form-control" required="" name="plan_price"></div>
                             </div>
                         <div class="form-group"><label class="col-sm-2 control-label">计划时间</label>
-                            <div class="col-sm-10"><input type="datetime" placeholder="计划招商时间" class="form-control" required="" name="time"></div>
-                            <div class="input-append date" id="datetimepicker" data-date="12-02-2012" data-date-format="dd-mm-yyyy">
-                                <input class="span2" size="16" type="text" value="12-02-2012">
-                                <span class="add-on"><i class="icon-remove"></i></span>
-                                <span class="add-on"><i class="icon-th"></i></span>
-                            </div>
+                            <div class="col-sm-10"><input type="datetime" placeholder="例如：2017-2" class="form-control" required="" name="time"></div>
                         </div>
                         </div>
                         <div class="modal-footer">
@@ -81,8 +76,8 @@
                             <input type="hidden" name="id" value="">
 
                         </div>
-                    </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -119,10 +114,10 @@
                         {$vo.plan_price} 万元
                     </td>
                     <td>
-                        {$vo.time|| time_format="Y-m"}
+                        {$vo.time}
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-name="{$vo.user_name}"  data-area="{$vo.plan_area}"   data-price="{$vo.plan_price}"  data-time="{$vo.time}"       >编辑</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-name="{$vo.user_name}"  data-area="{$vo.plan_area}"   data-price="{$vo.plan_price}"   data-user="{$vo.user_id}" data-time="{$vo.time}"       >编辑</a>
 
 
                     </td>
@@ -160,13 +155,11 @@
 
         var name =$(a).attr('data-name');
         $("input[name='id']").val($(a).attr('data-id'));
-        $("input[name='group_name']").val($(a).attr('data-groupname'));
-        $("input[name='content']").val($(a).attr('data-content'));
-        $("select[name='status']").val($(a).attr('data-status'));
-        $("select[name='park_id']").val($(a).attr('data-park'));
-        var pic = document.getElementById("group_img");
-        pic.src=$(a).attr('data-img');
-
+        $("input[name='name']").val('{$name}');
+        $("input[name='plan_area']").val($(a).attr('data-area'));
+        $("input[name='plan_price']").val($(a).attr('data-price'));
+        $("input[name='time']").val($(a).attr('data-time'));
+        $("input[name='user_id']").val($(a).attr('data-user_id'));
 
     }
     highlight_subnav("{:Url('Merchanrs/index')}");
