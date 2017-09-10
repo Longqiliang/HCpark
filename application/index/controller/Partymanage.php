@@ -232,7 +232,7 @@ class Partymanage extends Base
 
         if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
-                if (@getimagesize(PUBLIC_PATH . $v1)) {
+                if (is_file(PUBLIC_PATH . $v1)) {
                     $path = str_replace(".", "_s.", $v1);
                     $image = Image::open(PUBLIC_PATH . $v1);
                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);

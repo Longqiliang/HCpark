@@ -45,7 +45,7 @@ class Roomrent extends Base
         ];
         if ($data['img']) {
             foreach ($data['img'] as $k1 => $v1) {
-                if (@getimagesize(PUBLIC_PATH . $v1)){
+                if (is_file(PUBLIC_PATH . $v1)){
                     $path = str_replace(".", "_s.", $v1);
                     $image = Image::open(PUBLIC_PATH . $v1);
                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
@@ -106,7 +106,7 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    if (@getimagesize(PUBLIC_PATH . $v1)){
+                    if (is_file(PUBLIC_PATH . $v1)){
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
@@ -151,7 +151,7 @@ class Roomrent extends Base
                 ];
                 if ($data[$k]['img']) {
                     foreach ($data[$k]['img'] as $k1 => $v1) {
-                        if (@getimagesize(PUBLIC_PATH . $v1)){
+                        if (is_file(PUBLIC_PATH . $v1)){
                             $path = str_replace(".", "_s.", $v1);
                             $image = Image::open(PUBLIC_PATH . $v1);
                             $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
@@ -268,7 +268,7 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    if(@getimagesize(PUBLIC_PATH . $v1)){
+                    if(is_file(PUBLIC_PATH . $v1)){
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
@@ -292,7 +292,7 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    if(@getimagesize(PUBLIC_PATH . $v1)){
+                    if(is_file(PUBLIC_PATH . $v1)){
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
