@@ -33,19 +33,19 @@ class Partymanage extends Base
             'type' => 2,
             'status' => 1,
         ];
-        if(IS_POST){
+        if (IS_POST) {
             $park_id = input('park_id');
-            $news = News::where($map)->where('park_id', $park_id)->order('create_time desc')->field('id,title')->limit(4)->select();
-           if($news){
-               return $this->success('成功','',json_encode($news));
-           }else{
-
-               return $this->error('失败');
-           }
-
+            if ($park_id == 1) {
+                $news = News::where($map)->order('create_time desc')->field('id,title')->limit(4)->select();
+            } else {
+                $news = News::where($map)->where('park_id', $park_id)->order('create_time desc')->field('id,title')->limit(4)->select();
+            }
+            if ($news) {
+                return $this->success('成功', '', json_encode($news));
+            } else {
+                return $this->error('失败');
+            }
         }
-
-
         //所有园区领导,能看到所有园区
         if ($user['department'] == 1 && $user['tagid'] == 1) {
 
@@ -67,9 +67,6 @@ class Partymanage extends Base
 
         return $this->fetch();
     }
-
-
-
 
 
     /** 园区内部通告列表 **/
@@ -330,7 +327,7 @@ class Partymanage extends Base
                 $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
                 unset($value['user']);
             }
-           // echo "领导权限";
+            // echo "领导权限";
         } //个人权限
         else {
             //echo "个人权限";
@@ -476,7 +473,7 @@ class Partymanage extends Base
             $data = input('');
             $merchants_id = $data['merchants_id'];
             unset($data['merchaants_id']);
-            $data['merchants_date'] = $data['merchants_date']/1000;
+            $data['merchants_date'] = $data['merchants_date'] / 1000;
             $merchants_area = $data['merchants_area'];
             $merchants_money = $data['merchants_money'];
             $data['img'] = empty($data['img']) ? "" : json_encode($data['img']);
@@ -491,9 +488,9 @@ class Partymanage extends Base
                     'status' => 2
                 ];
                 $result = $mCompany->save($map, ['id' => $merchants_id]);
-           }
+            }
             if ($list) {
-                return $this->success("完成",'',$mCompany->getLastSql());
+                return $this->success("完成", '', $mCompany->getLastSql());
             } else {
                 return $this->error("失败");
             }
@@ -593,7 +590,7 @@ class Partymanage extends Base
             $month = input('month');
             $personalinfo = $this->statisticsCommon($userid, $year, $month);
             if ($personalinfo) {
-                return $this->success("成功", '',$personalinfo);
+                return $this->success("成功", '', $personalinfo);
 
             } else {
                 return $this->error("失败");
@@ -660,7 +657,7 @@ class Partymanage extends Base
             }
 
             //当前日志详情
-           // echo json_encode($diary);
+            // echo json_encode($diary);
             $this->assign('info', json_encode($diary));
             //该用户总共写的日志
             $this->assign('list', json_encode($time));

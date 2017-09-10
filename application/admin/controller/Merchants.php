@@ -91,6 +91,11 @@ class Merchants extends Admin
         $mRecord = new MerchantsRecord;
         $id = input('id');
         $list = $mRecord->where('merchants_id', $id)->paginate();
+      foreach ($list as $value)
+      {
+          $value['merchants_date']=!empty($value['merchants_date'])?date('Y-m-d',$value['merchants_date']):"";
+          $value['create_time']=!empty($value['create_time'])?date('Y-m-d',$value['create_time']):"";
+       }
         $this->assign('list', $list);
         return $this->fetch();
     }
@@ -158,6 +163,32 @@ class Merchants extends Admin
         $this->assign('list', $list);
         return $this->fetch();
     }
+
+    //招商人员指定招商计划 编辑和修改
+    public  function  editPlan(){
+        $id = input('id');
+        $data = input('');
+        $mCompany = new MerchantsCompany();
+        //新增
+        if (empty($id)) {
+
+
+            $info = $mCompany->allowField(true)->save($data);
+        } //编辑
+        else {
+            unset($data['id']);
+            $info = $mCompany->allowField(true)->save($data, ['id' => $id]);
+        }
+        if ($info) {
+            return $this->success("成功");
+        } else {
+            return $this->error('失败','',$mCompany->getError());
+        }
+    }
+
+
+
+
     //删除招商公司
     public  function  deleteCompany(){
         $ids = input('ids/a');

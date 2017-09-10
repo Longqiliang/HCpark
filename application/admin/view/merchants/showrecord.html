@@ -125,7 +125,8 @@
                         {$vo.id}
                     </td>
                     <td>
-                        {$vo.merchants_date|| time_format="Y-m-d "}
+                        <noempty name="vo.merchants_date">  {$vo.merchants_date}</noempty>
+
                     </td>
                     <td>
                         {$vo.merchants_place}
@@ -137,7 +138,8 @@
                         {$vo.mobile}
                     </td>
                     <td>
-                        {$vo.create_time|| time_format="Y-m-d "}
+                        <noempty name="vo.create_time">  {$vo.create_time}</noempty>
+
                     </td>
                     <td>
                         {$vo.status}

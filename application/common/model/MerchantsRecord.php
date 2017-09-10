@@ -14,12 +14,10 @@ use think\Model;
 class MerchantsRecord extends  Model
 {
     protected  $type=[
-
-        'create_time'=>'strtotime'
+        'create_time'=>'strtotime',
+        'merchants_date'=>'strtotime'
     ];
     public  function  merchantsCompany(){
-
-
         return $this->hasOne('MerchantsCompany','id','merchants_id');
     }
 }
