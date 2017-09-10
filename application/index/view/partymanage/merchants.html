@@ -285,6 +285,7 @@
         top:0;
         left:0;
         z-index: 998;
+        overflow: scroll!important;
     }
     .searchList>li{
         margin-bottom: 0;
@@ -294,7 +295,7 @@
         background-color: rgba(0,0,0,0.5);
     }
     .searchList>li:first-child{
-        margin-top: 4.8rem;
+        margin-top: 4.7rem;
     }
 
     .rate .searchList.my-list{
@@ -357,7 +358,9 @@
     #personalStats{
         position: inherit;
     }
-    
+    .my-hide{
+        display: none;
+    }
     /**加载中**/
     .my-footer{
         padding: 1rem 0;
@@ -412,7 +415,7 @@
                         </div>
                         <div class="unBtn" @click="isCancel">取消</div>
                 </div>
-                <ul class="my-personal" >
+                <ul class="my-personal" :class="{'my-hide':inputStatus}">
                     <li v-for="item in personallist" @click="window.location.href='/index/partymanage/statisticsInfo?id='+item.id">
                         <img :src="item.avatar" alt="头像" v-if="item.avatar!=null">
                         <img src="/index/images/cbd.jpg" alt="头像" v-else>
@@ -445,22 +448,22 @@
                 <div class="unBtn" @click="isCancel">取消</div>
             </div>
             <div  v-if="rateActive==0">
-                <ul class="my-list" >
+                <ul class="my-list" :class="{'my-hide':inputStatus}">
                     <li v-for="item in undone">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
                 </ul>
             </div>
             <div  v-if="rateActive==1">
-                <ul class="my-list">
+                <ul class="my-list" :class="{'my-hide':inputStatus}">
                     <li v-for="item in finish">
                         <div class="content-box">
                             <div class="my-job"><span>{{item.company}}</span></div>
-                            <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                            <div class="my-demand"><span>{{item.create_time}}</span></div>
                         </div>
                         <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                     </li>
@@ -470,7 +473,7 @@
                 <li v-for="item in searchList">
                     <div class="content-box">
                         <div class="my-job"><span>{{item.company}}</span></div>
-                        <div class="my-demand"><span>{{item.create_time | timeToString}}</span></div>
+                        <div class="my-demand"><span>{{item.create_time}}</span></div>
                     </div>
                     <a :href="'/index/partymanage/companyInfo/id/'+item.id"></a>
                 </li>
@@ -621,9 +624,6 @@
 //                this.setIframeHeight(document.getElementById('personalStats'));
         },
         methods:{
-
-
-
 //            切换tab
             changeTab(value){
                 if(value!=this.isActive){
@@ -834,10 +834,15 @@
             },
             isClick:function () {
                 this.inputStatus=true;
+//                document.getElementsByTagName("body")[0].setAttribute("style","height:100vh");
+//                document.getElementsByTagName("body")[0].setAttribute("style","overflow:hidden");
             },
             isCancel:function () {
                 this.inputStatus=false;
-                this.inputValue=''
+                this.inputValue='';
+                this.searchList.length=0;
+//                document.getElementsByTagName("body")[0].setAttribute("style","height:auto");
+//                document.getElementsByTagName("body")[0].setAttribute("style","overflow:auto");
             },
         }
     })
