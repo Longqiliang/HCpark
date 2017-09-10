@@ -138,7 +138,7 @@ class Union extends Base
         $this->assign('res',json_encode($res));
 
         // 添加阅读量
-       $res = UnionModel::where('id', input('id'))->setInc('views');
+       $res = UnionLoabourModel::where('id', input('id'))->setInc('views');
 
 
 
