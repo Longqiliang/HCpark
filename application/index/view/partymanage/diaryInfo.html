@@ -277,6 +277,8 @@
             if(!the.baseInfo.img){
                 the.baseInfo.img=[]
             }
+            localStorage.setItem('active',3);
+
             //领导不能写日志判断
             the.canWrite();
             if(!the.baseInfo.create_time){
