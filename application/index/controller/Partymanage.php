@@ -33,6 +33,19 @@ class Partymanage extends Base
             'type' => 2,
             'status' => 1,
         ];
+        if(IS_POST){
+            $park_id = input('park_id');
+            $news = News::where($map)->where('park_id', $park_id)->order('create_time desc')->field('id,title')->limit(4)->select();
+           if($news){
+               return $this->success('成功','',json_encode($news));
+           }else{
+
+               return $this->error('失败');
+           }
+
+        }
+
+
         //所有园区领导,能看到所有园区
         if ($user['department'] == 1 && $user['tagid'] == 1) {
 
@@ -51,8 +64,13 @@ class Partymanage extends Base
 
         $this->assign('news', json_encode($news));
         $this->assign('res', json_encode($res));
+
         return $this->fetch();
     }
+
+
+
+
 
     /** 园区内部通告列表 **/
     public function notify()
