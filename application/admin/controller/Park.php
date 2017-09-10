@@ -149,7 +149,7 @@ class Park extends Admin
     {
         $search = input('search');
         $parkRent = new ParkRent();
-        $map = ['park_id' => session("user_auth")['park_id']];
+        $map = ['park_id' => session("user_auth")['park_id'],'status' => 0];
         if ($search){
             $res = ParkRoom::where('room',$search)->select();
             foreach($res as $k=>$v){
@@ -203,8 +203,13 @@ class Park extends Admin
                 unset($data['id']);
                 unset($data['floor']);
                 $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'),'del' =>0])->find();
-                if (!$rooms){
+                //return  dump($rooms['id']);
+                if (!$rooms['id']){
                     $this->error('该楼室不存在');
+                }
+                $rents = $parkRent->where(['room_id'=>$rooms['id'],'status' => 0])->find();
+                if ($rents['id']){
+                    $this->error('该信息已存在');
                 }
                 $data['room_id'] = $rooms['id'];
                 $data['park_id'] = session("user_auth")['park_id'];
@@ -297,5 +302,19 @@ class Park extends Admin
         }
     }
     /*删除预约信息*/
+    public function moveToTrashs()
+    {
+        $ids = input('ids/a');
+        $result = ParkRent::where('id', 'in', $ids)->update(['status' => -1]);
+
+        if ($result) {
+
+            return $this->success('删除成功');
+
+        } else {
+
+            return $this->error('删除失败');
+        }
+    }
 
 }

@@ -287,7 +287,7 @@ class Roomrent extends Base
                 'area' => $v['area'] . "㎡",
                 'price' => $v['price'] . "元/㎡·天",
                 'name' => $parkInfo['name'],
-                'rent_id' => $v['id'],
+                'id' => $v['id'],
                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
             if ($data[$k]['img']) {
