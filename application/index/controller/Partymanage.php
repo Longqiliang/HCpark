@@ -227,10 +227,12 @@ class Partymanage extends Base
 
         if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
-                $path = str_replace(".", "_s.", $v1);
-                $image = Image::open(PUBLIC_PATH . $v1);
-                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                $info['img'][$k1] = $path;
+                if (@getimagesize(PUBLIC_PATH . $v1)){
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                    $info['img'][$k1] = $path;
+                }
             }
         }
 //        return  dump($info);
@@ -722,10 +724,12 @@ class Partymanage extends Base
 
         if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
-                $path = str_replace(".", "_s.", $v1);
-                $image = Image::open(PUBLIC_PATH . $v1);
-                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                $info['img'][$k1] = $path;
+                if (@getimagesize(PUBLIC_PATH . $v1)){
+                    $path = str_replace(".", "_s.", $v1);
+                    $image = Image::open(PUBLIC_PATH . $v1);
+                    $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                    $info['img'][$k1] = $path;
+                }
             }
         }
 //        return  dump($info);
