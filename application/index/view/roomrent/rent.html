@@ -102,11 +102,11 @@
 <div class="content" id="app">
     <div class="banner">
         <!--<span class=""></span>-->
-        <div class="banner-icon icon-vr" @click="looVR('http://720yun.com/t/e3cjO5mvuO2?pano_id=2107800')"></div>
+        <div class="banner-icon icon-vr" @click="looVR(info.panorama)" v-if="info.panorama"></div>
         <div class="swiper-container" @click="show($event)" ref="banner">
             <div class="swiper-wrapper">
                 <div v-for="(img,index) of info.img" class="swiper-slide">
-                    <img :data-src="img" class="swiper-lazy" :data-original="info.panorama[index]">
+                    <img :data-src="imgs" class="swiper-lazy" :data-original="info.img[index]">
                     <div class="swiper-lazy-preloader"></div>
                 </div>
             </div>
@@ -182,8 +182,8 @@
 <script>
     console.log({$info});
     var info ={$info};
-    info.img =['/index/images/service/lifepay/utilities.png','/index/images/enterprise/p2.png'];
-    info.panorama = ['/index/images/index/icon-no.png','/index/images/index/select.png'];
+//    info.img =['/index/images/service/lifepay/utilities.png','/index/images/enterprise/p2.png'];
+//    info.panorama = ['/index/images/index/icon-no.png','/index/images/index/select.png'];
     var vm = new Vue({
         el:'#app',
         data:{

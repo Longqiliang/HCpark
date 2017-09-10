@@ -92,7 +92,7 @@
 {block name="script"}
 <script type="text/javascript">
     var list = {$list};
-    console.log(list);
+//    console.log(list);
     var values = [];
     for(var i in list){
         values.push(i);
@@ -188,11 +188,7 @@
             },
             loadMore:function (event) {
                 var _this = this;
-                console.log(_this.loading,_this.canLoad,_this.isHouseList);
-//                if(){
-//                    console.log("11");
-//                    return;
-//                }
+//                console.log(_this.loading,_this.canLoad,_this.isHouseList);
                 if((!_this.loading) && !_this.isHouseList){
                     _this.loading = true;
                     var build = _this.parkName.txt.substr(-2,1);
@@ -209,21 +205,21 @@
                         build:build,
                         length:rentList.length
                     };
-                    console.log(data);
+//                    console.log(data);
                     _this.$indicator.open({
                         text: '加载中',
                         spinnerType: 'triple-bounce'
                     });
                     _this.$http.post('/index/Roomrent/moreList',data).then(function (res) {
                         _this.$indicator.close();
-                        console.log(res.data);
-                        console.log(res.data.data);
+//                        console.log(res.data);
+//                        console.log(res.data.data);
                         if(res.data.code==0){
 
                         }else{
                             var list = JSON.parse(res.data.data);
                             for( var i = 0 ;i < list.length;i++){
-                                console.log(list[i]);
+//                                console.log(list[i]);
                                 rentList.push(list[i]);
                             }
                             _this.loading = false;
