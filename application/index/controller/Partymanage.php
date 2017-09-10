@@ -517,7 +517,7 @@ class Partymanage extends Base
         $myRecord = $mRecord->where($map)->select();
         $record_num = array();
         foreach ($myRecord as $value) {
-            $time = date('Y-m-d', strtotime($value['merchants_date']));
+            $time = date('Y-m-d', $value['merchants_date']);
             array_push($record_num, $time);
         }
         $num = count(array_values(array_unique($record_num)));

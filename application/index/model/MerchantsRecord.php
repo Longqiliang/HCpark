@@ -11,11 +11,19 @@ namespace app\index\model;
 
 use think\Model;
 
-class MerchantsRecord extends  Model
+class MerchantsRecord extends Model
 {
-public  function  merchantsCompany(){
+    protected  $type =[
+
+        'merchants_date'=>'strtotime',
+
+    ];
 
 
-    return $this->hasOne('MerchantsCompany','id','merchants_id');
-}
+    public function merchantsCompany()
+    {
+
+
+        return $this->hasOne('MerchantsCompany', 'id', 'merchants_id');
+    }
 }
