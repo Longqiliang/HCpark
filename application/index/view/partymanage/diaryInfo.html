@@ -277,6 +277,7 @@
             if(!the.baseInfo.img){
                 the.baseInfo.img=[]
             }
+            //领导不能写日志判断
             the.canWrite();
             if(!the.baseInfo.create_time){
                 the.date=Date.parse(new Date())
@@ -287,14 +288,10 @@
 
         },
         mounted(){
-            //领导不能写日志判断
-            this.canWrite();
             this.createView();
         },
         updated(){
             this.createView();
-            this.canWrite();
-
         },
         methods:{
             canWrite(){
@@ -412,6 +409,7 @@
                     this.baseInfo.content=data.content;
                     this.baseInfo.img=data.img ? data.img : [];
                     console.log(this.baseInfo)
+                    this.canWrite();
 //                    this.createView();
                 },function (res) {
                     this.$toast('请求失败，请退出页面重试')
@@ -482,7 +480,7 @@
                                 imgName:[]
                             };
                             the.checkedList.push(the.baseInfo.create_time);
-//                            the.createView();
+                            the.createView();
                             if(the.nowDateIndex){
                                 the.days[the.nowDateIndex].isChecked=true;
                             }else{
