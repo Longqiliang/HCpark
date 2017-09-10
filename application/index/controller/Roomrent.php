@@ -50,6 +50,8 @@ class Roomrent extends Base
                     $image = Image::open(PUBLIC_PATH . $v1);
                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
                     $data['imgs'][$k1] = $path;
+                }else{
+                    $data['imgs'][$k1] = $data['img'][$k1];
                 }
             }
         }
