@@ -1,23 +1,26 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>园区管理</title>
+<title>合同查看</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
-
+    .list-card-info {
+        line-height: 50px;
+        font-size: 1.5rem;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app" class="content">
-    <div class="list-card">
+    <div class="list-card" @click="jump('/index/partymanage/serviceContract/type/3',id)">
         <div class="list-card-info">
             招商合同
         </div>
     </div>
-    <div class="list-card">
+    <div class="list-card" @click="jump('/index/partymanage/serviceContract/type/4',id)">
         <div class="list-card-info">
-            消防同意书
+           消防同意书
         </div>
     </div>
 </div>
@@ -28,10 +31,12 @@
     var vm = new Vue({
         el:'#app',
         data:{
-
+            id:{$id}
         },
         methods:{
-
+            jump:function (href,id) {
+                window.location.href = href+"/?id="+id
+            }
         }
     })
 </script>

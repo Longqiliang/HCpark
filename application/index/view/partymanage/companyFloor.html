@@ -36,11 +36,6 @@
                 {{rooms.room}}
             </span>
         </div>
-        <div class="houses-list-item" v-else>
-            <span class="block" >
-                {{item.rooms}}
-            </span>
-        </div>
     </div>
 
     <!--<div class="houses-list" v-for="item of list">-->
@@ -123,11 +118,14 @@
                 _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
             jump:function (id,empty) {
+                if(!id){
+                    return;
+                }
                 if(!empty){
                     window.location.href = "/index/partymanage/parklist?id="+id;
                     return;
                 }
-                window.location.href = "/index/roomrent/rent?id="+id;
+                window.location.href = "/index/roomrent/rent?rent_id="+id;
             }
         }
     });

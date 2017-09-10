@@ -10,32 +10,32 @@
 
 {block name="body"}
 <div class="content" id="app">
-    <div class="list-card">
+    <div class="list-card" @click="jump('/index/enterprise/detail/c/0')">
         <div class="list-card-info">
             <h3 class="info-tit">公司详情</h3>
             <p class="info-label">公司信息尽在掌握</p>
             <span class="info-line"></span>
         </div>
-        <div class="list-card-img"></div>
+        <div class="list-card-img list-card-img1"></div>
     </div>
-    <div class="list-card">
-        <div class="list-card-img"></div>
+    <div class="list-card" @click="jump('/index/partymanage/detailList')">
+        <div class="list-card-img list-card-img2"></div>
         <div class="list-card-info right">
             <h3 class="info-tit">服务合同</h3>
             <p class="info-label">合同情况一目了然</p>
             <span class="info-line"></span>
         </div>
     </div>
-    <div class="list-card">
+    <div class="list-card" @click="jump('/index/partymanage/feeRecord')">
         <div class="list-card-info">
             <h3 class="info-tit">缴费记录</h3>
             <p class="info-label">物业缴费一览无遗</p>
             <span class="info-line"></span>
         </div>
-        <div class="list-card-img"></div>
+        <div class="list-card-img list-card-img3"></div>
     </div>
-    <div class="list-card">
-        <div class="list-card-img"></div>
+    <div class="list-card" >
+        <div class="list-card-img list-card-img4"></div>
         <div class="list-card-info right">
             <h3 class="info-tit">招商记录</h3>
             <p class="info-label">招商进度实时更新</p>
@@ -46,7 +46,20 @@
 
 {block name="script"}
 <script type="text/javascript">
-
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            id:{$id}
+        },
+        methods:{
+            jump:function (href) {
+                if(!this.id){
+                    return;
+                }
+                window.location.href=href+"/id/"+this.id;
+            }
+        }
+    })
 
 </script>
 {/block}

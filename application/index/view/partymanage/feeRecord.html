@@ -1,0 +1,83 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>缴费记录</title>
+<style>
+    ul{
+        padding:1.2rem;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    ul>li{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #333;
+    }
+    ul>li:first-child{
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+    ul>li:last-child{
+        font-size: 1.4rem;
+        color: #000;
+    }
+    .unPay{
+        color: #f97878;
+    }
+    .auditing{
+        color: #fcc44b;
+    }
+    .payed{
+        color: #52cc92;
+    }
+    .no-history{
+        color: #999;
+        font-size: 1.6rem;
+        text-align: center;
+        margin-top: 40vh;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <ul v-for="item in historyList" >
+        <li>
+            <span>{{item.name}}</span>
+            <span class="unPay" v-if="item.status==-1">已删除</span>
+            <span class="auditing" v-if="item.status==0">审核中</span>
+            <span class="payed" v-if="item.status==1">已缴费</span>
+            <span class="unPay" v-if="item.status==2">审核失败</span>
+        </li>
+        <li>
+            <span>{{item.time}}</span>
+            <span v-if="item.pay">缴费金额：{{item.pay}}元</span>
+        </li>
+    </ul>
+    <p class="no-history" v-if="historyList==''">
+        暂无记录
+    </p>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el:'#app',
+        mounted(){
+        },
+        data:{
+            historyList:JSON.parse('{$info}'),
+        },
+        methods:{
+            jumpTo(id){
+                var aid=this.appid;
+                if(aid == 1 || aid == 3 || aid == 6 || aid == 7){
+                    window.location.href='/index/service/historyDetail/appid/'+this.appid+'/id/'+id
+                }
+            }
+        }
+    })
+</script>
+{/block}

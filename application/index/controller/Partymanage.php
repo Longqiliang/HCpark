@@ -19,7 +19,7 @@ use app\index\model\MerchantsCompany;
 use app\common\model\FeePayment;
 use org\ImageImagick;
 use app\index\model\News;
-
+use think\Image;
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
@@ -119,7 +119,7 @@ class Partymanage extends Base
         $res = News::where($map)->find();
 
         $this->assign('res', json_encode($res));
-        echo json_encode($res);
+//        echo json_encode($res);
         return $this->fetch();
     }
 
@@ -140,13 +140,14 @@ class Partymanage extends Base
 
         $this->assign('list', json_encode($list));
         $this->assign('res', json_encode($res));
-        echo json_encode($list);
+//        echo json_encode($list);
         return $this->fetch();
     }
 
     /***合同管理*/
     public function contract()
     {
+        $type =input('type');
         $data[0] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 1])->count();
         $data[1] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 2])->count();
         $contract[0] = $data[0] + $data[1];
@@ -158,6 +159,7 @@ class Partymanage extends Base
             'property' => ['name' => "物业合同", 'count' => $contract[2]]
         ];
 //        return json_encode($array);
+        $this->assign('type',$type);
         $this->assign('info', json_encode($array));
 
         return $this->fetch();
@@ -166,10 +168,12 @@ class Partymanage extends Base
     /*合同列表*/
     public function managelist()
     {
+        $id =input('id');
+
         $type = input("type");
         $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
             ->order("create_time desc")
-            ->limit(6)
+            ->limit(7)
             ->select();
         $name = "";
         switch ($type) {
@@ -196,7 +200,7 @@ class Partymanage extends Base
         $len = input("length");
         $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
             ->order("create_time desc")
-            ->limit($len, 6)
+            ->limit($len, 7)
             ->select();
         if ($list) {
 
@@ -216,16 +220,20 @@ class Partymanage extends Base
         $info = [
             'extra' => $manageInfo['remark'],
             'img' => json_decode($manageInfo['img']),
-            'imgs' => []
+            'imgs' => [],
+            'number' => $manageInfo['number'],
+            'create_time' => $manageInfo['create_time'],
         ];
 
         if ($info['img']) {
-            foreach ($info['img'] as $k => $v) {
-                $small_img = $this->getThumb($v, 163, 230);
-                $info['imgs'][$k] = $small_img;
+            foreach ($info['img'] as $k1 => $v1) {
+                $path = str_replace(".", "_s.", $v1);
+                $image = Image::open(PUBLIC_PATH . $v1);
+                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                $info['img'][$k1] = $path;
             }
         }
-        //return  dump($info);
+//        return  dump($info);
         $this->assign('info', json_encode($info));
 
         return $this->fetch();
@@ -673,6 +681,7 @@ class Partymanage extends Base
     public function parkList()
     {
         $park = new Park();
+        $id = input('id');
         $list = $park->select();
         foreach ($list as $k => $v) {
             $data[$k] = [
@@ -681,7 +690,16 @@ class Partymanage extends Base
             ];
         }
         $this->assign('list', $data);
+        $this->assign('id',$id);
         return $this->fetch();
+    }
+    /*公司详情列表*/
+    public function detailList(){
+        $id = input('id');
+
+        $this->assign('id',$id);
+
+        return  $this->fetch();
     }
 
     /*公司合同列表*/
@@ -693,12 +711,26 @@ class Partymanage extends Base
             'type' => $type,
             'department_id' => $departmentId,
         ];
-        if ($type == 3) {
-            $info = CompanyContract::where($map)->select();
-        }
-        $info = CompanyContract::where($map)->find();
+        $manageInfo = CompanyContract::where($map)->find();
+        $info = [
+            'extra' => $manageInfo['remark'],
+            'img' => json_decode($manageInfo['img']),
+            'imgs' => [],
+            'number' => $manageInfo['number'],
+            'create_time' => $manageInfo['create_time'],
+        ];
 
-        $this->assign('info', $info);
+        if ($info['img']) {
+            foreach ($info['img'] as $k1 => $v1) {
+                $path = str_replace(".", "_s.", $v1);
+                $image = Image::open(PUBLIC_PATH . $v1);
+                $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                $info['img'][$k1] = $path;
+            }
+        }
+//        return  dump($info);
+        $this->assign('info', json_encode($info));
+
 
         return $this->fetch();
     }
@@ -709,7 +741,7 @@ class Partymanage extends Base
         $info = [];
         $departmentId = input('id');
         $map = ['company_id' => $departmentId];
-        $list = FeePayment::where($map)->order('id desc')->limit(6);
+        $list = FeePayment::where($map)->order('id desc')->limit(6)->select();
         foreach ($list as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
@@ -770,7 +802,7 @@ class Partymanage extends Base
             'park_id' => $parkId,
             'build_block' => "A",
         ];
-        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor asc')->select();
+        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
         foreach ($list as $k => $v) {
             $floor[$k] = $v['floor'];
         }
@@ -849,11 +881,17 @@ class Partymanage extends Base
         $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr));
-        echo json_encode($resArr);
+        //echo json_encode($resArr);
 
-        //return $this->fetch();
+        return $this->fetch();
 
 
+    }
+    public  function  otherList(){
+        $id = input('id');
+        $this->assign("id", $id);
+
+        return $this->fetch();
     }
 
 }

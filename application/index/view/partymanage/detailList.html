@@ -1,0 +1,56 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>公司详情</title>
+<link rel="stylesheet" href="/index/css/partymanage/contract/index.css">
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="img-list">
+        <a @click="jumpTo('/index/partyManage/serviceContract',id)">
+            <div class="img-list-item">
+                <img src="/index/images/partymanage/contract-img1.jpg"  class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">租赁合同</span></div>
+            </div>
+        </a>
+    </div>
+    <div class="img-list">
+        <a @click="jumpTo('/index/partyManage/serviceContract',id)">
+            <div class="img-list-item">
+                <img src="/index/images/partymanage/contract-img2.jpg" class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">物业合同</span></div>
+            </div>
+        </a>
+    </div>
+    <div class="img-list">
+        <a @click="jumpTo('/index/partyManage/otherList',id)">
+            <div class="img-list-item">
+                <img src="/index/images/partymanage/contract-img3.jpg" class="img-responsive">
+                <div class="item-img-marking"><span class="marking-info">其他合同</span></div>
+            </div>
+        </a>
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+<script src="/static/echarts/echarts.min.1.js"></script>
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            id:{$id}
+        },
+        methods:{
+            jumpTo(href,id){
+
+                if(id){
+                    window.location.href=href+"?id="+id;
+                }
+            }
+        }
+    });
+</script>
+{/block}

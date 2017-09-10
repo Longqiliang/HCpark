@@ -122,6 +122,18 @@
     }
     .my-demand>span{
         margin-right: 2rem;
+        padding-left: 2rem;
+        background: url() no-repeat left center;
+        background-size: 1.2rem 1.2rem;
+    }
+    .my-demand>span.icon-people{
+        background-image: url('/index/images/talentservice/recruit-people.png');
+    }
+    .my-demand>span.icon-job{
+        background-image: url('/index/images/talentservice/recruit-job.png');
+    }
+    .my-demand>span.icon-edu{
+        background-image: url('/index/images/talentservice/recruit-education.png');
     }
     .my-list li a{
         width: 100%;
@@ -137,6 +149,7 @@
         position: absolute;
         top:0;
         left:0;
+        z-index: 998;
     }
     .searchList>li{
         border-bottom: 1px solid #f1f1f1;
@@ -158,17 +171,17 @@
 <div id="app">
     <div class="search" :class="{isClick:inputStatus}" >
         <div class="searchBox" @click="isClick">
-            <div class="searchText"><span class="searchText_c">请在此搜索姓名</span></div>
-            <input type="text" v-model="inputValue" @keyup="toSearch(0)" class="searchInput" placeholder="请输入姓名" v-focus="inputStatus">
+            <div class="searchText"><span class="searchText_c">请再此搜索岗位名称</span></div>
+            <input type="text" v-model="inputValue" @keyup="toSearch(0)" class="searchInput" placeholder="请输入岗位名称" v-focus="inputStatus">
         </div>
         <div class="unBtn" @click="isCancel">取消</div>
     </div>
     <ul class="my-list">
         <li v-for="item in article">
             <div class="content-box">
-                <div class="my-job"><span>{{item.position}}</span><span>{{item.wages}}</span></div>
-                <span class="my-company">{{item.company}}</span>
-                <div class="my-demand"><span>{{item.number}}</span> <span>{{item.experience}}</span><span>{{item.education}}</span></div>
+                <div class="my-job"><span>{{item.position ? item.position : '暂无信息'}}</span><span>{{item.wages ? item.wages : "暂无信息"}}</span></div>
+                <span class="my-company">{{item.company ? item.company : '暂无信息'}}</span>
+                <div class="my-demand"><span class="icon-people">{{item.number ? item.number+'人' : '-'}}</span> <span class="icon-job">{{item.experience ? item.experience : '-'}}</span><span class="icon-edu">{{item.education ? item.education : '-'}}</span></div>
             </div>
             <a :href="'/index/talentservice/detail/id/'+item.id"></a>
         </li>
@@ -176,9 +189,9 @@
     <ul class="searchList my-list" :class="{bgWhite:inputStatus}" v-if="inputStatus">
         <li v-for="item in searchList">
             <div class="content-box">
-                <div class="my-job"><span>{{item.position}}</span><span>{{item.wages}}</span></div>
-                <span class="my-company">{{item.company}}</span>
-                <div class="my-demand"><span>{{item.number}}</span> <span>{{item.experience}}</span><span>{{item.education}}</span></div>
+                <div class="my-job"><span>{{item.position ? item.position : '暂无信息'}}</span><span>{{item.wages ? item.wages : "暂无信息"}}</span></div>
+                <span class="my-company">{{item.company ? item.company : '暂无信息'}}</span>
+                <div class="my-demand"><span class="icon-people">{{item.number ? item.number+'人' : '-'}}</span> <span class="icon-job">{{item.experience ? item.experience : '-'}}</span><span class="icon-edu">{{item.education ? item.education : '-'}}</span></div>
             </div>
             <a :href="'/index/talentservice/detail/id/'+item.id"></a>
         </li>

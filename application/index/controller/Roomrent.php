@@ -51,7 +51,6 @@ class Roomrent extends Base
                 $data['img'][$k1] = $path;
             }
         }
-        return dump($data);
         $this->assign('info', json_encode($data));
 
         return $this->fetch();

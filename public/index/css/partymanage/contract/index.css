@@ -60,6 +60,9 @@
     height: 34.67vw;
     position: relative;
 }
+.img-list-item img{
+    border-radius: 5px;
+}
 .item-img-marking{
     position: absolute;
     border-radius: 5px;
@@ -101,7 +104,7 @@
 .contract-list{
     box-sizing: border-box;
     width: 100%;
-    padding:2rem 3.7vw ;
+    padding:2rem 3.7vw 0;
 }
 .contract-list>li{
     margin-bottom: 2rem;

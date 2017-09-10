@@ -176,8 +176,20 @@ body{
    margin: 2.93vw 4vw;
     width:30.4vw;
     height:26.13vw;
-    background: url('/index/images/roomrent/icon-park.png') no-repeat;
+    background: url('') no-repeat;
     background-size:100%;
+}
+.list-card-img1{
+    background-image: url('/index/images/roomrent/park-detail.png');
+}
+.list-card-img2{
+    background-image: url('/index/images/roomrent/park-service.png');
+}
+.list-card-img3{
+    background-image: url('/index/images/roomrent/park-pay.png');
+}
+.list-card-img4{
+    background-image: url('/index/images/roomrent/park-record.png');
 }
 .list-card-info{
     padding:0 6.67vw;

@@ -3,6 +3,10 @@
 {block name="style"}
 <title>园区党建</title>
 <style>
+    body{
+        color: #333;
+        padding-bottom: 1rem;
+    }
     .my-banner{
         width:100%;
         height:50vw;
@@ -46,11 +50,12 @@
         margin:0 auto;
         width:5rem;
         height:5rem;
-        border-radius: 100%;
     }
     .my-tabs span{
         line-height: 2;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
+        margin-top: 0.5rem;
+        display: block;
     }
 
     .my-list li{
@@ -126,12 +131,12 @@
 
 {block name="body"}
 <div id="app">
-    <img src="/index/images/cbd.jpg" alt="banner图" class="my-banner">
+    <img src="/index/images/partybuild/party-banner.png" alt="banner图" class="my-banner">
     <ul class="my-tabs">
-        <li @click="jumpTo('showList/type/1')"><img src="/index/images/cbd.jpg" alt="图标"><span>支部活动</span></li>
-        <li @click="jumpTo('showList/type/2')"><img src="/index/images/cbd.jpg" alt="图标"><span>两学一做</span></li>
-        <li @click="jumpTo('showList/type/3')"><img src="/index/images/cbd.jpg" alt="图标"><span>党员风采</span></li>
-        <li @click="jumpTo('countParty')"><img src="/index/images/cbd.jpg" alt="图标"><span>党员统计</span></li>
+        <li @click="jumpTo('showList/type/1')"><img src="/index/images/partybuild/party-icon1.png" alt="支部活动"><span>支部活动</span></li>
+        <li @click="jumpTo('showList/type/2')"><img src="/index/images/partybuild/party-icon2.png" alt="两学一做"><span>两学一做</span></li>
+        <li @click="jumpTo('showList/type/3')"><img src="/index/images/partybuild/party-icon3.png" alt="党员风采"><span>党员风采</span></li>
+        <li @click="jumpTo('countParty')"><img src="/index/images/partybuild/party-icon4.png" alt="党员统计"><span>党员统计</span></li>
     </ul>
 
     <div class="group-tit">
