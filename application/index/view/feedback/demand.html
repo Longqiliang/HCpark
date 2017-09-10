@@ -108,13 +108,17 @@
 {block name="script"}
 <script>
     $(function(){
+        var isSend=false;
         $(".foot").on('click',function () {
             var title = $('.theme input').val(),
                 department = $('.department option:checked').val(),
                 question = $('.content-box').val();
             if(!title || !question){
                 alert('请填写相关信息！');
+            }else if(isSend){
+                alert('正在提交中，请勿重复提交！');
             } else if(question.length<=300){
+                isSend=true
                 $.ajax({
                     type:'post',
                     url:'{:Url("Feedback/demand")}',
