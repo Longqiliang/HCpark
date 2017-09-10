@@ -19,7 +19,7 @@ use app\index\model\MerchantsCompany;
 use app\common\model\FeePayment;
 use org\ImageImagick;
 use app\index\model\News;
-
+use think\Image;
 class Partymanage extends Base
 {
     /** 园区管理首页 **/
