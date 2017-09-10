@@ -36,8 +36,6 @@
                             <select name="build_block" id="" style="width: 100px;height: 30px;">
                                 <option value="A"{eq name="$info.build_block" value="A"}selected{/eq}>A幢</option>
                                 <option value="B"{eq name="$info.build_block" value="B"}selected{/eq}>B幢</option>
-                                <option value="C"{eq name="$info.build_block" value="C"}selected{/eq}>C幢</option>
-                                <option value="D"{eq name="$info.build_block" value="D"}selected{/eq}>D幢</option>
                             </select>
                         </div>
                     </div>
@@ -60,7 +58,7 @@
                         <div class="col-sm-2"><h3>单位（元/㎡·天）</h3></div>
                     </div>
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;全景:</h3></label>
-                        <div class="col-sm-5"> <input type="text" class="form-control"  name="panorama" value="{$info.panorama}"></div>
+                        <div class="col-sm-5"> <input type="text" class="form-control"  name="panorama" value="{$info.panorama}" placeholder="需要全景照片时，请联系我们制作全景照片"></div>
                     </div>
 
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;照片:</h3></label>
@@ -164,9 +162,6 @@
             return "";
         }else if(prices == ""){
             updateAlert("请添加价格","info");
-            return "";
-        }else if (panoramas == ""){
-            updateAlert("请添加全景照片链接","info");
             return "";
         }else if (imgsSrc.length == 0){
             updateAlert("请添加照片","info");
