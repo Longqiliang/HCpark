@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>送水服务</title>
+<title>饮水服务</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
 <style>
     body{
@@ -13,14 +13,14 @@
 {block name="body"}
 <div id="app">
     <div class="card">
-        <div class="card-tit">送水服务</div>
+        <div class="card-tit">饮水服务</div>
         <div class="card-cell">
             <label for="add">送水地点</label>
             <input type="text" placeholder="请输入送水地点" id="add" v-model="defaultData.address">
         </div>
         <div class="card-cell">
             <label for="num">送水桶数</label>
-            <input type="text" placeholder="请输入送水桶数" id="num" v-model="defaultData.number">
+            <input type="number" placeholder="请输入送水桶数" id="num" v-model="defaultData.number">
         </div>
         <div class="card-cell">
             <label for="name">联系人员</label>
@@ -65,7 +65,7 @@
                     return;
                 }
                 if(!_this.defaultData.number){
-                    _this.$toast('请输入送水桶数');
+                    _this.$toast('请输入正确的送水桶数');
                     return;
                 }
                 if(!_this.defaultData.name){

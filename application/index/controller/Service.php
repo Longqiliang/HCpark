@@ -1328,7 +1328,7 @@ class Service extends Base{
             $info[$k]=[
                 'id'=>$v['id'],
                 'type'=>$types[$v['type']],
-                'time'=>date('Y-m-d',$v['clear_time']),
+                'time'=>date('Y-m-d',$v['create_time']),
                 'status'=>$v['status'],
             ];
         }
@@ -1388,8 +1388,8 @@ class Service extends Base{
 
     //饮水服务列表页
     public function waterList(){
+        $info = [] ;
         $userid = session('userId');
-  //      echo  $userid;
         $map = [
             'status'=> array('neq',-1),
             'userid'=>$userid,

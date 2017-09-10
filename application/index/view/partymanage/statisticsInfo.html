@@ -294,6 +294,7 @@ var app = new Vue({
         }
     },
     mounted(){
+        console.log(this.personalInfo)
         var info=this.personalInfo;
         var log=(info.dairy_num / info.total * 100).toFixed(1),
                 area=(info.finish_area / info.area * 100).toFixed(1),
@@ -323,15 +324,24 @@ var app = new Vue({
                 if(res.data.code==1){
                     this.personalInfo=res.data.data;
                     var info=this.personalInfo;
+                    if(this.personalInfo.area==0 && this.personalInfo.finish_area!=0){
+                        this.drawCharts('c2',80,10,13,45,'面积完成率',100,'rgba(128,206,205,0.2)','rgba(128,206,205,1)');
+                    }else{
+                        var area=(info.finish_area / info.area * 100).toFixed(1);
+                        area=isNaN(area)?0:area;
+                        this.drawCharts('c2',80,10,13,45,'面积完成率',area,'rgba(128,206,205,0.2)','rgba(128,206,205,1)');
+                    }
+                    if(this.personalInfo.price==0 && this.personalInfo.finish_price!=0){
+                        this.drawCharts('c3',80,10,13,45,'回款完成率',100,'rgba(240,171,65,0.2)','rgba(240,171,65,1)');
+                    }else{
+                        var  price=(info.finish_price / info.price * 100).toFixed(1);
+                        price=isNaN(price)?0:price;
+                        this.drawCharts('c3',80,10,13,45,'回款完成率',price,'rgba(240,171,65,0.2)','rgba(240,171,65,1)');
+                    }
                     var log=(info.dairy_num / info.total * 100).toFixed(1),
-                            area=(info.finish_area / info.area * 100).toFixed(1),
-                            price=(info.finish_price / info.price * 100).toFixed(1);
                     log=isNaN(log)?0:log;
-                    area=isNaN(area)?0:area;
-                    price=isNaN(price)?0:price;
+
                     this.drawCharts('c1',80,10,13,45,'日志完整性',log,'rgba(118,202,153,0.2)','rgba(118,202,153,1)');
-                    this.drawCharts('c2',80,10,13,45,'面积完成率',area,'rgba(128,206,205,0.2)','rgba(128,206,205,1)');
-                    this.drawCharts('c3',80,10,13,45,'回款完成率',price,'rgba(240,171,65,0.2)','rgba(240,171,65,1)');
                 }else{
                     this.$toast('请其失败，请重试')
                 }

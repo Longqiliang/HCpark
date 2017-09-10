@@ -604,6 +604,10 @@
             }else{
                 this.isActive=1
             }
+            var active=localStorage.getItem('active');
+            if(active!=null){
+                this.isActive=active
+            }
         },
         mounted(){
             //初始数据处理
@@ -622,10 +626,13 @@
             //能否写日志判断
             if(this.is_boss=='yes'){
                 this.canWrite=false
-            }else if(new Date(this.diaryList[0].create_time*1000).setHours(0,0,0,0)==new Date().setHours(0,0,0,0)) {
-                this.canWrite=false
             }else{
                 this.canWrite=true
+            }
+            for(var i=0;i<this.diaryList.length;i++){
+                if(new Date(this.diaryList[i].create_time*1000).setHours(0,0,0,0)==new Date().setHours(0,0,0,0)) {
+                    this.canWrite=false
+                }
             }
             this.drawPie(this.types);
             this.drawLine(this.will);
@@ -640,7 +647,8 @@
                     if(this.inputStatus){
                         this.inputStatus=false;
                         this.inputValue='';
-                    }
+                    };
+                    localStorage.setItem('active',value);
                 }
             },
             changeRateTab(value){
