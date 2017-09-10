@@ -1388,8 +1388,8 @@ class Service extends Base{
 
     //饮水服务列表页
     public function waterList(){
+        $info = [] ;
         $userid = session('userId');
-  //      echo  $userid;
         $map = [
             'status'=> array('neq',-1),
             'userid'=>$userid,
