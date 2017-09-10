@@ -83,6 +83,7 @@
     new Vue({
         el:'#comment',
         data:{
+            isSend:false,
             count:{$count},
             canLoad:true,
             loading:false,
@@ -101,9 +102,13 @@
         methods:{
             send:function (id,type) {
                 console.log(this.content)
-                if(this.content == '' || !this.content){
+                if(this.isSend){
+                    this.$toast({message:'提交中，请勿重复提交',position:'bottom',duration:1000});
+                    return ;
+                }else if(this.content == '' || !this.content){
                     this.$toast({message:'评论不能为空！',position:'bottom',duration:1000});
                 } else {
+                    this.isSend=true;
                     this.$http.post('{:Url("Base/addComments")}',{type:type,id:id,content:this.content}).then(function (res) {
                         console.log(res.data);
                         if(res.data.code==1){
