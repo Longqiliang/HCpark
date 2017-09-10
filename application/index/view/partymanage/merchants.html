@@ -493,7 +493,7 @@
                     <a :href="'/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id"></a>
                 </li>
             </ul>
-            <a :href="'/index/partymanage/diaryInfo'" class="addDdiary"  v-if="is_boss!='yes'">
+            <a :href="'/index/partymanage/diaryInfo'" class="addDdiary"  v-if="canWrite">
                 <img src="/index/images/partymanage/add.png" alt="添加日志">
             </a>
         </li>
@@ -577,6 +577,7 @@
             },
 //            工作日志
             diaryList:{$diaryList},
+            canWrite:true,
 //            招商统计
             finish_num:{$finish_num},
             undone_num:{$undone_num},
@@ -597,7 +598,7 @@
         computed:{
         },
         created(){
-            console.log(this.diaryList)
+            //初始Tab
             if(this.is_boss=='yes'){
                 this.isActive=0
             }else{
@@ -605,6 +606,7 @@
             }
         },
         mounted(){
+            //初始数据处理
             var w=[],e=[];
             for( x in this.undone2 ){
                 w.push(this.undone2[x])
@@ -614,10 +616,17 @@
                 e.push(this.finish2[x])
             }
             console.log(e)
-
             this.will.data=w;
             this.finish1.data=e;
             console.log(this.diaryList)
+            //能否写日志判断
+            if(this.is_boss=='yes'){
+                this.canWrite=false
+            }else if(new Date(this.diaryList[0].create_time*1000).setHours(0,0,0,0)==new Date().setHours(0,0,0,0)) {
+                this.canWrite=false
+            }else{
+                this.canWrite=true
+            }
             this.drawPie(this.types);
             this.drawLine(this.will);
             this.drawLine(this.finish1);
