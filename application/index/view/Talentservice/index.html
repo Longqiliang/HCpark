@@ -80,7 +80,18 @@
         font-size: 1.4rem;
     }
     .my-list{
-        padding:0.8rem 2.133vw;
+        box-sizing: border-box;
+        width:100%;
+        padding:5.6rem 2.133vw 0.8rem;
+        position: absolute;
+    }
+    .my-list-all{
+        top:0;
+    }
+    .my-list.overflow{
+        height:100vh;
+
+        overflow: hidden;
     }
     .my-list li{
         width: 100%;
@@ -150,6 +161,7 @@
         top:0;
         left:0;
         z-index: 998;
+        overflow: scroll;
     }
     .searchList>li{
         border-bottom: 1px solid #f1f1f1;
@@ -157,12 +169,9 @@
     .bgWhite{
         background-color: rgba(0,0,0,0.5);
     }
-    .searchList>li:first-child{
-        margin-top: 4.8rem;
-    }
-
-    .rate .searchList.my-list{
-        margin-top: 5rem;
+    .my-list.overflow-hide{
+        line-height: 100vh;
+        overflow: hidden;
     }
 </style>
 {/block}
@@ -176,14 +185,14 @@
         </div>
         <div class="unBtn" @click="isCancel">取消</div>
     </div>
-    <ul class="my-list">
+    <ul class="my-list my-list-all" :class="{overflow:inputStatus}">
         <li v-for="item in article">
             <div class="content-box">
                 <div class="my-job"><span>{{item.position ? item.position : '暂无信息'}}</span><span>{{item.wages ? item.wages : "暂无信息"}}</span></div>
                 <span class="my-company">{{item.company ? item.company : '暂无信息'}}</span>
                 <div class="my-demand"><span class="icon-people">{{item.number ? item.number+'人' : '-'}}</span> <span class="icon-job">{{item.experience ? item.experience : '-'}}</span><span class="icon-edu">{{item.education ? item.education : '-'}}</span></div>
             </div>
-            <a :href="'/index/talentservice/detail/id/'+item.id"></a>
+            <!--<a :href="'/index/talentservice/detail/id/'+item.id"></a>-->
         </li>
     </ul>
     <ul class="searchList my-list" :class="{bgWhite:inputStatus}" v-if="inputStatus">
@@ -252,12 +261,13 @@
             },
             isClick:function () {
                 this.inputStatus=true;
-                document.body.style.overflow='hidden'
+//                document.body.style.overflow='hidden'
             },
             isCancel:function () {
                 this.inputStatus=false;
                 this.inputValue='';
-                document.body.style.overflow='auto'
+                this.searchList.length=0;
+//                document.body.style.overflow='auto'
             },
             toSearch:function () {
                 let reg=new RegExp(this.inputValue);

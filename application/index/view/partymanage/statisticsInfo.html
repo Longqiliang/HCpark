@@ -294,15 +294,10 @@ var app = new Vue({
         }
     },
     mounted(){
-        if(window.parent){
-            console.log(window.parent.location.href);
-        }else{
-            console.log('no parent')
-        }
         var info=this.personalInfo;
-        var log=parseInt(info.dairy_num / info.total * 100),
-                area=parseInt(info.finish_area / info.area * 100),
-                price=parseInt(info.finish_price / info.price * 100);
+        var log=(info.dairy_num / info.total * 100).toFixed(1),
+                area=(info.finish_area / info.area * 100).toFixed(1),
+                price=(info.finish_price / info.price * 100).toFixed(1);
             log=isNaN(log)?0:log;
             area=isNaN(area)?0:area;
             price=isNaN(price)?0:price;
@@ -312,16 +307,12 @@ var app = new Vue({
     },
     methods:{
         timeChange(){
-            console.log(this.yearSelected);
             if(this.active===1){
                 console.log('this.yearSelected__'+this.yearSelected);
-
-                var data=this.year[this.yearSelected]
+                var data={year:this.year[this.yearSelected]}
             }else{
                 console.log('this.monthSelected'+this.monthSelected);
-
                 var data= this.month[this.monthSelected]
-
             }
             console.log(data);
             this.$indicator.open({
@@ -332,9 +323,9 @@ var app = new Vue({
                 if(res.data.code==1){
                     this.personalInfo=res.data.data;
                     var info=this.personalInfo;
-                    var log=parseInt(info.dairy_num / info.total * 100),
-                            area=parseInt(info.finish_area / info.area * 100),
-                            price=parseInt(info.finish_price / info.price * 100);
+                    var log=(info.dairy_num / info.total * 100).toFixed(1),
+                            area=(info.finish_area / info.area * 100).toFixed(1),
+                            price=(info.finish_price / info.price * 100).toFixed(1);
                     log=isNaN(log)?0:log;
                     area=isNaN(area)?0:area;
                     price=isNaN(price)?0:price;

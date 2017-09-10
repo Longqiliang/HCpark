@@ -121,7 +121,7 @@ class Roomrent extends Base
     /*楼盘列表下拉刷新*/
     public function moreList()
     {
-        $len = input('lenth');
+        $len = input('length');
         $parkId = session("park_id");
         $build = input('build');
         if ($build) {
@@ -367,12 +367,14 @@ class Roomrent extends Base
                         'floor' =>$i,
                         'rooms' =>['room'=>$v['room'],'department_id'=>$v['deparment_id'],'number'=>$v['number']],
                     ];*/
-                    $finallArr['floor'] = $i;
-                    $finallArr['rooms'][$k] = ['room' => $v['room'], 'department_id' => $v['deparment_id'], 'number' => $v['number']];
+                    $finallArr[$i]['floor'] = $i;
+                    $finallArr[$i]['rooms'][$k] = ['room' => $v['room'], 'department_id' => $v['deparment_id'], 'number' => $v['number']];
+                    sort($finallArr[$i]['rooms']);
                 }
 
             }
         }
+        rsort($finallArr);
         echo json_encode($finallArr);
 
 
