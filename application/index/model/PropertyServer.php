@@ -12,9 +12,7 @@ use think\Model;
 class PropertyServer extends Model
 {
 
-    protected $insert = [
-        'clear_time' => NOW_TIME,
-    ];
+
 
 
 }
