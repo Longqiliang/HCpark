@@ -77,13 +77,13 @@ console.log({$info});
                             color:"#333"
                         }
                     },
-                    color:['#6ae7d4','#eda10e'],
+                    color:['#6ae7d4','#eda10e','#f78bda'],
                     legend: {
                         orient: 'horizontal',
                         selectedMode:false,
                         bottom:'5%',
                         itemGap:8,
-                        data:[_this.info.rent.name,_this.info.property.name]
+                        data:[_this.info.rent.name,_this.info.property.name,_this.info.other.name]
                     },
                     series: [
                         {
@@ -104,7 +104,8 @@ console.log({$info});
                             },
                             data:[
                                 {value:_this.info.rent.count, name:_this.info.rent.name},
-                                {value:_this.info.property.count, name:_this.info.property.name}
+                                {value:_this.info.property.count, name:_this.info.property.name},
+                                {value:_this.info.other.count, name:_this.info.other.name}
                             ]
                         }
                     ]
