@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>工会列表</title>
+<title>通知公告</title>
 <link rel="stylesheet" href="/index/css/news/article.css">
 {/block}
 
@@ -42,6 +42,19 @@
     var list = {$list};
     var type = {$type};
     console.log(list);
+    switch (type){
+        case "1":
+            document.title = "通知公告";
+        break;
+        case "2":
+            document.title = "工会信息";
+        break;
+        case "3":
+            document.title =  "相关活动";
+        break;
+        default:
+            break;
+    }
     var vm = new Vue({
         el:'#app',
         data:{
