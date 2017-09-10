@@ -45,12 +45,12 @@ class Roomrent extends Base
         ];
         if ($data['img']) {
             foreach ($data['img'] as $k1 => $v1) {
-                if (is_file(PUBLIC_PATH . $v1)){
+                if (is_file(PUBLIC_PATH . $v1)) {
                     $path = str_replace(".", "_s.", $v1);
                     $image = Image::open(PUBLIC_PATH . $v1);
                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
                     $data['imgs'][$k1] = $path;
-                }else{
+                } else {
                     $data['imgs'][$k1] = $data['img'][$k1];
                 }
             }
@@ -106,7 +106,7 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    if (is_file(PUBLIC_PATH . $v1)){
+                    if (is_file(PUBLIC_PATH . $v1)) {
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
@@ -151,7 +151,7 @@ class Roomrent extends Base
                 ];
                 if ($data[$k]['img']) {
                     foreach ($data[$k]['img'] as $k1 => $v1) {
-                        if (is_file(PUBLIC_PATH . $v1)){
+                        if (is_file(PUBLIC_PATH . $v1)) {
                             $path = str_replace(".", "_s.", $v1);
                             $image = Image::open(PUBLIC_PATH . $v1);
                             $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
@@ -161,7 +161,7 @@ class Roomrent extends Base
                 }
             }
 
-            return  ['code'=>1,'data'=>json_encode($data)];
+            return ['code' => 1, 'data' => json_encode($data)];
         } else {
 
             return ['code' => 0, 'data' => "没有更多数据了"];
@@ -251,7 +251,7 @@ class Roomrent extends Base
         $data1 = [];
         $type = input('type');
         $parkId = session("park_id");
-        $map = ['park_id' => $parkId, "build_block" => "A"];
+        $map = ['park_id' => $parkId, "build_block" => "A", 'status' => 0];
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRent = new ParkRent();
         $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
@@ -268,7 +268,7 @@ class Roomrent extends Base
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    if(is_file(PUBLIC_PATH . $v1)){
+                    if (is_file(PUBLIC_PATH . $v1)) {
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
@@ -277,7 +277,7 @@ class Roomrent extends Base
                 }
             }
         }
-        $map1 = ['park_id' => $parkId, "build_block" => "B"];
+        $map1 = ['park_id' => $parkId, "build_block" => "B", 'status' => 0];
         $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
         foreach ($list1 as $k => $v) {
             $room = ParkRoom::where('id', $v['room_id'])->find();
@@ -287,12 +287,12 @@ class Roomrent extends Base
                 'area' => $v['area'] . "㎡",
                 'price' => $v['price'] . "元/㎡·天",
                 'name' => $parkInfo['name'],
-                'rent_id' => $v['id'],
+                'id' => $v['id'],
                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
             if ($data[$k]['img']) {
                 foreach ($data[$k]['img'] as $k1 => $v1) {
-                    if(is_file(PUBLIC_PATH . $v1)){
+                    if (is_file(PUBLIC_PATH . $v1)) {
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
@@ -340,13 +340,16 @@ class Roomrent extends Base
 
         return $this->fetch();
     }
+
     /*全景照片*/
-    public function panorama(){
+    public function panorama()
+    {
         $link = input('link');
-        $this->assign('link',$link);
+        $this->assign('link', $link);
 
         return $this->fetch();
     }
+
     /*拼数组*/
     public function gaoshiqing()
     {
