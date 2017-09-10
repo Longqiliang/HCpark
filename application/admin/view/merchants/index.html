@@ -44,7 +44,7 @@
             <h2>招商管理</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteCompany')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -55,7 +55,7 @@
         <div id="modal-form" class="modal fade" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form class="form-horizontal" method="post" action="{:Url('Communication/edit')}">
+                    <form class="form-horizontal" method="post" action="{:Url('Merchants/editCompany')}">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                             <h3 class="modal-title text-center"  name="dialog-title">编辑招商公司</h3>
@@ -66,24 +66,46 @@
                                     <input id="input-file" type="file" class="file">
                                     <sapn>
 
-                                        <img class="front_cover_img" name="group_img"  id ="group_img" src="" />
+                                        <img class="front_cover_img" name="img"  id ="img" src="" />
 
                                     </sapn>
                                 </div>
                             </div>
                             <div class="form-group"><label class="col-sm-2 control-label">招商公司</label>
-                                <div class="col-sm-10"><input type="text" placeholder="服务简介" class="form-control" required="" name="group_name"></div>
+                                <div class="col-sm-10"><input type="text" placeholder="公司名称" class="form-control" required="" name="company"></div>
                             </div>
                             <div class="form-group"><label class="col-sm-2 control-label">公司介绍</label>
-                                <div class="col-sm-10"><input type="text" placeholder="群简介" class="form-control" required="" name="content"></div>
+                                <div class="col-sm-10"><input type="text" placeholder="公司介绍" class="form-control" required="" name="content"></div>
                             </div>
                             <div class="form-group"><label class="col-sm-2 control-label">招商人员</label>
-                                <div class="col-sm-10"><input type="text" placeholder="群简介" class="form-control" required="" name="content"></div>
+
+                                <div class="col-sm-10"><select class="form-control m-b" name="user_id">
+                                    {volist name="userlist" id="vo"}
+
+                                    <option value="{$vo.user_id}">{$vo.name}</option>
+
+                                    {/volist}
+                                </select></div>
+
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">招商面积</label>
+                                <div class="col-sm-10"><input type="number" placeholder="招商面积（平米）" class="form-control" required="" name="merchants_area"></div>
+                            </div>
+
+
+                            <div class="form-group"><label class="col-sm-2 control-label">完成回款</label>
+                                <div class="col-sm-10"><input type="number" placeholder="完成回款（万元）" class="form-control" required="" name="merchants_money"></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">状态</label>
+                                <div class="col-sm-10"><select class="form-control m-b"   name="status">
+                                    <option value="1" >进行中</option>
+                                    <option value="2" >已完成</option>
+                                </select></div>
                             </div>
 
                             <div class="form-group"><label class="col-sm-2 control-label">所属园区</label>
-                                <div class="col-sm-10"><select class="form-control m-b" name="park_id">
-                                    <option value="3">希垦园区</option>
+                                <div class="col-sm-10"><select class="form-control m-b"  disabled name="park_id">
+                                    <option value="3" >希垦园区</option>
 
                                 </select></div>
                             </div>
@@ -142,22 +164,25 @@
                     </td>
 
                     <td>
-                        {$vo.merchants_area}
+                        {$vo.merchants_area}平米
                     </td>
                     <td>
-                        {$vo.merchants_money}
+                        {$vo.merchants_money}万元
                     </td>
                     <td>
-                        {$vo.create_time}
+                        <noempty name="vo.create_time"> {$vo.create_time}</noempty>
+
                     </td>
                     <td>
-                        {$vo.update_time}
+                        <noempty name="vo.update_time">{$vo.update_time }</noempty>
+
+
                     </td>
                     <td>
                         {$vo.status_text}
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-company="{$vo.company}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.id}"    >编辑</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-company="{$vo.company}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"  data-status="{$vo.status}"  data-user="{$vo.user_id}"  data-area="{$vo.merchants_area}" data-money="{$vo.merchants_money}">编辑</a>
                         <a   href="{:Url('showRecord','id='.$vo.id  )}" >查看招商日志</a>
 
                     </td>
@@ -201,22 +226,24 @@
         }
     });
     function edit(a) {
-
+        console.log($(a).attr('data-user'));
         var name =$(a).attr('data-name');
         $("input[name='id']").val($(a).attr('data-id'));
-        $("input[name='group_name']").val($(a).attr('data-groupname'));
+        $("select[name='user_id']").val($(a).attr('data-user'));
         $("input[name='content']").val($(a).attr('data-content'));
         $("select[name='status']").val($(a).attr('data-status'));
         $("select[name='park_id']").val($(a).attr('data-park'));
-        var pic = document.getElementById("group_img");
+        $("input[name='company']").val($(a).attr('data-company'));
+        $("input[name='img']").val($(a).attr('data-img'));
+        $("select[name='status']").val($(a).attr('data-status'));
+        $("input[name='merchants_area']").val($(a).attr('data-area'));
+        $("input[name='merchants_money']").val($(a).attr('data-money'));
+        var pic = document.getElementById("img");
         pic.src=$(a).attr('data-img');
 
 
     }
-    function add() {
 
-
-    }
 
 
     function sendFile(file) {
@@ -231,6 +258,8 @@
             processData: false,
             success: function(response) {
                 var data = $.parseJSON(response);
+               console.log('1111');
+               console.log(data.data)
                 $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
             }
         });
@@ -253,7 +282,7 @@
             $("input[name='front_cover']").val(response.data);
             $("input[name='img']").val(response.data);
             console.log( $("input[name='img']").val());
-            var pic = document.getElementById("group_img");
+            var pic = document.getElementById("img");
             pic.src=response.data;
 
         } else {

@@ -13,6 +13,18 @@ use think\Model;
 
 class MerchantsCompany extends  Model
 {
+
+    protected $type =[
+
+        'update_time'=>'strtotime',
+         'create_time'=>'strtotime'
+
+    ];
+    protected $insert = [
+        'status' => 1,
+        'create_time' => NOW_TIME,
+
+    ];
     public  function  user(){
 
         return $this->hasOne('WechatUser','userid','user_id');

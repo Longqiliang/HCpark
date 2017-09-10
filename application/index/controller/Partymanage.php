@@ -305,10 +305,10 @@ class Partymanage extends Base
                 $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
                 unset($value['user']);
             }
-            echo "领导权限";
+           // echo "领导权限";
         } //个人权限
         else {
-            echo "个人权限";
+            //echo "个人权限";
             //工作日志
             $diaryList = $mDiary->where('user_id', $userid)->order('create_time desc')->select();
             foreach ($diaryList as $value) {
@@ -427,9 +427,7 @@ class Partymanage extends Base
     //查看招商日志详情
     public function recordDetail()
     {
-        $user_id = session('userId');
         $mRecord = new MerchantsRecord();
-        $mCompany = new MerchantsCompany();
         $Record_id = input('id');
         $info = $mRecord->where('id', $Record_id)->find();
         $info['company_name'] = isset($info->merchantsCompany->company) ? $info->merchantsCompany->company : "";
@@ -437,7 +435,7 @@ class Partymanage extends Base
         $info['merchants_area'] = isset($info->merchantsCompany->merchants_area) ? $info->merchantsCompany->merchants_area : "";
         $info['merchants_money'] = isset($info->merchantsCompany->merchants_money) ? $info->merchantsCompany->merchants_money : "";
         unset($info['merchantsCompany']);
-        echo json_encode($info);
+        //echo json_encode($info);
         $this->assign('info', json_encode($info));
         return $this->fetch();
     }
@@ -568,7 +566,7 @@ class Partymanage extends Base
             $month = input('month');
             $personalinfo = $this->statisticsCommon($userid, $year, $month);
             if ($personalinfo) {
-                return $this->success("成功", '', $personalinfo);
+                return $this->success("成功", '',$personalinfo);
 
             } else {
                 return $this->error("失败");
@@ -635,7 +633,7 @@ class Partymanage extends Base
             }
 
             //当前日志详情
-            echo json_encode($diary);
+           // echo json_encode($diary);
             $this->assign('info', json_encode($diary));
             //该用户总共写的日志
             $this->assign('list', json_encode($time));

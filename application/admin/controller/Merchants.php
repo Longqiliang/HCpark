@@ -34,20 +34,54 @@ class Merchants extends Admin
         ];
         $user = $wechatUser->where($data)->select();
         $userId = array();
+        $userlist=array();
         foreach ($user as $value) {
+            $data=[
+                'user_id'=>$value['userid'],
+                'name'=>$value['name']
+
+            ];
+            array_push($userlist,$data);
             array_push($userId, $value['userid']);
 
         }
         $map['user_id'] = array('in', $userId);
+        $map['status']=array('gt',-1);
         $all_company = $mCompany->where($map)->paginate();
         foreach ($all_company as $value) {
             $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+            $value['park_id'] = $park_id;
+            $value['create_time'] = !empty($value['create_time'])?date('Y-m-d',$value['create_time']):"";
+            $value['update_time'] =  !empty($value['update_time'])?date('Y-m-d',$value['update_time']):"";
         }
         int_to_string($all_company, array('status' => array(1 => '招商中', 2 => '已招商')));
 
+        $this->assign('userlist',$userlist);
         $this->assign('search', $search);
         $this->assign('list', $all_company);
         return $this->fetch();
+
+    }
+
+    //编辑和新增招商公司
+    public function editCompany()
+    {
+        $id = input('id');
+        $data = input('');
+        $mCompany = new MerchantsCompany();
+        //新增
+        if (empty($id)) {
+            $info = $mCompany->allowField(true)->save($data);
+        } //编辑
+        else {
+            unset($data['id']);
+            $info = $mCompany->allowField(true)->save($data, ['id' => $id]);
+        }
+        if ($info) {
+            return $this->success("成功");
+        } else {
+            return $this->error('失败','',$mCompany->getError());
+        }
 
     }
 
@@ -76,6 +110,8 @@ class Merchants extends Admin
         $this->assign('info', $info);
         return $this->fetch();
     }
+
+
 
     //招商人员
     public function user()
@@ -122,4 +158,29 @@ class Merchants extends Admin
         $this->assign('list', $list);
         return $this->fetch();
     }
+    //删除招商公司
+    public  function  deleteCompany(){
+        $ids = input('ids/a');
+        $mCompany = new MerchantsCompany();
+
+        $result = $mCompany->where('id', 'in', $ids)->update(['status' => -1]);
+        if($result) {
+            return $this->success('删除成功', url('Merchants/index'));
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
+
+    }
+    //删除工作日志
+    public  function  deleteDiary(){
+
+
+    }
+    //删除招商日志
+    public  function  deleteRecord(){
+
+
+    }
+
+
 }
