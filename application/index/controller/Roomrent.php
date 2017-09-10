@@ -130,7 +130,7 @@ class Roomrent extends Base
         $len = input('length');
         $parkId = session("park_id");
         $build = input('build');
-        if ($build) {
+        if (!$build) {
             $build = "A";
         }
         $map = ['park_id' => $parkId, 'build_block' => $build];
