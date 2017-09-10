@@ -192,7 +192,7 @@
                 <span class="my-company">{{item.company ? item.company : '暂无信息'}}</span>
                 <div class="my-demand"><span class="icon-people">{{item.number ? item.number+'人' : '-'}}</span> <span class="icon-job">{{item.experience ? item.experience : '-'}}</span><span class="icon-edu">{{item.education ? item.education : '-'}}</span></div>
             </div>
-            <!--<a :href="'/index/talentservice/detail/id/'+item.id"></a>-->
+            <a :href="'/index/talentservice/detail/id/'+item.id"></a>
         </li>
     </ul>
     <ul class="searchList my-list" :class="{bgWhite:inputStatus}" v-if="inputStatus">
