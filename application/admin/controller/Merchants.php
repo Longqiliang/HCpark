@@ -24,7 +24,7 @@ class Merchants extends Admin
         if (!empty($search)) {
             $map['company'] = array('like', '%' . $search . '%');
         }
-        $park_id = session('park_id');
+        $park_id = session('user_auth.park_id');
         $mCompany = new MerchantsCompany();
         $wechatUser = new WechatUser();
         $data = [
@@ -120,7 +120,7 @@ class Merchants extends Admin
         if (!empty($search)) {
             $map['company'] = array('like', '%' . $search . '%');
         }
-        $park_id = session('park_id');
+        $park_id = session('user_auth.park_id');
         $wechatUser = new WechatUser();
         $data = [
             'park_id' => $park_id,
