@@ -6,6 +6,7 @@
     ul{
         padding:1.2rem;
         border-bottom: 1px solid #f1f1f1;
+        font-size: 1.5rem;
     }
     ul>li{
         display: -webkit-flex;
@@ -43,6 +44,7 @@
 {block name="body"}
 <div id="app">
     <ul v-for="item in historyList" >
+        <li>{{item.title}}</li>
         <li>
             <span>{{item.name}}</span>
             <span class="unPay" v-if="item.status==-1">已删除</span>

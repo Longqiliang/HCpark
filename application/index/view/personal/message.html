@@ -8,25 +8,34 @@
     text-align: center;
     color: #999;
 }
+    p.no-more{
+        color: #999;
+        font-size: 1.4rem;
+        text-align: center;
+        line-height: 80vh;
+    }
 </style>
 {/block}
 {block name="body"}
 <div id="app">
-    <ul class="msg-lists">
-        <li  class="clear" v-for="item in list">
-            <div :style="'background-image: url('+item.path+')'" class="msg-img"></div>
-            <div class="msg-text">
-                <div class="msg-title"><span class="msg-title-text">标题</span> <span class="fr msg-time">2017-8-29</span> </div>
-                <div class="msg-info">消息内容（-。。-）</div>
-            </div>
-            <!--<a href=""></a>-->
-        </li>
-    </ul>
-    <div class="load-more">
-        <span v-if="documents.length === 0">暂无消息</span>
-        <mt-spinner :type="2"  v-if="canLoad && loading"></mt-spinner>
-        <span v-if="!canLoad">没有更多了</span>
-    </div>
+    <!--<ul class="msg-lists">-->
+        <!--<li  class="clear" v-for="item in list">-->
+            <!--<div :style="'background-image: url('+item.path+')'" class="msg-img"></div>-->
+            <!--<div class="msg-text">-->
+                <!--<div class="msg-title"><span class="msg-title-text">标题</span> <span class="fr msg-time">2017-8-29</span> </div>-->
+                <!--<div class="msg-info">消息内容（-。。-）</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;<a href=""></a>&ndash;&gt;-->
+        <!--</li>-->
+    <!--</ul>-->
+    <!--<div class="load-more">-->
+        <!--<span v-if="documents.length === 0">暂无消息</span>-->
+        <!--<mt-spinner :type="2"  v-if="canLoad && loading"></mt-spinner>-->
+        <!--<span v-if="!canLoad">没有更多了</span>-->
+    <!--</div>-->
+    <p class="no-more">
+        暂无消息
+    </p>
 </div>
 <!--加载更多-->
 
@@ -38,7 +47,7 @@
     var app=new Vue({
         el:'#app',
         data:{
-            list:{$list},
+            list:'{$list}',
             canLoad:true,
             loading:false,
             id:{$id}

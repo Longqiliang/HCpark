@@ -113,7 +113,8 @@ class Personal extends Base
         $party_user=new  WechatUser();
         if (IS_POST) {
             $data=input('');
-                $result =$party_user->save($data,['userid'=>$user_id]);
+            $data['education'] = $data['education']-1;
+            $result =$party_user->save($data,['userid'=>$user_id]);
             if($result!==false){
 
                 return $this->success('成功');
@@ -126,6 +127,7 @@ class Personal extends Base
             if($userInfo){
                 unset($userInfo['mobile']);
                 unset($userInfo['userid']);
+                $userInfo['education'] =  $userInfo['education']+1;
                 $result['data']=$userInfo;
             }
             $this->assign("data",json_encode($result));
@@ -138,6 +140,7 @@ class Personal extends Base
         $user_id = session("userId");
         $party_user=new  WechatUser();
         $userInfo = $party_user->where(['userid' => $user_id])->find();
+        $userInfo['education'] = $userInfo['education'] + 1;
         unset($userInfo['mobile']);
         unset($userInfo['userid']);
         $this->assign("data",$userInfo);
