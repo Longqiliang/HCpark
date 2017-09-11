@@ -197,7 +197,8 @@ class Roomrent extends Base
         foreach ($floor as $k => $v) {
             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
             foreach ($roomList as $k1 => $v1) {
-                if ($v1['company']) {
+                $res = ParkRent::where('room_id',$v1['id'])->find();
+                if (!$res) {
                     $status = false;
                 } else {
                     $status = true;
@@ -223,7 +224,8 @@ class Roomrent extends Base
         foreach ($floor1 as $k => $v) {
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
-                if ($v1['company']) {
+                $res = ParkRent::where('room_id',$v1['id'])->find();
+                if (!$res) {
                     $status1 = false;
                 } else {
                     $status1 = true;
