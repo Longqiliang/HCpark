@@ -55,8 +55,7 @@ class Merchants extends Admin
             $value['update_time'] = !empty($value['update_time']) ? date('Y-m-d', $value['update_time']) : "";
         }
         int_to_string($all_company, array('status' => array(1 => '招商中', 2 => '已招商')));
-
-        echo json_encode($userlist);
+        $this->assign('park',$park_id);
         $this->assign('userlist', $userlist);
         $this->assign('search', $search);
         $this->assign('list', $all_company);

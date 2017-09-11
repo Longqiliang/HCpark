@@ -375,7 +375,7 @@ class Communication extends Base
                 'status' => 3
             ];
             $group_id = array();
-            $list = $cuser->where($map2)->order('id desc')->select();
+            $list = $cuser->where($map2)->order('create_time desc')->select();
             foreach ($list as $value) {
                 array_push($group_id, $value['group_id']);
             }
@@ -384,7 +384,7 @@ class Communication extends Base
                 'status' => array('lt', 3),
                 'group_id' => array('in', $group_id)
             ];
-            $list = $cuser->where($map)->select();
+            $list = $cuser->where($map)->order('create_time desc')->select();
             foreach ($list as $value) {
                 $value['name'] = isset($value->user->name) ? $value->user->name : "";
                 $value['group_name'] = isset($value->group->group_name) ? $value->group->group_name : "";
