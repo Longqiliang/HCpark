@@ -94,66 +94,69 @@ class Electricity extends Admin
                 $record->save();
                 return $this->success("审核成功");
             }
-
-
-        }else{
-            $id=input('id');
-            $info =$ElectricityRecord->where('id',$id)->find();
-            $info['payment_voucher']=json_decode($info['payment_voucher']);
-            $info['name'] = isset($info->findService->name)?$info->findService->name:"";
-            $info['mobile'] = isset($info->findService->mobile)?$info->findService->mobile:"";
-            $info['user'] = isset($info->findService->user->name  )?$info->findService->user->name:"";
-            $info['type']=$info['type']==1?"新柱办理":"旧柱续费";
-            $info['electricity_id'] = isset($info->findService->electricity_id)?$info->findService->electricity_id:"";
-            switch ($info['status']){
-                case 0: $info['status_text']="审核中"; break;
-                case 1: $info['status_text']="审核通过"; break;
-                case 2: $info['status_text']="审核失败"; break;
+        } else {
+            $id = input('id');
+            $info = $ElectricityRecord->where('id', $id)->find();
+            $info['payment_voucher'] = json_decode($info['payment_voucher']);
+            $info['name'] = isset($info->findService->name) ? $info->findService->name : "";
+            $info['mobile'] = isset($info->findService->mobile) ? $info->findService->mobile : "";
+            $info['user'] = isset($info->findService->user->name) ? $info->findService->user->name : "";
+            $info['type'] = $info['type'] == 1 ? "新柱办理" : "旧柱续费";
+            $info['electricity_id'] = isset($info->findService->electricity_id) ? $info->findService->electricity_id : "";
+            switch ($info['status']) {
+                case 0:
+                    $info['status_text'] = "审核中";
+                    break;
+                case 1:
+                    $info['status_text'] = "审核通过";
+                    break;
+                case 2:
+                    $info['status_text'] = "审核失败";
+                    break;
             }
 
-$this->assign('info', $info);
-return $this->fetch();
-}
-}
-public
-function del()
-{
-    $CardparkRecord = new CarparkRecord();
-    $result = $CardparkRecord->where('id', input('id'))->find();
-    $result['status'] = -1;
-    $result->save();
-
-
-    if ($result) {
-        $this->redirect('index');
-    } else {
-        $this->error('删除失败');
-    }
-}
-
-public
-function change()
-{
-    $ElectricityRecord = new ElectricityRecord();
-    $ElectricityService = new ElectricityService();
-    $id = input('id');
-    $electricity_id = input('electricity_id');
-    if (empty($park_card)) {
-        return $this->error("请填写 充电柱编号");
-    }
-    $record = $ElectricityRecord->where('id', $id)->find();
-    $map = [
-        'electricity_id' => $electricity_id
-    ];
-    $service = $ElectricityService->where('id', $record['service_id'])->Update($map);
-    if ($service != false) {
-        return $this->success("修改成功");
-    } else {
-        return $this->error("修改失败");
+            $this->assign('info', $info);
+            return $this->fetch();
+        }
     }
 
+    public function del()
+    {
+        $CardparkRecord = new CarparkRecord();
+        $result = $CardparkRecord->where('id', input('id'))->find();
+        $result['status'] = -1;
+        $result->save();
 
-}
+
+        if ($result) {
+            $this->redirect('index');
+        } else {
+            $this->error('删除失败');
+        }
+    }
+
+    public function change()
+    {
+        $ElectricityRecord = new ElectricityRecord();
+        $ElectricityService = new ElectricityService();
+        $id = input('id');
+        $electricity_id = input('electricity_id');
+        if (empty($park_card)) {
+            return $this->error("请填写 充电柱编号");
+        }
+        $record = $ElectricityRecord->where('id', $id)->find();
+        $map = [
+            'electricity_id' => $electricity_id
+        ];
+        $service = $ElectricityService->where('id', $record['service_id'])->Update($map);
+        if ($service != false) {
+            return $this->success("修改成功");
+        } else {
+            return $this->error("修改失败");
+        }
+
+
+    }
 
 
 }
