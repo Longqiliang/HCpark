@@ -1142,19 +1142,32 @@ class Service extends Base
                 foreach ($list as $l) {
                     array_push($create_time, $l['create_time']);
                 }
+
                 //数组去重
                 $time = array_values(array_unique($create_time));
-
                 foreach ($time as $onetime) {
                     $map = array();
+                    $times=array();
                     foreach ($list as $info) {
                         if ($info['create_time'] == $onetime) {
                             array_push($map, $info);
+                            array_push($times, $info['order_time']);
                         }
+                    }
+                    $price=0;
+                    $timelist=array_count_values($times);
+
+                    foreach ($timelist as $key=>$value){
+                        if($value==1){
+                            $price=$price+500;
+                        }else if($value==2){
+                            $price=$price+800;
+                        }
+
                     }
                     $re = [
                         'create_time' => strtotime($onetime) * 1000,
-                        'price' => count($map) * $serviceInfo['price']
+                        'price' => $price
                     ];
                     $re['day'] = "";
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
