@@ -76,9 +76,9 @@
                 <thead>
                 <tr>
                     <th style="width:10%"></th>
-                    <th style="width:25%">企业名称</th>
                     <th style="width:25%">楼盘名称</th>
                     <th style="width:15%">房间号</th>
+                    <th style="width:25%">企业名称</th>
                     <th style="width:15%">操作</th>
                 </tr>
                 </thead>
@@ -88,18 +88,17 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
-                    <td class="mail-subject">
-                        <a href="{:Url('roommanage','id='.$vo.id)}">
-                            {$vo.company}{empty name="$vo.company"}待租{/empty}
-                        </a>
-                    </td>
                     <td>
                         <a href="{:Url('roommanage','id='.$vo.id)}">{$parkName}{$vo.build_block}幢</a>
                     </td>
                     <td>
                         <a href="{:Url('roommanage','id='.$vo.id)}">{$vo.floor}楼{$vo.room}室</a>
                     </td>
-
+                    <td class="mail-subject">
+                        <a href="{:Url('roommanage','id='.$vo.id)}">
+                            {$vo.company}{empty name="$vo.company"}待租{/empty}
+                        </a>
+                    </td>
                     <td>
                         <a  href="{:Url('roommanage','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">查看信息</a>
                     </td>

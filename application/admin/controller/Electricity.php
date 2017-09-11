@@ -74,7 +74,8 @@ class Electricity extends Admin
                 $record['status']=1;
                 $record->save();
                 $map=[
-                    'electricity_id'=>$electricity_id
+                    'electricity_id'=>$electricity_id,
+                    'status' =>1,
                 ];
                 $service = $ElectricityService->where('id',$record['service_id'])->Update($map);
                 if ($service){
