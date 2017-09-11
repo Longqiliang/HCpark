@@ -248,7 +248,7 @@ class Partymanage extends Base
                     $path = str_replace(".", "_s.", $v1);
                     $image = Image::open(PUBLIC_PATH . $v1);
                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                    $info['img'][$k1] = $path;
+                    $info['imgs'][$k1] = $path;
                 }
             }
         }
@@ -746,11 +746,11 @@ class Partymanage extends Base
                     $path = str_replace(".", "_s.", $v1);
                     $image = Image::open(PUBLIC_PATH . $v1);
                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                    $info['img'][$k1] = $path;
+                    $info['imgs'][$k1] = $path;
                 }
             }
         }
-//        return  dump($info);
+        //return  dump($info);
         $this->assign('info', json_encode($info));
 
 
