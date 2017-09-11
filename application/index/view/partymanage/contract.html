@@ -65,22 +65,22 @@ console.log({$info});
                     title: {
                         text: _this.info.total.count,
                         x:"49%",
-                        y:"35%",
+                        y:"40%",
                         textAlign: "center",
                         textStyle: {
                             fontWeight: 'normal',
                             fontSize: 15,
-                            color: '#3ea1ff'
+                            color: '#333'
                         },
                         subtextStyle:{
                             color:"#333"
                         }
                     },
-                    color:['#6ae7d4','#eda10e','#f78bda'],
+                    color:['#57cc98','#ffa71a','#4cd5d1'],
                     legend: {
                         orient: 'horizontal',
                         selectedMode:false,
-                        bottom:'5%',
+                        bottom:'3%',
                         itemGap:8,
                         data:[_this.info.rent.name,_this.info.property.name,_this.info.other.name]
                     },
@@ -89,7 +89,7 @@ console.log({$info});
                             hoverAnimation:false,//取消hover动画
                             name:'合同类型统计',
                             type:'pie',
-                            center:['50%',"40%"],
+                            center:['50%',"45%"],
                             radius: ['40%', '55%'],
                             label: {
                                 normal: {

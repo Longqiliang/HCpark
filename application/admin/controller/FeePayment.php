@@ -13,7 +13,7 @@ use app\index\model\WechatDepartment;
 use app\index\model\WechatUser;
 
 
-class FeePayment extends Admin
+class Feepayment extends Admin
 {
     /*费用缴纳首页*/
     public function index(){
@@ -86,7 +86,7 @@ class FeePayment extends Admin
             }
 
         }else{
-            $status = [-1=>"删除",0=>"进行中",1=>"审核中",2=>"已缴费",3=>"审核失败"];
+            $status = [-1=>"删除",0=>"审核中",1=>"审核成功",2=>"审核失败"];
             $id = input('id');
             $company = ParkCompany::get($id);
             $list1 = $feepayment->where(['company_id'=>$id,'type'=>1,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
@@ -123,7 +123,7 @@ class FeePayment extends Admin
     public function changeState(){
         $id =input('id');
         $feepayment = new FeePaymentModel();
-        $res =$feepayment->where('id',$id)->update(['status'=>2]);
+        $res =$feepayment->where('id',$id)->update(['status'=>1]);
         if ($res){
 
            return  $this->success("审核通过， 稍后自动刷新页面~");
@@ -142,7 +142,7 @@ class FeePayment extends Admin
         $company = ParkCompany::get($id);
         $list = $feepayment->where(['company_id'=>$id])->paginate();
         int_to_string($list,['type'=>[1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"],
-                            'status'=>[-1=>"删除",0=>"进行中",1=>"审核中",2=>"已缴费",3=>"未缴费"]]);
+                            'status'=>[-1=>"删除",0=>"审核中",1=>"审核成功",2=>"审核失败"]]);
         foreach ($list as $k=>$v){
             $v['payment_voucher'] = unserialize($v['payment_voucher']);
         }
