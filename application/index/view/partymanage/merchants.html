@@ -589,7 +589,7 @@
             finish:{$finish},
             //个人统计
             personallist:{$personallist},
-            isActive:1,
+            isActive:0,
             searchList:[],
             rateActive:0,
             inputStatus:false,
@@ -599,6 +599,9 @@
         computed:{
         },
         created(){
+
+        },
+        mounted(){
             //初始Tab
             if(this.is_boss=='yes'){
                 this.isActive=0
@@ -609,8 +612,6 @@
             if(active!=null){
                 this.isActive=active
             }
-        },
-        mounted(){
             //初始数据处理
             var w=[],e=[];
             for( x in this.undone2 ){
