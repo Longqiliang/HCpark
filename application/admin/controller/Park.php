@@ -194,17 +194,16 @@ class Park extends Admin
                 $data = input('post.');
                 unset($data['floor']);
                 $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block')])->find();
-                /*$rents = $parkRent->where(['room' => input('room'), 'build_block' => input('build_block')])->find();
-                if ($rents){
-                    $parkRent->where('id',$rents['id'])->update(['status'=>-1]);
-                }*/
+                if ($rooms['company']){
+
+                    $this->error(" 该房间已有企业入住，无法添加出租信息");
+                }
                 $data['room_id'] = $rooms['id'];
                 unset($data['room']);
                 foreach ($data['img'] as $k => $v) {
                     $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
                 $data['img'] = json_encode($data['img']);
-                //return dump($data);
                 $res = $parkRent->where('id', $id)->update($data);
                 if ($res) {
 
@@ -218,9 +217,11 @@ class Park extends Admin
                 unset($data['id']);
                 unset($data['floor']);
                 $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'), 'del' => 0])->find();
-                //return  dump($rooms['id']);
                 if (!$rooms['id']) {
                     $this->error('该楼室不存在');
+                }elseif ($rooms['company']){
+
+                    $this->error(" 该房间已有企业入住，无法添加出租信息");
                 }
                 $rents = $parkRent->where(['room_id' => $rooms['id'], 'status' => 0])->find();
                 if ($rents['id']) {
