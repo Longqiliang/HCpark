@@ -20,6 +20,7 @@ use app\common\model\FeePayment;
 use org\ImageImagick;
 use app\index\model\News;
 use think\Image;
+use app\common\model\PartyNews;
 
 class Partymanage extends Base
 {
@@ -30,18 +31,17 @@ class Partymanage extends Base
         $park_id = session('park_id');
         $user = WechatUser::where('userid', 'eq', $userid)->field('department,tagid')->find();
         $map = [
-            'type' => 2,
             'status' => 1,
         ];
         if (IS_POST) {
             $park_id = input('park_id');
             if ($park_id == 1) {
-                $news = News::where($map)->order('create_time desc')->field('id,title')->limit(4)->select();
+                $news = PartyNews::where($map)->order('create_time desc')->field('id,title')->limit(4)->select();
             } else {
-                $news = News::where($map)->where('park_id', $park_id)->order('create_time desc')->field('id,title')->limit(4)->select();
+                $news = PartyNews::where($map)->where('park_id', $park_id)->order('create_time desc')->field('id,title')->limit(4)->select();
             }
-            if ($news！=false) {
-                return  $this->success('成功' ,'',json_encode($news));
+            if ($news！ = false) {
+                return $this->success('成功', '', json_encode($news));
             } else {
                 return $this->error('失败');
             }
@@ -50,7 +50,7 @@ class Partymanage extends Base
         if ($user['department'] == 1 && $user['tagid'] == 1) {
 
             $res = Park::field('id,name')->select();
-            $news = News::where($map)->order('create_time desc')->field('id,title')->limit(4)->select();
+            $news = PartyNews::where($map)->order('create_time desc')->field('id,title')->limit(4)->select();
             $all = [
                 'id' => "1",
                 'name' => "全部"
@@ -59,7 +59,7 @@ class Partymanage extends Base
         } else {
             //只能看到自己园区
             $res = Park::where('id', 'eq', $park_id)->field('id,name')->select();
-            $news = News::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->limit(4)->select();
+            $news = PartyNews::where($map)->where('park_id', session("park_id"))->order('create_time desc')->field('id,title')->limit(4)->select();
         }
 
         $this->assign('news', json_encode($news));
@@ -76,17 +76,15 @@ class Partymanage extends Base
         $parkid = input('park_id');
         if ($parkid == '1') {
             $map = [
-                'type' => 2,
                 'status' => 1,
             ];
         } else {
             $map = [
                 'park_id' => $parkid,
-                'type' => 2,
                 'status' => 1,
             ];
         }
-        $list = News::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->limit(6)->select();
+        $list = PartyNews::where($map)->order('create_time desc')->field('id,title,views,create_time,park_id')->limit(6)->select();
         $this->assign('list', json_encode($list));
         $this->assign('park_id', json_encode($parkid));
         return $this->fetch();
@@ -99,18 +97,16 @@ class Partymanage extends Base
         $parkid = input('park_id');
         if ($parkid == '1') {
             $map = [
-                'type' => 2,
                 'status' => 1,
             ];
         } else {
             $map = [
                 'park_id' => $parkid,
-                'type' => 2,
                 'status' => 1,
             ];
         }
 
-        $list = News::where($map)
+        $list = PartyNews::where($map)
             ->order("create_time desc")
             ->limit($len, 6)
             ->select();
@@ -127,16 +123,16 @@ class Partymanage extends Base
     /** 内部通告详情页 **/
     public function detail()
     {
+        // 添加阅读量
+        PartyNews::where('id', input('id'))->setInc('views');
         $id = input('id');
         $map = [
             'id' => $id,
-            'type' => 2,
             'status' => 1,
         ];
-        $res = News::where($map)->find();
+        $res = PartyNews::where($map)->find();
 
         $this->assign('res', json_encode($res));
-//        echo json_encode($res);
         return $this->fetch();
     }
 
