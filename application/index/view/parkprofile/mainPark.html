@@ -1,0 +1,146 @@
+
+{extend name="public/common"}
+
+{block name="style"}
+<title>园区简介</title>
+<!--<link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>-->
+<style>
+    *{
+        box-sizing: border-box;
+    }
+    h1,h2,h3,h4,h5,h6,p{
+        margin: 0;
+    }
+    .header{
+        padding-bottom: 5.33vw
+    }
+    .header h2{
+        font-weight: bold;
+        text-align: center;
+        margin: 2.667vw 0 0;
+        color: #333;
+        font-size: 1.8rem;
+        padding: 0 4vw;
+    }
+    section{
+        padding: 0 4vw 5.33vw 4vw;
+        font-size: 1.4rem;
+        color: #333;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+    section h3.title{
+        text-indent: 2em;
+        margin:0 0 1.33vw ;
+        font-size: 1.6rem;
+    }
+    section p,h4{
+        text-indent: 2em;
+        font-size: 1.5rem;
+        font-weight: normal;
+    }
+    h4.title{
+        font-weight: bold;
+    }
+    h4.none{
+        text-indent: 0;
+    }
+    section p{
+        margin: 1.33vw 0;
+    }
+    .flex{
+        display: flex;
+        justify-content: center;
+    }
+    .flex img:first-child{
+        width: 60%;
+    }
+    .flex img:last-child{
+        width: 40%;
+    }
+    .img-responsive{
+        display: block;
+        max-width: 100%;
+        /*max-height: 50vw;*/
+        vertical-align: middle;
+        margin: 5.33vw auto;
+    }
+    .list-important{
+        font-weight: bold;
+    }
+    ul.list{
+        padding:0 4vw;
+    }
+    .list-important li{
+        text-indent: 4em;
+    }
+    .list-box{
+        margin: 5.33vw 0;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="comment">
+    <div class="header">
+        <h2>浙江智新泽地科技发展有限公司</h2>
+    </div>
+    <section>
+        <h3 class="title">一、公司简介：</h3>
+        <p>浙江智新泽地科技发展有限公司（下简称“智新泽地”）是一家专业的科技园区运营商和创业创新服务提供商。公司以“营造创业创新环境、服务创业创新发展、培育万家企业成长”为宗旨，致力于为创业者提供一流的创业空间、完善的创业创新服务、快速成长的发展环境。</p>
+        <p>智新泽地成立于2011年11月，注册资金1000万元，位于中国互联网之城、创业之都、美丽的西子湖——杭州！</p>
+        <p>智新泽地园区规模建筑面积在18万平方方，园区物业分别位于余杭区未来科技城、江干区钱江金融城和滨江高新区人工智能产业园，是浙江杭州金融科技和互联网、高科技产业集聚密度最高区域。</p>
+        <h4>一、园区</h4>
+        <p>1、“浙江互联网产业大厦”位于钱江金融城区，西靠凤起路延伸段及运河东路，南临杭海路，遥望钱塘江景。是智新泽地根据江干区科技产业发展总体规划，与江干区政府在城东钱江金融城区域共同打造的科技平台项目，也是智新泽地在江干区落地发展的第一个科技产业园项目。</p>
+        <p><img src="/index/images/parkprofile/park-img1.png" alt="浙江互联网产业大厦" class="img-responsive"></p>
+        <p>2、“希垦孵化园”总建筑面积为3.5万平方米，位于余杭区未来科技城核心区域，于2014年11月正式入驻，在政府大力的政策扶持下，园区将重点引进互联网、电子商务、科技型的企业，以培育高新技术企业和互联网服务平台研发为主要目标，目前去化率已完成94%，形成电子商务企业集聚、初创企业快速成长的良好局面。</p>
+        <p><img src="/index/images/parkprofile/park-img2.png" alt="希垦孵化园" class="img-responsive"></p>
+        <p>3、人工智能产业园，总用地面积约2.2万平方米，建筑面积近8万平方米。分为A、B、C、D四幢主体合围建筑。本项目将以“营造人工智能产业发展环境，服务人工智能企业创业成长，助推区域经济新发展”为宗旨，深入研究以人工智能为代表的智慧产业发展趋势，围绕人工智能产业发展五大细分产业链，打造人工智能专业孵化器、加速器与倍增器！</p>
+        <p><img src="/index/images/parkprofile/park-img3.png" alt="人工智能产业园" class="img-responsive"></p>
+
+        <h4>二、众创空间</h4>
+        <p>“希垦创梦空间” 规模建筑面积为1余万平方米，拥有780个创业工位。分布在杭州市城东钱江板块、城西未来城板块及城北智慧新城。是目前杭州市面积最大、覆盖最广的众创空间。由“智新泽地”为创业者量身设计、精心打造，以一流的创业空间、完善的服务体系、专业的贴心服务，给创业者：营造创业环境，提供创业服务，降低创业成本，提高创业成功率，帮助创业者解决创业过程中的难点与问题。</p>
+        <p>希垦创梦空间 将以“推动众创产业发展，服务创业创新成长”为使命，提供“管家式”科创服务，全方位满足科技创新型企业“办公孵化、投融资对接、商业模式构建、团队融合、媒体资讯、创业培训、专业咨询”需求，着力打造“企业孵化、创业投融资、种子股权交易”三大核心功能和“创业交流、创业展示、创业培训、创业媒体”四大重点功能的全要素服务体系，并将联合社会资源共同打造开放、多元、共享的创新创业生态系统，为创业创新提供良好发展环境。 </p>
+        <p class="flex"><img src="/index/images/parkprofile/park-img4.png" alt="众创空间" class="img-responsive"><img src="/index/images/parkprofile/park-img5.png" alt="希垦创梦空间" class="img-responsive"></p>
+        <p></p>
+
+        <h4>三、投资板块</h4>
+        <p>浙江智新泽地投资管理有限公司成立于2016年5月18日，注册资本五千万人民币，受托管理股权投资基金，从事投融资管理及相关咨询服务。</p>
+        <p>我们各基金的合伙人是各产业基金、股权基金的拥有人本身。我们严格遵偱各相关法律的严格规定与所获得的经营许可权限经营，构建了统一的股权投资基金管理业务平台、内部控制体系和风险管理流程，致力于为拥有高资产净值的个人、家庭及控制巨额可投资资产的机构提供全方位优质服务，实现客户资产的长期稳步高增值。</p>
+        <p>智新泽地的股权基金，主要对已经形成一定规模的，并产生稳定现金流的成熟企业的股权投资为主，例如上市公司定向增发、符合投资条件的金融企业股权、贸易和相关供应链金融系统的产业投资、高速公路股权投资，以及境外兼并重组。</p>
+        <p>研发实力雄厚、团队经验丰富：智新泽地拥有一支具备国际化背景、丰富国内经验和良好职业素养的专业投资管理团队，在业内享有良好声誉。建立了规范的内部控制体系和严格的风险管理制度，能够有效地识别、监控和管理业务各个环节可能出现的风险。智新泽地在实现低风险水平下的稳定收益时，十分注重保持适当的资金流动性。 </p>
+        <p>客服体系完善、服务优质高效. 智新泽地建立了完善的客户服务体系，拥有功能强大的客户服务系统以及具备良好专业素质的客服团队，为客户提供便捷、高效、持续、优质的投资管理服务。天象根据投资性质和客户需求，为客户提供量体裁衣式的个性化服务方案，并注重与客户保持良好的沟通与交流，向客户定期提供特定形式和内容的报告，便于客户及时、深入地了解其投资资产的运作状况。 </p>
+        <div class="list-box">
+            <h4 class="none">投资理念：</h4>
+            <ul class="list">
+                <li>有活力——投资服务创业者，让天下创业不再难</li>
+                <li>有资源——企业家，行业专家，专业金融投资机构密切互动合作</li>
+                <li>有亮点——智新泽地产业园区+投资联动，具有独特项目落地优势</li>
+            </ul>
+        </div>
+        <div class="list-box">
+            <h4 class="title none">获得荣誉：</h4>
+            <ul class="list list-important">
+                <li>国家级科技企业孵化器</li>
+                <li>国家级海峡两岸青年创业基地</li>
+                <li>国家级中小企业集聚区</li>
+                <li>浙江省科技企业孵化器</li>
+                <li>浙江省级众创空间</li>
+                <li>杭州市科技企业孵化器</li>
+                <li>杭州市级文化创意产业园</li>
+                <li>江干区信息服务业特色平台</li>
+            </ul>
+        </div>
+
+    </section>
+</div>
+<div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+{/block}
