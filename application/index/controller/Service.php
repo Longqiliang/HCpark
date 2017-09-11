@@ -1322,12 +1322,14 @@ class Service extends Base{
     }
     /*物业报修记录*/
     public function repairRecord(){
+        $info = [] ;
+        $userId = session("userId");
         $types=[1=>'空调报修',2=>"电梯报修",3=>"其他报修"];
-        $list = PropertyServer::where(['type'=>['<',4],'status'=>['>=',0]])->order('id desc')->paginate();
+        $list = PropertyServer::where(['type'=>['<',4],'status'=>['>=',0],'user_id'=> $userId])->order('id desc')->paginate();
         foreach($list as $k=>$v){
             $info[$k]=[
                 'id'=>$v['id'],
-                'type'=>$types[$v['type']],
+                'name'=>$types[$v['type']],
                 'time'=>date('Y-m-d',$v['create_time']),
                 'status'=>$v['status'],
             ];
@@ -1340,7 +1342,9 @@ class Service extends Base{
     /*保洁服务记录*/
 
     public function clearRecord(){
-        $list = PropertyServer::where(['type'=>4,'status'=>['>=',0]])->order('clear_time desc')->paginate();
+        $info = [] ;
+        $userId = session("userId");
+        $list = PropertyServer::where(['type'=>4,'status'=>['>=',0],'user_id'=> $userId])->order('clear_time desc')->paginate();
         foreach($list as $k=>$v){
             $info[$k]=[
                 'id'=>$v['id'],

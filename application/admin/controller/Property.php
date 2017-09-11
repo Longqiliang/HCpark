@@ -25,7 +25,7 @@ class Property extends Admin
     /*保洁服务列表*/
     public function clear(){
         $parkid =session("user_auth")['park_id'];
-        $list=PropertyServer::where(['park_id'=> $parkid,'type'=>4,'status'=>['in',[0,1]]])->paginate();
+        $list=PropertyServer::where(['park_id'=> $parkid,'type'=>4,'status'=>['in',[0,1]]])->order('id desc')->paginate();
         int_to_string($list,['type'=>[4=>'保洁记录']]);
         int_to_string($list,['status'=>[0=>"进行中",1=>"已完成"]]);
         $this->assign("list",$list);
