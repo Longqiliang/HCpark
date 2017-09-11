@@ -286,6 +286,7 @@
     });
 
     function check(){
+        var it=$(this);
         var data = {
             park_card:$("input[name='park_card']").val(),
             id:$("input[name='id']").val(),
@@ -296,11 +297,36 @@
             type: "POST",
             url: "{:Url('Carcard/check')}",
             success:function(data){
-                updateAlert(data.msg,"success");
+                if(data.code == 1){
+                    if (data.url) {
+                        updateAlert(data.msg + ' 页面即将自动跳转~','success');
+                    }else{
+                        updateAlert(data.msg ,'success');
+                    }
+                    it.prop('disabled','true');
+                    it.prev().prop('disabled','true');
+                    setTimeout(function(){
+                        if (data.url) {
+                            location.href=data.url;
+                        } else {
+                            location.reload();
+                        }
+                        it.removeAttr('disabled');
+                        it.prev().removeAttr('disabled')
+                    },2000);
+                } else {
+                    updateAlert(data.msg, 'error');
+                    it.attr('disabled','true');
+                    it.prev().prop('disabled','true');
+                    setTimeout(function(){
+                        it.removeAttr('disabled');
+                        it.prev().removeAttr('disabled')
+                    },2000);
+                }
             }
 
-        })
-
+        });
+        return false;
     }
 
     function change(){
