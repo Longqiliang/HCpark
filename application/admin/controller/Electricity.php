@@ -141,7 +141,7 @@ class Electricity extends Admin
         $ElectricityService = new ElectricityService();
         $id = input('id');
         $electricity_id = input('electricity_id');
-        if (empty($park_card)) {
+        if (empty($electricity_id)) {
             return $this->error("请填写 充电柱编号");
         }
         $record = $ElectricityRecord->where('id', $id)->find();
