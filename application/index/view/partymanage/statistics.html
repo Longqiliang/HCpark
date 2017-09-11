@@ -109,7 +109,7 @@
                 <div id="scale" class="my-charts"></div>
             </div>
             <div class="my-box">
-                <div class="my-title">园区基本信息统计</div>
+                <div class="my-title">园区类型统计</div>
                 <div id="types" class="my-charts" ></div>
             </div>
         </mt-tab-container-item>
@@ -148,7 +148,6 @@ var app = new Vue({
             return{
                 id:'area',
                 title:res.area_total+'km²',
-                subtext:"总面积",
                 label: '{c|{c}}km²\n{d|{d}%}',
                 color:['#49CA91','#EDA10E'],
                 legend:['已租面积','空置面积'],
@@ -164,7 +163,6 @@ var app = new Vue({
                 id:'scale',
                 unit:'',
                 title:res.scale_one+res.scale_two+res.scale_three+'家',
-                subtext:"规模统计",
                 label: '{c|{c}家}\n{d|{d}%}',
                 color:['#4CD2C4','#439BC4','#A1CDE1'],
                 legend:['100平米以下','100-300平米','300-600平米'],
@@ -180,7 +178,6 @@ var app = new Vue({
             return {
                 id:'types',
                 title:res.type_one+res.type_two+res.type_three+'家',
-                subtext:"类型统计",
                 label: '{c|{c}家}\n{d|{d}%}',
                 color:['#FB5E5E','#F4BDDC','#ff8866'],
                 legend:['生活配套类','科技创新类','中介服务类'],
