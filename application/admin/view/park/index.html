@@ -27,6 +27,22 @@
                     <div class="form-group"><label class="col-sm-2 control-label">园区地址:</label>
                         <div class="col-sm-10"><input type="text" class="form-control"  name="address" value='{$info.address}' ></div>
                     </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
+                        <div class="col-sm-10">
+                            <input id="input-file" type="file"  class="file">
+
+                            <sapn>
+                                <a class="front_cover" href="{$info.img}">
+
+                                    <img  width="200px" height="200px" class="front_cover_img" id="img" name="img" src="{$info.img}"/>
+
+                                </a>
+                            </sapn>
+                        </div>
+                    </div>
+                    <input name="img" type="hidden"  value="">
+
                     <div class="form-group"><label class="col-sm-2 control-label">物业电话:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" name="property_phone" value='{$info.property_phone}'></div>
                     </div>
@@ -87,8 +103,6 @@
                     <div class="form-group"><label class="col-sm-2 control-label">中介服务类企业:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" placeholder="中介服务类企业的数量"   name="type_three" value='{$info.type_three}'></div>
                     </div>
-
-
                 </div>
                 <div class="mail-body text-right tooltip-demo">
                     <button url="{:Url('index')}" class="btn btn-sm btn-primary ajax-post" target-form="form-horizontal"
@@ -99,11 +113,6 @@
                 </div>
                 <div class="clearfix"></div>
             </form>
-
-
-
-
-
         </div>
     </div>
 
@@ -138,7 +147,6 @@
                 }
             }
         });
-
         function sendFile(file) {
             var data = new FormData();
             data.append("file_data", file);
@@ -155,10 +163,8 @@
                 }
             });
         }
-
-
     });
-    $(".input-file").fileinput({
+    $("#input-file").fileinput({
         showPreview: false,
         language: 'zh', //设置语言
         uploadUrl: '{:Url("Upload/picture")}', //上传的地址
@@ -170,7 +176,9 @@
         var response = $.parseJSON(data.response);
         if(response.code == 1) {
             $("input[name='front_cover']").val(response.data);
-            $('.front_cover_img').attr('src',response.data);
+            $("input[name='img']").val(response.data);
+            var pic = document.getElementById("img");
+            pic.src=response.data;
         } else {
             updateAlert(response.msg, 'warning');
         }
