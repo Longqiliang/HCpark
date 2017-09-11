@@ -21,6 +21,7 @@ use org\ImageImagick;
 use app\index\model\News;
 use think\Image;
 use app\common\model\PartyNews;
+use app\common\model\ParkRent;
 
 class Partymanage extends Base
 {
@@ -830,12 +831,15 @@ class Partymanage extends Base
         foreach ($floor as $k => $v) {
             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
             foreach ($roomList as $k1 => $v1) {
-                if ($v1['company']) {
+                $res = ParkRent::where(['room_id'=>$v1['id'],'manage'=>0,'status'=>0])->find();
+                if (!$res) {
                     $status = false;
+                    $roomsId = 0;
                 } else {
                     $status = true;
+                    $roomsId = $res['room_id'];
                 }
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id']];
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'] ,'room_id' =>$roomsId];
             }
 
         }
@@ -857,12 +861,15 @@ class Partymanage extends Base
         foreach ($floor1 as $k => $v) {
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
-                if ($v1['company']) {
+                $res = ParkRent::where(['room_id'=>$v1['id'],'manage'=>0,'status'=>0])->find();
+                if (!$res) {
                     $status1 = false;
+                    $roomsId1 = 0;
                 } else {
                     $status1 = true;
+                    $roomsId1 = $res['room_id'];
                 }
-                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id']];
+                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id'],'room_id' =>$roomsId1];
             }
         }
         foreach ($floor as $k => $v) {
