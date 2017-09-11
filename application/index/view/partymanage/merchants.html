@@ -410,8 +410,8 @@
             <div v-if="is_boss=='yes'">
                 <div class="search" :class="{isClick:inputStatus}" >
                         <div class="searchBox" @click="isClick">
-                            <div class="searchText"><span class="searchText_c">请在此搜索公司名称</span></div>
-                            <input type="text" v-model="inputValue" @keyup="toSearch(0)" class="searchInput" placeholder="请在此搜索公司名称" v-focus="inputStatus">
+                            <div class="searchText"><span class="searchText_c">请在此搜索姓名</span></div>
+                            <input type="text" v-model="inputValue" @keyup="toSearch(0)" class="searchInput" placeholder="请输入姓名" v-focus="inputStatus">
                         </div>
                         <div class="unBtn" @click="isCancel">取消</div>
                 </div>
@@ -442,8 +442,8 @@
             </ul>
             <div class="search" :class="{isClick:inputStatus}">
                 <div class="searchBox" @click="isClick">
-                    <div class="searchText"><span class="searchText_c">请在此搜索姓名</span></div>
-                    <input type="text" v-model="inputValue" @keyup="toSearch(1)"  class="searchInput" placeholder="请输入姓名" v-focus="inputStatus">
+                    <div class="searchText"><span class="searchText_c">请在此搜索公司名称</span></div>
+                    <input type="text" v-model="inputValue" @keyup="toSearch(1)"  class="searchInput" placeholder="请输入公司名称" v-focus="inputStatus">
                 </div>
                 <div class="unBtn" @click="isCancel">取消</div>
             </div>
@@ -743,7 +743,6 @@
                     title:{
                         show:true,
                         text: data.title,
-                        subtext: data.subtext,
                         textStyle:{
                             fontSize:14,
                             color:'#299FE8',
