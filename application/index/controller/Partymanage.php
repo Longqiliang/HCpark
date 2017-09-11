@@ -152,7 +152,7 @@ class Partymanage extends Base
 
         } else {
             $res = Park::where('id', 'eq', $id)->field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
-            $list = Park::where('id', 'eq', $id)->field('id,name,address,images')->find();
+            $list = Park::where('id', 'eq', $id)->field('id,name,address,images')->select();
         }
 
         $this->assign('list', json_encode($list));
