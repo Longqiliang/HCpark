@@ -251,7 +251,7 @@ class Roomrent extends Base
         $data1 = [];
         $type = input('type');
         $parkId = session("park_id");
-        $map = ['park_id' => $parkId, "build_block" => "A", 'status' => 0];
+        $map = ['park_id' => $parkId, "build_block" => "A", 'status' => 0, 'manage' => 0];
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRent = new ParkRent();
         $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
@@ -277,7 +277,7 @@ class Roomrent extends Base
                 }
             }
         }
-        $map1 = ['park_id' => $parkId, "build_block" => "B", 'status' => 0];
+        $map1 = ['park_id' => $parkId, "build_block" => "B", 'status' => 0, 'manage' => 0];
         $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
         foreach ($list1 as $k => $v) {
             $room = ParkRoom::where('id', $v['room_id'])->find();
