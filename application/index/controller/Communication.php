@@ -104,7 +104,7 @@ class Communication extends Base
                     $map['group_id'] = $info['group_id'];
                     $map['status'] = 3;
                     $useridlist = "";
-                    $list = $cuser->select($map);
+                    $list = $cuser->where($map)->select();
                     foreach ($list as $value) {
                         $useridlist .= '|' . $value['user_id'];
                     }
