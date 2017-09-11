@@ -22,7 +22,7 @@ class Addressbook extends Base
         $department = $this->findChild($hand);
         $sd = $this->mydeparment();
 
-        if($user['tagid']==1){
+        if($user['department']==1){
             $this->assign('department', $department);
 
 
