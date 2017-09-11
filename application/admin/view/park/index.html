@@ -33,15 +33,15 @@
                             <input id="input-file" type="file"  class="file">
 
                             <sapn>
-                                <a class="front_cover" href="{$info.img}">
+                                <a class="front_cover" href="{$info.images}">
 
-                                    <img  width="200px" height="200px" class="front_cover_img" id="img" name="img" src="{$info.img}"/>
+                                    <img  width="200px" height="200px" class="front_cover_img" id="images" name="images" src="{$info.images}"/>
 
                                 </a>
                             </sapn>
                         </div>
                     </div>
-                    <input name="img" type="hidden"  value="{$info.img}">
+                    <input name="images" type="hidden"  value="{$info.images}">
 
                     <div class="form-group"><label class="col-sm-2 control-label">物业电话:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" name="property_phone" value='{$info.property_phone}'></div>
@@ -176,8 +176,8 @@
         var response = $.parseJSON(data.response);
         if(response.code == 1) {
             $("input[name='front_cover']").val(response.data);
-            $("input[name='img']").val(response.data);
-            var pic = document.getElementById("img");
+            $("input[name='images']").val(response.data);
+            var pic = document.getElementById("images");
             pic.src=response.data;
         } else {
             updateAlert(response.msg, 'warning');
