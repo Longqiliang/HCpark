@@ -118,7 +118,6 @@ class Partymanage extends Base
 
             return json(['code' => 0, 'msg' => "没有更多内容了"]);
         }
-
     }
 
     /** 内部通告详情页 **/
@@ -284,7 +283,6 @@ class Partymanage extends Base
                     }
                 }
             } else {
-
                 foreach ($all_company as $value) {
                     if ($value['status'] == 1 && $value->user->park_id == $park_id) {
                         array_push($doing, $value);
@@ -297,7 +295,6 @@ class Partymanage extends Base
             //招商统计图表所需数据格式
             $finish2 = $this->merchantsComment($finish, 1);
             $doing2 = $this->merchantsComment($doing, 2);
-
             //个人统计
             if ($park_id == 1) {
                 $map = [
@@ -556,6 +553,7 @@ class Partymanage extends Base
         }
         unset($map['time']);
         $map['update_time'] = array('between', array($begindate, $enddate));
+        $map['user_id']=$user_id;
         $list2 = $mCompany->where($map)->select();
         //招商实际回款
         $finish_price = 0;
