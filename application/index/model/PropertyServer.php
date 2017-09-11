@@ -11,7 +11,12 @@ use think\Model;
 
 class PropertyServer extends Model
 {
+ protected $type=[
 
+     'create_time'=>'strtotime'
+
+
+ ];
 
 
 
