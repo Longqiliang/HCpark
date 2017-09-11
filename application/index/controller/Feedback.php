@@ -37,7 +37,6 @@ class Feedback extends Base
             ];
             $result = FeedbackModel::create($data);
             if($result){
-
                 //todo 推送给标签为园区领导（文字卡片推送）
                 $map=[
                     'status'=>0,
@@ -55,7 +54,7 @@ class Feedback extends Base
                     'agentid' => 1000007,
                     'textcard' => [
                         'title' => "您有一条最新信息",
-                        'description' => $list['create_time']."</br>"."海创大厦："."</br>尊敬的领导，我们公司现在发展有新的需求......，希望园区部门给出解答",
+                        'description' => $list['create_time']."</br>"."希垦科技园："."</br>尊敬的领导，我们公司现在发展有新的需求......，希望园区部门给出解答",
                         'url' =>'http://xk.0519ztnet.com/index/feedback/reply/id/'.$list['id'],
                     ]
                 ];
@@ -126,7 +125,7 @@ class Feedback extends Base
                     'agentid' => 1000006,
                     'textcard' => [
                         'title' => "您有一条最新信息",
-                        'description' => date('Y-m-d H:i:s',$list['reply_time'])."</br>".$depart['name']."</br>根据你所提供的意见，我领导已经回复，批示内容如下，如有任何问题，欢迎咨询。O(∩_∩)O谢谢！",
+                        'description' => date('Y-m-d H:i:s',$list['reply_time'])."</br>".$depart['name']."</br>根据你所提供的意见，我领导已经回复，批示内容如下，如有任何问题，欢迎咨询。谢谢！",
                         'url' =>'http://xk.0519ztnet.com/index/feedback/detail/id/'.input('id'),
                     ]
                 ];
