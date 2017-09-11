@@ -31,7 +31,6 @@ class BroadbandPhone extends Admin
             ->order('create_time desc')
             ->paginate();
 
-
         $this->assign('list',$list);
         return $this->fetch();
     }
