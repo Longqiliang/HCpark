@@ -211,18 +211,14 @@
                         'img':JSON.stringify(_this.img),
                         'group_id':id
                     };
-                    console.log(data);
-                    if(!_this.isSubmit){
+                    if(!(_this.isSubmit)){
                         return;
                     }
                     _this.isSubmit = false;
-                    $.ajax({
-                        type:'post',
-                        url:'{:Url("Communication/writePost")}',
-                        data:data
-                    }).done(function (data) {
-                        _this.isSubmit = true;
+                    _this.$http.post('{:Url("Communication/writePost")}',data).then(function (res) {
+                        var data = res.data;
                         if(data.code == 1){
+                            _this.isSubmit = false;
                             _this.$toast({
                                 message:"发帖成功，跳回首页！",
                                 duration:1000
@@ -231,7 +227,30 @@
                                 window.location.href = '/index/Communication/postslist/group_id/'+id;
                             },1500);
                         }
+                    },function () {
+                        _this.isSubmit = true;
                     })
+//                    $.ajax({
+//                        type:'post',
+//                        url:'{:Url("Communication/writePost")}',
+//                        data:data,
+//                        async:false,
+//                        success:function (data) {
+//                            _this.isSubmit = true;
+//                            if(data.code == 1){
+//                                _this.$toast({
+//                                    message:"发帖成功，跳回首页！",
+//                                    duration:1000
+//                                });
+//                                setTimeout(function () {
+//                                    window.location.href = '/index/Communication/postslist/group_id/'+id;
+//                                },1500);
+//                            }
+//                        },
+//                        error:function () {
+//                            _this.isSubmit = true;
+//                        }
+//                    })
                 }
             }
         }
