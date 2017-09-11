@@ -112,8 +112,16 @@
                     <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.mobile}</a></td>
                     <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.remark | msubstr=0,20}</a></td>
                     <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.address | msubstr=0,30}</a></td>
-                    <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.business}</a></td>
-                    <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.business_time}</a></td>
+                    <td><a href="{:Url('detail','id='.$vo.id)}">
+                        {eq name="$vo.business" value="1"}电信业务{/eq}
+                        {eq name="$vo.business" value="2"}铁通业务{/eq}
+                        {eq name="$vo.business" value="3"}联通业务{/eq}
+                    </a></td>
+                    <td><a href="{:Url('detail','id='.$vo.id)}">
+                        {eq name="$vo.business_time" value="1"}三个月{/eq}
+                        {eq name="$vo.business_time" value="2"}六个月{/eq}
+                        {eq name="$vo.business_time" value="3"}十二个月{/eq}
+                    </a></td>
                     <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.create_time}</a></td>
                     {eq name="$vo.status" value="1"}
                     <td>已完成</td>
