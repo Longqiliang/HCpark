@@ -396,7 +396,7 @@ class Personal extends Base
             $mtime_list = array_values(array_unique ($map_time));
 
             foreach ($mtime_list as $k=>$value){
-                $re['service_name']="公共区服务（大堂led灯预约）";
+                $re['service_name']="公共区服务（大堂led屏预约）";
                 $re['create_time']=$map[$k]['create_time'];
             }
             if($map[0]['status']==0){
