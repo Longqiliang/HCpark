@@ -69,6 +69,30 @@ class Merchants extends Admin
         $id = input('id');
         $data = input('');
         $mCompany = new MerchantsCompany();
+        //1.开始招商时间有没有写
+        if(empty($data['create_time'])){
+            return $this->error('开始招商时间未填');
+        }
+        //2.开始招商时间格式对不对
+         $data['create_time']=strtotime( $data['create_time']);
+         $is = $this->is_timestamp($data['create_time']);
+        if(!$is){
+            return $this->error('开始招商时格式不对');
+        }
+        //3.完成招商时间有没有写
+        if(empty($data['update_time'])&&$data['status']==2){
+            return $this->error('完成招商时间未填');
+        }
+        //4.完成招商时间格式对不对
+        if(!empty($data['update_time'])){
+            $data['update_time']=strtotime( $data['update_time']);
+            $is = $this->is_timestamp($data['update_time']);
+            if(!$is){
+                return $this->error('完成招商时间格式不对');
+            }
+
+        }
+
         //新增
         if (empty($id)) {
             $info = $mCompany->allowField(true)->save($data);

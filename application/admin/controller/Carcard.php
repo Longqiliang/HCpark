@@ -117,48 +117,46 @@ class Carcard extends Admin
                     break;
             }
 
-$this->assign('info', $info);
-return $this->fetch();
-}
-}
-
-public
-function del()
-{
-    $CardparkRecord = new CarparkRecord();
-    $result = $CardparkRecord->where('id', input('id'))->find();
-    $result['status'] = -1;
-    $result->save();
-    if ($result) {
-        $this->redirect('index');
-    } else {
-        $this->error('删除失败');
-    }
-}
-
-public
-function change()
-{
-    $CardparkService = new CarparkService();
-    $CardparkRecord = new CarparkRecord();
-    $id = input('id');
-    $park_card = input('park_card');
-    if (empty($park_card)) {
-        return $this->error("请填写 停车卡号");
-    }
-    $record = $CardparkRecord->where('id', $id)->find();
-    $map = [
-        'park_card' => $park_card
-    ];
-    $service = $CardparkService->where('id', $record['carpark_id'])->Update($map);
-    if ($service != false) {
-        return $this->success("修改成功");
-    } else {
-        return $this->error("修改失败");
+            $this->assign('info', $info);
+            return $this->fetch();
+        }
     }
 
+    public function del()
+    {
+        $CardparkRecord = new CarparkRecord();
+        $result = $CardparkRecord->where('id', input('id'))->find();
+        $result['status'] = -1;
+        $result->save();
+        if ($result) {
+            $this->redirect('index');
+        } else {
+            $this->error('删除失败');
+        }
+    }
 
-}
+    public function change()
+    {
+        $CardparkService = new CarparkService();
+        $CardparkRecord = new CarparkRecord();
+        $id = input('id');
+        $park_card = input('park_card');
+        if (empty($park_card)) {
+            return $this->error("请填写 停车卡号");
+        }
+        $record = $CardparkRecord->where('id', $id)->find();
+        $map = [
+            'park_card' => $park_card
+        ];
+        $service = $CardparkService->where('id', $record['carpark_id'])->Update($map);
+        if ($service != false) {
+            return $this->success("修改成功");
+        } else {
+            return $this->error("修改失败");
+        }
+
+
+    }
 
 
 }

@@ -20,11 +20,7 @@ class MerchantsCompany extends  Model
          'create_time'=>'strtotime'
 
     ];
-    protected $insert = [
 
-        'create_time' => NOW_TIME,
-
-    ];
     public  function  user(){
 
         return $this->hasOne('WechatUser','userid','user_id');
