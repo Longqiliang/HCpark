@@ -405,14 +405,14 @@ var app = new Vue({
                 //绘制标题文字
                 ctx.fillStyle = '#fff';
                 var title = text;
-                ctx.font = fontSize1+'px SimSong';
+                ctx.font = fontSize1+'px Microsoft YaHei';
                 ctx.textBaseline = 'top';
                 var titleWidth = ctx.measureText(title).width;
                 ctx.fillText(title, centerX-titleWidth/2, centerY+Math.cos(45)*r+fontSize1/2);
                 if(val>=value){
                     var txt =value + '%';
                     ctx.fillStyle = color2;
-                    ctx.font = fontSize2+'px SimHei';
+                    ctx.font = fontSize2+'px Microsoft YaHei';
                     ctx.textBaseline = 'hanging';
                     var txtWidth = ctx.measureText(txt).width;
                     ctx.fillText(txt, centerX-txtWidth/2, centerY-fontSize2/2);
@@ -420,7 +420,7 @@ var app = new Vue({
                 }else{
                     var txt =val + '%';
                     ctx.fillStyle = color2;
-                    ctx.font = fontSize2+'px SimHei';
+                    ctx.font = fontSize2+'px Microsoft YaHei';
                     ctx.textBaseline = 'hanging';
                     var txtWidth = ctx.measureText(txt).width;
                     ctx.fillText(txt, centerX-txtWidth/2, centerY-fontSize2/2);
