@@ -142,10 +142,9 @@
             success:function (data) {
                 if (data.code ==1){
                     updateAlert(data.msg+' 页面稍后会自动跳转～',"success");
-
-                    // setTimeout(function () {
-                    //    location.href = data.url;
-                    //},2000)
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },2000);
                 }else{
                     updateAlert(data.msg,"info")
                 }
