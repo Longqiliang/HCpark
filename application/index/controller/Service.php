@@ -1474,7 +1474,7 @@ class Service extends Base
         $userinfo = WechatUser::where(['userid' => $userid])->find();
         $departmentId = $userinfo['department'];
         $map = ['company_id' => $departmentId, 'type' => $type];
-        $info = FeePayment::where($map)->find();
+        $info = FeePayment::where($map)->order('id desc')->find();
         $info['appid'] = $appid;
         $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
         $this->assign('info', json_encode($info));
