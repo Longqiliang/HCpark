@@ -13,6 +13,7 @@ use app\common\model\ParkRoom;
 use app\common\model\PeopleRent;
 use app\index\model\WechatDepartment;
 use app\common\model\ParkRent;
+use app\common\model\PartyNews;
 
 
 class Park extends Admin
@@ -316,5 +317,75 @@ class Park extends Admin
             return $this->error('删除失败');
         }
     }
+    /*通知公告列表*/
+    public function noticeList(){
+        $parkid = session('user_auth')['park_id'];
+        $map = ['status'=> 1,'park_id'=>$parkid];
+        $search = input('search');
+        if ($search != '') {
+            $map['title'] = ['like','%'.$search.'%'];
+        }
+        $list = PartyNews::where($map)->order('id desc')->paginate();
+        $this->assign('list', $list);
+
+        return $this->fetch();
+
+    }
+
+
+    /*通知公告添加*/
+    public function notice(){
+        $parkid = session('user_auth')['park_id'];
+        if (IS_POST){
+            $partyBuilding =new PartyNews();
+            if(input('id')) {
+                $_POST['park_id']=$parkid;
+                $_POST['update_time'] =time();
+                $result = $partyBuilding->validate(true)->save($_POST, ['id'=>input('id')]);
+                if ($result){
+
+                    return $this->success("修改成功！");
+                }else{
+
+                    return $this->error("修改失败");
+                }
+            }else{
+                $_POST['park_id']=$parkid;
+                $_POST['create_time'] =time();
+                $_POST['status'] = 1;
+                unset($_POST['id']);
+                $result =  $partyBuilding->validate(true)->save($_POST);
+                if ($result){
+
+                    return $this->success("添加成功！");
+                }else{
+
+                    return $this->error($partyBuilding->getError());
+                }
+            }
+
+        }else{
+            $news = PartyNews::where('id','eq',input('id'))->find();
+            $this->assign('news', $news);
+            return $this->fetch();
+        }
+    }
+    /*删除通知公告信息*/
+    public function moveToTrashss()
+    {
+        $ids = input('ids/a');
+        $result = PartyNews::where('id', 'in', $ids)->update(['status' => -1]);
+
+        if ($result) {
+
+            return $this->success('删除成功');
+
+        } else {
+
+            return $this->error('删除失败');
+        }
+    }
+
+
 
 }
