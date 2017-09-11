@@ -160,11 +160,11 @@
     <div class="month" >
         <ul>
             <!--点击会触发pickpre函数，重新刷新当前日期 -->
-            <li class="arrow" @click="pickPre(currentYear,currentMonth)" :class="{hide:!isShow}">❮</li>
+            <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
             <li class="year-month" @click="toShow">
                 <span class="choose-year">{{ currentYear }}-{{ currentMonth }}</span>
             </li>
-            <li class="arrow" @click="pickNext(currentYear,currentMonth)" :class="{hide:!isShow}">❯</li>
+            <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
         </ul>
     </div>
     <div :class="{hide:!isShow}">
@@ -188,7 +188,7 @@
     </div>
     <div class="my-box">
      <ul class="my-baseInfo">
-            <li>招商人员姓名：<span>{{baseInfo.user_name}}</span></li>
+            <li>姓名：<span>{{baseInfo.user_name}}</span></li>
             <li>日期：
                 <!--<span v-if="baseInfo.create_time">{{baseInfo.create_time | timeToString}}</span>-->
                 <!--<span v-else>{{ Date.parse( new Date() ) | timeToString}}</span>-->
@@ -423,14 +423,18 @@
                 // setDate(0); 上月最后一天
                 // setDate(-1); 上月倒数第二天
                 // setDate(dx) 参数dx为 上月最后一天的前后dx天
-                var d = new Date(this.formatDate(year , month , 1));
-                d.setDate(0);
-                this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                if(this.isShow){
+                    var d = new Date(this.formatDate(year , month , 1));
+                    d.setDate(0);
+                    this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                }
             },
             pickNext: function(year, month) {
-                var d = new Date(this.formatDate(year , month , 1));
-                d.setDate(35);
-                this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                if(this.isShow){
+                    var d = new Date(this.formatDate(year , month , 1));
+                    d.setDate(35);
+                    this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                }
             },
 
             // 返回 2017-01-01 格式的字符串

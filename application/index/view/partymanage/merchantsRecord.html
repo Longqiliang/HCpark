@@ -71,8 +71,11 @@
         background: #e8e8e8;
         color: #fff;
     }
-    .my-Progress>span.active{
-        background: #69B9F9;
+    .my-Progress>span.active-end{
+        background: #57CC98;
+    }
+    .my-Progress>span.active-ing{
+        background: #F1AA42;
     }
 
     .card-upload{
@@ -190,8 +193,8 @@
             <li >
                 <div><span>招商进度：</span></div>
                 <div class="my-Progress">
-                    <span :class="{active:progress==1}" @click="changeProgress(1)">招商中</span>
-                    <span :class="{active:progress==2}" @click="changeProgress(2)">已完成</span>
+                    <span :class="{'active-ing':progress==1}" @click="changeProgress(1)">招商中</span>
+                    <span :class="{'active-end':progress==2}" @click="changeProgress(2)">已完成</span>
                 </div>
             </li>
             <li v-if="progress==2">

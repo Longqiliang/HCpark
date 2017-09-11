@@ -11,8 +11,8 @@
         display: -webkit-flex;
         display: flex;
         background: #fff;
-        border:1px solid #0A96E6;
-        color: #0A96E6;
+        border:1px solid #69B9F9;
+        color: #69B9F9;
         border-radius: 5px;
         overflow: hidden;
     }
@@ -39,10 +39,10 @@
         text-align: center;
     }
     .my-tabs>li:not(:last-child){
-        border-right: 1px solid #0A96E6;
+        border-right: 1px solid #69B9F9;
     }
     .my-tabs>li.my-active{
-        background-color: #0A96E6;
+        background-color: #69B9F9;
         color: #ffffff;
     }
 
@@ -115,15 +115,15 @@
         </mt-tab-container-item>
         <mt-tab-container-item id="tab-container2">
             <ul class="msg-lists">
-                <li>
-                <div :style="'background-image: url('+list.images+')'" class="msg-img" v-if="list.images != null"></div>
-                    <div style="backgroundImage:url('/index/images/index/icon-no.png')" class="msg-img"  v-else></div>
-                <div class="msg-text">
-                    <div class="msg-title"><span class="msg-title-text">{{list.name}}</span></div>
-                    <div class="msg-info">{{list.address ? list.address : '地址暂无'}}</div>
-                </div>
-                <a :href="'/index/partymanage/companyFloor'"></a>
-            </li>
+                <li v-for="item in list">
+                    <div :style="'background-image: url('+item.images+')'" class="msg-img" v-if="item.images != null"></div>
+                        <div style="backgroundImage:url('/index/images/index/icon-no.png')" class="msg-img"  v-else></div>
+                    <div class="msg-text">
+                        <div class="msg-title"><span class="msg-title-text">{{item.name}}</span></div>
+                        <div class="msg-info">{{item.address ? item.address : '地址暂无'}}</div>
+                    </div>
+                    <a :href="'/index/partymanage/companyFloor'"></a>
+                </li>
             </ul>
         </mt-tab-container-item>
     </mt-tab-container>
@@ -149,7 +149,7 @@ var app = new Vue({
                 id:'area',
                 title:res.area_total+'km²',
                 label: '{c|{c}}km²\n{d|{d}%}',
-                color:['#49CA91','#EDA10E'],
+                color:['#57cc98','#ffa71a'],
                 legend:['已租面积','空置面积'],
                 data:[
                     {value:res.area_use, name:'已租面积'},
@@ -164,12 +164,12 @@ var app = new Vue({
                 unit:'',
                 title:res.scale_one+res.scale_two+res.scale_three+'家',
                 label: '{c|{c}家}\n{d|{d}%}',
-                color:['#4CD2C4','#439BC4','#A1CDE1'],
+                color:['#57cc98','#ffa71a','#4cd5d1'],
                 legend:['100平米以下','100-300平米','300-600平米'],
                 data:[
                     {value:res.scale_one, name:'100平米以下'},
                     {value:res.scale_two, name:'100-300平米'},
-                    {value:res.scale_three, name:'300-600平米'},
+                    {value:res.scale_three, name:'300-600平米'}
                 ]
             }
         },
@@ -179,7 +179,7 @@ var app = new Vue({
                 id:'types',
                 title:res.type_one+res.type_two+res.type_three+'家',
                 label: '{c|{c}家}\n{d|{d}%}',
-                color:['#FB5E5E','#F4BDDC','#ff8866'],
+                color:['#57cc98','#ffa71a','#4cd5d1'],
                 legend:['生活配套类','科技创新类','中介服务类'],
                 data:[
                     {value:res.type_one, name:'生活配套类'},
@@ -204,6 +204,12 @@ var app = new Vue({
         },
         //饼图
         drawPie(data){
+            var itemStyle = {
+                normal: {
+                    borderWidth: 3,
+                    borderColor: '#fff'
+                }
+            };
             var myChart = echarts.init(document.getElementById(data.id));
             var option = {
                 title:{
@@ -212,7 +218,7 @@ var app = new Vue({
                     subtext: data.subtext,
                     textStyle:{
                         fontSize:14,
-                        color:'#299FE8',
+                        color:'#999',
                     },
                     subtextStyle:{
                         color:'#999',
@@ -265,7 +271,8 @@ var app = new Vue({
                                 length2:5
                             }
                         },
-                        data:data.data
+                        data:data.data,
+                        itemStyle: itemStyle
                     }
                 ]
             };

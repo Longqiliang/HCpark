@@ -26,36 +26,36 @@
 <div id="app">
     <div class="my-item my-color3">
         <div class="my-item-img" style="background-image: url('/index/images/service/publicservice/i3.jpeg')">
-            <div class="my-item-price">¥10/小时</div>
+            <div class="my-item-price">¥{{adlist[2].price}}/小时</div>
         </div>
         <div class="my-item-info">
             <ul>
-                <li>希垦科技园--大堂LED屏</li>
-                <li>服务时间：08:30--17:30（工作日）</li>
+                <li>{{adlist[2].abstract}}</li>
+                <li>服务时间：{{adlist[2].service_time}}</li>
             </ul>
             <div class="my-item-btn" @click="jumpTo('led')">马上预约</div>
         </div>
     </div>
     <div class="my-item my-color1">
         <div class="my-item-img" style="background-image: url('/index/images/service/publicservice/i1.jpeg')">
-            <div class="my-item-price">¥400/天</div>
+            <div class="my-item-price">¥{{adlist[0].price}}/天</div>
         </div>
         <div class="my-item-info">
             <ul>
-                <li>希垦科技园--大厅广告位</li>
-                <li>服务时间：08:30--17:30（工作日）</li>
+                <li>{{adlist[0].abstract}}</li>
+                <li>服务时间：{{adlist[0].service_time}}</li>
             </ul>
             <div class="my-item-btn" @click="jumpTo('advertise')">马上预约</div>
         </div>
     </div>
     <div class="my-item my-color2">
         <div class="my-item-img" style="background-image: url('/index/images/service/publicservice/i2.jpeg')">
-            <div class="my-item-price">¥500/半天</div>
+            <div class="my-item-price">¥{{adlist[1].price}}/半天</div>
         </div>
         <div class="my-item-info">
             <ul>
-                <li>希垦科技园--二楼多功能厅</li>
-                <li>服务时间：08:30--17:30（工作日）</li>
+                <li>{{adlist[1].abstract}}</li>
+                <li>服务时间：{{adlist[1].service_time}}</li>
             </ul>
             <div class="my-item-btn" @click="jumpTo('multifunction')">马上预约</div>
         </div>

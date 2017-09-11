@@ -106,10 +106,10 @@
         margin-right: 3.2vw;
     }
     .my-log  .my-icon-suc{
-        background-image: url('/index/images/partymanage/suc.png');
+        background-image: url('/index/images/partymanage/record-end.png');
     }
     .my-log .my-icon-ing{
-        background-image: url('/index/images/partymanage/ing.png');
+        background-image: url('/index/images/partymanage/record-ing.png');
     }
     .my-log .my-icon-err{
         background-image: url('/index/images/partymanage/err.png');
@@ -414,7 +414,7 @@ var app = new Vue({
                     var txt =value + '%';
                     ctx.fillStyle = color2;
                     ctx.font = fontSize2+'px SimHei';
-                    ctx.textBaseline = 'top';
+                    ctx.textBaseline = 'hanging';
                     var txtWidth = ctx.measureText(txt).width;
                     ctx.fillText(txt, centerX-txtWidth/2, centerY-fontSize2/2);
                     clearInterval(timer)
@@ -422,7 +422,7 @@ var app = new Vue({
                     var txt =val + '%';
                     ctx.fillStyle = color2;
                     ctx.font = fontSize2+'px SimHei';
-                    ctx.textBaseline = 'top';
+                    ctx.textBaseline = 'hanging';
                     var txtWidth = ctx.measureText(txt).width;
                     ctx.fillText(txt, centerX-txtWidth/2, centerY-fontSize2/2);
                 }
