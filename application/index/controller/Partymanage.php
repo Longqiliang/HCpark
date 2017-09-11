@@ -742,7 +742,7 @@ class Partymanage extends Base
 
         if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
-                if (@getimagesize(PUBLIC_PATH . $v1)) {
+                if (is_file(PUBLIC_PATH . $v1)) {
                     $path = str_replace(".", "_s.", $v1);
                     $image = Image::open(PUBLIC_PATH . $v1);
                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
@@ -761,6 +761,7 @@ class Partymanage extends Base
     public function feeRecord()
     {
         $info = [];
+        $type =[1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"];
         $departmentId = input('id');
         $map = ['company_id' => $departmentId];
         $list = FeePayment::where($map)->order('id desc')->limit(6)->select();
@@ -771,6 +772,7 @@ class Partymanage extends Base
                 'status' => $v['status'],
                 'time' => $v['create_time'],
                 'pay' => $v['fee'],
+                'title' =>$type[$v['type']]
             ];
         }
         $this->assign("info", json_encode($info));

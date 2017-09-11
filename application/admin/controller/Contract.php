@@ -42,7 +42,16 @@ class Contract extends Admin {
                     'number' =>input('number')
 
                 ];
-                $department = WechatDepartment::where("name",input('company'))->find();
+                $like = mb_substr($update['company'], 0, 6);
+                $department = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
+                if ($department){
+                    $result = CompanyContract::where(['type'=>$update['type'],'department_id'=>$department['id']])->find();
+                    if ($result){
+
+                        $this->error("已存在合同信息");
+                    }
+                }
+
                 if ($department){
                     $update['department_id'] = $department['id'];
                 }
@@ -57,15 +66,25 @@ class Contract extends Admin {
                 }
             }else{
                 $data = input('post.');
+                $like = mb_substr($data['company'], 0, 6);
+                $department = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
+                if ($department){
+                    $result = CompanyContract::where(['type'=>$data['type'],'department_id'=>$department['id']])->find();
+                    if ($result){
+
+                        $this->error("已存在合同信息");
+                    }
+                }
+                if ($department){
+                    $data['department_id'] = $department['id'];
+                    $data['company'] = $department['name'];
+                }
                 foreach($data['img'] as $k=>$v){
                     $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
                 }
                 $data['create_time'] = time();
                 $data['park_id'] = session("user_auth")['park_id'];
-                $department = WechatDepartment::where("name",input('company'))->find();
-                if ($department){
-                    $data['department_id'] = $department['id'];
-                }
+
                 $data['img'] = json_encode($data['img']);
                 unset($data['id']);
                 $res = $contract->allowField(true)->save($data);
