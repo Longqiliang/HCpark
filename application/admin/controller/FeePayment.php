@@ -13,7 +13,7 @@ use app\index\model\WechatDepartment;
 use app\index\model\WechatUser;
 
 
-class FeePayment extends Admin
+class Feepayment extends Admin
 {
     /*费用缴纳首页*/
     public function index(){
