@@ -12,6 +12,6 @@ use think\Model;
 
 class PartyNews extends Model
 {
-
+    protected $dateFormat="Y-m-d";
 
 }
