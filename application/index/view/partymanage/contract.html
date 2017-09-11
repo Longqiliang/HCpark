@@ -59,6 +59,12 @@ console.log({$info});
         },
         methods:{
             initChart(){
+                var itemStyle = {
+                    normal: {
+                        borderWidth: 3,
+                        borderColor: '#fff'
+                    }
+                };
                 var _this = this;
                 _this.chart = echarts.init(_this.$refs.contractChart);
                 var contractOption = {
@@ -105,7 +111,8 @@ console.log({$info});
                                 {value:_this.info.rent.count, name:_this.info.rent.name},
                                 {value:_this.info.property.count, name:_this.info.property.name},
                                 {value:_this.info.other.count, name:_this.info.other.name}
-                            ]
+                            ],
+                            itemStyle: itemStyle
                         }
                     ]
                 };
