@@ -542,6 +542,7 @@ class Partymanage extends Base
         //清空map
         $map = [];
         $map['time'] = array('between', array($begindate, $enddate));
+       $map['user_id']=$user_id;
         $list = $mPlan->where($map)->select();
         //招商计划回款
         $price = 0;
