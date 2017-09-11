@@ -14,6 +14,8 @@ use app\common\model\CommunicatePosts;
 use app\common\model\CommunicateComment;
 use app\common\model\WechatUser;
 use think\Db;
+use wechat\TPWechat;
+use think\Loader;
 
 //合作交流
 class Communication extends Admin
@@ -65,10 +67,44 @@ class Communication extends Admin
         if (IS_POST) {
             $id = input('id');
             $status=input('status');
+            if($status==-1){
+              $msg="未通过";
+
+            }else{
+                $msg="通过";
+            }
             $remark=input('remark');
             $result = $cuser->where('id', $id)->update(['status' => $status,'remark'=>$remark]);
             if ($result) {
+               $user=$cuser->where('id',$id)->find();
+                Loader::import('wechat\TPWechat', EXTEND_PATH);
+                $weObj = new TPWechat(config('Communication'));
+                $groupname=isset($user->group->group_name)?$user->group->group_name:"";
+                $data = [
+                    "touser" => $user['user_id'],
+                    'safe' => 0,
+                    'msgtype' => 'text',
+                    'agentid' => 1000013,
+                    'text' => [
+                        'title' => "加群申请",
+                        'content' => '您申请加入“'.$groupname.'”群，审核结果：'.$msg.'',
+
+                    ]
+                ];
+                $result1 = $weObj->sendMessage($data);
+                //var_dump($result1);
+                //var_dump($weObj->errCode.'|'.$weObj->errMsg);
+                if ($result1['errcode'] == 0) {
+                    return $this->success('提交成功');
+                } else {
+                    return $this->error('推送失败');
+                }
+
+
+
                 return $this->success("成功");
+
+
             } else {
                 return $this->error("失败");
             }

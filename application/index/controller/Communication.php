@@ -14,8 +14,8 @@ use app\index\model\CommunicateUser;
 use app\index\model\WechatUser;
 use app\index\model\CommunicatePosts;
 use app\index\model\CommunicateComment;
-
-
+use wechat\TPWechat;
+use think\Loader;
 
 class Communication extends Base
 {
@@ -97,7 +97,41 @@ class Communication extends Base
                 $map['remark'] = $remark;
                 $reult = $cuser->save($map);
                 if ($reult) {
-                    return $this->success("成功");
+                    //todo 推送给群审核人员（文字卡片推送）
+                    $id = $cuser->getLastInsID();
+                    $info = $cuser->where('id', $id)->find();
+                    $map = array();
+                    $map['group_id'] = $info['group_id'];
+                    $map['status'] = 3;
+                    $useridlist = "";
+                    $list = $cuser->select($map);
+                    foreach ($list as $value) {
+                        $useridlist .= '|' . $value['user_id'];
+                    }
+                    $username = isset($info->user->name) ? $info->user->name : "";
+                    $mobile = isset($info->user->mobile) ? $info->user->mobile : "";
+                    $department = isset($info->user->departmentName->name) ? $info->user->departmentName->name : "";
+                    Loader::import('wechat\TPWechat', EXTEND_PATH);
+                    $weObj = new TPWechat(config('Communication'));
+                    $data = [
+                        "touser" => $useridlist,
+                        'safe' => 0,
+                        'msgtype' => 'textcard',
+                        'agentid' => 1000013,
+                        'textcard' => [
+                            'title' => "加群申请",
+                            'description' => date('m月d日', $info['create_time']) . "</br>" . "您有一个加群申请需要审核" . "</br>姓名：" . $username . "  手机：" . $mobile . "   公司名称：" . $department . "   备注：" . $remark,
+                            'url' => 'http://xk.0519ztnet.com/index/Communication/myCheck',
+                        ]
+                    ];
+                    $result1 = $weObj->sendMessage($data);
+                    //var_dump($result1);
+                    //var_dump($weObj->errCode.'|'.$weObj->errMsg);
+                    if ($result1['errcode'] == 0) {
+                        return $this->success('提交成功');
+                    } else {
+                        return $this->error('推送失败');
+                    }
                 } else {
                     return $this->error("申请失败");
                 }
@@ -127,6 +161,7 @@ class Communication extends Base
 
         }
     }
+
 
     /*帖子列表*/
     public function postsList()
@@ -162,6 +197,7 @@ class Communication extends Base
         $this->assign('group', $groupInfo);
         return $this->fetch();
     }
+
     /*帖子详情*/
     public function postDetails()
     {
@@ -179,12 +215,12 @@ class Communication extends Base
             'target_id' => input('id')
         ];
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
-        foreach ($comments as $value){
+        foreach ($comments as $value) {
             $userinfo = WechatUser::where('userid', $value['user_id'])->field('header,avatar')->find();
-            $head=isset($userinfo['header'])?$userinfo['header']:"";
-            $ava =isset($userinfo['avatar'])?$userinfo['avatar']:"";
-            $value['header'] =empty($head)?$ava:$head;
-            $value['create_time']=date("Y-m-d H:m",$value['create_time']);
+            $head = isset($userinfo['header']) ? $userinfo['header'] : "";
+            $ava = isset($userinfo['avatar']) ? $userinfo['avatar'] : "";
+            $value['header'] = empty($head) ? $ava : $head;
+            $value['create_time'] = date("Y-m-d H:m", $value['create_time']);
         }
         //$count = CommunicateComment::where($map)->count();
         //echo json_encode($post);
@@ -193,12 +229,13 @@ class Communication extends Base
 
         return $this->fetch();
     }
+
     /*写帖子页面*/
     public function writePost()
     {
         $post = new CommunicatePosts();
         if (IS_POST) {
-//            $data = input('data');
+            //$data = input('data');
             $map = [
                 'title' => input('title'),
                 'content' => input('content'),
@@ -219,6 +256,7 @@ class Communication extends Base
             return $this->fetch();
         }
     }
+
     /*评论*/
     public function comment()
     {
@@ -238,13 +276,14 @@ class Communication extends Base
         $result = CommunicateComment::create($data);
         if ($result) {
             $post['comments'] += 1;
-            $result['create_time']=date("Y-m-d H:m",$result['create_time']);
+            $result['create_time'] = date("Y-m-d H:m", $result['create_time']);
             $post->save();
             return $this->success('评论成功', '', $result);
         } else {
             return $this->error('评论失败');
         }
     }
+
     //评论分页
     public function moreComment()
     {
@@ -256,13 +295,13 @@ class Communication extends Base
             $map['id'] = ['<', $lastId];
         }
         $comments = CommunicateComment::where($map)->order('id desc')->limit(6)->select();
-        foreach ($comments as $value){
+        foreach ($comments as $value) {
             $userinfo = WechatUser::where('userid', $value['user_id'])->field('header,avatar')->find();
-            $head=isset($userinfo['header'])?$userinfo['header']:"";
-            $ava =isset($userinfo['avatar'])?$userinfo['avatar']:"";
-            $value['header'] =empty($head)?$ava:$head;
+            $head = isset($userinfo['header']) ? $userinfo['header'] : "";
+            $ava = isset($userinfo['avatar']) ? $userinfo['avatar'] : "";
+            $value['header'] = empty($head) ? $ava : $head;
 
-            $value['create_time'] = date("Y-m-d H:m",$value['create_time']);
+            $value['create_time'] = date("Y-m-d H:m", $value['create_time']);
         }
         return json(['total' => count($comments), 'comments' => $comments]);
     }
@@ -273,7 +312,6 @@ class Communication extends Base
     {
         $userid = session('userId');
         $cuser = new CommunicateUser();
-        $cgroup = new CommunicateGroup();
         $map = [
             'user_id' => $userid,
             'status' => array('lt', 4)
@@ -299,14 +337,37 @@ class Communication extends Base
             //审核通过
             if (input('type') == 1) {
                 $user['status'] = 2;
-                $user->save();
+                 $user->save();
+                 $msg='通过';
             } //审核失败
             else {
                 $user['status'] = -1;
                 $user->save();
+                $msg='不通过';
             }
-            return $this->success("审核成功");
 
+            Loader::import('wechat\TPWechat', EXTEND_PATH);
+            $weObj = new TPWechat(config('Communication'));
+            $groupname=isset($user->group->group_name)?$user->group->group_name:"";
+            $data = [
+                "touser" => $user['user_id'],
+                'safe' => 0,
+                'msgtype' => 'text',
+                'agentid' => 1000013,
+                'text' => [
+                    'title' => "加群申请",
+                    'content' => '您申请加入“'.$groupname.'”群，审核结果：'.$msg.'',
+
+                ]
+            ];
+            $result1 = $weObj->sendMessage($data);
+            //var_dump($result1);
+            //var_dump($weObj->errCode.'|'.$weObj->errMsg);
+            if ($result1['errcode'] == 0) {
+                return $this->success('提交成功');
+            } else {
+                return $this->error('推送失败');
+            }
         } else {
 
             $map2 = [
@@ -375,11 +436,11 @@ class Communication extends Base
         $userid = session('userId');
         $commments = $ccomment->where('user_id', $userid)->order('create_time desc')->select();
         $userinfo = WechatUser::where('userid', session('userId'))->field('header,avatar')->find();
-        $head=isset($userinfo['header'])?$userinfo['header']:"";
-        $ava =isset($userinfo['avatar'])?$userinfo['avatar']:"";
+        $head = isset($userinfo['header']) ? $userinfo['header'] : "";
+        $ava = isset($userinfo['avatar']) ? $userinfo['avatar'] : "";
         $myComments = array();
         foreach ($commments as $value) {
-            $value['header'] =empty($head)?$ava:$head;
+            $value['header'] = empty($head) ? $ava : $head;
             $status = isset($value->CommunicatePost->status) ? $value->CommunicatePost->status : "";
             $value['post'] = isset($value->CommunicatePost) ? $value->CommunicatePost : "";
             if ($status == 1) {
@@ -422,4 +483,13 @@ class Communication extends Base
         $this->assign('list', $myComments);
         return $this->fetch();
     }
+
+    /*发送给用户已回复推送*/
+    public function send($data, $weObj)
+    {
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $result = $weObj->sendMessage($data);
+        return $result;
+    }
+
 }

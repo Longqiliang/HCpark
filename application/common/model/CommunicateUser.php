@@ -18,4 +18,9 @@ class CommunicateUser extends  Model
       return $this->hasOne('WechatUser','userid','user_id');
 
   }
+    public  function  group(){
+
+        return $this->hasOne('CommunicateGroup','id','group_id');
+
+    }
 }
