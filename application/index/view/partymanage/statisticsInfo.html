@@ -335,6 +335,13 @@ var app = new Vue({
                 text: '加载中...',
                 spinnerType: 'fading-circle'
             });
+            var indicator=document.getElementsByClassName('mint-indicator-wrapper')[0];
+//            if(indicator.currentStyle){
+//                var inHeight=indicator.currentStyle.height;       //支持IE
+//            }else{
+//                var inHeight=getComputedStyle(indicator).height;  //支持高级浏览器
+//            }
+           indicator.style.top=parseInt(window.screen.height)/2-53+'px';
             this.$http.post('/index/partymanage/statisticsInfo',data).then(function (res) {
                 if(res.data.code==1){
                     this.personalInfo=res.data.data;
@@ -347,14 +354,12 @@ var app = new Vue({
                 this.$indicator.close()
                 this.$toast('请其失败，请重试')
             })
-            alert(window.devicePixelRatio);
         },
         drawCharts(id,r,borderW,fontSize1,fontSize2,text,value,color,color2){
             var el=document.getElementById(id);
             var ctx = el.getContext('2d');
             var elW=el.width,
                     elH=el.height;
-             console.log(elH,elW)
             //绘制可以前进的圆拱进度条
             var startAngle = -225; //圆拱的起始角度
             var endAngle = -225;  //圆拱的终点角度
