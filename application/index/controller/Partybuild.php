@@ -188,7 +188,6 @@ class Partybuild extends Base{
         $education[1] = WechatUser::where(['age'=>['>',0],'education'=>1])->count();
         $education[2] = WechatUser::where(['age'=>['>',0],'education'=>2])->count();
         $education[3] = WechatUser::where(['age'=>['>',0],'education'=>3])->count();
-        $education[4] = WechatUser::where(['age'=>['>',0],'education'=>4])->count();
         /*党支部统计*/
         $count = WechatUser::where(['age'=>['>',0]])->group('party_branch')->count();
         $this->assign("countParty",$count);
