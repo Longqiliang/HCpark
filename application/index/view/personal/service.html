@@ -63,18 +63,136 @@
     </div>
 </div>
 <!--加载更多-->
-<div class="tip"></div>
-<div class="loading hidden">
-    <div class="typing_loader"></div>
-</div>
+<!--<div class="tip"></div>-->
+<!--<div class="loading hidden">-->
+    <!--<div class="typing_loader"></div>-->
+<!--</div>-->
 {/block}
 {block name="script"}
 <script src="/index/js/reset.js"></script>
 <script>
     $("title").html('我的服务');
+    var scrollNow = true;//判断下拉请求是否执行中.false为正在请求
     $(function(){
+        //tab初始化和数据存储
+        var ntc = $('.notices');
+        var c =  parseInt(window.location.href.split("service/c/")[1]);
+        console.log(c);
+        var co = getCookie("type");
+        if(co == 11 || co == 12){
+            c = co - 10;
+        }
+        $('.tabs>.tab').eq(c-1).find('span').addClass('active');
+        ntc.eq(c-1).removeClass('hidden');
+        //上拉加载
+//        var len = ntc.eq(c-1 ).find('.notice:last .list').length;
+//        if(len >= 5){
+//            $('.tip' ).text('上拉加载更多');
+//        }
+//        loadScroll(c);
+        //tab切换
+        $('.tabs>.tab ').on('click',function(){
+            var ntc = $('.notices');
+            var eq = $(this ).index();
+            $(this ).siblings('.tab' ).find('span' ).removeClass('active');
+            $(this ).find('span' ).addClass('active');
+            ntc.eq(eq ).siblings('.notices' ).addClass('hidden');
+            ntc.eq(eq).removeClass('hidden');
+            var len = ntc.eq(eq ).find('.notice:last .list').length;
+            if(len >= 6){
+                $('.tip' ).text('上拉加载更多');
+            }
+            loadScroll(eq+1);
+            //使用示例
+            setCookie("type",eq+11);
+        });
+        //安卓4.4tab兼容
+        var u = navigator.userAgent;
+        var isAnd = !u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+        if(isAnd){
+            var num = u.substr(u.indexOf('Android') + 8, 3);
+            if(num <= 4.4){
+                var tabw = $('.tabs').width()/2 -2;
+                $('.tabs>.tab').width(tabw);
+            }
+        }
         isOut();
     });
+    function loadScroll(type){
+        $(window ).off("scroll" ).on("scroll",function(){
+            var ntc = $('.notices');
+            var dh = $(document).height();
+            var end = $(window).height() + $(window ).scrollTop();
+            var len = ntc.eq(type-1).find('.notice:last .list').length;
+            var tip = $(".tip");
+            var loading = $('.loading');
+            if(dh == end && scrollNow){
+                scrollNow = false;//请求执行中
+                $.ajax({
+                    type:"post",
+                    url: "{:Url('Policy/listmore')}",
+                    data:{
+                        length:len,
+                        type : type
+                    },
+                    beforeSend: function(XMLHttpRequest){
+                        tip.hide();
+                        loading.toggleClass('hidden');
+                    },
+                    success:function(data){
+                        console.log(data)
+                        loading.toggleClass('hidden');
+                        tip.show();
+                        if(data.code == 1){
+                            console.log(data.data);
+                            addLists(data,type);
+                            var dataLen =data.data.length;
+                            if(dataLen == 6){
+                                tip.text('上拉加载更多');
+                            }
+                        }else{
+                            tip.text('没有更多了');
+                            $(window ).off("scroll");
+                        }
+                        scrollNow = true;//请求结束
+                    }
+                })
+            }
+        })
+    }
+    function timeChange(time) {
+        var newTime=new Date(time*1000);
+        return newTime.getFullYear()+"-"+newTime.getMonth()+"-"+newTime.getDate();
+    }
+    function addLists(data,t){
+        var type;
+        var html = '';
+        var lists = data.data;
+        var len = lists.length;
+        if ( t == 1){
+            type = 'property'
+        }else if( t == 2){
+            type = 'enterprise';
+        }
+        //1:物业；2:企业；
+        for(var i = 0; i< len;i++){
+            var list = lists[i],
+                    state = list == 1 ? '<span class="end">已完成</span>' : '<span class="ing">进行中</span>';
+            html += '<a class="list">'+
+                    '<div class="info">'+
+                        '<div class="title">'+list.title+'</div>'+
+                        '<div class="time">'+
+                            '<span>'+timeChange(list.create_time)+'</span>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="state">'+
+                            state+
+                    '</div>'+
+                    '</a>';
+        }
+
+        $('.'+type).append(html);
+    }
 
     //退出清理tab缓存
     function isOut(){
