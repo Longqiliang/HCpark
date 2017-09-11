@@ -9,82 +9,129 @@
     <!--<img src="/index/images/policy/banner.jpeg" alt="banner">-->
 <!--</div>-->
 <!--tab-->
-<div class="tabs clear">
-    <div class="tab tab1"><span>物业服务</span></div>
-    <!--<span class="line"></span>-->
-    <div class="tab"><span>企业服务</span></div>
-</div>
-<!--切换列表-->
-<div class="content">
-    <!--物业服务-->
-    <div class="notices hidden">
-        <div class="notice property">
-            {volist name="property" id="loo"}
-            <a class="list">
-                <div class="info">
-                    <div class="title">{$loo.service_name}</div>
-                    <div class=" time">
-                        <span>{$loo.create_time|strtotime|date="Y-m-d",###}</span>
+<div id="app">
+    <div class="tabs clear">
+        <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">物业服务</span></div>
+        <!--<span class="line"></span>-->
+        <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >企业服务</span></div>
+    </div>
+    <!--切换列表-->
+    <div class="content">
+        <!--物业服务-->
+        <div class="notices" v-if="active==0">
+            <div class="notice property">
+                {volist name="property" id="loo"}
+                <a class="list">
+                    <div class="info">
+                        <div class="title">{$loo.service_name}</div>
+                        <div class=" time">
+                            <span>{$loo.create_time|strtotime|date="Y-m-d",###}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="state">
-                    {eq name="loo.status" value="1"}
-                    <span class="end">{$loo.status_text}</span>
-                    {else/}
-                    <span class="ing">{$loo.status_text}</span>
-                    {/eq}
-                </div>
-            </a>
-            {/volist}
+                    <div class="state">
+                        {eq name="loo.status" value="1"}
+                        <span class="end">{$loo.status_text}</span>
+                        {else/}
+                        <span class="ing">{$loo.status_text}</span>
+                        {/eq}
+                    </div>
+                </a>
+                {/volist}
 
+            </div>
         </div>
-    </div>
-    <!--企业服务-->
-    <div class="notices hidden">
-        <div class="notice enterprise">
-            {volist name="company" id="lo"}
-            <a class="list">
-                <div class="info">
-                    <div class="title">{$lo.service_name}</div>
-                    <div class="time">
-                        <span>{$lo.create_time|date="Y-m-d",###}</span>
+        <!--企业服务-->
+        <div class="notices" v-if="active==1">
+            <div class="notice enterprise">
+                {volist name="company" id="lo"}
+                <a class="list">
+                    <div class="info">
+                        <div class="title">{$lo.service_name}</div>
+                        <div class="time">
+                            <span>{$lo.create_time|date="Y-m-d",###}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="state">
-                    {eq name="lo.status" value="1"}
-                    <span class="end">已完成</span>
-                    {else/}
-                    <span class="ing">进行中</span>
-                    {/eq}
-                </div>
-            </a>
-            {/volist}
+                    <div class="state">
+                        {eq name="lo.status" value="1"}
+                        <span class="end">已完成</span>
+                        {else/}
+                        <span class="ing">进行中</span>
+                        {/eq}
+                    </div>
+                </a>
+                {/volist}
+            </div>
         </div>
     </div>
-</div>
 <!--加载更多-->
-<div class="tip"></div>
-<div class="loading hidden">
-    <div class="typing_loader"></div>
+<!--<div class="tip"></div>-->
+<!--<div class="loading hidden">-->
+    <!--<div class="typing_loader"></div>-->
+<!--</div>-->
 </div>
 {/block}
 {block name="script"}
 <script src="/index/js/reset.js"></script>
 <script>
-    $("title").html('我的服务');
-    $(function(){
-        isOut();
-    });
-
-    //退出清理tab缓存
-    function isOut(){
-        pushHistory();
-        setTimeout(function(){
-            window.addEventListener("popstate", function(e) {
-                delCookie("type");
-                window.history.go(-1);
-            }, false);
-        },200)
-    }
+    var app=new Vue({
+        el:'#app',
+        data:{
+            active:0
+        },
+        created(){
+            var c =  parseInt(window.location.href.split("service/c/")[1]);
+            var co = this.getCookie("type");
+            if(co == 11 || co == 12){
+                c = co - 11;
+            };
+            this.active=c;
+            this.isOut();
+        },
+        methods:{
+            tabChange(key){
+                this.active=key;
+                this.setCookie("type",key+11);
+            },
+            //退出清理tab缓存
+            isOut(){
+                var the=this;
+                the.pushHistory();
+                setTimeout(function(){
+                    window.addEventListener("popstate", function(e) {
+                        the.delCookie("type");
+                        window.history.go(-1);
+                    }, false);
+                },200)
+            },
+            pushHistory(){
+                var sta = {
+                    title: "title"
+                };
+                if( window.history.state === null ){
+                    window.history.pushState( sta, "title" );
+                }
+            },
+            setCookie( name, value ){
+                var Days = 30;
+                var exp = new Date();
+                exp.setTime( exp.getTime() + Days * 24 * 60 * 60 * 1000 );
+                document.cookie = name + "=" + value + ";expires=" + exp.toGMTString();
+            },
+            getCookie( name ){
+                var arr, reg = new RegExp( "(^| )" + name + "=([^;]*)(;|$)" );
+                if( arr = document.cookie.match( reg ) )
+                    return arr[ 2 ];
+                else
+                    return null;
+            },
+            delCookie( name ){
+                var exp = new Date();
+                exp.setTime( exp.getTime() - 1 );
+                var cval = getCookie( name );
+                if( cval != null )
+                    document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+            }
+        },
+    })
 </script>
 {/block}
