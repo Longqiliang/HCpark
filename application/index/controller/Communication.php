@@ -120,7 +120,7 @@ class Communication extends Base
                         'agentid' => 1000013,
                         'textcard' => [
                             'title' => "加群申请",
-                            'description' => date('m月d日', $info['create_time']) . "</br>" . "您有一个加群申请需要审核" . "</br>姓名：" . $username . "  手机：" . $mobile . "   公司名称：" . $department . "   备注：" . $remark,
+                            'description' => "您有一个加群申请需要审核\n姓名：" . $username . " 手机：" . $mobile . "   公司名称：" . $department . "   备注：" . $remark,
                             'url' => 'http://xk.0519ztnet.com/index/Communication/myCheck',
                         ]
                     ];
@@ -337,18 +337,18 @@ class Communication extends Base
             //审核通过
             if (input('type') == 1) {
                 $user['status'] = 2;
-                 $user->save();
-                 $msg='通过';
+                $user->save();
+                $msg = '通过';
             } //审核失败
             else {
                 $user['status'] = -1;
                 $user->save();
-                $msg='不通过';
+                $msg = '不通过';
             }
 
             Loader::import('wechat\TPWechat', EXTEND_PATH);
             $weObj = new TPWechat(config('Communication'));
-            $groupname=isset($user->group->group_name)?$user->group->group_name:"";
+            $groupname = isset($user->group->group_name) ? $user->group->group_name : "";
             $data = [
                 "touser" => $user['user_id'],
                 'safe' => 0,
@@ -356,7 +356,7 @@ class Communication extends Base
                 'agentid' => 1000013,
                 'text' => [
                     'title' => "加群申请",
-                    'content' => '您申请加入“'.$groupname.'”群，审核结果：'.$msg.'',
+                    'content' => '您申请加入“' . $groupname . '”群，审核结果：' . $msg . '',
 
                 ]
             ];
