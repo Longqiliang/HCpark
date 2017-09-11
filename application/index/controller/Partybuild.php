@@ -69,6 +69,8 @@ class Partybuild extends Base{
     }
         /*新闻详细页面*/
     public function detail(){
+        // 添加阅读量
+        PartyBuildingModel::where('id', input('id'))->setInc('views');
         $id= input('id');
         $news = PartyBuildingModel::get(input('id'));
         $this->assign('news', $news);
@@ -89,8 +91,7 @@ class Partybuild extends Base{
         $this->assign('count',$count);
         $this->assign('comments', json_encode($comments));
         $this->assign('id',$id);
-        // 添加阅读量
-        PartyBuildingModel::where('id', input('id'))->setInc('views');
+
 
         return $this->fetch();
     }

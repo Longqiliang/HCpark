@@ -32,7 +32,7 @@
             {{item.floor}}楼
         </div>
         <div class="houses-list-item" v-if="!item.combine">
-            <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">
+            <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.room_id || rooms.id,rooms.empty)">
                 {{rooms.room}}
             </span>
         </div>
@@ -125,7 +125,7 @@
                     window.location.href = "/index/partymanage/parklist?id="+id;
                     return;
                 }
-                window.location.href = "/index/roomrent/rent?rent_id="+id;
+                window.location.href = "/index/roomrent/rent?room_id="+id;
             }
         }
     });

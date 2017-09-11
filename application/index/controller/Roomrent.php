@@ -292,13 +292,13 @@ class Roomrent extends Base
                 'id' => $v['id'],
                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
-            if ($data[$k]['img']) {
-                foreach ($data[$k]['img'] as $k1 => $v1) {
+            if ($data1[$k]['img']) {
+                foreach ($data1[$k]['img'] as $k1 => $v1) {
                     if (is_file(PUBLIC_PATH . $v1)) {
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                        $data[$k]['imgs'][$k1] = $path;
+                        $data1[$k]['imgs'][$k1] = $path;
                     }
                 }
             }
