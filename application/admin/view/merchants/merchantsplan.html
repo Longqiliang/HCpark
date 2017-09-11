@@ -37,7 +37,7 @@
             <h2>招商指标管理</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deletePlan')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -74,6 +74,7 @@
                         <div class="modal-footer">
                             <button class="btn btn-primary ajax-post" type="submit" target-form="form-horizontal">保存</button>
                             <input type="hidden" name="id" value="">
+                            <input type="hidden" name="user_id" value="">
 
                         </div>
                     </form>
@@ -159,7 +160,7 @@
         $("input[name='plan_area']").val($(a).attr('data-area'));
         $("input[name='plan_price']").val($(a).attr('data-price'));
         $("input[name='time']").val($(a).attr('data-time'));
-        $("input[name='user_id']").val($(a).attr('data-user_id'));
+        $("input[name='user_id']").val('{$userid}');
 
     }
     highlight_subnav("{:Url('Merchanrs/index')}");
