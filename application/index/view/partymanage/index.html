@@ -81,8 +81,13 @@
 <script>
     var res ={$res};
     var nowPark = null;
+    var parkId = window.sessionStorage.getItem("park_id");
     if(res.length){
-        nowPark = res[0].id;
+        if(parkId && res.length > 1){
+            nowPark = parkId;
+        }else {
+            nowPark = res[0].id;
+        }
     }
     console.log({$res});
     console.log({$news});
@@ -115,6 +120,7 @@ var vm = new Vue({
             var data = {
                 park_id:_this.nowPark
             };
+            window.sessionStorage.setItem("park_id",_this.nowPark);
             _this.$http.post('/index/partymanage/index',data).then(function (res) {
                 //console.log(res.data);
                 _this.isCheck = true;
