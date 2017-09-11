@@ -41,14 +41,14 @@ class Park extends Admin
 
     /*楼盘管理*/
     public function roomManage()
-    {
+    {   $parkRent = new ParkRent();
         $id = input("id");
         $parkRoom = new ParkRoom();
         if (IS_POST) {
             if (input('uid')) {
                 $data = input('post.');
-                $like = mb_substr($data['company_id'],0,6);
-                $info =  WechatDepartment::where(['name'=> ['like',"%$like%"]])->find();
+                $like = mb_substr($data['company_id'], 0, 6);
+                $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
                 $data['company'] = $data['company_id'];
                 if ($info) {
                     $data['company_id'] = $info['id'];
@@ -58,6 +58,11 @@ class Park extends Admin
                 unset($data['uid']);
                 $res = $parkRoom->validate(true)->where('id', input('uid'))->update($data);
                 if ($res) {
+                    $rents = $parkRent->where('room_id',input('uid'))->find();
+
+                    if ($rents){
+                        $parkRent->where(['id'=>$rents['id'],'status'=>0])->update(['status'=>-1]);
+                    }
                     $this->success("修改成功");
                 } else {
                     $this->error("修改失败");
@@ -69,16 +74,16 @@ class Park extends Admin
                     'room' => $data['room'],
                 ];
                 $roomId = ParkRoom::where($maps)->find();
-                if ($roomId){
+                if ($roomId) {
 
                     $this->error("该信息已存在，无法添加");
                 }
                 $data['park_id'] = session("user_auth")['park_id'];
                 $data['status'] = 1;
                 $data['company'] = $data['company_id'];
-                $like = mb_substr($data['company_id'],0,6);
-                $info = WechatDepartment::where(['name'=> ['like',"%$like%"]])->find();
-                if ($info && $data['company_id'] !="") {
+                $like = mb_substr($data['company_id'], 0, 6);
+                $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
+                if ($info && $data['company_id'] != "") {
                     $data['company_id'] = $info['id'];
                 } else {
                     $data['company_id'] = 0;
@@ -86,6 +91,11 @@ class Park extends Admin
                 unset($data['uid']);
                 $res = $parkRoom->validate(true)->save($data);
                 if ($res) {
+                    $lastId = $parkRoom->getLastInsID();
+                    $rents = $parkRent->where(['room_id'=>$lastId,'status'=>0])->find();
+                    if ($rents){
+                        $parkRent->where('id',$rents['id'])->update(['status'=>-1]);
+                    }
                     $this->success("添加成功");
                 } else {
                     $this->error($parkRoom->getError());
@@ -113,7 +123,7 @@ class Park extends Admin
             "park_id" => session("user_auth")['park_id'],
             'del' => 0,
         ];
-        if ($search){
+        if ($search) {
             $map['room'] = $search;
         }
         $list = ParkRoom::where($map)->order('id desc')->paginate();
@@ -150,13 +160,13 @@ class Park extends Admin
     {
         $search = input('search');
         $parkRent = new ParkRent();
-        $map = ['park_id' => session("user_auth")['park_id'],'status' => 0];
-        if ($search){
-            $res = ParkRoom::where('room',$search)->select();
-            foreach($res as $k=>$v){
+        $map = ['park_id' => session("user_auth")['park_id'], 'status' => 0];
+        if ($search) {
+            $res = ParkRoom::where('room', $search)->select();
+            foreach ($res as $k => $v) {
                 $seachArr[$k] = $v['id'];
             }
-            $map['room_id'] = ['in',$seachArr] ;
+            $map['room_id'] = ['in', $seachArr];
         }
         $list = $parkRent->where($map)->order('id desc')->paginate();
         foreach ($list as $k => $v) {
@@ -184,6 +194,10 @@ class Park extends Admin
                 $data = input('post.');
                 unset($data['floor']);
                 $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block')])->find();
+                /*$rents = $parkRent->where(['room' => input('room'), 'build_block' => input('build_block')])->find();
+                if ($rents){
+                    $parkRent->where('id',$rents['id'])->update(['status'=>-1]);
+                }*/
                 $data['room_id'] = $rooms['id'];
                 unset($data['room']);
                 foreach ($data['img'] as $k => $v) {
@@ -203,13 +217,13 @@ class Park extends Admin
                 $data = input('post.');
                 unset($data['id']);
                 unset($data['floor']);
-                $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'),'del' =>0])->find();
+                $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'), 'del' => 0])->find();
                 //return  dump($rooms['id']);
-                if (!$rooms['id']){
+                if (!$rooms['id']) {
                     $this->error('该楼室不存在');
                 }
-                $rents = $parkRent->where(['room_id'=>$rooms['id'],'status' => 0])->find();
-                if ($rents['id']){
+                $rents = $parkRent->where(['room_id' => $rooms['id'], 'status' => 0])->find();
+                if ($rents['id']) {
                     $this->error('该信息已存在');
                 }
                 $data['room_id'] = $rooms['id'];
@@ -302,6 +316,7 @@ class Park extends Admin
             $this->error("修改失败");
         }
     }
+
     /*删除预约信息*/
     public function moveToTrashs()
     {
@@ -317,13 +332,15 @@ class Park extends Admin
             return $this->error('删除失败');
         }
     }
+
     /*通知公告列表*/
-    public function noticeList(){
+    public function noticeList()
+    {
         $parkid = session('user_auth')['park_id'];
-        $map = ['status'=> 1,'park_id'=>$parkid];
+        $map = ['status' => 1, 'park_id' => $parkid];
         $search = input('search');
         if ($search != '') {
-            $map['title'] = ['like','%'.$search.'%'];
+            $map['title'] = ['like', '%' . $search . '%'];
         }
         $list = PartyNews::where($map)->order('id desc')->paginate();
         $this->assign('list', $list);
@@ -334,42 +351,44 @@ class Park extends Admin
 
 
     /*通知公告添加*/
-    public function notice(){
+    public function notice()
+    {
         $parkid = session('user_auth')['park_id'];
-        if (IS_POST){
-            $partyBuilding =new PartyNews();
-            if(input('id')) {
-                $_POST['park_id']=$parkid;
-                $_POST['update_time'] =time();
-                $result = $partyBuilding->validate(true)->save($_POST, ['id'=>input('id')]);
-                if ($result){
+        if (IS_POST) {
+            $partyBuilding = new PartyNews();
+            if (input('id')) {
+                $_POST['park_id'] = $parkid;
+                $_POST['update_time'] = time();
+                $result = $partyBuilding->validate(true)->save($_POST, ['id' => input('id')]);
+                if ($result) {
 
                     return $this->success("修改成功！");
-                }else{
+                } else {
 
                     return $this->error("修改失败");
                 }
-            }else{
-                $_POST['park_id']=$parkid;
-                $_POST['create_time'] =time();
+            } else {
+                $_POST['park_id'] = $parkid;
+                $_POST['create_time'] = time();
                 $_POST['status'] = 1;
                 unset($_POST['id']);
-                $result =  $partyBuilding->validate(true)->save($_POST);
-                if ($result){
+                $result = $partyBuilding->validate(true)->save($_POST);
+                if ($result) {
 
                     return $this->success("添加成功！");
-                }else{
+                } else {
 
                     return $this->error($partyBuilding->getError());
                 }
             }
 
-        }else{
-            $news = PartyNews::where('id','eq',input('id'))->find();
+        } else {
+            $news = PartyNews::where('id', 'eq', input('id'))->find();
             $this->assign('news', $news);
             return $this->fetch();
         }
     }
+
     /*删除通知公告信息*/
     public function moveToTrashss()
     {
@@ -386,6 +405,20 @@ class Park extends Admin
         }
     }
 
+    public function manage()
+    {
+        $id = input('id');
+        $uid = input('uid');
+        $parkrent = new ParkRent();
+        $res = $parkrent->where('id', $id)->update(['manage' => $uid]);
+        if ($res) {
 
+            $this->success('设置成功');
+        } else {
+
+            $this->error("设置失败");
+        }
+
+    }
 
 }

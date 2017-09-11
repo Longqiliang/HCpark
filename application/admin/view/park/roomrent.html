@@ -102,6 +102,11 @@
                         <a href="{:Url('addrent','id='.$vo.id)}">{$vo.price}元/㎡·天</a>
                     </td>
                     <td>
+                        {eq name="$vo.manage" value="0"}
+                        <a href="javascript:void(0)" class="btn-sm btn-primary" style="color:#fff" onclick="changeManage('{$vo.id}',1)">设置下架</a>
+                        {else}
+                        <a href="javascript:void(0)" class="btn-sm btn-primary" style="color:#fff" onclick="changeManage('{$vo.id}',0)">设置上架</a>
+                        {/eq}
                         <a  href="{:Url('addrent','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">查看信息</a>
                     </td>
                 </tr>
@@ -140,6 +145,21 @@
 
         })
 
+    }
+    function changeManage(id,uid) {
+        $.ajax({
+            data:{id:id,uid:uid},
+            type:"post",
+            url:"{:Url('Park/manage')}",
+            success:function (data) {
+                if (data.code == 1){
+                    updateAlert(data.msg+' 页面稍后会自动跳转～',"success");
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },2000);
+                }
+            }
+        })
     }
 </script>
 {/block}
