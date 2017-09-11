@@ -73,10 +73,9 @@
 
 {block name="body"}
 <div id="app">
-    <img src="/index/images/partybuild/party-banner3.jpg" class="my-banner" alt="支部活动" v-if="type==1">
+    <img src="/index/images/partybuild/party-banner1.png" class="my-banner" alt="支部活动" v-if="type==1">
     <img src="/index/images/partybuild/party-banner2.png" class="my-banner" alt="两学一做" v-if="type==2">
-    <img src="/index/images/partybuild/party-banner.png" class="my-banner" alt="支部活动" v-if="type==3">
-
+    <img src="/index/images/partybuild/party-banner3.png" class="my-banner" alt="党员风采" v-if="type==3">
     <ul class="my-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
         <li v-for="item in article">
             <div class="content-box">
