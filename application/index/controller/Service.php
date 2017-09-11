@@ -1446,7 +1446,7 @@ class Service extends Base{
         $userinfo=WechatUser::where(['userid'=>$userid])->find();
         $departmentId =$userinfo['department'];
         $map = ['company_id'=>$departmentId,'type'=>$type];
-        $info = FeePayment::where($map)->find();
+        $info = FeePayment::where($map)->order('id desc')->find();
         $info['appid']=$appid;
         $info['payment_voucher']=isset($info['payment_voucher'])?unserialize($info["payment_voucher"]):"";
         $this->assign('info',json_encode($info));
@@ -1506,7 +1506,6 @@ class Service extends Base{
             $appid =input('app_id');
             $data = input('post.');
             $datas["payment_voucher"] = serialize($data["payment_voucher"]);
-            $datas['status']=1;
             $res=$feePayment->where('id',$id)->update($datas);
             if ($res){
                 $msg="您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
