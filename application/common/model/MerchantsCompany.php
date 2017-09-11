@@ -21,7 +21,7 @@ class MerchantsCompany extends  Model
 
     ];
     protected $insert = [
-        'status' => 1,
+
         'create_time' => NOW_TIME,
 
     ];
