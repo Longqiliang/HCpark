@@ -45,7 +45,7 @@ class Contract extends Admin {
                 $like = mb_substr($update['company'], 0, 6);
                 $department = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
                 if ($department){
-                    $result = CompanyContract::where(['type'=>$update['type'],'department_id'=>$department['id']])->find();
+                    $result = CompanyContract::where(['type'=>$update['type'],'department_id'=>$department['id'],'id'=>['neq',input("id")]])->find();
                     if ($result){
 
                         $this->error("已存在合同信息");
@@ -56,7 +56,7 @@ class Contract extends Admin {
                     $update['department_id'] = $department['id'];
                 }
 
-                $res = $contract->where('id',input('id'))->update( $update);
+                $res = $contract->where('id',input('id'))->update($update);
                 if ($res){
 
                     $this->success("修改成功");
