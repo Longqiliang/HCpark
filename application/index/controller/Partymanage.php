@@ -40,8 +40,8 @@ class Partymanage extends Base
             } else {
                 $news = News::where($map)->where('park_id', $park_id)->order('create_time desc')->field('id,title')->limit(4)->select();
             }
-            if ($news) {
-                return $this->success('成功', '', json_encode($news));
+            if ($news！=false) {
+                return  $this->success('成功' ,'',json_encode($news));
             } else {
                 return $this->error('失败');
             }
@@ -145,7 +145,7 @@ class Partymanage extends Base
     {
         //首页所选园区ID
         $id = input('park_id');
-        if ($id == 'a') {
+        if ($id == '1') {
             //园区统计
             $res = Park::field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
             $list = Park::field('id,name,address,images')->select();
