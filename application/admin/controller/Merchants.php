@@ -92,10 +92,11 @@ class Merchants extends Admin
             }
 
         }
-
         //新增
         if (empty($id)) {
+
             $info = $mCompany->allowField(true)->save($data);
+
         } //编辑
         else {
             unset($data['id']);
@@ -134,7 +135,7 @@ class Merchants extends Admin
         $info['merchants_area'] = isset($info->merchantsCompany->merchants_area) ? $info->merchantsCompany->merchants_area : "";
         $info['merchants_money'] = isset($info->merchantsCompany->merchants_money) ? $info->merchantsCompany->merchants_money : "";
         unset($info['merchantsCompany']);
-        echo json_encode($info);
+        //echo json_encode($info);
         $this->assign('info', $info);
         return $this->fetch();
     }
@@ -166,7 +167,7 @@ class Merchants extends Admin
         $weuser = new WechatUser();
         $user_id = input('user_id');
         $user = $weuser->where('userid', $user_id)->find();
-        echo json_encode($user['name']);
+        //echo json_encode($user['name']);
         $this->assign('name', $user['name']);
         $this->assign('userid', $user['userid']);
 
@@ -203,6 +204,11 @@ class Merchants extends Admin
         //新增
         if (empty($id)) {
             $data['time'] = strtotime($data['time']);
+
+            $is = $this->is_timestamp($data['time']);
+            if (!$is)  {
+                $this->error('招商时间格式不正确');
+            }
             $map = [
                 'user_id' => $data['user_id'],
                 'time' => $data['time']
