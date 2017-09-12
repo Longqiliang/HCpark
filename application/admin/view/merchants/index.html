@@ -88,6 +88,12 @@
                                 </select></div>
 
                             </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">开始招商时间</label>
+                                <div class="col-sm-10"><input type="text" placeholder="如：2017-04-01" class="form-control" required="" name="create_time"></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">结束招商时间</label>
+                                <div class="col-sm-10"><input type="text" placeholder="如：2017-04-01" class="form-control" required="" name="update_time"></div>
+                            </div>
                             <div class="form-group"><label class="col-sm-2 control-label">招商面积</label>
                                 <div class="col-sm-10"><input type="number" placeholder="招商面积（平米）" class="form-control" required="" name="merchants_area"></div>
                             </div>
@@ -185,7 +191,7 @@
                         {$vo.status_text}
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-company="{$vo.company}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"  data-status="{$vo.status}"  data-user="{$vo.user_id}"  data-area="{$vo.merchants_area}" data-money="{$vo.merchants_money}">编辑</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-company="{$vo.company}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"  data-status="{$vo.status}"  data-user="{$vo.user_id}"  data-area="{$vo.merchants_area}" data-money="{$vo.merchants_money}"   data-update="{$vo.update_time}"  data-create="{$vo.create_time}">编辑</a>
                         <a   href="{:Url('showRecord','id='.$vo.id  )}" >查看招商日志</a>
 
                     </td>
@@ -240,6 +246,8 @@
         $("input[name='img']").val($(a).attr('data-img'));
         $("input[name='merchants_area']").val($(a).attr('data-area'));
         $("input[name='merchants_money']").val($(a).attr('data-money'));
+        $("input[name='update_time']").val($(a).attr('data-update'));
+        $("input[name='create_time']").val($(a).attr('data-create'));
         var pic = document.getElementById("img");
         pic.src=$(a).attr('data-img');
 

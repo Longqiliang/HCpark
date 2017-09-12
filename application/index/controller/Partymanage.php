@@ -41,7 +41,7 @@ class Partymanage extends Base
             } else {
                 $news = PartyNews::where($map)->where('park_id', $park_id)->order('create_time desc')->field('id,title')->limit(4)->select();
             }
-            if ($news！ = false) {
+            if ($news != false) {
                 return $this->success('成功', '', json_encode($news));
             } else {
                 return $this->error('失败');
@@ -542,7 +542,7 @@ class Partymanage extends Base
         //清空map
         $map = [];
         $map['time'] = array('between', array($begindate, $enddate));
-       $map['user_id']=$user_id;
+        $map['user_id'] = $user_id;
         $list = $mPlan->where($map)->select();
         //招商计划回款
         $price = 0;
@@ -554,7 +554,7 @@ class Partymanage extends Base
         }
         unset($map['time']);
         $map['update_time'] = array('between', array($begindate, $enddate));
-        $map['user_id']=$user_id;
+        $map['user_id'] = $user_id;
         $list2 = $mCompany->where($map)->select();
         //招商实际回款
         $finish_price = 0;
@@ -760,7 +760,7 @@ class Partymanage extends Base
     public function feeRecord()
     {
         $info = [];
-        $type =[1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"];
+        $type = [1 => "水电费", 2 => "物业费", 3 => "房租费", 4 => "公耗费"];
         $departmentId = input('id');
         $map = ['company_id' => $departmentId];
         $list = FeePayment::where($map)->order('id desc')->limit(6)->select();
@@ -771,7 +771,7 @@ class Partymanage extends Base
                 'status' => $v['status'],
                 'time' => $v['create_time'],
                 'pay' => $v['fee'],
-                'title' =>$type[$v['type']]
+                'title' => $type[$v['type']]
             ];
         }
         $this->assign("info", json_encode($info));
@@ -832,7 +832,7 @@ class Partymanage extends Base
         foreach ($floor as $k => $v) {
             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
             foreach ($roomList as $k1 => $v1) {
-                $res = ParkRent::where(['room_id'=>$v1['id'],'manage'=>0,'status'=>0])->find();
+                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                 if (!$res) {
                     $status = false;
                     $roomsId = 0;
@@ -840,7 +840,7 @@ class Partymanage extends Base
                     $status = true;
                     $roomsId = $res['room_id'];
                 }
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'] ,'room_id' =>$roomsId];
+                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
             }
 
         }
@@ -862,7 +862,7 @@ class Partymanage extends Base
         foreach ($floor1 as $k => $v) {
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
-                $res = ParkRent::where(['room_id'=>$v1['id'],'manage'=>0,'status'=>0])->find();
+                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                 if (!$res) {
                     $status1 = false;
                     $roomsId1 = 0;
@@ -870,7 +870,7 @@ class Partymanage extends Base
                     $status1 = true;
                     $roomsId1 = $res['room_id'];
                 }
-                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id'],'room_id' =>$roomsId1];
+                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id'], 'room_id' => $roomsId1];
             }
         }
         foreach ($floor as $k => $v) {
