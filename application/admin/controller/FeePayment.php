@@ -11,7 +11,7 @@ use app\common\model\ParkCompany;
 use app\common\model\FeePayment as FeePaymentModel;
 
 
-class FeePayment extends Admin
+class Feepayment extends Admin
 {
     /*费用缴纳首页*/
     public function index(){
@@ -72,6 +72,7 @@ class FeePayment extends Admin
                 $data =input('post.');
                 unset($data['uid']);
                 $data['status'] = 0;
+                $data['create_time'] = time();
                 $re=$feepayment->validate(true)->save($data);
                 if ($re){
 
