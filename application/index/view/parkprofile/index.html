@@ -9,13 +9,6 @@
 
 {block name="body"}
 <div id="comment">
-    <div class="banner">
-        {present name="info.panorama_cover"}
-            <a href="{$info.panorama_link}"><img src="{$info.panorama_cover}" alt=""></a>
-        {/present}
-        {notpresent name="info.panorama_cover"}
-        {/notpresent}
-    </div>
     <section>
         {$info->content}
     </section>
