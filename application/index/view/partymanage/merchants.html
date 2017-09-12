@@ -681,6 +681,9 @@
                 if(value!=this.rateActive){
                     this.rateActive=value;
                 }
+                this.inputValue='';
+                this.inputStatus=false;
+                this.searchList.length=0
             },
             jumpTo(id){
                 window.location.href='/index/enterprise/product/id/'+id

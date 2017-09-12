@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/index/css/partymanage/contract/index.css">
 <style>
     body {
-        background-color: #f1f1f1;
+        background-color: #f6f6f6;
     }
 
 </style>
@@ -24,7 +24,11 @@
             </ul>
         </li>
     </ul>
-    <div class="load-more" v-if="contractList.length === 0">暂无合同！</div>
+    <div class="load-more" v-if="contractList.length === 0">
+        <div class="center">
+            <img src="/index/images/service/card/icon-default.jpg" >
+        </div>
+    </div>
     <div class="load-more" v-else >
         <div v-if="loadOver">没有更多了</div>
         <div v-else  v-show="loading" >
