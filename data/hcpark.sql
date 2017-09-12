@@ -11,7 +11,7 @@
  Target Server Version : 50719
  File Encoding         : utf-8
 
- Date: 08/09/2017 13:55:46 PM
+ Date: 08/09/2017 16:24:03 PM
 */
 
 SET NAMES utf8mb4;
@@ -123,6 +123,27 @@ CREATE TABLE `tb_auth_rule` (
 BEGIN;
 INSERT INTO `tb_auth_rule` VALUES ('1', 'admin', '1', 'admin/User/add', '新增', '1', '1'), ('2', 'admin', '1', 'admin/User/edit', '编辑', '1', ''), ('3', 'admin', '1', 'admin/User/del', '删除', '1', ''), ('4', 'admin', '1', 'admin/User/changeStatus', '修改状态', '1', ''), ('5', 'admin', '1', 'admin/Action/add', '新增', '1', ''), ('6', 'admin', '1', 'admin/Action/edit', '编辑', '1', ''), ('7', 'admin', '1', 'admin/Action/del', '删除', '1', ''), ('8', 'admin', '1', 'admin/Action/changeStatus', '修改状态', '1', ''), ('9', 'admin', '1', 'admin/Auth/add', '新增', '-1', ''), ('10', 'admin', '1', 'admin/Auth/edit', '编辑', '-1', ''), ('11', 'admin', '1', 'admin/Auth/del', '删除', '-1', ''), ('12', 'admin', '1', 'admin/Auth/changeStatus', '修改状态', '1', ''), ('13', 'admin', '1', 'admin/Auth/user', '成员授权', '1', ''), ('14', 'admin', '1', 'admin/Auth/access', '访问授权', '1', ''), ('15', 'admin', '1', 'admin/Auth/group', '授权组', '-1', ''), ('16', 'admin', '1', 'admin/Auth/addToGroup', '保存成员授权', '1', ''), ('17', 'admin', '1', 'admin/Auth/removeFromGroup', '接触授权', '1', ''), ('18', 'admin', '1', 'admin/Action/view', '日志详情', '1', ''), ('19', 'admin', '1', 'admin/Action/remove', '删除日志', '1', ''), ('20', 'admin', '2', '1', '首页', '-1', ''), ('21', 'admin', '1', 'admin/User/index', '用户信息', '1', ''), ('22', 'admin', '2', 'admin/User/index', '后台用户', '1', ''), ('23', 'admin', '1', 'admin/Auth/index', '权限控制', '1', ''), ('24', 'admin', '2', 'admin/System/index', '系统配置', '1', ''), ('25', 'admin', '1', 'admin/Action/index', '用户行为', '1', ''), ('26', 'admin', '2', 'admin/Addons/index', '扩展插件', '1', ''), ('27', 'admin', '1', 'admin/Action/log', '行为日志', '1', ''), ('28', 'admin', '1', 'admin/Member/company', '游戏厂商', '-1', ''), ('29', 'admin', '1', 'admin/Project/index', '发布中的专案', '-1', ''), ('30', 'admin', '1', 'admin/Project/apply', '申请名单', '-1', ''), ('31', 'admin', '1', 'admin/Member/anchor', '视频主播', '-1', ''), ('32', 'admin', '1', 'admin/Member/companyDetail', '厂商详情', '-1', ''), ('33', 'admin', '1', 'admin/Member/anchorDetail', '主播详情', '-1', ''), ('34', 'admin', '1', 'admin/Config/group', '网站配置', '1', ''), ('35', 'admin', '2', 'admin/Project/index', '推广专案', '-1', ''), ('36', 'admin', '1', 'admin/Config/index', '配置属性', '1', ''), ('37', 'admin', '2', 'admin/Member/index', '前台用户', '-1', ''), ('38', 'admin', '1', 'admin/Menu/index', '菜单管理', '1', ''), ('39', 'admin', '2', 'admin/Finance/index', '财务结算', '-1', ''), ('40', 'admin', '1', 'admin/Channel/index', '业务导航', '-1', ''), ('41', 'admin', '1', 'admin/Database/export', '备份数据库', '1', ''), ('42', 'admin', '2', 'admin/Message/index', '消息管理', '1', ''), ('43', 'admin', '1', 'admin/Database/import', '还原数据库', '1', ''), ('44', 'admin', '1', 'admin/Finance/project', '结算专案', '-1', ''), ('45', 'admin', '1', 'admin/Finance/anchor', '支付主播', '-1', ''), ('46', 'admin', '1', 'admin/Finance/company', '厂商支付', '-1', ''), ('47', 'admin', '1', 'admin/Project/info', '详情', '-1', ''), ('48', 'admin', '1', 'admin/Project/check', '审核', '-1', ''), ('49', 'admin', '1', 'admin/Project/anchor', '管理视频', '-1', ''), ('50', 'admin', '1', 'admin/Project/video', '查看视频', '-1', ''), ('51', 'admin', '1', 'admin/Project/anchordetail', '主播详情', '-1', ''), ('52', 'admin', '1', 'admin/Finance/view', '查看详情', '-1', ''), ('53', 'admin', '1', 'admin/Message/view', '浏览', '1', ''), ('54', 'admin', '1', 'admin/Project/checkList', '提交审核的专案', '-1', ''), ('55', 'admin', '1', 'admin/Message/send', '发送消息', '1', ''), ('56', 'admin', '1', 'admin/Message/inbox', '收件箱', '1', ''), ('57', 'admin', '1', 'admin/Project/makeList', '制作中的专案', '-1', ''), ('58', 'admin', '1', 'admin/Message/index', '发件箱', '1', ''), ('59', 'admin', '1', 'admin/Message/draft', '草稿箱', '1', ''), ('60', 'admin', '1', 'admin/Project/finishList', '已完结的专案', '-1', ''), ('61', 'admin', '1', 'admin/Message/trash', '回收站', '1', ''), ('62', 'admin', '1', 'admin/Vote/video', '参赛视频', '-1', ''), ('63', 'admin', '1', 'admin/Vote/index', '投票统计', '-1', ''), ('64', 'admin', '1', 'admin/Vote/expert', '专家投票', '-1', ''), ('65', 'admin', '2', 'admin/Vote/index', '投票管理', '-1', ''), ('66', 'admin', '1', 'admin/Index/index', '首页', '1', ''), ('71', 'admin', '1', 'admin/Vote/show', '显示详情', '-1', ''), ('67', 'admin', '1', 'admin/Project/finish', '完结专案', '-1', ''), ('68', 'admin', '1', 'admin/Project/edit', '编辑专案', '-1', ''), ('69', 'admin', '1', 'admin/Project/addVideoData', '添加数据', '-1', ''), ('70', 'admin', '2', 'admin/Index/index', '首页', '1', ''), ('72', 'admin', '1', 'admin/Vote/vote', '投票', '-1', ''), ('73', 'admin', '1', 'admin/Finance/add', '添加支付', '-1', ''), ('74', 'admin', '1', 'admin/Finance/typeInfo', '类型信息', '-1', ''), ('75', 'admin', '1', 'admin/Finance/getInfo', '专案信息', '-1', ''), ('76', 'admin', '1', 'admin/Message/delete', '删除', '1', ''), ('77', 'admin', '1', 'admin/Message/moveToTrash', '移动到回收站', '1', ''), ('78', 'admin', '1', 'admin/User/updateHeader', '上传头像', '1', ''), ('79', 'admin', '1', 'admin/User/update', '更新信息', '1', ''), ('80', 'admin', '1', 'admin/Auth/createGroup', '创建组', '1', ''), ('81', 'admin', '1', 'admin/Auth/editGroup', '编辑组', '1', ''), ('82', 'admin', '1', 'admin/auth/updateRules', '更新节点', '1', ''), ('83', 'admin', '1', 'admin/Config/add', '新增配置', '1', ''), ('84', 'admin', '1', 'admin/Config/edit', '编辑', '1', ''), ('85', 'admin', '1', 'admin/Config/save', '批量保存', '1', ''), ('86', 'admin', '1', 'admin/Config/del', '删除配置', '1', ''), ('87', 'admin', '1', 'admin/Config/sort', '排序', '1', ''), ('88', 'admin', '1', 'admin/Menu/add', '新增', '1', ''), ('89', 'admin', '1', 'admin/Menu/edit', '编辑', '1', ''), ('90', 'admin', '1', 'admin/Menu/del', '删除', '1', ''), ('91', 'admin', '1', 'admin/Menu/toogleHide', '是否隐藏', '1', ''), ('92', 'admin', '1', 'admin/Menu/toogleDev', '是否开发', '1', ''), ('93', 'admin', '1', 'admin/Menu/sort', '排序', '1', ''), ('94', 'admin', '1', 'admin/Menu/getInfo', '菜单信息', '1', ''), ('95', 'admin', '1', 'admin/Database/optimize', '优化表', '1', ''), ('96', 'admin', '1', 'admin/Database/repair', '修复表', '1', ''), ('97', 'admin', '1', 'admin/Database/del', '删除备份', '1', ''), ('98', 'admin', '1', 'admin/Update/index', '补丁管理', '1', ''), ('99', 'admin', '1', 'admin/Update/update', '升级系统', '1', '');
 COMMIT;
+
+-- ----------------------------
+--  Table structure for `tb_comment`
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_comment`;
+CREATE TABLE `tb_comment` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `content` mediumtext COLLATE utf8mb4_bin COMMENT '评论内容',
+  `parent_id` bigint(20) unsigned DEFAULT '0' COMMENT '回复的上级回复ID，0为一级回复',
+  `target_id` int(11) unsigned DEFAULT '0' COMMENT 'ID',
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT '评论的人',
+  `user_name` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `replay_id` bigint(20) unsigned DEFAULT '0' COMMENT '被回复的人ID',
+  `comments` mediumint(9) DEFAULT '0' COMMENT '评论次数',
+  `likes` mediumint(9) DEFAULT '0' COMMENT '点赞次数',
+  `istop` tinyint(4) DEFAULT '0' COMMENT '是否置顶，0正常、1顶置',
+  `create_time` int(11) unsigned DEFAULT NULL COMMENT '创建时间',
+  `update_time` int(10) unsigned DEFAULT NULL COMMENT '修改时间',
+  `status` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='评论数据';
 
 -- ----------------------------
 --  Table structure for `tb_config`
@@ -461,27 +482,17 @@ CREATE TABLE `tb_wechat_tag` (
 DROP TABLE IF EXISTS `tb_wechat_user`;
 CREATE TABLE `tb_wechat_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `openid` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '用户的标识，对当前公众号唯一',
-  `unionid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段',
-  `nickname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户的昵称',
-  `sex` tinyint(4) NOT NULL DEFAULT '0' COMMENT '用户的性别，值为1时是男性，值为2时是女性，值为0时是未知',
-  `city` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '用户所在城市',
-  `province` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '用户所在省份',
-  `country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '用户所在国家',
-  `language` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '用户的语言，简体中文为zh_CN',
-  `headimgurl` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空。若用户更换头像，原有头像URL将失效。',
-  `subscribe_time` int(11) NOT NULL DEFAULT '0' COMMENT '用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间\n用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间\n用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间\n用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间',
-  `unsubscribe_time` int(11) DEFAULT '0' COMMENT '退订时间',
-  `subscribe` tinyint(4) DEFAULT '0' COMMENT '用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。',
-  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '粉丝的备注',
-  `groupid` char(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户所在的分组ID',
-  `tagid_list` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '标签组',
-  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '后期逻辑处理标识,0取消关注、1关注',
+  `userid` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '用户的标识，对当前公众号唯一',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户的昵称',
+  `gender` tinyint(4) DEFAULT '0' COMMENT '用户的性别，值为1时是男性，值为2时是女性，值为0时是未知',
+  `avatar` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '用户所在省份',
+  `department` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '用户所在国家',
+  `tagid` int(20) DEFAULT NULL COMMENT '用户的语言，简体中文为zh_CN',
+  `status` tinyint(4) DEFAULT '1' COMMENT '后期逻辑处理标识,0取消关注、1关注',
   `party_branch` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '党支部',
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
+  `real_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
   `age` tinyint(4) DEFAULT NULL,
   `education` tinyint(4) DEFAULT '2' COMMENT '学历，1大专、2本科、3硕士、4博士',
-  `mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号码',
   `unit` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '所属单位',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='微信用户信息';

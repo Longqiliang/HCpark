@@ -9,11 +9,9 @@ namespace app\admin\controller;
 
 use app\common\model\ParkCompany;
 use app\common\model\FeePayment as FeePaymentModel;
-use app\index\model\WechatDepartment;
-use app\index\model\WechatUser;
 
 
-class Feepayment extends Admin
+class FeePayment extends Admin
 {
     /*费用缴纳首页*/
     public function index(){
@@ -56,26 +54,25 @@ class Feepayment extends Admin
                 $data = input('post.');
                 unset($data['uid']);
                 /*修改输入当月的数据*/
-                    $enter_time = date("Y-m",strtotime(input('expiration_time')));
-                    $start_time = date("Y-m-d",strtotime($enter_time));
+                    $enter_time =date("Y-m",strtotime(input('expiration_time')));
+                    $start_time =date("Y-m-d",strtotime($enter_time));
                     $end_time = mktime(23, 59, 59, date('m', strtotime($start_time))+1, 00,date("y",strtotime($enter_time)));
                     $end_time = date("Y-m-d",$end_time);
-                    $re = $feepayment->validate(true)->where(['company_id'=>$id,'type'=>$type,'expiration_time'=>['between',[$start_time,$end_time]]])->update($data);
+                    $re=$feepayment->validate(true)->where(['company_id'=>$id,'type'=>$type,'expiration_time'=>['between',[$start_time,$end_time]]])->update($data);
 
                 if ($re){
 
                     return $this->success('修改成功');
                 }else{
 
-                    return $this->error("修改失败 ".$feepayment->getError());
+                    return $this->error("sorry !! ".$feepayment->getError());
                 }
 
             }else{
-                $data = input('post.');
+                $data =input('post.');
                 unset($data['uid']);
                 $data['status'] = 0;
-                $data['create_time']=time();
-                $re = $feepayment->validate(true)->save($data);
+                $re=$feepayment->validate(true)->save($data);
                 if ($re){
 
                     return $this->success('添加成功');
@@ -86,13 +83,13 @@ class Feepayment extends Admin
             }
 
         }else{
-            $status = [-1=>"删除",0=>"审核中",1=>"审核成功",2=>"审核失败"];
+            $status = [-1=>"删除",0=>"进行中",1=>"审核中",2=>"已缴费",3=>"审核失败"];
             $id = input('id');
             $company = ParkCompany::get($id);
-            $list1 = $feepayment->where(['company_id'=>$id,'type'=>1,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
-            $list2 = $feepayment->where(['company_id'=>$id,'type'=>2,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
-            $list3 = $feepayment->where(['company_id'=>$id,'type'=>3,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
-            $list4 = $feepayment->where(['company_id'=>$id,'type'=>4,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
+            $list1 =$feepayment->where(['company_id'=>$id,'type'=>1,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
+            $list2 =$feepayment->where(['company_id'=>$id,'type'=>2,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
+            $list3 =$feepayment->where(['company_id'=>$id,'type'=>3,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
+            $list4 =$feepayment->where(['company_id'=>$id,'type'=>4,'expiration_time'=>['between',[$start_time,$end_time]]])->find();
             if ($list1){
                 $list1['state'] =$status[$list1['status']];
             }
@@ -105,6 +102,8 @@ class Feepayment extends Admin
             if ($list4){
                 $list4['state'] =$status[$list4['status']];
             }
+
+
 
             $this->assign('list1',$list1);
             $this->assign('list2',$list2);
@@ -123,7 +122,7 @@ class Feepayment extends Admin
     public function changeState(){
         $id =input('id');
         $feepayment = new FeePaymentModel();
-        $res =$feepayment->where('id',$id)->update(['status'=>1]);
+        $res =$feepayment->where('id',$id)->update(['status'=>2]);
         if ($res){
 
            return  $this->success("审核通过， 稍后自动刷新页面~");
@@ -140,57 +139,20 @@ class Feepayment extends Admin
         $feepayment = new FeePaymentModel();
         $id = input('id');
         $company = ParkCompany::get($id);
-        $list = $feepayment->where(['company_id'=>$id])->order('id desc')->paginate();
+        $list=$feepayment->where(['company_id'=>$id])->paginate();
         int_to_string($list,['type'=>[1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"],
-                            'status'=>[-1=>"删除",0=>"审核中",1=>"审核成功",2=>"审核失败"]]);
-        foreach ($list as $k=>$v){
-            $v['payment_voucher'] = unserialize($v['payment_voucher']);
-        }
+                            'status'=>[-1=>"删除",0=>"进行中",1=>"审核中",2=>"已缴费",3=>"未缴费"]]);
 
         $this->assign('company',$company);
         $this->assign('list',$list);
         return $this->fetch();
     }
 
-    /*显示凭证*/
-    public function showImage(){
-        $id = input("id");
-        $html="";
-        $feepayment = FeePaymentModel::get($id);
-        if ($feepayment['payment_voucher']){
-            $image = unserialize($feepayment['payment_voucher']);
-
-            foreach($image as $value){
-                $html .= "<div class='col-md-4'><img class='front_cover_img' src='$value' style='width: 150px;height: 200px;'></div>";
-            }
-        }
-
-        return $html;
-
-    }
-    /*权限管理*/
-    public function manageuser(){
-        $id = input('id');
-        $list = WechatUser::where('department',$id)->order('id asc')->paginate();
-
-        $this->assign('list',$list);
-        return $this->fetch();
-    }
-
-    public function lookState(){
-        $id = input('id');
-        $uid =input('uid');
-        $res = WechatUser::where('id',$id)->update(['fee_status'=>$uid]);
-        if ($res){
-
-            $this->success("设置成功");
-        }else{
-
-            $this->error("设置失败");
-        }
 
 
-    }
+
+
+
 
 
 

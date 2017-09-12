@@ -52,12 +52,12 @@ class Wechat extends Controller
         ];
 
         $wechatUser = new WechatUser();
-        $user=$wechatUser->where('userid',$userInfo['userid'])->find();
         if ($wechatUser->checkUserExist($userInfo['userid'])) {
             $wechatUser->save($data, ['userid' => $userInfo['userid']]);
         } else {
             $wechatUser->save($data);
         }
+        $user=$wechatUser->where('userid',$userInfo['userid'])->find();
         
         session('userId', $userInfo['userid']);
         session('name', $userInfo['name']);
