@@ -10,6 +10,6 @@ namespace app\common\model;
 
  class FeePayment extends Model
  {
-
+    protected $dateFormat="Y-m-d";
 
  }
