@@ -138,7 +138,7 @@ body{
 .houses-list-tit{
     font-size: 1.8rem;
     line-height: 1.4;
-    padding: 2vw 2.67vw;
+    padding:  2.67vw;
 }
 .houses-list-item{
     display: flex;
