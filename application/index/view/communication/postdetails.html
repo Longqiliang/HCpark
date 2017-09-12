@@ -38,6 +38,7 @@
         background: #f2f2f2;
         padding: 0 10px 0 15px;
         border-radius: 5px;
+        font-size: 15px;
     }
     .foot .send{
         width: 70px;
@@ -119,9 +120,9 @@
     </div>
     <div class="load-more" v-if="comments.length === 0">暂时啥都没有，快去评论吧！</div>
     <div class="load-more" v-if="comments.length > 0" @click="loadMore($event)">加载更多...</div>
-    <div class="foot">
+    <div class="foot" ref="inputBox">
         <div class="input-box">
-            <input type="text" placeholder="说说你的感想！" ref="inputs">
+            <input type="text" placeholder="说说你的感想！" ref="inputs" @click="focus">
         </div>
         <div class="send" @click="send()">
             发送
@@ -136,7 +137,6 @@
 {block name="script"}
 <script>
     var id = {$post.id};
-    console.log(id);
     new Vue({
         el: '#app',
         data:{
@@ -149,32 +149,40 @@
                 var content = this.$refs.inputs,
                     vm = this.comments,
                     _this = this;
-                _this.$indicator.open({
-                    text: '评论提交中',
-                    spinnerType: 'triple-bounce'
-                });
-                $.ajax({
-                    type:'post',
-                    url:'{:Url("Communication/comment")}',
-                    dataType:'json',
-                    data:{'id':id,'content':$(content).val()}
-                }).done(function (data) {
-                    _this.$indicator.close();
-                    if(data.code == 1){
-                        _this.$toast({
-                            message:"评论成功！",
-                            duration:1000
-                        });
-                        vm.unshift(data.data);
-                        $(content).val('');
-                    }else{
-                        _this.$toast({
-                            message:"评论失败！",
-                            duration:1000
-                        });
-                    }
+                if(content.length > 0){
+                    _this.$indicator.open({
+                        text: '评论提交中',
+                        spinnerType: 'triple-bounce'
+                    });
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("Communication/comment")}',
+                        dataType:'json',
+                        data:{'id':id,'content':$(content).val()}
+                    }).done(function (data) {
+                        _this.$indicator.close();
+                        if(data.code == 1){
+                            _this.$toast({
+                                message:"评论成功！",
+                                duration:1000
+                            });
+                            vm.unshift(data.data);
+                            $(content).val('');
+                        }else{
+                            _this.$toast({
+                                message:"评论失败！",
+                                duration:1000
+                            });
+                        }
 
-                })
+                    })
+                }else{
+                    _this.$toast({
+                        message:"评论不能为空！",
+                        duration:1000
+                    });
+                }
+
             },
             loadMore: function (event) {
                 var length = this.comments.length,
@@ -218,10 +226,26 @@
                     _this.bigImg = false;
                     $("body").removeClass('no-scroll');
                 }
+            },
+            focus: function () {
+                var _this = this;
+                setTimeout(function () {
+                    var pannel = _this.$refs.inputBox;
+                    pannel.scrollIntoView(true);
+                },200);
             }
         }
 
     })
+//    $(function () {
+//        var viewTop = $(window).scrollTop(),            // 可视区域顶部
+//            viewBottom = viewTop + window.innerHeight;  // 可视区域底部
+//        $("input").focus(function (event) {
+//            var elementTop = $(event.target).offset().top, // $element是保存的input
+//                elementBottom = elementTop + $(event.target).height();
+//            $(window).scrollTop(elementBottom);
+//        })
+//    })
 </script>
 
 {/block}

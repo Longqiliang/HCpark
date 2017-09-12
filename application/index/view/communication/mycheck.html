@@ -190,7 +190,7 @@
                 <img src="/index/images/communication/success.png">
                 {/case}
                 {case value="1"}
-                <span data-id="{$vo->id}" data-company="{$vo->company}" data-mobile="{$vo->mobile}" data-name="{$vo->name}" data-remark="{$vo->remark}" onclick="check(event)">审核</span>
+                <span data-id="{$vo->id}" data-company="{$vo->company}" data-mobile="{$vo->mobile}" data-name="{$vo->name}" data-remark="{$vo->remark}">审核</span>
                 {/case}
                 {/switch}
             </li>
@@ -237,19 +237,20 @@
 
 {block name="script"}
 <script>
-    function check(event) {
-        var id = $(event.target).attr('data-id'),
-            name = $(event.target).attr('data-name'),
-            mobile = $(event.target).attr('data-mobile'),
-            remark = $(event.target).attr('data-remark'),
-            company = $(event.target).attr('data-company');
-        $("#name").text(name);
-        $("#mobile").text(mobile);
-        $("#company").text(company);
-        $(".remark textarea").val(remark);
-        $(".modal-box").fadeIn(200);
-        pass(id);
-    }
+
+        $(".body").find('li>span').on('click',function () {
+            var id = $(this).attr('data-id'),
+                name = $(this).attr('data-name'),
+                mobile = $(this).attr('data-mobile'),
+                remark = $(this).attr('data-remark'),
+                company = $(this).attr('data-company');
+            $("#name").text(name);
+            $("#mobile").text(mobile);
+            $("#company").text(company);
+            $(".remark textarea").val(remark);
+            $(".modal-box").fadeIn(200);
+            pass(id);
+        });
     function pass(id) {
         $(".button").find('li').on('click',function () {
             var index = $(this).index(),
@@ -259,6 +260,7 @@
             }else{
                 type = 1;
             }
+            console.log(id);
             $.ajax({
                 type:'post',
                 url:'{:Url("Communication/myCheck")}',
