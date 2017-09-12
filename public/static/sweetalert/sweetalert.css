@@ -25,7 +25,8 @@ body.stop-scrolling {
   text-align: center;
   position: fixed;
   left: 50%;
-  top: 50%;
+  /*top: 50%;*/
+  top:43%;
   margin-left: -256px;
   margin-top: -200px;
   overflow: hidden;
