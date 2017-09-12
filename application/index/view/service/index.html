@@ -149,6 +149,7 @@
         data:{
             baseData:{
                 isBoss:'{$is_boss}',
+                isFee:'{$is_fee}',
                 propertyServices:JSON.parse('{$propert}'),
                 companyService:JSON.parse('{$company}')
             },
@@ -165,6 +166,10 @@
         },
         methods:{
             jumpTo(path,id){
+                if(id==1 && this.isFee=='no'){
+                    window.location.href='/index/service/noPermissions';
+                    return;
+                }
                 window.location.href='/index/service/onCheck/id/'+id+'/path/'+path;
             },
             parkChange(){

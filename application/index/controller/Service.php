@@ -43,8 +43,10 @@ class Service extends Base
         $app = new  CompanyApplication();
         $info = $user->where('userid', $user_id)->find();
         $map = ['type ' => 0];
+        $is='yes';
         if (!$info['fee_status']) {
             $map['app_id'] = ['>', 1];
+            $is="no";
         }
         /*if($info['tagid']==1){
 
@@ -97,6 +99,7 @@ class Service extends Base
         $this->assign('is_boss', $is_boss);
         $this->assign('propert', json_encode($PropertyServices));
         $this->assign('company', json_encode($CompanyService));
+       $this->assign('is_fee',$is);
         return $this->fetch();
 
     }
@@ -203,7 +206,15 @@ class Service extends Base
 
     }
 
+    public function noPermissions()
+    {
+        return $this->fetch();
+    }
 
+    public function officeSupplies()
+    {
+        return $this->fetch();
+    }
     //预约
     public function order()
     {
