@@ -5,29 +5,83 @@
     a{
         display: block;
         text-align: center;
-        font-size: 1.7rem;
+        font-size: 1.3rem;
         color: #666;
-        margin:1rem
+        margin:0.6rem
+    }
+    .line{
+        position: relative;
+        text-align: center;
+        height: 25px;
+        line-height: 25px;
+        color:#FFAEB9;
+    }
+    .line:before,.line:after{
+        position: absolute;
+        top:10px;
+        content:'';
+        width: 37vw;
+        height: 1px;
+        background: #f1f1f1;
+    }
+    .line:before{
+        left: 0;
+    }
+    .line:after{
+        right: 0;
     }
 </style>
 {/block}
 
 {block name="body"}
 <div>
-    <a href="/index/addressbook/index">通讯录</a>
-    <a href="/index/enterprise/index">企业搜索</a>
-    <a href="/index/feedback/index">意见反馈</a>
-    <a href="/index/feedback/demand">意见反馈 - 编辑</a>
-    <a href="/index/feedback/replylist"> 反馈列表</a>
-    <a href="/index/index/registercode">注册二维码</a>
+    <div class="line">已测</div>
+    <a href="/index/enterprise/index">园区企业（搜索）</a>
+    <a href="/index/communication/index">合作交流</a>
+    <a href="/index/policy/index/c/1">政策法规</a>
+    <a href="/index/partybuild/index">··园区党建（统计）</a>
+    <a href="/index/parkprofile/index">··园区介绍（少两个园区信息）</a>
+    <a href="/index/union/index">工会联盟</a>
+
+    <div class="line">独立主页</div>
+
+    <a href="/index/index/regitercode">注册二维码</a>
     <a href="/index/index/register">注册</a>
+    <a href="/index/addressbook/index">通讯录</a>
+
+    <a href="/index/Partymanage/index">园区管理</a>
+    <a href="/index/service/index">企业服务</a>
+    <a href="/index/personal/index">个人中心</a>
+
+    <a href="/index/Roomrent/houseslist">我要租房</a>
+
+    <div class="line">人才介绍（已测）</div>
+    <a href="/index/Talentservice/serviceIndex">服务信息</a>
+    <a href="/index/Talentservice/index">企业招聘</a>
+
+
+    <div class="line">新闻通告（已测）</div>
+
     <a href="/index/news/index">新闻</a>
     <a href="/index/news/article">好文分享</a>
     <a href="/index/news/policy">园区通告</a>
-    <a href="/index/partybuild/index">园区通告 - 首页</a>
-    <a href="/index/personal/index">个人中心</a>
-    <a href="/index/policy/index/c/1">政策法规</a>
-    <a href="/index/service/index">企业服务</a>
+
+    <div class="line">意见反馈／回复（已测）</div>
+
+    <a href="/index/feedback/index">意见反馈</a>
+    <a href="/index/feedback/demand">意见反馈 - 编辑</a>
+    <a href="/index/feedback/replylist"> 反馈列表</a>
+
+    <div class="line"></div>
+
+
+
+
+
+    <div class="line"></div>
+
+
+
     <a>...</a>
 </div>
 {/block}
