@@ -14,6 +14,15 @@
         text-align: center;
         line-height: 80vh;
     }
+
+body{
+    background: #F5F5F5;
+}
+.no-list{
+    width:100%;
+    display: block;
+    margin:0 auto;
+}
 </style>
 {/block}
 {block name="body"}
@@ -33,9 +42,8 @@
         <!--<mt-spinner :type="2"  v-if="canLoad && loading"></mt-spinner>-->
         <!--<span v-if="!canLoad">没有更多了</span>-->
     <!--</div>-->
-    <p class="no-more">
-        暂无消息
-    </p>
+    <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+
 </div>
 <!--加载更多-->
 

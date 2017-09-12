@@ -3,6 +3,16 @@
     <title>我的收藏</title>
     <link rel="stylesheet" href="/index/css/personal/collection.css">
     <link rel="stylesheet" href="/index/css/common/tip.css">
+<style>
+    body{
+        background: #F5F5F5;
+    }
+    .no-list{
+        width:100%;
+        display: block;
+        margin:0 auto;
+    }
+</style>
 {/block}
 {block name="body"}
     <!--tab-->
@@ -34,7 +44,9 @@
                     </div>
                 </a>
                 {/volist}
-
+                {empty name='list1'}
+                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+                {/empty}
             </div>
         </div>
         <!--园区通告-->
@@ -56,6 +68,9 @@
                     </div>
                 </a>
                 {/volist}
+                {empty name='list2'}
+                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+                {/empty}
             </div>
         </div>
         <!--好文分享-->
@@ -77,6 +92,9 @@
                     </div>
                 </a>
                 {/volist}
+                {empty name='list3'}
+                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+                {/empty}
             </div>
         </div>
         <!--政策法规-->
@@ -98,6 +116,9 @@
                     </div>
                 </a>
                 {/volist}
+                {empty name='list4'}
+                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+                {/empty}
             </div>
         </div>
     </div>

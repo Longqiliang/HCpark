@@ -81,6 +81,9 @@
         color: #999;
         font-size: 1.2rem;
     }
+    .my-title{
+        font-size: 1.5rem;
+    }
 </style>
 {/block}
 
@@ -88,7 +91,7 @@
 <div class="body">
 
     <div class="question">
-        <p>问题信息</p>
+        <p class="my-title">问题信息</p>
         <ul>
             <li>
                 <div class="title">标<span class="nbsp"></span>题：</div>
@@ -106,7 +109,7 @@
         </ul>
     </div>
     <div class="reply">
-        <p>园区回复</p>
+        <p class="my-title">园区回复</p>
         {empty name="info->reply"}
         <div class="content">暂无回复</div>
         {else /}

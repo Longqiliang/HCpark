@@ -2,6 +2,19 @@
 {block name="style"}
 <title>我的服务</title>
 <link rel="stylesheet" href="/index/css/personal/service.css">
+<style>
+    body{
+        background: #F5F5F5;
+    }
+    .no-list{
+        width:100%;
+        display: block;
+        margin:0 auto;
+    }
+    .notice .list{
+        background: #fff;
+    }
+</style>
 <!--<link rel="stylesheet" href="/index/css/common/tip.css">-->
 {/block}
 {block name="body"}
@@ -37,7 +50,9 @@
                     </div>
                 </a>
                 {/volist}
-
+                {empty name='property'}
+                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+                {/empty}
             </div>
         </div>
         <!--企业服务-->
@@ -60,6 +75,9 @@
                     </div>
                 </a>
                 {/volist}
+                {empty name='company'}
+                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+                {/empty}
             </div>
         </div>
     </div>
