@@ -44,8 +44,8 @@ class Service extends Base
         $info = $user->where('userid', $user_id)->find();
         $map = ['type ' => 0];
         $is='yes';
-        if (!$info['fee_status']) {
-            $map['app_id'] = ['>', 1];
+        if ($info['fee_status'] != 0) {
+
             $is="no";
         }
         /*if($info['tagid']==1){
