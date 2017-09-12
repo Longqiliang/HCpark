@@ -102,7 +102,7 @@
 <div class="content" id="app">
     <div class="banner">
         <!--<span class=""></span>-->
-        <div class="banner-icon icon-vr" @click="looVR(info.panorama)" v-if="info.panorama"></div>
+        <div class="banner-icon icon-vr" @click="looVR(info.panorama)" v-if="info.panorama">全景</div>
         <div class="swiper-container" @click="show($event)" ref="banner">
             <div class="swiper-wrapper">
                 <div v-for="(img,index) of info.imgs" class="swiper-slide">
