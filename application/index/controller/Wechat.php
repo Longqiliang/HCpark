@@ -39,8 +39,8 @@ class Wechat extends Controller
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('company'));
         $userId = $weObj->getUserId(input('code'), config('company.agentid'));
-//var_dump($userId);
-//var_dump('errcode:'.$weObj->errCode.',msg:'.$weObj->errMsg);
+        //var_dump($userId);
+        //var_dump('errcode:'.$weObj->errCode.',msg:'.$weObj->errMsg);
         $userInfo = $weObj->getUserInfo($userId['UserId']);
         $data = [
             'userid' => $userInfo['userid'],
@@ -48,7 +48,7 @@ class Wechat extends Controller
             'mobile' => $userInfo['mobile'],
             'gender' => $userInfo['gender'],
             'avatar' => $userInfo['avatar'],
-//            'department' => $userInfo['department'][0], //只选第一个所属部门
+            //'department' => $userInfo['department'][0], //只选第一个所属部门
         ];
 
         $wechatUser = new WechatUser();
@@ -62,7 +62,7 @@ class Wechat extends Controller
         session('name', $userInfo['name']);
         session('gender', $userInfo['gender']);
         session('avatar', $userInfo['avatar']);
-
+        session('park_id', $userInfo['park_id']);
         // 默认跳转到前一页
         $this->redirect(session('requestUri'));
     }
