@@ -118,6 +118,9 @@
         background-color: #fff;
     }
     .company-logo>img{
+        text-align: center;
+        line-height: 59px;
+        display: block;
         width:59px;
         height:59px;
         border-radius: 3px;
@@ -165,12 +168,13 @@
     <ul class="company-list" :class="{overflow:inputStatus}">
         <li v-for="item in companyList" @click="jumpTo(item.id)">
             <div class="company-logo">
-                <img :src="item.img" alt="公司logo" v-if="item.img">
-                <img src="/index/images/index/icon-no.png" alt="公司logo" v-else>
+                <img :src="item.img" alt="logo" v-if="item.img">
+                <img src="/index/images/index/icon-no.png" alt="logo" v-else>
             </div>
             <ul class="company-info">
                 <li>{{item.name}}</li>
-                <li>{{item.mobile}}</li>
+                <li v-if="item.mobile!=null">联系电话：{{item.mobile}}</li>
+                <li v-else>联系电话：暂无</li>
             </ul>
         </li>
     </ul>
@@ -178,12 +182,13 @@
     <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
         <li v-for="item in searchList" @click="jumpTo(item.id)">
             <div class="company-logo">
-                <img :src="item.img" alt="公司logo" v-if="item.img">
-                <img src="/index/images/index/icon-no.png" alt="公司logo" v-else>
+                <img :src="item.img" alt="logo" v-if="item.img">
+                <img src="/index/images/index/icon-no.png" alt="logo" v-else>
             </div>
             <ul class="company-info">
                 <li>{{item.name}}</li>
-                <li>{{item.mobile}}</li>
+                <li v-if="item.mobile!=null">联系电话：{{item.mobile}}</li>
+                <li v-else>联系电话：暂无</li>
             </ul>
         </li>
     </ul>
