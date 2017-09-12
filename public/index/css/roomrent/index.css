@@ -428,4 +428,10 @@ i.icon-photo{
     font-size: 1.5rem;
     color: #999;
     line-height: 45px;
+    background-color: #f6f6f6;
+    height:calc( 100vh - 14.7vw);
+}
+.center img {
+    width: 95%;
+    margin: 20% auto 0;
 }
