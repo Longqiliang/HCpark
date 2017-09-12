@@ -52,6 +52,7 @@ class Wechat extends Controller
         ];
 
         $wechatUser = new WechatUser();
+        $user=$wechatUser->where('userid',$userInfo['userid'])->find();
         if ($wechatUser->checkUserExist($userInfo['userid'])) {
             $wechatUser->save($data, ['userid' => $userInfo['userid']]);
         } else {
@@ -62,7 +63,7 @@ class Wechat extends Controller
         session('name', $userInfo['name']);
         session('gender', $userInfo['gender']);
         session('avatar', $userInfo['avatar']);
-        session('park_id', $userInfo['park_id']);
+        session('park_id', $user['park_id']);
         // 默认跳转到前一页
         $this->redirect(session('requestUri'));
     }
