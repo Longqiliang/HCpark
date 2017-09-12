@@ -14,7 +14,7 @@ class Parkprofile extends Base
 /*园区简介，前台加判断，如果没有全景图片，就不显示*/
     public function index(){
         //取线上url的park_id，先写死；
-        $parkid = input('park_id',3);
+        $parkid = input('park_id');
         $map=array(
             'id'=>$parkid,
         );
@@ -24,6 +24,9 @@ class Parkprofile extends Base
         $this->assign('info',$info);
         return $this->fetch();
     }
+    public function  mainPark(){
 
+        return $this->fetch();
+    }
 
 }

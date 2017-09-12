@@ -407,7 +407,7 @@
         </li>
         <!--个人统计-->
         <li class="" :class="{'contentShow':isActive==1}">
-            <iframe src="/index/partymanage/statisticsInfo" v-if="is_boss=='no'" id="personalStats" frameborder="0" scrolling="no" width="100%" height="100%" onload="setIframeHeight(this)"></iframe>
+            <iframe src="/index/partymanage/statisticsInfo" v-if="is_boss=='no'" id="personalStats" frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
             <div v-if="is_boss=='yes'">
                 <div class="search" :class="{isClick:inputStatus}" >
                         <div class="searchBox" @click="isClick">
@@ -636,9 +636,33 @@
                     this.canWrite=false
                 }
             }
+//            画图
             this.drawPie(this.types);
             this.drawLine(this.will);
             this.drawLine(this.finish1);
+            function reinitIframe(){
+
+            }
+//            iframe 高度自适应
+            window.setInterval(function () {
+                var iframe = document.getElementById("personalStats");
+                try{
+                    var iframeOldHeight=iframe.height;
+//                    var bHeight = iframe.contentWindow.document.body.scrollHeight;
+//                    var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+//                    var height = Math.max(bHeight, dHeight);
+//                    iframe.height = height;
+                    var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+                    if (iframeWin.document.body) {
+                        var iframeNewHeight= iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+                        if(iframeNewHeight!=iframeOldHeight){
+                            iframe.height = iframeNewHeight;
+                        }
+                    }
+                }catch (error){
+//                    location.reload(true);
+                }
+            }, 200);
 //                this.setIframeHeight(document.getElementById('personalStats'));
         },
         methods:{
