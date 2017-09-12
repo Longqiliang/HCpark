@@ -69,7 +69,7 @@ console.log({$info});
                 _this.chart = echarts.init(_this.$refs.contractChart);
                 var contractOption = {
                     title: {
-                        text: _this.info.total.count,
+                        text: _this.info.total.count+"份",
                         x:"49%",
                         y:"40%",
                         textAlign: "center",
@@ -96,7 +96,7 @@ console.log({$info});
                             name:'合同类型统计',
                             type:'pie',
                             center:['50%',"45%"],
-                            radius: ['40%', '55%'],
+                            radius: ['45', '70'],
                             label: {
                                 normal: {
                                     formatter: [`{c|{c}}`, `{b}`].join('\n'),
