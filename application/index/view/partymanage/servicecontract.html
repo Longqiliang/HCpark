@@ -18,12 +18,13 @@
     .group-view{
         padding: 0 4vw;
         font-size: 1.5rem;
+        position: relative;
     }
     .group-view-cell{
         display: flex;
         justify-content: space-between;
         align-items: center;
-        line-height: 1.4rem;
+        line-height: 1.4;
         padding:4vw 0;
     }
     .group-view-cell span:last-child{
@@ -34,7 +35,7 @@
         font-size: 1.5rem;
         position: relative;
     }
-    .group-box:after{
+    .group-box:after,.group-view:after{
         content: '';
         position: absolute;
         width: 100%;
