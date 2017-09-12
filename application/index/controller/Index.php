@@ -4,7 +4,7 @@ use think\Controller;
 use wechat\TPWechat;
 use wechat\TPQYWechat;
 use think\Loader;
-class Index extends Base
+class Index  extends  Controller
 {
     /** 测试专用 页面地址列表 **/
     public function index(){
