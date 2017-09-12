@@ -41,11 +41,9 @@ class Partymanage extends Base
             } else {
                 $news = PartyNews::where($map)->where('park_id', $park_id)->order('create_time desc')->field('id,title')->limit(4)->select();
             }
-            if ($news != false) {
-                return $this->success('成功', '', json_encode($news));
-            } else {
-                return $this->error('失败');
-            }
+
+            return $this->success('成功', '', json_encode($news));
+
         }
         //所有园区领导,能看到所有园区
         if ($user['department'] == 1 && $user['tagid'] == 1) {
@@ -376,7 +374,7 @@ class Partymanage extends Base
         return $this->fetch();
     }
 
-    //招商统计图表所需数据格式
+     //招商统计图表所需数据格式
     public function merchantsComment($mCompany, $type)
     {
         $data = [
@@ -440,7 +438,7 @@ class Partymanage extends Base
         return $this->fetch();
     }
 
-    //查看招商日志详情
+     //查看招商日志详情
     public function recordDetail()
     {
         $mRecord = new MerchantsRecord();
@@ -456,7 +454,7 @@ class Partymanage extends Base
         return $this->fetch();
     }
 
-    //写招商日志
+//写招商日志
     public function merchantsRecord()
     {
         $user_id = session('user_id');
@@ -498,7 +496,7 @@ class Partymanage extends Base
     }
 
 
-    //个人统计详情获取数据的公共方法
+     //个人统计详情获取数据的公共方法
     public function statisticsCommon($user_id, $year, $month)
     {
         $mDiary = new MerchantsDiary();
@@ -712,7 +710,8 @@ class Partymanage extends Base
     }
 
     /*公司详情列表*/
-    public function detailList()
+    public
+    function detailList()
     {
         $id = input('id');
 
