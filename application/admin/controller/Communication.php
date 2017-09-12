@@ -115,7 +115,7 @@ class Communication extends Admin
             $serch = input('search');
             if (!empty($serch)) {
                 $map['name'] = array('like', '%' . $serch . "%");
-                $userlist = $user->where($map)->select();
+                $userlist = $user->where($map)->order('create_time desc')->select();
                 $ids = array();
                 foreach ($userlist as $value) {
                     array_push($ids, $value['userid']);
