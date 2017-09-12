@@ -39,6 +39,9 @@
                             <div class="list-item">{{item.title}}</div>
                         </div>
                     </div>
+                    <div v-else>
+                        <div class="list-item">暂无信息</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,6 +84,7 @@
 <script>
     var res ={$res};
     var nowPark = null;
+    var listSwiper = null;
     var parkId = window.sessionStorage.getItem("park_id");
     if(res.length){
         if(parkId && res.length > 1){
@@ -94,7 +98,9 @@
 var vm = new Vue({
     el:'#app',
     mounted(){
-        var listSwiper = new Swiper('#listSwiper',{
+        listSwiper = new Swiper('#listSwiper',{
+            observer:true,
+            observeParents:true,
             direction : 'vertical',
             slidesPerGroup : 2,
             autoplay: 2000,
@@ -107,7 +113,8 @@ var vm = new Vue({
         nowPark:nowPark,
         parks:{$res},
         news:{$news},
-        isCheck:true
+        isCheck:true,
+        listSwiper:null
     },
     methods:{
         //园区选择
@@ -120,15 +127,24 @@ var vm = new Vue({
             var data = {
                 park_id:_this.nowPark
             };
+            console.log(data);
             window.sessionStorage.setItem("park_id",_this.nowPark);
             _this.$http.post('/index/partymanage/index',data).then(function (res) {
-                //console.log(res.data);
+                console.log(res.data);
                 _this.isCheck = true;
                 var data = res.data;
                 if(data.code == 1){
                     var list =JSON.parse(data.data);
-                    _this.news = list;
-                    //console.log(_this.news);
+                    var html = '';
+                    if(list.length){
+                        for(var j = 0;j < list.length; j++){
+                            html += '<div class="swiper-slide" ><div class="list-item">'+list[j].title+'</div></div>'
+                        }
+                    }else {
+                        html += '<div class="list-item">暂无消息</div>'
+                    }
+                    $("#listSwiper .swiper-wrapper").empty().append(html);
+                    listSwiper.init();
                 }
             },function (res) {
                 _this.isCheck = true;
