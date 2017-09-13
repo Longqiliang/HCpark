@@ -8,6 +8,7 @@
 
 namespace app\index\controller;
 
+use app\common\model\ParkIntention;
 use app\common\model\ParkRent;
 use app\common\model\ParkRoom;
 use app\common\model\PeopleRent;
@@ -281,7 +282,7 @@ class Roomrent extends Base
             " A幢" => ['houselist' => $newArr, 'rentlist' => $data],
             " B幢" => ['houselist' => $newArr1, 'rentlist' => $data1],
         ];
-        $list1 = ["$parkName" => $list];
+        $list1 = ["$parkName" => $list,'人工产业园'=>$list];
         $this->assign('type', $type);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($list1));
@@ -434,6 +435,29 @@ class Roomrent extends Base
             $floor[$k] = $v['floor'];
         }
 
+    }
+
+    /*租房意向申请*/
+    public function intention(){
+        if (IS_POST){
+            $data = input('post.');
+            $data['create_time'] = time();
+            $data['park_id'] = session('park_id');
+            $data['status'] = 0;
+
+            $parkIntention = new ParkIntention();
+            $res = $parkIntention->allowField(true)->save($data);
+            if ($res){
+
+                $this->success('添加成功');
+            }else{
+
+                $this->error("添加失败");
+            }
+        }else{
+
+            return $this->fetch();
+        }
 
     }
 
