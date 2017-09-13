@@ -9,6 +9,7 @@ namespace app\admin\controller;
 
 use app\common\model\CompanyContract;
 use app\common\model\WechatDepartment;
+use think\Image;
 
 class Contract extends Admin {
     /*合同列表页*/
@@ -34,13 +35,25 @@ class Contract extends Admin {
                 foreach($data['img'] as $k=>$v){
                     $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
                 }
+                if ($data['img']) {
+                    foreach ($data['img'] as $k1 => $v1) {
+                        if (is_file(PUBLIC_PATH . $v1)) {
+                            $path = str_replace(".", "_s.", $v1);
+                            $image = Image::open(PUBLIC_PATH . $v1);
+                            $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                            $data['imgs'][$k1] = $path;
+                        } else {
+                            $data['imgs'][$k1] = $data['img'][$k1];
+                        }
+                    }
+                }
                 $update = [
                     'img' =>json_encode($data['img']),
+                    'imgs' => json_encode($data['imgs']),
                     'company' =>input('company'),
                     'type' =>input("type"),
                     'remark' =>input('remark'),
                     'number' =>input('number')
-
                 ];
                 $like = mb_substr($update['company'], 0, 6);
                 $department = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
@@ -81,6 +94,18 @@ class Contract extends Admin {
                 }
                 foreach($data['img'] as $k=>$v){
                     $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
+                }
+                if ($data['img']) {
+                    foreach ($data['img'] as $k1 => $v1) {
+                        if (is_file(PUBLIC_PATH . $v1)) {
+                            $path = str_replace(".", "_s.", $v1);
+                            $image = Image::open(PUBLIC_PATH . $v1);
+                            $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                            $data['imgs'][$k1] = $path;
+                        } else {
+                            $data['imgs'][$k1] = $data['img'][$k1];
+                        }
+                    }
                 }
                 $data['create_time'] = time();
                 $data['park_id'] = session("user_auth")['park_id'];
