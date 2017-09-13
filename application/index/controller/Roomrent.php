@@ -347,7 +347,7 @@ class Roomrent extends Base
     public function panorama()
     {
         $link = input('link');
-        $this->assign('link', $link);
+        $this->assign('link',json_encode($link));
 
         return $this->fetch();
     }
