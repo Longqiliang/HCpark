@@ -44,18 +44,18 @@ class Roomrent extends Base
             'rent_id' => $roomInfo['id'],
 
         ];
-       /* if ($data['img']) {
-            foreach ($data['img'] as $k1 => $v1) {
-                if (is_file(PUBLIC_PATH . $v1)) {
-                    $path = str_replace(".", "_s.", $v1);
-                    $image = Image::open(PUBLIC_PATH . $v1);
-                    $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                    $data['imgs'][$k1] = $path;
-                } else {
-                    $data['imgs'][$k1] = $data['img'][$k1];
-                }
-            }
-        }*/
+        /* if ($data['img']) {
+             foreach ($data['img'] as $k1 => $v1) {
+                 if (is_file(PUBLIC_PATH . $v1)) {
+                     $path = str_replace(".", "_s.", $v1);
+                     $image = Image::open(PUBLIC_PATH . $v1);
+                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
+                     $data['imgs'][$k1] = $path;
+                 } else {
+                     $data['imgs'][$k1] = $data['img'][$k1];
+                 }
+             }
+         }*/
         $this->assign('info', json_encode($data));
 
         return $this->fetch();
@@ -177,7 +177,6 @@ class Roomrent extends Base
         $floor1 = [];
         $newArr = [];
         $newArr1 = [];
-        $type = input('type');
         $parkId = session('park_id');
         if ($parkId == 3) {
             $common = "（公共区域)";
@@ -185,7 +184,6 @@ class Roomrent extends Base
             $common = "";
         }
         $parkInfo = Park::where('id', $parkId)->find();
-        $parkName = $parkInfo['name'];
         $parkRoom = new ParkRoom();
         $map = [
             'park_id' => $parkId,
@@ -239,16 +237,9 @@ class Roomrent extends Base
             $newArr1[$k]['floor'] = $v;
             $newArr1[$k]['combine'] = false;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
-            /* $newArr1[$k]['rooms'] = $roomArray1[$k];
-             if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
-                 $newArr1[$k]['combine'] = true;
-                 $newArr1[$k]['depart'] = $roomArray1[$k][0]['department_id'];
-                 $newArr1[$k]['rooms'] = "B$v";
-             }*/
-
         }
-        $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
-        //echo json_encode($resArr);exit;
+
+
         //rentlist
         $data = [];
         $data1 = [];
@@ -269,16 +260,7 @@ class Roomrent extends Base
                 'id' => $v['id'],
                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
-           /* if ($data[$k]['img']) {
-                foreach ($data[$k]['img'] as $k1 => $v1) {
-                    if (is_file(PUBLIC_PATH . $v1)) {
-                        $path = str_replace(".", "_s.", $v1);
-                        $image = Image::open(PUBLIC_PATH . $v1);
-                        $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                        $data[$k]['img'][$k1] = $path;
-                    }
-                }
-            }*/
+
         }
         $map1 = ['park_id' => $parkId, "build_block" => "B", 'status' => 0, 'manage' => 0];
         $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
@@ -293,30 +275,16 @@ class Roomrent extends Base
                 'id' => $v['id'],
                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
             ];
-            /*if ($data1[$k]['img']) {
-                foreach ($data1[$k]['img'] as $k1 => $v1) {
-                    if (is_file(PUBLIC_PATH . $v1)) {
-                        $path = str_replace(".", "_s.", $v1);
-                        $image = Image::open(PUBLIC_PATH . $v1);
-                        $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                        $data1[$k]['img'][$k1] = $path;
-                    }
-                }
-            }*/
         }
         $parkName = $parkInfo['name'];
-        //$resArr = array_merge(["$parkName A幢" => $newArr], ["$parkName B幢" => $newArr1]);
-        //$resArr1 = array_merge(["$parkName A幢" => $data], ["$parkName B幢" => $data1]);
         $list = [
             " A幢" => ['houselist' => $newArr, 'rentlist' => $data],
             " B幢" => ['houselist' => $newArr1, 'rentlist' => $data1],
         ];
-        //echo json_encode(['houselist'=>$resArr,'rentlist'=>$resArr1]);exit;
-        //echo json_encode($list);exit;
+        $list1 = ["$parkName" => $list];
         $this->assign('type', $type);
         $this->assign('commonArea', $common);
-        $this->assign('list', json_encode($list));
-        $this->assign('parkName',$parkName);
+        $this->assign('list', json_encode($list1));
 
 
         return $this->fetch();
@@ -349,7 +317,7 @@ class Roomrent extends Base
     public function panorama()
     {
         $link = input('link');
-        $this->assign('link',json_encode($link));
+        $this->assign('link', json_encode($link));
 
         return $this->fetch();
     }
@@ -448,8 +416,10 @@ class Roomrent extends Base
         }
 
     }
+
     /*楼房信息*/
-    public function gaoshiqings(){
+    public function gaoshiqings()
+    {
         $parkId = session('park_id');
         $parkInfo = Park::where('id', $parkId)->find();
         $parkName = $parkInfo['name'];
@@ -465,12 +435,7 @@ class Roomrent extends Base
         }
 
 
-
-
     }
-
-
-
 
 
 }
