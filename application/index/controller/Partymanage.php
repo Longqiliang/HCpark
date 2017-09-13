@@ -234,12 +234,12 @@ class Partymanage extends Base
         $info = [
             'extra' => $manageInfo['remark'],
             'img' => json_decode($manageInfo['img']),
-            'imgs' => [],
+            'imgs' => json_decode($manageInfo['imgs']),
             'number' => $manageInfo['number'],
             'create_time' => $manageInfo['create_time'],
         ];
 
-        if ($info['img']) {
+       /* if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
                 if (is_file(PUBLIC_PATH . $v1)) {
                     $path = str_replace(".", "_s.", $v1);
@@ -248,7 +248,7 @@ class Partymanage extends Base
                     $info['imgs'][$k1] = $path;
                 }
             }
-        }
+        }*/
 //        return  dump($info);
         $this->assign('info', json_encode($info));
 
@@ -733,12 +733,12 @@ class Partymanage extends Base
         $info = [
             'extra' => $manageInfo['remark'],
             'img' => json_decode($manageInfo['img']),
-            'imgs' => [],
+            'imgs' => json_decode($manageInfo['imgs']),
             'number' => $manageInfo['number'],
             'create_time' => $manageInfo['create_time'],
         ];
 
-        if ($info['img']) {
+        /*if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
                 if (is_file(PUBLIC_PATH . $v1)) {
                     $path = str_replace(".", "_s.", $v1);
@@ -747,7 +747,7 @@ class Partymanage extends Base
                     $info['imgs'][$k1] = $path;
                 }
             }
-        }
+        }*/
         //return  dump($info);
         $this->assign('info', json_encode($info));
 

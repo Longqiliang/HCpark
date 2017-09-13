@@ -107,9 +107,7 @@
         <div class="swiper-container" @click="show($event)" ref="banner">
             <div class="swiper-wrapper">
                 <div v-for="(img,index) of info.imgs" class="swiper-slide">
-                    <img :data-src="img" class="swiper-lazy" :data-original="info.img[index]">
-                    <div class="swiper-lazy-preloader"></div>
-
+                    <img :src="img"  :data-original="info.img[index]">
                 </div>
             </div>
             <div class="swiper-pagination"></div>
