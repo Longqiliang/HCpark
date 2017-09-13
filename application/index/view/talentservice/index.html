@@ -180,7 +180,7 @@
 <div id="app">
     <div class="search" :class="{isClick:inputStatus}" >
         <div class="searchBox" @click="isClick">
-            <div class="searchText"><span class="searchText_c">请再此搜索岗位名称</span></div>
+            <div class="searchText"><span class="searchText_c">请在此搜索岗位名称</span></div>
             <input type="text" v-model="inputValue" @keyup="toSearch(0)" class="searchInput" placeholder="请输入岗位名称" v-focus="inputStatus">
         </div>
         <div class="unBtn" @click="isCancel">取消</div>
