@@ -109,6 +109,7 @@
                 <div v-for="(img,index) of info.imgs" class="swiper-slide">
                     <img :data-src="img" class="swiper-lazy" :data-original="info.img[index]">
                     <div class="swiper-lazy-preloader"></div>
+
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -141,10 +142,6 @@
     <div class="icon-box" v-if="lookVR">
         <i class="iconfont icon-back" @click="prev"></i>
         <i class="iconfont icon-go" @click="next"></i>
-    </div>
-    <div class="cancel" onclick="cancel()">
-        <span><i class="iconfont hc-cha1"></i></span>
-        <span></span>
     </div>
     <div class="modal-box" v-show="rentShow">
         <div class="modal">
