@@ -13,6 +13,13 @@
         width: 100%;
         height: 100%;
     }
+    .vr-mark i{
+        font-style: normal;
+        line-height: 7.73vw;
+        text-align: right;
+        font-size: 1.2rem;
+        padding-right: 5px;
+    }
 </style>
 {/block}
 
@@ -20,7 +27,7 @@
 {block name="body"}
 <div id="app">
     <div class="vr-mark" @click="reBack()">
-        <i class="icon-photo"></i>
+        <i class="icon-photo">照片</i>
     </div>
     <iframe :src=link frameborder="0" id="vr-link" ref="vr"></iframe>
 </div>
