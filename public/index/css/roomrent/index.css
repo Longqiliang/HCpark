@@ -262,28 +262,38 @@ body{
 .viewer-canvas{
     width: 100vw;
 }
+.icon-box .box{
+    width: 50px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: calc(50% - 52px );
+    z-index: 2016;
+    transform: translateY(-50%);
+}
+.box.box-left{
+    left: 1vw;
+    justify-content: flex-start;
+}
+.box.box-right{
+    right: 1vw;
+    justify-content: flex-end;
+}
 .icon-back,.icon-go{
     display: block;
     width: 40px;
     height: 40px;
-    background-color: transparent;
     color: #fff;
     font-size: 2.6rem;
-    position: fixed;
-    top:calc(50% - 52px);
-    transform: translateY(-50%);
-    z-index: 2016;
     text-align: center;
     line-height: 40px;
+    border-radius: 50%;
+    background-color:rgba(0,0,0,.3) ;
 }
-.icon-back{
-    left: 1vw;
-}
-.icon-go{
-    right: 1vw;
-}
+
 .table-view{
-    padding: 5.33vw;
+    padding: 5.33vw ;
     font-size: 1.4rem;
 }
 .table-view-cell{
@@ -341,11 +351,12 @@ body{
     color: #999;
 }
 .rent-btn-box{
-    position: fixed;
+    position: absolute;
     width: 100%;
     bottom: 0;
     left: 0;
    padding:8vw 4.8vw ;
+
 }
 .btn-box{
     width: 100%;

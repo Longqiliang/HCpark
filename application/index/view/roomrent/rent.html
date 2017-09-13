@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_355905_js6086l9et81tt9.css">
 <style>
     body{
-
         background-color: #fff;
+        height: 100vh;
     }
     /*modal框*/
     .modal-box{
@@ -140,8 +140,13 @@
         <button class="btn btn-block btn-green" @click="showRent">租房申请</button>
     </div>
     <div class="icon-box" v-if="lookVR">
-        <i class="iconfont icon-back" @click="prev"></i>
-        <i class="iconfont icon-go" @click="next"></i>
+        <div class="box box-left" @click="prev">
+            <i class="iconfont icon-back" ></i>
+        </div>
+       <div class="box box-right" @click="next">
+           <i class="iconfont icon-go" ></i>
+       </div>
+
     </div>
     <div class="modal-box" v-show="rentShow">
         <div class="modal">
