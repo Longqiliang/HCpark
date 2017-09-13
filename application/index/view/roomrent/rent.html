@@ -234,6 +234,9 @@
                 this.vrShow = false;
             },
             looVR:function (e) {
+                if(!e){
+                    return;
+                }
                 window.location.href='/index/roomrent/panorama?link='+e;
             },
             show:function (event){
