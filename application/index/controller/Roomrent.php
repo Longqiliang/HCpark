@@ -197,7 +197,7 @@ class Roomrent extends Base
         foreach ($floor as $k => $v) {
             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
             foreach ($roomList as $k1 => $v1) {
-                $res = ParkRent::where(['room_id'=>$v1['id'],'manage'=>0,'status'=>0])->find();
+                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                 if (!$res) {
                     $status = false;
                 } else {
@@ -224,7 +224,7 @@ class Roomrent extends Base
         foreach ($floor1 as $k => $v) {
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
-                $res = ParkRent::where(['room_id'=>$v1['id'],'manage'=>0,'status'=>0])->find();
+                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                 if (!$res) {
                     $status1 = false;
                 } else {
@@ -274,7 +274,7 @@ class Roomrent extends Base
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                        $data[$k]['imgs'][$k1] = $path;
+                        $data[$k]['img'][$k1] = $path;
                     }
                 }
             }
@@ -298,7 +298,7 @@ class Roomrent extends Base
                         $path = str_replace(".", "_s.", $v1);
                         $image = Image::open(PUBLIC_PATH . $v1);
                         $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                        $data1[$k]['imgs'][$k1] = $path;
+                        $data1[$k]['img'][$k1] = $path;
                     }
                 }
             }
@@ -446,6 +446,10 @@ class Roomrent extends Base
         }
 
     }
+
+
+
+
 
 
 }
