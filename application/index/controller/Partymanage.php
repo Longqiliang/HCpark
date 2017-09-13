@@ -906,9 +906,10 @@ class Partymanage extends Base
                  $newArr1[$k]['rooms'] = "B$v";
              }*/
         }
-        $resArr = array_merge(["$parkName A" => $newArr], ["$parkName B" => $newArr1]);
+        $resArr = array_merge(["A幢" => $newArr], ["B幢" => $newArr1]);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr));
+        $this->assign('parkName',$parkName);
         //echo json_encode($resArr);
 
         return $this->fetch();

@@ -308,14 +308,15 @@ class Roomrent extends Base
         //$resArr = array_merge(["$parkName A幢" => $newArr], ["$parkName B幢" => $newArr1]);
         //$resArr1 = array_merge(["$parkName A幢" => $data], ["$parkName B幢" => $data1]);
         $list = [
-            "$parkName A幢" => ['houselist' => $newArr, 'rentlist' => $data],
-            "$parkName B幢" => ['houselist' => $newArr1, 'rentlist' => $data1],
+            " A幢" => ['houselist' => $newArr, 'rentlist' => $data],
+            " B幢" => ['houselist' => $newArr1, 'rentlist' => $data1],
         ];
         //echo json_encode(['houselist'=>$resArr,'rentlist'=>$resArr1]);exit;
         //echo json_encode($list);exit;
         $this->assign('type', $type);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($list));
+        $this->assign('parkName',$parkName);
 
 
         return $this->fetch();
