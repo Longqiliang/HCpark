@@ -54,7 +54,7 @@
             </div>
             <span class="card-label">园区概况一目了然</span>
         </div>
-        <div class="card-list" @click="jump('/index/partymanage/merchants')">
+        <div class="card-list" @click="jumpTo(0)">
             <h3 class="card-tit">招商管理</h3>
             <div class="card-img-box">
                 <img src="/index/images/partymanage/img-partymanage.png" class="small">
@@ -153,6 +153,12 @@ var vm = new Vue({
         jump:function (href) {
             if(this.nowPark && href){
                 window.location.href = href+"?park_id="+this.nowPark;
+            }
+        },
+        jumpTo:function (active) {
+            if(this.nowPark){
+                sessionStorage.setItem('active',active);
+                window.location.href = "/index/partymanage/merchants"+"?park_id="+this.nowPark;
             }
         }
     }
