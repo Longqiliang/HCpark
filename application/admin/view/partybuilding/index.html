@@ -96,11 +96,11 @@
                         </div>
                     </td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.source}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}"><div class="mail-main">{$vo.content|strip_tags|msubstr=0,60}</div></a></td>
-                    <td class="list_type">
+                    <td class="text-content"><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,80}</a></td>
+                    <td >
                         {gt name="$vo.type" value="1"}
                             {eq name="$vo.type" value="2"}
-                            <span class="label label-info">两学一做</span>
+                            <span class="label label-info ">两学一做</span>
                             {else/}
                             <span class="label label-info">党员风采</span>
                             {/eq}
@@ -109,7 +109,7 @@
                         {/gt}
                     </td>
 
-                    <td class="text-right mail-date">{$vo.create_time}</td>
+                    <td class="text-content mail-date">{$vo.create_time}</td>
                 </tr>
                 {/volist}
                 </tbody>
