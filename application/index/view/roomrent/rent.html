@@ -249,7 +249,9 @@
         },
         methods:{
             loadImg:function (src) {
-                var urls ='http://lql.xz.cn/index/images/service/enterprise/business-img1.png';
+                var urls =window.location.protocol +'//'+ window.location.host +src;
+                console.log(urls);
+
                 wx.previewImage({
                     current: urls, // 当前显示图片的http链接
                     urls: [urls] // 需要预览的图片http链接列表
