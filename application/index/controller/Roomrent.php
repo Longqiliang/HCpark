@@ -130,7 +130,7 @@ class Roomrent extends Base
     public function moreList()
     {
         $len = input('length');
-        $parkId = session("park_id");
+        $parkId = input("park_id");
         $build = input('build');
         if (!$build) {
             $build = "A";
@@ -151,16 +151,6 @@ class Roomrent extends Base
                     'id' => $v['id'],
                     'room' => $room['build_block'] . "幢" . $room['room'] . "室"
                 ];
-                /*if ($data[$k]['img']) {
-                    foreach ($data[$k]['img'] as $k1 => $v1) {
-                        if (is_file(PUBLIC_PATH . $v1)) {
-                            $path = str_replace(".", "_s.", $v1);
-                            $image = Image::open(PUBLIC_PATH . $v1);
-                            $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                            $data[$k]['img'][$k1] = $path;
-                        }
-                    }
-                }*/
             }
 
             return ['code' => 1, 'data' => json_encode($data)];
