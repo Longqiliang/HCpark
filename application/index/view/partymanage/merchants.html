@@ -3,382 +3,59 @@
 {block name="style"}
 <title>招商管理</title>
 <style>
+    *{box-sizing:border-box}
+    .my-nav{display:-webkit-flex;display:flex;justify-content:space-around;line-height:5rem;font-size:1.5rem;height:5rem;border-bottom:2px solid #f1f1f1}
+    .my-rate-nav{justify-content:center;border-bottom:none}
+    .my-rate-nav>li:first-child{margin-right:4.6rem}
+    .my-nav>li{margin-bottom:-2px;padding:0 1rem}
+    .my-nav>li.active{color:#69b9f9;border-bottom:2px solid #69b9f9}
+    .my-tabs{display:-webkit-flex;display:flex;background:#fff;border:1px solid #69b9f9;color:#0A96E6;border-radius:5px;overflow:hidden}
+    .my-tabs1{margin:1rem auto;width:20rem;height:2.8rem;font-size:1.4rem;line-height:2.8rem}
+    .my-tabs>li{width:50%;height:100%;text-align:center}
+    .my-tabs>li:not(:last-child){border-right:1px solid #69b9f9}
+    .my-tabs>li.my-active{background-color:#69b9f9;color:#fff}
+    .my-content>li{width:100vw;position:relative;display:none}
+    .my-box>li{border-bottom:5px solid #f1f1f1}
+    .my-chart{padding:3.2vw}
+    .my-charts{width:100%;height:22rem}
+    .my-chart>.my-title{font-size:1.4rem;font-weight:700}
+    .my-charts{padding:3.2vw}
+    .my-personal>li{padding:1.2rem 0 1.2rem 4vw;display:-webkit-flex;display:flex;justify-content:center;align-items:center;font-size:1.5rem;background-color:#fff}
+    .my-personal>li>img{height:3rem;width:3rem;border:1px solid #f1f1f1;margin-right:1.9rem}
+    .my-personal>li>div{line-height:3rem;color:#333;flex-grow:1;border-bottom:1px solid #f1f1f1;padding:0 1.5rem 0 0;display:flex;justify-content:space-between}
+    .my-personal>li>div>span:last-child{color:#999}
+    .rate .my-list li{border-bottom:1px solid #f1f1f1}
 
-    *{
-        box-sizing: border-box;
-    }
-    /*tab*/
-    .my-nav{
-        display: -webkit-flex;
-        display: flex;
-        justify-content: space-around;
-        line-height: 5rem;
-        font-size: 1.5rem;
-        height:5rem;
-        border-bottom: 2px solid #f1f1f1;
-    }
-    .my-rate-nav{
-        justify-content: center;
-        border-bottom: none;
-    }
-    .my-rate-nav>li:first-child{
-        margin-right: 4.6rem;
-    }
-    .my-nav>li{
-        margin-bottom: -2px;
-        padding:0 1rem;
-    }
-    .my-nav>li.active{
-        color: #69b9f9;
-        border-bottom: 2px solid #69b9f9;
-    }
+    .my-content .contentShow{border-top:1px solid transparent;margin-top:-1px;display:block}
+    .search{background:#f0eff5;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;position:relative;z-index:999}
+    .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center}
+    .search>.unBtn{display:none}
+    .search>.searchBox>.searchInput{display:none}
+    .search>.searchBox>.searchText{display:inline-block;font-size:1.4rem;color:#999;padding-left:2rem;min-width:1px;line-height:3.2rem;height:3.2rem;background:url(/index/images/enterprise/search.png) 0 50% no-repeat;background-size:1.4rem 1.4rem}
+    .search.isClick{background:#fff;border-bottom:1px solid #f1f1f1;display:flex;align-items:center;justify-content:space-between}
+    .search.isClick>.searchBox{background:#f0eff5;padding-left:2.66vw;width:78vw;display:flex;align-items:center}
+    .search.isClick>.searchBox>.searchText{display:inline-block}
+    .search.isClick>.searchBox>.searchText>.searchText_c{display:none}
+    .search.isClick .searchInput{background:#f0eff5;display:inline-block;font-size:1.4rem;height:3.2rem;width:61.33vw}
+    .search.isClick>.unBtn{display:block;padding:0;box-sizing:border-box;width:3.8rem;height:2.8rem;line-height:2.8rem;border-radius:5px;border:1px solid #5d9cec;color:#5d9cec;text-align:center;font-size:1.4rem}
+    .searchList{width:100%;min-height:100vh;position:absolute;top:0;left:0;z-index:998;overflow:scroll!important}
+    .searchList>li{margin-bottom:0;border-bottom:1px solid #f1f1f1}
+    .bgWhite{background-color:rgba(0,0,0,.5)}
+    .searchList>li:first-child{margin-top:4.7rem}
+    .rate .searchList.my-list{margin-top:5rem}
+    .my-list li{width:100%;height:7rem;overflow:hidden;position:relative;background:#fff}
+    .my-list li .content-box{height:100%;padding:1.5rem;position:relative;display:-webkit-flex;display:flex;justify-content:space-between;flex-direction:column}
+    .content-box>.my-company{color:#999;font-size:1.4rem}
+    .my-job{font-size:1.6rem;color:#333;display:-webkit-flex;display:flex;justify-content:space-between}
+    .my-demand{font-size:1.2rem;display:-webkit-flex;display:flex;color:#999}
+    .my-demand>span{margin-right:2rem}
+    .my-list li a{width:100%;height:100%;position:absolute;top:0;left:0;z-index:2}
+    #personalStats{position:inherit}
+    .my-hide{display:none}
+    .my-footer{padding:1rem 0;text-align:center;color:#999;font-size:1.4rem}
+    .my-footer>p{text-align:center;font-size:1.5rem;line-height:80vh}
+    .my-footer div{display:inline-block;vertical-align:middle;margin-right:5px}
 
-    .my-tabs{
-        display: -webkit-flex;
-        display: flex;
-        background: #fff;
-        border:1px solid #69b9f9;
-        color: #0A96E6;
-        border-radius: 5px;
-        overflow: hidden;
-    }
-    .my-tabs1{
-        margin:1rem auto;
-        width:20rem;
-        height:2.8rem;
-        font-size: 1.4rem;
-        line-height: 2.8rem;
-    }
-    .my-tabs>li{
-        width:50%;
-        height:100%;
-        text-align: center;
-    }
-    .my-tabs>li:not(:last-child){
-        border-right: 1px solid #69b9f9;
-    }
-    .my-tabs>li.my-active{
-        background-color: #69b9f9;
-        color: #ffffff;
-    }
-
-    /*内容*/
-    .my-content>li{
-        width:100vw;
-        position: relative;
-        display: none;
-    }
-    .my-box>li{
-        border-bottom: 5px solid #f1f1f1;
-    }
-    .my-chart{
-        padding:3.2vw;
-    }
-
-    .my-charts{
-        width:100%;
-        height:22rem;
-    }
-    .my-chart > .my-title{
-        font-size: 1.4rem;
-        font-weight: bold;
-    }
-    .my-charts{
-        padding:3.2vw;
-    }
-
-
-    /*personal*/
-    .my-personal>li{
-        padding: 1.2rem 0 1.2rem 4vw ;
-        display: -webkit-flex;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.5rem;
-        background-color: #fff;
-    }
-    .my-personal>li>img{
-        height:3rem;
-        width:3rem;
-        border:1px solid #f1f1f1;
-        margin-right: 1.9rem;
-    }
-    .my-personal>li>div{
-        line-height: 3rem;
-        color: #333;
-        flex-grow:1;
-        border-bottom: 1px solid #f1f1f1;
-        padding:0 1.5rem 0 0;
-        display: flex;
-        justify-content: space-between;
-    }
-    .my-personal>li>div>span:last-child{
-        color: #999;
-    }
-
-
-    /**rate**/
-    .rate .my-list li{
-        border-bottom: 1px solid #f1f1f1;
-    }
-
-    /*my-log*/
-    .my-log li{
-        position: relative;
-        box-sizing:content-box;
-        padding:1.7rem 4vw;
-        border-bottom: 1px solid #f1f1f1;
-
-    }
-    .my-log li>div{
-        display: -webkit-flex;
-        display: flex;
-    }
-    .my-log li>a{
-        height:100%;
-        width:100%;
-        position: absolute;
-        top:0;
-        left: 0;
-    }
-    .my-log  .my-icon{
-        height:2.2rem;
-        width:2.2rem;
-        background: url('') no-repeat center center;
-        background-size: cover;
-        margin-right: 3.2vw;
-    }
-    .my-log  .my-icon-suc{
-        background-image: url('/index/images/partymanage/suc.png');
-    }
-    .my-log .my-icon-ing{
-        background-image: url('/index/images/partymanage/ing.png');
-    }
-    .my-log .my-icon-err{
-        background-image: url('/index/images/partymanage/err.png');
-    }
-    .my-log .my-list{
-        padding:0;
-        flex-grow:1;
-        display: -webkit-flex;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    .my-log .my-list>div:first-child{
-        color: #333;
-        font-size: 1.5rem;
-        line-height: 2.2rem;
-        display: -webkit-flex;
-        display: flex;
-    }
-    .my-log .my-list>div:first-child>span:first-child{
-        margin-right: 1.5rem;
-        width:7rem;
-    }
-    .my-log .my-list>div:first-child>span:last-child{
-        flex-grow:1;
-        width:40vw;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .my-log .my-list>div:last-child{
-        font-size: 1.2rem;
-        color: #999;
-    }
-    .addDdiary{
-        width:4.8rem;
-        height: 4.8rem;
-        position: fixed;
-        bottom:58px;
-        right:19px;
-        border-radius: 4.8rem
-    }
-    .addDdiary>img{
-        border-radius: 50%;
-        box-shadow: 0 3px 10px rgba(105,185,249,1);
-        box-sizing: border-box;
-        width:100%;
-    }
-    .my-content .contentShow{
-        border-top: 1px solid transparent;
-        margin-top: -1px;
-        display: block;
-    }
-
-    /**招商进度**/
-    .search{
-        background: #f0eff5;
-        padding:0.8rem 2.133vw;
-        border-bottom: 1px solid #f0eff5;
-        position: relative;
-        z-index: 999;
-    }
-    .search>.searchBox{
-        border-radius: 0.3rem;
-        height:3.2rem;
-        background: #ffffff;
-        text-align: center;
-    }
-    .search>.unBtn{
-        display: none;
-    }
-    .search>.searchBox>.searchInput{
-        display: none;
-    }
-    .search>.searchBox>.searchText{
-        display: inline-block;
-        font-size:1.4rem;
-        color: #999;
-        padding-left:2.0rem;
-        min-width: 1px;
-        line-height: 3.2rem;
-        height:3.2rem;
-        background: url("/index/images/enterprise/search.png") 0 50% no-repeat;
-        background-size: 1.4rem 1.4rem;
-    }
-    .search.isClick{
-        background: #ffffff;
-        border-bottom: 1px solid #f1f1f1;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .search.isClick>.searchBox{
-        background: #f0eff5;
-        padding-left: 2.66vw;
-        width:78vw;
-        display: flex;
-        align-items: center;
-    }
-    .search.isClick>.searchBox>.searchText{
-        display: inline-block;
-    }
-    .search.isClick>.searchBox>.searchText>.searchText_c{
-        display: none;
-    }
-    .search.isClick .searchInput{
-        background: #f0eff5;
-        display: inline-block;
-        font-size:1.4rem;
-        height:3.2rem;
-        width:61.33vw;
-    }
-    .search.isClick>.unBtn{
-        display: block;
-        padding:0;
-        box-sizing: border-box;
-        width:3.8rem;
-        height:2.8rem;
-        line-height: 2.8rem;
-        border-radius: 5px;
-        border:1px solid #5d9cec;
-        color: #5d9cec;
-        text-align: center;
-        font-size: 1.4rem;
-    }
-    .searchList{
-        width:100%;
-        min-height:100vh;
-        position: absolute;
-        top:0;
-        left:0;
-        z-index: 998;
-        overflow: scroll!important;
-    }
-    .searchList>li{
-        margin-bottom: 0;
-        border-bottom: 1px solid #f1f1f1;
-    }
-    .bgWhite{
-        background-color: rgba(0,0,0,0.5);
-    }
-    .searchList>li:first-child{
-        margin-top: 4.7rem;
-    }
-
-    .rate .searchList.my-list{
-        margin-top: 5rem;
-    }
-
-    .my-list{
-        /*padding:0.8rem 2.133vw;*/
-    }
-    .my-list li{
-        width: 100%;
-        height:7rem;
-        overflow: hidden;
-        position: relative;
-        background: #fff;
-        /*margin-bottom: 1.2rem;*/
-        /*border-radius: 0.3rem;*/
-    }
-    .my-list li .content-box{
-        height: 100%;
-        padding:1.5rem;
-        position: relative;
-        display: -webkit-flex;
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-    }
-    .content-box>.my-company{
-        color: #999;
-        font-size: 1.4rem;
-    }
-    .my-job{
-        font-size: 1.6rem;
-        color: #333;
-        display: -webkit-flex;
-        display: flex;
-        justify-content: space-between;
-    }
-    /*.my-job>span:last-child{*/
-        /*color: #52CC92;*/
-    /*}*/
-    .my-demand{
-        font-size: 1.2rem;
-        display: -webkit-flex;
-        display: flex;
-        color: #999;
-    }
-    .my-demand>span{
-        margin-right: 2rem;
-    }
-    .my-list li a{
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 2;
-    }
-
-    #personalStats{
-        position: inherit;
-    }
-    .my-hide{
-        display: none;
-    }
-    /**加载中**/
-    .my-footer{
-        padding: 1rem 0;
-        text-align: center;
-        color:#999;
-        font-size: 1.4rem;
-    }
-    .my-footer>p{
-        text-align: center;
-        font-size: 1.5rem;
-        line-height: 80vh;
-    }
-    .my-footer div {
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 5px;
-    }
 </style>
 {/block}
 
@@ -388,7 +65,6 @@
         <li :class="{active:isActive==0}" @click="changeTab(0)" v-if="is_boss=='yes'">招商统计</li>
         <li :class="{active:isActive==1}" @click="changeTab(1)">个人统计</li>
         <li :class="{active:isActive==2}" @click="changeTab(2)">招商进度</li>
-        <li :class="{active:isActive==3}" @click="changeTab(3)">工作日志</li>
     </ul>
     <ul class="my-content">
         <!--招商统计-->
@@ -412,7 +88,7 @@
                 <div class="search" :class="{isClick:inputStatus}" >
                         <div class="searchBox" @click="isClick">
                             <div class="searchText"><span class="searchText_c">请在此搜索姓名</span></div>
-                            <input type="text" v-model="inputValue" @keyup="toSearch(0)" class="searchInput" placeholder="请输入姓名" v-focus="inputStatus">
+                            <input type="text" v-model="inputValue" @input="toSearch(0)" class="searchInput" placeholder="请输入姓名" v-focus="inputStatus">
                         </div>
                         <div class="unBtn" @click="isCancel">取消</div>
                 </div>
@@ -444,7 +120,7 @@
             <div class="search" :class="{isClick:inputStatus}">
                 <div class="searchBox" @click="isClick">
                     <div class="searchText"><span class="searchText_c">请在此搜索公司名称</span></div>
-                    <input type="text" v-model="inputValue" @keyup="toSearch(1)"  class="searchInput" placeholder="请输入公司名称" v-focus="inputStatus">
+                    <input type="text" v-model="inputValue" @input="toSearch(1)"  class="searchInput" placeholder="请输入公司名称" v-focus="inputStatus">
                 </div>
                 <div class="unBtn" @click="isCancel">取消</div>
             </div>
@@ -480,24 +156,7 @@
                 </li>
             </ul>
         </li>
-        <!--工作日志-->
-        <li class="my-log" :class="{'contentShow':isActive==3}">
-            <ul>
-                <li v-for="item in diaryList" >
-                    <div>
-                        <span class="my-icon my-icon-suc"></span>
-                        <div class="my-list">
-                            <div><span>工作日志</span><span>{{item.content}}</span></div>
-                            <div><span>创建日期：</span><span>{{item.create_time*1000 | timeToString}}</span></div>
-                        </div>
-                    </div>
-                    <a :href="'/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id"></a>
-                </li>
-            </ul>
-            <a :href="'/index/partymanage/diaryInfo'" class="addDdiary"  v-if="canWrite">
-                <img src="/index/images/partymanage/add.png" alt="添加日志">
-            </a>
-        </li>
+
     </ul>
 </div>
 {/block}
@@ -576,9 +235,7 @@
                 color:['#68D1CB'],
                 data:[30,40,70,90,50,15,88,50,80,50,60,20]
             },
-//            工作日志
-            diaryList:{$diaryList},
-            canWrite:true,
+
 //            招商统计
             finish_num:{$finish_num},
             undone_num:{$undone_num},
@@ -608,11 +265,11 @@
             }else{
                 this.isActive=1
             }
-            var active=localStorage.getItem('active');
+            var active=sessionStorage.getItem('active');
             if(active!=null){
-                this.isActive=active
+                this.isActive= active== 0 && this.is_boss == 'no' ? 1 :active
             }
-            //初始数据处理
+                        //初始数据处理
             var w=[],e=[];
             for( x in this.undone2 ){
                 w.push(this.undone2[x])
@@ -625,17 +282,7 @@
             this.will.data=w;
             this.finish1.data=e;
             console.log(this.diaryList)
-            //能否写日志判断
-            if(this.is_boss=='yes'){
-                this.canWrite=false
-            }else{
-                this.canWrite=true
-            }
-            for(var i=0;i<this.diaryList.length;i++){
-                if(new Date(this.diaryList[i].create_time*1000).setHours(0,0,0,0)==new Date().setHours(0,0,0,0)) {
-                    this.canWrite=false
-                }
-            }
+
 //            画图
             this.drawPie(this.types);
             this.drawLine(this.will);
@@ -663,7 +310,6 @@
 //                    location.reload(true);
                 }
             }, 200);
-//                this.setIframeHeight(document.getElementById('personalStats'));
         },
         methods:{
 //            切换tab
@@ -674,7 +320,7 @@
                         this.inputStatus=false;
                         this.inputValue='';
                     };
-                    localStorage.setItem('active',value);
+                    sessionStorage.setItem('active',value);
                 }
             },
             changeRateTab(value){
@@ -684,9 +330,6 @@
                 this.inputValue='';
                 this.inputStatus=false;
                 this.searchList.length=0
-            },
-            jumpTo(id){
-                window.location.href='/index/enterprise/product/id/'+id
             },
             drawLine(data){
                 var myChart = echarts.init(document.getElementById(data.id));

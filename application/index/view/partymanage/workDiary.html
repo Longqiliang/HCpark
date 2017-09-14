@@ -1,0 +1,87 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    .my-log li{position:relative;box-sizing:content-box;padding:1.7rem 4vw;border-bottom:1px solid #f1f1f1}
+    .my-log li>div{display:-webkit-flex;display:flex}
+    .my-log li>a{height:100%;width:100%;position:absolute;top:0;left:0}
+    .my-log .my-icon{height:2.2rem;width:2.2rem;background:url() no-repeat center center;background-size:cover;margin-right:3.2vw}
+    .my-log .my-icon-suc{background-image:url(/index/images/partymanage/suc.png)}
+    .my-log .my-icon-ing{background-image:url(/index/images/partymanage/ing.png)}
+    .my-log .my-icon-err{background-image:url(/index/images/partymanage/err.png)}
+    .my-log .my-list{padding:0;flex-grow:1;display:-webkit-flex;display:flex;flex-direction:column;justify-content:space-between}
+    .my-log .my-list>div:first-child{color:#333;font-size:1.5rem;line-height:2.2rem;display:-webkit-flex;display:flex}
+    .my-log .my-list>div:first-child>span:first-child{margin-right:1.5rem;width:7rem}
+    .my-log .my-list>div:first-child>span:last-child{flex-grow:1;width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .my-log .my-list>div:last-child{font-size:1.2rem;color:#999}
+    .addDdiary{width:4.8rem;height:4.8rem;position:fixed;bottom:58px;right:19px;border-radius:4.8rem}
+    .addDdiary>img{border-radius:50%;box-shadow:0 3px 10px rgba(105,185,249,1);box-sizing:border-box;width:100%}
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <!--工作日志-->
+    <div class="my-log">
+        <ul>
+            <li v-for="item in diaryList" >
+                <div>
+                    <span class="my-icon my-icon-suc"></span>
+                    <div class="my-list">
+                        <div><span>工作日志</span><span>{{item.content}}</span></div>
+                        <div><span>创建日期：</span><span>{{item.create_time*1000 | timeToString}}</span></div>
+                    </div>
+                </div>
+                <a :href="'/index/partymanage/diaryInfo?id='+item.id+'&user_id='+item.user_id"></a>
+            </li>
+        </ul>
+        <a :href="'/index/partymanage/diaryInfo'" class="addDdiary"  v-if="canWrite">
+            <img src="/index/images/partymanage/add.png" alt="添加日志">
+        </a>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    y=newTime.getFullYear();
+            if(dt<10){
+                dt='0'+dt;
+            }
+            if(m<10){
+                m='0'+m;
+            }
+            return y+'-'+m+'-'+dt
+        }
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            is_boss:'{$is_boss}',
+            //            工作日志
+            diaryList:{$diaryList},
+            canWrite:true,
+
+        },
+        mounted(){
+            //能否写日志判断
+            if(this.is_boss=='yes'){
+                this.canWrite=false
+            }else{
+                this.canWrite=true
+            }
+            for(var i=0;i<this.diaryList.length;i++){
+                if(new Date(this.diaryList[i].create_time*1000).setHours(0,0,0,0)==new Date().setHours(0,0,0,0)) {
+                    this.canWrite=false
+                }
+            }
+        },
+        methods: {}
+    })
+</script>
+{/block}
