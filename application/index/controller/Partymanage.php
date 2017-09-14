@@ -418,21 +418,6 @@ class Partymanage extends Base
 
         return $this->fetch();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      //招商统计图表所需数据格式
     public function merchantsComment($mCompany, $type)
     {
@@ -1000,34 +985,15 @@ class Partymanage extends Base
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('parkmanage'));
 
-        $jsApiList = $weObj->getJsTicket();
-        $time =time();
-        $map=[
-            'noncestr'=>"Wm3WZYTPz0wzccnW",
-            'jsapi_ticket'=>$jsApiList,
-            'timestamp'=>$time,
-            'url'=>$url
-        ];
-        $signature = $weObj->getSignature($map);
-        if (!$jsApiList) {
 
-            return "获取jsApiList失败" . $weObj->errCode . '|' . $weObj->errMsg;;
-        }
+        $signature = $weObj->getJsSign($url);
+
         if (!$signature) {
 
             return "获取signature失败" . $weObj->errCode . '|' . $weObj->errMsg;;
         }
-        $data = [
-            'beta' => true,
-            'debug' => true,
-            'appId' => config('parkmanage')['appid'],
-            'timestamp' => $time,
-            'nonceStr' => "Wm3WZYTPz0wzccnW",
-            'signature' => $signature,
-            'jsApiList' => $jsApiList
 
-        ];
-        return json_encode($data);
+        return json_encode($signature);
 
 
     }
