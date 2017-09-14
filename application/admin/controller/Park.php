@@ -9,11 +9,13 @@
 namespace app\admin\controller;
 
 use app\common\model\Park as ParkModel;
+use app\common\model\ParkIntention;
 use app\common\model\ParkRoom;
 use app\common\model\PeopleRent;
 use app\index\model\WechatDepartment;
 use app\common\model\ParkRent;
 use app\common\model\PartyNews;
+use think\Image;
 
 
 class Park extends Admin
@@ -203,7 +205,20 @@ class Park extends Admin
                 foreach ($data['img'] as $k => $v) {
                     $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
+                if ($data['img']) {
+                    foreach ($data['img'] as $k1 => $v1) {
+                        if (is_file(PUBLIC_PATH . $v1)) {
+                            $path = str_replace(".", "_s.", $v1);
+                            $image = Image::open(PUBLIC_PATH . $v1);
+                            $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                            $data['imgs'][$k1] = $path;
+                        } else {
+                            $data['imgs'][$k1] = $data['img'][$k1];
+                        }
+                    }
+                }
                 $data['img'] = json_encode($data['img']);
+                $data['imgs'] = json_encode($data['imgs']);
                 $res = $parkRent->where('id', $id)->update($data);
                 if ($res) {
 
@@ -233,7 +248,20 @@ class Park extends Admin
                 foreach ($data['img'] as $k => $v) {
                     $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
+                if ($data['img']) {
+                    foreach ($data['img'] as $k1 => $v1) {
+                        if (is_file(PUBLIC_PATH . $v1)) {
+                            $path = str_replace(".", "_s.", $v1);
+                            $image = Image::open(PUBLIC_PATH . $v1);
+                            $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                            $data['imgs'][$k1] = $path;
+                        } else {
+                            $data['imgs'][$k1] = $data['img'][$k1];
+                        }
+                    }
+                }
                 $data['img'] = json_encode($data['img']);
+                $data['imgs'] = json_encode($data['imgs']);
                 $res = $parkRent->save($data);
                 if ($res) {
 
@@ -405,7 +433,7 @@ class Park extends Admin
             return $this->error('删除失败');
         }
     }
-
+    /**/
     public function manage()
     {
         $id = input('id');
@@ -421,5 +449,44 @@ class Park extends Admin
         }
 
     }
+
+    /*租房意向表*/
+    public function intention(){
+        $park_id = session('user_auth')['park_id'];
+        $list = ParkIntention::where(['park_id'=>$park_id,'status'=>['>',-1]])->order('create_time desc')->paginate();
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+    /*修改租房意向状态*/
+    public function changeState()
+    {
+        $id = input('id');
+        $res = ParkIntention::where('id', $id)->update(['status' => 1]);
+        if ($res) {
+
+            $this->success("修改成功");
+        } else {
+
+            $this->error("修改失败");
+        }
+    }
+
+    /*删除租房意向信息*/
+    public function moveToTrashsss()
+    {
+        $ids = input('ids/a');
+        $result = ParkIntention::where('id', 'in', $ids)->update(['status' => -1]);
+
+        if ($result) {
+
+            return $this->success('删除成功');
+
+        } else {
+
+            return $this->error('删除失败');
+        }
+    }
+
+
 
 }

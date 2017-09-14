@@ -86,7 +86,7 @@
                             <option value="3" {eq name="$checkType" value="3"}selected{/eq}>好文分享</option>
                         </select>
                     </th>
-                    <th>是否推送</th>
+                    <th style="width: 10%" >是否推送</th>
                     <th>创建时间</th>
                 </tr>
                 </thead>
@@ -113,7 +113,7 @@
                         {eq name="vo.is_send" value="1"}
                         <span class="label label-info">已推送</span>
                         {else/}
-                        <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm">开始推送</a>
+                        <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-primary" style="color: #fff">开始推送</a>
                         {/eq}
                     </td>
                     <td class="text-right mail-date">{$vo.create_time}</td>

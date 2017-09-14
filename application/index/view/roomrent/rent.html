@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_355905_js6086l9et81tt9.css">
 <style>
     body{
-
         background-color: #fff;
+        height: 100vh;
     }
     /*modal框*/
     .modal-box{
@@ -107,8 +107,7 @@
         <div class="swiper-container" @click="show($event)" ref="banner">
             <div class="swiper-wrapper">
                 <div v-for="(img,index) of info.imgs" class="swiper-slide">
-                    <img :data-src="img" class="swiper-lazy" :data-original="info.img[index]">
-                    <div class="swiper-lazy-preloader"></div>
+                    <img :src="img"  :data-original="info.img[index]">
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -139,12 +138,13 @@
         <button class="btn btn-block btn-green" @click="showRent">租房申请</button>
     </div>
     <div class="icon-box" v-if="lookVR">
-        <i class="iconfont icon-back" @click="prev"></i>
-        <i class="iconfont icon-go" @click="next"></i>
-    </div>
-    <div class="cancel" onclick="cancel()">
-        <span><i class="iconfont hc-cha1"></i></span>
-        <span></span>
+        <div class="box box-left" @click="prev">
+            <i class="iconfont icon-back" ></i>
+        </div>
+       <div class="box box-right" @click="next">
+           <i class="iconfont icon-go" ></i>
+       </div>
+
     </div>
     <div class="modal-box" v-show="rentShow">
         <div class="modal">
@@ -234,6 +234,9 @@
                 this.vrShow = false;
             },
             looVR:function (e) {
+                if(!e){
+                    return;
+                }
                 window.location.href='/index/roomrent/panorama?link='+e;
             },
             show:function (event){

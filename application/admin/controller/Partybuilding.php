@@ -8,7 +8,7 @@
 namespace app\admin\controller;
 use app\common\model\PartyBuilding as PartyBuildingModel;
 
-class PartyBuilding extends Admin{
+class Partybuilding extends Admin{
     /*列表展示*/
     public function index(){
         $parkid = session('user_auth')['park_id'];
