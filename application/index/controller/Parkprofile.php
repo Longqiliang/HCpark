@@ -43,9 +43,9 @@ class Parkprofile extends Base
         $user = new WechatUser();
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('parkinfo'));
-        $weObj->valid(true);//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
+        $check =$weObj->valid(true);//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
         $is=false;
-        return  $weObj->valid(true);
+        return $check['msg'];
         $type = $weObj->getRev()->getRevType();
         if($type==TPWechat::EVENT_ENTER_AGENT) {
 
