@@ -39,6 +39,12 @@
                             <input  type="text" class="form-control" name="name" value="{$info.company}"> <br>
                         </div>
                         <div class="col-md-2 column">
+                            <h3>合同名称</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <input  type="text" class="form-control" name="other_name" value="{$info.other_name}"> <br>
+                        </div>
+                        <div class="col-md-2 column">
                             <h3>合同编号</h3>
                         </div>
                         <div class="col-md-10 column">
@@ -57,10 +63,10 @@
                             <select name="type" id="" class="col-md-4 column">
                                 <option value="1"{eq name="$info.type" value="1"}selected{/eq}>租赁合同</option>
                                 <option value="2"{eq name="$info.type" value="2"}selected{/eq}>物业合同</option>
-                                <option value="3"{eq name="$info.type" value="3"}selected{/eq}>招商合同</option>
-                                <option value="4"{eq name="$info.type" value="4"}selected{/eq}>消防合同</option>
+                                <option value="3"{eq name="$info.type" value="3"}selected{/eq}>其他合同</option>
                             </select>
                         </div>
+
                         <div class="col-md-12 column">
                             <h3>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</h3>
                         </div>
@@ -161,8 +167,12 @@
         var types = $("[name='type']").val();
         var content = $("[name='extra']").val();
         var orderNumber = $("[name='number']").val();
+        var otherName = $("[name='other_name']").val();
         if(companyName ==""){
             updateAlert("请添加公司名称","info");
+            return "";
+        }else if (otherName == ""){
+            updateAlert("请添加合同名称","info");
             return "";
         }else if (imgScrs.length == 0){
             updateAlert("请添加合同照片","info");
@@ -172,7 +182,7 @@
             return "";
         }
         $.ajax({
-            data:{img:imgScrs,status:0,company:companyName,type:types,remark:content,id:id,number:orderNumber},
+            data:{img:imgScrs,status:0,company:companyName,type:types,remark:content,id:id,number:orderNumber,other_name:otherName},
             type:"post",
             url:"{:Url('add')}",
             success:function (data) {
