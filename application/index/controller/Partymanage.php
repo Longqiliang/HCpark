@@ -183,7 +183,6 @@ class Partymanage extends Base
     public function managelist()
     {
         $id = input('id');
-
         $type = input("type");
         $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
             ->order("create_time desc")
@@ -239,17 +238,6 @@ class Partymanage extends Base
             'create_time' => $manageInfo['create_time'],
         ];
 
-       /* if ($info['img']) {
-            foreach ($info['img'] as $k1 => $v1) {
-                if (is_file(PUBLIC_PATH . $v1)) {
-                    $path = str_replace(".", "_s.", $v1);
-                    $image = Image::open(PUBLIC_PATH . $v1);
-                    $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                    $info['imgs'][$k1] = $path;
-                }
-            }
-        }*/
-//        return  dump($info);
         $this->assign('info', json_encode($info));
 
         return $this->fetch();
@@ -374,7 +362,7 @@ class Partymanage extends Base
         return $this->fetch();
     }
 
-     //招商统计图表所需数据格式
+    //招商统计图表所需数据格式
     public function merchantsComment($mCompany, $type)
     {
         $data = [
@@ -438,7 +426,7 @@ class Partymanage extends Base
         return $this->fetch();
     }
 
-     //查看招商日志详情
+    //查看招商日志详情
     public function recordDetail()
     {
         $mRecord = new MerchantsRecord();
@@ -496,7 +484,7 @@ class Partymanage extends Base
     }
 
 
-     //个人统计详情获取数据的公共方法
+    //个人统计详情获取数据的公共方法
     public function statisticsCommon($user_id, $year, $month)
     {
         $mDiary = new MerchantsDiary();
@@ -907,7 +895,7 @@ class Partymanage extends Base
              }*/
         }
         $resArr = array_merge(["A幢" => $newArr], ["B幢" => $newArr1]);
-        $resArr1 =["$parkName"=>$resArr];
+        $resArr1 = ["$parkName" => $resArr];
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($resArr1));
 
@@ -916,11 +904,20 @@ class Partymanage extends Base
 
 
     }
-
+    /*公司其他合同列表*/
     public function otherList()
     {
         $id = input('id');
+        $map = ['department_id' => $id,'type'=>3];
+        $list = CompanyContract::where($map)->order('id  desc')->select();
+        foreach ($list as $k => $v) {
+            $data[$k] = [
+                'id' => $v['id'],
+                'name' => $v['other_name'],
+            ];
+        }
         $this->assign("id", $id);
+        $this->assign('list',json_encode($data));
 
         return $this->fetch();
     }
