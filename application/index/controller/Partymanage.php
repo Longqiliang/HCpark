@@ -374,6 +374,77 @@ class Partymanage extends Base
         return $this->fetch();
     }
 
+    /*工作日志*/
+    public function workDiary()
+    {
+        $userid = session('userId');
+        $weuser = new WechatUser();
+        $mCompany = new MerchantsCompany();
+        $mDiary = new MerchantsDiary();
+        $park_id = input('park_id');
+        $user = $weuser->where('userid', $userid)->find();
+        $is_boss = $user['tagid'] == 1 ? "yes" : "no";
+        $this->assign('is_boss', $is_boss);
+        //领导权限
+        if ($user['tagid'] == 1) {
+
+            //个人统计
+            if ($park_id == 1) {
+                $map = [
+                    'tagid' => 4
+                ];
+            } else {
+                $map = [
+                    'tagid' => 4,
+                    'park_id' => $park_id
+                ];
+            }
+            $merchantUser = $weuser->where($map)->select();
+            $merchantUserid = array();
+            foreach ($merchantUser as $value) {
+                array_push($merchantUserid, $value['userid']);
+            }
+            $data = [
+                'user_id' => array('in', $merchantUserid)
+
+            ];
+            //工作日志
+            $diaryList = $mDiary->where($data)->order('create_time desc')->select();
+            foreach ($diaryList as $value) {
+                $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+                unset($value['user']);
+            }
+            // echo "领导权限";
+        } //个人权限
+        else {
+            //echo "个人权限";
+            //工作日志
+            $diaryList = $mDiary->where('user_id', $userid)->order('create_time desc')->select();
+            foreach ($diaryList as $value) {
+                $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+                unset($value['user']);
+            }
+        }
+        //工作日志
+        $this->assign('diaryList', json_encode($diaryList));
+
+        return $this->fetch();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
      //招商统计图表所需数据格式
     public function merchantsComment($mCompany, $type)
     {
@@ -924,5 +995,48 @@ class Partymanage extends Base
 
         return $this->fetch();
     }
+
+    //微信js-sdk调试
+    public  function   wxjssdk()
+    {
+        $url=input('url');
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $weObj = new TPWechat(config('parkmanage'));
+
+        $jsApiList = $weObj->getJsTicket();
+        $time =time();
+        $map=[
+            'noncestr'=>"Wm3WZYTPz0wzccnW",
+            'jsapi_ticket'=>$jsApiList,
+            'timestamp'=>$time,
+            'url'=>$url
+        ];
+        $signature = $weObj->getSignature($map);
+        if (!$jsApiList) {
+
+            return "获取jsApiList失败" . $weObj->errCode . '|' . $weObj->errMsg;;
+        }
+        if (!$signature) {
+
+            return "获取signature失败" . $weObj->errCode . '|' . $weObj->errMsg;;
+        }
+        $data = [
+            'beta' => true,
+            'debug' => true,
+            'appId' => config('parkmanage')['appid'],
+            'timestamp' => $time,
+            'nonceStr' => "Wm3WZYTPz0wzccnW",
+            'signature' => $signature,
+            'jsApiList' => $jsApiList
+
+        ];
+        return json_encode($data);
+
+
+    }
+
+
+
+
 
 }
