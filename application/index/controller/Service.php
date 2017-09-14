@@ -26,6 +26,7 @@ use  app\index\model\AdvertisingRecord;
 use  app\index\model\AdvertisingService;
 use  app\index\model\FunctionRoomRecord;
 use  app\index\model\WechatDepartment;
+use  app\index\model\News as NewsModel;
 
 use  app\index\model\LedRecord;
 
@@ -96,6 +97,10 @@ class Service extends Base
         }
         $is_boss = "no";
         /*}*/
+        //政策法规轮播
+        $policy = NewsModel::where(['park_id'=>$park_id,'type'=>['in',[4,5]]])->field('id,title')->order('id  desc')->limit(4)->select();
+
+        $this->assign('policy',$policy);
         $this->assign('is_boss', $is_boss);
         $this->assign('propert', json_encode($PropertyServices));
         $this->assign('company', json_encode($CompanyService));

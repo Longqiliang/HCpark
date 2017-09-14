@@ -191,8 +191,8 @@
                         {$vo.status_text}
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-company="{$vo.company}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"  data-status="{$vo.status}"  data-user="{$vo.user_id}"  data-area="{$vo.merchants_area}" data-money="{$vo.merchants_money}"   data-update="{$vo.update_time}"  data-create="{$vo.create_time}">编辑</a>
-                        <a   href="{:Url('showRecord','id='.$vo.id  )}" >查看招商日志</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-company="{$vo.company}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"  data-status="{$vo.status}"  data-user="{$vo.user_id}"  data-area="{$vo.merchants_area}" data-money="{$vo.merchants_money}"   data-update="{$vo.update_time}"  data-create="{$vo.create_time}" class="btn-sm btn-primary" style="color: #fff">编辑</a>
+                        <a   href="{:Url('showRecord','id='.$vo.id  )}" class="btn-sm btn-info" style="color:#fff" >查看招商日志</a>
 
                     </td>
                 </tr>
