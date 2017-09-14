@@ -107,7 +107,7 @@
         <div class="swiper-container" @click="show($event)" ref="banner">
             <div class="swiper-wrapper">
                 <div v-for="(img,index) of info.imgs" class="swiper-slide">
-                    <img :src="img"  :data-original="info.img[index]">
+                    <img :src="img"  :data-original="info.img[index]" @click="loadImg(img)">
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -180,6 +180,7 @@
 {block name="script"}
 <script src="/static/swiper/swiper.min.js"></script>
 <script src="/static/viewer/viewer.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     console.log({$info});
     var info ={$info};
@@ -204,21 +205,20 @@
         },
         mounted(){
             var _this = this;
-            _this.viewer =  new Viewer(_this.$refs.banner,{
-                url:'data-original',
-                toolbar:false,
-                title:false,
-                movable:false,
-                fullscreen:false,
-                show:function () {
-                    _this.lookVR = true;
-                },
-                hide:function (e) {
-                    _this.lookVR = false;
-                    _this.mySwiper.startAutoplay();
-                }
-            });
-
+//            _this.viewer =  new Viewer(_this.$refs.banner,{
+//                url:'data-original',
+//                toolbar:false,
+//                title:false,
+//                movable:false,
+//                fullscreen:false,
+//                show:function () {
+//                    _this.lookVR = true;
+//                },
+//                hide:function (e) {
+//                    _this.lookVR = false;
+//                    _this.mySwiper.startAutoplay();
+//                }
+//            });
              _this.mySwiper = new Swiper('.swiper-container',{
                 lazyLoading : true,
                 lazyLoadingInPrevNext : true,
@@ -227,9 +227,34 @@
                 autoplayDisableOnInteraction: false,
                 onSlideChangeEnd:function(e){
                 }
+            });
+            var test =window.location.href;
+            var data ={
+                url:test
+            };
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                console.log(data);
+                wx.config({
+                    debug: true,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+            },function () {
+                
             })
         },
         methods:{
+            loadImg:function (src) {
+                var urls ='http://lql.xz.cn/index/images/service/enterprise/business-img1.png';
+                wx.previewImage({
+                    current: urls, // 当前显示图片的http链接
+                    urls: [urls] // 需要预览的图片http链接列表
+                });
+            },
             reBack:function () {
                 this.vrShow = false;
             },
