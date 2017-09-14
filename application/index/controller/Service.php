@@ -1503,11 +1503,23 @@ class Service extends Base
         $userinfo = WechatUser::where(['userid' => $userid])->find();
         $departmentId = $userinfo['department'];
         $map = ['company_id' => $departmentId, 'type' => $type];
-        $info = FeePayment::where($map)->order('id desc')->find();
-        $info['appid'] = $appid;
-        $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
-        $this->assign('info', json_encode($info));
+        if ($type ==3){
+            $map1 = ['company_id' => $departmentId, 'type' => 4];
+            $info = FeePayment::where($map)->order('id desc')->find();
+            $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
+            $info['appid'] = $appid;
+            $info1 = FeePayment::where($map1)->order('id desc')->find();
+            $info1['appid'] = $appid;
+            $info1['payment_voucher'] = isset($info1['payment_voucher']) ? unserialize($info1["payment_voucher"]) : "";
+            $this->assign('info', json_encode([$info,$info1]));
 
+
+        }else{
+            $info = FeePayment::where($map)->order('id desc')->find();
+            $info['appid'] = $appid;
+            $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
+            $this->assign('info', json_encode([$info]));
+        }
 
         return $this->fetch();
     }
