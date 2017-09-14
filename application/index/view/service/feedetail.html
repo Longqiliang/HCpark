@@ -19,19 +19,19 @@
 
 {block name="body"}
 <div id="app">
-    <div class="card">
+    <div class="card" v-for="item of info">
         <div class="card-tit">{{title}}</div>
         <div class="card-cell">
             <span>企业名称</span>
-            <span>{{info.name}}</span>
+            <span>{{item.name}}</span>
         </div>
         <div class="card-cell">
             <span>到期时间</span>
-            <span>{{info.expiration_time}}</span>
+            <span>{{item.expiration_time}}</span>
         </div>
         <div class="card-cell">
             <span>应缴费用</span>
-            <span>{{info.fee}}元</span>
+            <span>{{item.fee}}元</span>
         </div>
     </div>
     <div class="card-more">

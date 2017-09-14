@@ -4,6 +4,10 @@
 <title>我要租房</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
+    .content{
+        min-height: 100vh;
+        position: relative;
+    }
     .my-footer{
         padding: 1rem 0;
         text-align: center;
@@ -20,7 +24,126 @@
         margin-right: 5px;
     }
     .houses-list-box{
-        padding-bottom: 4vw;
+        padding-bottom: 12.67vw;
+    }
+    .foot{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 10.67vw;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        font-size: 1.5rem;
+    }
+    .foot a{
+        color: #52CC92;
+    }
+    .foot:hover a{
+        text-decoration: underline;
+    }
+    .foot a:active{
+        background-color: transparent;
+    }
+    /*modal框*/
+    .modal-box{
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.4);
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9;
+    }
+    .modal-box .modal{
+        width: calc(100% - 36px);
+        margin: 15vh auto 0;
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px 0;
+        position: relative;
+    }
+    .modal>p{
+        line-height: 40px;
+        font-size: 17px;
+        text-align: center;
+    }
+    .name-mobile,.remark{
+        padding: 5px 18px;
+    }
+    .name-mobile ul li{
+        line-height: 40px;
+        border-bottom: 1px solid #f1f1f1;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+    }
+    .name-mobile span{
+        display: inline-block;
+        font-size: 1.5rem;
+        color: #333;
+    }
+    .name-mobile span:first-child{
+        float: left;
+    }
+    .name-mobile input{
+        text-align: right;
+        font-size: 1.5rem;
+    }
+    .price .price-input-box{
+        position: relative;
+    }
+    .price .price-input-box:after{
+        content: '';
+        position: absolute;
+        width: 30px;
+        bottom: 8px;
+        left: 0;
+        height: 1px;
+        background-color: #999;
+    }
+    .price input{
+        width: 30px;
+        text-align: center;
+    }
+    .remark p{
+        font-size: 15px;
+    }
+    .remark textarea{
+        border: 1px solid #e5e5e5;
+        height: 18vh;
+        border-radius: 5px;
+        width: calc(100% - 14px);
+        margin: 10px 7px;
+        padding: 5px 10px;
+    }
+    .cancel{
+        position: absolute;
+        top: -50px;
+        right: 0;
+    }
+    .cancel>span:first-child{
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 15px;
+        border: 1px solid #fff;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+    }
+    .cancel i::before{
+        width: 20px;
+        height: 20px;
+        color: #fff;
+    }
+    .cancel>span:last-child{
+        display: inline-block;
+        height: 22px;
+        width: 0;
+        border-right: 1px solid #fff;
+        position: relative;
+        left: 50%;
     }
 </style>
 {/block}
@@ -30,7 +153,7 @@
     <div class="header">
 
         <h2 @click="checkPark" class="header-tit">
-            <span >{{parkName.index}}{{parkName.txt}}</span> <i class="allow-down"></i>
+            <span v-html="showPark"></span> <i class="allow-down"></i>
             <i class="header-icon" @click.stop="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list']"></i>
         </h2>
         <div class="houses-icon-box" v-show="isHouseList">
@@ -55,11 +178,7 @@
                 {{rooms.room}}
             </span>
             </div>
-            <!--<div class="houses-list-item" v-else>-->
-            <!--<span>-->
-            <!--{{item.rooms}}-->
-            <!--</span>-->
-            <!--</div>-->
+
         </div>
     </div>
 
@@ -89,7 +208,49 @@
         </div>
 
     </div>
+    <div class="foot" @click="showModel">
+        <span>兜兜转转一房难求？请填写 <a href="javascript:void(0);" >租房意向</a> </span>
+    </div>
+    <div class="modal-box" v-show="intention">
+        <div class="modal">
+            <p>申请人信息</p>
+            <div class="name-mobile">
+                <ul>
+                    <li>
+                        <span>姓名</span>
+                        <input type="text" id="name" placeholder="请输入姓名" v-model="subData.name">
+                    </li>
+                    <li>
+                        <span>手机</span>
+                        <input type="number" id="mobile" placeholder="请输入手机号" v-model="subData.mobile">
+                    </li>
+                    <li>
+                        <span>面积要求</span>
+                        <input type="text"  placeholder="请输入面积要求" v-model="subData.area">
+                    </li>
+                    <li>
+                        <span>用房时间</span>
+                        <input type="text" placeholder="请输入用房时间" v-model="subData.time">
+                    </li>
+                    <li>
+                        <span>单价范围</span>
+                        <div class="price">
+                            <span class="price-input-box"><input type="number" v-model="priceOne" maxlength="3"></span><span >—</span>
+                            <span class="price-input-box"><input type="number" v-model="priceTwo" maxlength="3"></span><span>/㎡·天</span>
+                        </div>
 
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-box">
+                <button class="btn btn-block btn-green" @click="">提交</button>
+            </div>
+            <div class="cancel" @click="hideModel">
+                <span><i class="iconfont hc-cha1"></i></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
 </div>
 {/block}
 
@@ -108,6 +269,17 @@
     var vm =  new Vue({
         el:'#app',
         data:{
+            intention:false,
+            priceOne:'',
+            priceTwo:'',
+            subData:{
+                rent_id:0,
+                mobile:'',
+                name:'',
+                area:'',
+                price:'',
+                remark:''
+            },
             isHouseList:false,
             list:list,
             popupVisible:false,
@@ -163,9 +335,20 @@
                         }
                     }
                 }
+            },
+            showPark:function () {
+                var _this = this;
+                return _this.parkName.index + _this.parkName.txt;
             }
         },
         methods:{
+            showModel:function () {
+              var _this = this;
+                _this.intention = true;
+            },
+            hideModel:function () {
+                this.intention = false;
+            },
             parkToggle:function () {
                 var _this = this;
                 _this.isHouseList =!_this.isHouseList;
@@ -253,7 +436,72 @@
 
                     })
                 }
+            },
+            subIntention:function () {
+                var _this = this;
+                console.log(_this.subData);
+                if(!_this.subData.name){
+                    _this.$toast("请输入您的姓名！");
+                    return;
+                }
+                if(!_this.subData.mobile){
+                    _this.$toast("请输入正确的电话！");
+                    return;
+                }
+                if(!_this.subData.area){
+                    _this.$toast("请输入面积要求！");
+                    return;
+                }
+                if(!_this.subData.time){
+                    _this.$toast("请输入用房时间！");
+                    return;
+                }
+                if(!_this.isSubmit){
+                    return;
+                }
+                _this.isSubmit = false;
+                var data = JSON.parse(JSON.stringify(_this.subData));
+                //console.log(data);
+                _this.$http.post('/index/roomrent/peoplerent',data).then(function (res) {
+                    var data  = res.data;
+                    _this.isSubmit = true;
+                    if(data.code == 1){
+                        var msg = data.data;
+                        var newMsg =  msg.split(";");
+                        msg =  newMsg.join("<br/>");
+                        swal({
+                            title:data.msg,
+                            text:msg,
+                            html:true,
+                            type:"success",
+                            confirmButtonColor: "#52CC92"
+                        },function () {
+                            _this.rentShow = false;
+                            window.location.href='/index/roomrent/houseslist'
+                        });
+                    }else{
+                        swal({
+                            title:"提交失败!",
+                            text:"请重新提交！",
+                            type:"error",
+                            confirmButtonColor: "#52CC92"
+                        },function () {
+                            window.location.reload();
+                        });
+                    }
+                },function (res) {
+                    _this.isSubmit = true;
+                    swal({
+                        title:"提交失败!",
+                        text:'请重新提交！',
+                        type:"error",
+                        confirmButtonColor: "#52CC92"
+                    },function () {
+                        window.location.reload();
+                    });
+                })
             }
+
         }
     });
 

@@ -2,6 +2,7 @@
 
 {block name="style"}
 <title>企业服务</title>
+<link rel="stylesheet" href="/static/swiper/swiper-3.3.1.min.css">
 <style>
     body{
         background: #f0edf1;
@@ -91,6 +92,75 @@
         border: 1px solid #e5e5e5;
         outline: none;
     }
+
+    /*政策法规文字轮播*/
+    .banner-list{
+        height: 16vw;
+        background: #fff;
+        display: flex;
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        margin:0 2.4vw ;
+        border-radius: 5px;
+        box-shadow: 0 0 4px rgba(0,0,0,.1);
+    }
+    .banner-list .list-tit{
+        padding: 3.2vw;
+        font-size: 1.6rem;
+        position: relative;
+    }
+    .banner-list .list-tit:after{
+        content: '';
+        position: absolute;
+        height: 8vw;
+        width: 1px;
+        right: 0;
+        background-color: #e8e8e8;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .banner-list .list-tit .icon-policy{
+        display: inline-block;
+        width: 8vw;
+        height: 9.2vw;
+        background: url("/index/images/service/index/icon-policy.png") no-repeat;
+        background-size:100%;
+    }
+    .banner-list .list-group{
+        width: 74vw;
+        margin:2.67vw 3.2vw;
+        /*height: 16vw;*/
+        overflow: hidden;
+    }
+    .swiper-slide .list-item{
+        font-size: 1.3rem;
+        width: 100%;
+        align-items: center;
+        /*height: 100%;*/
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: 1.5;
+        position: relative;
+        padding-left: 4.8vw;
+    }
+    .swiper-slide .list-item:before {
+        position: absolute;
+        content: '';
+        width: 6px;
+        height: 6px;
+        top: 50%;
+        border-radius: 50%;
+        background-color: #f97878;
+        vertical-align: middle;
+        transform: translateY(-50%);
+        left: 0;
+    }
+    .listSwiper{
+        height: 10.67vw;
+    }
 </style>
 {/block}
 {block name="body"}
@@ -111,6 +181,23 @@
             </select>
         </div>
 
+    </div>
+    <div class="banner-list">
+        <div class="list-tit">
+            <i class="icon-policy"></i>
+        </div>
+        <div class="list-group" @click="">
+            <div class="swiper-container listSwiper" id="listSwiper">
+                <div class="swiper-wrapper" v-if="news.length > 0">
+                    <div class="swiper-slide" v-for="item of news">
+                        <div class="list-item">{{item.title}}</div>
+                    </div>
+                </div>
+                <div v-else>
+                    <div class="list-item">暂无信息</div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="my-items">
         <div class="my-item">
@@ -143,6 +230,7 @@
 
 {/block}
 {block name="script"}
+<script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
 <script>
     var app=new Vue({
         el:'#app',
@@ -153,6 +241,7 @@
                 propertyServices:JSON.parse('{$propert}'),
                 companyService:JSON.parse('{$company}')
             },
+            news:[{"id":9,"title":"4"},{"id":8,"title":"123"},{"id":7,"title":"2"},{"id":6,"title":"1"}],
             nowPark:0,
             parks:[
                 {name:'希垦科技园',value:0},
@@ -163,6 +252,16 @@
         },
         mounted(){
             console.log(this.baseData)
+            listSwiper = new Swiper('#listSwiper',{
+                observer:true,
+                observeParents:true,
+                direction : 'vertical',
+                slidesPerGroup : 2,
+                autoplay: 2000,
+                slidesPerView : 2,
+                loopedSlides :8,
+                loop:true
+            })
         },
         methods:{
             jumpTo(path,id){

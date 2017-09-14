@@ -59,6 +59,7 @@ body{
     z-index: 1;
     margin:0 2.4vw ;
     border-radius: 5px;
+    box-shadow: 0 0 4px rgba(0,0,0,.1);
 }
 .banner-list .list-tit{
     padding: 3.2vw;
@@ -119,7 +120,7 @@ body{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding:0 2.4vw;
+    padding:0 2.4vw 2.4vw;
 }
 .group-card .card-list{
     display: flex;
