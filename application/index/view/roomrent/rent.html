@@ -107,7 +107,7 @@
         <div class="swiper-container" @click="show($event)" ref="banner">
             <div class="swiper-wrapper">
                 <div v-for="(img,index) of info.imgs" class="swiper-slide">
-                    <img :src="img"  :data-original="info.img[index]" @click="loadImg(img)">
+                    <img :src="img"  :data-original="info.img[index]" @click="loadImg(info.img[index],info.img)">
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -236,7 +236,7 @@
                 var data = JSON.parse(res.data);
                 console.log(data);
                 wx.config({
-                    debug: true,
+                    debug: false,
                     appId: data.appid,
                     timestamp:data.timestamp ,
                     nonceStr: data.noncestr,
@@ -248,13 +248,17 @@
             })
         },
         methods:{
-            loadImg:function (src) {
-                var urls =window.location.protocol +'//'+ window.location.host +src;
+            loadImg:function (src,imglist) {
+                var urls =window.location.protocol +'//'+ window.location.host;
+                for(var item in imglist){
+                    imglist[item] = urls + imglist[item];
+                }
+                console.log(imglist);
                 console.log(urls);
-
+//                return;
                 wx.previewImage({
-                    current: urls, // 当前显示图片的http链接
-                    urls: [urls] // 需要预览的图片http链接列表
+                    current:  urls + src, // 当前显示图片的http链接
+                    urls: imglist // 需要预览的图片http链接列表
                 });
             },
             reBack:function () {
