@@ -53,7 +53,8 @@ class Contract extends Admin {
                     'company' =>input('company'),
                     'type' =>input("type"),
                     'remark' =>input('remark'),
-                    'number' =>input('number')
+                    'number' =>input('number'),
+                    'other_name' => input('other_name'),
                 ];
                 $like = mb_substr($update['company'], 0, 6);
                 $department = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
