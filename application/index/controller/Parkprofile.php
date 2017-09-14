@@ -45,7 +45,7 @@ class Parkprofile extends Base
         $weObj = new TPWechat(config('parkinfo'));
         $weObj->valid(true);//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
         $is=false;
-        // return  $weObj->valid(true);
+        return  $weObj->valid(true);
         $type = $weObj->getRev()->getRevType();
         if($type==TPWechat::EVENT_ENTER_AGENT) {
 
