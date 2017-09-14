@@ -12,7 +12,7 @@
 <div class="content" id="app">
     <div class="header">
         <h2 @click="checkPark" class="header-tit">
-            <span >{{parkName.txt}}</span> <i class="allow-down"></i>
+            <span >{{parkName.index}}{{parkName.txt}}</span> <i class="allow-down"></i>
         </h2>
         <div class="houses-icon-box">
             <span ><i class="houses-icon icon-rentable"></i>可租</span>
@@ -58,37 +58,54 @@
     }
     //    console.log(values);
        console.log(list);
+    console.log(values[0]);
+    console.log();
     var vm =  new Vue({
         el:'#app',
         data:{
             list:list,
             popupVisible:false,
             parkPicker:'',
-            name:values,
+            name:Object.keys(list),
             parkName:{
-                index:0,
-                txt:values[0]
+                index:Object.keys(list)[0],
+                txt:Object.keys(Object.values(list)[0])[0]
             },
             parkTxt:{
-                index:0,
-                txt:values[0]
+                index:Object.keys(list)[0],
+                txt:Object.keys(Object.values(list)[0])[0]
             },
             slots: [
                 {
-                    values: values
+                    defaultIndex: 1,
+                    values: Object.keys(list)
+                },{
+                    defaultIndex: 1,
+                    values:Object.keys(Object.values(list)[0])
                 }
             ]
         },
-        computed:{
-            showList:function () {
+        mounted:function () {
+            var _this = this;
+            _this.$nextTick(function() {
+                setTimeout(function() {
+                    _this.slots[0].defaultIndex = 0;
+//                        _this.slots[1].defaultIndex = 0;
+                }, 100);
+            });
+        },
+        computed: {
+            showList: function () {
                 var _this = this;
-                for(var arr in _this.list){
-                    if(_this.parkName.txt == arr){
-                        return _this.list[arr];
+                for (var obj in _this.list) {
+                    for (var arr in _this.list[obj]) {
+                        if (_this.parkName.txt == arr) {
+                            // console.log(_this.list[obj][arr].houselist);
+                            return _this.list[obj][arr].houselist;
+                        }
                     }
                 }
             }
-
         },
         methods:{
             cancelPark:function () {
@@ -101,21 +118,21 @@
             },
             onParkChange:function (picker,values) {
                 var _this = this;
+                //console.log(values);
                 _this.parkPicker =  picker;
-                var length =  _this.name.length;
-                for(var j = 0; j < length; j += 1){
-                    if(values[0] == _this.name[j]){
-                        _this.parkTxt = {
-                            index:j,
-                            txt:values[0]
-                        }
-                    }
+                if(values[0]){
+                    picker.setSlotValues(1,Object.keys(_this.list[values[0]]));
+
                 }
+                _this.parkTxt ={
+                    index:values[0],
+                    txt:values[1]
+                };
             },
             checkPark:function () {
                 var _this =this;
                 _this.popupVisible = true;
-                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
+                //_this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
             jump:function (id,empty) {
                 if(!id){

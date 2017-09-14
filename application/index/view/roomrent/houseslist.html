@@ -30,7 +30,7 @@
     <div class="header">
 
         <h2 @click="checkPark" class="header-tit">
-            <span >{{parkName.txt}}</span> <i class="allow-down"></i>
+            <span >{{parkName.index}}{{parkName.txt}}</span> <i class="allow-down"></i>
             <i class="header-icon" @click.stop="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list']"></i>
         </h2>
         <div class="houses-icon-box" v-show="isHouseList">
@@ -99,10 +99,12 @@
     console.log(list);
     var values = [];
     for(var i in list){
-        values.push(i);
+        values.push(list[i]);
     }
 //    console.log(values);
-//    console.log(list);
+//    console.log(Object.keys(list));
+//    console.log(Object.values(list));
+//    console.log(Object.keys(Object.values(list)[0]));
     var vm =  new Vue({
         el:'#app',
         data:{
@@ -110,38 +112,55 @@
             list:list,
             popupVisible:false,
             parkPicker:'',
-            name:values,
+            name:Object.keys(list),
             parkName:{
-                index:0,
-                txt:values[0]
+                index:Object.keys(list)[0],
+                txt:Object.keys(values[0])[0]
             },
             parkTxt:{
-                index:0,
-                txt:values[0]
+                index:Object.keys(list)[0],
+                txt:Object.keys(values[0])[0]
             },
             slots: [
                 {
-                    values: values
+                    defaultIndex: 1,
+                    values: Object.keys(list)
+                },{
+                    defaultIndex: 1,
+                    values:Object.keys(Object.values(list)[0])
                 }
             ],
             loading:false
         },
+        mounted:function () {
+            var _this = this;
+            _this.$nextTick(function() {
+                    setTimeout(function() {
+                        _this.slots[0].defaultIndex = 0;
+//                        _this.slots[1].defaultIndex = 0;
+                }, 100);
+            });
+        },
         computed:{
             showhouseList:function () {
               var _this = this;
-              for(var arr in _this.list){
-                  if(_this.parkName.txt == arr){
-                      return _this.list[arr].houselist;
-                  }
+              for(var obj in _this.list){
+                for(var arr in _this.list[obj]){
+                    if(_this.parkName.txt == arr){
+                       // console.log(_this.list[obj][arr].houselist);
+                        return _this.list[obj][arr].houselist;
+                    }
+                }
               }
             },
             showrentList:function () {
                 var _this = this;
-                for(var arr in _this.list){
-                    if(_this.parkName.txt == arr){
-                        console.log(arr);
-                        console.log(_this.list[arr].rentlist);
-                        return _this.list[arr].rentlist;
+                for(var obj in _this.list){
+                    for(var arr in _this.list[obj]){
+                        if(_this.parkName.txt == arr){
+                            //console.log(_this.list[obj][arr].rentlist);
+                            return _this.list[obj][arr].rentlist;
+                        }
                     }
                 }
             }
@@ -150,14 +169,6 @@
             parkToggle:function () {
                 var _this = this;
                 _this.isHouseList =!_this.isHouseList;
-//                var  rentList= window.sessionStorage.getItem("rentList");
-//                window.sessionStorage.setItem("housesList",true);
-//                if(rentList){
-//                    window.sessionStorage.removeItem("rentList");
-//                    window.history.go(-1);
-//                }else{
-//                    window.location.href="/index/roomrent/rentlist?type="+this.parkTxt.index;
-//                }
             },
             cancelPark:function () {
                 this.popupVisible = false;
@@ -170,21 +181,21 @@
             },
             onParkChange:function (picker,values) {
                 var _this = this;
+                //console.log(values);
                 _this.parkPicker =  picker;
-                var length =  _this.name.length;
-                for(var j = 0; j < length; j += 1){
-                    if(values[0] == _this.name[j]){
-                        _this.parkTxt = {
-                            index:j,
-                            txt:values[0]
-                        }
-                    }
+                if(values[0]){
+                    picker.setSlotValues(1,Object.keys(_this.list[values[0]]));
+
                 }
+                _this.parkTxt ={
+                    index:values[0],
+                    txt:values[1]
+                };
             },
             checkPark:function () {
                 var _this =this;
                 _this.popupVisible = true;
-                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
+//                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
             jump:function (id,empty) {
                 if(!empty){
@@ -197,14 +208,17 @@
 //                console.log(_this.loading,_this.canLoad,_this.isHouseList);
                 if((!_this.loading) && !_this.isHouseList){
                     _this.loading = true;
-                    var build = _this.parkName.txt.substr(-2,1);
+                    var build = _this.parkName.txt;
                     var rentList =null;
-                    for(var arr in _this.list){
-                        if(_this.parkName.txt == arr){
-                            rentList = _this.list[arr].rentlist;
+                    for(var obj in _this.list){
+                        for(var arr in _this.list[obj]){
+                            if(_this.parkName.txt == arr){
+                                //console.log(_this.list[obj][arr].rentlist);
+                                rentList = _this.list[obj][arr].rentlist;
+                            }
                         }
                     }
-                    console.log(rentList.length);
+                    //console.log(rentList.length);
                     if(!rentList || rentList.length % 6 !=0 || rentList.length === 0){
                         return;
                     }
