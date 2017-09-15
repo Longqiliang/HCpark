@@ -30,33 +30,35 @@ class Parkprofile extends Base
         $this->assign('info', $info);
         return $this->fetch();
     }
-
     public function mainPark()
     {
-
         return $this->fetch();
     }
-
     //监听第一次进入园区简介的监听
     public function listener()
     {
         $user = new WechatUser();
         Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $weObj = new TPWechat(config('parkinfo'));
-        $weObj->valid();//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
+        $data =[
+        'appid' => 'ww68db00a56b949cff',
+        'token'=>'5nKAPmLKP8mJy6VIy',
+        'encodingAESKey'=>'fSH5sENzHzaeoegXgYIvJ7KDER4hO4z6PX5lZ8yQDr3',
+        'appsecret' => 'nUreq8Yaj3368JBzTUmuZM57kkOUpYJGfN7MPBD8Kg8',
+        'agentid' => 1000018
+    ];
+        $weObj = new TPWechat($data);
+        $weObj->valid(true);//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
+        return $weObj->valid(true);
         $is=false;
         $type = $weObj->getRev()->getRevType();
         if($type==TPWechat::EVENT_ENTER_AGENT) {
-
             $user_id = $weObj->getRev()->getRevFrom();
             $userInfo = $user->where('userid', $user_id)->find();
-
             if ($userInfo['is_first'] == 0) {
                 $is = true;
                 $userInfo['is_first'] = 1;
                 $userInfo->save();
             }
-
             $news = array();
             //希垦园区简介
             $new1 = [
