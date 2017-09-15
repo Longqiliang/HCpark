@@ -78,10 +78,39 @@
         </form>
     </div>
     <div v-else>
-        <div class="layer-center layer-default">
-            <img src="/index/images/service/card/icon-default.jpg" >
+        <div  class="card">
+            <div class="card-tit">旧卡绑定</div>
+            <div class="card-cell">
+                <label for="card">车卡号码</label>
+                <input type="text" placeholder="请输入车卡号码" id="card"  name="name">
+            </div>
+            <div class="card-cell">
+                <label for="name">车主姓名</label>
+                <input type="text" placeholder="请输入车主姓名" id="name"  name="name">
+            </div>
+            <div class="card-cell">
+                <label for="phone">车主电话</label>
+                <input type="number" placeholder="请输入车主电话" id="phone" name="mobile" maxlength="11">
+            </div>
+            <div class="card-cell">
+                <label for="number">车牌号码</label>
+                <input type="text" placeholder="请输入车牌号码" id="number"  name="car_card">
+            </div>
+            <div class="card-cell">
+                <label for="idCard">身份证号</label>
+                <input type="text" placeholder="请输入身份证号" id="idCard"  name="people_card">
+            </div>
+        </div>
+        <div class="card-btn-box">
+            <button class="btn btn-block btn-warning" >立即绑定</button>
         </div>
     </div>
+
+    <!--<div v-else>-->
+        <!--<div class="layer-center layer-default">-->
+            <!--<img src="/index/images/service/card/icon-default.jpg" >-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
 {/block}
 
@@ -106,6 +135,13 @@
             el:"#app",
             data:{
                 subData:data
+
+            },
+            methods:{
+                oldCardBind:function () {
+                    var _this = this;
+
+                }
             }
         })
     }else{
