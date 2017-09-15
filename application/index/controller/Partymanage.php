@@ -614,7 +614,8 @@ class Partymanage extends Base
             'finish_price' => $finish_price,
             'finish_area' => $finish_area,
             'records' => $myRecord,
-            'diary' => $myDiary
+            'diary' => $myDiary,
+            'userid'=> $user_id
         ];
         return $data;
     }
@@ -622,7 +623,8 @@ class Partymanage extends Base
     //招商个人统计
     public function statisticsInfo()
     {
-        $userid = session('userId');
+        $id =input('userid');
+        $userid = isset($id)?$id:session('userId');
         if (IS_POST) {
             $year = input('year');
             $month = input('month');
@@ -635,7 +637,7 @@ class Partymanage extends Base
             }
         } else {
             $weuser = new WechatUser();
-            $user = $weuser->where('userid', $userid)->find();
+            $user = $weuser->where('userid', session('userId'))->find();
             $is_boss = $user['tagid'] == 1 ? "yes" : "no";
             $this->assign('is_boss', $is_boss);
             if (empty($year)) {
@@ -647,8 +649,11 @@ class Partymanage extends Base
                 //月，输出2位整型，不够2位右对齐
                 $month = sprintf('%02d', $arr[1]);
             }
+
             $personalinfo = $this->statisticsCommon($userid, $year, $month);
+
             $this->assign('personalinfo', json_encode($personalinfo));
+
             return $this->fetch();
         }
     }
@@ -992,7 +997,7 @@ class Partymanage extends Base
 
             return "获取signature失败" . $weObj->errCode . '|' . $weObj->errMsg;;
         }
-
+        http://xk.0519ztnet.com/
         return json_encode($signature);
 
 
