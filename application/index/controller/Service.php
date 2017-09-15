@@ -175,11 +175,16 @@ class Service extends Base
                 $es = new ElectricityService();
                 $map = [
                     'user_id' => $user_id,
-                    'electricity_id' => array('exp', 'is not null')
+                    'electricity_id' => array('exp', 'is not null'),
+                   'status'=> array('in', [0, 1])
                 ];
-                $is_new = $es->where($map)->select();
-                if (count($is_new) > 0) {
-                    $info['type'] = "old";
+                $is_new = $es->where($map)->find();
+                if ($is_new) {
+                    if ($is_new['status'] == 1) {
+                        $info['type'] = "old";
+                    } else {
+                        $info['type'] = "check";
+                    }
 
                 } else {
                     $info['type'] = "new";
@@ -310,6 +315,7 @@ class Service extends Base
         $park = $Park->where('id', $park_id)->find();
         $map['user_id'] = $user_id;
         $map['electricity_id'] = array('exp', 'is not null');
+        $map['status']=1;
         $cardinfo = $pillar->where($map)->select();
         //充电柱单价
         $data['charging_price'] = $park['charging_price'];
@@ -345,6 +351,42 @@ class Service extends Base
             $this->error("失败");
         }
     }
+
+
+    // 不在数据库中旧柱提交
+    public function newOldPillar()
+    {
+        $er = new ElectricityRecord();
+        $es = new ElectricityService();
+        $data = input('');
+       $map=[
+           'name'=>$data['name'],
+           'mobile'=>$data['mobile'],
+           'user_id'=>session('userId'),
+           'create_time'=>time(),
+           'electricity_id'=>$data['electricity_id'],
+           'status'=>0
+       ];
+      $re =$es->save($map);
+        $record = [
+            'type' => 2,
+            'aging' => $data['aging'],
+            'payment_voucher' => json_encode($data['payment_voucher']),
+            'create_time' => time(),
+            'service_id' => $es->getLastInsID(),
+            'status' => 0,
+            'money' => ((int)$data['charging_price'] * (int)$data['aging']),
+        ];
+        $re2 = $er->save($record);
+        if ($re2) {
+            $this->success('成功');
+
+        } else {
+            $this->error("失败");
+        }
+    }
+
+
 
     //充电柱记录
     public function pillarRecord()
