@@ -12,8 +12,7 @@
 
 {block name="body"}
 <div id="app">
-    <div v-if="subData.cardlist.length">
-        <div class="card">
+        <div class="card" v-if="subData.cardlist.length">
             <div class="card-tit">车主信息</div>
             <div class="card-cell">
                 <span>车牌号码</span>
@@ -45,6 +44,31 @@
                 </div>
             </div>
         </div>
+
+        <div  class="card" v-else>
+            <div class="card-tit">旧卡绑定</div>
+            <div class="card-cell">
+                <label for="card">车卡号码</label>
+                <input type="text" placeholder="请输入车卡号码" id="card"  name="name">
+            </div>
+            <div class="card-cell">
+                <label for="name">车主姓名</label>
+                <input type="text" placeholder="请输入车主姓名" id="name"  name="name">
+            </div>
+            <div class="card-cell">
+                <label for="phone">车主电话</label>
+                <input type="number" placeholder="请输入车主电话" id="phone" name="mobile" maxlength="11">
+            </div>
+            <div class="card-cell">
+                <label for="number">车牌号码</label>
+                <input type="text" placeholder="请输入车牌号码" id="number"  name="car_card">
+            </div>
+            <div class="card-cell">
+                <label for="idCard">身份证号</label>
+                <input type="text" placeholder="请输入身份证号" id="idCard"  name="people_card">
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-tit">办理信息</div>
             <div class="card-cell">
@@ -77,34 +101,38 @@
             <input type="hidden" name="carpark_price" v-model="subData.carpark_price">
         </form>
     </div>
-    <div v-else>
-        <div  class="card">
-            <div class="card-tit">旧卡绑定</div>
-            <div class="card-cell">
-                <label for="card">车卡号码</label>
-                <input type="text" placeholder="请输入车卡号码" id="card"  name="name">
-            </div>
-            <div class="card-cell">
-                <label for="name">车主姓名</label>
-                <input type="text" placeholder="请输入车主姓名" id="name"  name="name">
-            </div>
-            <div class="card-cell">
-                <label for="phone">车主电话</label>
-                <input type="number" placeholder="请输入车主电话" id="phone" name="mobile" maxlength="11">
-            </div>
-            <div class="card-cell">
-                <label for="number">车牌号码</label>
-                <input type="text" placeholder="请输入车牌号码" id="number"  name="car_card">
-            </div>
-            <div class="card-cell">
-                <label for="idCard">身份证号</label>
-                <input type="text" placeholder="请输入身份证号" id="idCard"  name="people_card">
-            </div>
-        </div>
-        <div class="card-btn-box">
-            <button class="btn btn-block btn-warning" >立即绑定</button>
-        </div>
-    </div>
+    <!--<div v-else>-->
+        <!--<div  class="card">-->
+            <!--<div class="card-tit">旧卡绑定</div>-->
+            <!--<div class="card-cell">-->
+                <!--<label for="card">车卡号码</label>-->
+                <!--<input type="text" placeholder="请输入车卡号码" id="card"  name="name">-->
+            <!--</div>-->
+            <!--<div class="card-cell">-->
+                <!--<label for="name">车主姓名</label>-->
+                <!--<input type="text" placeholder="请输入车主姓名" id="name"  name="name">-->
+            <!--</div>-->
+            <!--<div class="card-cell">-->
+                <!--<label for="phone">车主电话</label>-->
+                <!--<input type="number" placeholder="请输入车主电话" id="phone" name="mobile" maxlength="11">-->
+            <!--</div>-->
+            <!--<div class="card-cell">-->
+                <!--<label for="number">车牌号码</label>-->
+                <!--<input type="text" placeholder="请输入车牌号码" id="number"  name="car_card">-->
+            <!--</div>-->
+            <!--<div class="card-cell">-->
+                <!--<label for="idCard">身份证号</label>-->
+                <!--<input type="text" placeholder="请输入身份证号" id="idCard"  name="people_card">-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<form action="payment" method="post" ref="cardform">-->
+            <!--<input type="hidden" v-model="subData.app_id" name="app_id">-->
+            <!--<input type="hidden" v-model="defaultData.type" name="type">-->
+            <!--<input type="hidden" name="id" v-model="cardId">-->
+            <!--<input type="hidden" name="aging" v-model="defaultData.aging">-->
+            <!--<input type="hidden" name="carpark_price" v-model="subData.carpark_price">-->
+        <!--</form>-->
+    <!--</div>-->
 
     <!--<div v-else>-->
         <!--<div class="layer-center layer-default">-->
@@ -129,22 +157,22 @@
             cardArray.push(list[i].car_card) ;
         }
     }
-    console.log(data);
-    if(!cardArray){
-        var vm = new Vue({
-            el:"#app",
-            data:{
-                subData:data
-
-            },
-            methods:{
-                oldCardBind:function () {
-                    var _this = this;
-
-                }
-            }
-        })
-    }else{
+//    console.log(data);
+//    if(!cardArray){
+//        var vm = new Vue({
+//            el:"#app",
+//            data:{
+//                subData:data
+//
+//            },
+//            methods:{
+//                oldCardBind:function () {
+//                    var _this = this;
+//
+//                }
+//            }
+//        })
+//    }else{
         var vm = new Vue({
             el:"#app",
             computed:{
@@ -243,6 +271,6 @@
                 }
             }
         });
-    }
+//    }
 </script>
 {/block}
