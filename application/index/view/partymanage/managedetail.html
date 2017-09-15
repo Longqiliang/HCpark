@@ -76,7 +76,7 @@
         <div class="swiper-container" ref="imgList">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" v-for="(thumb,index) of info.imgs">
-                    <img :src="thumb" :data-original="info.img[index]">
+                    <img :src="thumb"    @click="loadImg(info.img[index],info.img)">
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -94,6 +94,7 @@
 {block name="script"}
 <script src="/static/swiper/swiper.min.js"></script>
 <script src="/static/viewer/viewer.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     var info = {$info};
     console.log(info);
@@ -103,6 +104,26 @@
             info:info,
             viewer:null,
             swiper:null
+        },
+        create:function () {
+            var test =window.location.href;
+            var data ={
+                url:test
+            };
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                //console.log(data);
+                wx.config({
+                    debug: false,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+            },function () {
+
+            })
         },
         mounted(){
             var _this = this;
@@ -114,16 +135,23 @@
                 paginationClickable: true,
                 spaceBetween: 35
             });
-            _this.viewer =  new Viewer(_this.$refs.imgList,{
-                url:'data-original',
-                toolbar:false,
-                title:false,
-                movable:false,
-                fullscreen:false
-            });
         },
         methods:{
-
+            loadImg:function (src,imglist) {
+                var urls =window.location.protocol +'//'+ window.location.host;
+                for(var item in imglist){
+                    imglist[item] = urls + imglist[item];
+                }
+                console.log(imglist);
+                console.log(urls);
+//                return;
+                var src ='http://xk.0519ztnet.com/index/images/roomrent/rent-house.png';
+                var imglist =['http://xk.0519ztnet.com/index/images/roomrent/rent-house.png','http://xk.0519ztnet.com/index/images/roomrent/rent-area.png']
+                wx.previewImage({
+                    current: src, // 当前显示图片的http链接
+                    urls: imglist // 需要预览的图片http链接列表
+                });
+            }
         }
     })
 </script>

@@ -54,6 +54,10 @@
         left: 0;
         top: 0;
         z-index: 9;
+        display: none;
+    }
+    .modal-box.show{
+        display: block;
     }
     .modal-box .modal{
         width: calc(100% - 36px);
@@ -211,7 +215,7 @@
     <div class="foot" @click="showModel">
         <span>兜兜转转一房难求？请填写 <a href="javascript:void(0);" >租房意向</a> </span>
     </div>
-    <div class="modal-box" v-show="intention">
+    <div class="modal-box" :class="{'show':intention}">
         <div class="modal">
             <p>申请人信息</p>
             <div class="name-mobile">

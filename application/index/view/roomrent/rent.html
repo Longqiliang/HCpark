@@ -20,6 +20,10 @@
         left: 0;
         top: 0;
         z-index: 9;
+        display: none;
+    }
+    .modal-box.show{
+        display: block!important;
     }
     .modal-box .modal{
         width: calc(100% - 36px);
@@ -104,10 +108,10 @@
     <div class="banner">
         <!--<span class=""></span>-->
         <div class="banner-icon icon-vr" @click="looVR(info.panorama)" v-if="info.panorama">全景</div>
-        <div class="swiper-container" @click="show($event)" ref="banner">
+        <div class="swiper-container"  ref="banner">
             <div class="swiper-wrapper">
                 <div v-for="(img,index) of info.imgs" class="swiper-slide">
-                    <img :src="img"  :data-original="info.img[index]" @click="loadImg(info.img[index],info.img)">
+                    <img :src="img"   @click="loadImg(info.img[index],info.img)">
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -137,16 +141,8 @@
     <div class="rent-btn-box">
         <button class="btn btn-block btn-green" @click="showRent">租房申请</button>
     </div>
-    <div class="icon-box" v-if="lookVR">
-        <div class="box box-left" @click="prev">
-            <i class="iconfont icon-back" ></i>
-        </div>
-       <div class="box box-right" @click="next">
-           <i class="iconfont icon-go" ></i>
-       </div>
 
-    </div>
-    <div class="modal-box" v-show="rentShow">
+    <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
             <p>申请人信息</p>
             <div class="name-mobile">
@@ -191,7 +187,6 @@
         data:{
             info:info,
             vrShow:true,
-            lookVR:false,
             viewer:null,
             mySwiper:null,
             rentShow:false,
@@ -203,38 +198,14 @@
                 remark:''
             }
         },
-        mounted(){
-            var _this = this;
-//            _this.viewer =  new Viewer(_this.$refs.banner,{
-//                url:'data-original',
-//                toolbar:false,
-//                title:false,
-//                movable:false,
-//                fullscreen:false,
-//                show:function () {
-//                    _this.lookVR = true;
-//                },
-//                hide:function (e) {
-//                    _this.lookVR = false;
-//                    _this.mySwiper.startAutoplay();
-//                }
-//            });
-             _this.mySwiper = new Swiper('.swiper-container',{
-                lazyLoading : true,
-                lazyLoadingInPrevNext : true,
-                 autoplay:3000,
-                pagination: '.swiper-pagination',
-                autoplayDisableOnInteraction: false,
-                onSlideChangeEnd:function(e){
-                }
-            });
+        create:function () {
             var test =window.location.href;
             var data ={
                 url:test
             };
             _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
                 var data = JSON.parse(res.data);
-                console.log(data);
+                //console.log(data);
                 wx.config({
                     debug: false,
                     appId: data.appid,
@@ -244,8 +215,21 @@
                     jsApiList: ['previewImage']
                 });
             },function () {
-                
+
             })
+        },
+        mounted(){
+            var _this = this;
+             _this.mySwiper = new Swiper('.swiper-container',{
+                lazyLoading : true,
+                lazyLoadingInPrevNext : true,
+                 autoplay:3000,
+                pagination: '.swiper-pagination',
+                autoplayDisableOnInteraction: false,
+                onSlideChangeEnd:function(e){
+                }
+            });
+
         },
         methods:{
             loadImg:function (src,imglist) {
@@ -256,8 +240,10 @@
                 console.log(imglist);
                 console.log(urls);
 //                return;
+                var src ='http://xk.0519ztnet.com/index/images/roomrent/rent-house.png';
+                var imglist =['http://xk.0519ztnet.com/index/images/roomrent/rent-house.png','http://xk.0519ztnet.com/index/images/roomrent/rent-area.png']
                 wx.previewImage({
-                    current:  urls + src, // 当前显示图片的http链接
+                    current: src, // 当前显示图片的http链接
                     urls: imglist // 需要预览的图片http链接列表
                 });
             },
@@ -269,20 +255,6 @@
                     return;
                 }
                 window.location.href='/index/roomrent/panorama?link='+e;
-            },
-            show:function (event){
-                this.mySwiper.stopAutoplay();
-                //console.log(event);
-            },
-            next:function () {
-                var _this = this,
-                        viewer = _this.viewer;
-                viewer.next();
-            },
-            prev:function () {
-                var _this = this,
-                        viewer = _this.viewer;
-                viewer.prev();
             },
             showRent:function () {
                 this.rentShow = true;
