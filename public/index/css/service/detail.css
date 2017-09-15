@@ -429,6 +429,22 @@ textarea::-webkit-input-placeholder {
     text-align: right;
     width: 50vw;
 }
+.card-cell .cell-address input{
+    width: 9vw;
+    text-align: center;
+}
+.card-cell .cell-address .address-input-box{
+    position: relative;
+}
+.card-cell .cell-address .address-input-box:after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    bottom: -5px;
+    left: 0;
+    height: 1px;
+    background-color: #999;
+}
 .card-btn-box{
     margin: 8vw 2.4vw;
 }

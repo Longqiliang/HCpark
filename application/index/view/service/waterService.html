@@ -16,7 +16,11 @@
         <div class="card-tit">饮水服务</div>
         <div class="card-cell">
             <label for="add">送水地点</label>
-            <input type="text" placeholder="请输入送水地点" id="add" v-model="defaultData.address">
+            <div class="cell-address">
+                <span class="address-input-box"><input type="text" id="add" v-model="addressOne" maxlength="3"></span>
+                <span>幢</span>
+                <span class="address-input-box"><input type="number"  maxlength="4" v-model="addressTwo"></span>
+            </div>
         </div>
         <div class="card-cell">
             <label for="num">送水桶数</label>
@@ -45,6 +49,8 @@
     var vm = new Vue({
         el:"#app",
         data:{
+            addressOne:'',
+            addressTwo:'',
             defaultData:{
                 address:'',
                 number:'',
@@ -52,7 +58,7 @@
                 name:JSON.parse('{$info}').name,
                 mobile:JSON.parse('{$info}').mobile
             },
-            isSubmit:true,
+            isSubmit:true
         },
         methods: {
             goHistory(){
@@ -60,8 +66,12 @@
             },
             orderBtn: function () {
                 var _this = this;
+                _this.defaultData.address = _this.addressOne + _this.addressTwo;
                 if(!_this.defaultData.address){
                     _this.$toast('请输入送水地点');
+                    return;
+                }else if(!_this.addressOne || !_this.addressTwo ){
+                    _this.$toast('请输入正确送水地点');
                     return;
                 }
                 if(!_this.defaultData.number){

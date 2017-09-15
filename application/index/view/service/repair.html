@@ -30,7 +30,11 @@
         </div>
         <div class="card-cell">
             <label for="name">服务地点</label>
-            <input type="text" placeholder="请输入服务地点" id="name" v-model="defaultData.address">
+            <div class="cell-address">
+                <span class="address-input-box"><input type="text" id="name" v-model="addressOne" maxlength="3"></span>
+                <span>幢</span>
+                <span class="address-input-box"><input type="number"  maxlength="4" v-model="addressTwo"></span>
+            </div>
         </div>
         <div class="card-cell">
             <span>联系人员</span>
@@ -106,6 +110,8 @@
             }
         },
         data:{
+            addressOne:'',
+            addressTwo:'',
             defaultData:defaultData,
             subData:data,
             dataUrl:'',
@@ -265,8 +271,12 @@
                     _this.$toast('请选择服务类型');
                     return;
                 }
+                _this.defaultData.address = _this.addressOne + _this.addressTwo;
                 if(!_this.defaultData.address){
                     _this.$toast('请输入服务地点');
+                    return;
+                }else if(!_this.addressOne || !_this.addressTwo ){
+                    _this.$toast('请输入正确的服务地点');
                     return;
                 }
 
