@@ -201,7 +201,7 @@
                     <span class="my-icon my-icon-suc"></span>
                     <div class="my-list">
                         <div><span>工作日志</span><span>{{item.name}}</span></div>
-                        <div><span>创建日期：</span><span>{{item.create_time}}</span></div>
+                        <div><span>创建日期：</span><span>{{item.create_time*1000 | timeToString}}</span></div>
                     </div>
                 </li>
             </ul>
@@ -325,10 +325,11 @@ var app = new Vue({
         timeChange(){
             if(this.active===1){
                 console.log('this.yearSelected__'+this.yearSelected);
-                var data={year:this.year[this.yearSelected]}
+                var data={year:this.year[this.yearSelected],userid:this.personalInfo.userid}
             }else{
                 console.log('this.monthSelected'+this.monthSelected);
-                var data= this.month[this.monthSelected]
+                var data= this.month[this.monthSelected];
+                data.userid=this.personalInfo.userid
             }
             console.log(data);
             this.$indicator.open({
