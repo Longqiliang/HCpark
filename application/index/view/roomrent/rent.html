@@ -233,15 +233,6 @@
         },
         methods:{
             loadImg:function (src,imglist) {
-                var urls =window.location.protocol +'//'+ window.location.host;
-                for(var item in imglist){
-                    imglist[item] = urls + imglist[item];
-                }
-                console.log(imglist);
-                console.log(urls);
-//                return;
-                var src ='http://xk.0519ztnet.com/index/images/roomrent/rent-house.png';
-                var imglist =['http://xk.0519ztnet.com/index/images/roomrent/rent-house.png','http://xk.0519ztnet.com/index/images/roomrent/rent-area.png']
                 wx.previewImage({
                     current: src, // 当前显示图片的http链接
                     urls: imglist // 需要预览的图片http链接列表
