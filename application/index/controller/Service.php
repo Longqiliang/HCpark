@@ -100,7 +100,7 @@ class Service extends Base
         //政策法规轮播
         $policy = NewsModel::where(['park_id'=>$park_id,'type'=>['in',[4,5]]])->field('id,title')->order('id  desc')->limit(4)->select();
 
-        $this->assign('policy',$policy);
+        $this->assign('policy',json_encode($policy));
         $this->assign('is_boss', $is_boss);
         $this->assign('propert', json_encode($PropertyServices));
         $this->assign('company', json_encode($CompanyService));

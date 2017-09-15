@@ -186,7 +186,7 @@
         <div class="list-tit">
             <i class="icon-policy"></i>
         </div>
-        <div class="list-group" @click="">
+        <div class="list-group" @click="jump('/index/policy/index')">
             <div class="swiper-container listSwiper" id="listSwiper">
                 <div class="swiper-wrapper" v-if="news.length > 0">
                     <div class="swiper-slide" v-for="item of news">
@@ -241,7 +241,7 @@
                 propertyServices:JSON.parse('{$propert}'),
                 companyService:JSON.parse('{$company}')
             },
-            news:[{"id":9,"title":"4"},{"id":8,"title":"123"},{"id":7,"title":"2"},{"id":6,"title":"1"}],
+            news:{$policy},
             nowPark:0,
             parks:[
                 {name:'希垦科技园',value:0},
@@ -270,6 +270,9 @@
 //                    return;
 //                }
                 window.location.href='/index/service/onCheck/id/'+id+'/path/'+path;
+            },
+            jump:function (href) {
+                window.location.href=href;
             },
             parkChange(){
                 this.$http.post(this.changeApi,{value:this.nowPark}).then(function (res) {
