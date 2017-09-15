@@ -102,13 +102,14 @@
         position: absolute;
         width: 30px;
         bottom: 8px;
-        left: 0;
+        left: 3px;
         height: 1px;
         background-color: #999;
     }
     .price input{
         width: 30px;
         text-align: center;
+        margin: 0 3px;
     }
     .remark p{
         font-size: 15px;
@@ -226,7 +227,7 @@
                     </li>
                     <li>
                         <span>手机</span>
-                        <input type="number" id="mobile" placeholder="请输入手机号" v-model="subData.mobile">
+                        <input type="number" id="mobile" placeholder="请输入手机号" v-model.number="subData.mobile">
                     </li>
                     <li>
                         <span>面积要求</span>
@@ -239,15 +240,15 @@
                     <li>
                         <span>单价范围</span>
                         <div class="price">
-                            <span class="price-input-box"><input type="number" v-model="priceOne" maxlength="3"></span><span >—</span>
-                            <span class="price-input-box"><input type="number" v-model="priceTwo" maxlength="3"></span><span>/㎡·天</span>
+                            <span class="price-input-box"><input type="number" v-model.number="priceOne" maxlength="3"></span><span >—</span>
+                            <span class="price-input-box"><input type="number" v-model.number="priceTwo" maxlength="3"></span><span>/㎡·天</span>
                         </div>
 
                     </li>
                 </ul>
             </div>
             <div class="btn-box">
-                <button class="btn btn-block btn-green" @click="">提交</button>
+                <button class="btn btn-block btn-green" @click="subIntention">提交</button>
             </div>
             <div class="cancel" @click="hideModel">
                 <span><i class="iconfont hc-cha1"></i></span>
@@ -276,13 +277,13 @@
             intention:false,
             priceOne:'',
             priceTwo:'',
+            isSubmit:true,
             subData:{
                 rent_id:0,
                 mobile:'',
                 name:'',
                 area:'',
-                price:'',
-                remark:''
+                price:''
             },
             isHouseList:false,
             list:list,
@@ -451,6 +452,11 @@
                 if(!_this.subData.mobile){
                     _this.$toast("请输入正确的电话！");
                     return;
+                }else {
+                   if(!checkMobile(_this.subData.mobile)){
+                       _this.$toast("请输入正确的电话！");
+                       return;
+                   }
                 }
                 if(!_this.subData.area){
                     _this.$toast("请输入面积要求！");
@@ -460,13 +466,25 @@
                     _this.$toast("请输入用房时间！");
                     return;
                 }
+                if(!_this.priceOne || !_this.priceTwo){
+                    _this.$toast("请输入正确的单价范围！");
+                    return;
+                }else{
+                   if(!scope(_this.priceOne,_this.priceTwo)) {
+                       _this.$toast("单价范围应在0至10之间！");
+                       return;
+                   }else{
+                       _this.subData.price = _this.priceOne+'-'+_this.priceTwo;
+                   }
+                }
                 if(!_this.isSubmit){
                     return;
                 }
                 _this.isSubmit = false;
                 var data = JSON.parse(JSON.stringify(_this.subData));
-                //console.log(data);
-                _this.$http.post('/index/roomrent/peoplerent',data).then(function (res) {
+                console.log(data);
+                _this.$http.post('/index/roomrent/intention',data).then(function (res) {
+                    console.log(res.data);
                     var data  = res.data;
                     _this.isSubmit = true;
                     if(data.code == 1){
@@ -481,7 +499,7 @@
                             confirmButtonColor: "#52CC92"
                         },function () {
                             _this.rentShow = false;
-                            window.location.href='/index/roomrent/houseslist'
+                            window.location.reload();
                         });
                     }else{
                         swal({
@@ -508,6 +526,14 @@
 
         }
     });
-
+    function scope(a,b) {
+        if(typeof a =='number'&& typeof b == 'number'){
+            if(a > 0 && b>a && b<=10){
+               return true;
+            }else{
+               return false;
+            }
+        }
+    }
 </script>
 {/block}
