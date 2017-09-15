@@ -20,7 +20,7 @@
 {block name="body"}
 <div id="app">
     <div class="card" v-for="item of info">
-        <div class="card-tit">{{title}}</div>
+        <div class="card-tit">{{item.title}}</div>
         <div class="card-cell">
             <span>企业名称</span>
             <span>{{item.name}}</span>
@@ -56,9 +56,9 @@
             this.type=this.GetQueryString('t');
             if(this.type==1){
                 this.title= "水电费";
-            }else if(this.type==2){
-                this.title= "房租费";
             }else if(this.type==3){
+                this.title= "房租费";
+            }else if(this.type==2){
                 this.title= "物业费";
             }
             document.title=this.title;
