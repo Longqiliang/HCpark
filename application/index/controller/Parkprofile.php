@@ -42,13 +42,13 @@ class Parkprofile extends Base
         $data =[
         'appid' => 'ww68db00a56b949cff',
         'token'=>'5nKAPmLKP8mJy6VIy',
-        'encodingAesKey'=>'fSH5sENzHzaeoegXgYIvJ7KDER4hO4z6PX5lZ8yQDr3',
+        'encodingaeskey'=>'fSH5sENzHzaeoegXgYIvJ7KDER4hO4z6PX5lZ8yQDr3',
         'appsecret' => 'nUreq8Yaj3368JBzTUmuZM57kkOUpYJGfN7MPBD8Kg8',
         'agentid' => 1000018
     ];
         $weObj = new TPWechat($data);
-        $weObj->valid(true);//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
-        //return $weObj->valid(true);
+        $weObj->valid();//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
+        //return json_encode($weObj->valid(true));
         $is=false;
         $type = $weObj->getRev()->getRevType();
         if($type==TPWechat::EVENT_ENTER_AGENT) {
@@ -112,6 +112,11 @@ class Parkprofile extends Base
 
 
     }
+   public  function  test(){
+
+        phpinfo();
+
+   }
 
 
 }
