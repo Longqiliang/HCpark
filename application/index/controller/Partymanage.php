@@ -997,7 +997,7 @@ class Partymanage extends Base
 
             return "获取signature失败" . $weObj->errCode . '|' . $weObj->errMsg;;
         }
-        http://xk.0519ztnet.com/
+        $signature['imgurl']='http://xk.0519ztnet.com/';
         return json_encode($signature);
 
 
