@@ -44,13 +44,11 @@ class Service extends Base
         $app = new  CompanyApplication();
         $info = $user->where('userid', $user_id)->find();
         $map = ['type ' => 0];
-        $is='yes';
+        $is = 'yes';
         if ($info['fee_status'] != 0) {
-
-            $is="no";
+            $is = "no";
         }
         /*if($info['tagid']==1){
-
                 $map=[
                     'park_id'=>3,
                     'type'=>0
@@ -61,8 +59,6 @@ class Service extends Base
             //企业服务
             $CompanyService=$app->where($map)->order('id asc')->select();
             $is_boss="yes";
-
-
         }else{*/
         //物业服务
         $serviceApps = $app->where($map)->order('id asc')->select();
@@ -104,7 +100,7 @@ class Service extends Base
         $this->assign('is_boss', $is_boss);
         $this->assign('propert', json_encode($PropertyServices));
         $this->assign('company', json_encode($CompanyService));
-       $this->assign('is_fee',$is);
+        $this->assign('is_fee', $is);
         return $this->fetch();
 
     }
@@ -157,29 +153,29 @@ class Service extends Base
                     'user_id' => $user_id,
                 ];
                 $map['park_card'] = array('exp', 'is not null');
-                $usercard = $CardparkService->where($map)->select();
+                $map['status'] = array('in', [0, 1]);
+                $usercard = $CardparkService->where($map)->find();
 
-                if (count($usercard) > 0) {
+                if ($usercard) {
 
-                    $info['type'] = "old";
+                    if ($usercard['status'] == 1) {
+                        $info['type'] = "old";
+                    } else {
+                        $info['type'] = "check";
+                    }
 
                 } else {
 
                     $info['type'] = "new";
                 }
 
-
                 break;
-
-
             //充电柱
             case 7:
                 $es = new ElectricityService();
                 $map = [
                     'user_id' => $user_id,
                     'electricity_id' => array('exp', 'is not null')
-
-
                 ];
                 $is_new = $es->where($map)->select();
                 if (count($is_new) > 0) {
@@ -220,6 +216,7 @@ class Service extends Base
     {
         return $this->fetch();
     }
+
     //预约
     public function order()
     {
@@ -487,6 +484,8 @@ class Service extends Base
         $park = $Park->where('id', $park_id)->find();
         $map['user_id'] = $user_id;
         $map['park_card'] = array('exp', 'is not null');
+        $map['status'] = 1;
+        //已通过审核的卡
         $cardinfo = $carCard->where($map)->select();
         //停车卡单价
         $data['carpark_price'] = $park['carpark_price'];
@@ -525,6 +524,44 @@ class Service extends Base
         }
     }
 
+    //不在数据库中车卡续费（上传凭证）
+    public function addOldCard()
+    {
+        $id = session('userId');
+        $data = input('');
+        $CarparkRecord = new CarparkRecord();
+        $CardparkService = new CarparkService();
+        $map=[
+            'name'=>$data['name'],
+            'mobile'=>$data['mobile'],
+            'car_card'=>$data['car_card'],
+            'people_card' =>$data['people_card'],
+            'park_card'=>$data['park_card'],
+            'create_time'=>time(),
+            'status'=>0,
+            'user_id'=>$id
+
+        ];
+        $re =$CardparkService->save($map);
+
+        $record = [
+            'type' => 2,
+            'aging' => $data['aging'],
+            'payment_voucher' => json_encode($data['payment_voucher']),
+            'create_time' => time(),
+            'carpark_id' => $CardparkService->getLastInsID(),
+            'status' => 0,
+            'money' => ((int)$data['carpark_price'] * (int)$data['aging']),
+        ];
+        $re2 = $CarparkRecord->save($record);
+        if ($re2) {
+            $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈";
+            $this->success('成功', "", $msg);
+
+        } else {
+            $this->error("失败");
+        }
+    }
 
     //车卡记录
     public function carRecord()
@@ -1163,21 +1200,21 @@ class Service extends Base
                 $time = array_values(array_unique($create_time));
                 foreach ($time as $onetime) {
                     $map = array();
-                    $times=array();
+                    $times = array();
                     foreach ($list as $info) {
                         if ($info['create_time'] == $onetime) {
                             array_push($map, $info);
                             array_push($times, $info['order_time']);
                         }
                     }
-                    $price=0;
-                    $timelist=array_count_values($times);
+                    $price = 0;
+                    $timelist = array_count_values($times);
 
-                    foreach ($timelist as $key=>$value){
-                        if($value==1){
-                            $price=$price+500;
-                        }else if($value==2){
-                            $price=$price+800;
+                    foreach ($timelist as $key => $value) {
+                        if ($value == 1) {
+                            $price = $price + 500;
+                        } else if ($value == 2) {
+                            $price = $price + 800;
                         }
 
                     }
