@@ -330,6 +330,8 @@ function checkMobile(mobile){
 			console.log("验证成功");
 			return true;
 		}
+	}else{
+		return false;
 	}
 }
 /*
