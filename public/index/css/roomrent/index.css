@@ -225,9 +225,9 @@ body{
     height: 7.73vw;
     position: absolute;
     right: 0;
-    top:5%;
-    -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
+    top:10%;
+    /*-webkit-transform: translateY(-50%);*/
+    /*transform: translateY(-50%);*/
     background-repeat:no-repeat;
     background-size: 100%;
     z-index: 3;
