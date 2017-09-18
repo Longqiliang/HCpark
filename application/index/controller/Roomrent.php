@@ -45,6 +45,22 @@ class Roomrent extends Base
             'rent_id' => $roomInfo['id'],
 
         ];
+
+
+
+        $a=array();
+        foreach ($data['img'] as $v){
+           $v="http://xk.0519ztnet.com/".$v;
+           array_push($a,$v);
+        }
+        $data['img']=$a;
+
+        $b=array();
+        foreach ($data['imgs'] as $v2){
+            $v2="http://xk.0519ztnet.com/".$v2;
+            array_push($b,$v2);
+        }
+        $data['imgs']=$b;
         /* if ($data['img']) {
              foreach ($data['img'] as $k1 => $v1) {
                  if (is_file(PUBLIC_PATH . $v1)) {
@@ -57,6 +73,8 @@ class Roomrent extends Base
                  }
              }
          }*/
+
+
         $this->assign('info', json_encode($data));
 
         return $this->fetch();

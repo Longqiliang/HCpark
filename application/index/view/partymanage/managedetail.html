@@ -103,8 +103,7 @@
         data:{
             info:info,
             viewer:null,
-            swiper:null,
-            imgUrl:''
+            swiper:null
         },
         create:function () {
             var _this = this;
@@ -116,7 +115,6 @@
             _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
                 var data = JSON.parse(res.data);
                 //console.log(data);
-                _this.imgUrl = data.imgUrl;
                 wx.config({
                     debug: false,
                     appId: data.appid,
@@ -142,11 +140,8 @@
         },
         methods:{
             loadImg:function (src,imglist) {
-                for(var item in imglist){
-                    imglist[item] = "http://xk.0519ztnet.com/" + imglist[item]
-                }
                 wx.previewImage({
-                    current: "http://xk.0519ztnet.com/"+src,
+                    current: src,
                     urls: imglist
                 });
             }

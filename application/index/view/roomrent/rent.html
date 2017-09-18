@@ -185,7 +185,6 @@
     var vm = new Vue({
         el:'#app',
         data:{
-            imgUrl:'',
             info:info,
             vrShow:true,
             viewer:null,
@@ -199,25 +198,15 @@
                 remark:''
             }
         },
-        mounted(){
+        create:function () {
             var _this = this;
-             _this.mySwiper = new Swiper('.swiper-container',{
-                lazyLoading : true,
-                lazyLoadingInPrevNext : true,
-                 autoplay:3000,
-                pagination: '.swiper-pagination',
-                autoplayDisableOnInteraction: false,
-                onSlideChangeEnd:function(e){
-                }
-            });
             var test =window.location.href;
             var data ={
                 url:test
             };
             _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
                 var data = JSON.parse(res.data);
-                console.log(data);
-                _this.imgUrl =  data.imgurl;
+                //console.log(data);
                 wx.config({
                     debug: false,
                     appId: data.appid,
@@ -230,14 +219,25 @@
 
             })
         },
+        mounted(){
+            var _this = this;
+             _this.mySwiper = new Swiper('.swiper-container',{
+                lazyLoading : true,
+                lazyLoadingInPrevNext : true,
+                 autoplay:3000,
+                pagination: '.swiper-pagination',
+                autoplayDisableOnInteraction: false,
+                onSlideChangeEnd:function(e){
+                }
+            });
+
+        },
         methods:{
             loadImg:function (src,imglist) {
-                for(var item in imglist){
-                    imglist[item] = "http://xk.0519ztnet.com/" + imglist[item]
-                }
+
                 wx.previewImage({
-                    current: "http://xk.0519ztnet.com/"+src,
-                    urls: imglist
+                    current: src, // 当前显示图片的http链接
+                    urls: imglist // 需要预览的图片http链接列表
                 });
             },
             reBack:function () {
