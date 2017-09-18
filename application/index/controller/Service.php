@@ -29,6 +29,7 @@ use  app\index\model\WechatDepartment;
 use  app\index\model\News as NewsModel;
 
 use  app\index\model\LedRecord;
+use function PHPSTORM_META\type;
 
 //企业服务
 class Service extends Base
@@ -269,7 +270,7 @@ class Service extends Base
     //新柱提交
     public function addNewPillar()
     {
-        $PillarRecord = new ElectricityRecord();
+
         $PillarService = new ElectricityService();
 
         $id = session('userId');
@@ -279,22 +280,17 @@ class Service extends Base
             'mobile' => $data['mobile'],
             'user_id' => $id,
             'status' => 0,
-            'create_time' => time()
-        ];
-
-        $re = $PillarService->save($service);
-
-        $record = [
+            'create_time' => time(),
             'type' => 1,
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
-            'create_time' => time(),
-            'service_id' => $PillarService->id,
-            'status' => 0,
             'money' => ((int)$data['charging_price'] * (int)$data['aging']) + (int)$data['charging_deposit'],
-        ];
-        $re2 = $PillarRecord->save($record);
-        if ($re2) {
+            ];
+
+        $re = $PillarService->save($service);
+
+
+        if ($re) {
             $this->success('成功' . json_encode($PillarService->id));
 
         } else {
@@ -314,15 +310,14 @@ class Service extends Base
         $pillar = new ElectricityService();
         $park = $Park->where('id', $park_id)->find();
         $map['user_id'] = $user_id;
-        $map['electricity_id'] = array('exp', 'is not null');
         $map['status']=1;
-        $cardinfo = $pillar->where($map)->select();
+        $pillarinfo = $pillar->where($map)->select();
         //充电柱单价
         $data['charging_price'] = $park['charging_price'];
         //充电柱押金
         $data['charging_deposit'] = $park['charging_deposit'];
         //用户停车卡信息
-        $data['cardlist'] = $cardinfo;
+        $data['cardlist'] = $pillarinfo;
         $this->assign('data', json_encode($data));
         return $this->fetch();
     }
@@ -332,48 +327,16 @@ class Service extends Base
     public function addOldPillar()
     {
         $er = new ElectricityRecord();
-
+        $id = session('userId');
         $data = input('');
         $record = [
+            'name' => $data['name'],
+            'mobile' => $data['mobile'],
+            'user_id' => $id,
             'type' => 2,
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'create_time' => time(),
-            'service_id' => $data['id'],
-            'status' => 0,
-            'money' => ((int)$data['charging_price'] * (int)$data['aging']),
-        ];
-        $re2 = $er->save($record);
-        if ($re2) {
-            $this->success('成功');
-
-        } else {
-            $this->error("失败");
-        }
-    }
-
-
-    // 不在数据库中旧柱提交
-    public function newOldPillar()
-    {
-        $er = new ElectricityRecord();
-        $es = new ElectricityService();
-        $data = input('');
-       $map=[
-           'name'=>$data['name'],
-           'mobile'=>$data['mobile'],
-           'user_id'=>session('userId'),
-           'create_time'=>time(),
-           'electricity_id'=>$data['electricity_id'],
-           'status'=>0
-       ];
-      $re =$es->save($map);
-        $record = [
-            'type' => 2,
-            'aging' => $data['aging'],
-            'payment_voucher' => json_encode($data['payment_voucher']),
-            'create_time' => time(),
-            'service_id' => $es->getLastInsID(),
             'status' => 0,
             'money' => ((int)$data['charging_price'] * (int)$data['aging']),
         ];
@@ -391,7 +354,6 @@ class Service extends Base
     //充电柱记录
     public function pillarRecord()
     {
-
         $service = new ElectricityService;
         $user_id = session('userId');
         $map = [
@@ -399,22 +361,16 @@ class Service extends Base
             'status' => array('neq', -1)
         ];
         $list = $service->where($map)->order('create_time desc')->select();
-        $record = array();
-        foreach ($list as $value) {
-            array_push($record, $value->findRecord);
-        }
-        int_to_string($record, array('type' => array(1 => '新柱办理', 2 => '旧柱办理'), 'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败')));
+
+        int_to_string($list, array('type' => array(1 => '新柱办理', 2 => '旧柱办理'), 'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败')));
         $res = array();
-        foreach ($record as $k => $v) {
-            foreach ($v as $val) {
+        foreach ($list as $k => $val) {
                 $res[$k]['name'] = $val['type'] == 1 ? '新柱办理' : "旧柱续费";
                 $res[$k]['pay'] = $val['money'];
                 $res[$k]['time'] = $val['create_time'];
                 $res[$k]['status'] = $val['status'];
                 $res[$k]['id'] = $val['id'];
-            }
         }
-
         return $res;
     }
 
@@ -472,7 +428,7 @@ class Service extends Base
     public function addNewCard()
     {
 
-        $CarparkRecord = new CarparkRecord();
+
         $CardparkService = new CarparkService();
 
         $id = session('userId');
@@ -488,24 +444,19 @@ class Service extends Base
             'name' => $data['name'],
             'mobile' => $data['mobile'],
             'people_card' => $data['people_card'],
-            'car_card' => $data['car_card'],
             'user_id' => $id,
             'status' => 0,
-            'create_time' => time()
-        ];
-        $re = $CardparkService->save($service);
-
-        $record = [
+            'create_time' => time(),
+            'car_card' => $data['car_card'],
             'type' => 1,
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
-            'create_time' => time(),
-            'carpark_id' => $CardparkService->id,
-            'status' => 0,
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']) + (int)$data['carpark_deposit'],
         ];
-        $re2 = $CarparkRecord->save($record);
-        if ($re2) {
+        $re = $CardparkService->save($service);
+
+
+        if ($re) {
             $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈;请耐心等待,确认成功后;请您在2小时内到希垦科技园A座201领取车卡";
             $this->success('成功', "", $msg);
 
@@ -525,7 +476,6 @@ class Service extends Base
         $carCard = new CarparkService();
         $park = $Park->where('id', $park_id)->find();
         $map['user_id'] = $user_id;
-        $map['park_card'] = array('exp', 'is not null');
         $map['status'] = 1;
         //已通过审核的卡
         $cardinfo = $carCard->where($map)->select();
@@ -543,20 +493,23 @@ class Service extends Base
     //旧卡续费（上传凭证）
     public function keepOldCard()
     {
-        $CarparkRecord = new CarparkRecord();
         $CardparkService = new CarparkService();
         $id = session('userId');
         $data = input('');
-        $record = [
+        $service = [
+            'name' => $data['name'],
+            'mobile' => $data['mobile'],
+            'people_card' => $data['people_card'],
+            'car_card' => $data['car_card'],
+            'user_id' => $id,
             'type' => 2,
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'create_time' => time(),
-            'carpark_id' => $data['id'],
             'status' => 0,
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']),
         ];
-        $re2 = $CarparkRecord->save($record);
+        $re2 = $CardparkService->save($service);
         if ($re2) {
             $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈";
             $this->success('成功', "", $msg);
@@ -566,49 +519,12 @@ class Service extends Base
         }
     }
 
-    //不在数据库中车卡续费（上传凭证）
-    public function addOldCard()
-    {
-        $id = session('userId');
-        $data = input('');
-        $CarparkRecord = new CarparkRecord();
-        $CardparkService = new CarparkService();
-        $map=[
-            'name'=>$data['name'],
-            'mobile'=>$data['mobile'],
-            'car_card'=>$data['car_card'],
-            'people_card' =>$data['people_card'],
-            'park_card'=>$data['park_card'],
-            'create_time'=>time(),
-            'status'=>0,
-            'user_id'=>$id
 
-        ];
-        $re =$CardparkService->save($map);
-
-        $record = [
-            'type' => 2,
-            'aging' => $data['aging'],
-            'payment_voucher' => json_encode($data['payment_voucher']),
-            'create_time' => time(),
-            'carpark_id' => $CardparkService->getLastInsID(),
-            'status' => 0,
-            'money' => ((int)$data['carpark_price'] * (int)$data['aging']),
-        ];
-        $re2 = $CarparkRecord->save($record);
-        if ($re2) {
-            $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈";
-            $this->success('成功', "", $msg);
-
-        } else {
-            $this->error("失败");
-        }
-    }
 
     //车卡记录
     public function carRecord()
     {
-        $service = new CarparkRecord();
+        $service = new CarparkService();
         $map = [
             'status' => array('neq', -1)
         ];
@@ -629,7 +545,7 @@ class Service extends Base
         $adService = new AdvertisingService();
         $adRecord = new AdvertisingRecord();
         //取消超时没有上传凭证的预约信息
-        $nowtime = time() - 60;
+        $nowtime = time() - 600;
         $map = [
             'status' => 1,
             'create_time' => array('lt', $nowtime)
@@ -789,7 +705,7 @@ class Service extends Base
         $FunctionRoomRecord = new FunctionRoomRecord();
         $user_id = session('userId');
         //取消超时没有上传凭证的预约信息
-        $nowtime = time() - 60;
+        $nowtime = time() - 600;
         $map = [
             'status' => 1,
             'create_time' => array('lt', $nowtime)
@@ -1701,38 +1617,37 @@ class Service extends Base
 
             $info = WaterService::get($id);
         } elseif ($appid == 6) {
-            $payment_voucher = CarparkRecord::where('id', $id)->field('payment_voucher,money,aging,carpark_id')->find();
-            $info = CarparkService::where('id', $payment_voucher['carpark_id'])->find();
+            $info = CarparkService::where('id', $id)->find();
             //图片
-            $info['img'] = json_decode($payment_voucher['payment_voucher'], true);
+            $info['img'] = json_decode($info['payment_voucher'], true);
             //费用总计
-            $info['all_money'] = $payment_voucher['money'];
-
+            $info['all_money'] = $info['money'];
+            unset($info['payment_voucher']);
             $park_id = session('park_id');
             $park = Park::where('id', $park_id)->field('carpark_deposit,carpark_price')->find();
             //押金
             $info['carpark_deposit'] = $park['carpark_deposit'];
-            //时长
-            $info['aging'] = $payment_voucher['aging'];
-            //停车费
-            $info['money'] = $park['carpark_price'] * $payment_voucher['aging'];
 
+            if($info['type']==1){
+                $info['money']=$info['money']-$info['carpark_deposit'];
+            }
         } elseif ($appid == 7) {
-            $record = ElectricityRecord::get($id);
-            $service = ElectricityService::where('id', $record['service_id'])->find();
+            $service = ElectricityService::get($id);
+
             $info['electricity_id'] = $service['electricity_id'];//充电柱编号
             $info['name'] = $service['name'];
             $info['mobile'] = $service['mobile'];
-
             $park_id = session('park_id');
             $park = Park::where('id', $park_id)->field('charging_deposit,charging_price')->find();
-
-            $info['aging'] = $record['aging'];
+            $info['aging'] = $service['aging'];
             $info['carpark_deposit'] = $park['charging_deposit'];//押金
-            $info['money'] = $park['charging_price'] * $record['aging'];//充电费用
-            $info['all_money'] = $record['money'];//总费用
-            $info['img'] = json_decode($record['payment_voucher'], true);//图片
-            $info['type'] = $record['type'];
+            $info['all_money'] = $service['money'];//总费用
+            $info['img'] = json_decode($service['payment_voucher'], true);//图片
+            $info['type'] = $service['type'];
+            $info['money']=$service['money'];
+            if($info['type']==1){
+                $info['money']=$service['money']-$park['charging_deposit'];
+            }
 
         }
 
