@@ -19,7 +19,7 @@
                 <div class="card-cell">
                     <span>车牌号码</span>
                     <span >
-                        <input type="text"  name="id" v-model="carCard.car_card" >
+                        <input type="text"  name="id" v-model="defaultData.car_id" >
                         <!--<span>{{cardStatus}}</span> -->
                         <span @click="checkCard" class="allow-box">
                             <i class="allow-down" ></i>
@@ -35,17 +35,24 @@
                 </div>
                 <div v-for="item of showInfo">
                     <div class="card-cell">
-                        <span>停车卡号</span><span>{{ item.park_card }}</span>
+                        <span>停车卡号</span>
+                        <!--<span>{{ item.park_card }}</span>-->
+                        <input type="text" placeholder="请输入停车卡号" v-model="item.park_card" name="park_card" >
                     </div>
                     <div class="card-cell">
                         <span>车主姓名</span>
-                        <span>{{ item.name }}</span>
+                        <!--<span>{{ item.name }}</span>-->
+                        <input type="text" placeholder="请输入车主姓名" v-model="item.name " name="name">
                     </div>
                     <div class="card-cell">
-                        <span>车主电话</span><span>{{ item.mobile }}</span>
+                        <span>车主电话</span>
+                        <!--<span>{{ item.mobile }}</span>-->
+                        <input type="number" placeholder="请输入车主电话" v-model.number="item.mobile" name="mobile" maxlength="11">
                     </div>
                     <div class="card-cell">
-                        <span>身份证号</span><span>{{ item.people_card}}</span>
+                        <span>身份证号</span>
+                        <!--<span>{{ item.people_card}}</span>-->
+                        <input type="text" placeholder="请输入身份证号" v-model.number="item.people_card" name="people_card" maxlength="18">
                     </div>
                 </div>
                 <input type="hidden" v-model="subData.app_id" name="app_id">
@@ -115,11 +122,13 @@
 
 {block name="script"}
 <script>
+
+    var data = {$data};
     var defaultData = {
         type:'keepOldCard',
+        car_id:data.cardlist[0].car_card,
         aging:0
     };
-    var data = {$data};
     if(!data.cardlist.length ){
 //        console.log(data.cardlist);
         defaultData = {
@@ -222,7 +231,7 @@
                     var _this = this;
                     _this.cardPopupVisible = false;
                     _this.carCard = this.cardName;
-
+                    _this.defaultData.car_id = _this.cardName.car_card;
                 },
                 checkTime: function () {
                     this.popupVisible = true;

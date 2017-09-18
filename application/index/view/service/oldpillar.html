@@ -19,8 +19,10 @@
                 <div class="card-cell">
                     <span>电柱编号</span>
                     <span >
-                        <input type="text"   name="id" v-model="carCard.electricity_id" >
-                        <i class="allow-right" @click="checkCard"></i>
+                        <input type="text"   name="id" v-model="defaultData.elect_id" placeholder="请输入电柱编号">
+                        <span class="allow-box">
+                             <i class="allow-down" @click="checkCard"></i>
+                        </span>
                     </span>
 
                     <mt-popup  position="bottom"  v-model="cardPopupVisible" class="mint-popup" >
@@ -104,14 +106,15 @@
 
 {block name="script"}
 <script>
+
+    var data = {$data};
     var defaultData = {
         type:'addOldpillar',
-        aging:0
+        aging:0,
+        elect_id:data.cardlist[0].electricity_id
     };
-    var data = {$data};
     console.log(data);
     if(!data.cardlist.length ){
-
         defaultData = {
             type:'addOldpillar',
             electricity_id:'',
@@ -124,15 +127,6 @@
     var vm = new Vue({
         el:"#app",
         computed:{
-            cardStatus:function () {
-                var _this = this;
-                var list = _this.subData.cardlist;
-                for(var item in list){
-                    if(_this.carCard.electricity_id == list[item].electricity_id){
-                        return list[item].electricity_id;
-                    }
-                }
-            },
             showInfo:function () {
                 var _this = this;
                 return this.subData.cardlist.filter(function (list) {
@@ -200,7 +194,7 @@
                 var _this = this;
                 _this.cardPopupVisible = false;
                 _this.carCard = _this.cardName;
-
+                _this.defaultData.elect_id = _this.cardName.electricity_id;
             },
             checkTime: function () {
                 this.popupVisible = true;
