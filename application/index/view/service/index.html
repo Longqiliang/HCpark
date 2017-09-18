@@ -266,10 +266,10 @@
         },
         methods:{
             jumpTo(path,id){
-//                if(id==1 && this.baseData.isFee=='no'){
-//                    window.location.href='/index/service/noPermissions';
-//                    return;
-//                }
+                if(id==1 && this.baseData.isFee=='no'){
+                    window.location.href='/index/service/noPermissions';
+                    return;
+                }
                 window.location.href='/index/service/onCheck/id/'+id+'/path/'+path;
             },
             jump:function (href) {
