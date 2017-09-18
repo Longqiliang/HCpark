@@ -11,16 +11,24 @@ namespace app\index\model;
 
 use think\Model;
 
-class CarparkService extends  Model
+class CarparkService extends Model
 {
 
-public  function  findRecord(){
+
+    protected $type = [
+
+        'create_time' => 'strtotime'
+
+    ];
+
+    public function findRecord()
+    {
 
 
-    return $this->hasMany('CarparkRecord','carpark_id','id');
+        return $this->hasMany('CarparkRecord', 'carpark_id', 'id');
 
 
-}
+    }
 
 
 }

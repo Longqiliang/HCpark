@@ -10,6 +10,7 @@
 namespace app\index\controller;
 
 
+use app\index\model\CarparkService;
 use app\index\model\Collect as CollectModel;
 use app\index\model\WechatUser;
 use app\index\model\WechatDepartment;
@@ -218,16 +219,9 @@ class Personal extends Base
         }
 
         //车卡服务
-        $list5 = Db::table('tb_carpark_record')
-            ->alias('r')
-            ->join('__CARPARK_SERVICE__ s', 'r.carpark_id=s.id')
-            ->field('r.type as service_name,r.status,r.create_time')
-            ->where('s.user_id','eq',$userid)
-            ->where('r.status','neq',-1)
-            ->order('r.create_time desc')
-            ->select();
+        $list5 = CarparkService::where(['user_id'=>$userid,'status'=>array('neq',-1)])->select();
         foreach($list5 as $k=>$v){
-            $v['service_name']==1?$list5[$k]['service_name']="车卡服务（新卡办理）":$list5[$k]['service_name']="车卡服务（旧卡续费）";
+            $list5[$k]['service_name']=$v['type']==1?"车卡服务（新卡办理）":"车卡服务（旧卡续费）";
             $list5[$k]['create_time']=date("Y-m-d",$v['create_time']);
             if($list5[$k]['status']==0){
                 $list5[$k]['status_text']='进行中';
@@ -245,27 +239,13 @@ class Personal extends Base
             'user_id'=>$user_id,
             'status'=>array('neq',-1)
         ];
-        $result=$service->where($map)->order('create_time desc')->select();
-        $record=array();
-        foreach ($result as $value){
-            array_push($record,$value->findRecord);
-        }
-        int_to_string($record,array('type'=>array(1=>'新柱办理',2=>'旧柱办理'),'status'=>array(0=>'审核中',  1=>'审核通过', 2=>'审核失败'  )));
-        $list6=array();
-        foreach ($record as $k=>$v){
-            foreach ($v as $val){
-                $list6[$k]['service_name']=$val['type']==1?"充电柱办公（新柱办理）":"充电柱办公（旧柱续费）";
-                $list6[$k]['create_time']=$val['create_time'];
-                $list6[$k]['status']=$val['status'];
-                if($list6[$k]['status']==0){
-                    $list6[$k]['status_text']='进行中';
-                }elseif($list6[$k]['status']==1){
-                    $list6[$k]['status_text']='已完成';
-                }else{
-                    $list6[$k]['status_text']='审核失败';
-                }
-            }
-        }
+        $list6=$service->where($map)->order('create_time desc')->select();
+
+        int_to_string($list6,array('type'=>array(1=>'充电柱办公(新柱办理)',2=>'充电柱办公(旧柱续费)'),'status'=>array(0=>'进行中',  1=>'已完成', 2=>'审核失败'  )));
+         foreach ($list6 as $value){
+             $value['service_name']=$value['type_text'];
+
+         }
 
         //公共服务
 
