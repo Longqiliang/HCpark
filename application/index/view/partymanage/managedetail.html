@@ -103,16 +103,20 @@
         data:{
             info:info,
             viewer:null,
-            swiper:null
+            swiper:null,
+            imgUrl:''
         },
         create:function () {
+            var _this = this;
             var test =window.location.href;
             var data ={
                 url:test
             };
+
             _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
                 var data = JSON.parse(res.data);
                 //console.log(data);
+                _this.imgUrl = data.imgUrl;
                 wx.config({
                     debug: false,
                     appId: data.appid,
@@ -139,8 +143,8 @@
         methods:{
             loadImg:function (src,imglist) {
                 wx.previewImage({
-                    current: src, // 当前显示图片的http链接
-                    urls: imglist // 需要预览的图片http链接列表
+                    current:this.imgUrl + src, // 当前显示图片的http链接
+                    urls: this.imgUrl + imglist // 需要预览的图片http链接列表
                 });
             }
         }
