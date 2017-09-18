@@ -316,7 +316,7 @@ class Service extends Base
         $map['user_id'] = $user_id;
         $map['electricity_id'] = array('exp', 'is not null');
         $map['status']=1;
-        $cardinfo = $pillar->where($map)->select();
+        $cardinfo = $pillar->where($map)->find();
         //充电柱单价
         $data['charging_price'] = $park['charging_price'];
         //充电柱押金
@@ -528,7 +528,7 @@ class Service extends Base
         $map['park_card'] = array('exp', 'is not null');
         $map['status'] = 1;
         //已通过审核的卡
-        $cardinfo = $carCard->where($map)->select();
+        $cardinfo = $carCard->where($map)->find();
         //停车卡单价
         $data['carpark_price'] = $park['carpark_price'];
         //车卡押金
