@@ -142,9 +142,12 @@
         },
         methods:{
             loadImg:function (src,imglist) {
+                for(var item in imglist){
+                    imglist[item] = this.imgUrl + imglist[item]
+                }
                 wx.previewImage({
-                    current:this.imgUrl + src, // 当前显示图片的http链接
-                    urls: this.imgUrl + imglist // 需要预览的图片http链接列表
+                    current: this.imgUrl+src,
+                    urls: imglist
                 });
             }
         }

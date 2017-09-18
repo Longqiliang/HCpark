@@ -199,28 +199,6 @@
                 remark:''
             }
         },
-        create:function () {
-            var _this = this;
-            var test =window.location.href;
-            var data ={
-                url:test
-            };
-            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
-                var data = JSON.parse(res.data);
-                //console.log(data);
-                 _this.imgUrl =  data.imgurl;
-                wx.config({
-                    debug: false,
-                    appId: data.appid,
-                    timestamp:data.timestamp ,
-                    nonceStr: data.noncestr,
-                    signature: data.signature,
-                    jsApiList: ['previewImage']
-                });
-            },function () {
-
-            })
-        },
         mounted(){
             var _this = this;
              _this.mySwiper = new Swiper('.swiper-container',{
@@ -232,14 +210,34 @@
                 onSlideChangeEnd:function(e){
                 }
             });
+            var test =window.location.href;
+            var data ={
+                url:test
+            };
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                //console.log(data);
+                _this.imgUrl =  data.imgurl;
+                wx.config({
+                    debug: true,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+            },function () {
 
+            })
         },
         methods:{
             loadImg:function (src,imglist) {
-
+                for(var item in imglist){
+                    imglist[item] = this.imgUrl + imglist[item]
+                }
                 wx.previewImage({
-                    current: this.imgUrl+src, // 当前显示图片的http链接
-                    urls: this.imgUrl+imglist // 需要预览的图片http链接列表
+                    current: this.imgUrl+src,
+                    urls: imglist
                 });
             },
             reBack:function () {
