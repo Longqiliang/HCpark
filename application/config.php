@@ -178,8 +178,8 @@ return [
     'parkinfo'=>[
         "AppDesc" => "园区简介",
         'appid' => 'ww68db00a56b949cff',
-        'Token'=>'5nKAPmLKP8mJy6VIy',
-        'EncodingAESKey'=>'fSH5sENzHzaeoegXgYIvJ7KDER4hO4z6PX5lZ8yQDr3',
+        'token'=>'5nKAPmLKP8mJy6VIy',
+        'encodingaeskey'=>'fSH5sENzHzaeoegXgYIvJ7KDER4hO4z6PX5lZ8yQDr3',
         'appsecret' => 'nUreq8Yaj3368JBzTUmuZM57kkOUpYJGfN7MPBD8Kg8',
         'agentid' => 1000018
 

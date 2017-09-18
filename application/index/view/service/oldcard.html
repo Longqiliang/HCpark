@@ -19,7 +19,7 @@
                 <div class="card-cell">
                     <span>车牌号码</span>
                     <span >
-                        <input type="text"  name="id" v-model="defaultData.car_id" >
+                        <input type="text"  name="car_card" v-model="defaultData.car_id" >
                         <!--<span>{{cardStatus}}</span> -->
                         <span @click="checkCard" class="allow-box">
                             <i class="allow-down" ></i>
@@ -64,7 +64,7 @@
 
         <div  class="card" v-else>
             <form action="payment" method="post" ref="cardform">
-            <div class="card-tit">旧卡绑定</div>
+            <div class="card-tit">车主信息</div>
             <div class="card-cell">
                 <label for="park_card">车卡号码</label>
                 <input type="text" placeholder="请输入车卡号码" id="park_card"  name="park_card" v-model="defaultData.park_card">
@@ -78,8 +78,8 @@
                 <input type="number" placeholder="请输入车主电话" id="phone" name="mobile" maxlength="11" v-model="defaultData.mobile">
             </div>
             <div class="card-cell">
-                <label for="number">车牌号码</label>
-                <input type="text" placeholder="请输入车牌号码" id="number"  name="car_card" v-model="defaultData.car_card">
+                <label for="car_card">车牌号码</label>
+                <input type="text" placeholder="请输入车牌号码" id="car_card"  name="car_card" v-model="defaultData.car_card">
             </div>
             <div class="card-cell">
                 <label for="idCard">身份证号</label>
@@ -126,13 +126,12 @@
     var data = {$data};
     var defaultData = {
         type:'keepOldCard',
-        car_id:data.cardlist[0].car_card,
         aging:0
     };
     if(!data.cardlist.length ){
 //        console.log(data.cardlist);
         defaultData = {
-            type:'addOldCard',
+            type:'keepOldCard',
             park_card:'',
             people_card:'',
             car_card:'',
@@ -140,6 +139,8 @@
             name:'',
             aging:0
         }
+    }else{
+        defaultData.car_id=data.cardlist[0].car_card
     }
       console.log(data);
     console.log(defaultData);

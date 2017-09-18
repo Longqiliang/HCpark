@@ -1,3 +1,4 @@
+
 {extend name="public/common"}
 
 {block name="style"}
@@ -108,10 +109,9 @@
 <script>
 
     var data = {$data};
-    var defaultData = {
+    var  defaultData = {
         type:'addOldpillar',
-        aging:0,
-        elect_id:data.cardlist[0].electricity_id
+        aging:0
     };
     console.log(data);
     if(!data.cardlist.length ){
@@ -122,6 +122,8 @@
             name:'',
             aging:0
         }
+    }else{
+        defaultData.elect_id = data.cardlist[0].electricity_id
     }
 
     var vm = new Vue({

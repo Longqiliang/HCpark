@@ -326,7 +326,7 @@ class Service extends Base
     //旧柱提交
     public function addOldPillar()
     {
-        $er = new ElectricityRecord();
+        $er = new ElectricityService();
         $id = session('userId');
         $data = input('');
         $record = [
@@ -334,6 +334,7 @@ class Service extends Base
             'mobile' => $data['mobile'],
             'user_id' => $id,
             'type' => 2,
+            'electricity_id'=>$data['id'],
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'create_time' => time(),
@@ -478,13 +479,27 @@ class Service extends Base
         $map['user_id'] = $user_id;
         $map['status'] = 1;
         //已通过审核的卡
-        $cardinfo = $carCard->where($map)->select();
+        $cardinfo = $carCard->where($map)->order('create_time desc')->select();
+        //该用户按卡号分
+        $park_card=array();
+        foreach ($cardinfo as  $value){
+         array_push($park_card,$value['park_card']);
+        }
+
+
+        foreach ($cardinfo as $key =>$value){
+
+
+
+
+         }
         //停车卡单价
         $data['carpark_price'] = $park['carpark_price'];
         //车卡押金
         $data['carpark_deposit'] = $park['carpark_deposit'];
         //用户停车卡信息
         $data['cardlist'] = $cardinfo;
+       echo json_encode($cardinfo);
         $this->assign('data', json_encode($data));
         return $this->fetch();
     }
@@ -502,6 +517,7 @@ class Service extends Base
             'people_card' => $data['people_card'],
             'car_card' => $data['car_card'],
             'user_id' => $id,
+            'park_card'=>$data['park_card'],
             'type' => 2,
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
