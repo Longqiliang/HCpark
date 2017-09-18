@@ -20,7 +20,7 @@
                 <div class="card-cell">
                     <span>电柱编号</span>
                     <span >
-                        <input type="text"   name="id" v-model="defaultData.elect_id" placeholder="请输入电柱编号">
+                        <input type="text"   name="id" v-model="defaultData.elect_id" placeholder="请输入电柱编号" ref="electricity_id">
                         <span class="allow-box">
                              <i class="allow-down" @click="checkCard"></i>
                         </span>
@@ -38,12 +38,12 @@
                     <div class="card-cell">
                         <span>车主姓名</span>
                         <!--<span>{{ item.name }}</span>-->
-                        <input type="text"   name="name" v-model="item.name">
+                        <input type="text"   name="name" v-model="item.name"  ref="name" placeholder="请输入车主姓名">
                     </div>
                     <div class="card-cell">
                         <span>车主电话</span>
                         <!--<span>{{ item.mobile }}</span>-->
-                        <input type="number"   name="mobile"  v-model.number="item.mobile">
+                        <input type="number"   name="mobile"  v-model.number="item.mobile" ref="mobile" placeholder="请输入车主电话">
                     </div>
                 </div>
             </div>
@@ -226,6 +226,19 @@
                         return;
                     }
                     if(!checkMobile(_this.defaultData.mobile)){
+                        _this.$toast('请填写正确的车主电话');
+                        return;
+                    }
+                }else{
+                    if(!_this.$refs.electricity_id.value){
+                        _this.$toast('请填写充电柱编号');
+                        return;
+                    }
+                    if(!_this.$refs.name[0].value){
+                        _this.$toast('请填写车主姓名');
+                        return;
+                    }
+                    if(!checkMobile(_this.$refs.mobile[0].value)){
                         _this.$toast('请填写正确的车主电话');
                         return;
                     }
