@@ -272,7 +272,11 @@ class Roomrent extends Base
             " A幢" => ['houselist' => $newArr, 'rentlist' => $data],
             " B幢" => ['houselist' => $newArr1, 'rentlist' => $data1],
         ];
-        $list1 = ["$parkName" => $list,'人工产业园'=>$list];
+ /*       $list3 = [
+        " 1幢" => ['houselist' => $newArr, 'rentlist' => array()],
+        " 2幢" => ['houselist' => $newArr1, 'rentlist' => $data1],
+    ];*/
+        $list1 = ["$parkName" => $list];
         $this->assign('type', $type);
         $this->assign('commonArea', $common);
         $this->assign('list', json_encode($list1));
