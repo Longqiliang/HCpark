@@ -311,13 +311,29 @@ class Service extends Base
         $park = $Park->where('id', $park_id)->find();
         $map['user_id'] = $user_id;
         $map['status']=1;
-        $pillarinfo = $pillar->where($map)->select();
+        $pillarinfo = $pillar->where($map)->order("create_time desc")->select();
+        $pillar_id=array();
+        foreach ($pillarinfo as  $value){
+            array_push($pillar_id,$value['electricity_id']);
+        }
+        $pillar_ids = array_values(array_unique($pillar_id));
+        $list=array();
+        foreach ($pillar_ids as $value){
+            $is=0;
+            foreach ($pillarinfo as $v){
+                if($v['electricity_id']==$value&&$is==0){
+                    $is=1;
+                    array_push($list,$v);
+                }
+            }
+        }
+
         //充电柱单价
         $data['charging_price'] = $park['charging_price'];
         //充电柱押金
         $data['charging_deposit'] = $park['charging_deposit'];
         //用户停车卡信息
-        $data['cardlist'] = $pillarinfo;
+        $data['cardlist'] = $list;
         $this->assign('data', json_encode($data));
         return $this->fetch();
     }
@@ -485,26 +501,26 @@ class Service extends Base
         foreach ($cardinfo as  $value){
          array_push($park_card,$value['park_card']);
         }
-
-
-        foreach ($cardinfo as $key =>$value){
-
-
-
-
+        $park_cards = array_values(array_unique($park_card));
+        $list=array();
+        foreach ($park_cards as $value){
+            $is=0;
+            foreach ($cardinfo as $v){
+                if($v['park_card']==$value&&$is==0){
+                    $is=1;
+                    array_push($list,$v);
+                }
+            }
          }
         //停车卡单价
         $data['carpark_price'] = $park['carpark_price'];
         //车卡押金
         $data['carpark_deposit'] = $park['carpark_deposit'];
         //用户停车卡信息
-        $data['cardlist'] = $cardinfo;
-       echo json_encode($cardinfo);
+        $data['cardlist'] = $list;
         $this->assign('data', json_encode($data));
         return $this->fetch();
     }
-
-
     //旧卡续费（上传凭证）
     public function keepOldCard()
     {
@@ -534,9 +550,6 @@ class Service extends Base
             $this->error("失败");
         }
     }
-
-
-
     //车卡记录
     public function carRecord()
     {
@@ -862,7 +875,6 @@ class Service extends Base
                         'create_time' => $create_time,
                         'status' => 1,
                         'date_type' => 2
-
                     ];
                     array_push($record, $info);
 
