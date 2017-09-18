@@ -30,6 +30,10 @@ class Communication extends Base
             'status' => 1,
             'park_id' => session('park_id')
         ];
+       if(session('park_id')==1){
+           unset($map2['park_id']);
+       }
+
         $groupList = $cgroup->where($map2)->select();
         $map = [
             'user_id' => $user_id,
