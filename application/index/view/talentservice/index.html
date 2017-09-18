@@ -132,10 +132,12 @@
         color: #999;
     }
     .my-demand>span{
-        margin-right: 2rem;
         padding-left: 2rem;
         background: url() no-repeat left center;
         background-size: 1.2rem 1.2rem;
+    }
+    .my-demand>span:not(:last-child){
+        margin-right: 1rem;
     }
     .my-demand>span.icon-people{
         background-image: url('/index/images/talentservice/recruit-people.png');
@@ -181,7 +183,7 @@
     <div class="search" :class="{isClick:inputStatus}" >
         <div class="searchBox" @click="isClick">
             <div class="searchText"><span class="searchText_c">请在此搜索岗位名称</span></div>
-            <input type="text" v-model="inputValue" @keyup="toSearch(0)" class="searchInput" placeholder="请输入岗位名称" v-focus="inputStatus">
+            <input type="text" v-model="inputValue" @input="toSearch(0)" class="searchInput" placeholder="请输入岗位名称" v-focus="inputStatus">
         </div>
         <div class="unBtn" @click="isCancel">取消</div>
     </div>
