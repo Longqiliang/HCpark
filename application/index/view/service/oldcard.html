@@ -19,7 +19,7 @@
                 <div class="card-cell">
                     <span>车牌号码</span>
                     <span >
-                        <input type="text"  name="car_card" v-model="defaultData.car_id" >
+                        <input type="text"  name="car_card" v-model="defaultData.car_id" ref="car_card" placeholder="请输入车牌号码">
                         <!--<span>{{cardStatus}}</span> -->
                         <span @click="checkCard" class="allow-box">
                             <i class="allow-down" ></i>
@@ -37,22 +37,22 @@
                     <div class="card-cell">
                         <span>停车卡号</span>
                         <!--<span>{{ item.park_card }}</span>-->
-                        <input type="text" placeholder="请输入停车卡号" v-model="item.park_card" name="park_card" >
+                        <input type="text" placeholder="请输入停车卡号" v-model="item.park_card" name="park_card" ref="park_card">
                     </div>
                     <div class="card-cell">
                         <span>车主姓名</span>
                         <!--<span>{{ item.name }}</span>-->
-                        <input type="text" placeholder="请输入车主姓名" v-model="item.name " name="name">
+                        <input type="text" placeholder="请输入车主姓名" v-model="item.name " name="name" ref="name">
                     </div>
                     <div class="card-cell">
                         <span>车主电话</span>
                         <!--<span>{{ item.mobile }}</span>-->
-                        <input type="number" placeholder="请输入车主电话" v-model.number="item.mobile" name="mobile" maxlength="11">
+                        <input type="number" placeholder="请输入车主电话" v-model.number="item.mobile" name="mobile" maxlength="11" ref="mobile">
                     </div>
                     <div class="card-cell">
                         <span>身份证号</span>
                         <!--<span>{{ item.people_card}}</span>-->
-                        <input type="text" placeholder="请输入身份证号" v-model.number="item.people_card" name="people_card" maxlength="18">
+                        <input type="text" placeholder="请输入身份证号" v-model="item.people_card" name="people_card"  ref="people_card">
                     </div>
                 </div>
                 <input type="hidden" v-model="subData.app_id" name="app_id">
@@ -124,13 +124,10 @@
 <script>
 
     var data = {$data};
-    var defaultData = {
-        type:'keepOldCard',
-        aging:0
-    };
+
     if(!data.cardlist.length ){
 //        console.log(data.cardlist);
-        defaultData = {
+    var   defaultData = {
             type:'keepOldCard',
             park_card:'',
             people_card:'',
@@ -140,18 +137,14 @@
             aging:0
         }
     }else{
-        defaultData.car_id=data.cardlist[0].car_card
+        var defaultData = {
+            type:'keepOldCard',
+            car_id:data.cardlist[0].car_card,
+            aging:0
+        };
     }
-      console.log(data);
-    console.log(defaultData);
-//    if(data.cardlist.length){
-//        var list = data.cardlist;
-//        var cardArray = [];
-//        var carId = parseInt(data.cardlist[0].id);
-//        for(var i = 0;i< list.length; i += 1){
-//            cardArray.push(list[i].car_card) ;
-//        }
-//    }
+//      console.log(data);
+//    console.log(defaultData);
 
         var vm = new Vue({
             el:"#app",
@@ -252,7 +245,7 @@
                 },
                 nextBtn: function () {
                     var _this = this;
-                    if(!_this.subData.cardlist){
+                    if(!_this.subData.cardlist.length){
                         if(!_this.defaultData.park_card){
                             _this.$toast('请填写车卡号码');
                             return;
@@ -274,6 +267,32 @@
                             return;
                         }else{
                             var status = validateIdCard(_this.defaultData.people_card);
+                            if(!status){
+                                return;
+                            }
+                        }
+                    }else{
+                        if(!_this.$refs.park_card[0].value){
+                            _this.$toast('请填写停车卡号');
+                            return;
+                        }
+                        if(!_this.$refs.name[0].value){
+                            _this.$toast('请填写车主姓名');
+                            return;
+                        }
+                        if(!checkMobile(_this.$refs.mobile[0].value)){
+                            _this.$toast('请填写正确的车主电话');
+                            return;
+                        }
+                        if(!_this.$refs.car_card.value){
+                            _this.$toast('请填写车牌号码');
+                            return;
+                        }
+                        if(!_this.$refs.people_card[0].value){
+                            _this.$toast('请填写身份证号');
+                            return;
+                        }else{
+                            var status = validateIdCard(_this.$refs.people_card[0].value);
                             if(!status){
                                 return;
                             }
