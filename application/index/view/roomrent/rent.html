@@ -216,10 +216,10 @@
             };
             _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
                 var data = JSON.parse(res.data);
-                //console.log(data);
+                console.log(data);
                 _this.imgUrl =  data.imgurl;
                 wx.config({
-                    debug: true,
+                    debug: false,
                     appId: data.appid,
                     timestamp:data.timestamp ,
                     nonceStr: data.noncestr,
@@ -233,10 +233,10 @@
         methods:{
             loadImg:function (src,imglist) {
                 for(var item in imglist){
-                    imglist[item] = this.imgUrl + imglist[item]
+                    imglist[item] = "http://xk0519ztnet.com" + imglist[item]
                 }
                 wx.previewImage({
-                    current: this.imgUrl+src,
+                    current: "http://xk0519ztnet.com"+src,
                     urls: imglist
                 });
             },

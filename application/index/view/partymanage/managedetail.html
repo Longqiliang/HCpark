@@ -143,10 +143,10 @@
         methods:{
             loadImg:function (src,imglist) {
                 for(var item in imglist){
-                    imglist[item] = this.imgUrl + imglist[item]
+                    imglist[item] = "http://xk0519ztnet.com" + imglist[item]
                 }
                 wx.previewImage({
-                    current: this.imgUrl+src,
+                    current: "http://xk0519ztnet.com"+src,
                     urls: imglist
                 });
             }
