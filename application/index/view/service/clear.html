@@ -262,6 +262,7 @@
                     _this.$toast('请输入正确的服务地点');
                     return;
                 }
+                _this.defaultData.address = _this.addressOne +"幢"+ _this.addressTwo;
                 if(!_this.defaultData.dateStr){
                     _this.$toast('请选择服务时间');
                     return;
