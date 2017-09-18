@@ -512,6 +512,9 @@ textarea::-webkit-input-placeholder {
 .upload-box .upload-info{
     color: #999;
 }
+.allow-box{
+    padding-left: 4.8vw;
+}
 .allow-right{
     display: inline-block;
     width: 8px;
@@ -522,6 +525,16 @@ textarea::-webkit-input-placeholder {
     -webkit-transform: translateY(-50%) rotate(45deg);
     transform: translateY(-50%) rotate(45deg);
     vertical-align: -2px;
+}
+.allow-down{
+    display: inline-block;
+    width: 8px;
+    height:8px;
+    border: 1px solid #999;
+    border-top-width: 0;
+    border-left-width: 0;
+    -webkit-transform: translateY(-50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
 }
 .bottom-inherit{
     border-bottom:inherit ;

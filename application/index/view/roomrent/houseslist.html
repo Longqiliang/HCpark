@@ -241,7 +241,7 @@
                         <span>单价范围</span>
                         <div class="price">
                             <span class="price-input-box"><input type="number" v-model.number="priceOne" maxlength="3"></span><span >—</span>
-                            <span class="price-input-box"><input type="number" v-model.number="priceTwo" maxlength="3"></span><span>/㎡·天</span>
+                            <span class="price-input-box"><input type="number" v-model.number="priceTwo" maxlength="3" ></span><span>/㎡·天</span>
                         </div>
 
                     </li>
@@ -450,11 +450,11 @@
                     return;
                 }
                 if(!_this.subData.mobile){
-                    _this.$toast("请输入正确的电话！");
+                    _this.$toast("请输入正确的手机号码！");
                     return;
                 }else {
                    if(!checkMobile(_this.subData.mobile)){
-                       _this.$toast("请输入正确的电话！");
+                       _this.$toast("请输入正确的手机号码！");
                        return;
                    }
                 }
@@ -466,17 +466,13 @@
                     _this.$toast("请输入用房时间！");
                     return;
                 }
-                if(!_this.priceOne || !_this.priceTwo){
-                    _this.$toast("请输入正确的单价范围！");
-                    return;
+                if(!scope(_this.priceOne,_this.priceTwo)) {
+                   _this.$toast("单价范围应在0至10之间！");
+                   return;
                 }else{
-                   if(!scope(_this.priceOne,_this.priceTwo)) {
-                       _this.$toast("单价范围应在0至10之间！");
-                       return;
-                   }else{
-                       _this.subData.price = _this.priceOne+'-'+_this.priceTwo;
-                   }
+                   _this.subData.price = _this.priceOne+'-'+_this.priceTwo;
                 }
+
                 if(!_this.isSubmit){
                     return;
                 }
@@ -527,6 +523,9 @@
         }
     });
     function scope(a,b) {
+        if((!a && b<=10) || (!b && a > 0)){
+            return true;
+        }
         if(typeof a =='number'&& typeof b == 'number'){
             if(a > 0 && b>a && b<=10){
                return true;

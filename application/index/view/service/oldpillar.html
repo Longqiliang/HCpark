@@ -13,68 +13,91 @@
 {block name="body"}
 <div id="app">
     <div v-if="subData.cardlist.length">
-        <div class="card">
-            <div class="card-tit">车主信息</div>
-            <div class="card-cell">
-                <span>电柱编号</span>
-                <span @click="checkCard" >
-                    <span>{{cardStatus}}</span> <i class="allow-right"></i>
-                </span>
-
-                <mt-popup  position="bottom"  v-model="cardPopupVisible" class="mint-popup">
-                    <div class="picker-toolbar">
-                        <span class="mint-datetime-action mint-datetime-cancel" @click="cancelCard">取消</span>
-                        <span class="mint-datetime-action mint-datetime-confirm" @click="selectCard">确定</span>
-                    </div>
-                    <mt-picker :slots="cardSlots" @change="onCardChange" ></mt-picker>
-                </mt-popup>
-            </div>
-            <div v-for="item in showInfo">
-                <div class="card-cell">
-                    <span>车主姓名</span>
-                    <span>{{ item.name }}</span>
-                </div>
-                <div class="card-cell">
-                    <span>车主电话</span><span>{{ item.mobile }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-tit">办理信息</div>
-            <div class="card-cell">
-                <span>续费时长</span>
-                <span @click="checkTime" >
-                    <span :class="[!defaultData.aging ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>
-                </span>
-
-                <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
-                    <div class="picker-toolbar">
-                        <span class="mint-datetime-action mint-datetime-cancel" @click="cancelTime">取消</span>
-                        <span class="mint-datetime-action mint-datetime-confirm" @click="selectTime">确定</span>
-                    </div>
-                    <mt-picker :slots="slots" @change="onTimesChange" ></mt-picker>
-                </mt-popup>
-            </div>
-            <div class="card-cell">
-                <span>应缴费用</span>
-                <span>{{totalMoney}}</span>
-            </div>
-        </div>
-        <div class="card-btn-box">
-            <button class="btn btn-block btn-warning" @click="nextBtn">下一步</button>
-        </div>
         <form action="payment" method="post" ref="cardform">
+            <div class="card">
+                <div class="card-tit">车主信息</div>
+                <div class="card-cell">
+                    <span>电柱编号</span>
+                    <span >
+                        <input type="text"   name="id" v-model="carCard.electricity_id" >
+                        <i class="allow-right" @click="checkCard"></i>
+                    </span>
+
+                    <mt-popup  position="bottom"  v-model="cardPopupVisible" class="mint-popup" >
+                        <div class="picker-toolbar">
+                            <span class="mint-datetime-action mint-datetime-cancel" @click="cancelCard">取消</span>
+                            <span class="mint-datetime-action mint-datetime-confirm" @click="selectCard">确定</span>
+                        </div>
+                        <mt-picker :slots="cardSlots" @change="onCardChange" value-key="electricity_id"></mt-picker>
+                    </mt-popup>
+                </div>
+                <div v-for="item in showInfo">
+                    <div class="card-cell">
+                        <span>车主姓名</span>
+                        <!--<span>{{ item.name }}</span>-->
+                        <input type="text"   name="name" v-model="item.name">
+                    </div>
+                    <div class="card-cell">
+                        <span>车主电话</span>
+                        <!--<span>{{ item.mobile }}</span>-->
+                        <input type="number"   name="mobile"  v-model.number="item.mobile">
+                    </div>
+                </div>
+            </div>
+
             <input type="hidden" v-model="subData.app_id" name="app_id">
             <input type="hidden" v-model="defaultData.type" name="type">
-            <input type="hidden" name="id" v-model="cardId">
             <input type="hidden" name="aging" v-model="defaultData.aging">
             <input type="hidden" name="charging_price" v-model="subData.charging_price">
         </form>
     </div>
     <div v-else>
-        <div class="layer-center layer-default">
-            <img src="/index/images/service/card/icon-default.jpg" >
+        <form action="payment" method="post" ref="cardform">
+            <div class="card">
+                <div class="card-tit">充电柱绑定</div>
+                <div class="card-cell">
+                    <label for="id">电柱编号</label>
+                    <input type="text" placeholder="请输入电柱编号" id="id"  name="id" v-model="defaultData.electricity_id">
+                </div>
+                <div class="card-cell">
+                    <label for="name">车主姓名</label>
+                    <input type="text" placeholder="请输入电柱编号" id="name"  name="name" v-model="defaultData.name">
+                </div>
+                <div class="card-cell">
+                    <label for="mobile">车主电话</label>
+                    <input type="text" placeholder="请输入电柱编号" id="mobile"  name="mobile" v-model="defaultData.mobile">
+                </div>
+            </div>
+            <input type="hidden" v-model="subData.app_id" name="app_id">
+            <input type="hidden" v-model="defaultData.type" name="type">
+            <input type="hidden" name="aging" v-model="defaultData.aging">
+            <input type="hidden" name="charging_price" v-model="subData.charging_price">
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-tit">办理信息</div>
+        <div class="card-cell">
+            <span>续费时长</span>
+                <span @click="checkTime" >
+                    <span :class="[!defaultData.aging ? 'select-color' : '', '']">{{timeStatus}}</span> <i class="allow-right"></i>
+                </span>
+
+            <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelTime">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectTime">确定</span>
+                </div>
+                <mt-picker :slots="slots" @change="onTimesChange" ></mt-picker>
+            </mt-popup>
         </div>
+        <div class="card-cell">
+            <span>应缴费用</span>
+            <span>{{totalMoney}}</span>
+        </div>
+    </div>
+    <div class="card-btn-box">
+        <button class="btn btn-block btn-warning" @click="nextBtn">下一步</button>
     </div>
 </div>
 {/block}
@@ -86,121 +109,139 @@
         aging:0
     };
     var data = {$data};
-    if(data.cardlist.length){
-        var list = data.cardlist;
-        var cardArray = [];
-        var carId = parseInt(data.cardlist[0].id);
-        for(var i = 0;i< list.length; i += 1){
-            cardArray.push(list[i].electricity_id) ;
+    console.log(data);
+    if(!data.cardlist.length ){
+
+        defaultData = {
+            type:'addOldpillar',
+            electricity_id:'',
+            mobile:'',
+            name:'',
+            aging:0
         }
     }
-    console.log(data);
-    if(!cardArray){
-        var vm = new Vue({
-            el:"#app",
-            data:{
-                subData:data
-            }
-        })
-    }else{
-        var vm = new Vue({
-            el:"#app",
-            computed:{
-                cardStatus:function () {
-                    return this.carCard;
-                },
-                showInfo:function () {
-                    var _this = this;
-                    return this.subData.cardlist.filter(function (list) {
-                        return list.electricity_id == _this.carCard;
-                    })
-                },
-                timeStatus:function () {
-                    if(!this.defaultData.aging){
-                        return "请选择";
-                    }else{
-                        return this.defaultData.aging+"个月";
+
+    var vm = new Vue({
+        el:"#app",
+        computed:{
+            cardStatus:function () {
+                var _this = this;
+                var list = _this.subData.cardlist;
+                for(var item in list){
+                    if(_this.carCard.electricity_id == list[item].electricity_id){
+                        return list[item].electricity_id;
                     }
-                },
-                totalMoney:function () {
-                    return (this.defaultData.aging  * this.subData.charging_price);
                 }
             },
-            data:{
-                defaultData:defaultData,
-                subData:data,
-                popupVisible: false,
-                cardPopupVisible:false,
-                timePicker:'',
-                timeTxt:'',
-                cardPicker:'',
-                carCard:cardArray[0],
-                cardName:'',
-                cardId:carId,
-                isSubmit:true,
-                cardSlots:[
-                    {
-                        values:cardArray
-                    }
-                ],
-                slots: [
-                    {
-                        values: ['6个月','12个月']
-                    }
-                ]
+            showInfo:function () {
+                var _this = this;
+                return this.subData.cardlist.filter(function (list) {
+                    return list.id == _this.carCard.id;
+                })
             },
-            methods: {
-                checkCard:function () {
-                    this.cardPopupVisible = true;
-                    this.cardPicker.setSlotValue(0,cardArray[0]);
-                },
-                onCardChange:function (picker,values) {
-                    this.cardPicker = picker;
-                    if(values[0]){
-                        this.cardName = values[0];
-                    }
-                },
-                cancelCard:function () {
-                    this.cardPopupVisible = false;
-                },
-                selectCard:function () {
-                    var _this = this;
-                    _this.cardPopupVisible = false;
-                    _this.carCard = this.cardName;
-                    var list = _this.subData.cardlist;
-                    for(var i = 0 ;i < list.length ; i += 1 ){
-                        if(_this.cardName == list[i].electricity_id){
-                            _this.cardId = list[i].id;
-                        }
-                    }
-                },
-                checkTime: function () {
-                    this.popupVisible = true;
-                    this.timePicker.setSlotValue(0, '6个月');
-                },
-                onTimesChange: function (picker,values) {
-                    this.timePicker =  picker;
-                    if(!isNaN(parseInt(values[0]))){
-                        this.timeTxt = parseInt(values[0]);
-                    }
-                },
-                cancelTime: function () {
-                    this.popupVisible = false;
-                },
-                selectTime: function () {
-                    this.popupVisible = false;
-                    this.defaultData.aging = this.timeTxt;
-                },
-                nextBtn: function () {
-                    var _this = this;
-                    if(!_this.defaultData.aging){
-                        _this.$toast('请选择办理时长');
+            timeStatus:function () {
+                if(!this.defaultData.aging){
+                    return "请选择";
+                }else{
+                    return this.defaultData.aging+"个月";
+                }
+            },
+            totalMoney:function () {
+                return (this.defaultData.aging  * this.subData.charging_price);
+            }
+        },
+        data:{
+            defaultData:defaultData,
+            subData:data,
+            popupVisible: false,
+            cardPopupVisible:false,
+            timePicker:'',
+            timeTxt:'',
+            cardPicker:'',
+            carCard:data.cardlist[0],
+            cardName:null,
+            isSubmit:true,
+            cardSlots:[
+                {
+                    defaultIndex:1,
+                    values:data.cardlist                //cardArray
+                }
+            ],
+            slots: [
+                {
+                    defaultIndex:1,
+                    values: ['6个月','12个月']
+                }
+            ]
+        },
+        mounted:function () {
+            var _this = this;
+            _this.$nextTick(function() {
+                setTimeout(function() {
+                    _this.cardSlots[0].defaultIndex = 0;
+                    _this.slots[0].defaultIndex = 0;
+                }, 100);
+            });
+        },
+        methods: {
+            checkCard:function () {
+                this.cardPopupVisible = true;
+            },
+            onCardChange:function (picker,values) {
+                this.cardPicker = picker;
+                if(values[0]){
+                    this.cardName = values[0];
+                }
+            },
+            cancelCard:function () {
+                this.cardPopupVisible = false;
+            },
+            selectCard:function () {
+                var _this = this;
+                _this.cardPopupVisible = false;
+                _this.carCard = _this.cardName;
+
+            },
+            checkTime: function () {
+                this.popupVisible = true;
+            },
+            onTimesChange: function (picker,values) {
+                this.timePicker =  picker;
+                if(!isNaN(parseInt(values[0]))){
+                    this.timeTxt = parseInt(values[0]);
+                }
+            },
+            cancelTime: function () {
+                this.popupVisible = false;
+            },
+            selectTime: function () {
+                this.popupVisible = false;
+                this.defaultData.aging = this.timeTxt;
+            },
+            nextBtn: function () {
+                var _this = this;
+                if(!_this.subData.cardlist.length){
+                    if(!_this.defaultData.electricity_id){
+                        _this.$toast('请填写充电柱编号');
                         return;
                     }
-                    _this.$refs.cardform.submit();
+                    if(!_this.defaultData.name){
+                        _this.$toast('请填写车主姓名');
+                        return;
+                    }
+                    if(!checkMobile(_this.defaultData.mobile)){
+                        _this.$toast('请填写正确的车主电话');
+                        return;
+                    }
                 }
+                if(!_this.defaultData.aging){
+                    _this.$toast('请选择办理时长');
+                    return;
+                }
+                _this.$refs.cardform.submit();
             }
-        });
-    }
+        }
+    });
+
 </script>
 {/block}

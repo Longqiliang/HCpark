@@ -12,61 +12,78 @@
 
 {block name="body"}
 <div id="app">
-        <div class="card" v-if="subData.cardlist.length">
-            <div class="card-tit">车主信息</div>
-            <div class="card-cell">
-                <span>车牌号码</span>
-                <span @click="checkCard" >
-                    <span>{{cardStatus}}</span> <i class="allow-right"></i>
-                </span>
 
-                <mt-popup  position="bottom"  v-model="cardPopupVisible" class="mint-popup">
-                    <div class="picker-toolbar">
-                        <span class="mint-datetime-action mint-datetime-cancel" @click="cancelCard">取消</span>
-                        <span class="mint-datetime-action mint-datetime-confirm" @click="selectCard">确定</span>
+        <div class="card" v-if="subData.cardlist.length">
+            <form action="payment" method="post" ref="cardform">
+                <div class="card-tit">车主信息</div>
+                <div class="card-cell">
+                    <span>车牌号码</span>
+                    <span >
+                        <input type="text"  name="id" v-model="carCard.car_card" >
+                        <!--<span>{{cardStatus}}</span> -->
+                        <span @click="checkCard" class="allow-box">
+                            <i class="allow-down" ></i>
+                        </span>
+                    </span>
+                    <mt-popup  position="bottom"  v-model="cardPopupVisible" class="mint-popup">
+                        <div class="picker-toolbar">
+                            <span class="mint-datetime-action mint-datetime-cancel" @click="cancelCard">取消</span>
+                            <span class="mint-datetime-action mint-datetime-confirm" @click="selectCard">确定</span>
+                        </div>
+                        <mt-picker :slots="cardSlots" @change="onCardChange" value-key="car_card"></mt-picker>
+                    </mt-popup>
+                </div>
+                <div v-for="item of showInfo">
+                    <div class="card-cell">
+                        <span>停车卡号</span><span>{{ item.park_card }}</span>
                     </div>
-                    <mt-picker :slots="cardSlots" @change="onCardChange" ></mt-picker>
-                </mt-popup>
-            </div>
-            <div v-for="item in showInfo">
-                <div class="card-cell">
-                    <span>停车卡号</span><span>{{ item.park_card }}</span>
+                    <div class="card-cell">
+                        <span>车主姓名</span>
+                        <span>{{ item.name }}</span>
+                    </div>
+                    <div class="card-cell">
+                        <span>车主电话</span><span>{{ item.mobile }}</span>
+                    </div>
+                    <div class="card-cell">
+                        <span>身份证号</span><span>{{ item.people_card}}</span>
+                    </div>
                 </div>
-                <div class="card-cell">
-                    <span>车主姓名</span>
-                    <span>{{ item.name }}</span>
-                </div>
-                <div class="card-cell">
-                    <span>车主电话</span><span>{{ item.mobile }}</span>
-                </div>
-                <div class="card-cell">
-                    <span>身份证号</span><span>{{ item.people_card}}</span>
-                </div>
-            </div>
+                <input type="hidden" v-model="subData.app_id" name="app_id">
+                <input type="hidden" v-model="defaultData.type" name="type">
+                <input type="hidden" name="aging" v-model="defaultData.aging">
+                <input type="hidden" name="carpark_price" v-model="subData.carpark_price">
+            </form>
         </div>
 
         <div  class="card" v-else>
+            <form action="payment" method="post" ref="cardform">
             <div class="card-tit">旧卡绑定</div>
             <div class="card-cell">
-                <label for="card">车卡号码</label>
-                <input type="text" placeholder="请输入车卡号码" id="card"  name="name">
+                <label for="park_card">车卡号码</label>
+                <input type="text" placeholder="请输入车卡号码" id="park_card"  name="park_card" v-model="defaultData.park_card">
             </div>
             <div class="card-cell">
                 <label for="name">车主姓名</label>
-                <input type="text" placeholder="请输入车主姓名" id="name"  name="name">
+                <input type="text" placeholder="请输入车主姓名" id="name"  name="name" v-model="defaultData.name">
             </div>
             <div class="card-cell">
                 <label for="phone">车主电话</label>
-                <input type="number" placeholder="请输入车主电话" id="phone" name="mobile" maxlength="11">
+                <input type="number" placeholder="请输入车主电话" id="phone" name="mobile" maxlength="11" v-model="defaultData.mobile">
             </div>
             <div class="card-cell">
                 <label for="number">车牌号码</label>
-                <input type="text" placeholder="请输入车牌号码" id="number"  name="car_card">
+                <input type="text" placeholder="请输入车牌号码" id="number"  name="car_card" v-model="defaultData.car_card">
             </div>
             <div class="card-cell">
                 <label for="idCard">身份证号</label>
-                <input type="text" placeholder="请输入身份证号" id="idCard"  name="people_card">
+                <input type="text" placeholder="请输入身份证号" id="idCard"  name="people_card" v-model="defaultData.people_card">
             </div>
+
+                <input type="hidden" v-model="subData.app_id" name="app_id">
+                <input type="hidden" v-model="defaultData.type" name="type">
+                <input type="hidden" name="aging" v-model="defaultData.aging">
+                <input type="hidden" name="carpark_price" v-model="subData.carpark_price">
+            </form>
         </div>
 
         <div class="card">
@@ -93,52 +110,6 @@
         <div class="card-btn-box">
             <button class="btn btn-block btn-warning" @click="nextBtn">下一步</button>
         </div>
-        <form action="payment" method="post" ref="cardform">
-            <input type="hidden" v-model="subData.app_id" name="app_id">
-            <input type="hidden" v-model="defaultData.type" name="type">
-            <input type="hidden" name="id" v-model="cardId">
-            <input type="hidden" name="aging" v-model="defaultData.aging">
-            <input type="hidden" name="carpark_price" v-model="subData.carpark_price">
-        </form>
-    </div>
-    <!--<div v-else>-->
-        <!--<div  class="card">-->
-            <!--<div class="card-tit">旧卡绑定</div>-->
-            <!--<div class="card-cell">-->
-                <!--<label for="card">车卡号码</label>-->
-                <!--<input type="text" placeholder="请输入车卡号码" id="card"  name="name">-->
-            <!--</div>-->
-            <!--<div class="card-cell">-->
-                <!--<label for="name">车主姓名</label>-->
-                <!--<input type="text" placeholder="请输入车主姓名" id="name"  name="name">-->
-            <!--</div>-->
-            <!--<div class="card-cell">-->
-                <!--<label for="phone">车主电话</label>-->
-                <!--<input type="number" placeholder="请输入车主电话" id="phone" name="mobile" maxlength="11">-->
-            <!--</div>-->
-            <!--<div class="card-cell">-->
-                <!--<label for="number">车牌号码</label>-->
-                <!--<input type="text" placeholder="请输入车牌号码" id="number"  name="car_card">-->
-            <!--</div>-->
-            <!--<div class="card-cell">-->
-                <!--<label for="idCard">身份证号</label>-->
-                <!--<input type="text" placeholder="请输入身份证号" id="idCard"  name="people_card">-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<form action="payment" method="post" ref="cardform">-->
-            <!--<input type="hidden" v-model="subData.app_id" name="app_id">-->
-            <!--<input type="hidden" v-model="defaultData.type" name="type">-->
-            <!--<input type="hidden" name="id" v-model="cardId">-->
-            <!--<input type="hidden" name="aging" v-model="defaultData.aging">-->
-            <!--<input type="hidden" name="carpark_price" v-model="subData.carpark_price">-->
-        <!--</form>-->
-    <!--</div>-->
-
-    <!--<div v-else>-->
-        <!--<div class="layer-center layer-default">-->
-            <!--<img src="/index/images/service/card/icon-default.jpg" >-->
-        <!--</div>-->
-    <!--</div>-->
 </div>
 {/block}
 
@@ -149,40 +120,54 @@
         aging:0
     };
     var data = {$data};
-    if(data.cardlist.length){
-        var list = data.cardlist;
-        var cardArray = [];
-        var carId = parseInt(data.cardlist[0].id);
-        for(var i = 0;i< list.length; i += 1){
-            cardArray.push(list[i].car_card) ;
+    if(!data.cardlist.length ){
+//        console.log(data.cardlist);
+        defaultData = {
+            type:'addOldCard',
+            park_card:'',
+            people_card:'',
+            car_card:'',
+            mobile:'',
+            name:'',
+            aging:0
         }
     }
-//    console.log(data);
-//    if(!cardArray){
-//        var vm = new Vue({
-//            el:"#app",
-//            data:{
-//                subData:data
-//
-//            },
-//            methods:{
-//                oldCardBind:function () {
-//                    var _this = this;
-//
-//                }
-//            }
-//        })
-//    }else{
+      console.log(data);
+    console.log(defaultData);
+//    if(data.cardlist.length){
+//        var list = data.cardlist;
+//        var cardArray = [];
+//        var carId = parseInt(data.cardlist[0].id);
+//        for(var i = 0;i< list.length; i += 1){
+//            cardArray.push(list[i].car_card) ;
+//        }
+//    }
+
         var vm = new Vue({
             el:"#app",
+            mounted:function () {
+                var _this = this;
+                _this.$nextTick(function() {
+                    setTimeout(function() {
+                        _this.cardSlots[0].defaultIndex = 0;
+                        _this.slots[0].defaultIndex = 0;
+                    }, 100);
+                });
+            },
             computed:{
                 cardStatus:function () {
-                    return this.carCard;
+                    var _this = this;
+                    var list = _this.subData.cardlist;
+                    for(var item in list){
+                        if(_this.carCard.car_card == list[item].car_card){
+                            return list[item].car_card;
+                        }
+                    }
                 },
                 showInfo:function () {
                     var _this = this;
-                   return this.subData.cardlist.filter(function (list) {
-                        return list.car_card == _this.carCard;
+                    return this.subData.cardlist.filter(function (list) {
+                        return list.id == _this.carCard.id;
                     })
                 },
                 timeStatus:function () {
@@ -204,17 +189,18 @@
                 timePicker:'',
                 timeTxt:'',
                 cardPicker:'',
-                carCard:cardArray[0],
                 cardName:'',
-                cardId:carId,
+                carCard:data.cardlist[0],
                 isSubmit:true,
                 cardSlots:[
                     {
-                        values:cardArray
+                        defaultIndex:1,
+                        values:data.cardlist                //cardArray
                     }
                 ],
                 slots: [
                     {
+                        defaultIndex:1,
                         values: ['6个月','12个月']
                     }
                 ]
@@ -222,7 +208,6 @@
             methods: {
                 checkCard:function () {
                     this.cardPopupVisible = true;
-                    this.cardPicker.setSlotValue(0,cardArray[0]);
                 },
                 onCardChange:function (picker,values) {
                     this.cardPicker = picker;
@@ -237,16 +222,10 @@
                     var _this = this;
                     _this.cardPopupVisible = false;
                     _this.carCard = this.cardName;
-                    var list = _this.subData.cardlist;
-                    for(var i = 0 ;i < list.length ; i += 1 ){
-                        if(_this.cardName == list[i].car_card){
-                            _this.cardId = list[i].id;
-                        }
-                    }
+
                 },
                 checkTime: function () {
                     this.popupVisible = true;
-                    this.timePicker.setSlotValue(0, '6个月');
                 },
                 onTimesChange: function (picker,values) {
                     this.timePicker =  picker;
@@ -263,10 +242,39 @@
                 },
                 nextBtn: function () {
                     var _this = this;
+                    if(!_this.subData.cardlist){
+                        if(!_this.defaultData.park_card){
+                            _this.$toast('请填写车卡号码');
+                            return;
+                        }
+                        if(!_this.defaultData.name){
+                            _this.$toast('请填写车主姓名');
+                            return;
+                        }
+                        if(!checkMobile(_this.defaultData.mobile)){
+                            _this.$toast('请填写正确的车主电话');
+                            return;
+                        }
+                        if(!_this.defaultData.car_card){
+                            _this.$toast('请填写车牌号码');
+                            return;
+                        }
+                        if(!_this.defaultData.people_card){
+                            _this.$toast('请填写身份证号');
+                            return;
+                        }else{
+                            var status = validateIdCard(_this.defaultData.people_card);
+                            if(!status){
+                                return;
+                            }
+                        }
+                    }
                     if(!_this.defaultData.aging){
                         _this.$toast('请选择办理时长');
                         return;
                     }
+
+//                    return;
                     _this.$refs.cardform.submit();
                 }
             }
