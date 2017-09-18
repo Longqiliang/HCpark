@@ -92,7 +92,13 @@
                                 <label>充电柱号:</label>
                             </div>
                             <div class="col-lg-3">
+
+                                {empty name="info.electricity_id"}
                                 <input type="text" placeholder="请输入充电柱" class="form-control form_title" name="electricity_id" value="{$info.electricity_id}">
+                                {else /}
+                                <input type="text"  readonly="readonly" placeholder="请输入充电柱" class="form-control form_title" name="electricity_id" value="{$info.electricity_id}">
+                                {/empty}
+
                             </div>
 
                             <div class="col-lg-1 text-right control-label">
@@ -200,7 +206,7 @@
                                 <a data-toggle="modal" class="btn btn-sm btn-primary" href="#modal-form" onclick="check()">不通过</a>
                             </div>
                         </div>
-                        {else/}  <a data-toggle="modal" class="btn btn-sm btn-primary" href="#modal-form" onclick="change()">修改</a>
+                        {else/}  已完成审核
                         {/if}
 
                         <input type="hidden" name="id" value="{$info.id}">
