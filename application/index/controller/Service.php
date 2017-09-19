@@ -9,6 +9,7 @@
 namespace app\index\controller;
 
 use app\common\model\FeePayment;
+use app\common\model\PeopleRent;
 use  app\index\model\CompanyService;
 use app\index\model\CarparkService;
 use app\index\model\WaterService;
@@ -222,7 +223,7 @@ class Service extends Base
     public function order()
     {
         $compantService = new CompanyService();
-        $companyapplication=new CompanyApplication();
+        $companyapplication = new CompanyApplication();
         $data = input('');
         $re = $this->_checkData($data);
         if (!$re) {
@@ -241,10 +242,10 @@ class Service extends Base
         $result = $compantService->save($map);
         if ($result) {
             //todo： 推送点击到详情页面代码
-           $ca = $companyapplication->where('app_id',$data['app_id'])->find();
+            $ca = $companyapplication->where('app_id', $data['app_id'])->find();
             $message = [
                 "title" => "企业服务提示",
-                "description" => date('m月d', $map['create_time']) . "\n".$ca['name']."服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile']. "\n备注信息：" . $data['remark'],
+                "description" => date('m月d', $map['create_time']) . "\n" . $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['people'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
                 "url" => ''
             ];
             //推送给运营
@@ -254,7 +255,6 @@ class Service extends Base
             } else {
                 return $this->error("推送失败");
             }
-
 
 
             return $this->success('提交成功');
@@ -1449,7 +1449,7 @@ class Service extends Base
             }
             $message = [
                 "title" => "物业保修提示",
-                "description" => date('m月d', $data['create_time']) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "description" => date('m月d', time()) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
                 "url" => ''
             ];
             //推送给运营和物业
@@ -1770,9 +1770,12 @@ class Service extends Base
                 'id' => $infos['id'],
                 'status' => $infos['stauts']
             ];
-        } //物业维护
+        } //物业维护 $types = [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"];
         else if ($appid == 2) {
             $info = PropertyServer::get($id);
+            $info['image']=json_decode($info['image']);
+
+
         } //饮水
         elseif ($appid == 3) {
 
@@ -1815,33 +1818,11 @@ class Service extends Base
             if ($info['type'] == 1) {
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
-        } //设备(公共场所)
-        elseif ($appid == 8) {
-            $serviceInfo = AdvertisingService::where('id', 1)->find();
-            $type = input('tpye');
-            //大厅
-            if ($type == 1) {
-                $as = AdvertisingRecord::where('create_user', input('create_time'))->select();
-                $info['day'] = "";
-                foreach ($as as $value) {
-                    $info['day'] .= date('Y-m-d', $value['order_time']) . " ";
-                }
-                $info['create_time'] = input('create_time');
-                $info['name'] = "大厅广告位";
-                $info['status'] = $as[0]['status'];
-                $info['price'] = count($as) * $serviceInfo['price'];
-                $info['payment_voucher'] = json_decode($as[0]['payment_voucher']);
-            } //l二楼多功能
-            elseif ($type == 2) {
-                $serviceInfo = AdvertisingService::where('id', 2)->find();
-
-
-            } //led
-            elseif ($type == 3) {
-
-
-            }
-
+        } //企业服务
+        else if (10 < $appid && $appid < 19) {
+            $info = CompanyService::get($id);
+            $app = CompanyApplication::Where('app_id', $appid)->find();
+            $info['name'] = $app['name'];
 
         }
         $this->assign('can_check', $can_check);
@@ -1888,33 +1869,65 @@ class Service extends Base
         $type = input('type');
         $id = input('id');
         $data = input('');
-        $publictype = input('publictype');
         $CardparkService = new CarparkService();
         $ElectricityService = new ElectricityService();
         $feepayment = new FeePayment();
-        $avrecord = new AdvertisingRecord();
-        $funtion =new FunctionRoomRecord();
-        $led =new LedRecord();
+        $companyService = new CompanyService();
         switch ($appid) {
             //费用缴纳
             case  1:
                 if ($type == 1) {
                     $res = $feepayment->where('id', $id)->update(['status' => 1]);
-                    return $this->success("已审核");
                 } else {
                     $res = $feepayment->where('id', $id)->update(['status' => 2]);
-                    return $this->success("已审核");
                 }
+
+                /*//todo： 推送点击到详情页面代码
+                $message = [
+                    "title" => "饮水服务提示",
+                    "description" => date('m月d', $data['create_time']) . "\n送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                    "url" => ''
+                ];
+                //推送给运营和物业
+                $reult = $this->commonSend(3, $message);
+                if ($reult) {
+                    return $this->success("预约成功");
+                } else {
+                    return $this->error("推送失败");
+                }
+                */
                 break;
 
             case  2:
+                $message = [
+                    "title" => "物业保修提示",
+                    "description" => date('m月d日', time()) . "\n您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
+                    "url" => ''
+                ];
                 if ($type == 1) {
                     $res = PropertyServer::where('id', $id)->update(['status' => 1, 'remark' => $data['remark']]);
-                    return $this->success("已审核");
+
                 } else {
                     $res = PropertyServer::where('id', $id)->update(['status' => 2, 'remark' => $data['remark']]);
-                    return $this->success("已审核");
+                    $message['description']= date('m月d日', time()) . "\n保修服务暂时无法提供";
                 }
+                //todo： 推送点击到详情页面代码
+                //服务类型 1为空调，2为电梯，3为其他
+
+
+                if(!empty($data['remark'])){
+                    $message['description'].="\n备注：".$data['remark'];
+                }
+
+                //推送给用户
+                $reult = $this->commonSend(4, $message,$res['user_id']);
+
+                if ($reult) {
+                    return $this->success("报修成功");
+                } else {
+                    return $this->error("推送失败");
+                }
+
                 break;
             //饮水
             case  3:
@@ -1985,44 +1998,33 @@ class Service extends Base
                     return $this->success("审核成功");
                 }
                 break;
-            //公共场所
-            case  8:
-                //不通过
-                if ($type == 2) {
-                    //大厅
-                    if ($publictype == 1) {
-                        $ar = $avrecord->where('create_time',input('create_time'))->select();
-                       foreach ($ar as $value){
-                           $value['status']=0;
-                           $value->save();
-                       }
-                        return $this->success("审核成功");
-                     } //二楼多功能
-                    elseif ($publictype == 2) {
+            //我要租房
+            case 999:
+                //已联系
+                if($type==1){
+                $userRent=PeopleRent::get($id);
+                $userRent['status']=2;
+                $userRent->save();
+                return $this->success("审核成功");
+                }
+
+                break;
 
 
-                    } //led
-                    elseif ($publictype == 3) {
-
-
-                    }
-
-
-                } else{
-                    //todo: 推送
-                    if ($publictype == 1) {
-
-
-
-                    } //二楼多功能
-                    elseif ($publictype == 2) {
-
-
-                    } //led
-                    elseif ($publictype == 3) {
-
-
-                    }
+            //企业服务
+            default:
+                if ($type == 1) {
+                    $record = $companyService->where('id', $id)->find();
+                    $record['status'] = 1;
+                    $record['check_remark'] = $data['check_remark'];
+                    $record->save();
+                    return $this->success("审核成功");
+                } else {
+                    $record = $companyService->where('id', $id)->find();
+                    $record['status'] = 2;
+                    $record['check_remark'] = $data['check_remark'];
+                    $record->save();
+                    return $this->success("审核成功");
 
                 }
                 break;
@@ -2088,21 +2090,33 @@ class Service extends Base
                 break;
 
             case 4:
-                $useridlist = session('userId');
+                $useridlist = session('useId');
                 break;
 
         }
 
         $res = commonService::sendPersonalMessage($message, 15706844655);
         if ($res['errcode'] == 0) {
-            return true;
+            return json_encode($res);
         } else {
 
-            return false;
+            return json_encode($res);
         }
 
     }
 
+
+    public  function  test2(){
+
+        $message = [
+            "title" => "物业保修提示",
+            "description" => date('m月d日', time()) . "\n您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
+            "url" => ''
+        ];
+       $re = $this->commonSend(4,$message);
+       return $re;
+
+    }
 
 }
 
