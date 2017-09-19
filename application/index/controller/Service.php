@@ -1786,6 +1786,7 @@ class Service extends Base
             $info['type'] = $service['type'];
             $info['money'] = $service['money'];
             $info['status']=$service['status'];
+            $info['id']=$service['id'];
             if ($info['type'] == 1) {
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
