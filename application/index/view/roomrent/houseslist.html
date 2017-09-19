@@ -78,7 +78,7 @@
     .name-mobile ul li{
         line-height: 40px;
         border-bottom: 1px solid #f1f1f1;
-        overflow: hidden;
+        position: relative;
         display: flex;
         justify-content: space-between;
     }
@@ -149,6 +149,14 @@
         border-right: 1px solid #fff;
         position: relative;
         left: 50%;
+    }
+    .icon-required{
+        display: inline-block;
+        color: red;
+       font-style: normal;
+        position: absolute;
+        left: -10px;
+        top: 0;
     }
 </style>
 {/block}
@@ -222,19 +230,19 @@
             <div class="name-mobile">
                 <ul>
                     <li>
-                        <span>姓名</span>
+                        <span><i class="icon-required">*</i>姓名</span>
                         <input type="text" id="name" placeholder="请输入姓名" v-model="subData.name">
                     </li>
                     <li>
-                        <span>手机</span>
+                        <span><i class="icon-required">*</i>手机</span>
                         <input type="number" id="mobile" placeholder="请输入手机号" v-model.number="subData.mobile">
                     </li>
                     <li>
-                        <span>面积要求</span>
+                        <span><i class="icon-required">*</i>面积要求</span>
                         <input type="text"  placeholder="请输入面积要求" v-model="subData.area">
                     </li>
                     <li>
-                        <span>用房时间</span>
+                        <span><i class="icon-required">*</i>用房时间</span>
                         <input type="text" placeholder="请输入用房时间" v-model="subData.time">
                     </li>
                     <li>

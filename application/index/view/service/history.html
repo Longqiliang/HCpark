@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>缴费记录</title>
 <style>
     ul{
         padding:1.2rem;
@@ -75,8 +76,10 @@
     var app = new Vue({
         el:'#app',
         mounted(){
-            console.log(JSON.parse('{$info}'))
-            document.title=this.baseData.title;
+            console.log(JSON.parse('{$info}'));
+            if({$info}){
+                document.title=this.baseData.title;
+            }
         },
         data:{
             historyList:JSON.parse('{$info}'),
