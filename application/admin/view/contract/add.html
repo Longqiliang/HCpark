@@ -185,9 +185,6 @@
         }else if (imgScrs.length == 0){
             updateAlert("请添加合同照片","info");
             return "";
-        }else if(orderNumber == ""){
-            updateAlert("请添加合同编号","info");
-            return "";
         }
         $.ajax({
             data:{img:imgScrs,status:0,company:companyName,type:types,remark:content,id:id,number:orderNumber,other_name:otherName},
