@@ -499,7 +499,7 @@ class Service extends Base
             $message = [
                 "title" => "车卡服务提示",
                 "description" => date('m月d', time()) . "\n您有新卡缴费需要审核，请点击查看",
-                "url" => 'http://zyf.0519ztnet.com/index/service/historyDetail/app_id/6/can_check/yes/id/'.$CardparkService->getLastInsID()
+                "url" => 'http://'.$_SERVER['HTTP_HOST'].'/index/service/historyDetail/appid/6/can_check/yes/id/'.$CardparkService->getLastInsID()
             ];
             //推送给运营
             $reult = $this->commonSend(1, $message);
@@ -581,7 +581,7 @@ class Service extends Base
             $message = [
                 "title" => "车卡服务提示",
                 "description" => date('m月d', time()) . "\n您有旧卡缴费需要审核，请点击查看",
-                "url" => 'http://zyf.0519ztnet.com/index/service/historyDetail/app_id/6/can_check/yes/id/'.$CardparkService->getLastInsID()
+                "url" => 'http://zyf.0519ztnet.com/index/service/historyDetail/appid/6/can_check/yes/id/'.$CardparkService->getLastInsID()
             ];
             //推送给运营
             $reult = $this->commonSend(1, $message);
@@ -1834,6 +1834,67 @@ class Service extends Base
 
 
     }
+
+    public  function  check(){
+
+        $appid =input('appid');
+        $type =input('type');
+        $id = input('id');
+        $data=input('');
+        $CardparkService = new CarparkService();
+        switch ($appid){
+            //费用缴纳
+            case  1:
+                break;
+
+            case  2:
+
+                break;
+            case  3: break;
+            case  4: break;
+            case  5: break;
+            //车卡
+            case  6:
+                //审核通过
+                if($type==1){
+                    if (empty($data['park_card'])) {
+                        return $this->error("请填写 停车卡号");
+                    }
+                    $record = $CardparkService->where('id', $id)->find();
+                    $record['park_card'] = $data['park_card'];
+                    $record['status'] = 1;
+                    $record->save();
+                    return $this->success("审核成功");
+                }
+                //审核不过
+                else{
+                    $record = $CardparkService->where('id', $id)->find();
+                    $record['park_card'] = $data['park_card'];
+                    $record['status'] = 2;
+                    $record->save();
+                    return $this->success("审核成功");
+                }
+                break;
+            //充电柱
+            case  7:
+
+
+                break;
+
+
+        }
+
+
+
+
+
+    }
+
+
+
+
+
+
 
     /*推个人中心，推送人员选择公共方法
      *$type =1  该园区运营人员
