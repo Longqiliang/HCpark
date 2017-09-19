@@ -1785,6 +1785,7 @@ class Service extends Base
             $info['img'] = json_decode($service['payment_voucher'], true);//图片
             $info['type'] = $service['type'];
             $info['money'] = $service['money'];
+            $info['status']=$service['status'];
             if ($info['type'] == 1) {
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
