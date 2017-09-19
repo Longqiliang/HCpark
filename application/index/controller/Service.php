@@ -382,7 +382,6 @@ class Service extends Base
             }
 
 
-
         } else {
             $this->error("失败");
         }
@@ -499,7 +498,7 @@ class Service extends Base
             $message = [
                 "title" => "车卡服务提示",
                 "description" => date('m月d', time()) . "\n您有新卡缴费需要审核，请点击查看",
-                "url" => 'http://'.$_SERVER['HTTP_HOST'].'/index/service/historyDetail/appid/6/can_check/yes/id/'.$CardparkService->getLastInsID()
+                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
             //推送给运营
             $reult = $this->commonSend(1, $message);
@@ -581,7 +580,7 @@ class Service extends Base
             $message = [
                 "title" => "车卡服务提示",
                 "description" => date('m月d', time()) . "\n您有旧卡缴费需要审核，请点击查看",
-                "url" => 'http://zyf.0519ztnet.com/index/service/historyDetail/appid/6/can_check/yes/id/'.$CardparkService->getLastInsID()
+                "url" => 'http://zyf.0519ztnet.com/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
             //推送给运营
             $reult = $this->commonSend(1, $message);
@@ -1468,7 +1467,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码
             $message = [
                 "title" => "保洁服务提示",
-                "description" => date('m月d', $data['create_time']) . "\n服务地点：" . $data['address'] . "\n服务时间：" . date('m月d',$data['clear_time']) . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "description" => date('m月d', $data['create_time']) . "\n服务地点：" . $data['address'] . "\n服务时间：" . date('m月d', $data['clear_time']) . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
                 "url" => ''
             ];
             //推送给运营
@@ -1738,7 +1737,7 @@ class Service extends Base
     {
         $id = input('id');
         $appid = input('appid');
-        $can_check =empty( input('can_check'))?"no":input('can_check');
+        $can_check = empty(input('can_check')) ? "no" : input('can_check');
         //费用缴纳
         if ($appid == 1) {
 
@@ -1748,17 +1747,14 @@ class Service extends Base
                 'expiration_time' => $infos['expiration_time'],
                 'img' => isset($infos['payment_voucher']) ? unserialize($infos['payment_voucher']) : "",
             ];
-        }
-        //物业维护
-        else if($appid = 2){
-            $info=PropertyServer::get($id);
-        }
-        //饮水
+        } //物业维护
+        else if ($appid == 2) {
+            $info = PropertyServer::get($id);
+        } //饮水
         elseif ($appid == 3) {
 
             $info = WaterService::get($id);
-        }
-        //车卡
+        } //车卡
         elseif ($appid == 6) {
             $info = CarparkService::where('id', $id)->find();
             //图片
@@ -1774,8 +1770,7 @@ class Service extends Base
             if ($info['type'] == 1) {
                 $info['money'] = $info['money'] - $info['carpark_deposit'];
             }
-        }
-        //充电柱
+        } //充电柱
         elseif ($appid == 7) {
             $service = ElectricityService::get($id);
 
@@ -1794,7 +1789,7 @@ class Service extends Base
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
         }
-        $this->assign('can_check',$can_check );
+        $this->assign('can_check', $can_check);
         $this->assign('type', json_encode($appid));
         $this->assign('info', json_encode($info));
         return $this->fetch();
@@ -1829,34 +1824,57 @@ class Service extends Base
 
     public function test()
     {
-
         phpinfo();
-
-
     }
 
-    public  function  check(){
-
-        $appid =input('appid');
-        $type =input('type');
+    public function check()
+    {
+        $appid = input('appid');
+        $type = input('type');
         $id = input('id');
-        $data=input('');
+        $data = input('');
         $CardparkService = new CarparkService();
-        switch ($appid){
+        $ElectricityService = new ElectricityService();
+        switch ($appid) {
             //费用缴纳
             case  1:
                 break;
 
             case  2:
+                if ($type == 1) {
+                    $res = PropertyServer::where('id', $id)->update(['status' => 1, 'remark' => $data['remark']]);
+                    return $this->success("已审核");
+                } else {
+                    $res = PropertyServer::where('id', $id)->update(['status' => 2, 'remark' => $data['remark']]);
+                    return $this->success("已审核");
 
+                }
                 break;
-            case  3: break;
-            case  4: break;
-            case  5: break;
+            //饮水
+            case  3:
+                if ($type == 1) {
+                    $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'remark' => $data['remark']]);
+                    return $this->success("已审核");
+                } else {
+                    $result = WaterModel::where('id', 'in', $id)->update(['status' => 2, 'remark' => $data['remark']]);
+                    return $this->success("已审核");
+                }
+                break;
+            //保洁
+            case  4:
+                if ($type == 1) {
+                    $res = PropertyServer::where('id', $id)->update(['status' => 1, 'remark' => $data['remark']]);
+                    return $this->success("已审核");
+                } else {
+                    $res = PropertyServer::where('id', $id)->update(['status' => 2, 'remark' => $data['remark']]);
+                    return $this->success("已审核");
+
+                }
+                break;
             //车卡
             case  6:
                 //审核通过
-                if($type==1){
+                if ($type == 1) {
                     if (empty($data['park_card'])) {
                         return $this->error("请填写 停车卡号");
                     }
@@ -1865,9 +1883,8 @@ class Service extends Base
                     $record['status'] = 1;
                     $record->save();
                     return $this->success("审核成功");
-                }
-                //审核不过
-                else{
+                } //审核不过
+                else {
                     $record = $CardparkService->where('id', $id)->find();
                     $record['park_card'] = $data['park_card'];
                     $record['status'] = 2;
@@ -1877,23 +1894,35 @@ class Service extends Base
                 break;
             //充电柱
             case  7:
-
-
+                if ($type == 1) {
+                    if (empty($data['electricity_id'])) {
+                        return $this->error("请填写 充电柱编号");
+                    }
+                    $record = $ElectricityService->where('id', $id)->find();
+                    //新柱申请
+                    if ($record['type'] == 1) {
+                        $map['electricity_id'] = $data['electricity_id'];
+                        $map['status'] = 1;
+                        $is_has = $ElectricityService->where($map)->find();
+                        if ($is_has) {
+                            return $this->error('此柱已有使用者');
+                        }
+                    }
+                    $record['status'] = 1;
+                    $record['electricity_id'] = $data['electricity_id'];
+                    $record->save();
+                    return $this->success("审核成功");
+                } else {
+                    $record = $ElectricityService->where('id', $id)->find();
+                    $record['status'] = 2;
+                    $record->save();
+                    return $this->success("审核成功");
+                }
                 break;
-
-
         }
 
 
-
-
-
     }
-
-
-
-
-
 
 
     /*推个人中心，推送人员选择公共方法
