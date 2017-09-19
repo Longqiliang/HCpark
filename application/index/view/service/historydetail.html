@@ -7,6 +7,7 @@
 <style>
     body{
         background-color: #f0eff5;
+        padding-bottom: 1rem;
     }
     .upload-img img{
         max-width: 100%;
@@ -28,11 +29,17 @@
     }
     .modal-box .modal{
         width: calc(100% - 36px);
-        margin: 15vh auto 0;
+        margin: 50px auto 0;
         background: #fff;
         border-radius: 10px;
         padding: 10px 0;
         position: relative;
+        top:50%;
+        -webkit-transform: translateY(-20%);
+        -moz-transform: translateY(-20%);
+        -ms-transform: translateY(-20%);
+        -o-transform: translateY(-20%);
+        transform: translateY(-20%);
     }
     .modal>p{
         line-height: 40px;
@@ -109,7 +116,7 @@
         padding:8vw 4.8vw ;
 
     }
-    ..btn{
+    .btn{
         height: 5rem;
     }
     .btn-box{
@@ -138,14 +145,28 @@
     .btn-primary{
         background-color: #7DB8F2;
     }
+    .card{
+        padding-bottom: 1rem;
+    }
+    .card .remark{
+        padding:10px 0 5px;
+    }
+    .card .remark>div.no_msg{
+        color: #e5e5e5;
+    }
+    .card .remark>div{
+        border: 1px solid #e5e5e5;
+        min-height: 18vh;
+        border-radius: 5px;
+        width: calc(100% - 14px);
+        margin: 10px 7px;
+        padding: 5px 10px;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
-    <!--type=1 生活缴费-->
-    <!--type=2 送水-->
-    <!--type=3 车卡-->
     <div v-if="appid==1">
         <div class="card">
             <div class="card-tit">缴费信息</div>
@@ -171,7 +192,50 @@
             </div>
         </div>
     </div>
-
+    <div v-if="appid==2">
+        <div class="card">
+            <div class="card-tit">物业保修</div>
+            <div class="card-cell">
+                <span>服务类型</span>
+                <span>{{info.name}}</span>
+            </div>
+            <div class="card-cell">
+                <span>服务地点</span>
+                <span>{{info.address}}</span>
+            </div>
+            <div class="card-cell">
+                <span>提交时间</span>
+                <span>{{info.create_time*1000 | timeToString}}</span>
+            </div>
+            <div class="card-cell">
+                <span>联系人员</span>
+                <span>{{info.name}}</span>
+            </div>
+            <div class="card-cell">
+                <span>联系电话</span>
+                <span>{{info.mobile}}</span>
+            </div>
+            <div class="card-cell">
+                <span>审核进度</span>
+                <span>{{info.status | status}}</span>
+            </div>
+            <!--<div class="remark">-->
+                <!--<p>备注信息</p>-->
+                <!--<div :class="{'no_msg':!info.remark}">{{info.remark ? info.remark : "无"}}</div>-->
+            <!--</div>-->
+        </div>
+        <div class="card">
+            <div class="card-tit">备注信息</div>
+            <div class="card-area">
+                <div v-model="" class="group-area">{{info.extra ? info.extra : '无'}}</div>
+            </div>
+            <div class="card-upload"  v-if="info.img">
+                <div class="upload-img" v-for="img in info.img">
+                    <img :src="img" alt="缴费凭证">
+                </div>
+            </div>
+        </div>
+    </div>
     <div v-if="appid==3">
         <div class="card">
             <div class="card-tit">送水服务</div>
@@ -195,9 +259,56 @@
                 <span>联系电话</span>
                 <span>{{info.mobile}}</span>
             </div>
+            <div class="card-cell">
+                <span>审核进度</span>
+                <span>{{info.status | status}}</span>
+            </div>
         </div>
     </div>
-
+    <div v-if="appid==4">
+        <div class="card">
+            <div class="card-tit">室内保洁</div>
+            <div class="card-cell">
+                <span>服务类型</span>
+                <span>{{info.name}}</span>
+            </div>
+            <div class="card-cell">
+                <span>服务地点</span>
+                <span>{{info.expiration_time}}</span>
+            </div>
+            <div class="card-cell">
+                <span>服务时间</span>
+                <span>{{info.create_time | timeToString}}</span>
+            </div>
+            <div class="card-cell">
+                <span>提交时间</span>
+                <span>{{info.create_time | timeToString}}</span>
+            </div>
+            <div class="card-cell">
+                <span>联系人员</span>
+                <span>{{info.name}}</span>
+            </div>
+            <div class="card-cell">
+                <span>联系电话</span>
+                <span>{{info.mobile}}</span>
+            </div>
+            <div class="card-cell">
+                <span>审核进度</span>
+                <span>{{info.status | status}}</span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-tit">备注信息</div>
+            <div class="card-area">
+                <div class="group-area">{{info.extra ? info.extra : '无'}}</div>
+            </div>
+            <div class="card-upload"  v-if="info.img">
+                <div class="upload-img" v-for="img in info.img">
+                    <img :src="img" alt="缴费凭证">
+                </div>
+            </div>
+        </div>
+    </div>
     <div v-if="appid==6 || appid==7">
         <div class="card">
             <div class="card-tit">车主信息</div>
@@ -207,11 +318,13 @@
             </div>
             <div class="card-cell" v-if="appid==7">
                 <span>电柱编号</span>
-                <span>{{info.electricity_id}}</span>
+                <span v-if="info.electricity_id!=null">{{info.electricity_id}}</span>
+                <input v-if="can_check=='yes' && info.electricity_id==null" type="text" v-model="subData.electricity_id">
             </div>
             <div class="card-cell" v-if="appid==6">
                 <span>停车卡号</span>
-                <span>{{info.park_card}}</span>
+                <span v-if="info.park_card != null">{{info.park_card}}</span>
+                <input v-if="can_check == 'yes' && info.park_card == null" type="text" v-model="subData.park_card">
             </div>
             <div class="card-cell">
                 <span>车主姓名</span>
@@ -231,6 +344,10 @@
             <div class="card-cell">
                 <span>办理时长</span>
                 <span>{{info.aging}}个月</span>
+            </div>
+            <div class="card-cell">
+                <span>审核进度</span>
+                <span>{{info.status | status}}</span>
             </div>
             <div class="card-cell" v-if="info.type==1">
                 <span>车卡押金</span>
@@ -258,12 +375,53 @@
             </div>
         </div>
     </div>
-    <div class="rent-btn-box">
-        <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
-        <button class="btn btn-block btn-green">审核通过</button>
-        <button class="btn btn-block">审核失败</button>
+    <div v-if="appid==8">
+        <div class="card">
+            <div class="card-tit">设备服务</div>
+            <div class="card-cell">
+                <span>预约类型</span>
+                <span>{{info.name}}</span>
+            </div>
+            <div class="card-cell">
+                <span>缴费金额</span>
+                <span>{{info.price}}</span>
+            </div>
+            <div class="card-cell">
+                <span>提交时间</span>
+                <span>{{info.create_time | timeToString}}</span>
+            </div>
+            <div class="card-cell">
+                <span>审核进度</span>
+                <span>{{info.status | status}}</span>
+            </div>
+            <div class="card-cell remark">
+                <p>预约时间</p>
+                <div>{{info.day}}</div>
+            </div>
+            <div class="remark">
+                <p>备注信息</p>
+                <div :class="{'no_msg':!info.remark}">{{info.remark ? info.remark : "无"}}</div>
+            </div>
+        </div>
+        <div class="card" v-if="info.img">
+            <div class="card-tit">缴费凭证</div>
+            <div class="card-upload">
+                <div class="upload-img" v-for="img in info.img">
+                    <img :src="img" alt="缴费凭证">
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!--<div class="rent-btn-box" v-if="can_check=='no'">-->
+        <!--<button class="btn btn-block btn-green" v-if="info.status==0">审核中</button>-->
+        <!--<button class="btn btn-block btn-green" v-if="info.status==1">审核通过</button>-->
+        <!--<button class="btn btn-block" v-if="info.status==2">审核失败</button>-->
+        <!--<button class="btn btn-block" v-if="info.status==-1">已删除</button>-->
+    <!--</div>-->
+    <div class="rent-btn-box"  v-if="can_check=='yes' && info.status==0">
+        <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
+    </div>
     <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
             <p>审核服务</p>
@@ -279,13 +437,13 @@
                     <!--</li>-->
                 <!--</ul>-->
             <!--</div>-->
-            <div class="remark">
+            <div class="remark" v-if="appid==2 || appid==3 ||appid==4">
                 <p>备注信息</p>
                 <textarea v-model="subData.remark"></textarea>
             </div>
-            <div class="table-view-cell group-cell btn-box">
-                <button class="group-btn btn-warning btn" @click="subRent(false)">拒绝</button>
-                <button class="group-btn btn-primary btn" @click="subRent(true)">接受</button>
+            <div class="table-view-cell group-cell btn-box" >
+                <button class="group-btn btn-warning btn" @click="subRent(2)">取消服务</button>
+                <button class="group-btn btn-primary btn" @click="subRent(1)">确认服务</button>
             </div>
             <div class="cancel" @click="hideRent">
                 <span><i class="iconfont hc-cha1"></i></span>
@@ -299,6 +457,36 @@
 {block name="script"}
 <script src="/static/viewer/viewer.min.js"></script>
 <script>
+    Vue.filter('status', function(status) {
+        var a='';
+        if(status!==undefined){
+            if (status==0){
+                a='审核中'
+            }else if(status==1){
+                a='审核成功'
+            }else if(status==2){
+                a='审核失败'
+            }else{
+                a='已删除'
+            }
+        }
+        return a
+    });
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    y=newTime.getFullYear();
+            if(dt<10){
+                dt='0'+dt;
+            }
+            if(m<10){
+                m='0'+m;
+            }
+            return y+'-'+m+'-'+dt
+        }
+    });
 var app = new Vue({
     el:'#app',
     mounted(){
@@ -315,10 +503,22 @@ var app = new Vue({
         rentShow:false,
         appid:JSON.parse('{$type}'),
         info:JSON.parse('{$info}'),
+        can_check:'{$can_check}',
         isSubmit:false
+    },
+    created(){
+        console.log(this.appid)
     },
     methods:{
         showRent:function () {
+            var _this=this;
+            if(!_this.subData.electricity_id && _this.appid== 7){
+                _this.$toast("请输入电柱编号");
+                return;
+            }else if(!_this.subData.park_card && _this.appid== 6){
+                _this.$toast("请输入停车卡号");
+                return;
+            }
             this.rentShow = true;
         },
         hideRent:function () {
@@ -327,26 +527,22 @@ var app = new Vue({
         subRent:function (isPass) {
             var _this = this;
             console.log(_this.subData);
-//            if(!_this.subData.remark){
-//                _this.$toast("请输入备注");
-//                return;
-//            }
+
             if(_this.isSubmit){
                 return;
             }
             _this.isSubmit = true;
-            _this.subData.isPass=isPass;
+            _this.subData.type=isPass;
+            _this.subData.appid=_this.appid;
+            _this.subData.id=_this.info.id;
             var data = JSON.parse(JSON.stringify(_this.subData));
             //console.log(data);
-            _this.$http.post('/index/roomrent/',data).then(function (res) {
+            _this.$http.post('/index/service/check',data).then(function (res) {
                 var data  = res.data;
                 _this.isSubmit = false;
                 if(data.code == 1){
-                    var msg = data.data;
-                    var newMsg =  msg.split(";");
-                    msg =  newMsg.join("<br/>");
                     swal({
-                        title:data.msg,
+                        title:'',
                         text:'提交成功',
                         html:true,
                         type:"success",
