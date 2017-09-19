@@ -5,34 +5,45 @@
 <style>
     input{
         border: none!important;
-        width: 53.33vw!important;
     }
     ::-webkit-input-placeholder { /* WebKit browsers */
         color:    #999;
         font-size: 1.4rem;
     }
+    *{
+        box-sizing: border-box;
+    }
     body{
         background-color: #F1F1F1;
-        padding:14px;
+        padding:3.73333333vw;
+        height:100vh;
         min-height: 100vh;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     #reigster{
+        height: 100%;
         background: #ffffff;
         border-radius: 5px;
-        padding:1px 0 75px 0;
+        padding:3.2vw;
         box-shadow: 0px 0px 6px 0 rgba(0,0,0,.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
     }
     /*logo图片*/
     .mui-table-logo{
         text-align: center;
-        margin: 10vw;
+        margin: 10vw auto;
     }
     .mui-table-logo>p{
         padding-top: 10px;
         font-size: 2rem;
     }
     .mui-table-logo img{
-        width:35vw;
+        width:13.5rem
     }
 
     /*注册窗口*/
@@ -40,15 +51,8 @@
         width:84.53vw;
         margin: 0 auto;
     }
-    .mui-table-user{
-        height:8vw;
-    }
-
-    .mui-table-phone{
-        margin-top:20px;
-    }
-
     .mui-table-user input,.mui-table-phone input{
+        display: block;
         border-bottom: 1px solid #f00;
         height: 50px;
         margin-bottom: 0;
