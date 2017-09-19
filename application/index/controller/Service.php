@@ -222,6 +222,7 @@ class Service extends Base
     public function order()
     {
         $compantService = new CompanyService();
+        $companyapplication=new CompanyApplication();
         $data = input('');
         $re = $this->_checkData($data);
         if (!$re) {
@@ -239,7 +240,26 @@ class Service extends Base
         ];
         $result = $compantService->save($map);
         if ($result) {
+            //todo： 推送点击到详情页面代码
+           $ca = $companyapplication->where('app_id',$data['app_id'])->find();
+            $message = [
+                "title" => "企业服务提示",
+                "description" => date('m月d', $map['create_time']) . "\n".$ca['name']."服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile']. "\n备注信息：" . $data['remark'],
+                "url" => ''
+            ];
+            //推送给运营
+            $reult = $this->commonSend(1, $message);
+            if ($reult) {
+                return $this->success("预约成功");
+            } else {
+                return $this->error("推送失败");
+            }
+
+
+
             return $this->success('提交成功');
+
+
         } else {
             return $this->error('提交失败');
         }
@@ -1747,8 +1767,9 @@ class Service extends Base
                 'name' => $infos['name'],
                 'expiration_time' => $infos['expiration_time'],
                 'img' => isset($infos['payment_voucher']) ? unserialize($infos['payment_voucher']) : "",
-                'id' =>$infos['id']
-                ];
+                'id' => $infos['id'],
+                'status' => $infos['stauts']
+            ];
         } //物业维护
         else if ($appid == 2) {
             $info = PropertyServer::get($id);
@@ -1756,6 +1777,9 @@ class Service extends Base
         elseif ($appid == 3) {
 
             $info = WaterService::get($id);
+        } elseif ($appid == 4) {
+
+            $info = PropertyServer::get($id);
         } //车卡
         elseif ($appid == 6) {
             $info = CarparkService::where('id', $id)->find();
@@ -1786,15 +1810,37 @@ class Service extends Base
             $info['img'] = json_decode($service['payment_voucher'], true);//图片
             $info['type'] = $service['type'];
             $info['money'] = $service['money'];
-            $info['status']=$service['status'];
-            $info['id']=$service['id'];
+            $info['status'] = $service['status'];
+            $info['id'] = $service['id'];
             if ($info['type'] == 1) {
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
-        }
-        //设备(公共场所)
+        } //设备(公共场所)
         elseif ($appid == 8) {
+            $serviceInfo = AdvertisingService::where('id', 1)->find();
+            $type = input('tpye');
+            //大厅
+            if ($type == 1) {
+                $as = AdvertisingRecord::where('create_user', input('create_time'))->select();
+                $info['day'] = "";
+                foreach ($as as $value) {
+                    $info['day'] .= date('Y-m-d', $value['order_time']) . " ";
+                }
+                $info['create_time'] = input('create_time');
+                $info['name'] = "大厅广告位";
+                $info['status'] = $as[0]['status'];
+                $info['price'] = count($as) * $serviceInfo['price'];
+                $info['payment_voucher'] = json_decode($as[0]['payment_voucher']);
+            } //l二楼多功能
+            elseif ($type == 2) {
+                $serviceInfo = AdvertisingService::where('id', 2)->find();
 
+
+            } //led
+            elseif ($type == 3) {
+
+
+            }
 
 
         }
@@ -1842,16 +1888,20 @@ class Service extends Base
         $type = input('type');
         $id = input('id');
         $data = input('');
+        $publictype = input('publictype');
         $CardparkService = new CarparkService();
         $ElectricityService = new ElectricityService();
         $feepayment = new FeePayment();
+        $avrecord = new AdvertisingRecord();
+        $funtion =new FunctionRoomRecord();
+        $led =new LedRecord();
         switch ($appid) {
             //费用缴纳
             case  1:
-                if($type==1) {
+                if ($type == 1) {
                     $res = $feepayment->where('id', $id)->update(['status' => 1]);
                     return $this->success("已审核");
-                }else{
+                } else {
                     $res = $feepayment->where('id', $id)->update(['status' => 2]);
                     return $this->success("已审核");
                 }
@@ -1935,6 +1985,49 @@ class Service extends Base
                     return $this->success("审核成功");
                 }
                 break;
+            //公共场所
+            case  8:
+                //不通过
+                if ($type == 2) {
+                    //大厅
+                    if ($publictype == 1) {
+                        $ar = $avrecord->where('create_time',input('create_time'))->select();
+                       foreach ($ar as $value){
+                           $value['status']=0;
+                           $value->save();
+                       }
+                        return $this->success("审核成功");
+                     } //二楼多功能
+                    elseif ($publictype == 2) {
+
+
+                    } //led
+                    elseif ($publictype == 3) {
+
+
+                    }
+
+
+                } else{
+                    //todo: 推送
+                    if ($publictype == 1) {
+
+
+
+                    } //二楼多功能
+                    elseif ($publictype == 2) {
+
+
+                    } //led
+                    elseif ($publictype == 3) {
+
+
+                    }
+
+                }
+                break;
+
+
         }
 
 
