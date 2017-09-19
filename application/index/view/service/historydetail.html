@@ -120,6 +120,7 @@
         border-radius: 5px;
         text-align: center;
         border: none;
+        color: #fff;
         height: 10.67vw;
         font-size: 1.5rem;
     }
@@ -259,6 +260,8 @@
     </div>
     <div class="rent-btn-box">
         <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
+        <button class="btn btn-block btn-green">审核通过</button>
+        <button class="btn btn-block">审核失败</button>
     </div>
 
     <div class="modal-box"  :class="{'show':rentShow}">
