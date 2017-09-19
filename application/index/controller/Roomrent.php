@@ -473,5 +473,10 @@ class Roomrent extends Base
 
     }
 
+//    记录
+    public function record()
+    {
+        return $this->fetch();
+    }
 
 }

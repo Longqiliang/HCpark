@@ -1,0 +1,230 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/service/detail.css">
+
+<style>
+    body{background-color: #e8e8e8}
+    .card-tit{
+        color: #52CC92;
+    }
+    .card-tit:before{
+        background-image: url(/index/images/roomrent/icon-star.png)
+    }
+    .card-tit:after{
+        background-image: url(/index/images/roomrent/icon-star.png)
+    }
+
+
+
+    /*modal框*/
+    .modal-box{
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.4);
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9;
+        display: none;
+    }
+    .modal-box.show{
+        display: block!important;
+    }
+    .modal-box .modal{
+        width: calc(100% - 36px);
+        margin: 15vh auto 0;
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px 0;
+        position: relative;
+    }
+    .modal>p{
+        line-height: 40px;
+        font-size: 17px;
+        text-align: center;
+    }
+    .name-mobile,.remark{
+        padding: 5px 18px;
+    }
+    .name-mobile ul li{
+        line-height: 40px;
+        border-bottom: 1px solid #f1f1f1;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+    }
+    .name-mobile span{
+        display: inline-block;
+        font-size: 1.5rem;
+        color: #333;
+    }
+    .name-mobile span:first-child{
+        float: left;
+        width: 62px;
+    }
+    .name-mobile input{
+        text-align: right;
+        font-size: 1.5rem;
+    }
+    .remark p{
+        font-size: 15px;
+    }
+    .remark textarea{
+        border: 1px solid #e5e5e5;
+        height: 18vh;
+        border-radius: 5px;
+        width: calc(100% - 14px);
+        margin: 10px 7px;
+        padding: 5px 10px;
+    }
+    .cancel{
+        position: absolute;
+        top: -50px;
+        right: 0;
+    }
+    .cancel>span:first-child{
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 15px;
+        border: 1px solid #fff;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+    }
+    .cancel i::before{
+        width: 20px;
+        height: 20px;
+        color: #fff;
+    }
+    .cancel>span:last-child{
+        display: inline-block;
+        height: 22px;
+        width: 0;
+        border-right: 1px solid #fff;
+        position: relative;
+        left: 50%;
+    }
+    .rent-btn-box{
+        /*position: absolute;*/
+        width: 100%;
+        /*bottom: 0;*/
+        /*left: 0;*/
+        padding:8vw 4.8vw ;
+
+    }
+    .btn-box{
+        width: 100%;
+        padding:4vw 4.8vw
+    }
+    .btn{
+        border-radius: 5px;
+        text-align: center;
+        border: none;
+        height: 10.67vw;
+        font-size: 1.5rem;
+    }
+    .btn-block{
+        width: 100%;
+    }
+    .btn-green{
+        background-color: #fcc44b;
+        color: #fff;
+        font-size: 1.5rem;
+    }
+    .table-view-cell.group-cell{
+        border-bottom: none;
+    }
+
+    .rent-btn-box{
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        padding:8vw 4.8vw ;
+
+    }
+    .btn-box{
+        width: 100%;
+        padding:4vw 4.8vw
+    }
+    .btn{
+        border-radius: 5px;
+        text-align: center;
+        border: none;
+        height: 10.67vw;
+        font-size: 1.5rem;
+    }
+    .btn-block{
+        width: 100%;
+    }
+    .btn-green{
+        background-color: #52CC92;
+        color: #fff;
+        font-size: 1.5rem;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div>
+        <div class="card">
+            <div class="card-tit">申请人信息</div>
+            <div class="card-cell">
+                <span>姓名</span>
+                <span>{{info.name}}</span>
+            </div>
+            <div class="card-cell">
+                <span>手机</span>
+                <span>{{info.expiration_time}}</span>
+            </div>
+            <div class="card-cell">
+                <span>备注信息</span>
+                <span>{{info.name}}</span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-tit">租房意向</div>
+            <div class="card-cell">
+                <span>姓名</span>
+                <span>{{info.name}}</span>
+            </div>
+            <div class="card-cell">
+                <span>手机</span>
+                <span>{{info.expiration_time}}</span>
+            </div>
+            <div class="card-cell">
+                <span>面积要求</span>
+                <span>{{info.expiration_time}}</span>
+            </div>
+            <div class="card-cell">
+                <span>用房时间</span>
+                <span>{{info.expiration_time}}</span>
+            </div>
+            <div class="card-cell">
+                <span>价格范围</span>
+                <span>{{info.expiration_time}}</span>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            subData:{},
+            info:{},
+            isShow:false,
+            isSubmit:true
+        },
+        methods: {}
+    })
+</script>
+{/block}

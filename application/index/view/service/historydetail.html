@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>服务记录</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
 <link rel="stylesheet" href="/static/viewer/viewer.min.css">
 <style>
@@ -10,6 +11,131 @@
     .upload-img img{
         max-width: 100%;
         max-height: 100%;
+    }
+    /*modal框*/
+    .modal-box{
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.4);
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9;
+        display: none;
+    }
+    .modal-box.show{
+        display: block!important;
+    }
+    .modal-box .modal{
+        width: calc(100% - 36px);
+        margin: 15vh auto 0;
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px 0;
+        position: relative;
+    }
+    .modal>p{
+        line-height: 40px;
+        font-size: 17px;
+        text-align: center;
+    }
+    .name-mobile,.remark{
+        padding: 5px 18px;
+    }
+    .name-mobile ul li{
+        line-height: 40px;
+        border-bottom: 1px solid #f1f1f1;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+    }
+    .name-mobile span{
+        display: inline-block;
+        font-size: 1.5rem;
+        color: #333;
+    }
+    .name-mobile span:first-child{
+        float: left;
+        width: 62px;
+    }
+    .name-mobile input{
+        text-align: right;
+        font-size: 1.5rem;
+    }
+    .remark p{
+        font-size: 15px;
+    }
+    .remark textarea{
+        border: 1px solid #e5e5e5;
+        height: 18vh;
+        border-radius: 5px;
+        width: calc(100% - 14px);
+        margin: 10px 7px;
+        padding: 5px 10px;
+    }
+    .cancel{
+        position: absolute;
+        top: -50px;
+        right: 0;
+    }
+    .cancel>span:first-child{
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 15px;
+        border: 1px solid #fff;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+    }
+    .cancel i::before{
+        width: 20px;
+        height: 20px;
+        color: #fff;
+    }
+    .cancel>span:last-child{
+        display: inline-block;
+        height: 22px;
+        width: 0;
+        border-right: 1px solid #fff;
+        position: relative;
+        left: 50%;
+    }
+    .rent-btn-box{
+        /*position: absolute;*/
+        width: 100%;
+        /*bottom: 0;*/
+        /*left: 0;*/
+        padding:8vw 4.8vw ;
+
+    }
+    ..btn{
+        height: 5rem;
+    }
+    .btn-box{
+        width: 100%;
+        padding:4vw 4.8vw
+    }
+    .btn{
+        border-radius: 5px;
+        text-align: center;
+        border: none;
+        height: 10.67vw;
+        font-size: 1.5rem;
+    }
+    .btn-block{
+        width: 100%;
+    }
+    .btn-green{
+        background-color: #fcc44b;
+        color: #fff;
+        font-size: 1.5rem;
+    }
+    .table-view-cell.group-cell{
+        border-bottom: none;
+    }
+    .btn-primary{
+        background-color: #7DB8F2;
     }
 </style>
 {/block}
@@ -131,6 +257,39 @@
             </div>
         </div>
     </div>
+    <div class="rent-btn-box">
+        <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
+    </div>
+
+    <div class="modal-box"  :class="{'show':rentShow}">
+        <div class="modal">
+            <p>审核服务</p>
+            <!--<div class="name-mobile">-->
+                <!--<ul>-->
+                    <!--<li>-->
+                        <!--<span>姓名</span>-->
+                        <!--<input type="text" id="name" placeholder="请输入姓名" v-model="subData.name">-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>手机</span>-->
+                        <!--<input type="number" id="mobile" placeholder="请输入手机号" v-model="subData.mobile">-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <div class="remark">
+                <p>备注信息</p>
+                <textarea v-model="subData.remark"></textarea>
+            </div>
+            <div class="table-view-cell group-cell btn-box">
+                <button class="group-btn btn-warning btn" @click="subRent(false)">拒绝</button>
+                <button class="group-btn btn-primary btn" @click="subRent(true)">接受</button>
+            </div>
+            <div class="cancel" @click="hideRent">
+                <span><i class="iconfont hc-cha1"></i></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
 </div>
 {/block}
 
@@ -149,11 +308,72 @@ var app = new Vue({
         }
     },
     data:{
+        subData:{},
+        rentShow:false,
         appid:JSON.parse('{$type}'),
         info:JSON.parse('{$info}'),
+        isSubmit:false
     },
     methods:{
-        
+        showRent:function () {
+            this.rentShow = true;
+        },
+        hideRent:function () {
+            this.rentShow = false;
+        },
+        subRent:function (isPass) {
+            var _this = this;
+            console.log(_this.subData);
+//            if(!_this.subData.remark){
+//                _this.$toast("请输入备注");
+//                return;
+//            }
+            if(_this.isSubmit){
+                return;
+            }
+            _this.isSubmit = true;
+            _this.subData.isPass=isPass;
+            var data = JSON.parse(JSON.stringify(_this.subData));
+            //console.log(data);
+            _this.$http.post('/index/roomrent/',data).then(function (res) {
+                var data  = res.data;
+                _this.isSubmit = false;
+                if(data.code == 1){
+                    var msg = data.data;
+                    var newMsg =  msg.split(";");
+                    msg =  newMsg.join("<br/>");
+                    swal({
+                        title:data.msg,
+                        text:'提交成功',
+                        html:true,
+                        type:"success",
+                        confirmButtonColor: "#fcc44b"
+                    },function () {
+                        _this.rentShow = false;
+                        window.location.reload()
+                    });
+                }else{
+                    swal({
+                        title:"提交失败!",
+                        text:"请重新提交！",
+                        type:"error",
+                        confirmButtonColor: "#fcc44b"
+                    },function () {
+                        window.location.reload();
+                    });
+                }
+            },function (res) {
+                _this.isSubmit = false;
+                swal({
+                    title:"提交失败!",
+                    text:'请重新提交！',
+                    type:"error",
+                    confirmButtonColor: "#fcc44b"
+                },function () {
+                    window.location.reload();
+                });
+            })
+        }
     }
 })
 </script>
