@@ -1384,7 +1384,7 @@ class Service extends Base
         $res = $property->allowField(true)->save($data);
         if ($res) {
 
-            return $this->success("预约成功", "", " 请您在2小时内前往希垦科技园A座2楼201；进行费用缴纳和相关手续办理");
+            return $this->success("预约成功");
         } else {
 
             return $this->error("报修失败");
