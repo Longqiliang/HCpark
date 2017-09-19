@@ -159,9 +159,9 @@ class Partymanage extends Base
     public function contract()
     {
         $type = input('type');
-        $data[0] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 1])->count();
-        $data[1] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 2])->count();
-        $data[2] = CompanyContract::where(["park_id" => session("park_id"), 'type' => ['>', 2]])->count();
+        $data[0] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 1,'status'=>0])->count();
+        $data[1] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 2,'status'=>0])->count();
+        $data[2] = CompanyContract::where(["park_id" => session("park_id"), 'type' => ['>', 2],'status'=>0])->count();
         $contract[0] = $data[0] + $data[1] + $data[2];
         $contract[1] = $data[0];
         $contract[2] = $data[1];
@@ -184,7 +184,7 @@ class Partymanage extends Base
     {
         $id = input('id');
         $type = input("type");
-        $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
+        $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type,'status'=>0])
             ->order("create_time desc")
             ->limit(7)
             ->select();
@@ -211,7 +211,7 @@ class Partymanage extends Base
     {
         $type = input("type");
         $len = input("length");
-        $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type])
+        $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type,'status'=>0])
             ->order("create_time desc")
             ->limit($len, 7)
             ->select();
