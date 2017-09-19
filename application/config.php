@@ -184,7 +184,13 @@ return [
         'agentid' => 1000018
 
     ],
+    'personal'=>[
+        "AppDesc" => "个人中心",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'YFuR3RnQe1YzrLywoXEadCssLzp6bkDlfQoCKI98_9A',
+        'agentid' => 1000008
 
+    ],
 
 
     'weixinpay' => [

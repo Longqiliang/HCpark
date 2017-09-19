@@ -9,27 +9,22 @@
 namespace app\index\controller;
 
 use app\common\model\FeePayment;
-use app\index\model\CarparkRecord;
 use  app\index\model\CompanyService;
 use app\index\model\CarparkService;
 use app\index\model\WaterService;
 use app\index\model\WechatUser;
 use app\index\model\CompanyApplication;
 use app\index\model\Park;
-use  app\index\model\WechatTag;
 use  app\index\model\PropertyServer;
 use app\index\model\WaterService as WaterModel;
 use app\index\model\BroadbandPhone as BroadbandModel;
-use  app\index\model\ElectricityRecord;
 use  app\index\model\ElectricityService;
 use  app\index\model\AdvertisingRecord;
 use  app\index\model\AdvertisingService;
 use  app\index\model\FunctionRoomRecord;
-use  app\index\model\WechatDepartment;
 use  app\index\model\News as NewsModel;
-
 use  app\index\model\LedRecord;
-use function PHPSTORM_META\type;
+use  app\common\behavior\Service as commonService;
 
 //企业服务
 class Service extends Base
@@ -95,9 +90,9 @@ class Service extends Base
         $is_boss = "no";
         /*}*/
         //政策法规轮播
-        $policy = NewsModel::where(['park_id'=>$park_id,'type'=>['in',[4,5]]])->field('id,title')->order('id  desc')->limit(4)->select();
+        $policy = NewsModel::where(['park_id' => $park_id, 'type' => ['in', [4, 5]]])->field('id,title')->order('id  desc')->limit(4)->select();
 
-        $this->assign('policy',json_encode($policy));
+        $this->assign('policy', json_encode($policy));
         $this->assign('is_boss', $is_boss);
         $this->assign('propert', json_encode($PropertyServices));
         $this->assign('company', json_encode($CompanyService));
@@ -177,7 +172,7 @@ class Service extends Base
                 $map = [
                     'user_id' => $user_id,
                     'electricity_id' => array('exp', 'is not null'),
-                   'status'=> array('in', [0, 1])
+                    'status' => array('in', [0, 1])
                 ];
                 $is_new = $es->where($map)->find();
                 if ($is_new) {
@@ -285,13 +280,26 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['charging_price'] * (int)$data['aging']) + (int)$data['charging_deposit'],
-            ];
+        ];
 
         $re = $PillarService->save($service);
 
 
         if ($re) {
-            $this->success('成功' . json_encode($PillarService->id));
+            //todo： 推送点击到详情页面代码（要改）
+            $message = [
+                "title" => "充电柱服务提示",
+                "description" => date('m月d', time()) . "\n您有新充电柱缴费需要审核，请点击查看",
+                "url" => ''
+            ];
+            //推送给运营
+            $reult = $this->commonSend(1, $message);
+            if ($reult) {
+                $this->success('成功' . json_encode($PillarService->id));
+            } else {
+                return $this->error("推送失败");
+            }
+
 
         } else {
             $this->error("失败");
@@ -310,20 +318,20 @@ class Service extends Base
         $pillar = new ElectricityService();
         $park = $Park->where('id', $park_id)->find();
         $map['user_id'] = $user_id;
-        $map['status']=1;
+        $map['status'] = 1;
         $pillarinfo = $pillar->where($map)->order("create_time desc")->select();
-        $pillar_id=array();
-        foreach ($pillarinfo as  $value){
-            array_push($pillar_id,$value['electricity_id']);
+        $pillar_id = array();
+        foreach ($pillarinfo as $value) {
+            array_push($pillar_id, $value['electricity_id']);
         }
         $pillar_ids = array_values(array_unique($pillar_id));
-        $list=array();
-        foreach ($pillar_ids as $value){
-            $is=0;
-            foreach ($pillarinfo as $v){
-                if($v['electricity_id']==$value&&$is==0){
-                    $is=1;
-                    array_push($list,$v);
+        $list = array();
+        foreach ($pillar_ids as $value) {
+            $is = 0;
+            foreach ($pillarinfo as $v) {
+                if ($v['electricity_id'] == $value && $is == 0) {
+                    $is = 1;
+                    array_push($list, $v);
                 }
             }
         }
@@ -350,7 +358,7 @@ class Service extends Base
             'mobile' => $data['mobile'],
             'user_id' => $id,
             'type' => 2,
-            'electricity_id'=>$data['id'],
+            'electricity_id' => $data['id'],
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'create_time' => time(),
@@ -359,13 +367,26 @@ class Service extends Base
         ];
         $re2 = $er->save($record);
         if ($re2) {
-            $this->success('成功');
+            //todo： 推送点击到详情页面代码（要改）
+            $message = [
+                "title" => "充电柱服务提示",
+                "description" => date('m月d', time()) . "\n您有旧充电柱缴费需要审核，请点击查看",
+                "url" => ''
+            ];
+            //推送给运营
+            $reult = $this->commonSend(1, $message);
+            if ($reult) {
+                $this->success('成功');
+            } else {
+                return $this->error("推送失败");
+            }
+
+
 
         } else {
             $this->error("失败");
         }
     }
-
 
 
     //充电柱记录
@@ -382,11 +403,11 @@ class Service extends Base
         int_to_string($list, array('type' => array(1 => '新柱办理', 2 => '旧柱办理'), 'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败')));
         $res = array();
         foreach ($list as $k => $val) {
-                $res[$k]['name'] = $val['type'] == 1 ? '新柱办理' : "旧柱续费";
-                $res[$k]['pay'] = $val['money'];
-                $res[$k]['time'] = $val['create_time'];
-                $res[$k]['status'] = $val['status'];
-                $res[$k]['id'] = $val['id'];
+            $res[$k]['name'] = $val['type'] == 1 ? '新柱办理' : "旧柱续费";
+            $res[$k]['pay'] = $val['money'];
+            $res[$k]['time'] = $val['create_time'];
+            $res[$k]['status'] = $val['status'];
+            $res[$k]['id'] = $val['id'];
         }
         return $res;
     }
@@ -474,9 +495,20 @@ class Service extends Base
 
 
         if ($re) {
-            $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈;请耐心等待,确认成功后;请您在2小时内到希垦科技园A座201领取车卡";
-            $this->success('成功', "", $msg);
-
+            //todo： 推送点击到详情页面代码（要改）
+            $message = [
+                "title" => "车卡服务提示",
+                "description" => date('m月d', time()) . "\n您有新卡缴费需要审核，请点击查看",
+                "url" => 'http://zyf.0519ztnet.com/index/service/historyDetail/app_id/6/can_check/yes/id/'.$CardparkService->getLastInsID()
+            ];
+            //推送给运营
+            $reult = $this->commonSend(1, $message);
+            if ($reult) {
+                $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈;请耐心等待,确认成功后;请您在2小时内到希垦科技园A座201领取车卡";
+                $this->success('成功', "", $message['url']);
+            } else {
+                return $this->error("推送失败");
+            }
         } else {
             $this->error("失败");
         }
@@ -497,21 +529,21 @@ class Service extends Base
         //已通过审核的卡
         $cardinfo = $carCard->where($map)->order('create_time desc')->select();
         //该用户按卡号分
-        $park_card=array();
-        foreach ($cardinfo as  $value){
-         array_push($park_card,$value['park_card']);
+        $park_card = array();
+        foreach ($cardinfo as $value) {
+            array_push($park_card, $value['park_card']);
         }
         $park_cards = array_values(array_unique($park_card));
-        $list=array();
-        foreach ($park_cards as $value){
-            $is=0;
-            foreach ($cardinfo as $v){
-                if($v['park_card']==$value&&$is==0){
-                    $is=1;
-                    array_push($list,$v);
+        $list = array();
+        foreach ($park_cards as $value) {
+            $is = 0;
+            foreach ($cardinfo as $v) {
+                if ($v['park_card'] == $value && $is == 0) {
+                    $is = 1;
+                    array_push($list, $v);
                 }
             }
-         }
+        }
         //停车卡单价
         $data['carpark_price'] = $park['carpark_price'];
         //车卡押金
@@ -521,6 +553,7 @@ class Service extends Base
         $this->assign('data', json_encode($data));
         return $this->fetch();
     }
+
     //旧卡续费（上传凭证）
     public function keepOldCard()
     {
@@ -533,7 +566,7 @@ class Service extends Base
             'people_card' => $data['people_card'],
             'car_card' => $data['car_card'],
             'user_id' => $id,
-            'park_card'=>$data['park_card'],
+            'park_card' => $data['park_card'],
             'type' => 2,
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
@@ -543,13 +576,26 @@ class Service extends Base
         ];
         $re2 = $CardparkService->save($service);
         if ($re2) {
-            $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈";
-            $this->success('成功', "", $msg);
 
+            //todo： 推送点击到详情页面代码（要改）
+            $message = [
+                "title" => "车卡服务提示",
+                "description" => date('m月d', time()) . "\n您有旧卡缴费需要审核，请点击查看",
+                "url" => 'http://zyf.0519ztnet.com/index/service/historyDetail/app_id/6/can_check/yes/id/'.$CardparkService->getLastInsID()
+            ];
+            //推送给运营
+            $reult = $this->commonSend(1, $message);
+            if ($reult) {
+                $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈";
+                $this->success('成功', "", $msg);
+            } else {
+                return $this->error("推送失败");
+            }
         } else {
             $this->error("失败");
         }
     }
+
     //车卡记录
     public function carRecord()
     {
@@ -693,8 +739,23 @@ class Service extends Base
                 $value['status'] = 2;
                 $value->save();
             }
-            $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
-            return $this->success('成功', "", $msg);
+
+            //todo： 推送点击到详情页面代码（要改）
+            $message = [
+                "title" => "充电柱服务提示",
+                "description" => date('m月d', time()) . "\n您有大堂LED屏(大厅广告位，二楼多功能厅)预约申请需要审核，请点击查看",
+                "url" => ''
+            ];
+            //推送给运营
+            $reult = $this->commonSend(1, $message);
+            if ($reult) {
+                $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
+                return $this->success('成功', "", $msg);
+            } else {
+                return $this->error("推送失败");
+            }
+
+
         } else {
             return $this->error('超时');
         }
@@ -1352,16 +1413,37 @@ class Service extends Base
         $data['park_id'] = $parkid;
         $data["image"] = json_encode($data["payment_voucher"]);
         $res = $property->allowField(true)->save($data);
-
         if ($res) {
+            //todo： 推送点击到详情页面代码
+            //服务类型 1为空调，2为电梯，3为其他
+            switch ($data['type']) {
+                case 1:
+                    $data['type_text'] = "空调维修";
+                    break;
+                case 2:
+                    $data['type_text'] = "电梯维修";
+                    break;
+                case 3:
+                    $data['type_text'] = "其他维修";
+                    break;
+            }
+            $message = [
+                "title" => "物业保修提示",
+                "description" => date('m月d', $data['create_time']) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "url" => ''
+            ];
+            //推送给运营和物业
+            $reult = $this->commonSend(3, $message);
 
-            return $this->success("预约成功");
+            if ($reult) {
+                return $this->success("报修成功");
+            } else {
+                return $this->error("推送失败");
+            }
         } else {
 
             return $this->error("报修失败");
         }
-
-
     }
 
     /*保洁服务*/
@@ -1383,8 +1465,20 @@ class Service extends Base
 
         $res = $property->allowField(true)->save($data);
         if ($res) {
+            //todo： 推送点击到详情页面代码
+            $message = [
+                "title" => "保洁服务提示",
+                "description" => date('m月d', $data['create_time']) . "\n服务地点：" . $data['address'] . "\n服务时间：" . date('m月d',$data['clear_time']) . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "url" => ''
+            ];
+            //推送给运营
+            $reult = $this->commonSend(1, $message);
 
-            return $this->success("预约成功");
+            if ($reult) {
+                return $this->success("预约成功");
+            } else {
+                return $this->error("推送失败");
+            }
         } else {
 
             return $this->error("报修失败");
@@ -1459,8 +1553,19 @@ class Service extends Base
         $data['userid'] = session('userId');
         $result = $waterModel->allowField(true)->validate(true)->save($data);
         if ($result) {
-            //预约成功
-            return $this->success("预约成功");
+            //todo： 推送点击到详情页面代码
+            $message = [
+                "title" => "饮水服务提示",
+                "description" => date('m月d', $data['create_time']) . "\n送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "url" => ''
+            ];
+            //推送给运营和物业
+            $reult = $this->commonSend(3, $message);
+            if ($reult) {
+                return $this->success("预约成功");
+            } else {
+                return $this->error("推送失败");
+            }
         } else {
             return $this->error($waterModel->getError());
         }
@@ -1526,7 +1631,7 @@ class Service extends Base
         $userinfo = WechatUser::where(['userid' => $userid])->find();
         $departmentId = $userinfo['department'];
         $map = ['company_id' => $departmentId, 'type' => $type];
-        if ($type ==2){
+        if ($type == 2) {
             $map1 = ['company_id' => $departmentId, 'type' => 4];
             $info = FeePayment::where($map)->order('id desc')->find();
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
@@ -1536,14 +1641,14 @@ class Service extends Base
             $info1['appid'] = $appid;
             $info1['title'] = '物业费';
             $info1['payment_voucher'] = isset($info1['payment_voucher']) ? unserialize($info1["payment_voucher"]) : "";
-            $this->assign('info', json_encode([$info,$info1]));
+            $this->assign('info', json_encode([$info, $info1]));
 
 
-        }else{
+        } else {
             $info = FeePayment::where($map)->order('id desc')->find();
-            if($type == 1){
+            if ($type == 1) {
                 $info['title'] = '水电费';
-            }else if($type == 3){
+            } else if ($type == 3) {
                 $info['title'] = '房租费';
             }
             $info['appid'] = $appid;
@@ -1633,6 +1738,8 @@ class Service extends Base
     {
         $id = input('id');
         $appid = input('appid');
+        $can_check =empty( input('can_check'))?"no":input('can_check');
+        //费用缴纳
         if ($appid == 1) {
 
             $infos = FeePayment::get($id);
@@ -1641,10 +1748,18 @@ class Service extends Base
                 'expiration_time' => $infos['expiration_time'],
                 'img' => isset($infos['payment_voucher']) ? unserialize($infos['payment_voucher']) : "",
             ];
-        } elseif ($appid == 3) {
+        }
+        //物业维护
+        else if($appid = 2){
+            $info=PropertyServer::get($id);
+        }
+        //饮水
+        elseif ($appid == 3) {
 
             $info = WaterService::get($id);
-        } elseif ($appid == 6) {
+        }
+        //车卡
+        elseif ($appid == 6) {
             $info = CarparkService::where('id', $id)->find();
             //图片
             $info['img'] = json_decode($info['payment_voucher'], true);
@@ -1656,10 +1771,12 @@ class Service extends Base
             //押金
             $info['carpark_deposit'] = $park['carpark_deposit'];
 
-            if($info['type']==1){
-                $info['money']=$info['money']-$info['carpark_deposit'];
+            if ($info['type'] == 1) {
+                $info['money'] = $info['money'] - $info['carpark_deposit'];
             }
-        } elseif ($appid == 7) {
+        }
+        //充电柱
+        elseif ($appid == 7) {
             $service = ElectricityService::get($id);
 
             $info['electricity_id'] = $service['electricity_id'];//充电柱编号
@@ -1672,13 +1789,12 @@ class Service extends Base
             $info['all_money'] = $service['money'];//总费用
             $info['img'] = json_decode($service['payment_voucher'], true);//图片
             $info['type'] = $service['type'];
-            $info['money']=$service['money'];
-            if($info['type']==1){
-                $info['money']=$service['money']-$park['charging_deposit'];
+            $info['money'] = $service['money'];
+            if ($info['type'] == 1) {
+                $info['money'] = $service['money'] - $park['charging_deposit'];
             }
-
         }
-
+        $this->assign('can_check',$can_check );
         $this->assign('type', json_encode($appid));
         $this->assign('info', json_encode($info));
         return $this->fetch();
@@ -1716,6 +1832,75 @@ class Service extends Base
 
         phpinfo();
 
+
+    }
+
+    /*推个人中心，推送人员选择公共方法
+     *$type =1  该园区运营人员
+     *$type =2  该园区物业管理
+     *$type =3  该园区运营人员+物业管理
+     *$type =4  该用户
+     *
+     * $message=[
+     *   "title" => "物业保修提示",
+     *   "description" => date('m月d', $data['create_time']) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+     *   "url" => '']
+     *
+     *retur  true/false
+    */
+    public function commonSend($type, $message)
+    {
+        $wechatUser = new WechatUser();
+        $useridlist = "";
+        $park_id = session('park_id');
+        //该园区运营的department——id
+        switch ($park_id) {
+            case  3 :
+                $department_id = 76;
+                break;
+            default:
+                $department_id = 76;
+                break;
+        }
+        switch ($type) {
+            case 1 :
+                $user = $wechatUser->where('department', $department_id)->select();
+                foreach ($user as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                break;
+            case 2 :
+                $user = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                foreach ($user as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
+            case 3:
+                //该园区运营团队
+                $user1 = $wechatUser->where('department', $department_id)->select();
+                foreach ($user1 as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                //该园区物业管理
+                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                foreach ($user2 as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
+
+            case 4:
+                $useridlist = session('userId');
+                break;
+
+        }
+
+        $res = commonService::sendPersonalMessage($message, 15706844655);
+        if ($res['errcode'] == 0) {
+            return true;
+        } else {
+
+            return false;
+        }
 
     }
 
