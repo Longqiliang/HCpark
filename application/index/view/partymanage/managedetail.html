@@ -140,6 +140,7 @@
         },
         methods:{
             loadImg:function (src,imglist) {
+                this.$toast(src);
                 wx.previewImage({
                     current: src,
                     urls: imglist
