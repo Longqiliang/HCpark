@@ -122,6 +122,7 @@ class Wechat extends Controller
         //var_dump($userId);
         //var_dump('errcode:'.$weObj->errCode.',msg:'.$weObj->errMsg);
         $userInfo = $weObj->getUserInfo($userId['UserId']);
+        session('testinfo',json_encode($userInfo));
         $data = [
             'userid' => $userInfo['userid'],
             'name' => $userInfo['name'],
@@ -129,6 +130,7 @@ class Wechat extends Controller
             'gender' => $userInfo['gender'],
             'avatar' => $userInfo['avatar'],
             //'department' => $userInfo['department'][0], //只选第一个所属部门
+            //'park_id'=> $this->findParkid($userInfo['department'][0])
         ];
 
         $wechatUser = new WechatUser();
@@ -147,7 +149,19 @@ class Wechat extends Controller
         // 默认跳转到前一页
         $this->redirect(session('requestUri'));
     }
-
+    //查找园区id
+    public  function  findParkid($Department){
+        if($Department==1){
+            return 1;
+        }
+        $WeDepartment=new WechatDepartment();
+        $de = $WeDepartment->where('id',$Department)->find();
+        if($de['parentid']==1){
+            return $de['id'];
+        }else{
+            return $this->findParkid($de['parentid']);
+        }
+    }
     /**
      * 微信支付返回
      */
