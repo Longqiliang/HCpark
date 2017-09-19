@@ -9,6 +9,12 @@
         background-color: #f0eff5;
         padding-bottom: 1rem;
     }
+    #app:before{
+        content: '';
+        display: table;
+        height:0;
+
+    }
     .upload-img img{
         max-width: 100%;
         max-height: 100%;
@@ -29,17 +35,11 @@
     }
     .modal-box .modal{
         width: calc(100% - 36px);
-        margin: 50px auto 0;
+        margin: 20vh auto 0;
         background: #fff;
         border-radius: 10px;
         padding: 10px 0;
         position: relative;
-        top:50%;
-        -webkit-transform: translateY(-20%);
-        -moz-transform: translateY(-20%);
-        -ms-transform: translateY(-20%);
-        -o-transform: translateY(-20%);
-        transform: translateY(-20%);
     }
     .modal>p{
         line-height: 40px;
@@ -318,13 +318,13 @@
             </div>
             <div class="card-cell" v-if="appid==7">
                 <span>电柱编号</span>
-                <span v-if="info.electricity_id!=null">{{info.electricity_id}}</span>
-                <input v-if="can_check=='yes' && info.electricity_id==null" type="text" v-model="subData.electricity_id">
+                <span v-if="info.electricity_id">{{info.electricity_id}}</span>
+                <input v-if="can_check=='yes' && !info.electricity_id" type="text" v-model="subData.electricity_id">
             </div>
             <div class="card-cell" v-if="appid==6">
                 <span>停车卡号</span>
-                <span v-if="info.park_card != null">{{info.park_card}}</span>
-                <input v-if="can_check == 'yes' && info.park_card == null" type="text" v-model="subData.park_card">
+                <span v-if="info.park_card">{{info.park_card}}</span>
+                <input v-if="can_check == 'yes' && !info.park_card" type="text" v-model="subData.park_card">
             </div>
             <div class="card-cell">
                 <span>车主姓名</span>
@@ -512,10 +512,10 @@ var app = new Vue({
     methods:{
         showRent:function () {
             var _this=this;
-            if(!_this.subData.electricity_id && _this.appid== 7){
+            if(!_this.subData.electricity_id && _this.appid== 7 && _this.status==0){
                 _this.$toast("请输入电柱编号");
                 return;
-            }else if(!_this.subData.park_card && _this.appid== 6){
+            }else if(!_this.subData.park_card && _this.appid== 6 && _this.status==0){
                 _this.$toast("请输入停车卡号");
                 return;
             }
