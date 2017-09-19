@@ -1747,7 +1747,8 @@ class Service extends Base
                 'name' => $infos['name'],
                 'expiration_time' => $infos['expiration_time'],
                 'img' => isset($infos['payment_voucher']) ? unserialize($infos['payment_voucher']) : "",
-            ];
+                'id' =>$infos['id']
+                ];
         } //物业维护
         else if ($appid == 2) {
             $info = PropertyServer::get($id);
