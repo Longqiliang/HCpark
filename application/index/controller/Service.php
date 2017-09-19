@@ -741,8 +741,8 @@ class Service extends Base
 
             //todo： 推送点击到详情页面代码（要改）
             $message = [
-                "title" => "充电柱服务提示",
-                "description" => date('m月d', time()) . "\n您有大堂LED屏(大厅广告位，二楼多功能厅)预约申请需要审核，请点击查看",
+                "title" => "设备服务提示",
+                "description" => date('m月d', time()) . "\n您有大厅广告位预约申请需要审核，请点击查看",
                 "url" => ''
             ];
             //推送给运营
@@ -974,6 +974,7 @@ class Service extends Base
                 $value['status'] = 2;
                 $value->save();
             }
+
             $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
             return $this->success('成功', "", $msg);
         } else {
@@ -1773,7 +1774,6 @@ class Service extends Base
         } //充电柱
         elseif ($appid == 7) {
             $service = ElectricityService::get($id);
-
             $info['electricity_id'] = $service['electricity_id'];//充电柱编号
             $info['name'] = $service['name'];
             $info['mobile'] = $service['mobile'];
@@ -1789,6 +1789,12 @@ class Service extends Base
             if ($info['type'] == 1) {
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
+        }
+        //设备(公共场所)
+        elseif ($appid == 8) {
+
+
+
         }
         $this->assign('can_check', $can_check);
         $this->assign('type', json_encode($appid));
@@ -1836,9 +1842,17 @@ class Service extends Base
         $data = input('');
         $CardparkService = new CarparkService();
         $ElectricityService = new ElectricityService();
+        $feepayment = new FeePayment();
         switch ($appid) {
             //费用缴纳
             case  1:
+                if($type==1) {
+                    $res = $feepayment->where('id', $id)->update(['status' => 1]);
+                    return $this->success("已审核");
+                }else{
+                    $res = $feepayment->where('id', $id)->update(['status' => 2]);
+                    return $this->success("已审核");
+                }
                 break;
 
             case  2:
@@ -1848,7 +1862,6 @@ class Service extends Base
                 } else {
                     $res = PropertyServer::where('id', $id)->update(['status' => 2, 'remark' => $data['remark']]);
                     return $this->success("已审核");
-
                 }
                 break;
             //饮水
