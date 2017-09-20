@@ -39,7 +39,8 @@ class Property extends Admin
     public  function changeStatus(){
         $id=input('id');
         $uid = input('del');
-        $res=PropertyServer::where('id',$id)->update(['status'=>$uid]);
+        $remark = input('check_remark');
+        $res=PropertyServer::where('id',$id)->update(['status'=>$uid,'check_remark'=>$remark]);
         if ($uid == -1){
             $msg = "删除成功";
             $msgs = "删除失败";
@@ -57,7 +58,23 @@ class Property extends Admin
 
     }
 
+    /*显示凭证*/
+    public function showImage(){
+        $id = input("id");
+        $html="";
+        $feepayment = PropertyServer::get($id);
+        if ($feepayment['image']){
+            $image = json_decode($feepayment['image']);
 
+            foreach($image as $value){
+                $html .= "<div class='col-md-4'><img class='front_cover_img' src='$value' style='width: 150px;height: 200px;'></div>";
+
+            }
+        }
+
+        return $html;
+
+    }
 
 
 
