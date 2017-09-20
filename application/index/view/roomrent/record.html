@@ -14,9 +14,20 @@
     .card-tit:after{
         background-image: url(/index/images/roomrent/icon-star.png)
     }
-
-
-
+    .remark{
+        padding:10px 0;
+    }
+    .remark p{
+        font-size: 15px;
+    }
+    .remark div{
+        border: 1px solid #e5e5e5;
+        min-height: 18vh;
+        border-radius: 5px;
+        width: calc(100% - 14px);
+        margin: 10px auto;
+        padding: 5px 10px;
+    }
     /*modal框*/
     .modal-box{
         width: 100%;
@@ -33,7 +44,7 @@
     }
     .modal-box .modal{
         width: calc(100% - 36px);
-        margin: 15vh auto 0;
+        margin: 20vh auto 0;
         background: #fff;
         border-radius: 10px;
         padding: 10px 0;
@@ -114,6 +125,9 @@
         padding:8vw 4.8vw ;
 
     }
+    .btn{
+        height: 5rem;
+    }
     .btn-box{
         width: 100%;
         padding:4vw 4.8vw
@@ -122,37 +136,7 @@
         border-radius: 5px;
         text-align: center;
         border: none;
-        height: 10.67vw;
-        font-size: 1.5rem;
-    }
-    .btn-block{
-        width: 100%;
-    }
-    .btn-green{
-        background-color: #fcc44b;
         color: #fff;
-        font-size: 1.5rem;
-    }
-    .table-view-cell.group-cell{
-        border-bottom: none;
-    }
-
-    .rent-btn-box{
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        left: 0;
-        padding:8vw 4.8vw ;
-
-    }
-    .btn-box{
-        width: 100%;
-        padding:4vw 4.8vw
-    }
-    .btn{
-        border-radius: 5px;
-        text-align: center;
-        border: none;
         height: 10.67vw;
         font-size: 1.5rem;
     }
@@ -164,12 +148,56 @@
         color: #fff;
         font-size: 1.5rem;
     }
+    .table-view-cell.group-cell{
+        border-bottom: none;
+    }
+    .btn-primary{
+        background-color: #7DB8F2;
+    }
+    .card{
+        padding-bottom: 1rem;
+    }
+    .card .remark{
+        padding:10px 0 5px;
+    }
+    .card .remark>div.no_msg{
+        color: #e5e5e5;
+    }
+    .card .remark>div{
+        border: 1px solid #e5e5e5;
+        min-height: 18vh;
+        border-radius: 5px;
+        width: calc(100% - 14px);
+        margin: 10px 7px;
+        padding: 5px 10px;
+    }
+    .group-cell.btn-box{
+        margin:0;
+    }
+    .btn-warning{
+        background-color: #52CC92;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
-    <div>
+    <div v-if="info.type==1">
+        <div class="card">
+            <div class="card-tit">租房信息</div>
+            <div class="card-cell">
+                <span>位置</span>
+                <span>{{info.room}}室</span>
+            </div>
+            <div class="card-cell">
+                <span>面积</span>
+                <span>{{info.area}}㎡</span>
+            </div>
+            <div class="card-cell">
+                <span>价格</span>
+                <span>{{info.price}}元/㎡·天</span>
+            </div>
+        </div>
         <div class="card">
             <div class="card-tit">申请人信息</div>
             <div class="card-cell">
@@ -178,13 +206,15 @@
             </div>
             <div class="card-cell">
                 <span>手机</span>
-                <span>{{info.expiration_time}}</span>
+                <span>{{info.mobile}}</span>
             </div>
-            <div class="card-cell">
-                <span>备注信息</span>
-                <span>{{info.name}}</span>
+            <div class="remark">
+                <p>备注信息</p>
+                <div>{{info.remark}}</div>
             </div>
         </div>
+    </div>
+    <div v-if="info.type==2">
         <div class="card">
             <div class="card-tit">租房意向</div>
             <div class="card-cell">
@@ -193,24 +223,42 @@
             </div>
             <div class="card-cell">
                 <span>手机</span>
-                <span>{{info.expiration_time}}</span>
+                <span>{{info.mobile}}</span>
             </div>
             <div class="card-cell">
                 <span>面积要求</span>
-                <span>{{info.expiration_time}}</span>
+                <span>{{info.area}}</span>
             </div>
             <div class="card-cell">
                 <span>用房时间</span>
-                <span>{{info.expiration_time}}</span>
+                <span>{{info.time}}</span>
             </div>
             <div class="card-cell">
                 <span>价格范围</span>
-                <span>{{info.expiration_time}}</span>
+                <span>{{info.price}}/㎡·天</span>
             </div>
         </div>
     </div>
-
-
+    <div class="rent-btn-box"  v-if="info.type==1">
+        <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
+    </div>
+    <div class="modal-box"  :class="{'show':rentShow}">
+        <div class="modal">
+            <p>审核服务</p>
+            <div class="remark" >
+                <p>备注信息</p>
+                <textarea v-model="subData.check_remark"></textarea>
+            </div>
+            <div class="table-view-cell group-cell btn-box" >
+                <button class="group-btn btn-warning btn" @click="subRent(2)">取消服务</button>
+                <button class="group-btn btn-primary btn" @click="subRent(1)">确认服务</button>
+            </div>
+            <div class="cancel" @click="hideRent">
+                <span><i class="iconfont hc-cha1"></i></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
 </div>
 {/block}
 
@@ -220,11 +268,71 @@
         el: '#app',
         data: {
             subData:{},
-            info:{},
-            isShow:false,
-            isSubmit:true
+            rentShow:false,
+            info:JSON.parse('{$info}'),
+            isSubmit:false
         },
-        methods: {}
+        methods: {
+            showRent:function () {
+                this.rentShow = true;
+            },
+            hideRent:function () {
+                this.rentShow = false;
+            },
+            subRent:function (isPass) {
+                var _this = this;
+                console.log(_this.subData);
+
+                if(_this.isSubmit){
+                    return;
+                }
+                if(_this.appid==8){
+                    _this.isSubmit.publictype=_this.info.publictype;
+                    _this.isSubmit.create_time=_this.info.create_time;
+                }
+                _this.isSubmit = true;
+                _this.subData.type=isPass;
+                _this.subData.appid=_this.appid;
+                _this.subData.id=_this.info.id;
+                var data = JSON.parse(JSON.stringify(_this.subData));
+                //console.log(data);
+                _this.$http.post('/index/service/check',data).then(function (res) {
+                    var data  = res.data;
+                    _this.isSubmit = false;
+                    if(data.code == 1){
+                        swal({
+                            title:'',
+                            text:'提交成功',
+                            html:true,
+                            type:"success",
+                            confirmButtonColor: "#fcc44b"
+                        },function () {
+                            _this.rentShow = false;
+                            window.location.reload()
+                        });
+                    }else{
+                        swal({
+                            title:"提交失败!",
+                            text:"请重新提交！",
+                            type:"error",
+                            confirmButtonColor: "#fcc44b"
+                        },function () {
+                            window.location.reload();
+                        });
+                    }
+                },function (res) {
+                    _this.isSubmit = false;
+                    swal({
+                        title:"提交失败!",
+                        text:'请重新提交！',
+                        type:"error",
+                        confirmButtonColor: "#fcc44b"
+                    },function () {
+                        window.location.reload();
+                    });
+                })
+            }
+        }
     })
 </script>
 {/block}
