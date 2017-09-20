@@ -1949,6 +1949,7 @@ class Service extends Base
                     "description" => "您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
                 ];
+                $user=PropertyServer::get($id);
                 if ($type == 1) {
                     $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
 
@@ -1961,7 +1962,7 @@ class Service extends Base
                 }
 
                 //推送给用户
-                $reult = $this->commonSend(4, $message, $res['user_id']);
+                $reult = $this->commonSend(4, $message, $user['user_id']);
 
                 if ($reult) {
                     return $this->success("报修成功");
@@ -1977,6 +1978,7 @@ class Service extends Base
                     "description" => "您的饮水服务园区已确认，稍后将有服务人员送水，请您耐心等待",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/no/id/' . $id
                 ];
+               $user=WaterModel::get($id);
                 if ($type == 1) {
                     $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
                 } else {
@@ -1988,7 +1990,7 @@ class Service extends Base
                 }
 
                 //推送给用户
-                $reult = $this->commonSend(4, $message, $result['user_id']);
+                $reult = $this->commonSend(4, $message, $user['userid']);
 
                 if ($reult) {
                     return $this->success("报修成功");
@@ -2170,7 +2172,7 @@ class Service extends Base
      *
      *retur  true/false
     */
-    public function commonSend($type, $message, $userid = 15706844655)
+    public function commonSend($type, $message, $userid = "")
     {
         $wechatUser = new WechatUser();
         $useridlist = "";
@@ -2238,7 +2240,7 @@ class Service extends Base
          *
          *retur  true/false
         */
-    public function publicSend($type, $message, $userid = 15706844655)
+    public function publicSend($type, $message, $userid = "")
     {
         $wechatUser = new WechatUser();
         $useridlist = "";
