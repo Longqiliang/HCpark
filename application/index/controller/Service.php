@@ -42,7 +42,7 @@ class Service extends Base
         $info = $user->where('userid', $user_id)->find();
         $map = ['type ' => 0];
         $is = 'yes';
-        if ($info['fee_status'] != 0) {
+        if ($info['fee_status'] = 0) {
             $is = "no";
         }
         /*if($info['tagid']==1){
@@ -754,21 +754,15 @@ class Service extends Base
             }
 
             //todo： 推送点击到详情页面代码（要改）
-            $message = [
-                "title" => "设备服务提示",
-                "description" => date('m月d', time()) . "\n您有大厅广告位预约申请需要审核，请点击查看",
-                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail'
-            ];
-            //推送给运营
-            $reult = $this->commonSend(1, $message);
+            $message ="设备服务提示\n".date('m月d日', time()) . "\n您有大堂LED屏预约申请需要审核，请前往后台审核";
+            //推送给运营和物业
+            $reult = $this->publicSend(1, $message);
             if ($reult) {
                 $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
                 return $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
             }
-
-
         } else {
             return $this->error('超时');
         }
@@ -990,7 +984,16 @@ class Service extends Base
             }
 
             $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
-            return $this->success('成功', "", $msg);
+
+            $message ="设备服务提示\n".date('m月d日', time()) . "\n您有二楼多功能厅预约申请需要审核，请前往后台审核";
+            //推送给运营和物业
+            $reult = $this->publicSend(1, $message);
+            if ($reult) {
+                return $this->success('成功', "", $msg);
+            } else {
+                return $this->error("推送失败");
+            }
+
         } else {
             return $this->error('超时');
         }
@@ -1181,7 +1184,14 @@ class Service extends Base
                 $value->save();
             }
             $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
-            return $this->success('成功', "", $msg);
+            $message ="设备服务提示\n".date('m月d日', time()) . "\n您有大堂LED屏预约申请需要审核，请前往后台审核";
+            //推送给运营和物业
+            $reult = $this->publicSend(1, $message);
+            if ($reult) {
+                return $this->success('成功', "", $msg);
+            } else {
+                return $this->error("推送失败");
+            }
         } else {
             return $this->error('超时');
         }
@@ -2200,7 +2210,7 @@ class Service extends Base
 
         }
 
-        $res = commonService::sendPersonalMessage($message, 15706844655);
+        $res = commonService::sendPersonalMessage($message, $useridlist);
         if ($res['errcode'] == 0) {
             return true;
         } else {
@@ -2209,7 +2219,74 @@ class Service extends Base
         }
 
     }
+    /*推个人中心，推送人员选择公共方法（设备服务专用）
+         *$type =1  该园区运营人员
+         *$type =2  该园区物业管理
+         *$type =3  该园区运营人员+物业管理
+         *$type =4  该用户
+         *
+         * $message=[
+         *   "title" => "物业保修提示",
+         *   "description" => date('m月d', $data['create_time']) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+         *   "url" => '']
+         *
+         *retur  true/false
+        */
+    public function publicSend($type, $message, $userid = 15706844655)
+    {
+        $wechatUser = new WechatUser();
+        $useridlist = "";
+        $park_id = session('park_id');
+        //该园区运营的department——id
+        switch ($park_id) {
+            case  3 :
+                $department_id = 76;
+                break;
+            default:
+                $department_id = 76;
+                break;
+        }
+        switch ($type) {
+            case 1 :
+                $user = $wechatUser->where('department', $department_id)->select();
+                foreach ($user as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                break;
+            case 2 :
+                $user = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                foreach ($user as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
+            case 3:
+                //该园区运营团队
+                $user1 = $wechatUser->where('department', $department_id)->select();
+                foreach ($user1 as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                //该园区物业管理
+                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                foreach ($user2 as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
 
+            case 4:
+                $useridlist = $userid;
+                break;
+
+        }
+
+        $res = commonService::sendPersonalText($message, $useridlist);
+        if ($res['errcode'] == 0) {
+            return true;
+        } else {
+
+            return false;
+        }
+
+    }
 
 }
 

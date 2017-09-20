@@ -156,5 +156,23 @@ class Service
         return self::sendTextCard($config, $message, $toUser);
     }
 
+    /**
+     * 个人中心发送文本
+     * @param array $message 新闻数据
+     * [
+     *     'title' => $message['title'],
+     *     'description' => $message['description'],
+     *     'url' => $message['url'],
+     *
+     * ]
+     * @param string $toUser 发送对象，如果为空则发送给全体
+     * @return array|bool
+     */
+    public static function sendPersonalText($message, $toUser = '@all')
+    {
+        $config = config('personal');
+
+        return self::sendMessage($config, $message, $toUser);
+    }
 
 }
