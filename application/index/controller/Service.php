@@ -1491,8 +1491,8 @@ class Service extends Base
                 "description" => date('m月d日', $data['create_time']) . "\n服务地点：" . $data['address'] . "\n服务时间：" . date('m月d', $data['clear_time']) . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $property->getLastInsID()
             ];
-            //推送给运营
-            $reult = $this->commonSend(1, $message);
+            //推送给运营和物业
+            $reult = $this->commonSend(3, $message);
 
             if ($reult) {
                 return $this->success("预约成功");
@@ -1933,7 +1933,7 @@ class Service extends Base
                 $message = [
                     "title" => "饮水服务提示",
                     "description" => date('m月d日', time()) . "\n您的饮水服务园区已确认，稍后将有服务人员送水，请您耐心等待",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/no/id/' . $id
                 ];
                 if ($type == 1) {
                     $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
@@ -1961,7 +1961,7 @@ class Service extends Base
                 $message = [
                     "title" => "保洁服务提示",
                     "description" => date('m月d日', time()) . "\n您的保洁服务园区已确认，稍后将有服务人员联系您，请您耐心等待",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/no/id/' . $id
                 ];
                 if ($type == 1) {
                     $res = PropertyServer::where('id', $id)->update(['status' => 1, 'remark' => $data['remark']]);
@@ -2036,7 +2036,7 @@ class Service extends Base
             case  7:
                 $message = [
                     "title" => "车卡服务提示",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/no/id/' . $id
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/no/id/' . $id
                 ];
                 $record = $ElectricityService->where('id', $id)->find();
                 if ($type == 1) {
