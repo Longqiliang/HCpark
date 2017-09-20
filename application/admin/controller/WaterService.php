@@ -10,6 +10,7 @@ namespace app\admin\controller;
 use app\common\model\WaterService as WaterModel;
 use app\common\model\WechatUser;
 use think\Db;
+use app\common\behavior\Service as ServiceModel;
 class WaterService extends Admin
 {
     public function index()
@@ -58,8 +59,15 @@ class WaterService extends Admin
         $id = input('id');
         $remark = input('remark');
         $result = WaterModel::where('id', 'in', $id)->update(['status' => 1,'remark'=>$remark]);
+        $data = WaterModel::get($id);
+        $userId = $data['userid'];
         if ($result){
-
+            $message = [
+                "title" => "饮水服务提示",
+                "description" => "送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/'.$id,
+            ];
+            ServiceModel::sendPersonalMessage($message,$userId);
             $this->success("已审核");
         }else{
 

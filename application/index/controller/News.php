@@ -23,8 +23,8 @@ class News extends Base
             'is_banner' => 1,
             'park_id'  =>session("park_id")
         ];
-        $count = NewsModel::where($bannerMap)->order('create_time desc')->count();
-        $banners = NewsModel::where($bannerMap)->order('create_time desc')->limit(3)->select();
+       //$count = NewsModel::where($bannerMap)->order('create_time desc')->count();
+        $banners = NewsModel::where($bannerMap)->order('create_time desc')->select();
 
 
 
@@ -38,7 +38,7 @@ class News extends Base
         $list = NewsModel::where($listMap)->order('create_time desc')->limit(6)->select();
 
 
-        if($count==3){
+       /* if($count==3){
             //如果有3张轮播图，优先使用轮播图
             $this->assign('banners',$banners);
             $this->assign('list',$list);
@@ -66,8 +66,10 @@ class News extends Base
             $banners = NewsModel::where($listMap)->order('create_time desc')->limit(3)->select();
             $this->assign('banners',$banners);
             $this->assign('list',$list);
-        }
+        }*/
 
+        $this->assign('banners',$banners);
+        $this->assign('list',$list);
         return $this->fetch();
     }
 

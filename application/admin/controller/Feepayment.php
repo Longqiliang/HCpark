@@ -144,7 +144,7 @@ class Feepayment extends Admin
                 $message = [
                     "title" => "费用缴纳提示",
                     "description" => date('m月d日', time()) . "\n您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元确认成功。",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/history/type/'.$feeInfo['type'].'/id/'. $id,
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$id,
                 ];
 
             }else{
@@ -159,7 +159,6 @@ class Feepayment extends Admin
 
             return $this->error("审核失败");
         }
-
 
     }
 
