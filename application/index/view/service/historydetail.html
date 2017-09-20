@@ -455,7 +455,7 @@
     <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
             <p>审核服务</p>
-            <div class="remark" v-if="appid==2 || appid==3 ||appid==4 || (appid>10 && appid<19)">
+            <div class="remark" v-if="appid!=8">
                 <p>备注信息</p>
                 <textarea v-model="subData.check_remark"></textarea>
             </div>

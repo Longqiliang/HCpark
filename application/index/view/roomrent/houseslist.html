@@ -404,7 +404,7 @@
 //                console.log(_this.loading,_this.canLoad,_this.isHouseList);
                 if((!_this.loading) && !_this.isHouseList){
                     _this.loading = true;
-                    var build = _this.parkName.txt;
+                    var build = (_this.parkName.txt).substr(-2,1);
                     var rentList =null;
                     for(var obj in _this.list){
                         for(var arr in _this.list[obj]){
