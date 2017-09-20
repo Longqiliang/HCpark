@@ -1554,11 +1554,11 @@ class Service extends Base
         $len = input('length');
         if ($type == 1) {
 
-            $list = PropertyServer::where(['type' => ['<', 4], 'status' => ['in', [0, 1]]])->order('create_time desc')->limit($len, 6)->paginate();
+            $list = PropertyServer::where(['type' => ['<', 4], 'status' => ['in', [0, 1, 2]]])->order('create_time desc')->limit($len, 6)->paginate();
             int_to_string($list, ['type' => [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"]]);
         } else {
 
-            $list = PropertyServer::where(['type' => 4, 'status' => ['in', [0, 1]]])->order('create_time desc')->limit($len, 6)->paginate();
+            $list = PropertyServer::where(['type' => 4, 'status' => ['in', [0, 1,2]]])->order('create_time desc')->limit($len, 6)->paginate();
         }
 
         return $list;

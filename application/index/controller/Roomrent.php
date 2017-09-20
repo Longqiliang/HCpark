@@ -51,14 +51,14 @@ class Roomrent extends Base
 
         $a=array();
         foreach ($data['img'] as $v){
-           $v="http://xk.0519ztnet.com/".$v;
+           $v="http://".$_SERVER['HTTP_HOST'].$v;
            array_push($a,$v);
         }
         $data['img']=$a;
 
         $b=array();
         foreach ($data['imgs'] as $v2){
-            $v2="http://xk.0519ztnet.com/".$v2;
+            $v2="http://".$_SERVER['HTTP_HOST'].$v2;
             array_push($b,$v2);
         }
         $data['imgs']=$b;

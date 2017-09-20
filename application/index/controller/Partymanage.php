@@ -239,14 +239,14 @@ class Partymanage extends Base
         ];
         $a=array();
         foreach ($info['img'] as $v){
-            $v=session('requserUrl').$v;
+            $v= "http://".$_SERVER['HTTP_HOST'].$v;
             array_push($a,$v);
         }
         $info['img']=$a;
 
         $b=array();
         foreach ($info['imgs'] as $v2){
-            $v2=session('requserUrl').$v2;
+            $v2 = "http://".$_SERVER['HTTP_HOST'].$v2;
             array_push($b,$v2);
         }
         $info['imgs']=$b;

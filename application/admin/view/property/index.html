@@ -85,8 +85,10 @@
                     <th>{$vo.status_text}</th>
                     <td>
                         {eq name="$vo.status" value="0"}
-                        <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',0)">审核</button>
-                        {else/}<button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',1)">删除</button>
+                        <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',1)">审核通过</button>
+                        <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',2)">审核不通过</button>
+
+                        {else/}<button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',-1)">删除</button>
                         {/eq}
 
                     </td>

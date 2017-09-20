@@ -127,11 +127,12 @@ class Feepayment extends Admin
     public function changeState()
     {
         $id = input('id');
+        $uid = input('uid');
         $feepayment = new FeePaymentModel();
-        $res = $feepayment->where('id', $id)->update(['status' => 1]);
+        $res = $feepayment->where('id', $id)->update(['status' => $uid]);
         if ($res) {
 
-            return $this->success("审核通过， 稍后自动刷新页面~");
+            return $this->success("审核成功， 稍后自动刷新页面~");
         } else {
 
             return $this->error("审核失败");
