@@ -1576,6 +1576,7 @@ class Service extends Base
         $data = input('post.');
         $waterModel = new WaterModel;
         $data['userid'] = session('userId');
+        $data['park_id'] = session('park_id');
         $result = $waterModel->allowField(true)->validate(true)->save($data);
         if ($result) {
             //todo： 推送点击到详情页面代码
@@ -1788,7 +1789,7 @@ class Service extends Base
         if ($appid == 1) {
 
             $infos = FeePayment::get($id);
-            echo json_encode($infos);
+           // echo json_encode($infos);
             $info = [
                 'name' => $infos['name'],
                 'expiration_time' => $infos['expiration_time'],

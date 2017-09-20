@@ -8,6 +8,7 @@
 namespace app\admin\controller;
 
 use app\index\model\PropertyServer;
+use app\common\behavior\Service as ServiceModel;
 
 class Property extends Admin
 {
@@ -41,6 +42,9 @@ class Property extends Admin
         $uid = input('del');
         $remark = input('check_remark');
         $res=PropertyServer::where('id',$id)->update(['status'=>$uid,'check_remark'=>$remark]);
+        $userInfo = PropertyServer::where('id',$id)->find();
+        $userType = $userInfo['type'];
+        $userId = $userInfo['user_id'];
         if ($uid == -1){
             $msg = "删除成功";
             $msgs = "删除失败";
@@ -50,6 +54,40 @@ class Property extends Admin
         }
         if ($res){
 
+            if ($uid == 1){
+                if ($userType == 4){
+                    $message = [
+                        "title" => "保洁服务提示",
+                        "description" => "您的保洁服务园区已确认，稍后将有服务人员联系您，请您耐心等待",
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/no/id/' . $id
+                    ];
+                }else{
+                    $message = [
+                        "title" => "物业报修提示",
+                        "description" => "您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
+                    ];
+                }
+
+            }elseif ($uid == 2){
+                if ($userType == 4){
+                    $message = [
+                        "title" => "保洁服务提示",
+                        "description" => "报修服务暂时无法提供\n备注：".$userInfo['check_remark'],
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/no/id/' . $id
+                    ];
+                }else{
+                    $message = [
+                        "title" => "物业报修提示",
+                        "description" => "报修服务暂时无法提供\n备注：".$userInfo['check_remark'],
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
+                    ];
+                }
+
+            }else{
+
+            }
+            ServiceModel::sendPersonalMessage( $message,18867514826);
             $this->success( $msg);
         }else{
 
