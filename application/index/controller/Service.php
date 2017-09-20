@@ -245,7 +245,7 @@ class Service extends Base
             $ca = $companyapplication->where('app_id', $data['app_id'])->find();
             $message = [
                 "title" => "企业服务提示",
-                "description" => date('m月d', $map['create_time']) . "\n" . $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['people'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
+                "description" => date('m月d', $map['create_time']) . "\n" . $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $data['app_id'] . '/can_check/yes/id/' . $compantService->getLastInsID()
             ];
             //推送给运营
@@ -457,8 +457,6 @@ class Service extends Base
         return $this->fetch('payment');
 
     }
-
-
     //凭证提交公共方法
     public function payment()
     {
@@ -479,13 +477,9 @@ class Service extends Base
         $this->assign('data', json_encode($data));
         return $this->fetch();
     }
-
-
     //提交新卡
     public function addNewCard()
     {
-
-
         $CardparkService = new CarparkService();
 
         $id = session('userId');
@@ -1448,7 +1442,7 @@ class Service extends Base
                     break;
             }
             $message = [
-                "title" => "物业保修提示",
+                "title" => "物业报修提示",
                 "description" => date('m月d日', time()) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/yes/id/' . $property->getLastInsID()
             ];
@@ -1746,7 +1740,7 @@ class Service extends Base
                 $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
                 $message = [
                     "title" => $res['type_text']."缴纳确认提示",
-                    "description" => date('m月d', time()) . "\n".$res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee'],
+                    "description" => date('m月d', time()) . "\n".$res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee']."元",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $id
                 ];
                 //推送给运营
@@ -1907,18 +1901,18 @@ class Service extends Base
                 }
                 $message = [
                     "title" => $res['type_text']."缴纳确认提示",
-                    "description" => date('m月d日', time()) . "\n".$res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee'],
+                    "description" => date('m月d日', time()) . "\n".$res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee']."元",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/no/id/' . $id
                 ];
 
                 if ($type == 1) {
                     $res['status']=2;
-                  $message['description'].="\n 确认成功";
+                  $message['description'].="\n确认成功";
                 }
 
                 else {
                     $res['status']=3;
-                    $message['description'].="\n 缴费失败";
+                    $message['description'].="\n缴费失败";
                 }
                 unset($res['type_text']);
                 $res->save();
@@ -1945,7 +1939,7 @@ class Service extends Base
 
                 } else {
                     $res = PropertyServer::where('id', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
-                    $message['description'] = date('m月d日', time()) . "\n保修服务暂时无法提供";
+                    $message['description'] = date('m月d日', time()) . "\n报修服务暂时无法提供";
                 }
                 if (!empty($data['check_remark'])) {
                     $message['description'] .= "\n备注：" . $data['check_remark'];
