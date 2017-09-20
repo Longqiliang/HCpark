@@ -149,7 +149,7 @@
                 var content = this.$refs.inputs,
                     vm = this.comments,
                     _this = this;
-                if(content.length > 0){
+                if(content.value.length > 0){
                     _this.$indicator.open({
                         text: '评论提交中',
                         spinnerType: 'triple-bounce'
@@ -158,7 +158,7 @@
                         type:'post',
                         url:'{:Url("Communication/comment")}',
                         dataType:'json',
-                        data:{'id':id,'content':$(content).val()}
+                        data:{'id':id,'content':content.value}
                     }).done(function (data) {
                         _this.$indicator.close();
                         if(data.code == 1){

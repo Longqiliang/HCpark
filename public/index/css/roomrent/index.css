@@ -221,23 +221,20 @@ body{
     height: 50vw;
 }
 .banner-icon{
-    width: 16.53vw;
+    width: 18.53vw;
     height: 7.73vw;
     position: absolute;
     right: 0;
-    top:%;
-    /*-webkit-transform: translateY(-50%);*/
-    /*transform: translateY(-50%);*/
     background-repeat:no-repeat;
-    background-size: 100%;
     z-index: 3;
     line-height: 7.73vw;
-    text-align: right;
+    text-align: center;
     font-size: 1.2rem;
-    padding-right: 5px;
+    padding-left: 8vw;
 }
 .banner-icon.icon-vr{
     background-image: url('/index/images/roomrent/icon-vr.png');
+    background-size: 18vw;
 }
 .banner img{
     width: 100%;
@@ -416,4 +413,9 @@ i.icon-photo{
 .center img {
     width: 95%;
     margin: 20% auto 0;
+}
+@media screen and (min-width: 1000px){
+    .banner-icon{
+        font-size: 2rem;
+    }
 }
