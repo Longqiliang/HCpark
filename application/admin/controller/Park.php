@@ -210,7 +210,7 @@ class Park extends Admin
                         if (is_file(PUBLIC_PATH . $v1)) {
                             $path = str_replace(".", "_s.", $v1);
                             $image = Image::open(PUBLIC_PATH . $v1);
-                            $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                            $image->thumb(1125, 563)->save(PUBLIC_PATH . $path);
                             $data['imgs'][$k1] = $path;
                         } else {
                             $data['imgs'][$k1] = $data['img'][$k1];
@@ -253,7 +253,7 @@ class Park extends Admin
                         if (is_file(PUBLIC_PATH . $v1)) {
                             $path = str_replace(".", "_s.", $v1);
                             $image = Image::open(PUBLIC_PATH . $v1);
-                            $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
+                            $image->thumb(1125, 563)->save(PUBLIC_PATH . $path);
                             $data['imgs'][$k1] = $path;
                         } else {
                             $data['imgs'][$k1] = $data['img'][$k1];
