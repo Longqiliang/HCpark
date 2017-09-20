@@ -239,14 +239,14 @@ class Partymanage extends Base
         ];
         $a=array();
         foreach ($info['img'] as $v){
-            $v="http://xk.0519ztnet.com/".$v;
+            $v=session('requserUrl').$v;
             array_push($a,$v);
         }
         $info['img']=$a;
 
         $b=array();
         foreach ($info['imgs'] as $v2){
-            $v2="http://xk.0519ztnet.com/".$v2;
+            $v2=session('requserUrl').$v2;
             array_push($b,$v2);
         }
         $info['imgs']=$b;
@@ -980,6 +980,7 @@ class Partymanage extends Base
     /*公司其他合同列表*/
     public function otherList()
     {
+        $data = [] ;
         $id = input('id');
         $map = ['department_id' => $id,'type'=>3];
         $list = CompanyContract::where($map)->order('id  desc')->select();

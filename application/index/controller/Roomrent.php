@@ -50,14 +50,14 @@ class Roomrent extends Base
 
         $a=array();
         foreach ($data['img'] as $v){
-           $v="http://xk.0519ztnet.com/".$v;
+           $v=session('requserUrl').$v;
            array_push($a,$v);
         }
         $data['img']=$a;
 
         $b=array();
         foreach ($data['imgs'] as $v2){
-            $v2="http://xk.0519ztnet.com/".$v2;
+            $v2=session('requserUrl').$v2;
             array_push($b,$v2);
         }
         $data['imgs']=$b;
@@ -81,7 +81,7 @@ class Roomrent extends Base
     }
 
     /*租房详细列表*/
-    public function rentList()
+    /*public function rentList()
     {
         $data = [];
         $data1 = [];
@@ -142,7 +142,7 @@ class Roomrent extends Base
 
 
         return $this->fetch();
-    }
+    }*/
 
     /*楼盘列表下拉刷新*/
     public function moreList()
@@ -430,25 +430,6 @@ class Roomrent extends Base
 
     }
 
-    /*楼房信息*/
-    public function gaoshiqings()
-    {
-        $parkId = session('park_id');
-        $parkInfo = Park::where('id', $parkId)->find();
-        $parkName = $parkInfo['name'];
-        $parkRoom = new ParkRoom();
-        $map = [
-            'park_id' => $parkId,
-            'build_block' => "A",
-            'company_id' => 0
-        ];
-        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
-        foreach ($list as $k => $v) {
-            $floor[$k] = $v['floor'];
-        }
-
-    }
-
     /*租房意向申请*/
     public function intention(){
         if (IS_POST){
@@ -478,5 +459,96 @@ class Roomrent extends Base
     {
         return $this->fetch();
     }
+    /*楼房信息*/
+    public function gaoshiqings()
+    {
+        $parkId = session('park_id');
+        $parkInfo = Park::where('id', $parkId)->find();
+        $parkName = $parkInfo['name'];
+        $parkRoom = new ParkRoom();
+        $map = [
+            'park_id' => $parkId,
+            'build_block' => "A",
+            'company_id' => 0,
+            'del' => 0
+        ];
+        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
+        foreach ($list as $k => $v) {
+            $floor[$k] = $v['floor'];
+        }
+        //dump($floor);
+        foreach($floor as $k=>$v){
+            $map['floor'] = $v ;
+            $roomList[$k]['floor'] = $v;
+            $roomList[$k]['rooms'] = $parkRoom->where($map)->order('room  asc')->field('room,id')->select();
+
+        }
+        $area = $this->gaoshiqing();
+        for ($i=13;$i>0;$i--){
+            foreach($area as $k=>$v){
+                if ($v['floor'] == $i){
+                    $newArr[] =['floor'=>$i,'rooms'=>$v['rooms']];
+                }
+            }
+            foreach($roomList as $k=>$v){
+                if ($v['floor'] == $i){
+                    $newArr[] =['floor'=>$i,'rooms'=>$v['rooms']];
+                }
+            }
+        }
+
+        foreach ($newArr as $k=>$v){
+            if ($k ==(count($newArr)-1)){
+               break;
+            }
+            if ($newArr[$k]['floor'] ==$newArr[$k+1]['floor']){
+                    $newArr[$k]['rooms'] = array_merge($newArr[$k]['rooms'],$newArr[$k+1]['rooms']);
+                }
+        }
+        foreach ($newArr as $k=>$v){
+            if ($k ==(count($newArr)-1)){
+                break;
+            }
+            if ($newArr[$k]['floor'] ==$newArr[$k+1]['floor']){
+                $newArr1[] = $k+1;
+            }
+        }
+        foreach ( $newArr1 as $k=>$v){
+            unset($newArr[$v]);
+        }
+        $asp = "";
+        foreach ($newArr as $k=>$v){
+           foreach ($v['rooms'] as $k1=>$v1){
+
+               if ($k1 == (count($v['rooms'])-1)){break;}
+
+               if ($v['rooms'][$k1]['room'] > $v['rooms'][$k1+1]['room']){
+                   $asp = $v['rooms'][$k1+1]['room'] ;
+                   $v['rooms'][$k1+1]['room'] = $v['rooms'][$k1]['room'];
+                   $v['rooms'][$k1]['room'] =$asp;
+               }
+           }
+        }
+        echo json_encode($newArr);
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
