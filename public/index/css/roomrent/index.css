@@ -64,7 +64,7 @@ body{
 .list{
     display: flex;
     flex-wrap: wrap;
-    padding:0 3.2vw 4vw;
+    padding:0 3.2vw 10.67vw;
     justify-content: space-between;
 }
 .list-item{
@@ -225,7 +225,7 @@ body{
     height: 7.73vw;
     position: absolute;
     right: 0;
-    top:10%;
+    top:%;
     /*-webkit-transform: translateY(-50%);*/
     /*transform: translateY(-50%);*/
     background-repeat:no-repeat;
