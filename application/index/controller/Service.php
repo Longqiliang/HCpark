@@ -1920,6 +1920,7 @@ class Service extends Base
                     $res['status']=3;
                     $message['description'].="\n 缴费失败";
                 }
+                unset($res['type_text']);
                 $res->save();
                 //todo： 推送点击到详情页面代码
 
