@@ -103,6 +103,7 @@
                             };
                           var newData =  Object.assign(extraObj,data.data);
                             _this.documents.unshift(newData);
+                            _this.loading = false;
                         }
                     },function (data) {
                         alert("网络错误,请检查你的网络！");
