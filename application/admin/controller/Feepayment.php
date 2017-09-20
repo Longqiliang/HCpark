@@ -76,12 +76,25 @@ class Feepayment extends Admin
                 }
 
             } else {
+                $title = "" ;
+                $type = [1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"];
                 $data = input('post.');
                 unset($data['uid']);
                 $data['status'] = 0;
                 $data['create_time'] = time();
                 $re = $feepayment->validate(true)->save($data);
+                $title = $type[$data['type']];
                 if ($re) {
+                    $userList = WechatUser::where(['department'=>$data['company_id'],'fee_status'=>1])->select();
+                    foreach ($userList as $k=>$v){
+                        $userId = "|".$v['userid'];
+                    }
+                    $message = [
+                        "title" => $title."缴纳提示",
+                        "description" => date('m月d日', time()) . "\n您的". $title."（到期时间：".$data['expiration_time']."）应缴纳".$data['fee']."元",
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/history/appid/1/id/'.$id,
+                    ];
+                    Service::sendPersonalMessage($message,$userId);
 
                     return $this->success('添加成功');
                 } else {
