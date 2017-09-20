@@ -245,7 +245,7 @@ class Service extends Base
             $ca = $companyapplication->where('app_id', $data['app_id'])->find();
             $message = [
                 "title" => "企业服务提示",
-                "description" => date('m月d', $map['create_time']) . "\n" . $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
+                "description" => date('m月d日', $map['create_time']) . "\n" . $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $data['app_id'] . '/can_check/yes/id/' . $compantService->getLastInsID()
             ];
             //推送给运营
@@ -309,7 +309,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码（要改）
             $message = [
                 "title" => "充电柱服务提示",
-                "description" => date('m月d', time()) . "\n您有新充电柱缴费需要审核，请点击查看",
+                "description" => date('m月d日', time()) . "\n您有新充电柱缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/yes/id/' . $PillarService->getLastInsID()
             ];
             //推送给运营
@@ -390,7 +390,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码（要改）
             $message = [
                 "title" => "充电柱服务提示",
-                "description" => date('m月d', time()) . "\n您有旧充电柱缴费需要审核，请点击查看",
+                "description" => date('m月d日', time()) . "\n您有旧充电柱缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/yes/id/' . $er->getLastInsID()
             ];
             //推送给运营
@@ -511,7 +511,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码（要改）
             $message = [
                 "title" => "车卡服务提示",
-                "description" => date('m月d', time()) . "\n您有新卡缴费需要审核，请点击查看",
+                "description" => date('m月d日', time()) . "\n您有新卡缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
             //推送给运营
@@ -593,7 +593,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码（要改）
             $message = [
                 "title" => "车卡服务提示",
-                "description" => date('m月d', time()) . "\n您有旧卡缴费需要审核，请点击查看",
+                "description" => date('m月d日', time()) . "\n您有旧卡缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
             //推送给运营
@@ -1492,7 +1492,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码
             $message = [
                 "title" => "保洁服务提示",
-                "description" => date('m月d日', $data['create_time']) . "\n服务地点：" . $data['address'] . "\n服务时间：" . date('m月d', $data['clear_time']) . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "description" => date('m月d日', time()) . "\n服务地点：" . $data['address'] . "\n服务时间：" . date('m月d日', $data['clear_time']) . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $property->getLastInsID()
             ];
             //推送给运营和物业
@@ -1580,7 +1580,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码
             $message = [
                 "title" => "饮水服务提示",
-                "description" => date('m月d', time()) . "\n送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "description" => date('m月d日', time()) . "\n送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $waterModel->getLastInsID()
             ];
             //推送给运营和物业
@@ -1750,7 +1750,7 @@ class Service extends Base
                 $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
                 $message = [
                     "title" => $res['type_text']."缴纳确认提示",
-                    "description" => date('m月d', time()) . "\n".$res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee']."元",
+                    "description" => date('m月d日', time()) . "\n".$res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee']."元",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $id
                 ];
                 //推送给运营
