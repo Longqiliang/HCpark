@@ -503,7 +503,7 @@ class Roomrent extends Base
                 $info['area'] = isset($info->roominfo->area) ? $info->roominfo->area : "";
                 $info['price'] = isset($info->roominfo->price) ? $info->roominfo->price : "";
                 $info['room'] = isset($info->roominfo->room->room) ? $info->roominfo->room->room : "";
-
+               unset($info['roominfo']);
             } //租房意向
             else {
                 $info = $parkIntention->where('id', $id)->find();
