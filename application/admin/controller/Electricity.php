@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 use  app\common\model\ElectricityService;
 use  app\common\model\ElectricityRecord;
+use  app\common\behavior\Service as ServiceModel;
 
 class Electricity extends Admin
 {
@@ -61,6 +62,10 @@ class Electricity extends Admin
             $type = input('type');
             $id = input('id');
             $electricity_id = input('electricity_id');
+            $message = [
+                "title" => "车卡服务提示",
+                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/no/id/' . $id
+            ];
             //通过
             if ($type == 1) {
                 if (empty($electricity_id)) {
@@ -77,15 +82,37 @@ class Electricity extends Admin
                     }
                 }
                 $record['status'] = 1;
-               $record['electricity_id']=$electricity_id;
+                $record['electricity_id']=$electricity_id;
                 $record->save();
+                $userId =  $record['user_id'];
+                //新柱
+                if ($record['type'] == 1) {
+                    $message ['description'] = "您的新柱缴费已经完成，请2小时后前往领取";
+
+                } // 旧柱
+                else {
+                    $message ['description'] = "您的旧柱续费已经完成";
+                }
+                ServiceModel::sendPersonalMessage($message, $userId);
+
                 return $this->success("审核成功");
 
             } //没通过
             elseif ($type == 2) {
                 $record = $ElectricityService->where('id', $id)->find();
+                $userId =  $record['user_id'];
                 $record['status'] = 2;
                 $record->save();
+                //新柱
+                if ($record['type'] == 1) {
+                    $message ['description'] = "您的新柱缴费无法通过审核";
+
+                } // 旧柱
+                else {
+                    $message ['description'] = "您的旧柱续费无法通过审核";
+                }
+                ServiceModel::sendPersonalMessage($message,$userId);
+
                 return $this->success("审核成功");
             }
         } else {

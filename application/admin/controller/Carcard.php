@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 use  app\common\model\CarparkRecord;
 use  app\common\model\CarparkService;
+use  app\common\behavior\Service as ServiceModel;
 
 class Carcard extends Admin
 {
@@ -47,22 +48,45 @@ class Carcard extends Admin
             $type = input('type');
             $id = input('id');
             $park_card = input('park_card');
+            $message = [
+                "title" => "车卡服务提示",
+                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/no/id/' . $id
+            ];
             //通过
             if ($type == 1) {
                 if (empty($park_card)) {
                     return $this->error("请填写 停车卡号");
                 }
                 $record = $CardparkService->where('id', $id)->find();
+                $userId =  $record['user_id'];
                 $record['park_card'] = $park_card;
                 $record['status'] = 1;
                 $record->save();
+                if ($record['type'] == 1) {
+                    $message ['description'] = "您的新卡缴费已经完成，请2小时后前往领取";
+
+                } // 旧卡
+                else {
+                    $message ['description'] = "您的旧卡续费已经完成";
+                }
+                ServiceModel::sendPersonalMessage($message,$userId);
                 return $this->success("审核成功");
             } //没通过
             elseif ($type == 2) {
                 $record = $CardparkService->where('id', $id)->find();
+                $userId =  $record['user_id'];
                 $record['park_card'] = $park_card;
                 $record['status'] = 2;
                 $record->save();
+                //新卡
+                if ($record['type'] == 1) {
+                    $message ['description'] = "您的新卡缴费无法通过审核";
+
+                } // 旧卡
+                else {
+                    $message ['description'] = "您的旧卡续费无法通过审核";
+                }
+                ServiceModel::sendPersonalMessage($message,$userId);
                 return $this->success("审核成功");
             }
         } else {
