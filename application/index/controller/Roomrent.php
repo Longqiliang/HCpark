@@ -457,8 +457,21 @@ class Roomrent extends Base
             $parkIntention = new ParkIntention();
             $res = $parkIntention->allowField(true)->save($data);
             if ($res){
+                //todo： 推送点击到详情页面代码
+                $message = [
+                    "title" => "租房意向服务提示",
+                    "description" => date('m月d日', time()) . "\n您有新的租房意向，请点击查看。",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/type/2/id/'.$parkIntention->getLastInsID()
+                ];
+                //推送给运营
+                $service =new Service();
+                $reult = $service->commonSend(1, $message);
+                if ($reult) {
+                    $this->success('添加成功');
+                } else {
+                    return $this->error("推送失败");
+                }
 
-                $this->success('添加成功');
             }else{
 
                 $this->error("添加失败");
@@ -477,19 +490,25 @@ class Roomrent extends Base
         $type =input('type');
         $peopleRent =new PeopleRent();
         $parkIntention = new ParkIntention();
-        //我要租房
-        if($type==1){
-            $info=$peopleRent->where('id',$id)->find();
-            $info['area']=isset($info->rentinfo->area)?$info->rentinfo->area:"";
-            $info['price']=isset($info->rentinfo->price)?$info->rentinfo->price:"";
-            $info['room']=isset($info->rentinfo->room->room)?$info->rentinfo->room->room:"";
+        if(IS_POST){
+            $info = $peopleRent->where('id', $id)->find();
+            $info['status']=2;
+            $info->save();
+            return $this->success('成功');
+        }else {
 
-        }
-        //租房意向
-        else{
-            $info=$parkIntention->where('id',$id)->find();
-        }
+            //我要租房
+            if ($type == 1) {
+                $info = $peopleRent->where('id', $id)->find();
+                $info['area'] = isset($info->rentinfo->area) ? $info->rentinfo->area : "";
+                $info['price'] = isset($info->rentinfo->price) ? $info->rentinfo->price : "";
+                $info['room'] = isset($info->rentinfo->room->room) ? $info->rentinfo->room->room : "";
 
+            } //租房意向
+            else {
+                $info = $parkIntention->where('id', $id)->find();
+            }
+        }
 
       $this->assign('info',json_encode($info));
         return $this->fetch();
