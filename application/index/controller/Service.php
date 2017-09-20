@@ -1917,7 +1917,7 @@ class Service extends Base
                 $message = [
                     "title" => $res['type_text']."缴纳确认提示",
                     "description" => $res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee']."元",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/no/id/' . $id
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Service/historyDetail/appid/1/can_check/no/id/' . $id
                 ];
 
                 if ($type == 1) {
@@ -2080,7 +2080,7 @@ class Service extends Base
             //充电柱
             case  7:
                 $message = [
-                    "title" => "车卡服务提示",
+                    "title" => "充电柱服务提示",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/no/id/' . $id
                 ];
                 $record = $ElectricityService->where('id', $id)->find();
@@ -2130,7 +2130,7 @@ class Service extends Base
                 $ca = $companyapplication->where('app_id', $data['appid'])->find();
                 $record = $companyService->where('id', $id)->find();
                 $message = [
-                    "title" => "车卡服务提示",
+                    "title" => "企业服务提示",
                     'description' =>    $ca['name'] . "服务申请\n公司名称：" . $record['company'] . "\n联系人员：" . $record['people'] . "\n联系方式：" . $record['mobile'] . "\n备注信息：" . $record['remark'],
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/'.$data['appid'].'/can_check/no/id/' . $id
                 ];
@@ -2149,7 +2149,16 @@ class Service extends Base
                     $message['description'] .= "\n备注：" . $data['check_remark'];
                 }
                 $record->save();
-                return $this->success("审核成功");
+                //推送给用户
+                $reult = $this->commonSend(4, $message, $record['user_id']);
+
+                if ($reult) {
+                    return $this->success("报修成功");
+                } else {
+                    return $this->error("推送失败");
+                }
+
+
                 break;
 
 
