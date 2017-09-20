@@ -12,5 +12,8 @@ use think\Model;
 class ParkRent extends Model{
 
 
+  public  function  room(){
 
+      return $this->hasOne('ParkRoom','id','room_id');
+  }
 }

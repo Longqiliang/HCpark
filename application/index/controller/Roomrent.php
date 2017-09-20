@@ -15,6 +15,7 @@ use app\common\model\PeopleRent;
 use app\index\model\Park;
 use think\Db;
 use think\Image;
+use app\index\controller\Service;
 
 class Roomrent extends Base
 {
@@ -316,7 +317,22 @@ class Roomrent extends Base
             $res = $people->save($data);
             if ($res) {
                 $msg = "您已申请成功;稍后我们的工作人员会电话联系您！";
-                $this->success('提交成功', '', $msg);
+                //todo： 推送点击到详情页面代码
+                $message = [
+                    "title" => "租房服务提示",
+                    "description" => date('m月d', time()) . "\n您有新的租房申请，请点击查看。",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Rent/id/'.$people->getLastInsID()
+                ];
+                //推送给运营
+                $service =new Service();
+                $reult = $service->commonSend(1, $message);
+                if ($reult) {
+                    $this->success('提交成功', '', $msg);
+                } else {
+                    return $this->error("推送失败");
+                }
+
+
             } else {
 
                 $this->error("提交失败");
@@ -448,7 +464,6 @@ class Roomrent extends Base
         }
 
     }
-
     /*租房意向申请*/
     public function intention(){
         if (IS_POST){
@@ -476,6 +491,25 @@ class Roomrent extends Base
 //    记录
     public function record()
     {
+        $id=input('id');
+        $type =input('type');
+        $peopleRent =new PeopleRent();
+        $parkIntention = new ParkIntention();
+        //我要租房
+        if($type==1){
+            $info=$peopleRent->where('id',$id)->find();
+            $info['area']=isset($info->rentinfo->area)?$info->rentinfo->area:"";
+            $info['price']=isset($info->rentinfo->price)?$info->rentinfo->price:"";
+            $info['room']=isset($info->rentinfo->room->room)?$info->rentinfo->room->room:"";
+
+        }
+        //租房意向
+        else{
+            $info=$parkIntention->where('id',$id)->find();
+        }
+
+
+      $this->assign('info',json_encode($info));
         return $this->fetch();
     }
 

@@ -13,6 +13,14 @@ use think\Model;
 class PeopleRent extends Model
 {
 
+  public function  roominfo(){
+
+
+      return $this->hasOne('ParkRent','id','rent_id');
+
+
+  }
+
 
 
 }
