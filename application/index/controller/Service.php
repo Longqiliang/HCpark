@@ -475,6 +475,7 @@ class Service extends Base
         //缴费支付宝账号
         $data['payment_bank'] = $CA['has_bank'] == 1 ? $park['payment_bank'] : "";
         $this->assign('data', json_encode($data));
+
         return $this->fetch();
     }
     //提交新卡
@@ -1690,10 +1691,14 @@ class Service extends Base
         $appid = input('id');
         $type = input('type');
         if ($appid == 1) {
+
             $userid = session("userId");
             $userinfo = WechatUser::where(['userid' => $userid])->find();
             $departmentId = $userinfo['department'];
             $map = ['company_id' => $departmentId, 'type' => $type];
+            if ($type ==2 || $type ==4){
+                $map['type'] = ['in',[2,4]] ;
+            }
             $list = FeePayment::where($map)->order('id desc')->select();
             foreach ($list as $k => $v) {
                 $info[$k] = [
