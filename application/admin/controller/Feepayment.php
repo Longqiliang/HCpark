@@ -12,6 +12,7 @@ use app\common\model\ParkCompany;
 use app\common\model\FeePayment as FeePaymentModel;
 use app\index\model\WechatDepartment;
 use app\index\model\WechatUser;
+use app\common\behavior\Service;
 
 
 class Feepayment extends Admin
@@ -126,11 +127,32 @@ class Feepayment extends Admin
     /*审核*/
     public function changeState()
     {
+        $type = [1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"];
         $id = input('id');
         $uid = input('uid');
+        $userId = "";
         $feepayment = new FeePaymentModel();
         $res = $feepayment->where('id', $id)->update(['status' => $uid]);
+        $feeInfo = $feepayment->where('id',$id)->find();
+        $feeInfo['types'] =   $type[$feeInfo['type']];
         if ($res) {
+            $userList = WechatUser::where(['department'=>$id,'fee_status'=>1])->select();
+            foreach ($userList as $k=>$v){
+                $userId = "|".$v['userid'];
+            }
+            if ($uid ==1){
+                $message = [
+                    "title" => "费用缴纳提示",
+                    "description" => date('m月d日', time()) . "\n您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元确认成功。",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/history/type/'.$feeInfo['type'].'/id/'. $id,
+                ];
+
+            }else{
+
+
+            }
+            $putMessage = Service::sendPersonalMessage( $message,$userId);
+            //$putMessage = Service::sendPersonalMessage( $message,"15706844655");
 
             return $this->success("审核成功， 稍后自动刷新页面~");
         } else {

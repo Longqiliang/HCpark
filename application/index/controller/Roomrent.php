@@ -149,7 +149,7 @@ class Roomrent extends Base
     public function moreList()
     {
         $len = input('length');
-        $parkId = input("park_id");
+        $parkId = session('park_id');
         $build = input('build');
         if (!$build) {
             $build = "A";
