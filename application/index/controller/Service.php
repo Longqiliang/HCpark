@@ -1802,6 +1802,8 @@ class Service extends Base
         } elseif ($appid == 4) {
 
             $info = PropertyServer::get($id);
+            $info['image'] = json_decode($info['image']);
+
         } //车卡
         elseif ($appid == 6) {
             $info = CarparkService::where('id', $id)->find();
@@ -1945,7 +1947,7 @@ class Service extends Base
                     $message['description'] = date('m月d日', time()) . "\n保修服务暂时无法提供";
                 }
                 if (!empty($data['check_remark'])) {
-                    $message['description'] .= "\n备注：" . $data['remark'];
+                    $message['description'] .= "\n备注：" . $data['check_remark'];
                 }
 
                 //推送给用户
