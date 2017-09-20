@@ -70,10 +70,10 @@
                 if(r!=null)return  r[2]; return null;
             },
             goHistory(){
-                window.location.href='/index/service/history/type/'+this.type+"/id/"+this.info.appid;
+                window.location.href='/index/service/history/type/'+this.type+"/id/"+this.info[0].appid;
             },
             orderBtn: function () {
-                window.location.href='/index/service/payment?type=feeinfo'+'&app_id='+this.info.appid+'&id='+this.info.id;
+                window.location.href='/index/service/payment?type=feeinfo'+'&app_id='+this.info[0].appid+'&id='+this.info[0].id;
 //                this.$http.post("/index/service/waterService",data).then(function (res) {
 //                    _this.isSubmit = true;
 //                    var resData = res.data;
