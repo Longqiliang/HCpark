@@ -10,6 +10,7 @@ namespace app\index\controller;
 
 use app\common\behavior\Service;
 use app\index\model\WechatUser;
+use app\index\model\WechatDepartment;
 use think\Loader;
 use think\Log;
 use wechat\TPWechat;
@@ -20,16 +21,19 @@ use app\common\model\PointsLog as PointsLogModel;
 
 class Wechat extends Controller
 {
-    public function index() {
+    public function index()
+    {
         phpinfo();
     }
 
-    public function callback() {
+    public function callback()
+    {
         $weObj = new TPWechat(config('wechat'));
         $weObj->valid();
     }
 
-    public function valid() {
+    public function valid()
+    {
         $weObj = new TPWechat(config('scan'));
         $weObj->valid();
     }
@@ -39,7 +43,7 @@ class Wechat extends Controller
     {
         $user = new WechatUser();
         Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $data =[
+        $data = [
             'appid' => 'ww68db00a56b949cff',
             'token'=>'5nKAPmLKP8mJy6VIy',
             'encodingaeskey'=>'fSH5sENzHzaeoegXgYIvJ7KDER4hO4z6PX5lZ8yQDr3',
@@ -115,14 +119,15 @@ class Wechat extends Controller
 
 
     // 自动登入
-    public function login(){
+    public function login()
+    {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('company'));
         $userId = $weObj->getUserId(input('code'), config('company.agentid'));
         //var_dump($userId);
         //var_dump('errcode:'.$weObj->errCode.',msg:'.$weObj->errMsg);
         $userInfo = $weObj->getUserInfo($userId['UserId']);
-        session('testinfo',json_encode($userInfo));
+        $park_id=$this->findParkid($userInfo['department'][0]);
         $data = [
             'userid' => $userInfo['userid'],
             'name' => $userInfo['name'],
@@ -130,7 +135,7 @@ class Wechat extends Controller
             'gender' => $userInfo['gender'],
             'avatar' => $userInfo['avatar'],
             //'department' => $userInfo['department'][0], //只选第一个所属部门
-            //'park_id'=> $this->findParkid($userInfo['department'][0])
+            'park_id'=> $park_id
         ];
 
         $wechatUser = new WechatUser();
@@ -139,13 +144,13 @@ class Wechat extends Controller
         } else {
             $wechatUser->save($data);
         }
-        $user=$wechatUser->where('userid',$userInfo['userid'])->find();
-        
+
         session('userId', $userInfo['userid']);
         session('name', $userInfo['name']);
         session('gender', $userInfo['gender']);
         session('avatar', $userInfo['avatar']);
-        session('park_id', $user['park_id']);
+        session('park_id', $park_id);
+
         // 默认跳转到前一页
         $this->redirect(session('requestUri'));
     }
@@ -165,7 +170,8 @@ class Wechat extends Controller
     /**
      * 微信支付返回
      */
-    public function notify() {
+    public function notify()
+    {
 
         //接受成功回调支付信息
         $xml = file_get_contents('php://input');
@@ -194,10 +200,10 @@ class Wechat extends Controller
             //修改用户积分
             if ($res['user_type'] == 1) {
 
-                WechatUser::where('userid',$res['user_id'])->setInc('points', $res['points']);
+                WechatUser::where('userid', $res['user_id'])->setInc('points', $res['points']);
             } else if ($res['user_type'] == 2) {
 
-                ThirdUserModel::where('user_id',$res['user_id'])->setInc('points', $res['points']);
+                ThirdUserModel::where('user_id', $res['user_id'])->setInc('points', $res['points']);
             }
 
             //返回成功
