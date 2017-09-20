@@ -500,9 +500,9 @@ class Roomrent extends Base
             //我要租房
             if ($type == 1) {
                 $info = $peopleRent->where('id', $id)->find();
-                $info['area'] = isset($info->rentinfo->area) ? $info->rentinfo->area : "";
-                $info['price'] = isset($info->rentinfo->price) ? $info->rentinfo->price : "";
-                $info['room'] = isset($info->rentinfo->room->room) ? $info->rentinfo->room->room : "";
+                $info['area'] = isset($info->roominfo->area) ? $info->roominfo->area : "";
+                $info['price'] = isset($info->roominfo->price) ? $info->roominfo->price : "";
+                $info['room'] = isset($info->roominfo->room->room) ? $info->roominfo->room->room : "";
 
             } //租房意向
             else {
