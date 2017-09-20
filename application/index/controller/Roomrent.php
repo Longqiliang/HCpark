@@ -320,7 +320,7 @@ class Roomrent extends Base
                 //todo： 推送点击到详情页面代码
                 $message = [
                     "title" => "租房服务提示",
-                    "description" => date('m月d', time()) . "\n您有新的租房申请，请点击查看。",
+                    "description" => date('m月d日', time()) . "\n您有新的租房申请，请点击查看。",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Rent/id/'.$people->getLastInsID()
                 ];
                 //推送给运营
@@ -502,8 +502,10 @@ class Roomrent extends Base
                 $info = $peopleRent->where('id', $id)->find();
                 $info['area'] = isset($info->roominfo->area) ? $info->roominfo->area : "";
                 $info['price'] = isset($info->roominfo->price) ? $info->roominfo->price : "";
-                $info['room'] = isset($info->roominfo->room->room) ? $info->roominfo->room->room : "";
+                $info['room'] = isset($info->roominfo->room->room) ? $info->roominfo->room->build_block."幢".$info->roominfo->room->room : "";
+
                unset($info['roominfo']);
+
             } //租房意向
             else {
                 $info = $parkIntention->where('id', $id)->find();
