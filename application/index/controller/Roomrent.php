@@ -320,8 +320,8 @@ class Roomrent extends Base
                 //todo： 推送点击到详情页面代码
                 $message = [
                     "title" => "租房服务提示",
-                    "description" => date('m月d日', time()) . "\n您有新的租房申请，请点击查看。",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Rent/id/'.$people->getLastInsID()
+                    "description" =>  "您有新的租房申请，请点击查看。",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/id/'.$people->getLastInsID()
                 ];
                 //推送给运营
                 $service =new Service();
@@ -460,7 +460,7 @@ class Roomrent extends Base
                 //todo： 推送点击到详情页面代码
                 $message = [
                     "title" => "租房意向服务提示",
-                    "description" => date('m月d日', time()) . "\n您有新的租房意向，请点击查看。",
+                    "description" => "您有新的租房意向，请点击查看。",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/type/2/id/'.$parkIntention->getLastInsID()
                 ];
                 //推送给运营
