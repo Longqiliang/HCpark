@@ -85,10 +85,11 @@
                     <th>{$vo.status_text}</th>
                     <td>
                         {eq name="$vo.status" value="0"}
-                        <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',1)">审核通过</button>
-                        <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',2)">审核不通过</button>
-
-                        {else/}<button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',-1)">删除</button>
+                        <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
+                        <a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>
+                        <a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>
+                        {else/}
+                        <button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',-1)">删除</button>
                         {/eq}
 
                     </td>
@@ -100,6 +101,47 @@
         </div>
     </div>
 </div>
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="update">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">备注信息</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-10"><input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="modal-form1" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title text-center"  name="dialog-title">查看凭证</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group" id="showImg">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<input type="hidden" name="is_id" value="">
+<input type="hidden" name="is_uid" value="">
 {/block}
 
 {block name="script"}
@@ -114,10 +156,20 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
+    //增加模态框后的修改；
+    function changestates(id,uid) {
+        $("input[name='is_id']").val(id);
+        $("input[name='is_uid']").val(uid);
+    }
     /*修改服务状态值*/
     function changeStatus(id,uid){
+        if(!uid) {
+            var id = $("input[name='is_id']").val();
+            var uid = $("input[name='is_uid']").val();
+            var str = $("input[name='check_remark']").val();
+        }
         $.ajax({
-            data:{id:id,del:uid},
+            data:{id:id,del:uid,check_remark:str},
             type:"POST",
             url:"{:Url('Property/changeStatus')}",
             success:function (data){
@@ -129,6 +181,19 @@
                 }else{
                     updateAlert(data.msg,'info');
                 }
+            }
+        })
+
+    }
+    //查看凭证
+    function showImage(id) {
+        $.ajax({
+            data:{id:id},
+            url:"{:Url('showImage')}",
+            type:"post",
+            success:function(data){
+                $("#showImg").empty();
+                $("#showImg").append(data);
             }
         })
 

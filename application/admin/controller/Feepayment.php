@@ -183,5 +183,21 @@ class Feepayment extends Admin
 
     }
 
+    /*显示凭证*/
+    public function showImage(){
+        $id = input("id");
+        $html="";
+        $feepayment = FeePaymentModel::get($id);
+        if ($feepayment['payment_voucher']){
+            $image = unserialize($feepayment['payment_voucher']);
 
+            foreach($image as $value){
+                $html .= "<div class='col-md-4'><img class='front_cover_img' src='$value' style='width: 150px;height: 200px;'></div>";
+
+            }
+        }
+
+        return $html;
+
+    }
 }
