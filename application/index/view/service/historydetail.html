@@ -162,6 +162,9 @@
         margin: 10px 7px;
         padding: 5px 10px;
     }
+    .group-cell.btn-box{
+        margin:0;
+    }
 </style>
 {/block}
 
@@ -194,10 +197,10 @@
     </div>
     <div v-if="appid==2">
         <div class="card">
-            <div class="card-tit">物业保修</div>
+            <div class="card-tit">物业报修</div>
             <div class="card-cell">
                 <span>服务类型</span>
-                <span>{{info.name}}</span>
+                <span>{{serviceType(info.type)}}</span>
             </div>
             <div class="card-cell">
                 <span>服务地点</span>
@@ -217,7 +220,7 @@
             </div>
             <div class="card-cell">
                 <span>审核进度</span>
-                <span>{{info.status | status}}</span>
+                <span>{{status(info.status)}}</span>
             </div>
             <!--<div class="remark">-->
                 <!--<p>备注信息</p>-->
@@ -229,8 +232,8 @@
             <div class="card-area">
                 <div v-model="" class="group-area">{{info.extra ? info.extra : '无'}}</div>
             </div>
-            <div class="card-upload"  v-if="info.img">
-                <div class="upload-img" v-for="img in info.img">
+            <div class="card-upload"  v-if="info.image">
+                <div class="upload-img" v-for="img in info.image">
                     <img :src="img" alt="缴费凭证">
                 </div>
             </div>
@@ -261,7 +264,7 @@
             </div>
             <div class="card-cell">
                 <span>审核进度</span>
-                <span>{{info.status | status}}</span>
+                <span>{{status(info.status)}}</span>
             </div>
         </div>
     </div>
@@ -274,15 +277,15 @@
             </div>
             <div class="card-cell">
                 <span>服务地点</span>
-                <span>{{info.expiration_time}}</span>
+                <span>{{info.address}}</span>
             </div>
             <div class="card-cell">
                 <span>服务时间</span>
-                <span>{{info.create_time | timeToString}}</span>
+                <span>{{info.create_time*1000 | timeToString}}</span>
             </div>
             <div class="card-cell">
                 <span>提交时间</span>
-                <span>{{info.create_time | timeToString}}</span>
+                <span>{{info.create_time*1000 | timeToString}}</span>
             </div>
             <div class="card-cell">
                 <span>联系人员</span>
@@ -294,7 +297,7 @@
             </div>
             <div class="card-cell">
                 <span>审核进度</span>
-                <span>{{info.status | status}}</span>
+                <span>{{status(info.status)}}</span>
             </div>
         </div>
         <div class="card">
@@ -347,7 +350,7 @@
             </div>
             <div class="card-cell">
                 <span>审核进度</span>
-                <span>{{info.status | status}}</span>
+                <span>{{status(info.status)}}</span>
             </div>
             <div class="card-cell" v-if="info.type==1">
                 <span>车卡押金</span>
@@ -392,9 +395,9 @@
             </div>
             <div class="card-cell">
                 <span>审核进度</span>
-                <span>{{info.status | status}}</span>
+                <span>{{status(info.status)}}</span>
             </div>
-            <div class="card-cell remark">
+            <div class="remark">
                 <p>预约时间</p>
                 <div>{{info.day}}</div>
             </div>
@@ -405,6 +408,35 @@
                 <div class="upload-img" v-for="img in info.img">
                     <img :src="img" alt="缴费凭证">
                 </div>
+            </div>
+        </div>
+    </div>
+    <div v-if="appid>10 && appid<19">
+        <div class="card">
+            <div class="card-tit">{{info.name}}</div>
+            <div class="card-cell">
+                <span>公司名称</span>
+                <span>{{info.company}}</span>
+            </div>
+            <div class="card-cell">
+                <span>联系人员</span>
+                <span>{{info.people}}</span>
+            </div>
+            <div class="card-cell">
+                <span>联系方式</span>
+                <span>{{info.mobile}}</span>
+            </div>
+            <div class="card-cell">
+                <span>提交时间</span>
+                <span>{{info.create_time}}</span>
+            </div>
+            <div class="card-cell">
+                <span>审核进度</span>
+                <span>{{status(info.status)}}</span>
+            </div>
+            <div class="remark">
+                <p>备注</p>
+                <div>{{info.day}}</div>
             </div>
         </div>
     </div>
@@ -434,28 +466,7 @@
 {block name="script"}
 <script src="/static/viewer/viewer.min.js"></script>
 <script>
-    Vue.filter('status', function(status) {
-        var a='';
-        if(status!==undefined && status !== null){
-            if(this.appid!=8){
-            if (status==0){
-                a='审核中'
-            }else if(status==1){
-                a='审核成功'
-            }else if(status==2){
-                a='审核失败'
-            }else{
-                a='已删除'
-            }
-        }}else{
-            if(status==0){
-                a='已取消'
-            }else{
-                a='预约成功'
-            }
-        }
-        return a
-    });
+
     Vue.filter('timeToString', function(time) {
         if(time){
             var newTime = new Date(time);
@@ -475,7 +486,7 @@ var app = new Vue({
     el:'#app',
     mounted(){
         console.log(JSON.parse('{$info}'));
-        if(this.info.img){
+        if(this.info.img || this.info.image){
             var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
                 toolbar:2,
                 title:2,
@@ -494,6 +505,44 @@ var app = new Vue({
         console.log(this.appid)
     },
     methods:{
+        status:function(status) {
+            var s='';
+            if(status!==undefined && status !== null){
+                if(this.appid!=8){
+                    if (status==0){
+                        s='审核中'
+                    }else if(status==1){
+                        s='审核成功'
+                    }else if(status==2){
+                        s='审核失败'
+                    }else{
+                        s='已删除'
+                    }
+                }else{
+                    if(status==0){
+                        s='已取消'
+                    }else{
+                        s='预约成功'
+                    }
+                }
+            }
+            return s
+        },
+        serviceType:function (type) {
+            var st='';
+            console.log(this);
+            if(type!==undefined && type !== null){
+                if(this.appid==2){
+                    if (type==1){
+                        st='空调维修'
+                    }else if(type==2){
+                        st='电梯维修'
+                    }else {
+                        st='其他维修'
+                    }
+                }}
+            return st
+        },
         showRent:function () {
             var _this=this;
             console.log(!_this.subData.electricity_id && _this.appid== 7 && _this.info.status==0);

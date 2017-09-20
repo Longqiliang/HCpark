@@ -169,28 +169,40 @@ class Partybuild extends Base{
         }
 
     }
-
+//总数60人，男42人，女18人，年龄20-30岁16人，30-40岁20人，40-50岁10人，50岁以上4人，学历本科以下3人，本科36人，硕士6人，博士5人，党支部数量就写1个
         /*党员统计*/
     public function countParty(){
         /*人数统计*/
         $parkId = session("park_id");
-        $data[0]= WechatUser::where(['age'=>['<',20]])->count();
-        $data[1]= WechatUser::where(['age'=>['between',[20,30]]])->count();
-        $data[2]= WechatUser::where(['age'=>['between',[30,40]]])->count();
-        $data[3]= WechatUser::where(['age'=>['between',[40,50]]])->count();
-        $data[4]= WechatUser::where(['age'=>['>',50]])->count();
+//        $data[0]= WechatUser::where(['age'=>['<',20]])->count();
+//        $data[1]= WechatUser::where(['age'=>['between',[20,30]]])->count();
+//        $data[2]= WechatUser::where(['age'=>['between',[30,40]]])->count();
+//        $data[3]= WechatUser::where(['age'=>['between',[40,50]]])->count();
+//        $data[4]= WechatUser::where(['age'=>['>',50]])->count();
+        $data[0]= 0;
+        $data[1]= 16;
+        $data[2]= 20;
+        $data[3]= 10;
+        $data[4]= 4;
         /*男女比例统计*/
-        $man = WechatUser::where(['age'=>['>',0],'gender'=>1])->count();
-        $women= WechatUser::where(['age'=>['>',0],'gender'=>2])->count();
+//        $man = WechatUser::where(['age'=>['>',0],'gender'=>1])->count();
+//        $women= WechatUser::where(['age'=>['>',0],'gender'=>2])->count();
+        $man = 42;
+        $women= 18;
         $sex[0] = 100*$man/($man+$women);
         $sex[1] = 100*$women/($man+$women);
         /*教育统计*/
-        $education[0] = WechatUser::where(['age'=>['>',0],'education'=>0])->count();
-        $education[1] = WechatUser::where(['age'=>['>',0],'education'=>1])->count();
-        $education[2] = WechatUser::where(['age'=>['>',0],'education'=>2])->count();
-        $education[3] = WechatUser::where(['age'=>['>',0],'education'=>3])->count();
+//        $education[0] = WechatUser::where(['age'=>['>',0],'education'=>0])->count();
+//        $education[1] = WechatUser::where(['age'=>['>',0],'education'=>1])->count();
+//        $education[2] = WechatUser::where(['age'=>['>',0],'education'=>2])->count();
+//        $education[3] = WechatUser::where(['age'=>['>',0],'education'=>3])->count();
+        $education[0] = 3;
+        $education[1] = 36;
+        $education[2] = 6;
+        $education[3] = 5;
         /*党支部统计*/
-        $count = WechatUser::where(['age'=>['>',0]])->group('party_branch')->count();
+//        $count = WechatUser::where(['age'=>['>',0]])->group('party_branch')->count();
+        $count = 1;
         $this->assign("countParty",$count);
         $this->assign('data',json_encode($data));
         $this->assign('sex',json_encode($sex));
