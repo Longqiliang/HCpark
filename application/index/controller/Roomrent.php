@@ -508,10 +508,12 @@ class Roomrent extends Base
             else {
                 $info = $parkIntention->where('id', $id)->find();
             }
+
+            $info['type']=$type;
+          $this->assign('info',json_encode($info));
+           return $this->fetch();
         }
 
-      $this->assign('info',json_encode($info));
-        return $this->fetch();
     }
     /*楼房信息*/
     public function gaoshiqings()
