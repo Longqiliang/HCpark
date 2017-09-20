@@ -424,7 +424,7 @@ class Service extends Base
         foreach ($list as $k => $val) {
             $res[$k]['name'] = $val['type'] == 1 ? '新柱办理' : "旧柱续费";
             $res[$k]['pay'] = $val['money'];
-            $res[$k]['time'] = date('Y-m-d', $val['create_time']);
+            $res[$k]['time'] = $val['create_time'];
             $res[$k]['status'] = $val['status'];
             $res[$k]['id'] = $val['id'];
         }
