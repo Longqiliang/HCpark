@@ -2005,19 +2005,20 @@ class Service extends Base
                     "description" =>  "您的保洁服务园区已确认，稍后将有服务人员联系您，请您耐心等待",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/no/id/' . $id
                 ];
+                 $user=PropertyServer::get($id);
                 if ($type == 1) {
-                    $res = PropertyServer::where('id', $id)->update(['status' => 1, 'remark' => $data['remark']]);
+                    $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
 
                 } else {
-                    $res = PropertyServer::where('id', $id)->update(['status' => 2, 'remark' => $data['remark']]);
-                    $message['description'] = "饮水服务暂时无法提供";
+                    $res = PropertyServer::where('id', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
+                    $message['description'] = "保洁服务暂时无法提供";
                 }
                 if (!empty($data['check_remark'])) {
                     $message['description'] .= "\n备注：" . $data['check_remark'];
                 }
 
                 //推送给用户
-                $reult = $this->commonSend(4, $message, $res['user_id']);
+                $reult = $this->commonSend(4, $message, $user['user_id']);
 
                 if ($reult) {
                     return $this->success("报修成功");
