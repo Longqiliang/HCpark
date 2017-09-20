@@ -1735,9 +1735,27 @@ class Service extends Base
             $datas["payment_voucher"] = serialize($data["payment_voucher"]);
             $datas['status'] = 1;
             $res = $feePayment->where('id', $id)->update($datas);
+            //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
+            switch ($res['type']){
+                case 1: $res['type_text']= "水电费";break;
+                case 2: $res['type_text']= "物业费";break;
+                case 3: $res['type_text']= "房租费";break;
+                case 4: $res['type_text']= "公耗费";break;
+            }
             if ($res) {
                 $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
-                return $this->success('成功', "", $msg);
+                $message = [
+                    "title" => $res['type_text']."缴纳确认提示",
+                    "description" => date('m月d', time()) . "\n".$res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee'],
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $id
+                ];
+                //推送给运营
+                $reult = $this->commonSend(1, $message);
+                if ($reult) {
+                    return $this->success('成功', "", $msg);
+                } else {
+                    return $this->error("推送失败");
+                }
             } else {
 
                 return $this->error("上传失败");
@@ -1750,7 +1768,6 @@ class Service extends Base
         return $this->fetch();
 
     }
-
 
     /* 记录详情*/
     public function historyDetail()
@@ -1859,12 +1876,6 @@ class Service extends Base
         }
         return true;
     }
-
-    public function test()
-    {
-        phpinfo();
-    }
-
     public function check()
     {
         $appid = input('appid');
@@ -1879,26 +1890,45 @@ class Service extends Base
         switch ($appid) {
             //费用缴纳
             case  1:
+                //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
+                $res = $feepayment->where('id', $id)->find();
+                $userlist = WechatUser::where(['department'=>$res['company_id'],'fee_status'=>1])->select();
+                $users="";
+                foreach ($userlist as $value){
+                    $users.="|".$value['userid'];
+                }
+                switch ($res['type']){
+                    case 1: $res['type_text']= "水电费";break;
+                    case 2: $res['type_text']= "物业费";break;
+                    case 3: $res['type_text']= "房租费";break;
+                    case 4: $res['type_text']= "公耗费";break;
+                }
+                $message = [
+                    "title" => $res['type_text']."缴纳确认提示",
+                    "description" => date('m月d日', time()) . "\n".$res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee'],
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/no/id/' . $id
+                ];
+
                 if ($type == 1) {
-                    $res = $feepayment->where('id', $id)->update(['status' => 1]);
-                } else {
-                    $res = $feepayment->where('id', $id)->update(['status' => 2]);
+                    $res['status']=2;
+                  $message['description'].="\n 确认成功";
                 }
 
-                /*//todo： 推送点击到详情页面代码
-                $message = [
-                    "title" => "饮水服务提示",
-                    "description" => date('m月d', $data['create_time']) . "\n送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
-                    "url" => ''
-                ];
-                //推送给运营和物业
-                $reult = $this->commonSend(3, $message);
+                else {
+                    $res['status']=3;
+                    $message['description'].="\n 缴费失败";
+                }
+                $res->save();
+                //todo： 推送点击到详情页面代码
+
+                //推送给用户
+                $reult = $this->commonSend(4, $message,$users);
                 if ($reult) {
                     return $this->success("预约成功");
                 } else {
                     return $this->error("推送失败");
                 }
-                */
+
                 break;
 
             case  2:
