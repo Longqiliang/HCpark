@@ -178,13 +178,22 @@
                 <span>{{info.name}}</span>
             </div>
             <div class="card-cell">
+                <span>缴费类型</span>
+                <span>{{serviceType(info.type)}}</span>
+            </div>
+            <div class="card-cell">
                 <span>到期时间</span>
                 <span>{{info.expiration_time}}</span>
             </div>
             <div class="card-cell">
                 <span>应缴金额</span>
-                <span>{{info.name}}</span>
+                <span>{{info.fee}}</span>
             </div>
+            <div class="card-cell">
+                <span>审核进度</span>
+                <span>{{status(info.status)}}</span>
+            </div>
+
         </div>
         <div class="card" v-if="info.img">
             <div class="card-tit">缴费凭证</div>
@@ -305,8 +314,8 @@
             <div class="card-area">
                 <div class="group-area">{{info.extra ? info.extra : '无'}}</div>
             </div>
-            <div class="card-upload"  v-if="info.img">
-                <div class="upload-img" v-for="img in info.img">
+            <div class="card-upload"  v-if="info.image">
+                <div class="upload-img" v-for="img in info.image">
                     <img :src="img" alt="缴费凭证">
                 </div>
             </div>
@@ -466,7 +475,7 @@
 {block name="script"}
 <script src="/static/viewer/viewer.min.js"></script>
 <script>
-
+//    时间戳转字符串过滤器
     Vue.filter('timeToString', function(time) {
         if(time){
             var newTime = new Date(time);
@@ -486,6 +495,7 @@ var app = new Vue({
     el:'#app',
     mounted(){
         console.log(JSON.parse('{$info}'));
+//        图片查看器
         if(this.info.img || this.info.image){
             var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
                 toolbar:2,
@@ -505,6 +515,7 @@ var app = new Vue({
         console.log(this.appid)
     },
     methods:{
+//        状态判断
         status:function(status) {
             var s='';
             if(status!==undefined && status !== null){
@@ -528,6 +539,7 @@ var app = new Vue({
             }
             return s
         },
+//        服务类型判断（typr）
         serviceType:function (type) {
             var st='';
             console.log(this);
@@ -540,7 +552,16 @@ var app = new Vue({
                     }else {
                         st='其他维修'
                     }
-                }}
+                }else if(this.appid==1){
+                    if(type==1){
+                        st='水电费'
+                    }else if(type==2){
+                        st='房租费'
+                    }else{
+                        st='物业费（公耗费）'
+                    }
+                }
+            }
             return st
         },
         showRent:function () {

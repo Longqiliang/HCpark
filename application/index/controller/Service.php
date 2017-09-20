@@ -424,7 +424,7 @@ class Service extends Base
         foreach ($list as $k => $val) {
             $res[$k]['name'] = $val['type'] == 1 ? '新柱办理' : "旧柱续费";
             $res[$k]['pay'] = $val['money'];
-            $res[$k]['time'] = $val['create_time'];
+            $res[$k]['time'] = date('Y-m-d', $val['create_time']);
             $res[$k]['status'] = $val['status'];
             $res[$k]['id'] = $val['id'];
         }
@@ -626,7 +626,7 @@ class Service extends Base
         foreach ($list as $v) {
             $v['name'] = $v['type'] == 1 ? '新卡办理' : "旧卡续费";
             $v['pay'] = $v['money'];
-            $v['time'] = $v['create_time'];
+            $v['time'] = date('Y-m-d', $v['create_time']);
         }
         return $list;
     }
@@ -1711,7 +1711,6 @@ class Service extends Base
 
             $info = $this->clearRecord();
         } elseif ($appid == 6) {
-
             $info = $this->carRecord();
         } elseif ($appid == 7) {
 
@@ -1763,12 +1762,15 @@ class Service extends Base
         if ($appid == 1) {
 
             $infos = FeePayment::get($id);
+            echo json_encode($infos);
             $info = [
                 'name' => $infos['name'],
                 'expiration_time' => $infos['expiration_time'],
                 'img' => isset($infos['payment_voucher']) ? unserialize($infos['payment_voucher']) : "",
                 'id' => $infos['id'],
-                'status' => $infos['stauts']
+                'status' => $infos['status'],
+                'fee'=>$infos['fee'],
+                'type'=>$infos['type']
             ];
         } //物业维护 $types = [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"];
         else if ($appid == 2) {
@@ -2095,7 +2097,7 @@ class Service extends Base
 
         }
 
-        $res = commonService::sendPersonalMessage($message, 15706844655);
+        $res = commonService::sendPersonalMessage($message, 15824167420);
         if ($res['errcode'] == 0) {
             return json_encode($res);
         } else {
