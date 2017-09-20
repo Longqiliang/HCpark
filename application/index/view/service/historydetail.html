@@ -445,7 +445,7 @@
             </div>
             <div class="remark">
                 <p>备注</p>
-                <div>{{info.day}}</div>
+                <div>{{info.remark}}</div>
             </div>
         </div>
     </div>
@@ -494,7 +494,6 @@
 var app = new Vue({
     el:'#app',
     mounted(){
-        console.log(JSON.parse('{$info}'));
 //        图片查看器
         if(this.info.img || this.info.image){
             var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
@@ -504,15 +503,14 @@ var app = new Vue({
         }
     },
     data:{
-        subData:{},
+        subData:{
+            check_remark:''
+        },
         rentShow:false,
         appid:JSON.parse('{$type}'),
         info:JSON.parse('{$info}'),
         can_check:'{$can_check}',
         isSubmit:false
-    },
-    created(){
-        console.log(this.appid)
     },
     methods:{
 //        状态判断
