@@ -62,6 +62,7 @@ class Electricity extends Admin
             $type = input('type');
             $id = input('id');
             $electricity_id = input('electricity_id');
+            $checkRemark = input("check_remark");
             $message = [
                 "title" => "车卡服务提示",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/no/id/' . $id
@@ -102,14 +103,15 @@ class Electricity extends Admin
                 $record = $ElectricityService->where('id', $id)->find();
                 $userId =  $record['user_id'];
                 $record['status'] = 2;
+                $record['check_remark'] = $checkRemark;
                 $record->save();
                 //新柱
                 if ($record['type'] == 1) {
-                    $message ['description'] = "您的新柱缴费无法通过审核";
+                    $message ['description'] = "您的新柱缴费无法通过审核\n备注:".$record['check_remark'];
 
                 } // 旧柱
                 else {
-                    $message ['description'] = "您的旧柱续费无法通过审核";
+                    $message ['description'] = "您的旧柱续费无法通过审核\n备注:".$record['check_remark'];
                 }
                 ServiceModel::sendPersonalMessage($message,$userId);
 

@@ -48,6 +48,7 @@ class Carcard extends Admin
             $type = input('type');
             $id = input('id');
             $park_card = input('park_card');
+            $checkRemark = input("check_remark");
             $message = [
                 "title" => "车卡服务提示",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/no/id/' . $id
@@ -77,14 +78,15 @@ class Carcard extends Admin
                 $userId =  $record['user_id'];
                 $record['park_card'] = $park_card;
                 $record['status'] = 2;
+                $record['check_remark'] = $checkRemark;
                 $record->save();
                 //新卡
                 if ($record['type'] == 1) {
-                    $message ['description'] = "您的新卡缴费无法通过审核";
+                    $message ['description'] = "您的新卡缴费无法通过审核\n备注:".$record['check_remark'];
 
                 } // 旧卡
                 else {
-                    $message ['description'] = "您的旧卡续费无法通过审核";
+                    $message ['description'] = "您的旧卡续费无法通过审核\n备注:".$record['check_remark'];
                 }
                 ServiceModel::sendPersonalMessage($message,$userId);
                 return $this->success("审核成功");
