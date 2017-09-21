@@ -166,7 +166,7 @@ class Communication extends Admin
 
         $result = CommunicatePosts::where('id', 'in', $ids)->update(['status' => -1]);
         if($result) {
-            return $this->success('删除成功', url('Communication/showposts'));
+            return $this->success('删除成功');
         } elseif(!$result) {
             return $this->error('删除失败');
         }
