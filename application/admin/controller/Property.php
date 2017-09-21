@@ -58,13 +58,13 @@ class Property extends Admin
                 if ($userType == 4){
                     $message = [
                         "title" => "保洁服务提示",
-                        "description" => "您的保洁服务园区已确认，稍后将有服务人员联系您，请您耐心等待",
+                        "description" => date("m月d日",time())."\n您的保洁服务园区已确认，稍后将有服务人员联系您，请您耐心等待",
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/no/id/' . $id
                     ];
                 }else{
                     $message = [
                         "title" => "物业报修提示",
-                        "description" => "您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
+                        "description" => date("m月d日",time())."\n您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
                     ];
                 }
@@ -73,13 +73,13 @@ class Property extends Admin
                 if ($userType == 4){
                     $message = [
                         "title" => "保洁服务提示",
-                        "description" => "报修服务暂时无法提供\n备注：".$userInfo['check_remark'],
+                        "description" => date("m月d日",time())."\n报修服务暂时无法提供\n备注：".$userInfo['check_remark'],
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/no/id/' . $id
                     ];
                 }else{
                     $message = [
                         "title" => "物业报修提示",
-                        "description" => "报修服务暂时无法提供\n备注：".$userInfo['check_remark'],
+                        "description" => date("m月d日",time())."\n报修服务暂时无法提供\n备注：".$userInfo['check_remark'],
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
                     ];
                 }
@@ -87,7 +87,7 @@ class Property extends Admin
             }else{
 
             }
-            ServiceModel::sendPersonalMessage( $message,18867514826);
+            ServiceModel::sendPersonalMessage( $message,$userId);
             $this->success( $msg);
         }else{
 

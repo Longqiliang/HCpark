@@ -147,11 +147,11 @@ class Feepayment extends Admin
         $feepayment = new FeePaymentModel();
         $res = $feepayment->where('id', $id)->update(['status' => $uid]);
         $feeInfo = $feepayment->where('id',$id)->find();
-        $feeInfo['types'] =   $type[$feeInfo['type']];
+        $feeInfo['types'] = $type[$feeInfo['type']];
         if ($res) {
-            $userList = WechatUser::where(['department'=>$id,'fee_status'=>1])->select();
+            $userList = WechatUser::where(['department'=> $feeInfo['company_id'],'fee_status'=>1])->select();
             foreach ($userList as $k=>$v){
-                $userId = "|".$v['userid'];
+                $userId[$k] = $v['userid'];
             }
             if ($uid ==1){
                 $message = [
@@ -164,8 +164,9 @@ class Feepayment extends Admin
 
 
             }
-            $putMessage = Service::sendPersonalMessage( $message,$userId);
-            //$putMessage = Service::sendPersonalMessage( $message,"15706844655");
+            foreach ($userId as $k=>$v){
+                Service::sendPersonalMessage( $message,$v);
+            }
 
             return $this->success("审核成功， 稍后自动刷新页面~");
         } else {
