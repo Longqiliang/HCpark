@@ -517,7 +517,20 @@ var app = new Vue({
         status:function(status) {
             var s='';
             if(status!==undefined && status !== null){
-                if(this.appid!=8){
+                if(this.appid==1){
+//                    -1为删除 ，0为未缴费，1为审核中，2为审核成功，3为审核失败
+                    if (status==0){
+                        s='未缴费'
+                    }else if(status==1){
+                        s='审核中'
+                    }else if(status==2){
+                        s='审核成功'
+                    }else if(status==3){
+                        s='审核失败'
+                    }else{
+                        s='已删除'
+                    }
+                }else if(this.appid!=8 && this.appid!=1){
                     if (status==0){
                         s='审核中'
                     }else if(status==1){
@@ -610,7 +623,7 @@ var app = new Vue({
                         confirmButtonColor: "#fcc44b"
                     },function () {
                         _this.rentShow = false;
-                        window.location.reload()
+                        window.location.replace(window.location.href);
                     });
                 }else{
                     swal({
@@ -619,7 +632,7 @@ var app = new Vue({
                         type:"error",
                         confirmButtonColor: "#fcc44b"
                     },function () {
-                        window.location.reload();
+                        window.location.replace(window.location.href);
                     });
                 }
             },function (res) {
@@ -630,7 +643,7 @@ var app = new Vue({
                     type:"error",
                     confirmButtonColor: "#fcc44b"
                 },function () {
-                    window.location.reload();
+                    window.location.replace(window.location.href);
                 });
             })
         }
