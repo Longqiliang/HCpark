@@ -245,7 +245,7 @@ class Service extends Base
             $ca = $companyapplication->where('app_id', $data['app_id'])->find();
             $message = [
                 "title" => "企业服务提示",
-                "description" =>   $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
+                "description" => $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $data['app_id'] . '/can_check/yes/id/' . $compantService->getLastInsID()
             ];
             //推送给运营
@@ -309,7 +309,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码（要改）
             $message = [
                 "title" => "充电柱服务提示",
-                "description" =>  "您有新充电柱缴费需要审核，请点击查看",
+                "description" => "您有新充电柱缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/yes/id/' . $PillarService->getLastInsID()
             ];
             //推送给运营
@@ -390,7 +390,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码（要改）
             $message = [
                 "title" => "充电柱服务提示",
-                "description" =>  "您有旧充电柱缴费需要审核，请点击查看",
+                "description" => "您有旧充电柱缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/yes/id/' . $er->getLastInsID()
             ];
             //推送给运营
@@ -457,6 +457,7 @@ class Service extends Base
         return $this->fetch('payment');
 
     }
+
     //凭证提交公共方法
     public function payment()
     {
@@ -478,6 +479,7 @@ class Service extends Base
 
         return $this->fetch();
     }
+
     //提交新卡
     public function addNewCard()
     {
@@ -594,7 +596,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码（要改）
             $message = [
                 "title" => "车卡服务提示",
-                "description" =>"您有旧卡缴费需要审核，请点击查看",
+                "description" => "您有旧卡缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
             //推送给运营
@@ -755,7 +757,7 @@ class Service extends Base
             }
 
             //todo： 推送点击到详情页面代码（要改）
-            $message ="设备服务提示\n您有大堂LED屏预约申请需要审核，请前往后台审核";
+            $message = "设备服务提示\n您有大堂LED屏预约申请需要审核，请前往后台审核";
             //推送给运营和物业
             $reult = $this->publicSend(1, $message);
             if ($reult) {
@@ -986,7 +988,7 @@ class Service extends Base
 
             $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
 
-            $message ="设备服务提示\n您有二楼多功能厅预约申请需要审核，请前往后台审核";
+            $message = "设备服务提示\n您有二楼多功能厅预约申请需要审核，请前往后台审核";
             //推送给运营和物业
             $reult = $this->publicSend(1, $message);
             if ($reult) {
@@ -1185,7 +1187,7 @@ class Service extends Base
                 $value->save();
             }
             $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
-            $message ="设备服务提示\n您有大堂LED屏预约申请需要审核，请前往后台审核";
+            $message = "设备服务提示\n您有大堂LED屏预约申请需要审核，请前往后台审核";
             //推送给运营和物业
             $reult = $this->publicSend(1, $message);
             if ($reult) {
@@ -1493,7 +1495,7 @@ class Service extends Base
             //todo： 推送点击到详情页面代码
             $message = [
                 "title" => "保洁服务提示",
-                "description" =>  "服务地点：" . $data['address'] . "\n服务时间：" . date('m月d日', $data['clear_time']) . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                "description" => "服务地点：" . $data['address'] . "\n服务时间：" . date('m月d日', $data['clear_time']) . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $property->getLastInsID()
             ];
             //推送给运营和物业
@@ -1697,8 +1699,8 @@ class Service extends Base
             $userinfo = WechatUser::where(['userid' => $userid])->find();
             $departmentId = $userinfo['department'];
             $map = ['company_id' => $departmentId, 'type' => $type];
-            if ($type ==2 || $type ==4){
-                $map['type'] = ['in',[2,4]] ;
+            if ($type == 2 || $type == 4) {
+                $map['type'] = ['in', [2, 4]];
             }
             $list = FeePayment::where($map)->order('id desc')->select();
             foreach ($list as $k => $v) {
@@ -1740,51 +1742,52 @@ class Service extends Base
         if (IS_POST) {
             $feePayment = new FeePayment();
             $id = input('id');
-            $ids = explode('-',$id);
+            $ids = explode('-', $id);
             $appid = input('app_id');
             $data = input('post.');
             $datas["payment_voucher"] = serialize($data["payment_voucher"]);
             $datas['status'] = 1;
-            foreach($ids as $k=>$v){
+            foreach ($ids as $k => $v) {
                 $res = $feePayment->where('id', $v)->update($datas);
-            }
-
-            //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
-            switch ($res['type']){
-                case 1: $res['type_text']= "水电费";break;
-                case 2: $res['type_text']= "物业费";break;
-                case 3: $res['type_text']= "房租费";break;
-                case 4: $res['type_text']= "公耗费";break;
-            }
-            if ($res) {
-                $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
-                $message = [
-                    "title" => $res['type_text']."缴纳确认提示",
-                    "description" => $res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee']."元",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $id
-                ];
-                //推送给运营
-                $reult = $this->commonSend(1, $message);
-                if ($reult) {
-                    return $this->success('成功', "", $msg);
-                } else {
-                    return $this->error("推送失败");
+                //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
+                switch ($res['type']) {
+                    case 1:
+                        $res['type_text'] = "水电费";
+                        break;
+                    case 2:
+                        $res['type_text'] = "物业费";
+                        break;
+                    case 3:
+                        $res['type_text'] = "房租费";
+                        break;
+                    case 4:
+                        $res['type_text'] = "公耗费";
+                        break;
                 }
-            } else {
-
-                return $this->error("上传失败");
+                if ($res) {
+                    $message = [
+                        "title" => $res['type_text'] . "缴纳确认提示",
+                        "description" => $res['name'] . "企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee'] . "元",
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $id
+                    ];
+                    //推送给运营
+                    $reult = $this->commonSend(1, $message);
+                }
             }
+            $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
+            return $this->success('成功', "", $msg);
+        } else {
+            $parkInfo = Park::where('id', $parkid)->find();
+            $this->assign('parkInfo', json_encode($parkInfo));
 
+            return $this->fetch();
         }
-        $parkInfo = Park::where('id', $parkid)->find();
-        $this->assign('parkInfo', json_encode($parkInfo));
-
-        return $this->fetch();
 
     }
 
     /* 记录详情*/
-    public function historyDetail()
+    public
+    function historyDetail()
     {
         $id = input('id');
         $appid = input('appid');
@@ -1793,7 +1796,7 @@ class Service extends Base
         if ($appid == 1) {
 
             $infos = FeePayment::get($id);
-           // echo json_encode($infos);
+            // echo json_encode($infos);
             $info = [
                 'name' => $infos['name'],
                 'expiration_time' => $infos['expiration_time'],
@@ -1868,7 +1871,8 @@ class Service extends Base
     }
 
 
-    public function _checkData($data)
+    public
+    function _checkData($data)
     {
         if (empty($data)) {
             return false;
@@ -1892,7 +1896,9 @@ class Service extends Base
         }
         return true;
     }
-    public function check()
+
+    public
+    function check()
     {
         $appid = input('appid');
         $type = input('type');
@@ -1902,44 +1908,50 @@ class Service extends Base
         $ElectricityService = new ElectricityService();
         $feepayment = new FeePayment();
         $companyService = new CompanyService();
-        $companyapplication=new CompanyApplication();
+        $companyapplication = new CompanyApplication();
         switch ($appid) {
             //费用缴纳
             case  1:
                 //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
                 $res = $feepayment->where('id', $id)->find();
-                $userlist = WechatUser::where(['department'=>$res['company_id'],'fee_status'=>1])->select();
-                $users="";
-                foreach ($userlist as $value){
-                    $users.="|".$value['userid'];
+                $userlist = WechatUser::where(['department' => $res['company_id'], 'fee_status' => 1])->select();
+                $users = "";
+                foreach ($userlist as $value) {
+                    $users .= "|" . $value['userid'];
                 }
-                switch ($res['type']){
-                    case 1: $res['type_text']= "水电费";break;
-                    case 2: $res['type_text']= "物业费";break;
-                    case 3: $res['type_text']= "房租费";break;
-                    case 4: $res['type_text']= "公耗费";break;
+                switch ($res['type']) {
+                    case 1:
+                        $res['type_text'] = "水电费";
+                        break;
+                    case 2:
+                        $res['type_text'] = "物业费";
+                        break;
+                    case 3:
+                        $res['type_text'] = "房租费";
+                        break;
+                    case 4:
+                        $res['type_text'] = "公耗费";
+                        break;
                 }
                 $message = [
-                    "title" => $res['type_text']."缴纳确认提示",
-                    "description" => $res['name']."企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee']."元",
+                    "title" => $res['type_text'] . "缴纳确认提示",
+                    "description" => $res['name'] . "企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee'] . "元",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Service/historyDetail/appid/1/can_check/no/id/' . $id
                 ];
 
                 if ($type == 1) {
-                    $res['status']=2;
-                  $message['description'].="\n确认成功";
-                }
-
-                else {
-                    $res['status']=3;
-                    $message['description'].="\n缴费失败";
+                    $res['status'] = 2;
+                    $message['description'] .= "\n确认成功";
+                } else {
+                    $res['status'] = 3;
+                    $message['description'] .= "\n缴费失败";
                 }
                 unset($res['type_text']);
                 $res->save();
                 //todo： 推送点击到详情页面代码
 
                 //推送给用户
-                $reult = $this->commonSend(4, $message,$users);
+                $reult = $this->commonSend(4, $message, $users);
                 if ($reult) {
                     return $this->success("预约成功");
                 } else {
@@ -1954,7 +1966,7 @@ class Service extends Base
                     "description" => "您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
                 ];
-                $user=PropertyServer::get($id);
+                $user = PropertyServer::get($id);
                 if ($type == 1) {
                     $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
 
@@ -1983,7 +1995,7 @@ class Service extends Base
                     "description" => "您的饮水服务园区已确认，稍后将有服务人员送水，请您耐心等待",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/no/id/' . $id
                 ];
-               $user=WaterModel::get($id);
+                $user = WaterModel::get($id);
                 if ($type == 1) {
                     $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
                 } else {
@@ -2009,10 +2021,10 @@ class Service extends Base
             case  4:
                 $message = [
                     "title" => "保洁服务提示",
-                    "description" =>  "您的保洁服务园区已确认，稍后将有服务人员联系您，请您耐心等待",
+                    "description" => "您的保洁服务园区已确认，稍后将有服务人员联系您，请您耐心等待",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/no/id/' . $id
                 ];
-                 $user=PropertyServer::get($id);
+                $user = PropertyServer::get($id);
                 if ($type == 1) {
                     $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
 
@@ -2093,7 +2105,7 @@ class Service extends Base
                     if (empty($data['electricity_id'])) {
                         return $this->error("请填写 充电柱编号");
                     }
-                    $message ['description'] =  "您的旧柱续费已经完成";
+                    $message ['description'] = "您的旧柱续费已经完成";
                     //新柱申请
                     if ($record['type'] == 1) {
                         $message ['description'] = "您的新柱缴费已经完成，请2小时后前往领取";
@@ -2111,7 +2123,7 @@ class Service extends Base
                     if ($record['type'] == 1) {
                         $message ['description'] = "您的新柱缴费无法通过审核";
                     } else {
-                        $message ['description'] =  "您的旧柱缴费无法通过审核";
+                        $message ['description'] = "您的旧柱缴费无法通过审核";
                     }
 
                     $record['check_remark'] = $data['check_remark'];
@@ -2136,19 +2148,19 @@ class Service extends Base
                 $record = $companyService->where('id', $id)->find();
                 $message = [
                     "title" => "企业服务提示",
-                    'description' =>    $ca['name'] . "服务申请\n公司名称：" . $record['company'] . "\n联系人员：" . $record['people'] . "\n联系方式：" . $record['mobile'] . "\n备注信息：" . $record['remark'],
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/'.$data['appid'].'/can_check/no/id/' . $id
+                    'description' => $ca['name'] . "服务申请\n公司名称：" . $record['company'] . "\n联系人员：" . $record['people'] . "\n联系方式：" . $record['mobile'] . "\n备注信息：" . $record['remark'],
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $data['appid'] . '/can_check/no/id/' . $id
                 ];
                 $record['check_remark'] = $data['check_remark'];
                 if ($type == 1) {
 
                     $record['status'] = 1;
                     $record['check_remark'] = $data['check_remark'];
-                    $message ['description'].="\n您的企业服务园区已确认，稍后将有工作人员联系您，请您耐心等待。";
+                    $message ['description'] .= "\n您的企业服务园区已确认，稍后将有工作人员联系您，请您耐心等待。";
                 } else {
                     $record['status'] = 2;
                     $record['check_remark'] = $data['check_remark'];
-                    $message ['description'].="\n您的申请的企业服务暂时无法提供。";
+                    $message ['description'] .= "\n您的申请的企业服务暂时无法提供。";
                 }
                 if (!empty($data['check_remark'])) {
                     $message['description'] .= "\n备注：" . $data['check_remark'];
@@ -2186,7 +2198,8 @@ class Service extends Base
      *
      *retur  true/false
     */
-    public function commonSend($type, $message, $userid = "")
+    public
+    function commonSend($type, $message, $userid = "")
     {
         $wechatUser = new WechatUser();
         $useridlist = "";
@@ -2241,6 +2254,7 @@ class Service extends Base
         }
 
     }
+
     /*推个人中心，推送人员选择公共方法（设备服务专用）
          *$type =1  该园区运营人员
          *$type =2  该园区物业管理
@@ -2254,7 +2268,8 @@ class Service extends Base
          *
          *retur  true/false
         */
-    public function publicSend($type, $message, $userid = "")
+    public
+    function publicSend($type, $message, $userid = "")
     {
         $wechatUser = new WechatUser();
         $useridlist = "";
