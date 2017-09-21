@@ -1740,11 +1740,15 @@ class Service extends Base
         if (IS_POST) {
             $feePayment = new FeePayment();
             $id = input('id');
+            $ids = explode('-',$id);
             $appid = input('app_id');
             $data = input('post.');
             $datas["payment_voucher"] = serialize($data["payment_voucher"]);
             $datas['status'] = 1;
-            $res = $feePayment->where('id', $id)->update($datas);
+            foreach($ids as $k=>$v){
+                $res = $feePayment->where('id', $v)->update($datas);
+            }
+
             //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
             switch ($res['type']){
                 case 1: $res['type_text']= "水电费";break;
