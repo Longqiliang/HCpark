@@ -521,7 +521,7 @@ class Service extends Base
             $reult = $this->commonSend(1, $message);
             if ($reult) {
                 $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈;请耐心等待,确认成功后;请您在2小时内到希垦科技园A座201领取车卡";
-                $this->success('成功', "", $message['url']);
+                $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
             }
