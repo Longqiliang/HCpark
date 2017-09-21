@@ -1,5 +1,7 @@
 <?php
 namespace wechat;
+use think\Log;
+
 /**
  *	微信公众平台企业号PHP-SDK, 官方API类库
  *  @author  binsee <binsee@163.com>
@@ -812,7 +814,7 @@ class QYWechat
 		}
 		$timestamp = time();
 		$nonce = rand(77,999)*rand(605,888)*rand(11,99);
-		$encrypt = $array[1];
+		$encrypt = $array;
 		$tmpArr = array($this->token, $timestamp, $nonce,$encrypt);//比普通公众平台多了一个加密的密文
 		sort($tmpArr, SORT_STRING);
 		$signature = implode($tmpArr);

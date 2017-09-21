@@ -31,7 +31,7 @@ class Prpcrypt
      * @param string $text 需要加密的明文
      * @return string 加密后的密文
      */
-    public function encrypt($text, $appid)
+    public function encrypt($text, $appId)
     {
         try {
             $key = $this->key;

@@ -1747,26 +1747,27 @@ class Service extends Base
             $datas["payment_voucher"] = serialize($data["payment_voucher"]);
             $datas['status'] = 1;
             foreach ($ids as $k => $v) {
+                $res2=$feePayment->where('id',$v)->find();
                 $res = $feePayment->where('id', $v)->update($datas);
                 //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
-                switch ($res['type']) {
+                switch ($res2['type']) {
                     case 1:
-                        $res['type_text'] = "水电费";
+                        $res2['type_text'] = "水电费";
                         break;
                     case 2:
-                        $res['type_text'] = "物业费";
+                        $res2['type_text'] = "物业费";
                         break;
                     case 3:
-                        $res['type_text'] = "房租费";
+                        $res2['type_text'] = "房租费";
                         break;
                     case 4:
-                        $res['type_text'] = "公耗费";
+                        $res2['type_text'] = "公耗费";
                         break;
                 }
-                if ($res) {
+                if ($res2) {
                     $message = [
-                        "title" => $res['type_text'] . "缴纳确认提示",
-                        "description" => $res['name'] . "企业\n" . $res['type_text'] . "\n到期时间：" . $res['expiration_time'] . "\n应缴费用：" . $res['fee'] . "元",
+                        "title" => $res2['type_text'] . "缴纳确认提示",
+                        "description" => $res2['name'] . "企业\n" . $res2['type_text'] . "\n到期时间：" . $res2['expiration_time'] . "\n应缴费用：" . $res2['fee'] . "元",
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $id
                     ];
                     //推送给运营
