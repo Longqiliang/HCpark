@@ -246,7 +246,7 @@ class Service extends Base
             $message = [
                 "title" => "企业服务提示",
                 "description" => $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
-                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $data['app_id'] . '/can_check/yes/id/' . $compantService->getLastInsID()
+                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/'.$data['app_id'] . '/can_check/yes/id/' . $compantService->id
             ];
             //推送给运营
             $reult = $this->commonSend(1, $message);
