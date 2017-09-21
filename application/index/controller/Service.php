@@ -1535,7 +1535,6 @@ class Service extends Base
     }
 
     /*保洁服务记录*/
-
     public function clearRecord()
     {
         $info = [];
@@ -1637,7 +1636,7 @@ class Service extends Base
     public function broadbandPhone()
     {
         $data = input('');
-//        echo json_encode($data);exit;
+        //echo json_encode($data);exit;
         $broadbandModel = new BroadbandModel;
         $data['user_id'] = session('userId');
 
@@ -1650,7 +1649,7 @@ class Service extends Base
 
     }
 
-//费用缴纳
+    //费用缴纳
     public function feedetail()
     {
         $type = input('t');
@@ -1786,8 +1785,7 @@ class Service extends Base
     }
 
     /* 记录详情*/
-    public
-    function historyDetail()
+    public function historyDetail()
     {
         $id = input('id');
         $appid = input('appid');
@@ -1871,8 +1869,7 @@ class Service extends Base
     }
 
 
-    public
-    function _checkData($data)
+    public function _checkData($data)
     {
         if (empty($data)) {
             return false;
@@ -1897,8 +1894,7 @@ class Service extends Base
         return true;
     }
 
-    public
-    function check()
+    public function check()
     {
         $appid = input('appid');
         $type = input('type');
@@ -2198,8 +2194,7 @@ class Service extends Base
      *
      *retur  true/false
     */
-    public
-    function commonSend($type, $message, $userid = "")
+    public function commonSend($type, $message, $userid = "")
     {
         $wechatUser = new WechatUser();
         $useridlist = "";
@@ -2268,8 +2263,7 @@ class Service extends Base
          *
          *retur  true/false
         */
-    public
-    function publicSend($type, $message, $userid = "")
+    public function publicSend($type, $message, $userid = "")
     {
         $wechatUser = new WechatUser();
         $useridlist = "";
