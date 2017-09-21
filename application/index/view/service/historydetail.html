@@ -623,7 +623,9 @@ var app = new Vue({
                         confirmButtonColor: "#fcc44b"
                     },function () {
                         _this.rentShow = false;
-                        window.location.replace(window.location.href);
+//                        window.location.replace(window.location.href);
+//                        window.location.reload(true)
+                        window.location.href=window.location.href+='/reload/true'
                     });
                 }else{
                     swal({
@@ -632,7 +634,9 @@ var app = new Vue({
                         type:"error",
                         confirmButtonColor: "#fcc44b"
                     },function () {
-                        window.location.replace(window.location.href);
+                        window.location.reload(true)
+//                        window.location.replace(window.location.href);
+                        window.location.href=window.location.href+='/reload/true'
                     });
                 }
             },function (res) {

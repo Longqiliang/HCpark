@@ -54,10 +54,8 @@
             <span>{{item.name}}</span>
             <span class="unPay" v-if="item.status==-1">已删除</span>
             <span class="auditing" v-if="item.status==0">审核中</span>
-            <span class="payed" v-if="item.status==1">已缴费</span>
+            <span class="payed" v-if="item.status==1">审核成功</span>
             <span class="unPay" v-if="item.status==2">审核失败</span>
-
-
         </li>
         <li v-if="appid==1">
             <!-- -1为删除 ，0为未缴费，1为审核中，2为审核成功，3为审核失败-->

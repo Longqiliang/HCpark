@@ -33,7 +33,8 @@
 
 {block name="body"}
 <div id="app">
-    <h1>选择时间</h1>
+    <!--<h1>选择时间</h1>-->
+    <h1></h1>
     <ul class="my-time">
         <li v-for="item in weeks">
             <div class="my-time-am my-default" :class="{'my-checked':item.amCheck=='yes','my-Bespeak':item.amBespeak=='yes'}" @click="toChecked(item,'am')">上午（AM）</div>
