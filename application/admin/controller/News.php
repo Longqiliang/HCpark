@@ -71,7 +71,7 @@ class News extends Admin
             }
 
             if($result) {
-                // 新闻列表限制banner只有3个
+                /*// 新闻列表限制banner只有3个
                 if($_POST['type'] == 1){
                     $newsMap = [
                         'is_banner' => 1,
@@ -82,7 +82,7 @@ class News extends Admin
                     NewsModel::where($newsMap)->where('update_time', '<', $last[count($last)-1]['update_time'])->update(['is_banner' => 0]);
                 }else{
 
-                }
+                }*/
                 if ($pageType){
 
                     return $this->success('操作成功', url('News/policyLaw'));
