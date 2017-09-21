@@ -1856,7 +1856,7 @@ class Service extends Base
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
         } //企业服务
-        else if (10 < $appid && $appid < 19) {
+        else if (9 < $appid && $appid < 19) {
             $info = CompanyService::get($id);
             $app = CompanyApplication::Where('app_id', $appid)->find();
             $info['name'] = $app['name'];
