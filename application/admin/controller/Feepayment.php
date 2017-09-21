@@ -94,7 +94,7 @@ class Feepayment extends Admin
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$ids,
                     ];
                     foreach ($userList as $k=>$v){
-                        Service::sendPersonalMessage($message,$v);
+                        Service::sendPersonalMessage($message,$v['userid']);
                     }
 
                     return $this->success('添加成功');
