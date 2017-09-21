@@ -757,7 +757,7 @@ class Service extends Base
             }
 
             //todo： 推送点击到详情页面代码（要改）
-            $message = "设备服务提示\n您有大堂LED屏预约申请需要审核，请前往后台审核";
+            $message = "设备服务提示\n您有大厅广告位预约申请需要审核，请前往后台审核";
             //推送给运营和物业
             $reult = $this->publicSend(1, $message);
             if ($reult) {
