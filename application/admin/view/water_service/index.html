@@ -123,17 +123,22 @@
                 <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.create_time}</a></td>
 
                     {eq name="$vo.status" value="1"}
-                    <td>已完成</td>
+                    <td>审核通过</td>
                     {/eq}
                     {eq name="$vo.status" value="0"}
                     <td>进行中</td>
                     {/eq}
-
+                    {eq name="$vo.status" value="2"}
+                    <td>审核失败</td>
+                    {/eq}
 
                     {eq name="$vo.status" value="0"}
                     <td><button data-toggle="modal" class="btn btn-sm btn-primary " href="#modal-form" onclick="edit(this)" data-id="{$vo.id}">审核</button></td>
                     {/eq}
                     {eq name="$vo.status" value="1"}
+                    <td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>
+                    {/eq}
+                    {eq name="$vo.status" value="2"}
                     <td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>
                     {/eq}
                 </tr>

@@ -24,7 +24,7 @@ class WaterService extends Admin
         $list = Db::table('tb_water_service')
             ->alias('s')
             ->join('__WECHAT_USER__ w', 's.userid=w.userid')
-            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.remark')
+            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark')
             ->where('w.park_id','eq',$parkid)
             ->where($map)
             ->order('create_time desc')
@@ -58,7 +58,7 @@ class WaterService extends Admin
 
         $id = input('id');
         $remark = input('remark');
-        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1,'remark'=>$remark]);
+        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1,'check_remark'=>$remark]);
         $data = WaterModel::get($id);
         $userId = $data['userid'];
         if ($result){
