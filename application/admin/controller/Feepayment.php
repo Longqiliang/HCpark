@@ -83,18 +83,19 @@ class Feepayment extends Admin
                 $data['status'] = 0;
                 $data['create_time'] = time();
                 $re = $feepayment->validate(true)->save($data);
+                $ids = $feepayment->getLastInsID();
                 $title = $type[$data['type']];
                 if ($re) {
                     $userList = WechatUser::where(['department'=>$data['company_id'],'fee_status'=>1])->select();
-                    foreach ($userList as $k=>$v){
-                        $userId = "|".$v['userid'];
-                    }
+
                     $message = [
                         "title" => $title."缴纳提示",
                         "description" => date('m月d日', time()) . "\n您的". $title."（到期时间：".$data['expiration_time']."）应缴纳".$data['fee']."元",
-                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$id,
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$ids,
                     ];
-                    Service::sendPersonalMessage($message,$userId);
+                    foreach ($userList as $k=>$v){
+                        Service::sendPersonalMessage($message,$v);
+                    }
 
                     return $this->success('添加成功');
                 } else {
