@@ -92,7 +92,7 @@ class Feepayment extends Admin
                     $message = [
                         "title" => $title."缴纳提示",
                         "description" => date('m月d日', time()) . "\n您的". $title."（到期时间：".$data['expiration_time']."）应缴纳".$data['fee']."元",
-                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/history/appid/1/id/'.$id,
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$id,
                     ];
                     Service::sendPersonalMessage($message,$userId);
 
