@@ -72,20 +72,18 @@
         <div id="modal-form" class="modal fade" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form class="form-horizontal" method="post" action="{:Url('WaterService/complete')}">
+                    <form class="form-horizontal" method="post" action="update">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h3 class="modal-title text-center"  name="dialog-title">填写备注信息</h3>
+                            <h3 class="modal-title text-center">备注信息</h3>
                         </div>
-
-
+                        <div class="modal-body">
                             <div class="form-group"><label class="col-sm-2 control-label">备注</label>
-                                <div class="col-sm-10"><input type="text" placeholder="选填" class="form-control" required="" name="remark"></div>
+                                <div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>
                             </div>
-
-                        <div class="modal-footer">
-                            <button class="btn btn-primary ajax-post" type="submit" target-form="form-horizontal">保存</button>
-                            <input type="hidden" name="id" value="">
+                            <div class="form-group"><label class="col-sm-2 control-label"></label>
+                                <div class="col-sm-10"><input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;"></div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -132,15 +130,14 @@
                     <td>审核失败</td>
                     {/eq}
 
-                    {eq name="$vo.status" value="0"}
-                    <td><button data-toggle="modal" class="btn btn-sm btn-primary " href="#modal-form" onclick="edit(this)" data-id="{$vo.id}">审核</button></td>
-                    {/eq}
-                    {eq name="$vo.status" value="1"}
-                    <td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>
-                    {/eq}
-                    {eq name="$vo.status" value="2"}
-                    <td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>
-                    {/eq}
+                   <td>
+                       {eq name="$vo.status" value="0"}
+                       <a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>
+                       <a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>
+                       {/eq}
+
+                   </td>
+
                 </tr>
                 {/volist}
                 </tbody>
@@ -149,6 +146,8 @@
         </div>
     </div>
 </div>
+<input type="hidden" name="is_id" value="">
+<input type="hidden" name="is_uid" value="">
 {/block}
 
 {block name="script"}
@@ -164,9 +163,33 @@
         });
     });
 
+    //增加模态框后的修改；
+    function changestates(id,uid) {
+        $("input[name='is_id']").val(id);
+        $("input[name='is_uid']").val(uid);
+    }
     /*修改服务状态值*/
-    function edit(a){
-        $("input[name='id']").val($(a).attr('data-id'));
+    function changeStatus(id,uid){
+        if(!uid) {
+            var id = $("input[name='is_id']").val();
+            var uid = $("input[name='is_uid']").val();
+            var str = $("input[name='check_remark']").val();
+        }
+        $.ajax({
+            data:{id:id,del:uid,check_remark:str},
+            type:"POST",
+            url:"{:Url('Waterservice/complete')}",
+            success:function (data){
+                if(data.code==1){
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },2000);
+                }else{
+                    updateAlert(data.msg,'info');
+                }
+            }
+        })
 
     }
 </script>
