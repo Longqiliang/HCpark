@@ -100,7 +100,7 @@
                         </div>
                     </td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.source}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|msubstr=0,50}</a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,50}</a></td>
                     <td><a href="{:Url('add','id='.$vo.id)}">{$vo.front_cover|msubstr=0,50}</a></td>
                     <td class="list_type">
                         <a href="{:Url('add','id='.$vo.id)}">{$vo.type_text}</a>
