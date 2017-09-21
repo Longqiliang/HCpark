@@ -57,17 +57,28 @@ class WaterService extends Admin
     public function complete() {
 
         $id = input('id');
-        $remark = input('remark');
-        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1,'check_remark'=>$remark]);
+        $uid = input('uid');
+        $remark = input('check_remark');
+        $result = WaterModel::where('id', 'in', $id)->update(['status' => $uid,'check_remark'=>$remark]);
         $data = WaterModel::get($id);
         $userId = $data['userid'];
         if ($result){
-            $message = [
-                "title" => "饮水服务提示",
-                "description" => "送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
-                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/'.$id,
-            ];
-            ServiceModel::sendPersonalMessage($message,$userId);
+            if ($uid ==1){
+                $message = [
+                    "title" => "饮水服务提示",
+                    "description" => "送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/'.$id,
+                ];
+            }else{
+                $message = [
+                    "title" => "饮水服务提示",
+                    "description" => date('m月d日',time())."\n饮水服务暂时无法提供\n备注:".$data['check_remark'],
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/'.$id,
+                ];
+
+            }
+
+            ServiceModel::sendPersonalMessage($message,18867514826);
             $this->success("已审核");
         }else{
 
