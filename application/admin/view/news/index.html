@@ -102,7 +102,7 @@
                             <a href="{:Url('add','id='.$vo.id)}">{$vo.title}</a>
                         </div>
                     </td>
-                    <td><a href="{:Url('add','id='.$vo.id)}"><div class="mail-main">{$vo.content|strip_tags|msubstr=0,60}</div></a></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}"><div class="mail-main">{$vo.content|strip_tags|msubstr=0,30}</div></a></td>
                     <td class="list_banner">{eq name="vo.is_banner" value="1"}<span class="label label-warning">Banner</span>{/eq}</td>
                     <td class="list_type">
                         {volist name="Think.config.news_type" id="type"}
