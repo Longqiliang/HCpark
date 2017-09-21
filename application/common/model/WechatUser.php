@@ -12,8 +12,24 @@ use think\Model;
 
 class WechatUser extends Model
 {
-    public function departmentName() {
+    public function departmentName()
+    {
 
-        return $this->hasOne("WechatDepartment","id","department");
+        return $this->hasOne("WechatDepartment", "id", "department");
     }
+
+    public function merchantsDiary()
+    {
+
+
+        return $this->hasMany("MerchantsDiary", 'user_id', 'userid');
+    }
+
+    public function merchantsCompany()
+    {
+
+
+        return $this->hasMany("MerchantsCompany", 'user_id', 'userid');
+    }
+
 }
