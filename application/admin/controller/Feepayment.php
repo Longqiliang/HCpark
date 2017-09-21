@@ -88,7 +88,7 @@ class Feepayment extends Admin
                 if ($re) {
                     $userList = WechatUser::where(['department'=>$data['company_id'],'fee_status'=>1])->select();
                     if ($data['type'] == 4){
-                        $data['type'] == 2;
+                        $data['type'] = 2;
                     }
                     $message = [
                         "title" => $title."缴纳提示",
