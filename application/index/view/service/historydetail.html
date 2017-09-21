@@ -449,7 +449,7 @@
             </div>
         </div>
     </div>
-    <div class="rent-btn-box"  v-if="can_check=='yes' && info.status==0">
+    <div class="rent-btn-box"  v-if="(appid!=1 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
         <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
     </div>
     <div class="modal-box"  :class="{'show':rentShow}">
@@ -566,10 +566,10 @@ var app = new Vue({
             var _this=this;
             console.log(!_this.subData.electricity_id && _this.appid== 7 && _this.info.status==0);
             console.log(!_this.subData.electricity_id, _this.appid== 7, _this.info.status == 0)
-            if(!_this.subData.electricity_id && _this.appid== 7 ){
+            if(!_this.subData.electricity_id && _this.appid== 7 && _this.info.type==1 ){
                 _this.$toast("请输入电柱编号");
                 return;
-            }else if(!_this.subData.park_card && _this.appid== 6){
+            }else if(!_this.subData.park_card && _this.appid== 6 && _this.info.type==1){
                 _this.$toast("请输入停车卡号");
                 return;
             }
@@ -588,6 +588,9 @@ var app = new Vue({
             if(_this.appid==8){
                 _this.isSubmit.publictype=_this.info.publictype;
                 _this.isSubmit.create_time=_this.info.create_time;
+            }
+            if(_this.info.type==2 && (_this.appid==6 || _this.appid==7)){
+                if(_this.appid==6){_this.subData.park_card=_this.info.park_card}else{_this.subData.electricity_id=_this.info.electricity_id}
             }
             _this.isSubmit = true;
             _this.subData.type=isPass;
