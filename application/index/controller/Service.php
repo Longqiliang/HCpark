@@ -1663,10 +1663,10 @@ class Service extends Base
             $info = FeePayment::where($map)->order('id desc')->find();
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
             $info['appid'] = $appid;
-            $info['title'] = '公耗费';
+            $info['title'] = '物业费';
             $info1 = FeePayment::where($map1)->order('id desc')->find();
             $info1['appid'] = $appid;
-            $info1['title'] = '物业费';
+            $info1['title'] = '公耗费';
             $info1['payment_voucher'] = isset($info1['payment_voucher']) ? unserialize($info1["payment_voucher"]) : "";
             $this->assign('info', json_encode([$info, $info1]));
 
