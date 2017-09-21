@@ -199,7 +199,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-tit">申请人信息</div>
+            <div class="card-tit">申请信息</div>
             <div class="card-cell">
                 <span>姓名</span>
                 <span>{{info.name}}</span>
@@ -207,6 +207,10 @@
             <div class="card-cell">
                 <span>手机</span>
                 <span>{{info.mobile}}</span>
+            </div>
+            <div class="card-cell">
+                <span>是否联系</span>
+                <span>{{info.status==1?'未联系':'已联系'}}</span>
             </div>
             <div class="remark">
                 <p>备注信息</p>
@@ -235,23 +239,25 @@
             </div>
             <div class="card-cell">
                 <span>价格范围</span>
-                <span>{{info.price}}/㎡·天</span>
+                <span>{{info.price}}元/㎡·天</span>
             </div>
+
         </div>
     </div>
-    <div class="rent-btn-box"  v-if="info.type==1">
-        <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
+    <div class="rent-btn-box"  v-if="info.type==1 && info.status==1">
+        <button class="btn btn-block btn-green" @click="showRent">是否已联系？</button>
     </div>
     <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
             <p>审核服务</p>
-            <div class="remark" >
-                <p>备注信息</p>
-                <textarea v-model="subData.check_remark"></textarea>
-            </div>
+            <!--<div class="remark" >-->
+                <!--<p>备注信息</p>-->
+                <!--<textarea v-model="subData.check_remark"></textarea>-->
+            <!--</div>-->
+            <p>是否已联系？</p>
             <div class="table-view-cell group-cell btn-box" >
-                <button class="group-btn btn-warning btn" @click="subRent(2)">取消服务</button>
-                <button class="group-btn btn-primary btn" @click="subRent(1)">确认服务</button>
+                <button class="group-btn btn-warning btn" @click="hideRent">未联系</button>
+                <button class="group-btn btn-primary btn" @click="subRent">已联系</button>
             </div>
             <div class="cancel" @click="hideRent">
                 <span><i class="iconfont hc-cha1"></i></span>
@@ -272,6 +278,13 @@
             info:JSON.parse('{$info}'),
             isSubmit:false
         },
+        created(){
+            if(this.info.type==1){
+                document.title='租房申请'
+            }else if(this.info.type==2){
+                document.title='租房意向'
+            }
+        },
         methods: {
             showRent:function () {
                 this.rentShow = true;
@@ -291,12 +304,11 @@
                     _this.isSubmit.create_time=_this.info.create_time;
                 }
                 _this.isSubmit = true;
-                _this.subData.type=isPass;
-                _this.subData.appid=_this.appid;
+                _this.subData.type=_this.info.type;
                 _this.subData.id=_this.info.id;
                 var data = JSON.parse(JSON.stringify(_this.subData));
                 //console.log(data);
-                _this.$http.post('/index/service/check',data).then(function (res) {
+                _this.$http.post('/index/roomrent/record',data).then(function (res) {
                     var data  = res.data;
                     _this.isSubmit = false;
                     if(data.code == 1){
@@ -308,7 +320,7 @@
                             confirmButtonColor: "#fcc44b"
                         },function () {
                             _this.rentShow = false;
-                            window.location.reload()
+                            window.location.replace(window.location.href);
                         });
                     }else{
                         swal({
@@ -317,7 +329,8 @@
                             type:"error",
                             confirmButtonColor: "#fcc44b"
                         },function () {
-                            window.location.reload();
+                            window.location.replace(window.location.href);
+
                         });
                     }
                 },function (res) {
@@ -328,7 +341,8 @@
                         type:"error",
                         confirmButtonColor: "#fcc44b"
                     },function () {
-                        window.location.reload();
+                        window.location.replace(window.location.href);
+
                     });
                 })
             }
