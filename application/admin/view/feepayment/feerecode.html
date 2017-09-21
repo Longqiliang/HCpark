@@ -89,8 +89,8 @@
                     <td>
                         {eq name="$vo.status" value="0"}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-primary" style="color: #fff;">查看凭证</a>
-                        <a href="#" class="btn-sm btn-primary" onclick="changeState('{$vo.id}',1)" style="color:#fff">审核通过</a>
-                        <a href="#" class="btn-sm btn-success" onclick="changeState('{$vo.id}',2)" style="color:#fff">审核不通过</a>
+                        <a href="#" class="btn-sm btn-primary" onclick="changeState('{$vo.id}',2)" style="color:#fff">审核通过</a>
+                        <a href="#" class="btn-sm btn-success" onclick="changeState('{$vo.id}',3)" style="color:#fff">审核不通过</a>
                         {else/}
                         <button class="btn-sm btn-info" >{$vo.status_text}</button>
                         {/eq}

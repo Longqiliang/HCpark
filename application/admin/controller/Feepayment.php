@@ -104,7 +104,7 @@ class Feepayment extends Admin
             }
 
         } else {
-            $status = [-1 => "删除", 0 => "审核中", 1 => "审核成功", 2 => "审核失败"];
+            $status = [-1 => "删除", 0 => "未缴费", 1 => "审核中", 2 => "审核成功",3=>"审核失败"];
             $id = input('id');
             $company = ParkCompany::get($id);
             $list1 = $feepayment->where(['company_id' => $id, 'type' => 1, 'expiration_time' => ['between', [$start_time, $end_time]]])->find();
@@ -153,7 +153,7 @@ class Feepayment extends Admin
             foreach ($userList as $k=>$v){
                 $userId[$k] = $v['userid'];
             }
-            if ($uid ==1){
+            if ($uid ==2){
                 $message = [
                     "title" => "费用缴纳提示",
                     "description" => date('m月d日', time()) . "\n您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元确认成功。",
