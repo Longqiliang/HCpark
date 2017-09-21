@@ -331,12 +331,12 @@
             <div class="card-cell" v-if="appid==7">
                 <span>电柱编号</span>
                 <span v-if="info.electricity_id">{{info.electricity_id}}</span>
-                <input v-if="can_check=='yes' && !info.electricity_id && info.status == 0" type="text" v-model="subData.electricity_id">
+                <input v-if="can_check=='yes' && !info.electricity_id && info.status == 0" type="text" placeholder="请输入电柱编号" v-model="subData.electricity_id">
             </div>
             <div class="card-cell" v-if="appid==6">
                 <span>停车卡号</span>
                 <span v-if="info.park_card">{{info.park_card}}</span>
-                <input v-if="can_check == 'yes' && !info.park_card && info.status == 0" type="text" v-model="subData.park_card">
+                <input v-if="can_check == 'yes' && !info.park_card && info.status == 0" type="text" placeholder="请输入停车卡号" v-model="subData.park_card">
             </div>
             <div class="card-cell">
                 <span>车主姓名</span>
