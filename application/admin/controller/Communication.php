@@ -187,7 +187,24 @@ class Communication extends Admin
         $res['group_name']=$result['group_name'];
         $res['name']=$result['name'];
         $this->assign('res',$res);
+
         return $this->fetch();
     }
+    /*修改状态值*/
+    public function changeStatus(){
+        $id = input('id');
+        $uid = input('uid');
+        $res = CommunicatePosts::where('id',$id)->update(['status'=>$uid]);
+        if ($res){
+
+            $this->success("审核成功");
+        }else{
+
+            $this->error("审核失败");
+        }
+
+    }
+
+
 
 }
