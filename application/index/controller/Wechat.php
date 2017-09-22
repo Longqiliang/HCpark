@@ -95,6 +95,8 @@ class Wechat extends Controller
             if($is=="yes"){
                 $weObj->news($news)->reply();
             }
+        }elseif ($type['event']==TPWechat::EVENT_SUBSCRIBE){
+            $weObj->text("欢迎")->reply();
         }
     }
     // 自动登入
