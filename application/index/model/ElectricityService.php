@@ -13,6 +13,7 @@ use think\Model;
 
 class ElectricityService extends  Model
 {
+    protected $dateFormat="Y-m-d";
     public  function  findRecord(){
 
 
