@@ -2376,12 +2376,12 @@ class Service extends Base
             //$newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $list = [
-            " A幢" => [$newArr,],
-            " B幢" => [$newArr1,],
+            " A幢" => $newArr,
+            " B幢" => $newArr1,
         ];
 
-        return $list;
-        //echo json_encode($list);
+        //return $list;
+        echo json_encode($list);
 
     }
 
