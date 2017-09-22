@@ -26,7 +26,8 @@ use  app\index\model\FunctionRoomRecord;
 use  app\index\model\News as NewsModel;
 use  app\index\model\LedRecord;
 use  app\common\behavior\Service as commonService;
-
+use  app\common\model\ParkRoom;
+use  app\common\model\ParkRent;
 //企业服务
 class Service extends Base
 {
@@ -131,6 +132,8 @@ class Service extends Base
                     'mobile' => $userinfo['mobile'],
                     'propretyMobile' => $parkInfo['property_phone']
                 ];
+                $floorList = $this->commonFloor();
+                $this->assign('floorlist',json_encode($floorList));
                 break;
             //室内保洁
             case 4:
@@ -143,6 +146,8 @@ class Service extends Base
                     'mobile' => $userinfo['mobile'],
                     'propretyMobile' => $parkInfo['property_phone']
                 ];
+                $floorList = $this->commonFloor();
+                $this->assign('floorlist',json_encode($floorList));
                 break;
             //车卡
             case 6:
@@ -198,6 +203,8 @@ class Service extends Base
                 $info['mobile'] = $user['mobile'];
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
                 $info['app_id'] = $app_id;
+                $floorList = $this->commonFloor();
+                $this->assign('floorlist',json_encode($floorList));
                 break;
 
 
@@ -2319,6 +2326,69 @@ class Service extends Base
         }
 
     }
+    /*楼盘信息公共方法*/
+    public function commonFloor(){
+        $floor = [];
+        $floor1 = [];
+        $newArr = [];
+        $newArr1 = [];
+        $parkId = session('park_id');
+        $parkInfo = Park::where('id', $parkId)->find();
+        $parkRoom = new ParkRoom();
+        $map = [
+            'park_id' => $parkId,
+            'build_block' => "A",
+        ];
+        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
+        foreach ($list as $k => $v) {
+            $floor[$k] = $v['floor'];
+        }
+        foreach ($floor as $k => $v) {
+            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
+            foreach ($roomList as $k1 => $v1) {
+                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
+                $roomArray[$k][$k1] = ['room' => $v1['room']];
+            }
+
+        }
+        foreach ($floor as $k => $v) {
+            $newArr[$k]['floor'] = $v;
+            $newArr[$k]['rooms'] = $roomArray[$k];
+        }
+        $map1 = [
+            'park_id' => $parkId,
+            'build_block' => "B",
+        ];
+        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor desc')->select();
+        foreach ($list1 as $k => $v) {
+            $floor1[$k] = $v['floor'];
+        }
+        foreach ($floor1 as $k => $v) {
+            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
+            foreach ($roomList1 as $k1 => $v1) {
+                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
+                $roomArray1[$k][$k1] = ['room' => $v1['room']];
+            }
+
+        }
+        foreach ($floor1 as $k => $v) {
+            $newArr1[$k]['floor'] = $v;
+            $newArr1[$k]['rooms'] = $roomArray1[$k];
+        }
+        $list = [
+            " A幢" => [$newArr,],
+            " B幢" => [$newArr1,],
+        ];
+
+        return $list;
+        //echo json_encode($list);
+
+    }
+
+
+
+
+
 
 }
 
