@@ -12,6 +12,7 @@ use think\Model;
 
 class WaterService extends Model
 {
+    protected $dateFormat ="Y-m-d";
     protected $insert = [
         'create_time' => NOW_TIME,
     ];
