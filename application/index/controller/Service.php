@@ -2380,8 +2380,8 @@ class Service extends Base
             " B幢" => $newArr1,
         ];
 
-        //return $list;
-        echo json_encode($list);
+        return $list;
+        //echo json_encode($list);
 
     }
 
