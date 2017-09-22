@@ -15,12 +15,19 @@
     <div class="card">
         <div class="card-tit">饮水服务</div>
         <div class="card-cell">
-            <label for="add">送水地点</label>
-            <div class="cell-address">
-                <span class="address-input-box"><input type="text" id="add" v-model="addressOne" maxlength="3"></span>
+            <label >送水地点</label>
+            <div class="cell-address" @click="checkAddress">
+                <span class="address-input-box"><span  v-html="addressOne" class="input"></span></span>
                 <span>幢</span>
-                <span class="address-input-box"><input type="number"  maxlength="4" v-model="addressTwo"></span>
+                <span class="address-input-box"><span  v-html="addressTwo" class="input"></span></span>
             </div>
+            <mt-popup  position="bottom"  v-model="addressVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelAddress">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectAddress">确定</span>
+                </div>
+                <mt-picker :slots="addressList" @change="onAddressChange" ></mt-picker>
+            </mt-popup>
         </div>
         <div class="card-cell">
             <label for="num">送水桶数</label>
@@ -46,11 +53,38 @@
 {block name="script"}
 <script>
     console.log(JSON.parse('{$info}'));
+    var floorlist = {$floorlist};
+    var houseList = Object.values(floorlist)[0];
+    var floor = [];
+    for(var list in houseList){
+        floor.push(Object.keys(houseList[list])[0]);
+    }
     var vm = new Vue({
         el:"#app",
         data:{
             addressOne:'',
             addressTwo:'',
+            addressName:{
+                house:'',
+                room:''
+            },
+            addressVisible:false,
+            addressPicker:'',
+            addressList:[
+                {
+                    defaultIndex:1,
+                    values: Object.keys(floorlist)
+                },
+                {
+                    defaultIndex:1,
+                    values: floor
+                },
+                {
+                    defaultIndex:1,
+                    values:Object.values(houseList[0])[0]
+                }
+            ],
+            floorList:floorlist,
             defaultData:{
                 address:'',
                 number:'',
@@ -60,9 +94,50 @@
             },
             isSubmit:true
         },
+        mounted:function () {
+            var _this = this;
+            _this.$nextTick(function() {
+                setTimeout(function() {
+                    _this.addressList[0].defaultIndex = 0;
+                    _this.addressList[1].defaultIndex = 0;
+                    _this.addressList[2].defaultIndex = 0;
+                }, 100);
+            });
+        },
         methods: {
             goHistory(){
                 window.location.href='/index/service/history/id/'+this.defaultData.appid;
+            },
+            checkAddress:function () {
+                var _this = this;
+                _this.addressVisible = true;
+            },
+            onAddressChange:function (pick,values) {
+                var _this = this;
+                _this.addressPicker =  pick;
+                if(values[0]&& values[2]){
+                    var floor = [];
+                    for(var list in _this.floorList[values[0]]){
+                        floor.push(Object.keys(_this.floorList[values[0]][list])[0]);
+                        if(values[1] == Object.keys(_this.floorList[values[0]][list])[0]){
+                            pick.setSlotValues(1,floor);
+                            pick.setSlotValues(2,Object.values(_this.floorList[values[0]][list])[0]);
+                            _this.addressName = {
+                                house:values[0].substring(0,values[0].length - 1),
+                                room:values[2]
+                            }
+                        }
+                    }
+                }
+            },
+            cancelAddress:function () {
+                this.addressVisible = false;
+            },
+            selectAddress:function () {
+                var _this = this;
+                _this.addressVisible = false;
+                _this.addressOne = _this.addressName.house;
+                _this.addressTwo = _this.addressName.room;
             },
             orderBtn: function () {
                 var _this = this;

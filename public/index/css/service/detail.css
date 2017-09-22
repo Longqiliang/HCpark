@@ -429,7 +429,8 @@ textarea::-webkit-input-placeholder {
     text-align: right;
     width: 50vw;
 }
-.card-cell .cell-address input{
+.card-cell .cell-address .input{
+    display: inline-block;
     width: 9vw;
     text-align: center;
 }
