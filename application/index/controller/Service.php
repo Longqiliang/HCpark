@@ -2347,13 +2347,13 @@ class Service extends Base
             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
             foreach ($roomList as $k1 => $v1) {
                 $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                $roomArray[$k][$k1] = ['room' => $v1['room']];
+                $roomArray[$k][$k1] = $v1['room'];
             }
 
         }
         foreach ($floor as $k => $v) {
-            $newArr[$k]['floor'] = $v;
-            $newArr[$k]['rooms'] = $roomArray[$k];
+            $newArr[$k][$v] = $roomArray[$k];
+            //$newArr[$k]['rooms'] = $roomArray[$k];
         }
         $map1 = [
             'park_id' => $parkId,
@@ -2367,13 +2367,13 @@ class Service extends Base
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
                 $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                $roomArray1[$k][$k1] = ['room' => $v1['room']];
+                $roomArray1[$k][$k1] =  $v1['room'];
             }
 
         }
         foreach ($floor1 as $k => $v) {
-            $newArr1[$k]['floor'] = $v;
-            $newArr1[$k]['rooms'] = $roomArray1[$k];
+            $newArr1[$k][$v] = $roomArray1[$k];
+            //$newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $list = [
             " A幢" => [$newArr,],
