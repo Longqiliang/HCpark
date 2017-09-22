@@ -78,7 +78,7 @@ class WaterService extends Admin
 
             }
 
-            ServiceModel::sendPersonalMessage($message,18867514826);
+            ServiceModel::sendPersonalMessage($message,$userId);
             $this->success("已审核");
         }else{
 
