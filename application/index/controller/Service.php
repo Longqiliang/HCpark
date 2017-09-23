@@ -2352,7 +2352,7 @@ class Service extends Base
 
         }
         foreach ($floor as $k => $v) {
-            $newArr[$k][$v] = $roomArray[$k];
+            $newArr[$k][$v."楼"] = $roomArray[$k];
             //$newArr[$k]['rooms'] = $roomArray[$k];
         }
         $map1 = [
@@ -2372,7 +2372,7 @@ class Service extends Base
 
         }
         foreach ($floor1 as $k => $v) {
-            $newArr1[$k][$v] = $roomArray1[$k];
+            $newArr1[$k][$v."楼"] = $roomArray1[$k];
             //$newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $list = [
