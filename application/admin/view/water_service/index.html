@@ -178,7 +178,7 @@
         $.ajax({
             data:{id:id,uid:uid,check_remark:str},
             type:"POST",
-            url:"{:Url('Waterservice/complete')}",
+            url:"{:Url('WaterService/complete')}",
             success:function (data){
                 if(data.code==1){
                     updateAlert(data.msg+ ' 页面即将自动跳转~','success');
