@@ -176,7 +176,7 @@
             var str = $("input[name='check_remark']").val();
         }
         $.ajax({
-            data:{id:id,del:uid,check_remark:str},
+            data:{id:id,uid:uid,check_remark:str},
             type:"POST",
             url:"{:Url('Waterservice/complete')}",
             success:function (data){
