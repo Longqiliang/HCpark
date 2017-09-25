@@ -167,8 +167,10 @@ class Feepayment extends Admin
 
 
             }
-            foreach ($userId as $k=>$v){
-                Service::sendPersonalMessage( $message,$v);
+            if ($userId){
+                foreach ($userId as $k=>$v){
+                    Service::sendPersonalMessage( $message,$v);
+                }
             }
 
             return $this->success("审核成功， 稍后自动刷新页面~");
