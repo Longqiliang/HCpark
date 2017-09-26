@@ -8,12 +8,49 @@ use app\common\model\WechatDepartment;
 use app\common\model\WechatTag;
 use app\index\model\WechatUser;
 use app\common\behavior\Service;
-
+use app\common\model\CompanyContract;
 
 class Index extends Admin {
 
     public function index() {
+        //首页所选园区ID
+        $id = session('user_auth')['park_id'];
 
+        if ($id == '1') {
+            //园区统计
+            $res = Park::field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+            $list = Park::field('id,name,address,images')->select();
+
+        } else {
+            $res = Park::where('id', 'eq', $id)->field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
+            $list = Park::where('id', 'eq', $id)->field('id,name,address,images')->select();
+        }
+
+        $data[0] = CompanyContract::where(["park_id" => $id, 'type' => 1,'status'=>0])->count();
+        $data[1] = CompanyContract::where(["park_id" => $id, 'type' => 2,'status'=>0])->count();
+        $data[2] = CompanyContract::where(["park_id" => $id, 'type' => ['>', 2],'status'=>0])->count();
+        $contract[0] = $data[0] + $data[1] + $data[2];
+        $contract[1] = $data[0];
+        $contract[2] = $data[1];
+        $contract[3] = $data[2];
+        $array = [
+            'count' => $contract[0],
+            'rent' => $contract[1],
+            'property' => $contract[2],
+            'other' => $contract[3],
+        ];
+
+
+
+
+//        return json_encode($array);
+
+        $this->assign('info', json_encode($array));
+//        echo json_encode($list);
+
+
+        $this->assign('list', json_encode($list));
+        $this->assign('res', json_encode($res));
         return $this->fetch();
     }
 
