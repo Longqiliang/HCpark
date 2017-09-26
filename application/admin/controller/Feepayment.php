@@ -50,12 +50,10 @@ class Feepayment extends Admin
             $uid = input('uid');
             $type = input('type');
             $map = ['company_id' => $id, 'type' => $type];
-            $time = date("m", strtotime(input('expiration_time')));
-
-            // return $time;
+            $time = date("Y-m", strtotime(input('expiration_time')));
             $res = $feepayment->where($map)->select();
             foreach ($res as $k => $v) {
-                $timeArray[$k] = date("m", strtotime($v['expiration_time']));
+                $timeArray[$k] = date("Y-m", strtotime($v['expiration_time']));
             };
             if (in_array($time, $timeArray)) {
                 $data = input('post.');
@@ -169,7 +167,7 @@ class Feepayment extends Admin
             }
             if ($userId){
                 foreach ($userId as $k=>$v){
-                    Service::sendPersonalMessage( $message,$v);
+                    Service::sendPersonalMessage( $message,18867514826);
                 }
             }
 
