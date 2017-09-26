@@ -16,9 +16,12 @@
         line-height: 80vh;
     }
     .my-footer>div {
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 5px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .my-footer>div>span{
+        margin-right: 1rem;
     }
 </style>
 {/block}
@@ -72,18 +75,13 @@
                             for(var i=0;i<res.data.data.length;i++){
                                 this.article.push(res.data.data[i])
                             }
-                            this.loading = false;
                         }else{
-                            this.loading = false;
                             this.canLoad=false;
                         }
-                        console.log(this.canLoad)
-                    },function (res) {
-                        console.log(res.data);
                         this.loading = false;
-
+                    },function (res) {
+                        this.loading = false;
                     })
-                    this.loading = false;
                 }
             },
         }
