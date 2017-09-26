@@ -570,6 +570,17 @@ class Service extends Base
                 "description" => "您有新卡缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
+            $new=[
+                "title" => $message['title'],
+                "message" => $message['description'],
+                'type'=>1,
+                'park_id'=>session('park_id'),
+                'app_id'=>$data['app_id'],
+                'sid'=> $CardparkService->id,
+                'create_time'=>time(),
+                'status'=>0
+            ];
+            $savemessage =$personalMessage->save($new);
             //推送给运营
             $reult = $this->commonSend(1, $message);
             if ($reult) {
@@ -653,6 +664,18 @@ class Service extends Base
                 "description" => "您有旧卡缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
+
+            $new=[
+                "title" => $message['title'],
+                "message" => $message['description'],
+                'type'=>1,
+                'park_id'=>session('park_id'),
+                'app_id'=>$data['app_id'],
+                'sid'=> $CardparkService->id,
+                'create_time'=>time(),
+                'status'=>0
+            ];
+            $savemessage =$personalMessage->save($new);
             //推送给运营
             $reult = $this->commonSend(1, $message);
             if ($reult) {
@@ -1515,6 +1538,19 @@ class Service extends Base
                 "description" => "服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/yes/id/' . $property->getLastInsID()
             ];
+
+            $new=[
+                "title" => $message['title'],
+                "message" => $message['description'],
+                'type'=>2,
+                'park_id'=>session('park_id'),
+                'app_id'=>$data['app_id'],
+                'sid'=> $property->id,
+                'create_time'=>time(),
+                'status'=>0
+            ];
+            $savemessage =$personalMessage->save($new);
+
             //推送给运营和物业
             $reult = $this->commonSend(3, $message);
 
@@ -1557,6 +1593,17 @@ class Service extends Base
             //推送给运营和物业
             $reult = $this->commonSend(3, $message);
 
+            $new=[
+                "title" => $message['title'],
+                "message" => $message['description'],
+                'type'=>2,
+                'park_id'=>session('park_id'),
+                'app_id'=>$data['app_id'],
+                'sid'=> $property->id,
+                'create_time'=>time(),
+                'status'=>0
+            ];
+            $savemessage =$personalMessage->save($new);
             if ($reult) {
                 return $this->success("预约成功");
             } else {
@@ -1645,6 +1692,17 @@ class Service extends Base
             ];
             //推送给运营和物业
             $reult = $this->commonSend(3, $message);
+            $new=[
+                "title" => $message['title'],
+                "message" => $message['description'],
+                'type'=>2,
+                'park_id'=>session('park_id'),
+                'app_id'=>$data['app_id'],
+                'sid'=> $waterModel->id,
+                'create_time'=>time(),
+                'status'=>0
+            ];
+            $savemessage =$personalMessage->save($new);
             if ($reult) {
                 return $this->success("预约成功");
             } else {
@@ -1830,6 +1888,18 @@ class Service extends Base
                     ];
                     //推送给运营
                     $reult = $this->commonSend(1, $message);
+                    $new=[
+                        "title" => $message['title'],
+                        "message" => $message['description'],
+                        'type'=>2,
+                        'park_id'=>session('park_id'),
+                        'app_id'=>$data['app_id'],
+                        'sid'=> $id,
+                        'create_time'=>time(),
+                        'status'=>0
+                    ];
+                    $savemessage =$personalMessage->save($new);
+
                 }
             }
             $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
@@ -2010,6 +2080,18 @@ class Service extends Base
                 //推送给用户
                 $reult = $this->commonSend(4, $message, $users);
                 if ($reult) {
+                    $new=[
+                        "title" => $message['title'],
+                        "message" => $message['description'],
+                        'type'=>3,
+                        'park_id'=>session('park_id'),
+                        'app_id'=>$data['appid'],
+                        'sid'=> $id,
+                        'create_time'=>time(),
+                        'status'=>0,
+                        'userid'=>$users
+                    ];
+                    $savemessage =$personalMessage->save($new);
                     return $this->success("预约成功");
                 } else {
                     return $this->error("推送失败");
@@ -2039,6 +2121,19 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $user['user_id']);
 
                 if ($reult) {
+                    $new=[
+                        "title" => $message['title'],
+                        "message" => $message['description'],
+                        'type'=>3,
+                        'park_id'=>session('park_id'),
+                        'app_id'=>$data['appid'],
+                        'sid'=> $id,
+                        'create_time'=>time(),
+                        'status'=>0,
+                        'userid'=>$user['user_id']
+                    ];
+                    $savemessage =$personalMessage->save($new);
+
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2067,6 +2162,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $user['userid']);
 
                 if ($reult) {
+                    $new=[
+                        "title" => $message['title'],
+                        "message" => $message['description'],
+                        'type'=>3,
+                        'park_id'=>session('park_id'),
+                        'app_id'=>$data['appid'],
+                        'sid'=> $id,
+                        'create_time'=>time(),
+                        'status'=>0,
+                        'userid'=>$user['user_id']
+                    ];
+                    $savemessage =$personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2097,6 +2204,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $user['user_id']);
 
                 if ($reult) {
+                    $new=[
+                        "title" => $message['title'],
+                        "message" => $message['description'],
+                        'type'=>3,
+                        'park_id'=>session('park_id'),
+                        'app_id'=>$data['appid'],
+                        'sid'=> $id,
+                        'create_time'=>time(),
+                        'status'=>0,
+                        'userid'=>$user['user_id']
+                    ];
+                    $savemessage =$personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2146,6 +2265,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $record['user_id']);
 
                 if ($reult) {
+                    $new=[
+                        "title" => $message['title'],
+                        "message" => $message['description'],
+                        'type'=>3,
+                        'park_id'=>session('park_id'),
+                        'app_id'=>$data['appid'],
+                        'sid'=> $id,
+                        'create_time'=>time(),
+                        'status'=>0,
+                        'userid'=>$record['user_id']
+                    ];
+                    $savemessage =$personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2194,6 +2325,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $record['user_id']);
 
                 if ($reult) {
+                    $new=[
+                        "title" => $message['title'],
+                        "message" => $message['description'],
+                        'type'=>3,
+                        'park_id'=>session('park_id'),
+                        'app_id'=>$data['appid'],
+                        'sid'=> $id,
+                        'create_time'=>time(),
+                        'status'=>0,
+                        'userid'=>$record['user_id']
+                    ];
+                    $savemessage =$personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2227,6 +2370,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $record['user_id']);
 
                 if ($reult) {
+                    $new=[
+                        "title" => $message['title'],
+                        "message" => $message['description'],
+                        'type'=>3,
+                        'park_id'=>session('park_id'),
+                        'app_id'=>$data['appid'],
+                        'sid'=> $id,
+                        'create_time'=>time(),
+                        'status'=>0,
+                        'userid'=>$record['user_id']
+                    ];
+                    $savemessage =$personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");

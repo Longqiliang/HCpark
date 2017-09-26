@@ -188,7 +188,7 @@ class Personal extends Base
                 'park_id' => $park_id,
                 'type' => array('neq', 3)
             ];
-            $list = $personMessage->where($map)->select();
+            $list = $personMessage->where($map)->limit(0,6)->select();
 
         } //物业人员
         elseif ($user['tagid'] == 2) {
@@ -196,27 +196,62 @@ class Personal extends Base
                 'park_id' => $park_id,
                 'type' => array('eq', 2)
             ];
-            $list = $personMessage->where($map)->select();
+            $list = $personMessage->where($map)->limit(0,6)->select();
         } //用户自己
         else {
+
             $map = [
                 'park_id' => $park_id,
                 'type' => array('eq', 3),
                 'userid' => $user_id
             ];
-            $list = $personMessage->where($map)->select();
+            $list = $personMessage->where($map)->limit(0,6)->select();
         }
-
-
         $this->assign('list', json_encode($list));
         return $this->fetch();
     }
+
+    /*我的消息上拉加载*/
+    public function messageMore(){
+        $personMessage = new PersonalMessage();
+        $user_id = session('userId');
+        $park_id = session('park_id');
+        $user = WechatUser::where('userid', $user_id)->find();
+        $num =input('num');
+        //运营人员
+        if ($user['department'] == 76) {
+            $map = [
+                'park_id' => $park_id,
+                'type' => array('neq', 3)
+            ];
+            $list = $personMessage->where($map)->limit($num,6)->select();
+
+        } //物业人员
+        elseif ($user['tagid'] == 2) {
+            $map = [
+                'park_id' => $park_id,
+                'type' => array('eq', 2)
+            ];
+            $list = $personMessage->where($map)->limit($num,6)->select();
+        } //用户自己
+        else {
+
+            $map = [
+                'park_id' => $park_id,
+                'type' => array('eq', 3),
+                'userid' => $user_id
+            ];
+            $list = $personMessage->where($map)->limit($num,6)->select();
+        }
+      return json_encode($list);
+
+    }
+
 
     /*我的服务*/
     public function service()
     {
         $userid = session('userId');
-
         //费用缴纳
         $userinfo = WechatUser::where(['userid' => $userid])->find();
         $departmentId = $userinfo['department'];
@@ -232,7 +267,6 @@ class Personal extends Base
                 $v['status'] = 1;
             }
         };
-
         //物业报修
         $types = [1 => '物业报修（空调报修）', 2 => "物业报修（电梯报修）", 3 => "物业报修（其他报修）"];
         $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('type as service_name,status,create_time')->select();
