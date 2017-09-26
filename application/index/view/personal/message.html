@@ -2,48 +2,35 @@
 {block name="style"}
 <title>我的消息</title>
 <link rel="stylesheet" href="/index/css/personal/message.css">
-<link rel="stylesheet" href="/index/css/common/tip.css">
 <style>
-.load-more{
-    text-align: center;
-    color: #999;
-}
-    p.no-more{
-        color: #999;
-        font-size: 1.4rem;
-        text-align: center;
-        line-height: 80vh;
-    }
-
-body{
-    background: #F5F5F5;
-}
-.no-list{
-    width:100%;
-    display: block;
-    margin:0 auto;
-}
 </style>
 {/block}
 {block name="body"}
 <div id="app">
-    <!--<ul class="msg-lists">-->
-        <!--<li  class="clear" v-for="item in list">-->
-            <!--<div :style="'background-image: url('+item.path+')'" class="msg-img"></div>-->
-            <!--<div class="msg-text">-->
-                <!--<div class="msg-title"><span class="msg-title-text">标题</span> <span class="fr msg-time">2017-8-29</span> </div>-->
-                <!--<div class="msg-info">消息内容（-。。-）</div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash;<a href=""></a>&ndash;&gt;-->
-        <!--</li>-->
-    <!--</ul>-->
-    <!--<div class="load-more">-->
-        <!--<span v-if="documents.length === 0">暂无消息</span>-->
-        <!--<mt-spinner :type="2"  v-if="canLoad && loading"></mt-spinner>-->
-        <!--<span v-if="!canLoad">没有更多了</span>-->
-    <!--</div>-->
-    <img src="/index/images/service/card/icon-default.jpg" class="no-list">
-
+    <!--v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6"-->
+    <ul class="my-message" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
+        <li v-for="item in message" >
+            <h3>{{item.title}}</h3>
+            <div class="msg-time">{{item.create_time*1000 | timeToString}}</div>
+            <ul class="msg-detail" v-html="nToLi(item.message)">
+                <!--<li>杭州之图网络科技有限公司企业</li>-->
+                <!--<li>物业费（到期时间：2017-09-09）</li>-->
+                <!--&lt;!&ndash;<li></li>&ndash;&gt;-->
+                <!--<li>应缴费用：2元</li>-->
+                <!--<li class="status-r">缴费失败</li>-->
+            </ul>
+            <div class="msg-see-all">查看全文</div>
+            <a :href="'/index/service/historyDetail/appid/'+item.app_id+'/can_check/'+(item.type!=3?'yes':'no')+'/id/'+item.sid"></a>
+        </li>
+    </ul>
+    <div class="my-footer" v-if="message.length">
+        <span v-if="!canLoad">没有更多了</span>
+        <span v-if="canLoad && !loading">下拉加载更多</span>
+        <div  v-if="loading">
+            <mt-spinner :type="3"></mt-spinner>加载中...
+        </div>
+    </div>
+    <img src="/index/images/service/card/icon-default.jpg" class="no-message" v-if="!message.length">
 </div>
 <!--加载更多-->
 
@@ -51,45 +38,65 @@ body{
 {block name="script"}
 <!--<script src="/index/js/reset.js"></script>-->
 <script>
-    var scrollNow = true;//判断下拉请求是否执行中.false为正在请求
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    y=newTime.getFullYear();
+            if(dt<10){
+                dt='0'+dt;
+            }
+            if(m<10){
+                m='0'+m;
+            }
+            return y+'-'+m+'-'+dt
+        }
+    });
     var app=new Vue({
         el:'#app',
         data:{
-            list:'{$list}',
-            canLoad:true,
             loading:false,
-            id:{$id}
+            canLoad:true,
+            message:{$list}
         },
         created(){
-            if(this.documents.len==0){
+            if(this.message.length<=6){
                 this.canLoad=false
             }
         },
         methods:{
+            nToLi(str){
+                if (!str) { return ''}
+                var html='<li>';
+                html+=str.split('\n').join('</li><li>');
+                return html += '</li>'
+            },
             loadMore(){
-                if(!this.loading && this.documents.length>0 && this.canLoad ){
-                    this.loading = true;
-                    this.$http.post('/index/personal/getMore',{newsId:this.id,length:this.list.length}).then(function (res) {
-                        console.log(res.data);
-                        if(res.data.code==0){
-                            this.canLoad=false
+                var _this=this;
+                console.log(_this.loading,_this.canLoad)
+                if((!_this.loading) && _this.canLoad ){
+                    _this.loading = true;
+                    console.log(_this.loading,_this.canLoad)
+                    _this.$http.post('/index/news/getMoremessage',{length:_this.message.length}).then(function (res) {
+                        if(res.data.code!=0){
+                            for(var i=0;i<res.data.data.length;i++){
+                                _this.message.push(res.data.data[i])
+                            }
+                            _this.loading = false;
                         }else{
-                            for( var i = 0 ;i < res.data.data.length;i++){
-                                this.documents.push(res.data.data[i])
-                            }
-                            if(res.data.data.length<6){
-                                this.canLoad = false
-                            }
+                            _this.loading = false;
+                            _this.canLoad=false;
                         }
-                        this.loading = false;
+                        console.log(_this.canLoad)
                     },function (res) {
-                        console.log(res.data);
-                        this.loading = false;
+                        _this.loading = false;
 
                     })
+                    _this.loading = false;
                 }
             },
-        },
+        }
     })
 </script>
 {/block}

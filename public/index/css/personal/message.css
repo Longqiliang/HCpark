@@ -1,74 +1,90 @@
 body{
-    background-color: #f1f1f1;
+    background: #EBEBEB;
+    color: #333;
 }
-.msg-lists{
-    background: #ffffff;
+
+/**加载更多**/
+
+.my-footer{
+    padding: 1rem 0;
+    text-align: center;
+    color:#999
 }
-.msg-lists>li{
-    margin-left:3.2vw;
-    padding:1.2rem 3.2vw 1.2rem 0;
+.my-footer>p{
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 80vh;
+}
+.my-footer>div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+.no-message{
+    width:100%;
+    display: block;
+    margin:0 auto;
+}
+
+
+/*消息列表*/
+.my-message{
+    padding: 0 1.6rem;
+}
+.my-message>li{
+    border: 1px solid #D9D9D9;
+    -webkit-border-radius: 4px ;
+    -moz-border-radius: 4px;
+    border-radius: 4px ;
+    padding: 1.4rem;
+    background-color: #fff;
     position: relative;
+    margin:1.6rem 0;
 }
-.msg-lists>li:not(:last-child){
-    border-bottom: 1px solid #f1f1f1;
-}
-.msg-lists>li>a{
-    width:100vw;
-    height:100%;
+.my-message>li>a{
     position: absolute;
     top:0;
-    left:-3.2vw;
-    z-index: 999;
-}
-.msg-lists>li{
-    display: -webkit-flex;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.msg-lists>li>div.msg-img{
-    width:13.3vw;
-    height:13.3vw;
-    background: transparent url('') no-repeat center center;
-    background-size: cover;
-    border-radius: 0.5rem;
-    margin-right: 3.2vw;
-}
-.msg-lists>li>div.msg-text{
-    width:77vw;
-    height:13.3vw;
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-.msg-lists>li>div.msg-text>div{
+    left:0;
+    display: block;
+    height:100%;
     width:100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    -webkit-border-radius: 4px ;
+    -moz-border-radius: 4px;
+    border-radius: 4px ;
+    z-index: 10;
 }
-.msg-lists>li>div.msg-text>.msg-title{
-    display: -webkit-flex;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
+.my-message>li>h3{
+    margin:0;
+    font-size: 1.7rem;
 }
-.msg-lists>li>div.msg-text>.msg-title>.msg-title-text{
+.msg-time{
+    margin-top: 0.8rem;
+    color: #A7A7A7;
     font-size: 1.4rem;
-    color: #333;
-    width: 50vw;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
-.msg-lists>li>div.msg-text>.msg-title>.msg-time{
-    font-size: 1.1rem;
-    color: #999;
+.msg-detail{
+    color: #a7a7a7;
+    font-size: 1.4rem;
+    margin-bottom: 3rem;
+    margin-top: 1.2rem;
 }
-.msg-lists>li>div.msg-text>.msg-info{
-    font-size: 1.2rem;
-    color: #999;
+.msg-detail>li{
+    padding:0.2rem;
+}
+.msg-see-all{
+    font-size: 1.5rem;
 }
 
+/*状态*/
+/*黄色：#FCC44B*/
+/*绿色：#52CC92*/
+/*红色：#F97878*/
+.status-y{
+    color: #fcc44b;
+}
+.status-g{
+    color: #52cc92;
+}
+.status-r{
+    color: #f97878;
+}
