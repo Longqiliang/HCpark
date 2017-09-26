@@ -24,18 +24,16 @@
         <div class="my-footer" v-if="message.length">
             <span v-if="!canLoad">没有更多了</span>
             <span v-if="canLoad && !loading">下拉加载更多</span>
-            <div  v-if="loading">
-                <mt-spinner :type="3"></mt-spinner>加载中...
+            <div  class="my-loading" v-if="loading">
+                <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
             </div>
         </div>
         <img src="/index/images/service/card/icon-default.jpg" class="no-message" v-if="!message.length">
     </div>
 </div>
 <!--加载更多-->
-
 {/block}
 {block name="script"}
-<!--<script src="/index/js/reset.js"></script>-->
 <script>
     Vue.filter('timeToString', function(time) {
         if(time){
@@ -59,45 +57,44 @@
             loading:false,
             canLoad:true
         },
-        created(){
-            if(this.message.length<6){
-                this.canLoad=false
-            }
-        },
+//        created(){
+//            if(this.message.length<6){
+//                this.canLoad=false
+//            }
+//        },
         methods:{
+            loadMore(){
+                var _this=this;
+                console.log('before',_this.loading , _this.canLoad)
+                if(_this.loading || !_this.canLoad){
+                    return
+                }
+                _this.loading = true;
+                console.log('after',_this.loading,_this.canLoad)
+                _this.$http.post('/index/personal/messageMore',{num:_this.message.length}).then(function (res) {
+                    if(res.data.code!=0){
+                        var data=JSON.parse(res.data.data);
+                        if(data.length<6){
+                            _this.canLoad=false;
+                        }
+                        console.log(data)
+                        for(var i=0;i<data.length;i++){
+                            _this.message.push(data[i])
+                        }
+                    }else{
+                        _this.canLoad=false;
+                    }
+                    _this.loading = false;
+                    console.log('canLoad',_this.canLoad)
+                },function (res) {
+                    _this.loading = false;
+                })
+            },
             nToLi(str){
                 if (!str) { return ''}
                 var html='<li>';
                 html+=str.split('\n').join('</li><li>');
                 return html += '</li>'
-            },
-            loadMore(){
-                var _this=this;
-                console.log('before',_this.loading , _this.canLoad)
-                if((!_this.loading) && _this.canLoad ){
-                    _this.loading = true;
-                    console.log('after',_this.loading,_this.canLoad)
-                    _this.$http.post('/index/personal/messageMore',{num:_this.message.length}).then(function (res) {
-                        var data=JSON.parse(res.data.data);
-                        console.log(data)
-                        if(res.data.code!=0){
-                            for(var i=0;i<data.length;i++){
-                                _this.message.push(data[i])
-                            }
-                            _this.loading = false;
-                            if(data.length<6){
-                                _this.canLoad=false;
-                            }
-                        }else{
-                            _this.loading = false;
-                        }
-                        console.log(_this.canLoad)
-                    },function (res) {
-                        _this.loading = false;
-
-                    })
-                    _this.loading = false;
-                }
             },
         }
     })

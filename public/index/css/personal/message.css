@@ -2,11 +2,12 @@ body{
     background: #EBEBEB;
     color: #333;
 }
-
+#app{
+    padding: 1.6rem;
+}
 /**加载更多**/
 
 .my-footer{
-    padding: 1rem 0;
     text-align: center;
     color:#999
 }
@@ -15,10 +16,15 @@ body{
     font-size: 1.5rem;
     line-height: 80vh;
 }
-.my-footer>div {
-    display: inline-block;
+.my-footer>div{
+    display: -webkit-flex;
+    display: inline-flex;
     vertical-align: middle;
-    margin-right: 5px;
+    justify-content: center;
+    align-items: center;
+}
+.my-loading-text{
+    margin-left: 1rem;
 }
 .no-message{
     width:100%;
@@ -28,9 +34,6 @@ body{
 
 
 /*消息列表*/
-.my-message{
-    padding: 0 1.6rem;
-}
 .my-message>li{
     border: 1px solid #D9D9D9;
     -webkit-border-radius: 4px ;
@@ -39,7 +42,7 @@ body{
     padding: 1.4rem;
     background-color: #fff;
     position: relative;
-    margin:1.6rem 0;
+    margin-bottom: 1.6rem;
 }
 .my-message>li>a{
     position: absolute;
