@@ -243,7 +243,15 @@ class Personal extends Base
             ];
             $list = $personMessage->where($map)->limit($num,6)->select();
         }
-      return json_encode($list);
+         if($list){
+
+            return $this->success('成功','',json_encode($list));
+         }else{
+
+             return $this->error('失败');
+         }
+
+
 
     }
 
