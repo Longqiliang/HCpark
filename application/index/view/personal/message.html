@@ -7,30 +7,29 @@
 {/block}
 {block name="body"}
 <div id="app">
-    <!--v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6"-->
-    <ul class="my-message" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
-        <li v-for="item in message" >
-            <h3>{{item.title}}</h3>
-            <div class="msg-time">{{item.create_time*1000 | timeToString}}</div>
-            <ul class="msg-detail" v-html="nToLi(item.message)">
-                <!--<li>杭州之图网络科技有限公司企业</li>-->
-                <!--<li>物业费（到期时间：2017-09-09）</li>-->
-                <!--&lt;!&ndash;<li></li>&ndash;&gt;-->
-                <!--<li>应缴费用：2元</li>-->
-                <!--<li class="status-r">缴费失败</li>-->
-            </ul>
-            <div class="msg-see-all">查看全文</div>
-            <a :href="'/index/service/historyDetail/appid/'+item.app_id+'/can_check/'+(item.type!=3?'yes':'no')+'/id/'+item.sid"></a>
-        </li>
-    </ul>
-    <div class="my-footer" v-if="message.length">
-        <span v-if="!canLoad">没有更多了</span>
-        <span v-if="canLoad && !loading">下拉加载更多</span>
-        <div  v-if="loading">
-            <mt-spinner :type="3"></mt-spinner>加载中...
+    <div v-infinite-scroll="loadMore"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="10">
+        <ul class="my-message" >
+            <li v-for="item in message" >
+                <h3>{{item.title}}</h3>
+                <div class="msg-time">{{item.create_time*1000 | timeToString}}</div>
+                <ul class="msg-detail" v-html="nToLi(item.message)">
+
+                </ul>
+                <div class="msg-see-all">查看全文</div>
+                <a :href="'/index/service/historyDetail/appid/'+item.app_id+'/can_check/'+(item.type!=3?'yes':'no')+'/id/'+item.sid"></a>
+            </li>
+        </ul>
+        <div class="my-footer" v-if="message.length">
+            <span v-if="!canLoad">没有更多了</span>
+            <span v-if="canLoad && !loading">下拉加载更多</span>
+            <div  v-if="loading">
+                <mt-spinner :type="3"></mt-spinner>加载中...
+            </div>
         </div>
+        <img src="/index/images/service/card/icon-default.jpg" class="no-message" v-if="!message.length">
     </div>
-    <img src="/index/images/service/card/icon-default.jpg" class="no-message" v-if="!message.length">
 </div>
 <!--加载更多-->
 
@@ -56,12 +55,12 @@
     var app=new Vue({
         el:'#app',
         data:{
+            message:{$list},
             loading:false,
-            canLoad:true,
-            message:{$list}
+            canLoad:true
         },
         created(){
-            if(this.message.length<=6){
+            if(this.message.length<6){
                 this.canLoad=false
             }
         },
@@ -74,19 +73,23 @@
             },
             loadMore(){
                 var _this=this;
-                console.log(_this.loading,_this.canLoad)
+                console.log('before',_this.loading , _this.canLoad)
                 if((!_this.loading) && _this.canLoad ){
                     _this.loading = true;
-                    console.log(_this.loading,_this.canLoad)
-                    _this.$http.post('/index/news/getMoremessage',{length:_this.message.length}).then(function (res) {
+                    console.log('after',_this.loading,_this.canLoad)
+                    _this.$http.post('/index/personal/messageMore',{num:_this.message.length}).then(function (res) {
+                        var data=JSON.parse(res.data.data);
+                        console.log(data)
                         if(res.data.code!=0){
-                            for(var i=0;i<res.data.data.length;i++){
-                                _this.message.push(res.data.data[i])
+                            for(var i=0;i<data.length;i++){
+                                _this.message.push(data[i])
                             }
                             _this.loading = false;
+                            if(data.length<6){
+                                _this.canLoad=false;
+                            }
                         }else{
                             _this.loading = false;
-                            _this.canLoad=false;
                         }
                         console.log(_this.canLoad)
                     },function (res) {
