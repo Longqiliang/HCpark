@@ -9,8 +9,9 @@
 <div id="app">
     <div v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
-         infinite-scroll-distance="10">
-        <ul class="my-message" >
+         infinite-scroll-distance="10"
+         v-if="message.length">
+        <ul class="my-message">
             <li v-for="item in message" >
                 <h3>{{item.title}}</h3>
                 <div class="msg-time">{{item.create_time*1000 | timeToString}}</div>
@@ -21,15 +22,15 @@
                 <a :href="'/index/service/historyDetail/appid/'+item.app_id+'/can_check/'+(item.type!=3?'yes':'no')+'/id/'+item.sid"></a>
             </li>
         </ul>
-        <div class="my-footer" v-if="message.length">
+        <div class="my-footer">
             <span v-if="!canLoad">没有更多了</span>
             <span v-if="canLoad && !loading">下拉加载更多</span>
             <div  class="my-loading" v-if="loading">
                 <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
             </div>
         </div>
-        <img src="/index/images/service/card/icon-default.jpg" class="no-message" v-if="!message.length">
     </div>
+    <img src="/index/images/service/card/icon-default.jpg" class="no-message" v-if="!message.length">
 </div>
 <!--加载更多-->
 {/block}
@@ -57,27 +58,24 @@
             loading:false,
             canLoad:true
         },
-//        created(){
-//            if(this.message.length<6){
-//                this.canLoad=false
-//            }
-//        },
+        created(){
+            if(this.message.length<6){
+                this.canLoad=false
+            }
+        },
         methods:{
             loadMore(){
                 var _this=this;
-                console.log('before',_this.loading , _this.canLoad)
                 if(_this.loading || !_this.canLoad){
                     return
                 }
                 _this.loading = true;
-                console.log('after',_this.loading,_this.canLoad)
                 _this.$http.post('/index/personal/messageMore',{num:_this.message.length}).then(function (res) {
                     if(res.data.code!=0){
                         var data=JSON.parse(res.data.data);
                         if(data.length<6){
                             _this.canLoad=false;
                         }
-                        console.log(data)
                         for(var i=0;i<data.length;i++){
                             _this.message.push(data[i])
                         }
@@ -85,11 +83,11 @@
                         _this.canLoad=false;
                     }
                     _this.loading = false;
-                    console.log('canLoad',_this.canLoad)
                 },function (res) {
                     _this.loading = false;
                 })
             },
+            //'\n'转li标签结构
             nToLi(str){
                 if (!str) { return ''}
                 var html='<li>';
