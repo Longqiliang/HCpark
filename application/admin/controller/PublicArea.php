@@ -33,7 +33,7 @@ class PublicArea extends Admin
             }
             int_to_string($data, array(
                 'status' => array(0 => '禁用', 1 => '启用'),
-                'type' => array(1 => '大厅广告位', 2 => '多功能厅', 3 => 'LED灯')
+                'type' => array(1 => '大厅广告位', 2 => '多功能厅', 3 => '大堂LED屏')
             ));
 
         } else {
@@ -45,7 +45,7 @@ class PublicArea extends Admin
             }
             int_to_string($data, array(
                 'status' => array(0 => '禁用', 1 => '启用'),
-                'type' => array(1 => '大厅广告位', 2 => '多功能厅', 3 => 'LED灯')
+                'type' => array(1 => '大厅广告位', 2 => '多功能厅', 3 => '大堂LED屏')
             ));
         }
 
@@ -87,7 +87,7 @@ class PublicArea extends Admin
                 $time = array();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('neq', 0)
+                    'status' => array('neq', 1)
                 ];
                 $serviceInfo = $AdvertisingService->where('id', 1)->find();
                 $list = $AdvertisingRecord->where($map)->select();
@@ -120,12 +120,12 @@ class PublicArea extends Admin
 
                         $re['status'] = "被取消";
                     } else if ($map[0]['status'] == 1) {
-                        $re['status'] = "还未上传凭证";
+                        $re['status'] = "等待上传凭证";
                     } else {
                         $re['status'] = "预约成功";
                     }
                     $re['type'] = 1;
-
+                    $re['state'] = $map[0]['status'];
                     array_push($data, $re);
                 }
                 break;
@@ -191,6 +191,7 @@ class PublicArea extends Admin
                         $re['status'] = "预约成功";
                     }
                     $re['type'] = 2;
+                    $re['state'] = $map[0]['status'];
                     array_push($data, $re);
 
                 }
@@ -281,10 +282,12 @@ class PublicArea extends Admin
                         $re['status'] = "预约成功";
                     }
                     $re['type'] = 3;
+                    $re['state'] = $map[0]['status'];
                     array_push($data, $re);
                 }
                 break;
         }
+        echo json_encode($data);
         $this->assign('data', $data);
         return $this->fetch();
     }

@@ -57,7 +57,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <h2>公共场所服务</h2>
+            <h2>设备服务</h2>
             <a href="{:Url('index')}"   class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 返回</a>
         </div>
         <div id="modal-form" class="modal fade" aria-hidden="true">
@@ -92,7 +92,7 @@
                     <th></th>
                     <th>创建时间</th>
                     <th>申请用户</th>
-                    <th>申请时间</th>
+                    <th>预约时间</th>
                     <th>总金额</th>
                     <th>状态</th>
                     <th>操作</th>
@@ -105,7 +105,7 @@
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.time}">
                     </td>
                     <td class="mail-subject">
-                        {$vo.time}
+                        {$vo.time|date="Y-m-d",###}
                     </td>
                     <td>
                         {$vo.user}
@@ -123,8 +123,10 @@
                         {$vo.payment_voucher}
                     </td>
                     <td>
-                        <a  onclick="cancel(this)" data-time="{$vo.time}"  data-type="{$vo.type}" >取消</a>
-                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)" data-payment="{$vo.payment_voucher}" >查看凭证</a>
+                        {eq name="$vo.state" value="2"}
+                        <a  onclick="cancel(this)" data-time="{$vo.time}"  data-type="{$vo.type}" class="btn-sm btn-primary" style="color: #fff">取消</a>
+                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)" data-payment="{$vo.payment_voucher}" class="btn-sm btn-primary" style="color: #fff">查看凭证</a>
+                        {/eq}
                     </td>
                 </tr>
                 {/volist}

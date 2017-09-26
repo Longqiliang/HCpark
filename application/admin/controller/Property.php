@@ -27,7 +27,7 @@ class Property extends Admin
     public function clear(){
         $parkid =session("user_auth")['park_id'];
         $list=PropertyServer::where(['park_id'=> $parkid,'type'=>4,'status'=>['in',[0,1,2]]])->order('id desc')->paginate();
-        int_to_string($list,['type'=>[4=>'保洁记录']]);
+        int_to_string($list,['type'=>[4=>'室内保洁']]);
         int_to_string($list,['status'=>[0=>"进行中",1=>"已完成",2=>"审核失败"]]);
         $this->assign("list",$list);
 
