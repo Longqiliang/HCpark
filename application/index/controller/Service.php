@@ -28,6 +28,7 @@ use  app\index\model\LedRecord;
 use  app\common\behavior\Service as commonService;
 use  app\common\model\ParkRoom;
 use  app\common\model\ParkRent;
+use  app\index\model\PersonalMessage;
 //企业服务
 class Service extends Base
 {
@@ -229,8 +230,10 @@ class Service extends Base
     //预约
     public function order()
     {
+        $personalMessage = new PersonalMessage();
         $compantService = new CompanyService();
         $companyapplication = new CompanyApplication();
+
         $data = input('');
         $re = $this->_checkData($data);
         if (!$re) {
@@ -255,6 +258,21 @@ class Service extends Base
                 "description" => $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/'.$data['app_id'] . '/can_check/yes/id/' . $compantService->id
             ];
+
+            $new=[
+                "title" => $message['title'],
+                "message" => $message['description'],
+                'type'=>1,
+                'park_id'=>session('park_id'),
+                'app_id'=>$data['app_id'],
+                'sid'=> $compantService->id,
+                'create_time'=>time(),
+                'status'=>0
+            ];
+            $savemessage =$personalMessage->save($new);
+
+
+
             //推送给运营
             $reult = $this->commonSend(1, $message);
             if ($reult) {
@@ -294,7 +312,7 @@ class Service extends Base
     {
 
         $PillarService = new ElectricityService();
-
+        $personalMessage = new PersonalMessage();
         $id = session('userId');
         $data = input('');
         $service = [
@@ -319,6 +337,20 @@ class Service extends Base
                 "description" => "您有新充电柱缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/yes/id/' . $PillarService->getLastInsID()
             ];
+
+
+            $new=[
+                "title" => $message['title'],
+                "message" => $message['description'],
+                'type'=>1,
+                'park_id'=>session('park_id'),
+                'app_id'=>$data['app_id'],
+                'sid'=> $PillarService->id,
+                'create_time'=>time(),
+                'status'=>0
+            ];
+            $savemessage =$personalMessage->save($new);
+
             //推送给运营
             $reult = $this->commonSend(1, $message);
             if ($reult) {
@@ -378,6 +410,7 @@ class Service extends Base
     public function addOldPillar()
     {
         $er = new ElectricityService();
+        $personalMessage = new PersonalMessage();
         $id = session('userId');
         $data = input('');
         $record = [
@@ -400,6 +433,19 @@ class Service extends Base
                 "description" => "您有旧充电柱缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/yes/id/' . $er->getLastInsID()
             ];
+
+
+            $new=[
+                "title" => $message['title'],
+                "message" => $message['description'],
+                'type'=>1,
+                'park_id'=>session('park_id'),
+                'app_id'=>$data['app_id'],
+                'sid'=> $er->id,
+                'create_time'=>time(),
+                'status'=>0
+            ];
+            $savemessage =$personalMessage->save($new);
             //推送给运营
             $reult = $this->commonSend(1, $message);
             if ($reult) {
@@ -491,7 +537,7 @@ class Service extends Base
     public function addNewCard()
     {
         $CardparkService = new CarparkService();
-
+        $personalMessage = new PersonalMessage();
         $id = session('userId');
         $data = input('');
         $p_v = array();
@@ -581,6 +627,7 @@ class Service extends Base
     public function keepOldCard()
     {
         $CardparkService = new CarparkService();
+        $personalMessage = new PersonalMessage();
         $id = session('userId');
         $data = input('');
         $service = [
@@ -748,6 +795,7 @@ class Service extends Base
     public function submitAdvertise()
     {
         $ad = new AdvertisingRecord();
+        $personalMessage = new PersonalMessage();
         $user_id = session('userId');
         $data = input('');
 
@@ -785,8 +833,6 @@ class Service extends Base
         $adRecord = new AdvertisingRecord();
         //数字（几月）
         $month = input('month');
-
-
         $beginThismonth = mktime(0, 0, 0, $month, 1, date('Y'));
 
         $endThismonth = mktime(23, 59, 59, $month, date('t'), date('Y'));
@@ -979,6 +1025,7 @@ class Service extends Base
     public function submitFunctionRoom()
     {
         $ad = new FunctionRoomRecord();
+        $personalMessage = new PersonalMessage();
         $user_id = session('userId');
         $data = input('');
         $map = [
@@ -1180,6 +1227,7 @@ class Service extends Base
     public function submitLed()
     {
         $ad = new LedRecord();
+        $personalMessage = new PersonalMessage();
         $user_id = session('userId');
         $data = input('');
         $map = [
@@ -1441,6 +1489,7 @@ class Service extends Base
         $userid = session("userId");
         $parkid = session('park_id');
         $property = new PropertyServer();
+        $personalMessage = new PersonalMessage();
         $data = input('post.');
         $data['create_time'] = time();
         $data['user_id'] = $userid;
@@ -1496,7 +1545,7 @@ class Service extends Base
         $data["image"] = json_encode($data["payment_voucher"]);
 
         $property = new PropertyServer();
-
+        $personalMessage = new PersonalMessage();
         $res = $property->allowField(true)->save($data);
         if ($res) {
             //todo： 推送点击到详情页面代码
@@ -1583,6 +1632,7 @@ class Service extends Base
     {
         $data = input('post.');
         $waterModel = new WaterModel;
+        $personalMessage = new PersonalMessage();
         $data['userid'] = session('userId');
         $data['park_id'] = session('park_id');
         $result = $waterModel->allowField(true)->validate(true)->save($data);
@@ -1747,6 +1797,7 @@ class Service extends Base
         $parkid = session('park_id');
         if (IS_POST) {
             $feePayment = new FeePayment();
+            $personalMessage = new PersonalMessage();
             $id = input('id');
             $ids = explode('-', $id);
             $appid = input('app_id');
@@ -1798,6 +1849,7 @@ class Service extends Base
         $id = input('id');
         $appid = input('appid');
         $can_check = empty(input('can_check')) ? "no" : input('can_check');
+
         //费用缴纳
         if ($appid == 1) {
 
@@ -1913,6 +1965,7 @@ class Service extends Base
         $feepayment = new FeePayment();
         $companyService = new CompanyService();
         $companyapplication = new CompanyApplication();
+        $personalMessage = new PersonalMessage();
         switch ($appid) {
             //费用缴纳
             case  1:
@@ -2248,7 +2301,7 @@ class Service extends Base
 
         }
 
-        $res = commonService::sendPersonalMessage($message, $useridlist);
+        $res = commonService::sendPersonalMessage($message, 15706844655);
         if ($res['errcode'] == 0) {
             return true;
         } else {
@@ -2317,7 +2370,7 @@ class Service extends Base
 
         }
 
-        $res = commonService::sendPersonalText($message, $useridlist);
+        $res = commonService::sendPersonalText($message, 15706844655);
         if ($res['errcode'] == 0) {
             return true;
         } else {
@@ -2386,7 +2439,11 @@ class Service extends Base
     }
 
 
+ public  function  test(){
 
+        phpinfo();
+
+ }
 
 
 

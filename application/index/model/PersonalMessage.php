@@ -10,7 +10,14 @@
 namespace app\index\model;
 use think\Model;
 
-class PersonalService extends Model
+class PersonalMessage extends Model
 {
-    protected $dateFormat="Y-m-d";
+
+    protected  $type =[
+
+        'create_time'=> 'strtotime'
+
+
+    ];
+
 }
