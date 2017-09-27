@@ -1544,7 +1544,7 @@ class Service extends Base
                 "message" => $message['description'],
                 'type'=>2,
                 'park_id'=>session('park_id'),
-                'app_id'=>$data['app_id'],
+                'app_id'=>$data['appid'],
                 'sid'=> $property->id,
                 'create_time'=>time(),
                 'status'=>0
@@ -1697,7 +1697,7 @@ class Service extends Base
                 "message" => $message['description'],
                 'type'=>2,
                 'park_id'=>session('park_id'),
-                'app_id'=>$data['app_id'],
+                'app_id'=>$data['appid'],
                 'sid'=> $waterModel->id,
                 'create_time'=>time(),
                 'status'=>0
@@ -2522,7 +2522,6 @@ class Service extends Base
             case 4:
                 $useridlist = $userid;
                 break;
-
         }
 
         $res = commonService::sendPersonalText($message, 15706844655);
@@ -2577,7 +2576,6 @@ class Service extends Base
                 $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                 $roomArray1[$k][$k1] =  $v1['room'];
             }
-
         }
         foreach ($floor1 as $k => $v) {
             $newArr1[$k][$v."楼"] = $roomArray1[$k];
