@@ -28,7 +28,7 @@
                     <h5>园区基本信息统计</h5>
                 </div>
                 <div class="ibox-content">
-                    <canvas id="donut-chart" class="chart-holder"  >
+                    <canvas id="donut-chart" class="chart-holder"  width="200" height="290">
                     </canvas>
                 </div>
             </div>
@@ -169,113 +169,13 @@
 
 <script type="text/javascript">
 
-    console.log({$list})
-    console.log({$res})
-    console.log({$info})
+
     /* 插件块关闭操作 */
     $(".title-opt .wm-slide").each(function(){
         $(this).click(function(){
             $(this).closest(".columns-mod").find(".bd").toggle();
             $(this).find("i").toggleClass("mod-up");
         });
-    });
-    $(document).ready(function() {
-
-
-
-        var dataset = [
-            {
-                label: "评论数",
-                data: data3,
-                color: "#1ab394",
-                bars: {
-                    show: true,
-                    align: "center",
-                    barWidth: 24 * 60 * 60 * 600,
-                    lineWidth:0
-                }
-
-            }, {
-                label: "播放次数",
-                data: data2,
-                yaxis: 2,
-                color: "#1C84C6",
-                lines: {
-                    lineWidth:1,
-                    show: true,
-                    fill: true,
-                    fillColor: {
-                        colors: [{
-                            opacity: 0.2
-                        }, {
-                            opacity: 0.4
-                        }]
-                    }
-                },
-                splines: {
-                    show: false,
-                    tension: 0.6,
-                    lineWidth: 1,
-                    fill: 0.1
-                },
-            }
-        ];
-        var options = {
-            xaxis: {
-                mode: "time",
-                tickSize: [3, "day"],
-                tickLength: 0,
-                axisLabel: "Date",
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: 'Arial',
-                axisLabelPadding: 10,
-                color: "#d5d5d5"
-            },
-            yaxes: [{
-                position: "left",
-                max: 1070,
-                color: "#d5d5d5",
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: 'Arial',
-                axisLabelPadding: 3
-            }, {
-                position: "right",
-                clolor: "#d5d5d5",
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: ' Arial',
-                axisLabelPadding: 67
-            }
-            ],
-            legend: {
-                noColumns: 1,
-                labelBoxBorderColor: "#000000",
-                position: "nw"
-            },
-            grid: {
-                hoverable: false,
-                borderWidth: 0
-            }
-        };
-        function gd(year, month, day) {
-            return new Date(year, month - 1, day).getTime();
-        }
-        var previousPoint = null, previousLabel = null;
-
-        var mapData = {
-            "US": 298,
-            "SA": 200,
-            "DE": 220,
-            "FR": 540,
-            "CN": 120,
-            "AU": 760,
-            "BR": 550,
-            "IN": 200,
-            "GB": 120,
-        };
-
     });
     $(document).ready(function (){
         var user = $( '.btn-user' ).ladda();
@@ -298,115 +198,117 @@
 
     });
     var res={$res};
-//    area_other
-//        :
-//        11000
-//    area_total
-//        :
-//        33000
-//    area_use
-//        :
-//        22000
-//    id
-//        :
-//        3
-//    scale_one
-//        :
-//        65
-//    scale_three
-//        :
-//        25
-//    scale_two
-//        :
-//        30
-//    type_one
-//        :
-//        5
-//    type_three
-//        :
-//        6
-//    type_two
-//        :
-//        109
-    var doughnutData = [
-
-        {
-            value: res.area_other,
-            color: "#F7464A",
-            label : "空置面积"
-    },
-        {
-            value: res.area_total,
-            color: "#46BFBD",
-            label : "已租面积"
-        },
-    ];
-
-
-    var data2 = [
-
-        {
-            value: res.scale_one,
-            color: "#F7464A",
-            label : "100平米以下"
-        },
-        {
-            value: res.scale_two,
-            color: "#46BFBD",
-            label : "100-300平米"
-        },{
-            value: res.scale_three,
-            color: "rgba(226,151,093,1)",
-            label : "300-600平米"
-        },
-    ];
-
-    var data3 = [
-
-        {
-            value: res.type_one,
-            color: "#F7464A",
-            label : "生活配置类"
-        },
-        {
-            value: res.type_two,
-            color: "#46BFBD",
-            label : "中介服务类"
-        },{
-            value: res.type_three,
-            color: "#712341",
-            label : "科技创新类"
-        },
-    ];
     var info = {$info};
-    var data4 = [
+    var parameters1={
+        data:{
+            labels: [
+                "空置面积",
+                "已租面积"
+            ],
+            datasets: [
+                {
+                    data: [res.area_other, res.area_total],
+                    backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB"
+                    ],
+                    hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB"
+                    ]
+                }]
+        }
+    },
+    parameters2={
+        data:{
+            labels: [
+                "100平米以下",
+                "100-300平米",
+                "300-600平米"
+            ],
+            datasets: [
+                {
+                    data: [res.scale_one, res.type_two, res.type_three],
+                    backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#712341"
+                    ],
+                    hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#712341"
+                    ]
+                }]
+        }
+    },
+    parameters3={
+        data:{
+            labels: [
+                "生活配置类",
+                "中介服务类",
+                "科技创新类"
+            ],
+            datasets: [
+                {
+                    data: [res.type_one, res.type_two,res.type_three],
+                    backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#712341"
+                    ],
+                    hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#712341"
+                    ]
+                }]
+        }
+    },
+    parameters4={
+        data:{
+            labels: [
+                "租赁合同",
+                "物业合同",
+                "其他合同"
+            ],
+            datasets: [
+                {
+                    data: [info.rent, info.property,info.other],
+                    backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#712341"
+                    ],
+                    hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#712341"
+                    ]
+                }]
+        }
+    };
 
-        {
-            value: info.rent,
-            color: "#F7464A",
-            label : "租赁合同"
-        },
-        {
-            value: info.property,
-            color: "rgba(202,097,096,1)",
-            label : "物业合同"
-        },{
-            value: info.other,
-            color: "#46BFBD",
-            label : "其他合同"
-        },
-    ];
-    var data = [
-        {value : 100, color : 'rgba(226,151,093,1)', highlight : 'rgba(226,151,093,0.75)', label : "Sector 1"},
-        {value : 100, color : 'rgba(214,113,088,1)', highlight : 'rgba(214,113,088,0.75)', label : "Sector 2"},
-        {value : 100, color : 'rgba(202,097,096,1)', highlight : 'rgba(202,097,096,0.75)', label : "Sector 3"}
-    ];
-    var options = { showTooltips : true };
-    var myDoughnut = new Chart(document.getElementById("donut-chart").getContext("2d")).Doughnut(doughnutData,options);
-    var myDoughnut1 = new Chart(document.getElementById("donut-chart2").getContext("2d")).Doughnut(data2,options);
-    var myDoughnut2 = new Chart(document.getElementById("donut-chart3").getContext("2d")).Doughnut(data3,options);
-    var myDoughnut3 = new Chart(document.getElementById("donut-chart4").getContext("2d")).Doughnut(data4,options);
+    drawDoughnut('donut-chart',parameters1);
+    drawDoughnut('donut-chart2',parameters2);
+    drawDoughnut('donut-chart3',parameters3);
+    drawDoughnut('donut-chart4',parameters4);
+//    绘制甜甜圈
+    function drawDoughnut(element,option) {
+        var options={
+            type:'doughnut',
+            data:option.data,
+            options:{},
+            position:{
+                bottom:'10px'
+            }
 
+        };
+        options.option = option.options || {
+
+                } ;
+        new Chart(document.getElementById(element).getContext("2d"),options)
+    }
 
 
     highlight_subnav("{:Url('Index/index')}");
