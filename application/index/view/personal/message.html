@@ -19,7 +19,7 @@
 
                 </ul>
                 <div class="msg-see-all">查看全文</div>
-                <a :href="'/index/service/historyDetail/appid/'+item.app_id+'/can_check/'+(item.type!=3?'yes':'no')+'/id/'+item.sid"></a>
+                <a :href="'/index/service/historyDetail/appid/'+item.app_id+'/can_check/'+(item.type!=3?'yes':'no')+'/id/'+item.sid" v-if="item.app_id!=8"></a>
             </li>
         </ul>
         <div class="my-footer">

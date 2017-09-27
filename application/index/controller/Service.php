@@ -2524,7 +2524,7 @@ class Service extends Base
                 break;
         }
 
-        $res = commonService::sendPersonalText($message, 15706844655);
+        $res = commonService::sendPersonalText($message, $useridlist);
         if ($res['errcode'] == 0) {
             return true;
         } else {
@@ -2592,11 +2592,7 @@ class Service extends Base
     }
 
 
- public  function  test(){
 
-        phpinfo();
-
- }
 
 
 
