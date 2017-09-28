@@ -29,6 +29,7 @@ use  app\common\behavior\Service as commonService;
 use  app\common\model\ParkRoom;
 use  app\common\model\ParkRent;
 use  app\index\model\PersonalMessage;
+
 //企业服务
 class Service extends Base
 {
@@ -109,8 +110,8 @@ class Service extends Base
     {
         $path = input('path');
         $app_id = input('id');
-        $user_id = session('userId');
-        $park_id = session('park_id');
+        $userid = session('userId');
+        $parkid = session('park_id');
         $UserModel = new  WechatUser();
         $Park = new Park();
         $CardparkService = new CarparkService();
@@ -124,8 +125,7 @@ class Service extends Base
 
             //物业报修
             case 2:
-                $userid = session("userId");
-                $parkid = session('park_id');
+
                 $parkInfo = Park::where('id', $parkid)->find();
                 $userinfo = WechatUser::where(['userid' => $userid])->find();
                 $info = [
@@ -134,12 +134,11 @@ class Service extends Base
                     'propretyMobile' => $parkInfo['property_phone']
                 ];
                 $floorList = $this->commonFloor();
-                $this->assign('floorlist',json_encode($floorList));
+                $this->assign('floorlist', json_encode($floorList));
                 break;
             //室内保洁
             case 4:
-                $userid = session("userId");
-                $parkid = session('park_id');
+
                 $parkInfo = Park::where('id', $parkid)->find();
                 $userinfo = WechatUser::where(['userid' => $userid])->find();
                 $info = [
@@ -148,12 +147,12 @@ class Service extends Base
                     'propretyMobile' => $parkInfo['property_phone']
                 ];
                 $floorList = $this->commonFloor();
-                $this->assign('floorlist',json_encode($floorList));
+                $this->assign('floorlist', json_encode($floorList));
                 break;
             //车卡
             case 6:
                 $map = [
-                    'user_id' => $user_id,
+                    'user_id' => $userid,
                 ];
                 $map['park_card'] = array('exp', 'is not null');
                 $map['status'] = array('in', [0, 1]);
@@ -177,7 +176,7 @@ class Service extends Base
             case 7:
                 $es = new ElectricityService();
                 $map = [
-                    'user_id' => $user_id,
+                    'user_id' => $userid,
                     'electricity_id' => array('exp', 'is not null'),
                     'status' => array('in', [0, 1])
                 ];
@@ -195,27 +194,92 @@ class Service extends Base
                 break;
             //公共场所
             case 8:
-                $re = $AdService->where('park_id', $park_id)->select();
+                $re = $AdService->where('park_id', $parkid)->select();
                 $info['adlist'] = $re;
                 break;
+            //服务信息(人才服务)
+            case 19:
+
+                $map=array(
+                    'park_id'=>session('park_id'),
+                    'status'=>1,
+                );
+
+                $list = ServiceModel::where($map)->order('create_time  desc')->limit(6)->select();
+                $info['list']=$list;
+                break;
+            //企业招聘(人才服务)
+            case 20:
+
+                $map=array(
+                    'park_id'=>$parkid,
+                    'status'=>1,
+                );
+                $list = EnterpriseModel::where($map)->order('create_time  desc')->field('id,position,company,education,experience,number,wages')->select();
+                $info['list']=$list;
+                break;
             default:
-                $user = $UserModel->where('userid', $user_id)->find();
+                $user = $UserModel->where('userid', $userid)->find();
                 $info['name'] = $user['name'];
                 $info['mobile'] = $user['mobile'];
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
                 $info['app_id'] = $app_id;
                 $floorList = $this->commonFloor();
-                $this->assign('floorlist',json_encode($floorList));
+                $this->assign('floorlist', json_encode($floorList));
                 break;
-
-
         }
         $info['app_id'] = $app_id;
         $this->assign('info', json_encode($info));
         return $this->fetch($path);
+    }
+    /*企业招聘详情页*/
+    public function detail(){
+        $id = input('id');
+        $info = EnterpriseModel::where('id',$id)->find();
+        $this->assign('info', json_encode($info));
+        return $this->fetch();
+    }
 
+    /*服务信息列表下拉刷新*/
+    public function serviceList(){
+        $len = input("length");
+        $parkid =session('park_id');
+        $map=array(
+            'park_id'=>$parkid,
+            'status'=>1,
+        );
+
+        $list = ServiceModel::where($map)
+            ->order("create_time desc")
+            ->limit($len,6)
+            ->select();
+
+        if ($list){
+
+            return json(['code' => 1, 'data' => $list]);
+        }else{
+
+            return json(['code' => 0, 'msg' =>"没有更多内容了"]);
+        }
 
     }
+
+    /*服务信息详情页*/
+    public function serviceDetail(){
+        $id = input('id');
+        $info = ServiceModel::get($id);
+        $info['views']=$info['views']+1;
+        $info->save();
+        $parkid =session('park_id');
+        //发布园区
+        $park=Park::where('id','eq',$parkid)->field('name')->find();
+
+        $this->assign('park', $park['name']);
+        $this->assign('news', $info);
+        return $this->fetch();
+    }
+
+
 
     public function noPermissions()
     {
@@ -256,21 +320,20 @@ class Service extends Base
             $message = [
                 "title" => "企业服务提示",
                 "description" => $ca['name'] . "服务申请\n公司名称：" . $data['company'] . "\n联系人员：" . $data['name'] . "\n联系方式：" . $data['mobile'] . "\n备注信息：" . $data['remark'],
-                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/'.$data['app_id'] . '/can_check/yes/id/' . $compantService->id
+                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $data['app_id'] . '/can_check/yes/id/' . $compantService->id
             ];
 
-            $new=[
+            $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
-                'type'=>1,
-                'park_id'=>session('park_id'),
-                'app_id'=>$data['app_id'],
-                'sid'=> $compantService->id,
-                'create_time'=>time(),
-                'status'=>0
+                'type' => 1,
+                'park_id' => session('park_id'),
+                'app_id' => $data['app_id'],
+                'sid' => $compantService->id,
+                'create_time' => time(),
+                'status' => 0
             ];
-            $savemessage =$personalMessage->save($new);
-
+            $savemessage = $personalMessage->save($new);
 
 
             //推送给运营
@@ -339,17 +402,17 @@ class Service extends Base
             ];
 
 
-            $new=[
+            $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
-                'type'=>1,
-                'park_id'=>session('park_id'),
-                'app_id'=>$data['app_id'],
-                'sid'=> $PillarService->id,
-                'create_time'=>time(),
-                'status'=>0
+                'type' => 1,
+                'park_id' => session('park_id'),
+                'app_id' => $data['app_id'],
+                'sid' => $PillarService->id,
+                'create_time' => time(),
+                'status' => 0
             ];
-            $savemessage =$personalMessage->save($new);
+            $savemessage = $personalMessage->save($new);
 
             //推送给运营
             $reult = $this->commonSend(1, $message);
@@ -435,17 +498,17 @@ class Service extends Base
             ];
 
 
-            $new=[
+            $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
-                'type'=>1,
-                'park_id'=>session('park_id'),
-                'app_id'=>$data['app_id'],
-                'sid'=> $er->id,
-                'create_time'=>time(),
-                'status'=>0
+                'type' => 1,
+                'park_id' => session('park_id'),
+                'app_id' => $data['app_id'],
+                'sid' => $er->id,
+                'create_time' => time(),
+                'status' => 0
             ];
-            $savemessage =$personalMessage->save($new);
+            $savemessage = $personalMessage->save($new);
             //推送给运营
             $reult = $this->commonSend(1, $message);
             if ($reult) {
@@ -570,17 +633,17 @@ class Service extends Base
                 "description" => "您有新卡缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
-            $new=[
+            $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
-                'type'=>1,
-                'park_id'=>session('park_id'),
-                'app_id'=>$data['app_id'],
-                'sid'=> $CardparkService->id,
-                'create_time'=>time(),
-                'status'=>0
+                'type' => 1,
+                'park_id' => session('park_id'),
+                'app_id' => $data['app_id'],
+                'sid' => $CardparkService->id,
+                'create_time' => time(),
+                'status' => 0
             ];
-            $savemessage =$personalMessage->save($new);
+            $savemessage = $personalMessage->save($new);
             //推送给运营
             $reult = $this->commonSend(1, $message);
             if ($reult) {
@@ -665,17 +728,17 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
 
-            $new=[
+            $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
-                'type'=>1,
-                'park_id'=>session('park_id'),
-                'app_id'=>$data['app_id'],
-                'sid'=> $CardparkService->id,
-                'create_time'=>time(),
-                'status'=>0
+                'type' => 1,
+                'park_id' => session('park_id'),
+                'app_id' => $data['app_id'],
+                'sid' => $CardparkService->id,
+                'create_time' => time(),
+                'status' => 0
             ];
-            $savemessage =$personalMessage->save($new);
+            $savemessage = $personalMessage->save($new);
             //推送给运营
             $reult = $this->commonSend(1, $message);
             if ($reult) {
@@ -1539,17 +1602,17 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/yes/id/' . $property->getLastInsID()
             ];
 
-            $new=[
+            $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
-                'type'=>2,
-                'park_id'=>session('park_id'),
-                'app_id'=>$data['appid'],
-                'sid'=> $property->id,
-                'create_time'=>time(),
-                'status'=>0
+                'type' => 2,
+                'park_id' => session('park_id'),
+                'app_id' => $data['appid'],
+                'sid' => $property->id,
+                'create_time' => time(),
+                'status' => 0
             ];
-            $savemessage =$personalMessage->save($new);
+            $savemessage = $personalMessage->save($new);
 
             //推送给运营和物业
             $reult = $this->commonSend(3, $message);
@@ -1593,17 +1656,17 @@ class Service extends Base
             //推送给运营和物业
             $reult = $this->commonSend(3, $message);
 
-            $new=[
+            $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
-                'type'=>2,
-                'park_id'=>session('park_id'),
-                'app_id'=>$data['app_id'],
-                'sid'=> $property->id,
-                'create_time'=>time(),
-                'status'=>0
+                'type' => 2,
+                'park_id' => session('park_id'),
+                'app_id' => $data['app_id'],
+                'sid' => $property->id,
+                'create_time' => time(),
+                'status' => 0
             ];
-            $savemessage =$personalMessage->save($new);
+            $savemessage = $personalMessage->save($new);
             if ($reult) {
                 return $this->success("预约成功");
             } else {
@@ -1692,17 +1755,17 @@ class Service extends Base
             ];
             //推送给运营和物业
             $reult = $this->commonSend(3, $message);
-            $new=[
+            $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
-                'type'=>2,
-                'park_id'=>session('park_id'),
-                'app_id'=>$data['appid'],
-                'sid'=> $waterModel->id,
-                'create_time'=>time(),
-                'status'=>0
+                'type' => 2,
+                'park_id' => session('park_id'),
+                'app_id' => $data['appid'],
+                'sid' => $waterModel->id,
+                'create_time' => time(),
+                'status' => 0
             ];
-            $savemessage =$personalMessage->save($new);
+            $savemessage = $personalMessage->save($new);
             if ($reult) {
                 return $this->success("预约成功");
             } else {
@@ -1863,7 +1926,7 @@ class Service extends Base
             $datas["payment_voucher"] = serialize($data["payment_voucher"]);
             $datas['status'] = 1;
             foreach ($ids as $k => $v) {
-                $res2=$feePayment->where('id',$v)->find();
+                $res2 = $feePayment->where('id', $v)->find();
                 $res = $feePayment->where('id', $v)->update($datas);
                 //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
                 switch ($res2['type']) {
@@ -1888,17 +1951,17 @@ class Service extends Base
                     ];
                     //推送给运营
                     $reult = $this->commonSend(1, $message);
-                    $new=[
+                    $new = [
                         "title" => $message['title'],
                         "message" => $message['description'],
-                        'type'=>2,
-                        'park_id'=>session('park_id'),
-                        'app_id'=>$data['app_id'],
-                        'sid'=> $id,
-                        'create_time'=>time(),
-                        'status'=>0
+                        'type' => 2,
+                        'park_id' => session('park_id'),
+                        'app_id' => $data['app_id'],
+                        'sid' => $id,
+                        'create_time' => time(),
+                        'status' => 0
                     ];
-                    $savemessage =$personalMessage->save($new);
+                    $savemessage = $personalMessage->save($new);
 
                 }
             }
@@ -2080,18 +2143,18 @@ class Service extends Base
                 //推送给用户
                 $reult = $this->commonSend(4, $message, $users);
                 if ($reult) {
-                    $new=[
+                    $new = [
                         "title" => $message['title'],
                         "message" => $message['description'],
-                        'type'=>3,
-                        'park_id'=>session('park_id'),
-                        'app_id'=>$data['appid'],
-                        'sid'=> $id,
-                        'create_time'=>time(),
-                        'status'=>0,
-                        'userid'=>$users
+                        'type' => 3,
+                        'park_id' => session('park_id'),
+                        'app_id' => $data['appid'],
+                        'sid' => $id,
+                        'create_time' => time(),
+                        'status' => 0,
+                        'userid' => $users
                     ];
-                    $savemessage =$personalMessage->save($new);
+                    $savemessage = $personalMessage->save($new);
                     return $this->success("预约成功");
                 } else {
                     return $this->error("推送失败");
@@ -2121,18 +2184,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $user['user_id']);
 
                 if ($reult) {
-                    $new=[
+                    $new = [
                         "title" => $message['title'],
                         "message" => $message['description'],
-                        'type'=>3,
-                        'park_id'=>session('park_id'),
-                        'app_id'=>$data['appid'],
-                        'sid'=> $id,
-                        'create_time'=>time(),
-                        'status'=>0,
-                        'userid'=>$user['user_id']
+                        'type' => 3,
+                        'park_id' => session('park_id'),
+                        'app_id' => $data['appid'],
+                        'sid' => $id,
+                        'create_time' => time(),
+                        'status' => 0,
+                        'userid' => $user['user_id']
                     ];
-                    $savemessage =$personalMessage->save($new);
+                    $savemessage = $personalMessage->save($new);
 
                     return $this->success("报修成功");
                 } else {
@@ -2162,18 +2225,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $user['userid']);
 
                 if ($reult) {
-                    $new=[
+                    $new = [
                         "title" => $message['title'],
                         "message" => $message['description'],
-                        'type'=>3,
-                        'park_id'=>session('park_id'),
-                        'app_id'=>$data['appid'],
-                        'sid'=> $id,
-                        'create_time'=>time(),
-                        'status'=>0,
-                        'userid'=>$user['user_id']
+                        'type' => 3,
+                        'park_id' => session('park_id'),
+                        'app_id' => $data['appid'],
+                        'sid' => $id,
+                        'create_time' => time(),
+                        'status' => 0,
+                        'userid' => $user['user_id']
                     ];
-                    $savemessage =$personalMessage->save($new);
+                    $savemessage = $personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2204,18 +2267,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $user['user_id']);
 
                 if ($reult) {
-                    $new=[
+                    $new = [
                         "title" => $message['title'],
                         "message" => $message['description'],
-                        'type'=>3,
-                        'park_id'=>session('park_id'),
-                        'app_id'=>$data['appid'],
-                        'sid'=> $id,
-                        'create_time'=>time(),
-                        'status'=>0,
-                        'userid'=>$user['user_id']
+                        'type' => 3,
+                        'park_id' => session('park_id'),
+                        'app_id' => $data['appid'],
+                        'sid' => $id,
+                        'create_time' => time(),
+                        'status' => 0,
+                        'userid' => $user['user_id']
                     ];
-                    $savemessage =$personalMessage->save($new);
+                    $savemessage = $personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2265,18 +2328,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $record['user_id']);
 
                 if ($reult) {
-                    $new=[
+                    $new = [
                         "title" => $message['title'],
                         "message" => $message['description'],
-                        'type'=>3,
-                        'park_id'=>session('park_id'),
-                        'app_id'=>$data['appid'],
-                        'sid'=> $id,
-                        'create_time'=>time(),
-                        'status'=>0,
-                        'userid'=>$record['user_id']
+                        'type' => 3,
+                        'park_id' => session('park_id'),
+                        'app_id' => $data['appid'],
+                        'sid' => $id,
+                        'create_time' => time(),
+                        'status' => 0,
+                        'userid' => $record['user_id']
                     ];
-                    $savemessage =$personalMessage->save($new);
+                    $savemessage = $personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2325,18 +2388,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $record['user_id']);
 
                 if ($reult) {
-                    $new=[
+                    $new = [
                         "title" => $message['title'],
                         "message" => $message['description'],
-                        'type'=>3,
-                        'park_id'=>session('park_id'),
-                        'app_id'=>$data['appid'],
-                        'sid'=> $id,
-                        'create_time'=>time(),
-                        'status'=>0,
-                        'userid'=>$record['user_id']
+                        'type' => 3,
+                        'park_id' => session('park_id'),
+                        'app_id' => $data['appid'],
+                        'sid' => $id,
+                        'create_time' => time(),
+                        'status' => 0,
+                        'userid' => $record['user_id']
                     ];
-                    $savemessage =$personalMessage->save($new);
+                    $savemessage = $personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2370,18 +2433,18 @@ class Service extends Base
                 $reult = $this->commonSend(4, $message, $record['user_id']);
 
                 if ($reult) {
-                    $new=[
+                    $new = [
                         "title" => $message['title'],
                         "message" => $message['description'],
-                        'type'=>3,
-                        'park_id'=>session('park_id'),
-                        'app_id'=>$data['appid'],
-                        'sid'=> $id,
-                        'create_time'=>time(),
-                        'status'=>0,
-                        'userid'=>$record['user_id']
+                        'type' => 3,
+                        'park_id' => session('park_id'),
+                        'app_id' => $data['appid'],
+                        'sid' => $id,
+                        'create_time' => time(),
+                        'status' => 0,
+                        'userid' => $record['user_id']
                     ];
-                    $savemessage =$personalMessage->save($new);
+                    $savemessage = $personalMessage->save($new);
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2533,8 +2596,10 @@ class Service extends Base
         }
 
     }
+
     /*楼盘信息公共方法*/
-    public function commonFloor(){
+    public function commonFloor()
+    {
         $floor = [];
         $floor1 = [];
         $newArr = [];
@@ -2559,7 +2624,7 @@ class Service extends Base
 
         }
         foreach ($floor as $k => $v) {
-            $newArr[$k][$v."楼"] = $roomArray[$k];
+            $newArr[$k][$v . "楼"] = $roomArray[$k];
             //$newArr[$k]['rooms'] = $roomArray[$k];
         }
         $map1 = [
@@ -2574,11 +2639,11 @@ class Service extends Base
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
                 $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                $roomArray1[$k][$k1] =  $v1['room'];
+                $roomArray1[$k][$k1] = $v1['room'];
             }
         }
         foreach ($floor1 as $k => $v) {
-            $newArr1[$k][$v."楼"] = $roomArray1[$k];
+            $newArr1[$k][$v . "楼"] = $roomArray1[$k];
             //$newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $list = [
@@ -2590,10 +2655,6 @@ class Service extends Base
         //echo json_encode($list);
 
     }
-
-
-
-
 
 
 }
