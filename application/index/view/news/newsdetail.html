@@ -12,14 +12,13 @@
         <h2>{$news->title}</h2>
         <div class=" my-news-header">
             <div>
-                <div class="collect-box">
-                    <span class="uncollect" v-if="!collection" @click="collect($event,{$news->id},{$news->type})"></span>
-                    <span class="collected" v-else @click="collect($event,{$news->id},{$news->type})"></span>
-                </div>
                 <span>{$news->create_time}</span>
                 <span>{$news->source}</span>
             </div>
-            <span>{$news->views}</span>
+            <div class="collect-box">
+                <span class="uncollect" v-if="!collection" @click="collect($event,{$news->id},{$news->type})">收藏</span>
+                <span class="collected" v-else @click="collect($event,{$news->id},{$news->type})">收藏</span>
+            </div>
         </div>
     </div>
     <section>
