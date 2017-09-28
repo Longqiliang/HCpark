@@ -14,6 +14,10 @@
         width: 124px !important;
         min-width: 124px;
     }
+    .mail-box .mail-subject>a {
+        color: #5eb4ef;
+        text-decoration: underline;
+    }
     .mail-subject-div{
         width: 100px;
         max-width: 100px;
@@ -40,7 +44,9 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
-
+    th,td{
+        text-align: center;
+    }
 </style>
 {/block}
 
@@ -61,27 +67,27 @@
                 </div>
             </form>
             <h2>园区企业 ({$list->total()})</h2>
-            <div class="mail-tools tooltip-demo m-t-md">
-                <button type="button" class="btn btn-sm btn-primary" onclick="getCompany()">同步企业信息</button>
-            </div>
+            <!--<div class="mail-tools tooltip-demo m-t-md">-->
+                <!--&lt;!&ndash;<button type="button" class="btn btn-sm btn-primary" onclick="getCompany()">同步企业信息</button>&ndash;&gt;-->
+            <!--</div>-->
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
 
                 <thead>
                 <tr>
-                    <th style="width:10%"></th>
-                    <th style="width:25%">企业名称</th>
+                    <!--<th style="width:0"></th>-->
+                    <th style="width:50%">企业名称</th>
                     <th style="width:15%">联系方式</th>
-                    <th style="width:15%">操作</th>
+                    <th style="width:35%">操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr class="read">
-                    <td class="check-mail">
-                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
-                    </td>
+                    <!--<td class="check-mail">-->
+                        <!--&lt;!&ndash;<input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">&ndash;&gt;-->
+                    <!--</td>-->
                     <td class="mail-subject">
                             <a href="{:Url('add','id='.$vo.id)}">{$vo.name}</a>
                     </td>

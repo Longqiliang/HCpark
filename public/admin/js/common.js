@@ -61,11 +61,11 @@
         var href = $(this).attr('href');
         if ( $(this).hasClass('confirm') ) {
             swal({
-                title: "你确定要这样操作吗？",
+                title: "确认要执行该操作吗？",
                 type: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "是的,我确定!",
+                confirmButtonColor: "#ef6060",
+                confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 closeOnConfirm: false
             }, function () {
