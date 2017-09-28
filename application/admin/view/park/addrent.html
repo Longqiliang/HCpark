@@ -6,13 +6,19 @@
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+    .image{
+        padding-top: 10px;
+    }
     .del{
         position: absolute;
-        right:30px;
-        top:5px;
+        left:140px;
+        top:-10px;
     }
     .parent{
+        margin-top: 20px;
+        box-sizing: border-box;
         position:relative ;
+        padding-right: 10px
     }
 </style>
 {/block}
@@ -25,6 +31,9 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            <div class="pull-right tooltip-demo">
+                <a href="{:Url('roomrent')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
             <h2>园区信息</h2>
         </div>
         <div class="mail-box">
@@ -68,7 +77,7 @@
                         <div class="col-sm-6 image" >
                             {foreach name="img" item="vo"}
                             <div class="col-sm-3"  class="parent">
-                                <img src="{$vo}" alt="" style='width: 130px;height: 200px;margin-right: 10px' class="img">
+                                <img src="{$vo}" alt="" style='width: 130px;max-height: 200px;' class="img">
                                 <div class="del"><img src="/admin/images/delete.png" alt="" width="20px" height="20px"></div>
                             </div>
                             {/foreach}
@@ -78,7 +87,6 @@
                 <input type="hidden" name="uid" value="{$info.id}">
                 <div class="mail-body text-right tooltip-demo">
                     <a href="javascript:void(0)" class="btn-sm btn-primary" onclick="addRent()"><i class="fa fa-reply"></i>&nbsp;发送</a>
-                    <a href="{:Url('roomrent')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
                 </div>
                 <div class="clearfix"></div>
             </form>

@@ -348,7 +348,7 @@ textarea::-webkit-input-placeholder {
     content: '';
     position: absolute;
     top:50%;
-    width: 30%;
+    width: 20%;
     background-color: #fff;
     z-index: 1;
      -webkit-transform: translateY(-50%);
