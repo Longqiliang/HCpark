@@ -3,7 +3,9 @@
 {block name="style"}
 <link href="/static/summernote/summernote.css" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
-<link rel="stylesheet" href="/admin/css/plugins/daterangepicker/daterangepicker-bs3.css">
+<!--<link rel="stylesheet" href="/static/datepicker/datepicker3.css" >
+<link rel="stylesheet" href="/static/datepicker/bootstrap-datetimepicker.min.css">-->
+<link rel="stylesheet" href="/admin/css/plugins/daterangepicker/daterangepicker-bs3.css" >
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
     .content{
@@ -42,7 +44,7 @@
                     <h3>水电费(单位／元)</h3>
                 </div>
                 <div class="ibox-content">
-                    <span class=" pull-right"><input type="text" name="expiration1" class="input" value="{$list1.expiration_time}" ></span>
+                    <span class=" pull-right"><input type="text" name="expiration1" class="input datetimepicker" value="{$list1.expiration_time}" ></span>
                     <h4>到期时间</h4>
                 </div>
                 <div class="ibox-content">
@@ -72,10 +74,10 @@
                     <h3>物业费(单位／元)</h3>
                 </div>
                 <div class="ibox-content">
-                    <span class=" pull-right"><input type="text" name="expiration2" class="input" value="{$list2.expiration_time}"></span>
+                    <span class=" pull-right" ><input type="text" name="expiration2" class="input datetimepicker" value="{$list2.expiration_time}"></span>
                     <h4>到期时间</h4>
                 </div>
-                <div class="ibox-content">
+                <div class="ibox-content" >
                     <h1 class="no-margins"></h1>
                     <div class="stat-percent font-bold text-success" name="status2">
                         {$list2.state}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -104,7 +106,7 @@
                     <h3>房租费(单位／元)</h3>
                 </div>
                 <div class="ibox-content">
-                    <span class=" pull-right"><input type="text" name="expiration3" class="input" value="{$list3.expiration_time}"></span>
+                    <span class=" pull-right"><input type="text" name="expiration3" class="input  datetimepicker" value="{$list3.expiration_time}"></span>
                     <h4>到期时间</h4>
                 </div>
                 <div class="ibox-content">
@@ -129,11 +131,11 @@
         <div class="col-md-6 column content">
             <div class="ibox float-e-margins">
                 <div class="ibox-content">
-                    <span class=" pull-right"><input type="text" name="fee4" class="input" value="{$list4.fee}"></span>
+                    <span class=" pull-right"><input type="text" name="fee4" class="input " value="{$list4.fee}"></span>
                     <h3>公耗费(单位／元)</h3>
                 </div>
                 <div class="ibox-content">
-                    <span class=" pull-right"><input type="text" name="expiration4" class="input" value="{$list4.expiration_time}"></span>
+                    <span class=" pull-right"><input type="text" name="expiration4" class="input datetimepicker" value="{$list4.expiration_time}"></span>
                     <h4>到期时间</h4>
                 </div>
                 <div class="ibox-content">
@@ -157,21 +159,31 @@
         </div>
     </div>
 </div>
-</div>
+
 {/block}
 
 {block name="script"}
 <script src="/static/summernote/summernote.min.js"></script>
 <script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<!--
+<script src="/static/datepicker/bootstrap-datetimepicker.js"></script>
+-->
+<script src="/admin/js/plugins/datapicker/bootstrap-datepicker.js"></script>
 <script src="/admin/js/plugins/daterangepicker/daterangepicker.js"></script>
-<script src="/admin/js/plugins/daterangepicker/moment.js"></script>
 <script>
     $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green'
         });
-
+        //    时间日历
+        $( ".datetimepicker" ).datepicker( {
+            language: 'zh-CN',
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            format: "yyyy-mm-dd"
+        });
 
 
     });
