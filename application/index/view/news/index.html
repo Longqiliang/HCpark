@@ -4,6 +4,7 @@
 <title>新闻速递</title>
 <link rel="stylesheet" href="/static/swiper/swiper.min.css">
 <link rel="stylesheet" href="/index/css/common/rem.css">
+<link rel="stylesheet" href="/index/css/common/tip.css">
 <style type="text/css">
     *,ul,p,ul li{
         padding: 0;
@@ -121,7 +122,7 @@
             <div class="swiper-slide">
                 <img src="{$banner->front_cover}">
                 <p>{$banner->title}</p>
-                <a href="{:Url('News/detail?id='.$banner->id)}"></a>
+                <a href="{:Url('News/newsDetail?id='.$banner->id)}"></a>
             </div>
             {/volist}
         </div>
@@ -138,7 +139,7 @@
                     <span class="readed"><img src="">{$news->views}</span>
                     <span>{$news->create_time}</span>
                 </div>
-                <a href="{:Url('News/detail?id='.$news->id)}"></a>
+                <a href="{:Url('News/newsDetail?id='.$news->id)}"></a>
             </li>
             {/volist}
         </ul>

@@ -19,16 +19,48 @@ ul li{
 .header p{
     margin:0 4vw;
 }
-.header p span{
+.header p span , .my-news-header span{
     color:#999;
     padding-right:1.33vw;
     font-size:1.3rem;
 }
-.header p span:last-child{
+.header p span:last-child, .my-news-header span:last-child{
     float:right;
     background: url("../../images/declaration/eyes.png") no-repeat 0 center;
     padding:0 0 0 1.9rem;
     background-size: 1.3rem;
+}
+.my-news-header{
+    margin:0 4vw;
+    line-height: 1.6rem;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.my-news-header>div{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+}
+.my-news-header .collect-box{
+    margin-right: 1rem;
+}
+.my-news-header .collect-box>span{
+    display: inline-block;
+    padding: 0;
+    width:1.6rem;
+    height:1.6rem;
+    background: url("") no-repeat left center;
+    background-size:contain;
+}
+.my-news-header .collect-box>span.collected{
+    background-image: url("/index/images/detail/collect.png");
+}
+.my-news-header .collect-box>span.uncollect{
+    background-image: url("/index/images/detail/outcollect.png");
 }
 .banner{
     width: 100%;

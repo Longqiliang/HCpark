@@ -1,0 +1,152 @@
+
+{extend name="public/common"}
+
+{block name="style"}
+<title>{$news->title}</title>
+<link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
+{/block}
+
+{block name="body"}
+<div id="comment">
+    <div class="header">
+        <h2>{$news->title}</h2>
+        <div class=" my-news-header">
+            <div>
+                <div class="collect-box">
+                    <span class="uncollect" v-if="!collection" @click="collect($event,{$news->id},{$news->type})"></span>
+                    <span class="collected" v-else @click="collect($event,{$news->id},{$news->type})"></span>
+                </div>
+                <span>{$news->create_time}</span>
+                <span>{$news->source}</span>
+            </div>
+            <span>{$news->views}</span>
+        </div>
+    </div>
+    <section>
+        {$news->content}
+    </section>
+</div>
+<div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+  var vm = new Vue({
+        el:'#comment',
+        data:{
+            documents:{$news},
+            collection:{$collect},
+            value:'',
+            commentValue:'',
+            isCheck:true,
+            loadOver:false,
+            loading:false
+        },
+        methods:{
+            send:function (id,type) {
+                var _this  =this;
+                if(_this.commentValue == '' || !_this.commentValue){
+                    alert('评论不能为空！')
+                } else {
+                    var data  = {
+                        'targetId':id,
+                        'type':type,
+                        'content':_this.commentValue
+                    };
+                    _this.$http.post('{:Url("Base/addComment")}',data).then(function (res) {
+                        var data = res.data;
+                        if(data.code === 1){
+                            console.log(data);
+                            _this.commentValue = '';
+                            _this.count +=1;
+                            var extraObj = {
+                                like:0,
+                                header:''
+                            };
+                          var newData =  Object.assign(extraObj,data.data);
+                            _this.documents.unshift(newData);
+                            _this.loading = false;
+                        }
+                    },function (data) {
+                        alert("网络错误,请检查你的网络！");
+                    });
+                }
+            },
+            collect:function (event,id,type) {
+                var _this = this;
+                if(!_this.isCheck ){
+                    return;
+                }
+                _this.isCheck = false;
+                var subData = {
+                    'targetId':id,
+                    'type':type
+                };
+                //console.log("collection:"+_this.collection);
+                if(!_this.collection){
+                    _this.$http.post('{:Url("Base/addCollect")}',subData).then(function (res) {
+                        var data = res.data;
+                        if(data.code === 1){
+                            console.log(data);
+                            _this.isCheck = true;
+                            _this.collection =data.data;
+                        }
+                    },function (res) {
+                        _this.isCheck = true;
+                    });
+                }else{
+                    _this.$http.post('{:Url("Base/delCollect")}',subData).then(function (res) {
+                        var data = res.data;
+                        if(data.code === 1){
+                            console.log(data);
+                            _this.isCheck = true;
+                            _this.collection =null;
+                        }
+                    },function (res) {
+                        _this.isCheck = true;
+                    });
+                }
+            },
+            loadMore:function (event) {
+                var _this = this;
+                _this.loading = true;
+                var  doc = _this.documents,
+                        length = doc.length;
+                if(!length){
+                    return;
+                }else if(length >= _this.count){
+                    _this.loading = true;
+                    _this.loadOver = true;
+                    return;
+                }
+                 var  lastId =doc[length-1].id,
+                    subData = {
+                        'lastId':lastId,
+                        'targetId':"{$news.id}"
+                    };
+                _this.$http.post('{:Url("Base/moreComment")}',subData).then(function (res) {
+                        var data =  res.data;
+                        if(data.total == 0 ){
+                            console.log(data.total);
+                           _this.loading = true;
+                            _this.loadOver = true;
+                        }else{
+                            console.log(data);
+                            var comments = data.comments;
+                            for(var i = 0,length  = comments.length;i < length; i += 1){
+                                doc.push(comments[i]);
+                            }
+                            _this.loading = false;
+                        }
+                },function (res) {
+                    alert("网络错误,请检查你的网络！");
+                    _this.loading = true;
+                    _this.loadOver = true;
+                });
+            }
+        }
+    });
+</script>
+{/block}
