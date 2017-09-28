@@ -91,6 +91,23 @@ class Service extends Base
             }
 
         }
+
+        //人才服务
+        $talentService = $app->where('type', 2)->order('id asc')->select();
+        $Talent  = array();
+        foreach ($talentService as $value) {
+
+            $parkid = json_decode($value['park_id']);
+
+            foreach ($parkid as $value2) {
+                if ($value2 == $park_id) {
+                    $value['park_id'] = $park_id;
+                    array_push($Talent, $value);
+                }
+            }
+
+        }
+
         $is_boss = "no";
         /*}*/
         //政策法规轮播
@@ -100,6 +117,7 @@ class Service extends Base
         $this->assign('is_boss', $is_boss);
         $this->assign('propert', json_encode($PropertyServices));
         $this->assign('company', json_encode($CompanyService));
+        $this->assign('talent', json_encode($Talent));
         $this->assign('is_fee', $is);
         return $this->fetch();
 
