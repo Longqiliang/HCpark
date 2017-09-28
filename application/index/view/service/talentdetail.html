@@ -1,0 +1,186 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>企业招聘</title>
+<style>
+	*{
+		box-sizing: border-box;
+	}
+	p,h3,h4{
+		font-weight: normal;
+		margin: 0 auto;
+	}
+	body{
+		background-color: #fff;
+	}
+	.content{
+		background-color: #F0EFF5;
+	}
+	.content .info{
+		padding: 4vw;
+		font-size: 1.4rem;
+		background-color: #fff;
+	}
+	.info-tit{
+		color:#52CC92 ;
+		font-size: 1.7rem;
+		line-height: 1.5;
+		padding-bottom: 2.67vw;
+		position: relative;
+	}
+	.info-tit:after{
+		content: '';
+		height: 1px;
+		background-color: #E8E8E8;
+		position: absolute;
+		width: 100%;
+		bottom: 0;
+		left: 0;
+	}
+	.info-detail{
+		padding: 2.67vw 0;
+	}
+	.info-detail p{
+		line-height: 2;
+	}
+	.info-detail p span{
+		display: inline-flex;
+		min-width: 4em;
+		justify-content: space-between;
+	}
+	.info-detail-down,.info-detail-up{
+		display: flex;
+		justify-content: center;
+	}
+	.top-tit h3{
+		font-size: 1.7rem;
+		display: flex;
+		justify-content: space-between;
+		line-height: 1.8;
+	}
+	.top-tit h4{
+		line-height: 2;
+	}
+	.top-tit p{
+		color: #999;
+		font-size: 1.3rem;
+		line-height: 1.8;
+	}
+	.top-tit p .tit-mar{
+		margin: 0 6.67vw;
+	}
+	.top-tit span{
+		display: inline-block;
+	}
+	.tit-salary{
+		color: #52CC92 ;
+		margin-right: 2vw;
+	}
+	.info-center{
+		margin:2.13vw 0;		
+	}
+	.info-bottom{
+		
+	}
+	.icon{
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		margin-right:2.13vw ;
+		vertical-align: -2px;
+		background-size:100%;
+	}
+	.icon-less{
+		width: 13px;
+		height: 13px;
+	}
+	.icon-education{
+		background-image:url('/index/images/talentservice/icon-education.png') ;
+	}
+	.icon-people{
+		background-image:url('/index/images/talentservice/icon-people.png') ;
+	}
+	.icon-job{
+		background-image:url('/index/images/talentservice/icon-job.png') ;
+	}
+	.icon-experience{
+		background-image:url('/index/images/talentservice/icon-experience.png') ;
+	}
+	.icon-message{
+		background-image:url('/index/images/talentservice/icon-message.png') ;
+	}
+	@media screen and (min-width: 1000px){
+		.icon-less{
+			width: 16px;
+			height: 16px;
+		}
+	}
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+	<div class="content" v-if="info">
+		<div class="info info-top">
+			<div class="top-tit">
+				<h3>
+					<span>
+						{{info.position}}（{{info.number}}人）
+					</span>
+					<span class="tit-salary">{{info.wages}}</span>
+				</h3>
+				<h4>{{info.company}}</h4>
+				<p>
+					<span><i class="icon icon-less icon-people"></i>{{info.number}}人</span>
+					<span class="tit-mar"><i class="icon icon-less icon-experience"></i>{{info.experience}}</span>
+					<span><i class="icon icon-less icon-education"></i>{{info.education}}</span>
+				</p>
+			</div>
+		</div>
+		<div class="info info-center">
+			<div class="info-tit"><i class="icon icon-job"></i>职位详情</div>
+			<div class="info-detail" v-html="info.content"></div>
+			<!--<div class="info-detail-down" @click="lookDetail" v-if="isShow"><i class="icon"></i></div>-->
+			<!--<div class="info-detail-up" @click="closeDetail" v-else><i class="icon"></i></div>-->
+		</div>
+		<div class="info info-bottom">
+			<div class="info-tit"><i class="icon icon-message"></i>联系方式</div>
+			<div class="info-detail" v-html="info.contact"></div>
+		</div>
+	</div>
+</div>
+
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			info:{$info},
+			isShow:true
+		},
+		computed:{
+			recruitNub:function(){
+				return this.info.number +"人";
+			}
+		},
+		methods:{
+			lookDetail:function(){
+				var _this = this,
+				more = _this.info.more;
+				_this.info.detail =  _this.info.detail.concat(more);
+				_this.isShow = false;
+			},
+			closeDetail:function(){
+				var _this = this,
+				more = _this.info.more,
+				moreLength = more.length;
+				_this.info.detail = _this.info.detail.splice(-(moreLength),moreLength);
+				_this.isShow = true;
+			}
+		}
+	})
+</script>
+{/block}

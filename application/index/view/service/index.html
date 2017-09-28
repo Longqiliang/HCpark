@@ -51,6 +51,10 @@
         box-shadow: 0 .2rem .2rem 0 rgba(105,185,249,0.5);
         background: #69b9f9;
     }
+    .my-item-title.color3{
+        box-shadow: 0 .2rem .2rem 0 rgba(101,199,134,0.5);
+        background: #65C786;
+    }
     .my-lists{
         display: -webkit-flex;
         display: flex;
@@ -224,6 +228,18 @@
 
             </ul>
         </div>
+        <div class="my-item">
+            <div class="my-item-title color3">
+                人才服务
+            </div>
+            <ul class="my-lists">
+                <li class="my-list" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.talentService">
+                    <img :src="item.img" alt="图标">
+                    <span>{{item.name}}</span>
+                </li>
+
+            </ul>
+        </div>
     </div>
 
 
@@ -240,7 +256,8 @@
                 isBoss:'{$is_boss}',
                 isFee:'{$is_fee}',
                 propertyServices:JSON.parse('{$propert}'),
-                companyService:JSON.parse('{$company}')
+                companyService:JSON.parse('{$company}'),
+                talentService:JSON.parse('{$talent}')
             },
             news:{$policy},
             nowPark:0,

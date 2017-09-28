@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>水电费</title>
+<title>费用缴纳</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
 <style>
     body{
@@ -14,6 +14,77 @@
         overflow: hidden;
         white-space: nowrap;
     }
+
+
+    .top{
+        width: 100%;
+        height: 16vw;
+        border-bottom: 10px solid #f4f4f4;
+        overflow: hidden;
+    }
+    .top .left{
+        width: 26.67vw;
+        line-height: 16vw;
+        float: left;
+        text-align: center;
+        font-size:1.4rem;
+    }
+    .top .right{
+        width: 73vw;
+        height: 100%;
+        float: left;
+    }
+    .theme .right input{
+        height: 7.467vw;
+        border: 1px solid #e5e5e5;
+        width: 70%;
+        border-radius: 5px;
+        margin: 4vw 0 4vw 2.66vw;
+        padding-left: 2.667vw;
+        font-size: 1.4rem;
+        outline: none;
+    }
+    .department .right select{
+        width: calc(70% + 12px);
+        height: 28px;
+        border-radius: 5px;
+        margin: 15px 0 15px 10px;
+        padding-left: 10px;
+        font-size: 14px;
+        border: 1px solid #e5e5e5;
+        outline: none;
+    }
+    .feedback{
+        width: 100%;
+        margin-bottom: 7vh;
+    }
+    .feedback p{
+        margin: 5.33vw 0 4vw 4vw;
+        font-size:1.4rem;
+    }
+    .feedback .content-box{
+        display: block;
+        width: 86.7vw;
+        height: 36vh;
+        margin: 0 auto;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        padding: 2vw;
+        font-size: 1.5rem;
+        outline: none;
+    }
+    .foot{
+        width: 92vw;
+        height:10.667vw;
+        line-height: 10.667vw;
+        text-align: center;
+        border-radius: 5px;
+        background: #5d9cec;
+        color: #fff;
+        font-size: 1.4rem;
+        margin: 0 auto;
+    }
+
 </style>
 {/block}
 
@@ -39,6 +110,23 @@
     </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="orderBtn">下一步</button>
+    </div>
+    <div class="my-feedback">
+        <div class="my-feedback-theme top">
+            <div class="left">
+                您的主题：
+            </div>
+            <div class="right">
+                <input type="text" placeholder="20字以内" maxlength="20">
+            </div>
+        </div>
+        <div class="feedback">
+            <p>您的反馈内容或摘要：</p>
+            <textarea class="content-box" maxlength="300" placeholder="请在此输入反馈内容（300字以内）"></textarea>
+        </div>
+        <div class="foot">
+            提交
+        </div>
     </div>
 </div>
 {/block}

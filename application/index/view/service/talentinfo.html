@@ -1,0 +1,141 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>服务信息</title>
+<style>
+    .my-banner{
+        width:100vw;
+        height:50vw;
+    }
+    .my-list li{
+        width: 100%;
+        height:7rem;
+        overflow: hidden;
+        border-bottom: 1px solid #e5e5e5;
+        position: relative;
+    }
+    .my-list li .content-box{
+        height: 100%;
+        padding-left: 3.2vw;
+        padding-right:3.2vw;
+        position: relative;
+    }
+    .my-list li .content-box p{
+        width:100%;
+        padding-top: 0.8rem;
+        font-size: 1.4rem;
+        color: #333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .my-list li .content-box>span{
+        color: #999;
+        font-size: 1.1rem;
+        position: absolute;
+        bottom: 0.8rem;
+    }
+    .my-list li .content-box span:last-child{
+        width:2.5rem;
+        right: 4vw;
+        padding-left: 2rem;
+        background: url("/index/images/news/view.png") no-repeat left center;
+        background-size: 1.5rem;
+    }
+    .my-list li a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+    .my-footer{
+        padding: 1rem 0;
+        text-align: center;
+        color: #999;
+    }
+    .my-footer>p{
+        text-align: center;
+        font-size: 1.5rem;
+        line-height: 80vh;
+    }
+    .my-footer>div {
+        display: flex;
+        margin-right: 5px;
+        align-items: center;
+        justify-content: center;
+    }
+    .my-footer>div>span{
+        margin-right: 1rem;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <img src="/index/images/talentservice/service-message.png" class="my-banner" alt="">
+
+    <ul class="my-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="6">
+        <li v-for="item in info.list">
+            <div class="content-box">
+                <p>{{item.title}}</p>
+                <span>{{item.create_time}}</span>
+                <span>{{parseInt(item.views)>999?'999+':item.views}}</span>
+            </div>
+            <a :href="'/index/service/infoDetail/id/'+item.id"></a>
+        </li>
+    </ul>
+    <div class="my-footer">
+        <span v-if="canLoad && !loading">下拉加载更多</span>
+        <span v-if="!canLoad">没有更多啦！</span>
+        <div   v-if="canLoad && loading">
+            <mt-spinner :type="3"></mt-spinner>加载中...
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            loading:false,
+            canLoad:'',
+            info:{$info},
+        },
+        created(){
+            if(this.info.list.length<6){
+                this.canLoad=false
+            }else{
+                this.canLoad=true
+            }
+        },
+        methods:{
+            loadMore(){
+                if(!this.loading && this.canLoad ){
+                    this.loading = true;
+                    this.$http.post('/index/service/serviceList',{length:this.info.list.length}).then(function (res) {
+                        if(res.data.code==0){
+                            this.canLoad=false
+                        }else{
+                            for( var i = 0 ;i < res.data.data.length;i++){
+                                this.info.list.push(res.data.data[i])
+                            }
+                            if(res.data.data.length<6){
+                                this.canLoad = false
+                            }
+                        }
+                        this.loading = false;
+                    },function (res) {
+                        console.log(res.data);
+                        this.loading = false;
+
+                    })
+                }
+            },
+        }
+    })
+</script>
+{/block}

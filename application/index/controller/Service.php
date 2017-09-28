@@ -29,7 +29,8 @@ use  app\common\behavior\Service as commonService;
 use  app\common\model\ParkRoom;
 use  app\common\model\ParkRent;
 use  app\index\model\PersonalMessage;
-
+use app\index\model\EnterpriseRecruitment as EnterpriseModel;
+use app\index\model\ServiceInformation as ServiceModel;
 //企业服务
 class Service extends Base
 {
@@ -250,8 +251,9 @@ class Service extends Base
         $this->assign('info', json_encode($info));
         return $this->fetch($path);
     }
+    
     /*企业招聘详情页*/
-    public function detail(){
+    public function talentdetail(){
         $id = input('id');
         $info = EnterpriseModel::where('id',$id)->find();
         $this->assign('info', json_encode($info));
@@ -283,7 +285,7 @@ class Service extends Base
     }
 
     /*服务信息详情页*/
-    public function serviceDetail(){
+    public function infoDetail(){
         $id = input('id');
         $info = ServiceModel::get($id);
         $info['views']=$info['views']+1;

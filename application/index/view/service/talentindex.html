@@ -1,0 +1,288 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>企业招聘</title>
+<style>
+    body{
+        background-color: #f1f1f1;
+    }
+    *{
+        box-sizing: border-box;
+    }
+    .search{
+        background: #f0eff5;
+        padding:0.8rem 2.133vw;
+        border-bottom: 1px solid #f0eff5;
+        position: relative;
+        z-index: 999;
+    }
+    .search>.searchBox{
+        border-radius: 0.3rem;
+        height:3.2rem;
+        background: #ffffff;
+        text-align: center;
+    }
+    .search>.unBtn{
+        display: none;
+    }
+    .search>.searchBox>.searchInput{
+        display: none;
+    }
+    .search>.searchBox>.searchText{
+        display: inline-block;
+        font-size:1.4rem;
+        color: #999;
+        padding-left:2.0rem;
+        min-width: 1px;
+        line-height: 3.2rem;
+        height:3.2rem;
+        background: url("/index/images/enterprise/search.png") 0 50% no-repeat;
+        background-size: 1.4rem 1.4rem;
+    }
+    .search.isClick{
+        background: #ffffff;
+        border-bottom: 1px solid #f1f1f1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .search.isClick>.searchBox{
+        background: #f0eff5;
+        padding-left: 2.66vw;
+        width:78vw;
+        display: flex;
+        align-items: center;
+    }
+    .search.isClick>.searchBox>.searchText{
+        display: inline-block;
+    }
+    .search.isClick>.searchBox>.searchText>.searchText_c{
+        display: none;
+    }
+    .search.isClick .searchInput{
+        background: #f0eff5;
+        display: inline-block;
+        font-size:1.4rem;
+        height:3.2rem;
+        width:61.33vw;
+    }
+    .search.isClick>.unBtn{
+        display: block;
+        padding:0;
+        box-sizing: border-box;
+        width:3.8rem;
+        height:2.8rem;
+        line-height: 2.8rem;
+        border-radius: 5px;
+        border:1px solid #5d9cec;
+        color: #5d9cec;
+        text-align: center;
+        font-size: 1.4rem;
+    }
+    .my-list{
+        box-sizing: border-box;
+        width:100%;
+        padding:5.6rem 2.133vw 0.8rem;
+        position: absolute;
+    }
+    .my-list-all{
+        top:0;
+    }
+    .my-list.overflow{
+        height:100vh;
+
+        overflow: hidden;
+    }
+    .my-list li{
+        width: 100%;
+        height:10.8rem;
+        overflow: hidden;
+        position: relative;
+        background: #fff;
+        margin-bottom: 1.2rem;
+        border-radius: 0.3rem;
+    }
+    .my-list li .content-box{
+        height: 100%;
+        padding:1.5rem;
+        position: relative;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+    }
+    .content-box>.my-company{
+        color: #999;
+        font-size: 1.4rem;
+    }
+    .my-job{
+        font-size: 1.6rem;
+        color: #333;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+    }
+    .my-job>span:last-child{
+        color: #52CC92;
+    }
+    .my-demand{
+        font-size: 1.2rem;
+        display: -webkit-flex;
+        display: flex;
+        color: #999;
+    }
+    .my-demand>span{
+        padding-left: 2rem;
+        background: url() no-repeat left center;
+        background-size: 1.2rem 1.2rem;
+    }
+    .my-demand>span:not(:last-child){
+        margin-right: 1rem;
+    }
+    .my-demand>span.icon-people{
+        background-image: url('/index/images/talentservice/recruit-people.png');
+    }
+    .my-demand>span.icon-job{
+        background-image: url('/index/images/talentservice/recruit-job.png');
+    }
+    .my-demand>span.icon-edu{
+        background-image: url('/index/images/talentservice/recruit-education.png');
+    }
+    .my-list li a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+    .searchList{
+        width:100%;
+        min-height:100vh;
+        position: absolute;
+        top:0;
+        left:0;
+        z-index: 998;
+        overflow: scroll;
+    }
+    .searchList>li{
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .bgWhite{
+        background-color: rgba(0,0,0,0.5);
+    }
+    .my-list.overflow-hide{
+        line-height: 100vh;
+        overflow: hidden;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="search" :class="{isClick:inputStatus}" >
+        <div class="searchBox" @click="isClick">
+            <div class="searchText"><span class="searchText_c">请在此搜索岗位名称</span></div>
+            <input type="text" v-model="inputValue" @input="toSearch(0)" class="searchInput" placeholder="请输入岗位名称" v-focus="inputStatus">
+        </div>
+        <div class="unBtn" @click="isCancel">取消</div>
+    </div>
+    <ul class="my-list my-list-all" :class="{overflow:inputStatus}">
+        <li v-for="item in info.list">
+            <div class="content-box">
+                <div class="my-job"><span>{{item.position ? item.position : '暂无信息'}}</span><span>{{item.wages ? item.wages : "暂无信息"}}</span></div>
+                <span class="my-company">{{item.company ? item.company : '暂无信息'}}</span>
+                <div class="my-demand"><span class="icon-people">{{item.number ? item.number+'人' : '-'}}</span> <span class="icon-job">{{item.experience ? item.experience : '-'}}</span><span class="icon-edu">{{item.education ? item.education : '-'}}</span></div>
+            </div>
+            <a :href="'/index/service/talentdetail/id/'+item.id"></a>
+        </li>
+    </ul>
+    <ul class="searchList my-list" :class="{bgWhite:inputStatus}" v-if="inputStatus">
+        <li v-for="item in searchList">
+            <div class="content-box">
+                <div class="my-job"><span>{{item.position ? item.position : '暂无信息'}}</span><span>{{item.wages ? item.wages : "暂无信息"}}</span></div>
+                <span class="my-company">{{item.company ? item.company : '暂无信息'}}</span>
+                <div class="my-demand"><span class="icon-people">{{item.number ? item.number+'人' : '-'}}</span> <span class="icon-job">{{item.experience ? item.experience : '-'}}</span><span class="icon-edu">{{item.education ? item.education : '-'}}</span></div>
+            </div>
+            <a :href="'/index/service/talentdetail/id/'+item.id"></a>
+        </li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    Vue.directive('focus', {
+        // When the bound element is inserted into the DOM...
+        update: function (el,value) {
+            // Focus the element
+            if(value.value){
+                el.focus();
+            }
+        }
+    });
+    var app = new Vue({
+        el:'#app',
+        data:{
+            inputStatus:false,
+            inputValue:'',
+            loading:false,
+            canLoad:'',
+            isSearch:false,
+            searchList:[],
+            info:{$info}
+        },
+        created(){
+        },
+        methods:{
+            toBlur(){
+                var the=this;
+                setTimeout(function () {
+                    if(!the.isSearch){
+                        console.log('isBlur');
+                        the.inputStatus=false;
+                        the.inputValue=''
+                    }
+                },100)
+
+            },
+            toSearch:function () {
+                let reg=new RegExp(this.inputValue);
+                this.searchList=[];
+                if(!this.inputValue){
+                    this.searchList=[];
+                }else{
+                    for(let i=0;i<this.info.list.length;i++){
+                        if(reg.test(this.info.list[i].name)){
+                            this.searchList.push(this.info.list[i])
+                        }
+                    }
+                }
+            },
+            isClick:function () {
+                this.inputStatus=true;
+//                document.body.style.overflow='hidden'
+            },
+            isCancel:function () {
+                this.inputStatus=false;
+                this.inputValue='';
+                this.searchList.length=0;
+//                document.body.style.overflow='auto'
+            },
+            toSearch:function () {
+                let reg=new RegExp(this.inputValue);
+                this.searchList=[];
+                if(!this.inputValue){
+                    this.searchList=[];
+                }else{
+                    for(let i=0;i<this.info.list.length;i++){
+                        if(reg.test(this.info.list[i].position)){
+                            this.searchList.push(this.info.list[i])
+                        }
+                    }
+                }
+            },
+        }
+    })
+</script>
+{/block}

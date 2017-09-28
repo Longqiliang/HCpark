@@ -1,0 +1,41 @@
+
+{extend name="public/common"}
+
+{block name="style"}
+<title>{$news->title}</title>
+<link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
+<link rel="stylesheet" href="/index/css/common/rem.css">
+<style>
+    section>*{
+        max-width: 100%!important;
+        overflow: hidden!important;
+    }
+</style>
+
+{/block}
+
+{block name="body"}
+<div id="comment">
+    <div class="header">
+        <h2>{$news->title}</h2>
+        <p>
+            <span>{$park} / {$news->create_time | strtotime |date="Y-m-d",###}</span>
+            <span>{$news->views}</span>
+        </p>
+    </div>
+    <section>
+        {$news->content}
+    </section>
+
+
+</div>
+<div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+{/block}
