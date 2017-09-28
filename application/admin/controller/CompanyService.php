@@ -28,6 +28,7 @@ class CompanyService extends Admin
             ->where('a.park_id','like','%'.$parkid.'%')
             ->paginate();
         $total=count($list);
+        $this->assign('search',$search);
         $this->assign('total',$total);
         $this->assign('list',$list);
         return $this->fetch();

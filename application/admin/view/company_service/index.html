@@ -53,7 +53,7 @@
         <div class="mail-box-header">
             <form method="get" action="index.html" class="pull-right mail-search">
                 <div class="input-group">
-                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索标题">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索企业" value="{$search}">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                     </div>
@@ -75,14 +75,14 @@
                 <tr>
                     <th></th>
                     <th>ID</th>
+                    <th>服务名称</th>
                     <th>公司名称</th>
                     <th>联系人</th>
                     <th>联系电话</th>
                     <th>备注</th>
-                    <th>应用名称</th>
                     <th>创建时间</th>
                     <th>状态</th>
-                    <th>审核</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
 
@@ -92,13 +92,14 @@
                 <td class="check-mail">
                     <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                 </td>
-                    <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.id}</a></td>
-                    <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.company}</a></td>
-                <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.people}</a></td>
-                <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.mobile}</a></td>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.company}</td>
+                <td>{$vo.people}</td>
+                <td>{$vo.mobile}</td>
                 <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.remark|msubstr=0,60}</a></td>
-                    <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.name}</a></td>
-                <td><a href="{:Url('detail','id='.$vo.id)}">{$vo.create_time|date='Y-m-d H:i',###}</a></td>
+
+                <td>{$vo.create_time|date='Y-m-d H:i',###}</td>
 
                     {eq name="$vo.status" value="1"}
                     <td>已完成</td>
