@@ -46,15 +46,16 @@ ul li{
 
 }
 .my-news-header .collect-box{
-    margin-right: 1rem;
+    line-height: 1.6rem;
 }
+
 .my-news-header .collect-box>span{
     display: inline-block;
-    padding: 0;
-    width:1.6rem;
+    padding: 0 0 0 2rem;
     height:1.6rem;
     background: url("") no-repeat left center;
     background-size:contain;
+    margin-right: 0.5rem;
 }
 .my-news-header .collect-box>span.collected{
     background-image: url("/index/images/detail/collect.png");
