@@ -8,8 +8,8 @@
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
     .del{
        position: absolute;
-        right:5px;
-        top:10px;
+        right:10px;
+        top:14px;
     }
     .parent{
         position:relative ;
@@ -17,6 +17,10 @@
     #sortable { list-style-type: none; margin: 0; padding: 0; }
     #sortable li { margin: 0 ; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; display: block}
     #sortable li span { position: absolute; margin-left: -1.3em; }
+    .select{
+        display: inline-block;
+        height: 32px;
+    }
 </style>
 
 {/block}
@@ -54,42 +58,45 @@
                             <input  type="text" class="form-control" name="number" value="{$info.number}"> <br>
                         </div>
                         <div class="col-md-2 column">
-                            <h3>合同图片</h3>
-                        </div>
-                        <div class="col-md-10 column">
-                            <input  type="file" class="file input-file" multiple><br>
-                        </div>
-                        <div class="col-md-2 column">
                             <h3>合同类型</h3>
                         </div>
                         <div class="col-md-10 column">
-                            <select name="type" id="" class="col-md-4 column">
+                            <select name="type" id="" class="col-md-4 column select">
                                 <option value="1"{eq name="$info.type" value="1"}selected{/eq}>租赁合同</option>
                                 <option value="2"{eq name="$info.type" value="2"}selected{/eq}>物业合同</option>
                                 <option value="3"{eq name="$info.type" value="3"}selected{/eq}>其他合同</option>
                             </select>
                         </div>
-
                         <div class="col-md-12 column">
+                            <br>
+                        </div>
+                        <div class="col-md-2 column">
+                            <h3>合同图片</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <input  type="file" class="file input-file" multiple><br>
+                        </div>
+                        <div class="col-md-12 column"  id="sortable">
+                            {foreach name="img" item="vo"}
+                            <div class="col-md-2"  >
+                                <img src="{$vo}" alt="" style='width: 100%;height: 300px;margin: 10px' class="img parent">
+                                <div class="del"><img src="/admin/images/delete.png" alt="" width="25px height=25px"></div>
+                            </div>
+                            {/foreach}
+                            </ul>
+                        </div>
+
+                        <div class="col-md-2 column">
                             <h3>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</h3>
                         </div>
-                        <div class="col-md-12 column">
-                            <span class="col-md-2 column"></span>
+                        <div class="col-md-10 column">
                             <textarea name="extra"  cols="30" rows="10" class="col-md-10 column">{$info.remark}</textarea>
                         </div>
 
                     </div>
                 </div>
                 <div class='row clearfix' >
-                    <div class="col-md-10 column"  id="sortable">
-                        {foreach name="img" item="vo"}
-                            <div class="col-md-2"  >
-                                <img src="{$vo}" alt="" style='width: 100%;height: 300px;margin: 10px' class="img parent">
-                                <div class="del"><img src="/admin/images/delete.png" alt="" width="25px height=25px"></div>
-                            </div>
-                        {/foreach}
-                        </ul>
-                    </div>
+
                     <div class="col-md-10 column "><br>
                         <a href="{:Url('index')}" class="btn btn-white btn-sm" style="float:right ;margin-left:5px ;" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
                         <a class="btn btn-sm btn-primary " style="float:right" onclick="addContract()"><i class="fa fa-reply"></i>&nbsp;发送</a>
