@@ -84,5 +84,5 @@
 }
 /* 新分页 */
 .pager { margin: 0 }
-.pagination { margin: 0}
+/*.pagination { margin: 0}*/
 .pager li>a, .pager li>span {border-radius: 3px}

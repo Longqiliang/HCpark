@@ -7,35 +7,79 @@
     body{
         background-color: #f0eff5;
     }
+    .pay-num{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+    }
+    .pay-num>span{
+        -webkit-touch-callout:inherit;
+        -webkit-user-select:text;
+        -khtml-user-select:text;
+        -moz-user-select:text;
+        -ms-user-select:text;
+        user-select:text;
+        -o-user-select:text;
+        margin-right: 0.5rem;
+    }
+    .pay-code{
+        width:1.6rem;
+        height:1.6rem;
+    }
+    .modal-box{
+        width:100vw;
+        height:100vh;
+        background: rgba(0,0,0,0.5);
+        position: fixed;
+        top:0;
+        left:0;
+    }
+    .overflow-hidden{
+        height:100vh;
+        overflow: hidden;
+    }
+    .modal-box>img{
+        position: absolute;
+        top:50%;
+        left: 50%;
+        max-width: 80vw;
+        -webkit-transform: translate(-50%,-50%);
+        -moz-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        -o-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+    }
 </style>
 {/block}
 
 {block name="body"}
-<div id="app">
+<div id="app" :class="{'overflow-hidden':showCode}">
     <div class="card">
         <div class="card-tit">缴费信息</div>
-        <div class="card-cell">
+        <div class="card-cell" v-if="subData.app_id==1">
             <span>银行账户</span>
             <span>{{subData.bank_user}}</span>
         </div>
-        <div class="card-cell">
+        <div class="card-cell"  v-if="subData.app_id==1">
             <span>账号名称</span>
             <span>{{subData.payment_bank}}</span>
         </div>
         <div v-if="subData.payment_alipay">
-            <div class="card-cell bottom-inherit">
+            <div class="card-cell bottom-inherit"  v-if="subData.app_id==1">
                 <span class="card-hr">— — — or — — —</span>
             </div>
             <div class="card-cell">
                 <span>支付宝账号</span>
-                <span>{{subData.payment_alipay}}</span>
+                <div class="pay-num">
+                    <span>{{subData.payment_alipay}}</span>
+                    <img src="/index/images/service/icon-paycode.png" alt="" class="pay-code" @click="toggleCode">
+                </div>
             </div>
             <div class="card-cell">
                 <span>账号名称</span>
                 <span>{{subData.ailpay_user}}</span>
             </div>
         </div>
-
     </div>
     <p class="prompt-message">转账时请备注个人信息（转账事由及内容）</p>
     <div class="card">
@@ -57,6 +101,9 @@
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="subBtn">提交</button>
     </div>
+    <div class="modal-box" v-if="showCode" @click="toggleCode">
+        <img src="/index/images/service/payment-code.jpg" alt="支付二维码">
+    </div>
 </div>
 {/block}
 
@@ -74,9 +121,13 @@
                 imgLength:3,
                 dataUrl:[],
                 imgName:[]
-            }
+            },
+            showCode:false
         },
         methods: {
+            toggleCode(){
+                this.showCode=!this.showCode;
+            },
             delImg: function (e) {
                 this.imgSrc.dataUrl.splice(e,1);
                 this.payment_voucher.splice(e,1);

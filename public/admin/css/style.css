@@ -3853,12 +3853,11 @@ table.table-mail tr td {
 .unread td a,
 .unread td {
   font-weight: 600;
-  color: inherit;
+  /*color: inherit;*/
 }
 .read td a,
 .read td {
   font-weight: normal;
-  color: inherit;
 }
 .unread td {
   background-color: #f9f8f8;

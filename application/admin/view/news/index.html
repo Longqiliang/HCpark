@@ -11,7 +11,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: 124px !important;
+        /*width: 124px !important;*/
         min-width: 124px;
     }
     .mail-subject-div{
@@ -76,8 +76,8 @@
                 <tr>
                     <th></th>
                     <th>新闻标题</th>
-                    <th>创建时间</th>
-                    <th>是否轮播</th>
+                    <th  width="200px">创建时间</th>
+                    <th  width="200px">是否轮播</th>
                     <th >是否推送</th>
                     <th>
                         <select name="type" id="changeType" onchange="changeType()">
@@ -87,7 +87,7 @@
                             <option value="3" {eq name="$checkType" value="3"}selected{/eq}>好文分享</option>
                         </select>
                     </th>
-                    <th style="width: 10%" >操作</th>
+                    <th style="width: 250px" >操作</th>
                 </tr>
                 </thead>
 
@@ -102,7 +102,7 @@
                             <a href="{:Url('add','id='.$vo.id)}">{$vo.title}</a>
                         </div>
                     </td>
-                    <td >{$vo.create_time}</td>
+                    <td>{$vo.create_time}</td>
 
                     <td >{eq name="vo.is_banner" value="1"}是{/eq}</td>
                     <td class="list_type">
@@ -118,8 +118,9 @@
                     </td>
 
 
-                    <td> <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-primary" style="color: #fff">开始推送</a>
-                        <a href="{:Url('add','id='.$vo.id)}" class=" confirm btn-sm btn-primary" style="color: #fff">编辑</a>
+                    <td> <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-primary">开始推送</a>
+                        <a href="{:Url('add','id='.$vo.id)}" class=" confirm btn-sm btn-primary">编辑</a>
+                        <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-primary">删除</a>
                     </td>
 
                 </tr>
@@ -135,7 +136,47 @@
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script>
+    function delItem(id) {
+        swal({
+            title: "",
+            text: "是否确认删除？",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef6060",
+            confirmButtonText: "确认",
+            cancelButtonText:'取消',
+            closeOnConfirm: false
+        }, function(){
+            $.ajax({
+                data:{ids:[id]},
+                type:"POST",
+                url:"{:Url('moveToTrash')}",
+                success:function (data){
+                    if(data.code==1){
+                        swal({
+                            title: "",
+                            text: data.msg,
+                            type: "success",
+                            confirmButtonColor: "#1ab394",
+                            confirmButtonText: "确认",
+                        });
+                      window.location.reload();
+                    }else{
+                        swal({
+                            title: "",
+                            text: data.msg,
+                            type: "warning",
+                            confirmButtonColor: "#ef6060",
+                            confirmButtonText: "确认",
+                        });
+                    }
+                }
+            })
+        });
+
+    }
     $(document).ready(function(){
+
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
