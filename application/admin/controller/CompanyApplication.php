@@ -34,7 +34,7 @@ class CompanyApplication extends Admin
             $val['park_id'] = $a;
         }
         int_to_string($list, array(
-            'type' => array(1 => '企业服务', 0 => '物业服务'),
+            'type' => array(1 => '企业服务', 0 => '物业服务',2=>'人才服务'),
         ));
         int_to_string($list, array(
             'has_alipay' => array(1 => '支持', 2 => '不支持'),
