@@ -191,7 +191,27 @@ class News extends Base
         }
 
     }
+     public  function  newsDetail(){
+         $news = NewsModel::get(input('id'));
+         $this->assign('news', $news);
+         // 是否已经收藏
+         $collectMap = [
+             'target_id' => input('id'),
+             'user_id' => session('userId')
+         ];
+         $collect = Collect::where($collectMap)->find();
+         //echo json_encode($comments);
+         $this->assign('collect', json_encode($collect));
 
+         // 添加阅读量
+         NewsModel::where('id', input('id'))->setInc('views');
+
+         return $this->fetch();
+
+
+
+
+     }
 
 
 }
