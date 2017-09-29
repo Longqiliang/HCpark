@@ -41,6 +41,7 @@
     .list_banner {width: 80px}
     .list_type {width: 80px}
 
+
 </style>
 {/block}
 
@@ -90,7 +91,7 @@
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
                     <td class="mail-subject">
-                        <a href="{:Url('add','id='.$vo.id)}">{$vo.company}</a>
+                        <a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.company}</a>
                     </td>
                     <td>
                        {$vo.type_text}
@@ -102,7 +103,8 @@
                         {$vo.remark}
                     </td>
                     <td>
-                        <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">查看合同</a>
+                        <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-success" style="color:#fff">查看合同</a>
+                        <a class="n btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
                     </td>
                 </tr>
                 {/volist}

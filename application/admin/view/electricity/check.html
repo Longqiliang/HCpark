@@ -1,10 +1,14 @@
 {extend name="base/common"}
 
 {block name="style"}
-<link rel="stylesheet" href="/static/datepicker/bootstrap-datetimepicker.min.css">
-<link rel="stylesheet" href="/static/iCheck/custom.css">
-<link rel="stylesheet" href="/admin/css/chosen/chosen.css">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style>
+    .ibox-title h5{
+        margin-top: 10px;
+    }
+    .ibox-tools a{
+        color: inherit;
+    }
     .main{
         padding:12px;
 
@@ -29,9 +33,7 @@
         background: url("/home/images/application/radio1.png") center no-repeat;
         background-size: contain;
     }
-    input[type='text']{
-        border-bottom:1px solid #000000;
-    }
+
 
     .main>p{
         text-indent: 2rem;
@@ -41,7 +43,10 @@
         font-size: 14px;
 
     }
-
+    .img{
+        max-width: 350px;
+        max-height: 350px;
+    }
 </style>
 {/block}
 
@@ -70,8 +75,11 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5></h5>
                     <div class="ibox-tools">
+                        {if condition="$info.status eq 0"}
+                        {else/}
+                        <h5 class="center">已完成审核</h5>
+                        {/if}
                         <a href="javascript:window.history.go(-1);" class="btn btn-white btn-sm"><i class="fa fa-reply"></i> 返回</a>
                     </div>
                 </div>
@@ -162,6 +170,15 @@
                                 <input  readonly=ture type="text" placeholder="请输入办理期限" class="form-control form_title" name="term" value="{$info.aging}月">
                             </div>
 
+                            {notempty name='$info.check_remark'}
+                            <div class="col-lg-2 text-right control-label">
+                                <label>备注:</label>
+                            </div>
+                            <div class="col-lg-2">
+                                <input  readonly=ture type="text"  class="form-control form_title" name="term" value="{$info.check_remark}">
+                            </div>
+                            {/notempty}
+
                         </div>
 
                         <div class="form-group">
@@ -179,6 +196,8 @@
                                 <input  readonly=ture type="text" placeholder="请输入办理期限" class="form-control form_title" name="term" value="{$info.status_text}">
                             </div>
 
+
+
                         </div>
                         <br><br>
                         <div class="form-group">
@@ -189,7 +208,7 @@
                             <div class="col-lg-5">
                                 <div  class="imggroup">
                                     {volist name="$info.payment_voucher" id="vo"}
-                                    <img src="{$vo}" style="max-width:500px;" class="img" alt="">
+                                    <img src="{$vo}" style="max-width:500px;" class="img-auto" alt="">
                                     {/volist}
 
                                 </div>
@@ -200,12 +219,11 @@
 
                         {if condition="$info.status eq 0"}
                         <div class="form-group">
-                            <div class="col-lg-11 col-lg-offset-1">
+                            <div class="col-lg-11 col-lg-offset-1 text-right">
                                 <button class="btn btn-primary submit-btn post-put" type="button" target-form="form-horizontal" >通过</button>
-                                <a data-toggle="modal" href="#modal-form" class="btn btn-sm btn-primary" >不通过</a>
+                                <a data-toggle="modal" href="#modal-form" class="btn btn-sm btn-danger" >不通过</a>
                             </div>
                         </div>
-                        {else/}  已完成审核
                         {/if}
 
                         <input type="hidden" name="id" value="{$info.id}">
@@ -226,12 +244,12 @@
                     <h3 class="modal-title text-center">备注信息</h3>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                    <div class="clear"><label class="col-sm-2 control-label">备注</label>
                         <div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-10"><input type="button"  class="form-control"    value="确认提交"  onclick="check()" style="background-color: #1ab394;color: #fff;"></div>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"      onclick="check()" >确认提交</button>
                 </div>
             </form>
         </div>
@@ -240,11 +258,7 @@
 {/block}
 
 {block name="script"}
-<script src="/static/uploadify/jquery.uploadify.min.js"></script>
-<script src="/static/iCheck/icheck.min.js"></script>
-<script src="/static/ueditor/ueditor.config.js"></script>
-<script src="/static/ueditor/ueditor.all.min.js"></script>
-<script src="/admin/js/chosen.jquery.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 <script>
 
 

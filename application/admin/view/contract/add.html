@@ -8,18 +8,27 @@
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
     .del{
        position: absolute;
-        right:10px;
-        top:14px;
+        right:4px;
+        top:6px;
+        color: #666;
     }
     .parent{
         position:relative ;
     }
-    #sortable { list-style-type: none; margin: 0; padding: 0; }
+    #sortable { list-style-type: none; margin: 0 0 10px 0; padding: 0; }
     #sortable li { margin: 0 ; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; display: block}
     #sortable li span { position: absolute; margin-left: -1.3em; }
     .select{
         display: inline-block;
         height: 32px;
+    }
+    .img-item{
+        width:100%;
+        position: relative;
+        padding:25px 10px 10px 10px;
+        margin-bottom: 10px;
+        background: #f1f1f1;
+
     }
 </style>
 
@@ -33,6 +42,10 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            <div class="pull-right tooltip-demo">
+
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
             <h2>
                合同信息
             </h2><br><br><br>
@@ -76,11 +89,15 @@
                         <div class="col-md-10 column">
                             <input  type="file" class="file input-file" multiple><br>
                         </div>
-                        <div class="col-md-12 column"  id="sortable">
+                        <div class="col-md-12 column clear"  id="sortable">
                             {foreach name="img" item="vo"}
-                            <div class="col-md-2"  >
-                                <img src="{$vo}" alt="" style='width: 100%;height: 300px;margin: 10px' class="img parent">
-                                <div class="del"><img src="/admin/images/delete.png" alt="" width="25px height=25px"></div>
+                            <div class="col-md-2">
+                                <div class="img-item">
+                                    <a class="front_cover" href="{$vo}">
+                                        <img src="{$vo}" alt="" style='width: 100%;height: 300px;' class="img parent">
+                                    </a>
+                                    <div class="del"><span class="glyphicon glyphicon-remove"></span></div>
+                                </div>
                             </div>
                             {/foreach}
                         </div>
@@ -97,8 +114,7 @@
                 <div class='row clearfix' >
 
                     <div class="col-md-10 column "><br>
-                        <a href="{:Url('index')}" class="btn btn-white btn-sm" style="float:right ;margin-left:5px ;" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
-                        <a class="btn btn-sm btn-primary " style="float:right" onclick="addContract()"><i class="fa fa-reply"></i>&nbsp;发送</a>
+                        <a class="btn btn-primary " style="float:right" onclick="addContract()">保存</a>
                     </div>
                 </div>
             </div>
@@ -131,9 +147,10 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
      imageArray = new Array() ;
-
     });
-
+    (function () {
+        addImgBox()
+    })();
     $(".input-file").fileinput({
         showPreview: false,
         language: 'zh', //设置语言
@@ -146,29 +163,41 @@
     }).on('fileuploaded', function(event, data, previewId, index) {
         var response = $.parseJSON(data.response);
         if(response.code == 1) {
-            var html = "<div class='col-md-2'>" +
-                            "<img src='"+response.data+"' alt='' style='width: 100%;height: 300px;margin: 10px' class='img parent'>" +
-                            " <div class='del'><img src='/admin/images/delete.png' alt='' width='25px' height='25px'></div>"
-                       "</div>";
+            var html =
+            '<div class="col-md-2">'+
+                '<div class="img-item">'+
+                    '<a class="front_cover" href="'+response.data+'">'+
+                        '<img src="'+response.data+'" alt="" style="width: 100%;height: 300px;" class="img parent">'+
+                    '</a>'+
+                        '<div class="del" onclick="delImg(this)"><span class="glyphicon glyphicon-remove"></span></div>'+
+                '</div>'+
+            '</div>';
             $('#sortable').append(html);
             imageArray.push(response.data);
             $("input[name='front_cover']").val(response.data);
-            $('.del').click(function(){
-                $(this).parent().remove();
-            });
+//            $('.del').click(function(){
+//                $(this).parent().remove();
+//            });
+            addImgBox()
 
         } else {
             updateAlert(response.msg, 'warning');
         }
     });
-    $(".front_cover").imgbox({
-        overlayShow: false,
-        hideOnContentClick: true,
-        slideshow: false,
-        theme: 'dark',
-        alignment: 'center',       // Position - may be auto OR center.
-        allowMultiple: false,
-    });
+    function delImg(_this) {
+        $(_this).parent().remove();
+    }
+    function addImgBox() {
+        $(".front_cover").imgbox({
+            overlayShow: false,
+            hideOnContentClick: true,
+            slideshow: false,
+            theme: 'dark',
+            alignment: 'center',       // Position - may be auto OR center.
+            allowMultiple: false,
+        });
+    }
+
     //添加合同
     function addContract() {
         var imgScrs=[];

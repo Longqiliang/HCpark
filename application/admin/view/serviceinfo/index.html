@@ -40,6 +40,10 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+    th,td{
+        vertical-align: middle;
+        text-align: center;
+    }
 </style>
 {/block}
 
@@ -79,8 +83,10 @@
                     <th>标题</th>
                     <th>内容</th>
                     <th>发布人</th>
-                    <th>状态</th>
                     <th>创建时间</th>
+
+                    <th>状态</th>
+                    <th width="200px">操作</th>
                 </tr>
                 </thead>
 
@@ -94,22 +100,25 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                            <a href="{:Url('add','id='.$vo.id)}">{$vo.id}</a>
+                            <span >{$vo.id}</span>
                         </div>
                     </td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.title}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,50}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.source}</a></td>
+                    <td><span>{$vo.title}</span></td>
+                    <td><span>{$vo.content|strip_tags|msubstr=0,50}</span></td>
+                    <td><span>{$vo.source}</span></td>
+                    <td class="text-right mail-date" style="white-space: nowrap"><span>{$vo.create_time}</span></td>
 
                     {eq name="$vo.status" value="1"}
-                    <td><span class="label label-info">启用</span></td>
+                    <td><span >启用</span></td>
                     {/eq}
                     {eq name="$vo.status" value="0"}
-                    <td><span class="label label-danger">禁用</span></td>
+                    <td><span>禁用</span></td>
                     {/eq}
 
-                    <td class="text-right mail-date" style="white-space: nowrap"><a href="{:Url('add','id='.$vo.id)}">{$vo.create_time}</a></td>
-
+                    <td width="200px">
+                        <a href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-success">编辑</a>
+                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
+                    </td>
                 </tr>
                 {/volist}
 

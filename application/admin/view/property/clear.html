@@ -45,6 +45,9 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+    th,td{
+        text-align: center;
+    }
 </style>
 {/block}
 
@@ -65,11 +68,19 @@
                 </div>
             </form>
             <h2>保洁服务 ({$list->total()})</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>服务类型</th>
                     <th>服务地点</th>
                     <th>预约时间</th>
@@ -83,13 +94,16 @@
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr class="read">
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                    </td>
                     <td>{$vo.type_text}</td>
                     <td>{$vo.address}</td>
                     <td>{$vo.clear_time|date='Y-m-d H:i',###}</td>
                     <td>{$vo.name}</td>
                     <td>{$vo.mobile}</td>
-                    <td>{$vo.extra}</td>
-                    <th>{$vo.status_text}</th>
+                    <td><a class="click-text"  data-toggle="modal" data-target="#remark-modal" data-text="{$vo.extra}">{$vo.extra | msubstr=0,60}</a></td>
+                    <td>{$vo.status_text}</td>
                     <td>
                         {eq name="$vo.status" value="0"}
                         <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
@@ -97,6 +111,7 @@
                         <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>-->
                         <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>-->
                         {else/}
+                        <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
                         <button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',-1)">删除</button>
                         {/eq}
 
@@ -106,6 +121,22 @@
                 </tbody>
             </table>
             <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+<div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="remark-modal" aria-label="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">备注详情</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
         </div>
     </div>
 </div>
@@ -162,6 +193,16 @@
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script>
     $(document).ready(function(){
+        //绑定模态框展示的方法
+        $("#remark-modal").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            console.log(button);
+            var recipient = button.data('text');
+            var modal = $(this);
+            modal.find('.modal-body').html(recipient);
+
+
+        })
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',

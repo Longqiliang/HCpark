@@ -2,22 +2,11 @@
 
 {block name="style"}
 <style>
-    a.under-line{
-        text-decoration: underline;
-        color: #5eb4ef;
-    }
-    a.under-line:focus{
-        outline: none;
-    }
+
     .modal-dialog{
         margin: 200px auto;
     }
-    .txt-success{
-        color: #1ab394;
-    }
-    .txt-danger{
-        color: #ef6060;
-    }
+
     .mail-box .mail-ontact{
         width: 150px;
         min-width: 150px;
@@ -127,17 +116,15 @@
                     {eq name="$vo.status" value="0"}
                     <td>未联系</td>
                     {/eq}
-
                     {eq name="$vo.status" value="0"}
                     <td>
                         <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',0)">联系</button>
-                        <button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}')">删除</button>
+                        <button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button>
                     </td>
                     {/eq}
                     {eq name="$vo.status" value="1"}
-                    <td><button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}')">删除</button></td>
+                    <td><button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button></td>
                     <!--<td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>-->
-
                     {/eq}
                 </tr>
                 {/volist}
@@ -184,47 +171,10 @@
             var recipient = button.data('text');
             var modal = $(this);
             modal.find('.modal-body').html(recipient);
+
+
         })
     });
-    //删除
-    function delItem(id) {
-        swal({
-            title: "",
-            text: "是否确认删除？",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#ef6060",
-            confirmButtonText: "确认",
-            cancelButtonText:'取消',
-            closeOnConfirm: false
-        }, function(){
-            $.ajax({
-                data:{ids:[id]},
-                type:"POST",
-                url:"{:Url('moveToTrash')}",
-                success:function (data){
-                    if(data.code==1){
-                        swal({
-                            title: "",
-                            text: data.msg,
-                            type: "success",
-                            confirmButtonColor: "#1ab394",
-                            confirmButtonText: "确认"
-                        });
-                        window.location.reload();
-                    }else{
-                        swal({
-                            title: "",
-                            text: data.msg,
-                            type: "warning",
-                            confirmButtonColor: "#ef6060",
-                            confirmButtonText: "确认"
-                        });
-                    }
-                }
-            })
-        });
-    }
     /*修改服务状态值*/
     function changeStatus(id,uid){
             $.ajax({

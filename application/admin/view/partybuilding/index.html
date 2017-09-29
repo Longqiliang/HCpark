@@ -40,6 +40,10 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+    th,td{
+        text-align: center;
+        vertical-align: middle;
+    }
 </style>
 {/block}
 
@@ -80,7 +84,7 @@
                     <th>内容</th>
                     <th>类型</th>
                     <th>创建时间</th>
-
+                    <th>操作</th>
                 </tr>
                 </thead>
 
@@ -92,24 +96,31 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                            <a href="{:Url('add','id='.$vo.id)}">{$vo.title}</a>
+                            <span>{$vo.title}</span>
                         </div>
                     </td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.source}</a></td>
-                    <td class="text-content"><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,80}</a></td>
+                    <td><span>{$vo.source}</span></td>
+                    <td class="text-content"><a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.content|strip_tags|msubstr=0,80}</a></td>
                     <td >
                         {gt name="$vo.type" value="1"}
                             {eq name="$vo.type" value="2"}
-                            <span class="label label-info ">两学一做</span>
+                            <span>两学一做</span>
                             {else/}
-                            <span class="label label-info">党员风采</span>
+                            <span>党员风采</span>
                             {/eq}
                         {else/}
-                        <span class="label label-info">支部活动</span>
+                        <span>支部活动</span>
                         {/gt}
                     </td>
 
                     <td class="text-content mail-date">{$vo.create_time}</td>
+
+                    <td>
+                        <a href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-success">编辑</a>
+                        <a class="n btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+                    </td>
+
+
                 </tr>
                 {/volist}
                 </tbody>

@@ -140,9 +140,12 @@
                     {/eq}
 
                    <td>
+
                        <a href="{:Url('detail','id='.$vo.id)}" class="btn-sm btn-success">查看详情</a>
                        {eq name="$vo.status" value="0"}
                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">审核</a>
+                        {else/}
+                       <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
 
                        <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>-->
                        <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>-->
@@ -187,13 +190,13 @@
         if(uid!=-1){
             data={
                 id : $("input[name='is_id']").val(),
-                del : uid,
+                uid : uid,
                 check_remark : $("input[name='check_remark']").val()
             }
         }else{
             data={
                 id:id,
-                del:uid
+                uid:uid
             }
         }
         $.ajax({

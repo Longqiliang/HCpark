@@ -40,6 +40,9 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+    th,td{
+        text-align: center;
+    }
 </style>
 {/block}
 
@@ -60,6 +63,13 @@
                 </div>
             </form>
             <h2>停车卡审核 (待办数量:{$list.num})</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
@@ -106,13 +116,22 @@
                     <td>
                         {$vo.create_time}
                     </td>
+                    {eq name="$vo.status" value="0"}
+                    <td>未审核</td>
+                    {/eq}
+                    {eq name="$vo.status" value="1"}
+                    <td class="txt-success">已通过</td>
+                    {/eq}
+                    {eq name="$vo.status" value="2"}
+                    <td class="txt-danger">未通过</td>
+                    {/eq}
                     <td>
-                        {$vo.status_text}
-                    </td>
-                    <td>
-                        <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-primary" style="color: #fff">审核</a>
-                        <a  href="{:Url('del','id='.$vo.id)}" class="btn-sm btn-info" style="color: #fff" >删除</a>
-
+                        {if condition="$vo.status eq 0"}
+                        <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-primary" >审核</a>
+                        {else}
+                        <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-primary" >查看</a>
+                        {/if}
+                        <a class="btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                     </td>
                 </tr>
                 {/volist}

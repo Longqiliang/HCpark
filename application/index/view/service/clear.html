@@ -320,7 +320,7 @@
                 if(dateMinute.length == 1){
                     dateMinute = "0"+dateMinute;
                 }
-                var dateValue = value.getFullYear()+"-"+(value.getMonth()+1)+"-"+value.getDate()+" "+value.getHours()+":"+dateMinute;
+                var dateValue = value.getFullYear()+"/"+(value.getMonth()+1)+"/"+value.getDate()+" "+value.getHours()+":"+dateMinute;
                 this.defaultData.dateStr = dateValue;
             },
             orderBtn: function () {

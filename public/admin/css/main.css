@@ -103,3 +103,9 @@
 .zt-space-around{
     justify-content: space-around;
 }
+
+/*可点击文字*/
+.click-text ,.click-text:hover {
+    color: #5eb4ef;
+    text-decoration: underline;
+}
