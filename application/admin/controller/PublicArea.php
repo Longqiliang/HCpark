@@ -12,6 +12,7 @@ use  app\common\model\AdvertisingService;
 use  app\common\model\AdvertisingRecord;
 use  app\common\model\FunctionRoomRecord;
 use  app\common\model\LedRecord;
+use  app\common\behavior\Service;
 
 class PublicArea extends Admin
 {
@@ -108,7 +109,8 @@ class PublicArea extends Admin
                         'time' => strtotime($onetime),
                         'user' => isset($map[0]->findUser->name) ? $map[0]->findUser->name : "未找到",
                         'price' => count($map) * $serviceInfo['price'],
-                        'payment_voucher' => $map[0]['payment_voucher']
+                        'payment_voucher' => $map[0]['payment_voucher'],
+                        'userid' => $info['create_user']
                     ];
 
                     $re['day'] = "";
@@ -157,7 +159,8 @@ class PublicArea extends Admin
                         'time' => strtotime($onetime),
                         'user' => isset($info->findUser->name) ? $info->findUser->name : "未找到",
                         'price' => count($map) * $serviceInfo['price'],
-                        'payment_voucher' => $map[0]['payment_voucher']
+                        'payment_voucher' => $map[0]['payment_voucher'],
+                        'userid' => $info['create_user']
                     ];
                     $re['day'] = "";
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
@@ -224,7 +227,8 @@ class PublicArea extends Admin
                         'time' => strtotime($onetime),
                         'user' => isset($info->findUser->name) ? $info->findUser->name : "未找到",
                         'price' => count($map) * $serviceInfo['price'],
-                        'payment_voucher' => $map[0]['payment_voucher']
+                        'payment_voucher' => $map[0]['payment_voucher'],
+                        'userid' => $info['create_user']
                     ];
                     $re['day'] = "";
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
@@ -306,6 +310,7 @@ class PublicArea extends Admin
                     $value['status'] = 0;
                     $value->save();
                 }
+                $title ="大厅广告位";
                 break;
             case 2:
                 $list = $FunctionRoomRecord->where('create_time', $create_time)->select();
@@ -313,16 +318,23 @@ class PublicArea extends Admin
                     $value['status'] = 0;
                     $value->save();
                 }
-
+                $title ="二楼多功能厅";
                 break;
             case 3:
                 $list = $led->where('create_time', $create_time)->select();
                 foreach ($list as $value) {
                     $value['status'] = 0;
                     $value->save();
+                    $title ="大堂LED屏";
                 }
                 break;
         }
+        $send =new Service();
+
+        $message = "设备服务提示\n您有".$title."\n金额为".input('price')."元\n预约时间为:".input('day')."\n的预约已被取消了，如有疑问请联系";
+        $reult = $send->sendPersonalText($message,input('user'));
+
+
 
           return  $this->success("取消成功");
 

@@ -73,22 +73,23 @@
             <div class="modal-dialog">
                 <div class="modal-content">
 
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h3 class="modal-title text-center"  name="dialog-title">查看凭证</h3>
-                        </div>
-                        <div class="modal-body">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h3 class="modal-title text-center" name="dialog-title">查看凭证</h3>
+                    </div>
+                    <div class="modal-body">
 
-                            <div class="form-group"><label class="col-sm-2 control-label">支付凭证</label>
-                                <div class="col-sm-10 payment-img">
+                        <div class="form-group"><label class="col-sm-2 control-label">支付凭证</label>
+                            <div class="col-sm-10 payment-img">
 
-                                </div>
                             </div>
+                        </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <input type="hidden" name="id" value="">
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="id" value="">
+                    </div>
 
                 </div>
             </div>
@@ -128,13 +129,16 @@
                     <td>
                         {$vo.status}
                     </td>
-                    <td  hidden id="payment_voucher">
+                    <td hidden id="payment_voucher">
                         {$vo.payment_voucher}
                     </td>
                     <td>
                         {eq name="$vo.state" value="2"}
-                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)" data-payment="{$vo.payment_voucher}" class="btn-sm btn-success" style="color: #fff">查看凭证</a>
-                        <a  onclick="cancel(this)" data-time="{$vo.time}"  data-type="{$vo.type}" class="btn-sm btn-primary" style="color: #fff">取消</a>
+                        <a onclick="cancel(this)" data-time="{$vo.time}" data-type="{$vo.type}" data-day='{$vo.day}'
+                           data-price="{$vo.price}" data-user="{$vo.userid}"  class="btn-sm btn-primary"
+                           style="color: #fff">取消</a>
+                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)"
+                           data-payment="{$vo.payment_voucher}" class="btn-sm btn-primary" style="color: #fff">查看凭证</a>
                         {/eq}
                     </td>
                 </tr>
@@ -153,10 +157,10 @@
     function showpayment(a) {
         var $this = $(a);
         console.log($this);
-        var paymentHtml  = $this.parent('td').prev().html();
+        var paymentHtml = $this.parent('td').prev().html();
         paymentHtml = JSON.parse(paymentHtml);
         $(".payment-img").html('');
-        for(var i = 0,length = paymentHtml.length; i < length;i += 1){
+        for (var i = 0, length = paymentHtml.length; i < length; i += 1) {
             var img = new Image();
             img.src = paymentHtml[i];
             $(".payment-img").append(img);
@@ -167,22 +171,25 @@
     }
 
     function cancel(a) {
-      var data ={
-         "type":$(a).attr('data-type'),
-         "create_time" :$(a).attr('data-time')
-      }
+        var data = {
+            "type": $(a).attr('data-type'),
+            "create_time": $(a).attr('data-time'),
+            "user": $(a).attr('data-user'),
+            "price": $(a).attr('data-price'),
+            "day": $(a).attr('data-day'),
+        }
         $.ajax({
             data: data,
             type: "POST",
             url: "{:Url('PublicArea/cancel')}",
-            success: function(data) {
-                if(data.code=1){
-                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
-                    setTimeout(function(){
-                        location.href=data.url;
-                    },3000);
-                }else {
-                    updateAlert(data.msg,'error');
+            success: function (data) {
+                if (data.code = 1) {
+                    updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
+                    setTimeout(function () {
+                        location.href = data.url;
+                    }, 3000);
+                } else {
+                    updateAlert(data.msg, 'error');
                 }
             }
 
@@ -191,12 +198,12 @@
 
     }
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
-        $(".check-all").on("ifChanged",function(){
+        $(".check-all").on("ifChanged", function () {
             $("tbody").find(".ids").iCheck("toggle");
         });
     });

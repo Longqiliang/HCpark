@@ -82,7 +82,9 @@
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">帖子图片:</label>
                         {volist name="res.img" id="re"}
-                        <img width="200px" height="200px" src="{$re}">
+                        <a href="{$res}" class="front_cover">
+                            <img width="200px" height="200px" src="{$re}">
+                        </a>
                         {/volist}
                     </div>
                     {if condition="$res.status lt  2"}
@@ -122,7 +124,14 @@
 <script>
     highlight_subnav("{:Url('communication/index')}");
 
-
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
     function getStatus(a,b){
         $.ajax({
             data:{id:a,uid:b},

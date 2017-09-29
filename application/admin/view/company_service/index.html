@@ -119,11 +119,11 @@
                     {eq name="$vo.status" value="0"}
                     <td>
                         <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',0)">联系</button>
-                        <button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button>
+                        <button class="btn btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button>
                     </td>
                     {/eq}
                     {eq name="$vo.status" value="1"}
-                    <td><button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button></td>
+                    <td><button class="btn btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button></td>
                     <!--<td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>-->
                     {/eq}
                 </tr>

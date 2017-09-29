@@ -96,11 +96,11 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                            <span>{$vo.title}</span>
+                            <a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.title}</a>
                         </div>
                     </td>
                     <td><span>{$vo.source}</span></td>
-                    <td class="text-content"><a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.content|strip_tags|msubstr=0,80}</a></td>
+                    <td class="text-content"><span>{$vo.content|strip_tags|msubstr=0,50}</span></td>
                     <td >
                         {gt name="$vo.type" value="1"}
                             {eq name="$vo.type" value="2"}

@@ -40,7 +40,13 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
-
+    table tr,th{
+        text-align: center;
+    }
+    td:last-child{
+        text-align: left;
+        margin-left: 10%;
+    }
 </style>
 {/block}
 
@@ -67,12 +73,13 @@
 
                 <thead>
                 <tr>
-                    <th style="width:10%"></th>
-                    <th style="width:20%">联系人</th>
-                    <th style="width:20%">联系电话</th>
-                    <th style="width:20%">房间号</th>
-                    <th style="width:15%">备注</th>
-                    <th style="width:15%">状态</th>
+                    <th ></th>
+                    <th >联系人</th>
+                    <th>联系电话</th>
+                    <th >房间号</th>
+                    <th >备注</th>
+                    <th >状态</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -96,11 +103,20 @@
 
                     <td>
                         {eq name="$vo.status" value ="1"}
-                        <a  href="javascript:void(0)" class="btn-sm btn-primary" onclick="changeState('{$vo.id}')">{$vo.status_text}</a>
+                        <span>未联系</span>
                         {else/}
-                        <span>{$vo.status_text}</span>
+                        <span class="txt-success">已联系</span>
                         {/eq}
 
+                    </td>
+                    <td>
+                        <div class="col-md-5 col-sm-1"></div>
+                        {eq name="$vo.status" value ="1"}
+                        <a  href="javascript:void(0)" class="btn-sm btn-primary" onclick="changeState('{$vo.id}')">联系</a>
+                        <a  href="javascript:void(0)" class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+                        {else/}
+                        <a  href="javascript:void(0)" class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+                        {/eq}
                     </td>
                 </tr>
                 {/volist}

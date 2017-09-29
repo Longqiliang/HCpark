@@ -99,7 +99,6 @@
                         <div class="modal-footer">
                             <button class="btn btn-primary ajax-post" type="submit" target-form="form-horizontal">保存</button>
                             <input type="hidden" name="id" value="">
-
                         </div>
                     </form>
                 </div>
@@ -107,7 +106,6 @@
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
-
                 <thead>
                 <tr>
                     <th></th>
@@ -138,12 +136,13 @@
                         {$vo.park_id_text}
                     </td>
                     <td>
-                        <a href="javascript:void(0) " class="btn-sm btn-primary" style="color:#fff">{$vo.status_text}</a>
+                        <span>{$vo.status_text}</span>
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-groupname="{$vo.group_name}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"    class="btn-sm btn-primary" style="color:#fff">编辑</a>
-                        <a   href="{:Url('showusers','id='.$vo.id  )}" class="btn-sm btn-info" style="color:#fff">查看成员</a>
                         <a  href="{:Url('showposts','id='.$vo.id  )}" class="btn-sm btn-success" style="color:#fff">查看发帖</a>
+                        <a   href="{:Url('showusers','id='.$vo.id  )}" class="btn-sm btn-success" style="color:#fff">查看成员</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-groupname="{$vo.group_name}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"    class="btn-sm btn-primary" style="color:#fff">编辑</a>
+                        <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
                     </td>
                 </tr>
                 {/volist}

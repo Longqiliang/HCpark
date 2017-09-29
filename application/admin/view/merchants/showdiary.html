@@ -100,7 +100,7 @@
                     </td>
 
                     <td>
-                        {$vo.create_time|| time_format="Y-m"}
+                        {$vo.create_time|| time_format="Y-m-d"}
                     </td>
                     <td>
                         <a data-toggle="modal" title="修改" href="#modal-form" onclick="show(this)" data-content="{$vo.content}" >查看详情</a>
@@ -138,6 +138,6 @@
     function show(a) {
         $("textarea[name='content']").val($(a).attr('data-content'));
     }
-    highlight_subnav("{:Url('Merchanrs/index')}");
+    highlight_subnav("{:Url('merchants/user')}");
 </script>
 {/block}

@@ -142,7 +142,7 @@
 
                     </td>
                     <td>
-                        {$vo.status}
+                        {$vo.status_text}
                     </td>
                     <td>
                         <a   href="{:Url('recordInfo','id='.$vo.id  )}" >查看详情</a>
@@ -258,6 +258,6 @@
         alignment: 'center',       // Position - may be auto OR center.
         allowMultiple: false,
     });
-    highlight_subnav("{:Url('Merchanrs/index')}");
+    highlight_subnav("{:Url('merchants/index')}");
 </script>
 {/block}

@@ -1,6 +1,7 @@
 {extend name="base/common"}
 
 {block name="style"}
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style>
     .ibox-title h5{
         margin-top: 10px;
@@ -209,9 +210,10 @@
                             <div class="col-lg-5">
                                 <div  class="imggroup">
                                     {volist name="$info.payment_voucher" id="vo"}
-                                    <img src="{$vo}" class="img-auto" alt="">
+                                    <a href="{$vo}" class="front_cover">
+                                        <img src="{$vo}" class="img-auto front_cover_img" alt="">
+                                    </a>
                                     {/volist}
-
                                 </div>
                             </div>
                         </div>
@@ -260,8 +262,18 @@
 {/block}
 
 {block name="script"}
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 <script>
-
+    $(function () {
+        $(".front_cover").imgbox({
+            overlayShow: false,
+            hideOnContentClick: true,
+            slideshow: false,
+            theme: 'dark',
+            alignment: 'center',       // Position - may be auto OR center.
+            allowMultiple: false,
+        });
+    });
 
     //通过
     $(".post-put").off('click').on("click",function(){
