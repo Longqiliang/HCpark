@@ -57,8 +57,17 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            <div class=" pull-right tooltip-demo">
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
             <h2>设备服务</h2>
-            <a href="{:Url('index')}"   class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 返回</a>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
         </div>
         <div id="modal-form" class="modal fade" aria-hidden="true">
             <div class="modal-dialog">
@@ -124,8 +133,8 @@
                     </td>
                     <td>
                         {eq name="$vo.state" value="2"}
+                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)" data-payment="{$vo.payment_voucher}" class="btn-sm btn-success" style="color: #fff">查看凭证</a>
                         <a  onclick="cancel(this)" data-time="{$vo.time}"  data-type="{$vo.type}" class="btn-sm btn-primary" style="color: #fff">取消</a>
-                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)" data-payment="{$vo.payment_voucher}" class="btn-sm btn-primary" style="color: #fff">查看凭证</a>
                         {/eq}
                     </td>
                 </tr>

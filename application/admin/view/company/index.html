@@ -14,10 +14,7 @@
         width: 124px !important;
         min-width: 124px;
     }
-    .mail-box .mail-subject>a {
-        color: #5eb4ef;
-        text-decoration: underline;
-    }
+
     .mail-subject-div{
         width: 100px;
         max-width: 100px;
@@ -66,6 +63,7 @@
                     </div>
                 </div>
             </form>
+
             <h2>园区企业 ({$list->total()})</h2>
             <!--<div class="mail-tools tooltip-demo m-t-md">-->
                 <!--&lt;!&ndash;<button type="button" class="btn btn-sm btn-primary" onclick="getCompany()">同步企业信息</button>&ndash;&gt;-->
@@ -89,7 +87,7 @@
                         <!--&lt;!&ndash;<input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">&ndash;&gt;-->
                     <!--</td>-->
                     <td class="mail-subject">
-                            <a href="{:Url('add','id='.$vo.id)}">{$vo.name}</a>
+                            <a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.name}</a>
                     </td>
                     <td>
                         {empty name="$vo.mobile"}暂无
