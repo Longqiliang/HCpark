@@ -103,7 +103,7 @@
                             <span >{$vo.id}</span>
                         </div>
                     </td>
-                    <td><a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.title}</a></td>
+                    <td>{$vo.title}</td>
                     <td><span>{$vo.content|strip_tags|msubstr=0,50}</span></td>
                     <td><span>{$vo.source}</span></td>
                     <td class="text-right mail-date" style="white-space: nowrap"><span>{$vo.create_time}</span></td>
