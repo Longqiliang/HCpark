@@ -68,6 +68,7 @@ class Property extends Admin
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
                     ];
                 }
+                ServiceModel::sendPersonalMessage( $message,$userId);
 
             }elseif ($uid == 2){
                 if ($userType == 4){
@@ -82,12 +83,13 @@ class Property extends Admin
                         "description" => date("m月d日",time())."\n报修服务暂时无法提供\n备注：".$userInfo['check_remark'],
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
                     ];
+                    ServiceModel::sendPersonalMessage( $message,$userId);
                 }
 
             }else{
 
             }
-            ServiceModel::sendPersonalMessage( $message,$userId);
+
             $this->success( $msg);
         }else{
 

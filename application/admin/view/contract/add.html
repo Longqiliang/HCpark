@@ -83,7 +83,6 @@
                                 <div class="del"><img src="/admin/images/delete.png" alt="" width="25px height=25px"></div>
                             </div>
                             {/foreach}
-                            </ul>
                         </div>
 
                         <div class="col-md-2 column">
@@ -201,7 +200,7 @@
                 if (data.code==1){
                     updateAlert(data.msg+" 稍后自动刷新页面～","success");
                     setTimeout(function () {
-                        location.href = data.url;
+                        location.href = "{:Url('Contract/index')}";
                     },2000);
                 }else{
                     updateAlert(data.msg,"info");
@@ -212,7 +211,7 @@
     $('.del').click(function(){
         $(this).parent().remove();
     });
-
+highlight_subnav("{:Url('Contract/index')}");
 </script>
 
 {/block}
