@@ -8401,3 +8401,16 @@ body.md-skin {
 .zt-space-around{
   justify-content: space-around;
 }
+a.under-line{
+  text-decoration: underline;
+  color: #5eb4ef;
+}
+a.under-line:focus{
+  outline: none;
+}
+.txt-success{
+  color: #1ab394;
+}
+.txt-danger{
+  color: #ef6060;
+}
