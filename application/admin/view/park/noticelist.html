@@ -21,17 +21,20 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .mail-box .mail-main{
-        width: calc(100% - 460px);
-        position: absolute;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+    /*.mail-box .mail-main{*/
+        /*width: calc(100% - 460px);*/
+        /*position: absolute;*/
+        /*white-space: nowrap;*/
+        /*overflow: hidden;*/
+        /*text-overflow: ellipsis;*/
+    /*}*/
     .mail-date{
         width: 160px;
         min-width: 160px;
         overflow: hidden;
+    }
+    .mail-main{
+        width: 100%;
     }
     @media only screen and (max-width: 550px){
         .mail-date{
@@ -79,7 +82,7 @@
                     <th style="width: 10%">发布人</th>
                     <th style="width: 40%">内容</th>
                     <th style="width: 20%">创建时间</th>
-
+                    <th style="width: 10%">操作</th>
                 </tr>
                 </thead>
 
@@ -91,13 +94,17 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                            <a href="{:Url('notice','id='.$vo.id)}">{$vo.title}</a>
+                            {$vo.title}
                         </div>
                     </td>
-                    <td><a href="{:Url('notice','id='.$vo.id)}">{$vo.source}</a></td>
-                    <td><a href="{:Url('notice','id='.$vo.id)}"><div class="mail-main">{$vo.content|strip_tags|msubstr=0,30}</div></a></td>
+                    <td>{$vo.source}</td>
+                    <td><div class="mail-main">{$vo.content|strip_tags|msubstr=0,30}</div></td>
 
                     <td class="text-left mail-date">{$vo.create_time}</td>
+                    <td>
+                        <a href="{:Url('notice','id='.$vo.id)}" class="btn-sm btn-success">编辑</a>
+                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrashss')}?page_type=1')">删除</a>
+                    </td>
                 </tr>
                 {/volist}
                 </tbody>

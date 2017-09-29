@@ -5,6 +5,10 @@
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+    label{
+        font-size: 16px;
+        margin: 0 10px ;
+    }
 </style>
 {/block}
 
@@ -21,7 +25,7 @@
         <div class="mail-box">
             <form class="form-horizontal" method="post">
                 <div class="mail-body">
-                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;园区名称:</h3></label>
+                    <div class="form-group"><label class="col-md-2 text-right"><h3>&nbsp;&nbsp;&nbsp;&nbsp;园区名称:</h3></label>
                         <div class="col-sm-3"><input type="text" class="form-control"   value="{$parkName}" readonly></div>
                         <div class="col-sm-4">
                             <select name="build_block" id="" style="width: 100px;height: 30px;">
@@ -32,18 +36,20 @@
                     </div>
 
                     <br>
-                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;楼层:</h3></label>
-                        <div class="col-sm-1">
-                            <input type="text" class="form-control" style="width: 110px" name="floor" value="{$info.floor}">
+                    <div class="form-group"><label class="col-md-2 text-right "><h3>&nbsp;&nbsp;&nbsp;&nbsp;楼层:</h3></label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control inline" style="width: 110px" name="floor" value="{$info.floor}">
+                            <label>楼</label>
                         </div>
-                        <label class="col-md-1 " style="width: 40px"><h3>楼</h3></label>
-                        <div class="col-sm-1">
-                            <input type="text" class="form-control"  style="width: 110px" name="room" value="{$info.room}">
+                        <!--<label class="col-md-1 text-left" style="width: 40px"><h3>楼</h3></label>-->
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control inline"  style="width: 110px" name="room" value="{$info.room}">
+                            <label>室</label>
                         </div>
-                        <label class="col-md-1 "><h3>室</h3></label>
+                        <!--<label class="col-md-1 text-left"></label>-->
                     </div>
                     <br>
-                    <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;企业名称:</h3></label>
+                    <div class="form-group"><label class="col-md-2 text-right "><h3>&nbsp;&nbsp;&nbsp;&nbsp;企业名称:</h3></label>
                         <div class="col-sm-4"><input type="text" class="form-control"  name="company_id" value="{$info.company}" placeholder="填写入住企业详细名称，未租请勿填写"></div>
                     </div>
                 </div>
