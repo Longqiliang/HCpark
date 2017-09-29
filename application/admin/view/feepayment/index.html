@@ -40,7 +40,9 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
-
+    th,td{
+        text-align: center;
+    }
 </style>
 {/block}
 
@@ -68,7 +70,7 @@
 
                 <thead>
                 <tr>
-                    <th style="width:10%"></th>
+                    <!--<th style="width:10%"></th>-->
                     <th style="width:30%">企业名称</th>
                   <!--  <th style="width:15%">费用类型</th>
                     <th style="width:15%">费用金额</th>-->
@@ -80,11 +82,11 @@
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr class="read">
-                    <td class="check-mail">
-                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
-                    </td>
+                    <!--<td class="check-mail">-->
+                        <!--<input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">-->
+                    <!--</td>-->
                     <td class="mail-subject">
-                        <a href="{:Url('add','id='.$vo.id)}">{$vo.name}</a>
+                        <span>{$vo.name}</span>
                     </td>
                     <td>
                         <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-info" style="color:#fff">点击进入</a>

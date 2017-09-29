@@ -115,14 +115,16 @@
             <form class="form-horizontal" method="post" action="update">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h3 class="modal-title text-center">备注信息</h3>
+                    <h3 class="modal-title text-center">审核</h3>
                 </div>
                 <div class="modal-body">
+                    <p class="text-center zt-big-padding">是否通过审核？</p>
+
                     <div class="form-group"><label class="col-sm-2 control-label">备注</label>
                         <div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-12 text-center">
+                        <div class="col-sm-12 text-center zt-flex zt-space-around">
                             <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
                             <a class="btn btn-primary " onclick="changeStatus('',1)">审核通过</a>
                             <a class="btn btn-warning " onclick="changeStatus('',2)">审核不通过</a>
