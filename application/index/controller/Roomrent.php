@@ -321,11 +321,11 @@ class Roomrent extends Base
                 $message = [
                     "title" => "租房服务提示",
                     "description" =>  "您有新的租房申请，请点击查看。",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/id/'.$people->getLastInsID()
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/type/1/id/'.$people->getLastInsID()
                 ];
                 //推送给运营
                 $service =new Service();
-                $reult = $service->commonSend(1, $message);
+                $reult = $service->commonSend2(1, $message);
                 if ($reult) {
                     $this->success('提交成功', '', $msg);
                 } else {
