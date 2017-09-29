@@ -40,6 +40,9 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+    th,td{
+        text-align: center;
+    }
 </style>
 {/block}
 
@@ -86,8 +89,9 @@
                     <td>
                         {eq name="$vo.status" value="0"}
                         <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
-                        <a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>
-                        <a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>
+                        <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>-->
+                        <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>-->
+                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
                         <button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',-1)">删除</button>
                         {/eq}
@@ -107,14 +111,19 @@
             <form class="form-horizontal" method="post" action="update">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h3 class="modal-title text-center">备注信息</h3>
+                    <h3 class="modal-title text-center">审核</h3>
                 </div>
                 <div class="modal-body">
+                    <p class="text-center zt-big-padding">是否通过审核？</p>
                     <div class="form-group"><label class="col-sm-2 control-label">备注</label>
                         <div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-10"><input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;"></div>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center zt-flex zt-space-around">
+                            <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+                            <a class="btn btn-primary " onclick="changeStatus('',1)">审核通过</a>
+                            <a class="btn btn-warning " onclick="changeStatus('',2)">审核不通过</a>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -164,13 +173,21 @@
     }
     /*修改服务状态值*/
     function changeStatus(id,uid){
-        if(!uid) {
-            var id = $("input[name='is_id']").val();
-            var uid = $("input[name='is_uid']").val();
-            var str = $("input[name='check_remark']").val();
+        var data={};
+        if(uid!=-1){
+            data={
+                id : $("input[name='is_id']").val(),
+                del : uid,
+                check_remark : $("input[name='check_remark']").val()
+            }
+        }else{
+            data={
+                id:id,
+                del:uid
+            }
         }
         $.ajax({
-            data:{id:id,del:uid,check_remark:str},
+            data:data,
             type:"POST",
             url:"{:Url('Property/changeStatus')}",
             success:function (data){
