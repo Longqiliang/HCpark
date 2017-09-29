@@ -33,6 +33,9 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            <div class="pull-right tooltip-demo" style="margin-left: 20px">
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
             <form method="get" action="{:Url('Communication/showposts')}" class="pull-right mail-search">
                 <div class="input-group">
                     <input type="text" class="form-control input-sm" name="search" placeholder="搜索帖子" value="{$search}">
@@ -42,6 +45,7 @@
                     </div>
                 </div>
             </form>
+
             <h2>查看发帖</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
@@ -95,7 +99,8 @@
                         {$vo.status_text}
                     </td>
                     <td>
-                        <a   href="{:Url('detail','id='.$vo.id  )}"  class="btn-sm btn-primary" style="color: #fff">详情</a>
+                        <a   href="{:Url('detail','id='.$vo.id  )}"  class="btn-sm btn-success" style="color: #fff">查看详情</a>
+                        <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
                     </td>
                 </tr>
                 {/volist}

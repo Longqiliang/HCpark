@@ -33,11 +33,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <div class="pull-right tooltip-demo">
-                <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
-                <!--target-form="form-horizontal" data-edit="content">-->
-                <!--<i class="fa fa-pencil"></i> 保存草稿-->
-                <!--</button>-->
+            <div class="pull-right tooltip-demo" style="margin-left: 20px">
                 <a href="javascript:history.go(-1)" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
                         class="fa fa-times"></i> 关闭</a>
             </div>
@@ -150,7 +146,7 @@
                         {$vo.status_text}
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-username="{$vo.user_name}"  data-mobile="{$vo.mobile}"   data-company="{$vo.company}"  data-status="{$vo.status}"   data-remark="{$vo.remark}"class="btn-sm btn-info" style="color: #fff" >审核</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-username="{$vo.user_name}"  data-mobile="{$vo.mobile}"   data-company="{$vo.company}"  data-status="{$vo.status}"   data-remark="{$vo.remark}"class="btn-sm btn-success" style="color: #fff" >审核</a>
 
                     </td>
                 </tr>
