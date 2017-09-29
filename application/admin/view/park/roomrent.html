@@ -79,6 +79,7 @@
                     <th style="width:15%">房间号</th>
                     <th>面积</th>
                     <th>价格</th>
+                    <th>状态</th>
                     <th style="min-width:10%;max-width: 20%">操作</th>
                 </tr>
                 </thead>
@@ -100,6 +101,13 @@
                     </td>
                     <td>
                         <a href="{:Url('addrent','id='.$vo.id)}">{$vo.price}元/㎡·天</a>
+                    </td>
+                    <td>
+                        {eq name="$vo.manage" value="0"}
+                        <a href="{:Url('addrent','id='.$vo.id)}">已上架</a>
+                        {else/}
+                            <a href="{:Url('addrent','id='.$vo.id)}">已下架</a>
+                        {/eq}
                     </td>
                     <td>
                         {eq name="$vo.manage" value="0"}
