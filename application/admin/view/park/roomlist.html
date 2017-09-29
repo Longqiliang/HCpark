@@ -89,18 +89,16 @@
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
                     <td>
-                        <a href="{:Url('roommanage','id='.$vo.id)}">{$parkName}{$vo.build_block}幢</a>
+                        {$parkName}{$vo.build_block}幢
                     </td>
                     <td>
-                        <a href="{:Url('roommanage','id='.$vo.id)}">{$vo.floor}楼{$vo.room}室</a>
+                        {$vo.floor}楼{$vo.room}室
                     </td>
                     <td class="mail-subject">
-                        <a href="{:Url('roommanage','id='.$vo.id)}">
                             {$vo.company}{empty name="$vo.company"}待租{/empty}
-                        </a>
                     </td>
                     <td>
-                        <a  href="{:Url('roommanage','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">查看信息</a>
+                        <a  href="{:Url('roommanage','id='.$vo.id)}" class="btn-sm btn-primary">查看信息</a>
                     </td>
                 </tr>
                 {/volist}
