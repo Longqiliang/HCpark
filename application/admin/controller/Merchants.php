@@ -119,6 +119,7 @@ class Merchants extends Admin
         foreach ($list as $value) {
             $value['merchants_date'] = !empty($value['merchants_date']) ? date('Y-m-d', $value['merchants_date']) : "";
             $value['create_time'] = !empty($value['create_time']) ? date('Y-m-d', $value['create_time']) : "";
+            $value['status_text']= $value['status']==1?"招商中":"已招商";
         }
         $this->assign('list', $list);
         return $this->fetch();
