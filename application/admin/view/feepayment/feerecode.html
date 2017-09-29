@@ -89,12 +89,12 @@
                         {$vo.expiration_time}
                     </td>
                     <td>
-                        {eq name="$vo.status" value="0"}
+                        {lt name="$vo.status" value="2"}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-primary" style="color: #fff;">查看凭证</a>
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form1" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
                         <span>{$vo.status_text}</span>
-                        {/eq}
+                        {/lt}
 
                     </td>
 

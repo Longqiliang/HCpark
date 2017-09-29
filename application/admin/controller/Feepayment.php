@@ -144,7 +144,7 @@ class Feepayment extends Admin
         $type = [1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"];
         $id = input('id');
         $uid = input('uid');
-        $userId = [];
+        $userId = "";
         $feepayment = new FeePaymentModel();
         $res = $feepayment->where('id', $id)->update(['status' => $uid]);
         $feeInfo = $feepayment->where('id',$id)->find();
@@ -153,7 +153,7 @@ class Feepayment extends Admin
             $userList = WechatUser::where(['department'=> $feeInfo['company_id'],'fee_status'=>1])->select();
             if($userList){
                 foreach ($userList as $k=>$v){
-                    $userId[$k] = $v['userid'];
+                    $userId .= '|'.$v['userid'];
                 }
             }
             if ($uid ==2){
@@ -162,14 +162,16 @@ class Feepayment extends Admin
                     "description" => date('m月d日', time()) . "\n您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元确认成功。",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$id,
                 ];
-                if (!empty($userId)){
-                    foreach ($userId as $k=>$v){
-                        Service::sendPersonalMessage( $message,$v);
-                    }
-                }
-
             }else{
+                $message = [
+                    "title" => "费用缴纳提示",
+                    "description" => date('m月d日', time()) . "\n您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元审核失败。",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$id,
+                ];
 
+            }
+            if (!empty($userId)){
+                Service::sendPersonalMessage( $message,$userId);
             }
 
             return $this->success("审核成功， 稍后自动刷新页面~");
@@ -189,7 +191,7 @@ class Feepayment extends Admin
         $company = ParkCompany::get($id);
         $list = $feepayment->where(['company_id' => $id])->order('id desc')->paginate();
         int_to_string($list, ['type' => [1 => "水电费", 2 => "物业费", 3 => "房租费", 4 => "公耗费"],
-            'status' => [-1 => "删除", 0 => "未缴费", 1 => "审核中", 2 => "审核成功",3=>"审核失败"]]);
+            'status' => [-1 => "删除", 0 => "进行中", 1 => "审核中", 2 => "审核成功",3=>"审核失败"]]);
 
         $this->assign('company', $company);
         $this->assign('list', $list);
