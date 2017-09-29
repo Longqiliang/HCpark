@@ -7,18 +7,18 @@
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
     .image{
-        padding-top: 10px;
+       padding: 0px;
     }
     .del{
         position: absolute;
-        left:140px;
-        top:-10px;
+        left:120px;
+        top:5px;
     }
     .parent{
-        margin-top: 20px;
         box-sizing: border-box;
         position:relative ;
-        padding-right: 10px
+        padding-right: 10px;
+        margin-bottom: 20px;
     }
 </style>
 {/block}
@@ -76,8 +76,8 @@
                     <div class="form-group ">
                         <div class="col-sm-6 image" >
                             {foreach name="img" item="vo"}
-                            <div class="col-sm-3"  class="parent">
-                                <img src="{$vo}" alt="" style='width: 130px;max-height: 200px;' class="img">
+                            <div class="col-sm-3 parent"  >
+                                <img src="{$vo}" alt="" style='width: 130px;height: 200px;' class="img" >
                                 <div class="del"><img src="/admin/images/delete.png" alt="" width="20px" height="20px"></div>
                             </div>
                             {/foreach}
@@ -122,8 +122,8 @@
     }).on('fileuploaded', function(event, data, previewId, index) {
         var response = $.parseJSON(data.response);
         if(response.code == 1) {
-            var html = "<div class='col-sm-3 parent'>" +
-                "<img src='"+response.data+"' alt='' style='width: 130px;height: 200px;margin-right: 10px' class='img'>" +
+            var html = "<div class='col-sm-3  parent'>" +
+                "<img src='"+response.data+"' alt='' style='width: 130px;height: 200px;' class='img'>" +
                 " <div class='del'><img src='/admin/images/delete.png' alt='' width='20px' height='20px'></div>"
             "</div>";
             $('.image').append(html);
