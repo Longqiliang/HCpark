@@ -8401,11 +8401,18 @@ body.md-skin {
 .zt-space-around{
   justify-content: space-around;
 }
+
+
+/*可点击文字*/
+.click-text ,.click-text:hover{
+  color: #5eb4ef;
+  text-decoration: underline;
+}
 a.under-line{
   text-decoration: underline;
   color: #5eb4ef;
 }
-a.under-line:focus{
+a.under-line:focus,a.under-line:focus{
   outline: none;
 }
 .txt-success{

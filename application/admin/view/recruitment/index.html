@@ -40,6 +40,10 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+    th,td{
+        text-align: center;
+        vertical-align: middle;
+    }
 </style>
 {/block}
 
@@ -84,8 +88,9 @@
                     <th>招聘人数</th>
                     <th>提供薪资</th>
                     <th>招聘内容</th>
-                    <th>状态</th>
                     <th>创建时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
 
@@ -99,27 +104,29 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                            <a href="{:Url('add','id='.$vo.id)}">{$vo.id}</a>
+                            <span>{$vo.id}</span>
                         </div>
                     </td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.position}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.company}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.source}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.education}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.experience}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.number}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.wages}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.content|strip_tags|msubstr=0,40}</a></td>
-
+                    <td><spana>{$vo.position}</spana></td>
+                    <td><span>{$vo.company}</span></td>
+                    <td><span>{$vo.source}</span></td>
+                    <td><span>{$vo.education}</span></td>
+                    <td><span>{$vo.experience}</span></td>
+                    <td><span>{$vo.number}</span></td>
+                    <td><span>{$vo.wages}</span></td>
+                    <td><a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.content|strip_tags|msubstr=0,20}</a></td>
+                    <td class="text-right mail-date" style="white-space: nowrap"><a href="{:Url('add','id='.$vo.id)}">{$vo.create_time}</a></td>
 
                     {eq name="$vo.status" value="1"}
-                    <td><span class="label label-info">启用</span></td>
+                    <td><span >启用</span></td>
                     {/eq}
                     {eq name="$vo.status" value="0"}
-                    <td><span class="label label-danger">禁用</span></td>
+                    <td><span>禁用</span></td>
                     {/eq}
-
-                    <td class="text-right mail-date" style="white-space: nowrap"><a href="{:Url('add','id='.$vo.id)}">{$vo.create_time}</a></td>
+                    <td>
+                        <a href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-success">编辑</a>
+                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
+                    </td>
 
                 </tr>
                 {/volist}

@@ -63,29 +63,40 @@
                 </div>
             </form>
             <h2>物业服务 ({$list->total()})</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>服务类型</th>
                     <th>服务地点</th>
                     <th>联系人员</th>
                     <th>联系方式</th>
                     <th>备注</th>
                     <th>状态</th>
-                    <th>编辑</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr class="read">
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                    </td>
                     <td>{$vo.type_text}</td>
                     <td>{$vo.address}</td>
                     <td>{$vo.name}</td>
                     <td>{$vo.mobile}</td>
-                    <td>{$vo.extra}</td>
-                    <th>{$vo.status_text}</th>
+                    <td class="">{$vo.extra | msubstr=0,60}</td>
+                    <td>{$vo.status_text}</td>
                     <td>
                         {eq name="$vo.status" value="0"}
                         <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
@@ -93,7 +104,7 @@
                         <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>-->
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
-                        <button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',-1)">删除</button>
+                        <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                         {/eq}
 
                     </td>
@@ -114,16 +125,16 @@
                     <h3 class="modal-title text-center">审核</h3>
                 </div>
                 <div class="modal-body">
-                    <p class="text-center zt-big-padding">是否通过审核？</p>
-                    <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                    <div class="clear">
+                        <label class="col-sm-2 control-label">备注</label>
                         <div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-12 text-center zt-flex zt-space-around">
-                            <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
-                            <a class="btn btn-primary " onclick="changeStatus('',1)">审核通过</a>
-                            <a class="btn btn-warning " onclick="changeStatus('',2)">审核不通过</a>
-                        </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-12 text-center zt-flex zt-space-around">
+                        <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+                        <a class="btn btn-primary " onclick="changeStatus('',1)">审核通过</a>
+                        <a class="btn btn-warning " onclick="changeStatus('',2)">审核不通过</a>
                     </div>
                 </div>
             </form>
@@ -156,6 +167,48 @@
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script>
+    function delItem(id) {
+        swal({
+            title: "",
+            text: "是否确认删除？",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef6060",
+            confirmButtonText: "确认",
+            cancelButtonText:'取消',
+            closeOnConfirm: false
+        }, function(){
+            $.ajax({
+                data:{
+                    del:-1,
+                    id:id
+                },
+                type:"POST",
+                url:"{:Url('Property/changeStatus')}",
+                success:function (data){
+                    if(data.code==1){
+                        swal({
+                            title: "",
+                            text: data.msg,
+                            type: "success",
+                            confirmButtonColor: "#1ab394",
+                            confirmButtonText: "确认",
+                        });
+                        window.location.reload();
+                    }else{
+                        swal({
+                            title: "",
+                            text: data.msg,
+                            type: "warning",
+                            confirmButtonColor: "#ef6060",
+                            confirmButtonText: "确认",
+                        });
+                    }
+                }
+            })
+        });
+
+    }
     $(document).ready(function(){
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',

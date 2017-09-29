@@ -40,6 +40,9 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+    th  ,td{
+        text-align: center;
+    }
 </style>
 {/block}
 
@@ -60,6 +63,13 @@
                 </div>
             </form>
             <h2>充电柱审核 (待办数量:{$list.num})</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
