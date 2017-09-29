@@ -67,14 +67,15 @@
 
                 <thead>
                 <tr>
-                    <th style="width:10%"></th>
-                    <th style="width:10%">联系人</th>
-                    <th style="width:20%">联系电话</th>
-                    <th style="width:15%">面积要求</th>
-                    <th style="width:10%">租房时间</th>
-                    <th style="width:15%">单价范围</th>
-                    <th style="width:10%">创建时间</th>
-                    <th style="width:15%">操作</th>
+                    <th ></th>
+                    <th >联系人</th>
+                    <th >联系电话</th>
+                    <th >面积要求</th>
+                    <th >租房时间</th>
+                    <th >单价范围</th>
+                    <th >创建时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -101,14 +102,20 @@
                     <td>
                         {$vo.create_time}
                     </td>
-
                     <td>
                         {eq name="$vo.status" value="0"}
-                            <a  href="javascript:void(0)" class="btn-sm btn-primary" style="color:#fff" onclick="changeState('{$vo.id}')">未联系</a>
+                       未联系
                         {else/}
-                            <a  href="javascript:void(0)" class="btn-sm btn-primary" style="color:#fff" >已联系</a>
+                        <span class="txt-success">已联系</span>
                         {/eq}
-
+                    </td>
+                    <td>
+                        {eq name="$vo.status" value="0"}
+                            <a  href="javascript:void(0)" class="btn-sm btn-primary" onclick="changeState('{$vo.id}')">联系</a>
+                            <a class="btn-sm btn-info " onclick="delItem('{$vo.id}','{:Url('moveToTrashsss')}')">删除</a>
+                        {else/}
+                           <a type="button" class="btn-sm btn-info " onclick="delItem('{$vo.id}','{:Url('moveToTrashsss')}')">删除</a>
+                        {/eq}
                     </td>
                 </tr>
                 {/volist}

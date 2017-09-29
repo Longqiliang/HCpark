@@ -103,7 +103,15 @@
                     <td>{$vo.name}</td>
                     <td>{$vo.mobile}</td>
                     <td><a class="click-text"  data-toggle="modal" data-target="#remark-modal" data-text="{$vo.extra}">{$vo.extra | msubstr=0,60}</a></td>
-                    <td>{$vo.status_text}</td>
+                    {eq name="$vo.status" value="0"}
+                    <td>未审核</td>
+                    {/eq}
+                    {eq name="$vo.status" value="1"}
+                    <td class="txt-success">审核成功</td>
+                    {/eq}
+                    {eq name="$vo.status" value="2"}
+                    <td class="txt-danger">审核失败</td>
+                    {/eq}
                     <td>
                         {eq name="$vo.status" value="0"}
                         <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
