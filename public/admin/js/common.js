@@ -312,3 +312,47 @@ function warning(opts){
         toastr['warning'](opts.msg);
     }
 }
+
+//删除
+function delItem(id,href) {
+    console.log(id);
+    if(!id || !href || id== ''|| href == ''){
+        return;
+    }
+    swal({
+        title: "",
+        text: "是否确认删除？",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#ef6060",
+        confirmButtonText: "确认",
+        cancelButtonText:'取消',
+        closeOnConfirm: false
+    }, function(){
+        $.ajax({
+            data:{ids:[id]},
+            type:"POST",
+            url:href,
+            success:function (data){
+                if(data.code==1){
+                    swal({
+                        title: "",
+                        text: data.msg,
+                        type: "success",
+                        confirmButtonColor: "#1ab394",
+                        confirmButtonText: "确认"
+                    });
+                    window.location.reload();
+                }else{
+                    swal({
+                        title: "",
+                        text: data.msg,
+                        type: "warning",
+                        confirmButtonColor: "#ef6060",
+                        confirmButtonText: "确认"
+                    });
+                }
+            }
+        })
+    });
+}
