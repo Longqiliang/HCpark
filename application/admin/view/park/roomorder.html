@@ -95,7 +95,12 @@
                     </td>
 
                     <td>
-                        <a  href="javascript:void(0)" class="btn-sm btn-primary" style="color:#fff"  {eq name="$vo.status" value ="1"}onclick="changeState('{$vo.id}')"{/eq}>{$vo.status_text}</a>
+                        {eq name="$vo.status" value ="1"}
+                        <a  href="javascript:void(0)" class="btn-sm btn-primary" onclick="changeState('{$vo.id}')">{$vo.status_text}</a>
+                        {else/}
+                        <span>{$vo.status_text}</span>
+                        {/eq}
+
                     </td>
                 </tr>
                 {/volist}

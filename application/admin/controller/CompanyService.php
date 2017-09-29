@@ -65,10 +65,10 @@ class CompanyService extends Admin
         $result = CompanyServiceModel::where('id', 'in', $id)->update(['status' => 1]);
         if ($result){
 
-            $this->success("已审核");
+            $this->success("已联系");
         }else{
 
-            $this->error("未成功");
+            $this->error("失败");
         }
     }
 

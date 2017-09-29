@@ -86,3 +86,20 @@
 .pager { margin: 0 }
 /*.pagination { margin: 0}*/
 .pager li>a, .pager li>span {border-radius: 3px}
+
+
+/*padding*/
+.zt-big-padding{
+    padding:40px 0;
+}
+/*flex*/
+.zt-flex{
+    display: -webkit-box;  /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+    display: -moz-box;     /* 老版本语法: Firefox (buggy) */
+    display: -ms-flexbox;  /* 混合版本语法: IE 10 */
+    display: -webkit-flex; /* 新版本语法: Chrome 21+ */
+    display: flex;         /* 新版本语法: Opera 12.1, Firefox 22+ */
+}
+.zt-space-around{
+    justify-content: space-around;
+}

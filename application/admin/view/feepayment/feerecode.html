@@ -55,12 +55,14 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            <div class=" pull-right tooltip-demo">
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
             <h2>{$company.name}</h2>
 
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
-
                 <thead>
                 <tr>
                     <th style="width:10%"></th>
@@ -89,10 +91,9 @@
                     <td>
                         {eq name="$vo.status" value="0"}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-primary" style="color: #fff;">查看凭证</a>
-                        <a href="#" class="btn-sm btn-primary" onclick="changeState('{$vo.id}',2)" style="color:#fff">审核通过</a>
-                        <a href="#" class="btn-sm btn-success" onclick="changeState('{$vo.id}',3)" style="color:#fff">审核不通过</a>
+                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form1" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
-                        <button class="btn-sm btn-info" >{$vo.status_text}</button>
+                        <span>{$vo.status_text}</span>
                         {/eq}
 
                     </td>
@@ -103,6 +104,30 @@
                 </tbody>
             </table>
             <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+<div id="modal-form1" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="update">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">审核</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center zt-big-padding">是否通过审核？</p>
+                    <!--<div class="form-group"><label class="col-sm-2 control-label">备注</label>-->
+                        <!--<div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>-->
+                    <!--</div>-->
+                    <div class="form-group">
+                        <div class="col-sm-12 zt-flex zt-space-around">
+                            <a class="btn btn-primary " onclick="changeState(2)">审核通过</a>
+                            <a class="btn btn-warning " onclick="changeState(3)">审核不通过</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -125,6 +150,7 @@
         </div>
     </div>
 </div>
+<input type="hidden" name="is_id" value="">
 {/block}
 
 {block name="script"}
@@ -139,9 +165,9 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
-    function changeState(id,uid) {
+    function changeState(uid) {
         $.ajax({
-            data:{id:id,uid:uid},
+            data:{id:$("input[name='is_id']").val(),uid:uid},
             type:"post",
             url:"{:Url('Feepayment/changeState')}",
             success:function (data) {
@@ -155,6 +181,11 @@
                 }
             }
         });
+    }
+    //增加模态框后的修改；
+    function changestates(id) {
+        $("input[name='check_remark']").val("");
+        $("input[name='is_id']").val(id);
     }
     function showImage(id) {
         $.ajax({
