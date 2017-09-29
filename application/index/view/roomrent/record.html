@@ -152,7 +152,7 @@
         border-bottom: none;
     }
     .btn-primary{
-        background-color: #7DB8F2;
+        background-color: #52CC92;
     }
     .card{
         padding-bottom: 1rem;
@@ -175,7 +175,7 @@
         margin:0;
     }
     .btn-warning{
-        background-color: #52CC92;
+        background-color: #ff6f60;
     }
 </style>
 {/block}
@@ -245,7 +245,7 @@
         </div>
     </div>
     <div class="rent-btn-box"  v-if="info.type==1 && info.status==1">
-        <button class="btn btn-block btn-green" @click="showRent">是否已联系？</button>
+        <button class="btn btn-block btn-green" @click="showRent">确认联系</button>
     </div>
     <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
@@ -254,10 +254,10 @@
                 <!--<p>备注信息</p>-->
                 <!--<textarea v-model="subData.check_remark"></textarea>-->
             <!--</div>-->
-            <p>是否已联系？</p>
+            <p>如果已联系过客户，请选择确认。</p>
             <div class="table-view-cell group-cell btn-box" >
-                <button class="group-btn btn-warning btn" @click="hideRent">未联系</button>
-                <button class="group-btn btn-primary btn" @click="subRent">已联系</button>
+                <button class="group-btn btn-warning btn" @click="hideRent">取消</button>
+                <button class="group-btn btn-primary btn" @click="subRent">确认</button>
             </div>
             <div class="cancel" @click="hideRent">
                 <span><i class="iconfont hc-cha1"></i></span>
