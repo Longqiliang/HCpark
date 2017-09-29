@@ -2,22 +2,11 @@
 
 {block name="style"}
 <style>
-    a.under-line{
-        text-decoration: underline;
-        color: #5eb4ef;
-    }
-    a.under-line:focus{
-        outline: none;
-    }
+
     .modal-dialog{
         margin: 200px auto;
     }
-    .txt-success{
-        color: #1ab394;
-    }
-    .txt-danger{
-        color: #ef6060;
-    }
+
     .mail-box .mail-ontact{
         width: 150px;
         min-width: 150px;
@@ -131,11 +120,11 @@
                     {eq name="$vo.status" value="0"}
                     <td>
                         <button class="btn btn-sm btn-primary " onclick="changeStatus('{$vo.id}',0)">联系</button>
-                        <button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}')">删除</button>
+                        <button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button>
                     </td>
                     {/eq}
                     {eq name="$vo.status" value="1"}
-                    <td><button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</button></td>
+                    <td><button class="btn btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button></td>
                     <!--<td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>-->
                     {/eq}
                 </tr>
