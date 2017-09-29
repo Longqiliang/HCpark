@@ -96,18 +96,23 @@
                     <td>{$vo.name}</td>
                     <td>{$vo.mobile}</td>
                     <td class="">{$vo.extra | msubstr=0,60}</td>
-                    <td>{$vo.status_text}</td>
                     <td>
-                        {eq name="$vo.status" value="0"}
-                        <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
+                        {eq name="$vo.status" value="1"}
+                        <span class="txt-success">{$vo.status_text}</span>
+                        {/eq}
+                        {eq name="$vo.status" value="2"}
+                        <span class="txt-danger">{$vo.status_text}</span>
+                        {/eq}
+                    <td>
+                    <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看图片</a>
+
+                    {eq name="$vo.status" value="0"}
                         <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>-->
                         <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>-->
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
-                        <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
                         <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                         {/eq}
-
                     </td>
                 </tr>
                 {/volist}

@@ -103,12 +103,12 @@
                         </div>
                     </td>
                     <td>{$vo.create_time}</td>
-
-                    <td >{eq name="vo.is_banner" value="1"}是{/eq}</td>
+                    <td >{eq name="vo.is_banner" value="1"}<span>是</span>{else/}<span>否</span> {/eq}</td>
                     <td class="list_type">
                         {eq name="vo.is_send" value="1"}
-                        已推送
+                        <span class="txt-success">已推送</span>
                         {else/}
+                        <span>未推送</span>
                         {/eq}
                     </td>
                     <td class="list_type">
@@ -116,8 +116,6 @@
                         {eq name="$key" value="$vo.type"}{$type}{/eq}
                         {/volist}
                     </td>
-
-
                     <td> <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始推送</a>
                         <a href="{:Url('add','id='.$vo.id)}" class=" confirm btn-sm btn-primary">编辑</a>
                         <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
