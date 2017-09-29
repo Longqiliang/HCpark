@@ -115,18 +115,18 @@
                     <td>未审核</td>
                     {/eq}
                     {eq name="$vo.status" value="1"}
-                    <td class="txt-success">已通过</td>
+                    <td class="txt-success">审核成功</td>
                     {/eq}
                     {eq name="$vo.status" value="2"}
-                    <td class="txt-danger">未通过</td>
+                    <td class="txt-danger">审核失败</td>
                     {/eq}
                     <td>
                         {if condition="$vo.status eq 0"}
-                        <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-primary" >审核</a>
+                        <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-success" >审核</a>
                         {else}
                         <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-primary" >查看</a>
                         {/if}
-                        <a class="btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
+                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
 
                     </td>
                 </tr>

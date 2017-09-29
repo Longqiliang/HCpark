@@ -181,8 +181,8 @@
                         {$vo.status_text}
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}" data-time="{$vo.service_time}" data-type="{$vo.type}" data-abstract="{$vo.abstract}"  data-img="{$vo.img}" data-price="{$vo.price}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"   class="btn-sm btn-success" style="color: #fff" >编辑</a>
-                        <a  href="{:Url('show','id='.$vo.id.'&&type='.$vo.type  )}" class="btn-sm btn-info" style="color: #fff">查看预约</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}" data-time="{$vo.service_time}" data-type="{$vo.type}" data-abstract="{$vo.abstract}"  data-img="{$vo.img}" data-price="{$vo.price}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"   class="btn-sm btn-success"  >编辑</a>
+                        <a  href="{:Url('show','id='.$vo.id.'&&type='.$vo.type  )}" class="btn-sm btn-primary" >查看预约</a>
                     </td>
                 </tr>
                 {/volist}
