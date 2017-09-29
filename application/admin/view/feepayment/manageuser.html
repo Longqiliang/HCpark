@@ -55,8 +55,10 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            <div class=" pull-right tooltip-demo">
+                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
             <h2>权限设置</h2>
-
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
@@ -81,9 +83,9 @@
                     </td>
                     <td>
                         {eq name="$vo.fee_status" value="1"}
-                            <a class="btn-sm btn-primary">是</a>
+                            <span>是</span>
                         {else/}
-                        <a class="btn-sm btn-primary">否</a>
+                        <span>否</span>
                         {/eq}
                     </td>
                     <td>
