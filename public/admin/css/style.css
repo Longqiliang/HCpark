@@ -8421,3 +8421,7 @@ a.under-line:focus,a.under-line:focus{
 .txt-danger{
   color: #ef6060;
 }
+.img-auto{
+  max-width: 350px;
+  max-height: 350px;
+}
