@@ -140,11 +140,10 @@ class Electricity extends Admin
     }
     public function del()
     {
-        $CardparkRecord = new CarparkRecord();
+        $CardparkRecord = new ElectricityService();
         $result = $CardparkRecord->where('id', input('id'))->find();
         $result['status'] = -1;
         $result->save();
-
 
         if ($result) {
             $this->redirect('index');
@@ -153,4 +152,14 @@ class Electricity extends Admin
         }
     }
 
+    //逻辑删除
+    public function moveToTrash() {
+        $ids = input('ids/a');
+        $result = ElectricityService::where('id', 'in', $ids)->update(['status' => -1]);
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
+    }
 }
