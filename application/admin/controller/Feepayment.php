@@ -189,7 +189,7 @@ class Feepayment extends Admin
         $feepayment = new FeePaymentModel();
         $id = input('id');
         $company = ParkCompany::get($id);
-        $list = $feepayment->where(['company_id' => $id])->order('id desc')->paginate();
+        $list = $feepayment->where(['company_id' => $id,'status' => ['>',-1]])->order('id desc')->paginate();
         int_to_string($list, ['type' => [1 => "水电费", 2 => "物业费", 3 => "房租费", 4 => "公耗费"],
             'status' => [-1 => "删除", 0 => "进行中", 1 => "审核中", 2 => "审核成功",3=>"审核失败"]]);
 
