@@ -40,6 +40,9 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+    td,th{
+        /*text-align: center;*/
+    }
 </style>
 {/block}
 
@@ -83,7 +86,7 @@
                     <th>具体地址</th>
                     <th>办公时间</th>
                     <th>创建时间</th>
-
+                    <th>操作</th>
                 </tr>
                 </thead>
 
@@ -95,16 +98,21 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                            <a href="{:Url('add','id='.$vo.id)}"><div class="mail-main">{$vo.title}</div></a>
+                            <span>{$vo.title}</span>
                         </div>
                     </td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.source}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.type}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.contact}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.mobile}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}">{$vo.address}</a></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}"><span>{$vo.office_time_start|strtotime | date="H:i",###}</span>-<span>{$vo.office_time_end|strtotime | date="H:i",###}</span></a></td>
-                    <td class="text-right mail-date" style="white-space: nowrap">{$vo.create_time}</td>
+                    <td><span>{$vo.source}</span></td>
+                    <td><span>{$vo.type}</span></td>
+                    <td><span>{$vo.contact}</span></td>
+                    <td><span>{$vo.mobile}</span></td>
+                    <td><span>{$vo.address}</span></td>
+                    <td><span><span>{$vo.office_time_start|strtotime | date="H:i",###}</span>-<span>{$vo.office_time_end|strtotime | date="H:i",###}</span></span></td>
+                    <td class="mail-date">{$vo.create_time|strtotime| date='Y-m-d',###}</td>
+                    <td>
+                        <a class="btn-sm btn-success" href="{:Url('add','id='.$vo.id)}">编辑</a>
+                        <a class="n btn-sm btn-primary" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+
+                    </td>
                 </tr>
                 {/volist}
                 </tbody>
