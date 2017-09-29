@@ -135,7 +135,7 @@ class PublicArea extends Admin
                 $create_time = array();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('neq', 0)
+                    'status' => array('neq', 1)
                 ];
                 $serviceInfo = $AdvertisingService->where('id', 2)->find();
                 $list = $Fa->where($map)->order('create_time desc')->select();
@@ -203,7 +203,7 @@ class PublicArea extends Admin
                 $serviceInfo = $AdvertisingService->where('id', 3)->find();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('neq', 0)
+                    'status' => array('neq', 1)
                 ];
                 $list = $led->where($map)->order('create_time desc')->select();
                 //所有的创建时间
@@ -287,7 +287,7 @@ class PublicArea extends Admin
                 }
                 break;
         }
-        echo json_encode($data);
+       // echo json_encode($data);
         $this->assign('data', $data);
         return $this->fetch();
     }
