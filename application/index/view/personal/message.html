@@ -3,6 +3,18 @@
 <title>我的消息</title>
 <link rel="stylesheet" href="/index/css/personal/message.css">
 <style>
+    .content{
+        position: absolute;
+        left: 0;
+        padding: 1.6rem;
+        top: 0;
+        min-height: 100vh;
+        box-sizing: border-box;
+        background-color: #f5f5f5;
+    }
+    .content img{
+        margin-top: 25%;
+    }
 </style>
 {/block}
 {block name="body"}
@@ -30,7 +42,10 @@
             </div>
         </div>
     </div>
-    <img src="/index/images/service/card/icon-default.jpg" class="no-message" v-if="!message.length">
+    <div v-if="!message.length" class="content">
+        <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
+    </div>
+
 </div>
 <!--加载更多-->
 {/block}
