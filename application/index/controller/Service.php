@@ -19,6 +19,7 @@ use app\index\model\Park;
 use  app\index\model\PropertyServer;
 use app\index\model\WaterService as WaterModel;
 use app\index\model\BroadbandPhone as BroadbandModel;
+use app\index\model\EnterpriseRecruitment as EnterpriseModel;
 use  app\index\model\ElectricityService;
 use  app\index\model\AdvertisingRecord;
 use  app\index\model\AdvertisingService;
@@ -29,8 +30,8 @@ use  app\common\behavior\Service as commonService;
 use  app\common\model\ParkRoom;
 use  app\common\model\ParkRent;
 use  app\index\model\PersonalMessage;
-use app\index\model\EnterpriseRecruitment as EnterpriseModel;
 use app\index\model\ServiceInformation as ServiceModel;
+
 //企业服务
 class Service extends Base
 {
@@ -219,23 +220,23 @@ class Service extends Base
             //服务信息(人才服务)
             case 19:
 
-                $map=array(
-                    'park_id'=>session('park_id'),
-                    'status'=>1,
+                $map = array(
+                    'park_id' => session('park_id'),
+                    'status' => 1,
                 );
 
                 $list = ServiceModel::where($map)->order('create_time  desc')->limit(6)->select();
-                $info['list']=$list;
+                $info['list'] = $list;
                 break;
             //企业招聘(人才服务)
             case 20:
 
-                $map=array(
-                    'park_id'=>$parkid,
-                    'status'=>1,
+                $map = array(
+                    'park_id' => $parkid,
+                    'status' => 1,
                 );
                 $list = EnterpriseModel::where($map)->order('create_time  desc')->field('id,position,company,education,experience,number,wages')->select();
-                $info['list']=$list;
+                $info['list'] = $list;
                 break;
             default:
                 $user = $UserModel->where('userid', $userid)->find();
@@ -251,7 +252,7 @@ class Service extends Base
         $this->assign('info', json_encode($info));
         return $this->fetch($path);
     }
-    
+
     /*企业招聘详情页*/
     public function talentdetail(){
         $id = input('id');
@@ -300,7 +301,6 @@ class Service extends Base
     }
 
 
-
     public function noPermissions()
     {
         return $this->fetch();
@@ -310,7 +310,6 @@ class Service extends Base
     {
         return $this->fetch();
     }
-
     //预约
     public function order()
     {
@@ -982,7 +981,7 @@ class Service extends Base
         for ($i = 1; $i < 8; $i++) {
             $days = array();
             $time = mktime(0, 0, 0, date('m'), date('d') + $i, date('Y')) - 1;
-            $map = ['order_time' => $time, 'status' => array('neq', 0)];
+            $map = ['order_time' => $time, 'status' => array('in', [1,2])];
             $re = $FunctionRoomRecord->where($map)->select();
             if ($re) {
                 foreach ($re as $value) {
@@ -1162,7 +1161,7 @@ class Service extends Base
         }
     }
 
-    //led 灯服务
+    //led 屏服务
     public function led()
     {
         $user_id = session('userId');
@@ -1200,7 +1199,7 @@ class Service extends Base
             $data = [
 
                 'interval' => $value['date_type'],
-                'day' => $Today * 1000
+                'day' => $value['order_time'] * 1000
             ];
             array_push($all_check2, $data);
         }
@@ -1218,7 +1217,7 @@ class Service extends Base
         }
 
         $map['create_user'] = array('neq', $user_id);
-        $map['status'] = array('neq', 0);
+        $map['status'] = array('in', [1,2]);
         $map['order_time'] = $Today;
         //今天已选的
         $all_check = $led->where($map)->select();
@@ -1230,8 +1229,6 @@ class Service extends Base
             ];
             array_push($all_check2, $data);
         }
-
-
         $this->assign('app_id', input('app_id'));
         $this->assign('other', json_encode($all_check2));
         $this->assign('user', json_encode($user_check2));
@@ -1379,7 +1376,7 @@ class Service extends Base
                 $time = array();
                 $create_time = array();
                 $serviceInfo = $service->where('id', 1)->find();
-                $list = $ad->where('create_user', $user_id)->order('create_time desc')->select();
+                $list = $ad->where(['create_user'=> $user_id,'status'=> ['neq',-1]])->order('create_time desc')->select();
                 //所有的创建时间
                 foreach ($list as $l) {
                     array_push($create_time, $l['create_time']);
@@ -1425,7 +1422,7 @@ class Service extends Base
                 $time = array();
                 $create_time = array();
                 $serviceInfo = $service->where('id', 2)->find();
-                $list = $fs->where('create_user', $user_id)->order('create_time desc')->select();
+                $list = $fs->where(['create_user'=> $user_id,'status'=> ['neq',-1]])->order('create_time desc')->select();
                 //所有的创建时间
                 foreach ($list as $l) {
                     array_push($create_time, $l['create_time']);
@@ -1500,7 +1497,7 @@ class Service extends Base
                 $time = array();
                 $create_time = array();
                 $serviceInfo = $service->where('id', 3)->find();
-                $list = $led->where('create_user', $user_id)->order('create_time desc')->select();
+                $list = $led->where(['create_user'=> $user_id,'status'=> ['neq',-1]])->order('create_time desc')->select();
                 //所有的创建时间
                 foreach ($list as $l) {
                     array_push($create_time, $l['create_time']);
@@ -1578,17 +1575,11 @@ class Service extends Base
                     array_push($data, $re);
 
                 }
-
                 break;
-
         }
         $this->assign('data', json_encode($data));
         return $this->fetch();
-
-
     }
-
-
     /*物业报修*/
     public function repair()
     {
@@ -1635,7 +1626,7 @@ class Service extends Base
             $savemessage = $personalMessage->save($new);
 
             //推送给运营和物业
-            $reult = $this->commonSend(3, $message);
+            $reult = $this->commonSend(2, $message);
 
             if ($reult) {
                 return $this->success("报修成功");
@@ -1674,7 +1665,7 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $property->getLastInsID()
             ];
             //推送给运营和物业
-            $reult = $this->commonSend(3, $message);
+            $reult = $this->commonSend(2, $message);
 
             $new = [
                 "title" => $message['title'],
@@ -1690,7 +1681,7 @@ class Service extends Base
             if ($reult) {
                 return $this->success("预约成功");
             } else {
-                return $this->error("推送失败");
+                return $this->error("推送失败", '', json_encode($reult));
             }
         } else {
 
@@ -1757,7 +1748,7 @@ class Service extends Base
 
     }
 
-    //饮水服务
+//饮水服务
     public function waterService()
     {
         $data = input('post.');
@@ -1774,7 +1765,7 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $waterModel->getLastInsID()
             ];
             //推送给运营和物业
-            $reult = $this->commonSend(3, $message);
+            $reult = $this->commonSend(2, $message);
             $new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
@@ -1797,7 +1788,7 @@ class Service extends Base
 
     }
 
-    //饮水服务列表页
+//饮水服务列表页
     public function waterList()
     {
         $info = [];
@@ -1820,7 +1811,7 @@ class Service extends Base
         return $info;
     }
 
-    //饮水服务详情页
+//饮水服务详情页
     public function waterDetail()
     {
         $id = input('id');
@@ -1830,7 +1821,7 @@ class Service extends Base
         return $this->fetch();
     }
 
-    //电话宽带
+    /*//电话宽带
     public function broadbandPhone()
     {
         $data = input('');
@@ -1845,9 +1836,9 @@ class Service extends Base
             return $this->error($broadbandModel->getError());
         }
 
-    }
+    }*/
 
-    //费用缴纳
+//费用缴纳
     public function feedetail()
     {
         $type = input('t');
@@ -2479,7 +2470,6 @@ class Service extends Base
 
     }
 
-
     /*推个人中心，推送人员选择公共方法
      *$type =1  该园区运营人员
      *$type =2  该园区物业管理
@@ -2539,7 +2529,7 @@ class Service extends Base
 
         }
 
-        $res = commonService::sendPersonalMessage($message, 15706844655);
+        $res = commonService::sendPersonalMessage($message, $useridlist);
         if ($res['errcode'] == 0) {
             return true;
         } else {
@@ -2605,6 +2595,7 @@ class Service extends Base
             case 4:
                 $useridlist = $userid;
                 break;
+
         }
 
         $res = commonService::sendPersonalText($message, $useridlist);
@@ -2616,6 +2607,136 @@ class Service extends Base
         }
 
     }
+
+    /*推个人中心，推送人员选择公共方法
+     *$type =1  该园区运营人员
+     *$type =2  该园区物业管理
+     *$type =3  该园区运营人员+物业管理
+     *$type =4  该用户
+     *
+     * $message=[
+     *   "title" => "物业保修提示",
+     *   "description" => date('m月d', $data['create_time']) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+     *   "url" => '']
+     *
+     *retur  true/false
+    */
+   /* public
+    function commonSend($type, $message, $userid = "")
+    {
+        $wechatUser = new WechatUser();
+        $useridlist = "";
+        $park_id = session('park_id');
+        //该园区运营团队
+        $operation = $this->getUserbyTagid(1, $park_id);
+        //该园区物业管理
+        $property = $this->getUserbyTagid(2, $park_id);
+
+        switch ($type) {
+            //该园区运营团队
+            case 1 :
+                foreach ($operation as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                break;
+            //该园区物业管理
+            case 2 :
+                foreach ($property as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                break;
+            //物业加运营
+            case 3:
+                foreach ($operation as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                foreach ($property as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                break;
+            //用户
+            case 4:
+                $useridlist = $userid;
+                break;
+        }
+        $res = commonService::sendPersonalMessage($message, $useridlist);
+        if ($res['errcode'] == 0) {
+            return true;
+        } else {
+
+            return false;
+        }
+
+    }*/
+
+    /*推个人中心，推送人员选择公共方法（设备服务专用）
+         *$type =1  该园区运营人员
+         *$type =2  该园区物业管理
+         *$type =3  该园区运营人员+物业管理
+         *$type =4  该用户
+         *
+         * $message=[
+         *   "title" => "物业保修提示",
+         *   "description" => date('m月d', $data['create_time']) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+         *   "url" => '']
+         *
+         *retur  true/false
+        */
+    /*public
+    function publicSend($type, $message, $userid = "")
+    {
+        $wechatUser = new WechatUser();
+        $useridlist = "";
+        $park_id = session('park_id');
+        //该园区运营的department——id
+        switch ($park_id) {
+            case  3 :
+                $department_id = 76;
+                break;
+            default:
+                $department_id = 76;
+                break;
+        }
+        switch ($type) {
+            case 1 :
+                $user = $wechatUser->where('department', $department_id)->select();
+                foreach ($user as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                break;
+            case 2 :
+                $user = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                foreach ($user as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
+            case 3:
+                //该园区运营团队
+                $user1 = $wechatUser->where('department', $department_id)->select();
+                foreach ($user1 as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                //该园区物业管理
+                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                foreach ($user2 as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
+
+            case 4:
+                $useridlist = $userid;
+                break;
+
+        }
+        $res = commonService::sendPersonalText($message, $useridlist);
+        if ($res['errcode'] == 0) {
+            return true;
+        } else {
+
+            return false;
+        }
+
+    }*/
 
     /*楼盘信息公共方法*/
     public function commonFloor()
@@ -2675,6 +2796,9 @@ class Service extends Base
         //echo json_encode($list);
 
     }
+
+
+
 
 
 }
