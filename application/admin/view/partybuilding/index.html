@@ -100,7 +100,7 @@
                         </div>
                     </td>
                     <td><span>{$vo.source}</span></td>
-                    <td class="text-content"><span>{$vo.content|strip_tags|msubstr=0,50}</span></td>
+                    <td class="text-content"><span>{$vo.content|strip_tags|str_replace='&nbsp;',"",###|msubstr=0,30}</span></td>
                     <td >
                         {gt name="$vo.type" value="1"}
                             {eq name="$vo.type" value="2"}
