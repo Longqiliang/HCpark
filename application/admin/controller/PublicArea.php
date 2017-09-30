@@ -108,6 +108,7 @@ class PublicArea extends Admin
                     $re = [
                         'time' => strtotime($onetime),
                         'user' => isset($map[0]->findUser->name) ? $map[0]->findUser->name : "未找到",
+                        'mobile' => isset($info->findUser->mobile) ? $info->findUser->mobile : "未找到",
                         'price' => count($map) * $serviceInfo['price'],
                         'payment_voucher' => $map[0]['payment_voucher'],
                         'userid' => $info['create_user']
@@ -116,7 +117,7 @@ class PublicArea extends Admin
                     $re['day'] = "";
 
                     foreach ($map as $value) {
-                        $re['day'] .= date('Y-m-d', $value['order_time']) . " ";
+                        $re['day'] .= date('Y-m-d', $value['order_time'])."   " ;
                     }
                     if ($map[0]['status'] == 0) {
 
@@ -158,6 +159,7 @@ class PublicArea extends Admin
                     $re = [
                         'time' => strtotime($onetime),
                         'user' => isset($info->findUser->name) ? $info->findUser->name : "未找到",
+                        'mobile' => isset($info->findUser->mobile) ? $info->findUser->mobile : "未找到",
                         'price' => count($map) * $serviceInfo['price'],
                         'payment_voucher' => $map[0]['payment_voucher'],
                         'userid' => $info['create_user']
@@ -172,14 +174,18 @@ class PublicArea extends Admin
 
                     foreach ($mtime_list as $value) {
                         $re['day'] .= date('Y-m-d', $value);
+                        $length =0;
                         foreach ($map as $value2) {
+                            $length+=1;
                             if ($value == $value2['order_time']) {
-
                                 if ($value2['date_type'] == 1) {
                                     $re['day'] .= "上午 ";
                                 } elseif ($value2['date_type'] == 2) {
                                     $re['day'] .= "下午 ";
                                 }
+                            }
+                            if($length==count($map)){
+                                $re['day'].="<br>";
                             }
                         }
 
@@ -228,7 +234,8 @@ class PublicArea extends Admin
                         'user' => isset($info->findUser->name) ? $info->findUser->name : "未找到",
                         'price' => count($map) * $serviceInfo['price'],
                         'payment_voucher' => $map[0]['payment_voucher'],
-                        'userid' => $info['create_user']
+                        'userid' => $info['create_user'],
+                        'mobile' => isset($info->findUser->mobile) ? $info->findUser->mobile : "未找到",
                     ];
                     $re['day'] = "";
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
@@ -239,8 +246,10 @@ class PublicArea extends Admin
                     $mtime_list = array_values(array_unique($map_time));
 
                     foreach ($mtime_list as $value) {
-                        $re['day'] .= date('Y-m-d', $value) . "| ";
+                        $re['day'] .= date('Y-m-d', $value) .":";
+                        $length=0;
                         foreach ($map as $value2) {
+                            $length +=1;
                             if ($value == $value2['order_time']) {
                                 switch ($value2['date_type']) {
                                     case 1:
@@ -271,6 +280,10 @@ class PublicArea extends Admin
                                         $re['day'] .= "17:00-18:00 ";
                                         break;
                                 }
+
+                            }
+                            if($length==count($map)){
+                             $re['day'] .= "<br>";
 
                             }
                         }
@@ -331,7 +344,7 @@ class PublicArea extends Admin
         }
         $send =new Service();
 
-        $message = "设备服务提示\n您有".$title."\n金额为".input('price')."元\n预约时间为:".input('day')."\n的预约已被取消了，如有疑问请联系";
+        $message = "设备服务提示\n您有".$title."\n金额为".input('price')."元\n预约时间为:".input('day')."\n的预约已被取消了。";
         $reult = $send->sendPersonalText($message,input('user'));
 
 
