@@ -140,8 +140,6 @@
                     {/eq}
 
                    <td>
-
-                       <a href="{:Url('detail','id='.$vo.id)}" class="btn-sm btn-success">查看</a>
                        {eq name="$vo.status" value="0"}
                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
