@@ -51,7 +51,7 @@
             <h2>查看成员</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -147,7 +147,7 @@
                     </td>
                     <td>
                         <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-username="{$vo.user_name}"  data-mobile="{$vo.mobile}"   data-company="{$vo.company}"  data-status="{$vo.status}"   data-remark="{$vo.remark}"class="btn-sm btn-success" style="color: #fff" >审核</a>
-                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('delete')}')">删除</a>
+                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
 
                     </td>
                 </tr>

@@ -33,16 +33,15 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-
+            <div class="pull-right tooltip-demo">
+                <a href="javascript:history.back(-1)" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+            </div>
             <h2>招商工作日志列表</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteDiary')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
-                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
-                <a href="javascript:history.go(-1)" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
-                        class="fa fa-times"></i> 关闭</a>
             </div>
         </div>
 
@@ -103,9 +102,8 @@
                         {$vo.create_time|| time_format="Y-m-d"}
                     </td>
                     <td>
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="show(this)" data-content="{$vo.content}" >查看详情</a>
-
-
+                        <a data-toggle="modal" href="#modal-form" class="btn-sm btn-success" onclick="show(this)" data-content="{$vo.content}" >查看详情</a>
+                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('deleteDiary')}')">删除</a>
                     </td>
                 </tr>
                 {/volist}

@@ -21,7 +21,9 @@
         }
     }
 
-
+    th ,td{
+        text-align: center;
+    }
 </style>
 {/block}
 
@@ -115,7 +117,7 @@
                 {volist name="list" id="vo"}
                 <tr class="read">
                     <td class="check-mail">
-                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                        <!--<input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">-->
                     </td>
                     <td class="mail-subject">
                         {$vo.userid}
