@@ -193,7 +193,10 @@
                 <span>审核进度</span>
                 <span>{{status(info.status)}}</span>
             </div>
-
+            <div class="remark" v-if="info.status!=1 && info.check_remark">
+                <p>物业提示</p>
+                <div>{{info.check_remark}}</div>
+            </div>
         </div>
         <div class="card" v-if="info.img">
             <div class="card-tit">缴费凭证</div>
@@ -231,10 +234,10 @@
                 <span>审核进度</span>
                 <span>{{status(info.status)}}</span>
             </div>
-            <!--<div class="remark">-->
-                <!--<p>备注信息</p>-->
-                <!--<div :class="{'no_msg':!info.remark}">{{info.remark ? info.remark : "无"}}</div>-->
-            <!--</div>-->
+            <div class="remark" v-if="info.status!=0 && info.check_remark">
+                <p>物业提示</p>
+                <div>{{info.check_remark}}</div>
+            </div>
         </div>
         <div class="card">
             <div class="card-tit">备注信息</div>
@@ -275,6 +278,10 @@
                 <span>审核进度</span>
                 <span>{{status(info.status)}}</span>
             </div>
+            <div class="remark" v-if="info.status!=0 && info.check_remark">
+                <p>物业提示</p>
+                <div>{{info.check_remark}}</div>
+            </div>
         </div>
     </div>
     <div v-if="appid==4">
@@ -307,6 +314,10 @@
             <div class="card-cell">
                 <span>审核进度</span>
                 <span>{{status(info.status)}}</span>
+            </div>
+            <div class="remark" v-if="info.status!=0 && info.check_remark">
+                <p>物业提示</p>
+                <div>{{info.check_remark}}</div>
             </div>
         </div>
         <div class="card">
@@ -377,6 +388,10 @@
                 <span>费用总计</span>
                 <span>{{info.all_money}}</span>
             </div>
+            <div class="remark" v-if="info.status!=0 && info.check_remark">
+                <p>物业提示</p>
+                <div>{{info.check_remark}}</div>
+            </div>
         </div>
         <div class="card" v-if="info.img">
             <div class="card-tit">缴费凭证</div>
@@ -409,6 +424,10 @@
             <div class="remark">
                 <p>预约时间</p>
                 <div>{{info.day}}</div>
+            </div>
+            <div class="remark" v-if="info.status!=0 && info.check_remark">
+                <p>物业提示</p>
+                <div>{{info.check_remark}}</div>
             </div>
         </div>
         <div class="card" v-if="info.img">
@@ -446,6 +465,10 @@
             <div class="remark">
                 <p>备注</p>
                 <div>{{info.remark}}</div>
+            </div>
+            <div class="remark" v-if="info.status!=0 && info.check_remark">
+                <p>物业提示</p>
+                <div>{{info.check_remark}}</div>
             </div>
         </div>
     </div>

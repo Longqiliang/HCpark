@@ -9,33 +9,60 @@
 
 {block name="body"}
 <div class="banner">
-    {eq name="userinfo.header" value=""}
-    <img src="/index/images/personal/bg.png" alt="背景图" class="banner-img">
-    <div class="banner-backdrop"></div>
+    <!--{eq name="userinfo.header" value=""}-->
+    <!--<img src="/index/images/personal/bg.png" alt="背景图" class="banner-img">-->
+    <!--<div class="banner-backdrop"></div>-->
+    <!--<div class="user-info">-->
+        <!--<div class="user-photo">-->
+            <!--<a href="{:Url('Personal/personalinfo')}">-->
+                <!--<img src="{$userinfo.avatar}" alt="{$userinfo.name}">-->
+            <!--</a>-->
+        <!--</div>-->
+        <!--<div class="user-name">-->
+            <!--<h3>{$userinfo.name}</h3>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--{else/}-->
+    <!--<img src="/index/images/personal/bg.png" alt="背景图" class="banner-img">-->
+    <!--<div class="banner-backdrop"></div>-->
+    <!--<div class="user-info">-->
+        <!--<div class="user-photo">-->
+            <!--<a href="{:Url('Personal/personalinfo')}">-->
+                <!--<img src="{$userinfo.header}" alt="{$userinfo.name}">-->
+            <!--</a>-->
+        <!--</div>-->
+        <!--<div class="user-name">-->
+            <!--<h3>{$userinfo.name}</h3>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--{/eq}-->
+    <!--<img src="/index/images/personal/bg.png" alt="背景图" class="banner-img">-->
+    <!--<div class="banner-backdrop"></div>-->
+    <div class="waveWrapper waveAnimation">
+        <div class="waveWrapperInner bgTop">
+            <div class="wave waveTop" style="background-image: url('/index/images/personal/wave-top.png')"></div>
+        </div>
+        <div class="waveWrapperInner bgMiddle">
+            <div class="wave waveMiddle" style="background-image: url('/index/images/personal/wave-mid.png')"></div>
+        </div>
+        <div class="waveWrapperInner bgBottom">
+            <div class="wave waveBottom" style="background-image: url('/index/images/personal/wave-bot.png')"></div>
+        </div>
+    </div>
     <div class="user-info">
         <div class="user-photo">
             <a href="{:Url('Personal/personalinfo')}">
+                {eq name="userinfo.header" value=""}
                 <img src="{$userinfo.avatar}" alt="{$userinfo.name}">
-            </a>
-        </div>
-        <div class="user-name">
-            <h3>{$userinfo.name}</h3>
-        </div>
-    </div>
-    {else/}
-    <img src="/index/images/personal/bg.png" alt="背景图" class="banner-img">
-    <div class="banner-backdrop"></div>
-    <div class="user-info">
-        <div class="user-photo">
-            <a href="{:Url('Personal/personalinfo')}">
+                {else/}
                 <img src="{$userinfo.header}" alt="{$userinfo.name}">
+                {/eq}
             </a>
         </div>
         <div class="user-name">
             <h3>{$userinfo.name}</h3>
         </div>
     </div>
-    {/eq}
 </div>
 <div class="content">
     <!--<ul class="list">-->
@@ -51,6 +78,7 @@
         <li><a href="{:Url('Personal/message')}" class="item-pull-right"><span class="icon icon-message"></span><p>我的消息</p></a></li>
         <li><a href="{:Url('Personal/service?c=1')}" class="item-pull-right"><span class="icon icon-service"></span><p>我的服务</p></a></li>
         <li><a href="{:Url('Personal/collection?c=1')}" class="item-pull-right"><span class="icon icon-collect"></span><p>我的收藏</p></a></li>
+        <li><a href="{:Url('Feedback/demand')}" class="item-pull-right"><span class="icon icon-feedback"></span><p>意见反馈</p></a></li>
     </ul>
 </div>
 {/block}
