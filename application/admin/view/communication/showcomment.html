@@ -37,7 +37,7 @@
                 <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
             </div>
 
-            <h2>查看发帖</h2>
+            <h2>查看评论</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteComment')}" data-original-title="移动到回收站"
@@ -86,7 +86,7 @@
                     </td>
 
                     <td>
-                        <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
+                        <a onclick="delItem('{$vo.id}','{:Url('deleteComment')}')" class=" confirm btn-sm btn-info">删除</a>
                     </td>
                 </tr>
                 {/volist}

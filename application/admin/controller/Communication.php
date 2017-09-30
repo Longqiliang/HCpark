@@ -25,7 +25,8 @@ class Communication extends Admin
         $paek_id = session('user_auth')['park_id'];
         $CommunicateGroup = new CommunicateGroup();
         $map = [
-            'park_id' => $paek_id
+            'park_id' => $paek_id,
+            'status' => array('neq',-1)
         ];
         $serch = input('search');
         if (!empty($serch)) {
@@ -153,7 +154,11 @@ class Communication extends Admin
             }
             $data['group_id'] = $id;
             $list = $posts->where($data)->where('status','neq',-1)->paginate();
+            foreach ($list as $value){
+                $value['username']=isset($value->user->name)?$value->user->name:"";
 
+
+            }
             int_to_string($list, $map = array('status' => array(-1 => '删除', 0=> '审核中', 1 => '审核成功', 2 => '审核失败')));
         $this->assign('group_id',$id );
             $this->assign('search', $serch);
@@ -162,7 +167,7 @@ class Communication extends Admin
     }
 
     //逻辑删除
-    public function delete() {
+    public function deletePost() {
         $ids = input('ids/a');
 
         $result = CommunicatePosts::where('id', 'in', $ids)->update(['status' => -1]);
@@ -172,7 +177,28 @@ class Communication extends Admin
             return $this->error('删除失败');
         }
     }
+    //逻辑删除帖子
+    public function deleteGroup() {
+        $ids = input('ids/a');
 
+        $result = CommunicateGroup::where('id', 'in', $ids)->update(['status' => -1]);
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
+    }
+    //逻辑删除评论
+    public function deleteComment() {
+        $ids = input('ids/a');
+
+        $result = CommunicateComment::where('id', 'in', $ids)->update(['status' => -1]);
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
+    }
 
     //帖子详情
     public function detail()
@@ -216,22 +242,6 @@ class Communication extends Admin
 
         return $this->fetch();
     }
-
-    //逻辑删除评论
-    public function deleteComment() {
-        $ids = input('ids/a');
-
-        $result = CommunicateComment::where('id', 'in', $ids)->update(['status' => -1]);
-        if($result) {
-            return $this->success('删除成功');
-        } elseif(!$result) {
-            return $this->error('删除失败');
-        }
-    }
-
-
-
-
 
 
     /*修改状态值*/

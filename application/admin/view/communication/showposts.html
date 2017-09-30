@@ -49,7 +49,7 @@
             <h2>查看发帖</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deletePost')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -70,7 +70,7 @@
                 <tr>
                     <th></th>
                     <th>id</th>
-                    <th>标题</th>
+                    <th>发帖人</th>
                     <th>内容</th>
                     <th>评论数</th>
                     <th>状态</th>
@@ -87,7 +87,7 @@
                         {$vo.id}
                     </td>
                     <td>
-                        {$vo.title}
+                        {$vo.username}
                     </td>
                     <td>
                         {$vo.content}
@@ -100,8 +100,8 @@
                     </td>
                     <td>
                         <a   href="{:Url('detail','id='.$vo.id  )}"  class="btn-sm btn-success" style="color: #fff">查看详情</a>
-                        <a   href="{:Url('showComment','id='.$vo.id  )}"  class="btn-sm btn-success" style="color: #fff">查看评论</a>
-                        <a   onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
+                        <a   href="{:Url('showComment','id='.$vo.id  )}"  class="btn-sm btn-primary" style="color: #fff">查看评论</a>
+                        <a   onclick="delItem('{$vo.id}','{:Url('deletePost')}')" class=" confirm btn-sm btn-info">删除</a>
                     </td>
                 </tr>
                 {/volist}

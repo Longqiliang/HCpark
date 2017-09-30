@@ -44,7 +44,7 @@
             <h2>合作交流</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteGroup')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -142,7 +142,7 @@
                         <a  href="{:Url('showposts','id='.$vo.id  )}" class="btn-sm btn-success" style="color:#fff">查看发帖</a>
                         <a   href="{:Url('showusers','id='.$vo.id  )}" class="btn-sm btn-success" style="color:#fff">查看成员</a>
                         <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-groupname="{$vo.group_name}"  data-content="{$vo.content}"   data-img="{$vo.img}"  data-status="{$vo.status}"   data-park="{$vo.park_id}"    class="btn-sm btn-primary" style="color:#fff">编辑</a>
-                        <a onclick="delItem('{$vo.id}','{:Url('delete')}')" class=" confirm btn-sm btn-info">删除</a>
+                        <a onclick="delItem('{$vo.id}','{:Url('deleteGroup')}')" class=" confirm btn-sm btn-info">删除</a>
                     </td>
                 </tr>
                 {/volist}
