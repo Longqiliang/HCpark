@@ -36,20 +36,11 @@
             <div class="pull-right tooltip-demo" style="margin-left: 20px">
                 <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
             </div>
-            <form method="get" action="{:Url('Communication/showposts')}" class="pull-right mail-search">
-                <div class="input-group">
-                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索帖子" value="{$search}">
-                    <input type="hidden" class="form-control input-sm" name="id" placeholder="搜索帖子" value="{$group_id}">
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
-                    </div>
-                </div>
-            </form>
 
             <h2>查看发帖</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delete')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteComment')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -65,15 +56,13 @@
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
-
                 <thead>
                 <tr>
                     <th></th>
                     <th>id</th>
-                    <th>标题</th>
+                    <th>评论人</th>
                     <th>内容</th>
-                    <th>评论数</th>
-                    <th>状态</th>
+                    <th>评论时间</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -87,21 +76,17 @@
                         {$vo.id}
                     </td>
                     <td>
-                        {$vo.title}
+                        {$vo.user_name}
                     </td>
                     <td>
                         {$vo.content}
                     </td>
                     <td>
-                        {$vo.comments}
+                        {$vo.create_time}
                     </td>
+
                     <td>
-                        {$vo.status_text}
-                    </td>
-                    <td>
-                        <a   href="{:Url('detail','id='.$vo.id  )}"  class="btn-sm btn-success" style="color: #fff">查看详情</a>
-                        <a   href="{:Url('showComment','id='.$vo.id  )}"  class="btn-sm btn-success" style="color: #fff">查看评论</a>
-                        <a   onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
+                        <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
                     </td>
                 </tr>
                 {/volist}

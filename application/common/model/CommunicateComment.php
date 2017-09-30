@@ -14,4 +14,12 @@ use think\Model;
 class CommunicateComment extends  Model
 {
 
+    protected  $type =[
+     'create_time' => 'strtotime'
+
+
+    ];
+
+
+
 }

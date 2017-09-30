@@ -59,7 +59,7 @@ class Communication extends Admin
             return $this->error($cgroup->getError());
         }
     }
-
+    //查看成员
     public function showUsers()
     {
         $cuser = new CommunicateUser();
@@ -139,7 +139,8 @@ class Communication extends Admin
             return $this->fetch();
         }
     }
-    public function showposts(){
+    //查看帖子
+    public function showPosts(){
         $posts = new CommunicatePosts();
         $user = new  WechatUser();
 
@@ -153,7 +154,7 @@ class Communication extends Admin
             $data['group_id'] = $id;
             $list = $posts->where($data)->where('status','neq',-1)->paginate();
 
-            int_to_string($list, $map = array('status' => array(-1 => '删除', 1 => '审核中', 2 => '审核成功', 3 => '审核失败')));
+            int_to_string($list, $map = array('status' => array(-1 => '删除', 0=> '审核中', 1 => '审核成功', 2 => '审核失败')));
         $this->assign('group_id',$id );
             $this->assign('search', $serch);
             $this->assign('list', $list);
@@ -172,6 +173,8 @@ class Communication extends Admin
         }
     }
 
+
+    //帖子详情
     public function detail()
     {
         $id=input('id');
@@ -190,6 +193,47 @@ class Communication extends Admin
 
         return $this->fetch();
     }
+    //查看帖子评论
+    public function showComment(){
+        $posts = new CommunicateComment();
+        // 评论列表
+        $map = [
+            'target_id' => input('id'),
+            'status'=>array('neq',-1)
+        ];
+        $comments = CommunicateComment::where($map)->order('id desc')->paginate();
+        foreach ($comments as $value) {
+            $userinfo = WechatUser::where('userid', $value['user_id'])->field('header,avatar')->find();
+            $head = isset($userinfo['header']) ? $userinfo['header'] : "";
+            $ava = isset($userinfo['avatar']) ? $userinfo['avatar'] : "";
+            $value['header'] = empty($head) ? $ava : $head;
+            $value['create_time'] = date("Y-m-d H:m", $value['create_time']);
+        }
+        //$count = CommunicateComment::where($map)->count();
+        //echo json_encode($post);
+        //echo json_encode($comments);
+        $this->assign('list', $comments);
+
+        return $this->fetch();
+    }
+
+    //逻辑删除评论
+    public function deleteComment() {
+        $ids = input('ids/a');
+
+        $result = CommunicateComment::where('id', 'in', $ids)->update(['status' => -1]);
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
+    }
+
+
+
+
+
+
     /*修改状态值*/
     public function changeStatus(){
         $id = input('id');
@@ -204,6 +248,10 @@ class Communication extends Admin
         }
 
     }
+
+
+
+
 
 
 
