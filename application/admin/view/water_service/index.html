@@ -43,6 +43,9 @@
     th,td{
         text-align: center;
     }
+    td:last-child{
+        text-align: left;
+    }
 </style>
 {/block}
 
@@ -140,15 +143,11 @@
                     {/eq}
 
                    <td>
+                        <div class=" col-sm-1 col-md-1 col-lg-4"></div>
                        {eq name="$vo.status" value="0"}
                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">审核</a>
-                        {else/}
-                       <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
-
-                       <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>-->
-                       <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>-->
                        {/eq}
-
+                       <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                    </td>
 
                 </tr>
