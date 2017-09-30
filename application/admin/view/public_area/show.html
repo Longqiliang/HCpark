@@ -137,13 +137,17 @@
                         {$vo.payment_voucher}
                     </td>
                     <td>
+                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)"
+                           data-payment="{$vo.payment_voucher}" class="btn-sm btn-success" style="color: #fff">查看凭证</a>
                         {eq name="$vo.state" value="2"}
+
                         <a onclick="cancel(this)" data-time="{$vo.time}" data-type="{$vo.type}" data-day='{$vo.day}'
                            data-price="{$vo.price}" data-user="{$vo.userid}"  class="btn-sm btn-primary"
                            style="color: #fff">取消</a>
-                        <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)"
-                           data-payment="{$vo.payment_voucher}" class="btn-sm btn-primary" style="color: #fff">查看凭证</a>
+
                         {/eq}
+                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+
                     </td>
                 </tr>
                 {/volist}
