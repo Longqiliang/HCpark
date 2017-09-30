@@ -99,10 +99,10 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                            <a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.title}</a>
+                           {$vo.title}
                         </div>
                     </td>
-                    <td>{$vo.create_time}</td>
+                    <td>{$vo.create_time|strtotime|date='Y-m-d H:i',###}</td>
                     <td >{eq name="vo.is_banner" value="1"}<span>是</span>{else/}<span>否</span> {/eq}</td>
                     <td class="list_type">
                         {eq name="vo.is_send" value="1"}

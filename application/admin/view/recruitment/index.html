@@ -114,8 +114,8 @@
                     <td><span>{$vo.experience}</span></td>
                     <td><span>{$vo.number}</span></td>
                     <td><span>{$vo.wages}</span></td>
-                    <td><a href="{:Url('add','id='.$vo.id)}" class="click-text">{$vo.content|strip_tags|msubstr=0,20}</a></td>
-                    <td class="text-right mail-date" style="white-space: nowrap"><a href="{:Url('add','id='.$vo.id)}">{$vo.create_time}</a></td>
+                    <td>{$vo.content|strip_tags|msubstr=0,20}</td>
+                    <td class="text-right mail-date" style="white-space: nowrap">{$vo.create_time|strtotime|date='Y-m-d H:i',###}</td>
 
                     {eq name="$vo.status" value="1"}
                     <td><span >启用</span></td>

@@ -100,7 +100,7 @@
                         {$vo.price}
                     </td>
                     <td>
-                        {$vo.create_time}
+                        {$vo.create_time|strtotime|date='Y-m-d H:i',###}
                     </td>
                     <td>
                         {eq name="$vo.status" value="0"}

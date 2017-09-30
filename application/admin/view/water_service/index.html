@@ -127,7 +127,7 @@
                 <td>{$vo.address|msubstr=0,20}</td>
                 <td>{$vo.number}</td>
                 <td>{$vo.mobile}</td>
-                <td>{$vo.create_time|date='Y-m-d',###}</td>
+                <td>{$vo.create_time|date='Y-m-d H:i',###}</td>
 
                     {eq name="$vo.status" value="1"}
                     <td><span class="txt-success">审核通过</span></td>

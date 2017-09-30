@@ -114,7 +114,7 @@
                         {$vo.money} 元
                     </td>
                     <td>
-                        {$vo.create_time}
+                        {$vo.create_time|strtotime|date='Y-m-d H:i',###}
                     </td>
                     {eq name="$vo.status" value="0"}
                     <td>未审核</td>

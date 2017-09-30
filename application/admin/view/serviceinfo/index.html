@@ -106,7 +106,7 @@
                     <td>{$vo.title}</td>
                     <td><span>{$vo.content|strip_tags|msubstr=0,50}</span></td>
                     <td><span>{$vo.source}</span></td>
-                    <td class="text-right mail-date" style="white-space: nowrap"><span>{$vo.create_time}</span></td>
+                    <td class="text-right mail-date" style="white-space: nowrap"><span>{$vo.create_time|strtotime|date='Y-m-d H:i',###}</span></td>
 
                     {eq name="$vo.status" value="1"}
                     <td><span >启用</span></td>

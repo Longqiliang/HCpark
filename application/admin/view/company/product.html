@@ -87,7 +87,7 @@
                     </td>
                     <td>{$vo.name}</td>
                     <td>{$vo.detail}</td>
-                    <td>{$vo.create_time}</td>
+                    <td>{$vo.create_time|strtotime|date='Y-m-d H:i',###}</td>
                     <td>
                         <a data-toggle="modal" style="color: #ffffff;" href="#modal-form"  class=" btn-sm btn-primary" onclick="getCompanyserver('{$vo.id}')"> 编辑</a>
                         <a onclick="delItem('{$vo.id}','{:Url(\'moveToTrash\')}')" class=" confirm btn-sm btn-info">删除</a>
