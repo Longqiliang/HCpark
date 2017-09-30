@@ -22,8 +22,10 @@ use app\index\model\Comment;
 class Base extends Controller
 {
     protected function _initialize(){
-        session('userId', '15706844655');//测试  15706844655
-        session('park_id', 3);//测试
+        //session('userId', '18867514826');//测试
+        //session('userId', '13605804482');
+        //session('userId', '15706844655');//测试
+        //session('park_id', 3);//测试
 //        session('thirdUserId', '1001');
 
         /* 读取数据库中的配置 */
@@ -42,8 +44,8 @@ class Base extends Controller
         $weObj = new TPWechat(config('company'));
         if(empty($userId)) {
             $redirect_uri = config("login_url");
-            $url = $weObj->getOauthRedirect($redirect_uri);
-            $this->redirect($url);
+            $url = $weObj->getOauthRedirect($redirect_uri);//授权网址；
+            $this->redirect($url);//跳转网页；
         }
 
         // 2获取jsapi_ticket
