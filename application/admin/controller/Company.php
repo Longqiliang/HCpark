@@ -15,8 +15,13 @@ class Company extends Admin
 {
     /*企业详细列表*/
     public function index (){
+
+        $type = config('company_type');
+        //dump($type);
+       // echo $type[0];
         $search = input('search');
         $parkid  =session("user_auth")['park_id'];
+        $type = config('company_type');
         $map = ['park_id'=>$parkid];
         if (!empty($search)) {
             $map['name'] = ['like', "%$search%"];
@@ -24,8 +29,13 @@ class Company extends Admin
         $companyList = ParkCompany::where($map)->order('id  asc')->paginate();
         foreach ($companyList as $k=>$v){
             $v['present'] = mb_substr(strip_tags($v['present']),0,30);
+            if ($v['type'] >= 0){
+                $v['type'] = $type[$v['type']];
+            }else{
+                $v['type'] = '暂未分类';
+            }
         }
-       /// dump($companyList);
+
         $this->assign('list',$companyList);
 
         return  $this->fetch();

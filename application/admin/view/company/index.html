@@ -75,7 +75,8 @@
                 <thead>
                 <tr>
                     <!--<th style="width:0"></th>-->
-                    <th style="width:50%">企业名称</th>
+                    <th style="width:35%">企业名称</th>
+                    <th>企业类型</th>
                     <th style="width:15%">联系方式</th>
                     <th style="width:35%">操作</th>
                 </tr>
@@ -90,15 +91,18 @@
                             {$vo.name}
                     </td>
                     <td>
+                        {$vo.type}
+                    </td>
+                    <td>
                         {empty name="$vo.mobile"}暂无
                         {else/}{$vo.mobile}
                         {/empty}
                     </td>
 
                     <td>
-                        <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">企业信息</a>
-                        <a  href="{:Url('product','id='.$vo.id.'&type=1')}" class="btn-sm btn-info" style="color:#fff">企业产品</a>
-                        <a  href="{:Url('product','id='.$vo.id.'&type=2')}" class="btn-sm btn-warning" style="color:#fff">企业服务</a>
+                        <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-success" style="color:#fff">企业信息</a>
+                        <a  href="{:Url('product','id='.$vo.id.'&type=1')}" class="btn-sm btn-primary" style="color:#fff">企业产品</a>
+                        <a  href="{:Url('product','id='.$vo.id.'&type=2')}" class="btn-sm btn-info" style="color:#fff">企业服务</a>
                     </td>
                 </tr>
                 {/volist}

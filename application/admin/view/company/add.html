@@ -3,10 +3,13 @@
 {block name="style"}
 <link href="/static/summernote/summernote.css" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
-
+    .company{
+        height:32px;
+    }
 </style>
 
 {/block}
@@ -34,12 +37,24 @@
                         <div class="col-md-10 column">
                             <input  type="file" class="file input-file"><br>
                             <sapn>
-                                <a class="front_cover" href="#">
+                                <a class="front_cover" href="{$companyInfo.img}">
                                     <img class="front_cover_img" src="{$companyInfo.img}" width="100px"/>
                                 </a>
                             </sapn>
                         </div>
+                        <div class="col-md-2 column"><h3>企业分类</h3>
+                        </div >
+                        <div class="col-md-10 column" >
+                            <select name="company_type" id="" class="company col-md-4">
+                                {volist name="Think.config.company_type" id="vo"}
+                                    <option value="{$key}" {eq name="$companyInfo.type" value="$key"} selected {/eq}>{$vo}</option>
+                                {/volist}
+                            </select>
 
+                        </div >
+                        <div class="col-md-12 column">
+                            <br>
+                        </div>
                         <div class="col-md-2 column"><h3>联系电话</h3>
                         </div >
                         <div class="col-md-10 column">
@@ -156,6 +171,7 @@
         if(response.code == 1) {
             $("input[name='front_cover']").val(response.data);
             $('.front_cover_img').attr('src',response.data);
+            $('.front_cover').attr('href',response.data);
         } else {
             updateAlert(response.msg, 'warning');
         }
@@ -171,6 +187,7 @@
     });
     /*添加企业信息*/
     function companyMobile(){
+        var compantType = $("[name = 'company_type']").val();
         var image=$("input[name='front_cover']").val();
         var phone = $("[name='phone']").val();
         var contents =$('#summernote').summernote('code');
@@ -178,7 +195,7 @@
         $.ajax({
             type:"POST",
             url:"{:Url('Company/changeinfo')}",
-            data:{id:'{$companyInfo.id}',img:image,mobile:phone,images:'{$companyInfo.img}',about_us:contents,present:presents},
+            data:{id:'{$companyInfo.id}',img:image,mobile:phone,images:'{$companyInfo.img}',about_us:contents,present:presents,type:compantType},
             success:function (data) {
                 if(data.code==1){
                     updateAlert(data.msg+ ' 页面即将自动跳转~','success');
