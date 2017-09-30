@@ -6,19 +6,32 @@
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
-    .image{
-       padding: 0px;
-    }
     .del{
         position: absolute;
-        left:120px;
-        top:5px;
+        right:4px;
+        top:6px;
+        color: #666;
     }
     .parent{
-        box-sizing: border-box;
         position:relative ;
-        padding-right: 10px;
-        margin-bottom: 20px;
+    }
+    #sortable { list-style-type: none; margin: 0 0 10px 0; padding: 0; }
+    #sortable li { margin: 0 ; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; display: block}
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+    .select{
+        display: inline-block;
+        height: 32px;
+    }
+    .img-item{
+        box-sizing: content-box;
+        width:200px;
+        height:100px;
+        position: relative;
+        padding:25px 10px 10px 10px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        background: #f1f1f1;
+
     }
 </style>
 {/block}
@@ -71,22 +84,30 @@
                     </div>
 
                     <div class="form-group"><label class="col-md-1 "><h3>&nbsp;&nbsp;&nbsp;&nbsp;照片:</h3></label>
-                        <div class="col-sm-5"> <input class="input-file" type="file" class="file" multiple></div>
+                        <div class="col-sm-5"> <input class="input-file"  type="file" class="file" multiple>
+                            <span>建议上传宽高比例为2:1的图片</span>
+                        </div>
+
                     </div>
                     <div class="form-group ">
                         <div class="col-sm-6 image" >
+                            <div class="img-items zt-flex zt-flex-wrap">
                             {foreach name="img" item="vo"}
-                            <div class="col-sm-3 parent"  >
-                                <img src="{$vo}" alt="" style='width: 130px;height: 200px;' class="img" >
-                                <div class="del"><img src="/admin/images/delete.png" alt="" width="20px" height="20px"></div>
-                            </div>
+                                <div class="img-item">
+                                    <a class="front_cover" href="{$vo}">
+                                        <img src="{$vo}" alt="" style='width: 200px;height: 100px;' class="img parent">
+                                    </a>
+                                    <div class="del"><span class="glyphicon glyphicon-remove"></span></div>
+                                </div>
                             {/foreach}
+                           </div>
                         </div>
+
                     </div>
                 </div>
                 <input type="hidden" name="uid" value="{$info.id}">
                 <div class="mail-body text-right tooltip-demo">
-                    <a href="javascript:void(0)" class="btn-sm btn-primary" onclick="addRent()"><i class="fa fa-reply"></i>&nbsp;发送</a>
+                    <a href="javascript:void(0)" class="btn btn-primary" onclick="addRent()">保存</a>
                 </div>
                 <div class="clearfix"></div>
             </form>
@@ -109,7 +130,9 @@
             radioClass: 'iradio_square-green'
         });
     });
-
+    (function () {
+        addImgBox()
+    })()
     $(".input-file").fileinput({
         showPreview: false,
         language: 'zh', //设置语言
@@ -122,11 +145,15 @@
     }).on('fileuploaded', function(event, data, previewId, index) {
         var response = $.parseJSON(data.response);
         if(response.code == 1) {
-            var html = "<div class='col-sm-3  parent'>" +
-                "<img src='"+response.data+"' alt='' style='width: 130px;height: 200px;' class='img'>" +
-                " <div class='del'><img src='/admin/images/delete.png' alt='' width='20px' height='20px'></div>"
-            "</div>";
-            $('.image').append(html);
+            var html =
+                    '<div class="img-item">'+
+                    '<a class="front_cover" href="'+response.data+'">'+
+                    '<img src="'+response.data+'" alt="" style="width: 200px;height: 100px;" class="img parent">'+
+                    '</a>'+
+                    '<div class="del" onclick="delImg(this)"><span class="glyphicon glyphicon-remove"></span></div>'+
+                    '</div>';
+            $('.img-items').append(html);
+            addImgBox()
             $('.del').click(function(){
                 $(this).parent().remove();
             });
@@ -134,14 +161,16 @@
             updateAlert(response.msg, 'warning');
         }
     });
-    $(".front_cover").imgbox({
-        overlayShow: false,
-        hideOnContentClick: true,
-        slideshow: false,
-        theme: 'dark',
-        alignment: 'center',       // Position - may be auto OR center.
-        allowMultiple: false,
-    });
+    function addImgBox() {
+        $(".front_cover").imgbox({
+            overlayShow: false,
+            hideOnContentClick: true,
+            slideshow: false,
+            theme: 'dark',
+            alignment: 'center',       // Position - may be auto OR center.
+            allowMultiple: false,
+        });
+    }
     $('.del').click(function(){
         $(this).parent().remove();
     });

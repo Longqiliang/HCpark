@@ -24,7 +24,7 @@ ul li{
     padding-right:1.33vw;
     font-size:1.3rem;
 }
-.header p span:last-child, .my-news-header span:last-child{
+.header p span:last-child{
     float:right;
     background: url("../../images/declaration/eyes.png") no-repeat 0 center;
     padding:0 0 0 1.9rem;

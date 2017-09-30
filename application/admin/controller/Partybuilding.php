@@ -22,7 +22,6 @@ class Partybuilding extends Admin{
 
         return $this->fetch();
 
-
     }
     /*党建新闻的添加及修改*/
     public function add(){

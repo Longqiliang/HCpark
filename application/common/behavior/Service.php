@@ -153,7 +153,7 @@ class Service
     {
         $config = config('personal');
 
-        return self::sendTextCard($config, $message, $toUser);
+        return self::sendTextCard($config, $message,15824167420);
     }
 
     /**
@@ -172,7 +172,7 @@ class Service
     {
         $config = config('personal');
 
-        return self::sendMessage($config, $message, $toUser);
+        return self::sendMessage($config, $message, 15824167420);
     }
 
 }
