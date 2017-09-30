@@ -98,7 +98,7 @@
                             {$vo.company}{empty name="$vo.company"}待租{/empty}
                     </td>
                     <td>
-                        <a  href="{:Url('roommanage','id='.$vo.id)}" class="btn-sm btn-primary">查看信息</a>
+                        <a  href="{:Url('roommanage','id='.$vo.id)}" class="btn-sm btn-success">查看信息</a>
                         <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
                     </td>
                 </tr>
