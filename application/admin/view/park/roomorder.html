@@ -98,7 +98,7 @@
                        {$vo.rent_id}
                     </td>
                     <td>
-                       {$vo.remark}
+                        <a  class="under-line" data-toggle="modal" data-target="#remark-modal" data-text="{$vo.remark}">{$vo.remark|msubstr=0,20}</a>
                     </td>
 
                     <td>
@@ -125,6 +125,22 @@
             <div class="btn-group pull-right">{$list->render()}</div>
         </div>
     </div>
+    <div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="remark-modal" aria-label="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">备注详情</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {/block}
 
@@ -139,6 +155,15 @@
         $(".check-all").on("ifChanged",function(){
             $("tbody").find(".ids").iCheck("toggle");
         });
+
+        //绑定模态框展示的方法
+        $("#remark-modal").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            console.log(button);
+            var recipient = button.data('text');
+            var modal = $(this);
+            modal.find('.modal-body').html(recipient);
+        })
     });
     function getCompany(){
         $.ajax({
