@@ -20,7 +20,6 @@ class PublicArea extends Admin
     {
         $AdvertisingService = new AdvertisingService();
         $park_id = session('user_auth')['park_id'];
-
         $search = input('search');
         if (!empty($search)) {
             $map['park_id'] = $park_id;
@@ -36,7 +35,6 @@ class PublicArea extends Admin
                 'status' => array(0 => '禁用', 1 => '启用'),
                 'type' => array(1 => '大厅广告位', 2 => '多功能厅', 3 => '大堂LED屏')
             ));
-
         } else {
             $map['park_id'] = $park_id;
             $data = $AdvertisingService->where($map)->order('id asc')->paginate();
@@ -88,7 +86,7 @@ class PublicArea extends Admin
                 $time = array();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('neq', 1)
+                    'status' => array('in',[0,2])
                 ];
                 $serviceInfo = $AdvertisingService->where('id', 1)->find();
                 $list = $AdvertisingRecord->where($map)->select();
@@ -113,11 +111,11 @@ class PublicArea extends Admin
                         'payment_voucher' => $map[0]['payment_voucher'],
                         'userid' => $info['create_user']
                     ];
-
                     $re['day'] = "";
-
+                    $re['id'] = [1, array()];
                     foreach ($map as $value) {
                         $re['day'] .= date('Y-m-d', $value['order_time'])."   " ;
+                        array_push($re['id'][1],$value['id']);
                     }
                     if ($map[0]['status'] == 0) {
 
@@ -129,7 +127,9 @@ class PublicArea extends Admin
                     }
                     $re['type'] = 1;
                     $re['state'] = $map[0]['status'];
+                    $re['id']=json_encode( $re['id']);
                     array_push($data, $re);
+
                 }
                 break;
             case 2:
@@ -138,7 +138,7 @@ class PublicArea extends Admin
                 $create_time = array();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('neq', 1)
+                    'status' => array('in',[0,2])
                 ];
                 $serviceInfo = $AdvertisingService->where('id', 2)->find();
                 $list = $Fa->where($map)->order('create_time desc')->select();
@@ -171,7 +171,7 @@ class PublicArea extends Admin
                         array_push($map_time, $m['order_time']);
                     }
                     $mtime_list = array_values(array_unique($map_time));
-
+                    $re['id'] = [2, array()];
                     foreach ($mtime_list as $value) {
                         $re['day'] .= date('Y-m-d', $value);
                         $length =0;
@@ -187,6 +187,7 @@ class PublicArea extends Admin
                             if($length==count($map)){
                                 $re['day'].="<br>";
                             }
+                            array_push($re['id'][1],$value2['id']);
                         }
 
                     }
@@ -201,6 +202,7 @@ class PublicArea extends Admin
                     }
                     $re['type'] = 2;
                     $re['state'] = $map[0]['status'];
+                    $re['id']=json_encode( $re['id']);
                     array_push($data, $re);
 
                 }
@@ -212,7 +214,7 @@ class PublicArea extends Admin
                 $serviceInfo = $AdvertisingService->where('id', 3)->find();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('neq', 1)
+                    'status' => array('in',[0,2])
                 ];
                 $list = $led->where($map)->order('create_time desc')->select();
                 //所有的创建时间
@@ -238,6 +240,7 @@ class PublicArea extends Admin
                         'mobile' => isset($info->findUser->mobile) ? $info->findUser->mobile : "未找到",
                     ];
                     $re['day'] = "";
+                    $re['id'] = [3, array(),];
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
                     $map_time = array();
                     foreach ($map as $m) {
@@ -280,14 +283,12 @@ class PublicArea extends Admin
                                         $re['day'] .= "17:00-18:00 ";
                                         break;
                                 }
-
                             }
                             if($length==count($map)){
                              $re['day'] .= "<br>";
-
                             }
+                            array_push($re['id'][1],$value2['id']);
                         }
-
                     }
                     if ($map[0]['status'] == 0) {
 
@@ -300,11 +301,12 @@ class PublicArea extends Admin
                     }
                     $re['type'] = 3;
                     $re['state'] = $map[0]['status'];
+                    $re['id']=json_encode( $re['id']);
                     array_push($data, $re);
+
                 }
                 break;
         }
-       // echo json_encode($data);
         $this->assign('data', $data);
         return $this->fetch();
     }
@@ -351,6 +353,34 @@ class PublicArea extends Admin
 
           return  $this->success("取消成功");
 
+    }
+
+    public function moveToTrash(){
+        $data = input('');
+
+        $item=array();
+        foreach ($data['ids'] as $id){
+           $a = json_decode($id);
+           switch ($a[0]){
+               case  1:
+                   $item= array_values(array_unique($a[1]));
+                   $result = AdvertisingRecord::where('id', 'in', $item)->update(['status' => -1]);
+                   break;
+               case  2:
+                   $item= array_values(array_unique($a[1]));
+                   $result = FunctionRoomRecord::where('id', 'in', $item)->update(['status' => -1]);
+                   break;
+               case  3:
+                   $item= array_values(array_unique($a[1]));
+                   $result = LedRecord::where('id', 'in', $item)->update(['status' => -1]);
+                   break;
+           }
+        }
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
     }
 
 

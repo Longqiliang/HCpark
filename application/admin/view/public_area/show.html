@@ -66,6 +66,7 @@
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
+                <!--<button class="btn btn-white btn-sm m-l" onclick="delItem1('{:Url('moveToTrash')}')"><i class="fa fa-trash-o"></i></button>-->
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
             </div>
         </div>
@@ -113,7 +114,7 @@
                 {volist name="data" id="vo"}
                 <tr class="read">
                     <td class="check-mail">
-                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.time}">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
                     <td class="mail-subject">
                         {$vo.time|date="Y-m-d",###}
@@ -146,7 +147,7 @@
                            style="color: #fff">取消</a>
 
                         {/eq}
-                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+                        <a class="btn-sm btn-info" onclick="delItem1('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
 
                     </td>
                 </tr>
@@ -162,6 +163,39 @@
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script>
+
+    function delItem1(id,href) {
+               var ids = []
+
+                ids.push(id);
+
+            $.ajax({
+                data:{ids:ids},
+                type:"POST",
+                url:href,
+                success:function (data){
+                    console.log(data);
+                    if(data.code==1){
+                        swal({
+                            title: "",
+                            text: data.msg,
+                            type: "success",
+                            confirmButtonColor: "#1ab394",
+                            confirmButtonText: "确认"
+                        });
+                        window.location.reload();
+                    }else{
+                        swal({
+                            title: "",
+                            text: data.msg,
+                            type: "warning",
+                            confirmButtonColor: "#ef6060",
+                            confirmButtonText: "确认"
+                        });
+                    }
+                }
+            })
+    }
     function showpayment(a) {
         var $this = $(a);
         console.log($this);
