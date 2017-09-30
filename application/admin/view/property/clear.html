@@ -126,7 +126,7 @@
                         <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
 
                         {/eq}
-                        <button class="btn btn-sm btn-info " onclick="changeStatus('{$vo.id}',-1)">删除</button>
+                        <a onclick="delItem('{$vo.id}','{:Url(\'moveToTrash\')}')" class=" confirm btn-sm btn-info">删除</a>
                     </td>
                 </tr>
                 {/volist}

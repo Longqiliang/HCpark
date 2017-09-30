@@ -75,7 +75,7 @@
                 <thead>
                 <tr>
                     <th></th>
-                    <th>新闻标题</th>
+                    <th width="200px">新闻标题</th>
                     <th  width="200px">创建时间</th>
                     <th  width="200px">是否轮播</th>
                     <th >是否推送</th>
@@ -117,7 +117,10 @@
                         {/volist}
                     </td>
                     <td> <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始推送</a>
-                        <a href="{:Url('add','id='.$vo.id)}" class=" confirm btn-sm btn-primary">编辑</a>
+                        <a href="{:Url('add','id='.$vo.id)}" class=" confirm btn-sm btn-success">编辑</a>
+                        {gt name="$vo.type" value="1"}
+                        <a href="{:Url('showcomment','id='.$vo.id)}" class=" confirm btn-sm btn-primary">查看评论</a>
+                        {/gt}
                         <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
                     </td>
 

@@ -16,6 +16,7 @@ use app\index\model\Collect;
 use think\Loader;
 use wechat\TPWechat;
 use think\Db;
+use app\index\model\Comment;
 class News extends Admin
 {
     /*新闻通告首页面*/
@@ -231,6 +232,40 @@ class News extends Admin
 
         return $this->fetch();
 
+    }
+
+    /**
+     * 园区通告，好文分享显示评论
+     */
+    public function showcomment(){
+        $posts = new Comment();
+        // 评论列表
+        $map = [
+            'target_id' => input('id'),
+            'status'=>array('neq',-1),
+        ];
+        $comments = Comment::where($map)->order('id desc')->paginate();
+        foreach ($comments as $value) {
+            $userinfo = WechatUser::where('userid', $value['user_id'])->field('header,avatar')->find();
+        }
+        //$count = CommunicateComment::where($map)->count();
+        //echo json_encode($post);
+        //echo json_encode($comments);
+        $this->assign('list', $comments);
+
+        return $this->fetch();
+    }
+
+    //逻辑删除评论
+    public function deleteComment() {
+        $ids = input('ids/a');
+
+        $result = Comment::where('id', 'in', $ids)->update(['status' => -1]);
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
     }
 
 

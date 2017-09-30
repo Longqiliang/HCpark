@@ -259,7 +259,16 @@ class Communication extends Admin
 
     }
 
-
+    //查看成员逻辑删除
+    public function moveToTrash() {
+        $ids = input('ids/a');
+        $result = CommunicateUser::where('id', 'in', $ids)->update(['status' => -1]);
+        if($result) {
+            return $this->success('删除成功');
+        } elseif(!$result) {
+            return $this->error('删除失败');
+        }
+    }
 
 
 
