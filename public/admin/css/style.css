@@ -8401,6 +8401,9 @@ body.md-skin {
 .zt-space-around{
   justify-content: space-around;
 }
+.zt-flex-wrap{
+  flex-wrap: wrap;
+}
 
 
 /*可点击文字*/
