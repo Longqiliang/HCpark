@@ -58,8 +58,8 @@ body{
     border-right: 1px solid #e5e5e5;
 }
 .tabs .active {
-    color: #2baf2b;
-    border-bottom:2px solid #2baf2b!important;
+    color: #7DB8F2;
+    border-bottom:2px solid #7DB8F2!important;
 }
 /*覆盖*/
 .tabs .tab {

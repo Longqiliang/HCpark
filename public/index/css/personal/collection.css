@@ -36,8 +36,8 @@ body{
     border-bottom: 2px solid transparent;
 }
 .tabs .active {
-    color: #2baf2b;
-    border-bottom:2px solid #2baf2b!important;
+    color: #7DB8F2;
+    border-bottom:2px solid #7DB8F2!important;
 }
 /*覆盖*/
 .tabs .tab {
