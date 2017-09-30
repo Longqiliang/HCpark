@@ -98,7 +98,7 @@
                         </div>
                     </td>
                     <td><span>{$vo.source}</span></td>
-                    <td><span>{$vo.content|strip_tags|msubstr=0,20}</span></td>
+                    <td><span>{$vo.content|strip_tags|str_replace='&nbsp;',"",###|msubstr=0,30}</span></td>
                     <td class="list_type">
                         <span>{$vo.type_text}</span>
                     </td>
