@@ -127,6 +127,7 @@ class Communication extends Admin
             }
 
             $data['group_id'] = $id;
+            $data['status'] = ['>',-1];
             $list = $cuser->where($data)->paginate();
             int_to_string($list, $map = array('status' => array(-1 => '申请失败', 1 => '申请中', 2 => '普通成员', 3 => '管理员')));
             foreach ($list as $value) {
