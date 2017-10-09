@@ -546,6 +546,9 @@ textarea::-webkit-input-placeholder {
     font-size: 1.3rem;
     text-align: center;
 }
+.prompt-message>a{
+    color: #ccc;
+}
 .mint-popup, .picker-slot{
     width: 100%;
 }
