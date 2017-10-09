@@ -9,7 +9,7 @@ use app\common\model\WechatTag;
 use app\index\model\WechatUser;
 use app\common\behavior\Service;
 use app\common\model\CompanyContract;
-
+use app\common\model\ParkCompany;
 class Index extends Admin {
 
     public function index() {
