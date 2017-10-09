@@ -96,7 +96,7 @@ class Service extends Base
 
         //人才服务
         $talentService = $app->where('type', 2)->order('id asc')->select();
-        $Talent  = array();
+        $Talent = array();
         foreach ($talentService as $value) {
 
             $parkid = json_decode($value['park_id']);
@@ -254,46 +254,49 @@ class Service extends Base
     }
 
     /*企业招聘详情页*/
-    public function talentdetail(){
+    public function talentdetail()
+    {
         $id = input('id');
-        $info = EnterpriseModel::where('id',$id)->find();
+        $info = EnterpriseModel::where('id', $id)->find();
         $this->assign('info', json_encode($info));
         return $this->fetch();
     }
 
     /*服务信息列表下拉刷新*/
-    public function serviceList(){
+    public function serviceList()
+    {
         $len = input("length");
-        $parkid =session('park_id');
-        $map=array(
-            'park_id'=>$parkid,
-            'status'=>1,
+        $parkid = session('park_id');
+        $map = array(
+            'park_id' => $parkid,
+            'status' => 1,
         );
 
         $list = ServiceModel::where($map)
             ->order("create_time desc")
-            ->limit($len,6)
+            ->limit($len, 6)
             ->select();
 
-        if ($list){
+        if ($list) {
 
             return json(['code' => 1, 'data' => $list]);
-        }else{
+        } else {
 
-            return json(['code' => 0, 'msg' =>"没有更多内容了"]);
+            return json(['code' => 0, 'msg' => "没有更多内容了"]);
         }
 
     }
 
     /*服务信息详情页*/
-    public function infoDetail(){
+    public function infoDetail()
+    {
         $id = input('id');
         $info = ServiceModel::get($id);
-        $info['views']=$info['views']+1;
+        $info['views'] = $info['views'] + 1;
         $info->save();
-        $parkid =session('park_id');
+        $parkid = session('park_id');
         //发布园区
-        $park=Park::where('id','eq',$parkid)->field('name')->find();
+        $park = Park::where('id', 'eq', $parkid)->field('name')->find();
 
         $this->assign('park', $park['name']);
         $this->assign('news', $info);
@@ -310,6 +313,7 @@ class Service extends Base
     {
         return $this->fetch();
     }
+
     //预约
     public function order()
     {
@@ -342,17 +346,17 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $data['app_id'] . '/can_check/yes/id/' . $compantService->id
             ];
 
-           /* $new = [
-                "title" => $message['title'],
-                "message" => $message['description'],
-                'type' => 1,
-                'park_id' => session('park_id'),
-                'app_id' => $data['app_id'],
-                'sid' => $compantService->id,
-                'create_time' => time(),
-                'status' => 0
-            ];
-            $savemessage = $personalMessage->save($new);*/
+            /* $new = [
+                 "title" => $message['title'],
+                 "message" => $message['description'],
+                 'type' => 1,
+                 'park_id' => session('park_id'),
+                 'app_id' => $data['app_id'],
+                 'sid' => $compantService->id,
+                 'create_time' => time(),
+                 'status' => 0
+             ];
+             $savemessage = $personalMessage->save($new);*/
 
 
             //推送给运营
@@ -421,17 +425,17 @@ class Service extends Base
             ];
 
 
-           /* $new = [
-                "title" => $message['title'],
-                "message" => $message['description'],
-                'type' => 1,
-                'park_id' => session('park_id'),
-                'app_id' => $data['app_id'],
-                'sid' => $PillarService->id,
-                'create_time' => time(),
-                'status' => 0
-            ];
-            $savemessage = $personalMessage->save($new);*/
+            /* $new = [
+                 "title" => $message['title'],
+                 "message" => $message['description'],
+                 'type' => 1,
+                 'park_id' => session('park_id'),
+                 'app_id' => $data['app_id'],
+                 'sid' => $PillarService->id,
+                 'create_time' => time(),
+                 'status' => 0
+             ];
+             $savemessage = $personalMessage->save($new);*/
 
             //推送给运营
             $reult = $this->commonSend(1, $message);
@@ -746,7 +750,6 @@ class Service extends Base
                 "description" => "您有旧卡缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/6/can_check/yes/id/' . $CardparkService->getLastInsID()
             ];
-
             /*$new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
@@ -981,7 +984,7 @@ class Service extends Base
         for ($i = 1; $i < 8; $i++) {
             $days = array();
             $time = mktime(0, 0, 0, date('m'), date('d') + $i, date('Y')) - 1;
-            $map = ['order_time' => $time, 'status' => array('in', [1,2])];
+            $map = ['order_time' => $time, 'status' => array('in', [1, 2])];
             $re = $FunctionRoomRecord->where($map)->select();
             if ($re) {
                 foreach ($re as $value) {
@@ -1215,9 +1218,8 @@ class Service extends Base
             ];
             array_push($user_check2, $info);
         }
-
         $map['create_user'] = array('neq', $user_id);
-        $map['status'] = array('in', [1,2]);
+        $map['status'] = array('in', [1, 2]);
         $map['order_time'] = $Today;
         //今天已选的
         $all_check = $led->where($map)->select();
@@ -1376,7 +1378,7 @@ class Service extends Base
                 $time = array();
                 $create_time = array();
                 $serviceInfo = $service->where('id', 1)->find();
-                $list = $ad->where(['create_user'=> $user_id,'status'=> ['neq',-1]])->order('create_time desc')->select();
+                $list = $ad->where(['create_user' => $user_id, 'status' => ['neq', -1]])->order('create_time desc')->select();
                 //所有的创建时间
                 foreach ($list as $l) {
                     array_push($create_time, $l['create_time']);
@@ -1422,7 +1424,7 @@ class Service extends Base
                 $time = array();
                 $create_time = array();
                 $serviceInfo = $service->where('id', 2)->find();
-                $list = $fs->where(['create_user'=> $user_id,'status'=> ['neq',-1]])->order('create_time desc')->select();
+                $list = $fs->where(['create_user' => $user_id, 'status' => ['neq', -1]])->order('create_time desc')->select();
                 //所有的创建时间
                 foreach ($list as $l) {
                     array_push($create_time, $l['create_time']);
@@ -1497,7 +1499,7 @@ class Service extends Base
                 $time = array();
                 $create_time = array();
                 $serviceInfo = $service->where('id', 3)->find();
-                $list = $led->where(['create_user'=> $user_id,'status'=> ['neq',-1]])->order('create_time desc')->select();
+                $list = $led->where(['create_user' => $user_id, 'status' => ['neq', -1]])->order('create_time desc')->select();
                 //所有的创建时间
                 foreach ($list as $l) {
                     array_push($create_time, $l['create_time']);
@@ -1580,6 +1582,7 @@ class Service extends Base
         $this->assign('data', json_encode($data));
         return $this->fetch();
     }
+
     /*物业报修*/
     public function repair()
     {
@@ -2030,8 +2033,8 @@ class Service extends Base
         } //物业维护 $types = [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"];
         else if ($appid == 2) {
             $info = PropertyServer::get($id);
-            $info['image'] = json_decode($info['image']);
-
+            $info['image'] = !empty($info['image']) ? json_decode($info['image']) : "";
+            $info['proof'] = !empty($info['proof']) ? json_decode($info['proof']) : "";
 
         } //饮水
         elseif ($appid == 3) {
@@ -2173,18 +2176,18 @@ class Service extends Base
                 //推送给用户
                 $reult = $this->commonSend(4, $message, $users);
                 if ($reult) {
-                   /* $new = [
-                        "title" => $message['title'],
-                        "message" => $message['description'],
-                        'type' => 3,
-                        'park_id' => session('park_id'),
-                        'app_id' => $data['appid'],
-                        'sid' => $id,
-                        'create_time' => time(),
-                        'status' => 0,
-                        'userid' => $users
-                    ];
-                    $savemessage = $personalMessage->save($new);*/
+                    /* $new = [
+                         "title" => $message['title'],
+                         "message" => $message['description'],
+                         'type' => 3,
+                         'park_id' => session('park_id'),
+                         'app_id' => $data['appid'],
+                         'sid' => $id,
+                         'create_time' => time(),
+                         'status' => 0,
+                         'userid' => $users
+                     ];
+                     $savemessage = $personalMessage->save($new);*/
                     return $this->success("预约成功");
                 } else {
                     return $this->error("推送失败");
@@ -2193,85 +2196,105 @@ class Service extends Base
                 break;
 
             case  2:
-                $message = [
-                    "title" => "物业报修提示",
-                    "description" => "您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
-                ];
-                $user = PropertyServer::get($id);
-                if ($type == 1) {
-                    $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
+                $proof = json_encode(input('proof'));
+                if (!empty($proof)) {
+                    $res = PropertyServer::where('id', $id)->update(['proof' => $proof]);
+                    if ($res) {
+                        return $this->success("上传凭证成功");
+                    } else {
+                        return $this->error("上传凭证失败");
+                    }
 
                 } else {
-                    $res = PropertyServer::where('id', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
-                    $message['description'] = "报修服务暂时无法提供";
-                }
-                if (!empty($data['check_remark'])) {
-                    $message['description'] .= "\n备注：" . $data['check_remark'];
-                }
 
-                //推送给用户
-                $reult = $this->commonSend(4, $message, $user['user_id']);
-
-                if ($reult) {
-                   /* $new = [
-                        "title" => $message['title'],
-                        "message" => $message['description'],
-                        'type' => 3,
-                        'park_id' => session('park_id'),
-                        'app_id' => $data['appid'],
-                        'sid' => $id,
-                        'create_time' => time(),
-                        'status' => 0,
-                        'userid' => $user['user_id']
+                    $message = [
+                        "title" => "物业报修提示",
+                        "description" => "您的报修园区已确认，维修人员将稍后进行维修，请您耐心等待",
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
                     ];
-                    $savemessage = $personalMessage->save($new);*/
+                    $user = PropertyServer::get($id);
+                    if ($type == 1) {
+                        $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
 
-                    return $this->success("报修成功");
-                } else {
-                    return $this->error("推送失败");
+                    } else {
+                        $res = PropertyServer::where('id', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
+                        $message['description'] = "报修服务暂时无法提供";
+                    }
+                    if (!empty($data['check_remark'])) {
+                        $message['description'] .= "\n备注：" . $data['check_remark'];
+                    }
+
+                    //推送给用户
+                    $reult = $this->commonSend(4, $message, $user['user_id']);
+
+                    if ($reult) {
+                        /* $new = [
+                             "title" => $message['title'],
+                             "message" => $message['description'],
+                             'type' => 3,
+                             'park_id' => session('park_id'),
+                             'app_id' => $data['appid'],
+                             'sid' => $id,
+                             'create_time' => time(),
+                             'status' => 0,
+                             'userid' => $user['user_id']
+                         ];
+                         $savemessage = $personalMessage->save($new);*/
+
+                        return $this->success("报修成功");
+                    } else {
+                        return $this->error("推送失败");
+                    }
                 }
-
                 break;
             //饮水
             case  3:
-                $message = [
-                    "title" => "饮水服务提示",
-                    "description" => "您的饮水服务园区已确认，稍后将有服务人员送水，请您耐心等待",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/no/id/' . $id
-                ];
-                $user = WaterModel::get($id);
-                if ($type == 1) {
-                    $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
+                $success = input('success');
+                if ($success == 1) {
+                    $result = WaterModel::where('id', 'in', $id)->update(['status' => 3]);
+                    if ($result) {
+                        return $this->success("报修成功");
+                    } else {
+                        return $this->error("推送失败");
+                    }
                 } else {
-                    $result = WaterModel::where('id', 'in', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
-                    $message['description'] = "饮水服务暂时无法提供";
-                }
-                if (!empty($data['check_remark'])) {
-                    $message['description'] .= "\n备注：" . $data['check_remark'];
-                }
-
-                //推送给用户
-                $reult = $this->commonSend(4, $message, $user['userid']);
-
-                if ($reult) {
-                    /*$new = [
-                        "title" => $message['title'],
-                        "message" => $message['description'],
-                        'type' => 3,
-                        'park_id' => session('park_id'),
-                        'app_id' => $data['appid'],
-                        'sid' => $id,
-                        'create_time' => time(),
-                        'status' => 0,
-                        'userid' => $user['user_id']
+                    $message = [
+                        "title" => "饮水服务提示",
+                        "description" => "您的饮水服务园区已确认，稍后将有服务人员送水，请您耐心等待",
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/no/id/' . $id
                     ];
-                    $savemessage = $personalMessage->save($new);*/
-                    return $this->success("报修成功");
-                } else {
-                    return $this->error("推送失败");
-                }
+                    $user = WaterModel::get($id);
+                    if ($type == 1) {
+                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
+                    } else {
+                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
+                        $message['description'] = "饮水服务暂时无法提供";
+                    }
+                    if (!empty($data['check_remark'])) {
+                        $message['description'] .= "\n备注：" . $data['check_remark'];
+                    }
 
+                    //推送给用户
+                    $reult = $this->commonSend(4, $message, $user['userid']);
+
+                    if ($reult) {
+                        /*$new = [
+                            "title" => $message['title'],
+                            "message" => $message['description'],
+                            'type' => 3,
+                            'park_id' => session('park_id'),
+                            'app_id' => $data['appid'],
+                            'sid' => $id,
+                            'create_time' => time(),
+                            'status' => 0,
+                            'userid' => $user['user_id']
+                        ];
+                        $savemessage = $personalMessage->save($new);*/
+                        return $this->success("报修成功");
+                    } else {
+                        return $this->error("推送失败");
+                    }
+                }
 
                 break;
             //保洁
@@ -2462,19 +2485,20 @@ class Service extends Base
                 //推送给用户
                 $reult = $this->commonSend(4, $message, $record['user_id']);
 
+
                 if ($reult) {
-                  /*  $new = [
-                        "title" => $message['title'],
-                        "message" => $message['description'],
-                        'type' => 3,
-                        'park_id' => session('park_id'),
-                        'app_id' => $data['appid'],
-                        'sid' => $id,
-                        'create_time' => time(),
-                        'status' => 0,
-                        'userid' => $record['user_id']
-                    ];
-                    $savemessage = $personalMessage->save($new);*/
+                    /*  $new = [
+                          "title" => $message['title'],
+                          "message" => $message['description'],
+                          'type' => 3,
+                          'park_id' => session('park_id'),
+                          'app_id' => $data['appid'],
+                          'sid' => $id,
+                          'create_time' => time(),
+                          'status' => 0,
+                          'userid' => $record['user_id']
+                      ];
+                      $savemessage = $personalMessage->save($new);*/
                     return $this->success("报修成功");
                 } else {
                     return $this->error("推送失败");
@@ -2517,12 +2541,14 @@ class Service extends Base
                 break;
         }
         switch ($type) {
+            //运营
             case 1 :
                 $user = $wechatUser->where('department', $department_id)->select();
                 foreach ($user as $value) {
                     $useridlist .= '|' . $value['userid'];
                 }
                 break;
+            //物业
             case 2 :
                 $user = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
                 foreach ($user as $value2) {
@@ -2640,53 +2666,53 @@ class Service extends Base
      *
      *retur  true/false
     */
-   /* public
-    function commonSend($type, $message, $userid = "")
-    {
-        $wechatUser = new WechatUser();
-        $useridlist = "";
-        $park_id = session('park_id');
-        //该园区运营团队
-        $operation = $this->getUserbyTagid(1, $park_id);
-        //该园区物业管理
-        $property = $this->getUserbyTagid(2, $park_id);
+    /* public
+     function commonSend($type, $message, $userid = "")
+     {
+         $wechatUser = new WechatUser();
+         $useridlist = "";
+         $park_id = session('park_id');
+         //该园区运营团队
+         $operation = $this->getUserbyTagid(1, $park_id);
+         //该园区物业管理
+         $property = $this->getUserbyTagid(2, $park_id);
 
-        switch ($type) {
-            //该园区运营团队
-            case 1 :
-                foreach ($operation as $value) {
-                    $useridlist .= '|' . $value['userid'];
-                }
-                break;
-            //该园区物业管理
-            case 2 :
-                foreach ($property as $value) {
-                    $useridlist .= '|' . $value['userid'];
-                }
-                break;
-            //物业加运营
-            case 3:
-                foreach ($operation as $value) {
-                    $useridlist .= '|' . $value['userid'];
-                }
-                foreach ($property as $value) {
-                    $useridlist .= '|' . $value['userid'];
-                }
-                break;
-            //用户
-            case 4:
-                $useridlist = $userid;
-                break;
-        }
-        $res = commonService::sendPersonalMessage($message, $useridlist);
-        if ($res['errcode'] == 0) {
-            return true;
-        } else {
+         switch ($type) {
+             //该园区运营团队
+             case 1 :
+                 foreach ($operation as $value) {
+                     $useridlist .= '|' . $value['userid'];
+                 }
+                 break;
+             //该园区物业管理
+             case 2 :
+                 foreach ($property as $value) {
+                     $useridlist .= '|' . $value['userid'];
+                 }
+                 break;
+             //物业加运营
+             case 3:
+                 foreach ($operation as $value) {
+                     $useridlist .= '|' . $value['userid'];
+                 }
+                 foreach ($property as $value) {
+                     $useridlist .= '|' . $value['userid'];
+                 }
+                 break;
+             //用户
+             case 4:
+                 $useridlist = $userid;
+                 break;
+         }
+         $res = commonService::sendPersonalMessage($message, $useridlist);
+         if ($res['errcode'] == 0) {
+             return true;
+         } else {
 
-            return false;
-        }
+             return false;
+         }
 
-    }*/
+     }*/
 
     /*推个人中心，推送人员选择公共方法（设备服务专用）
          *$type =1  该园区运营人员
@@ -2815,9 +2841,6 @@ class Service extends Base
         //echo json_encode($list);
 
     }
-
-
-
 
 
 }
