@@ -619,7 +619,16 @@ var app = new Vue({
                 console.log('isSubmit')
                 return;
             }
+
             if(_this.appid==2){
+                if(!_this.payment_voucher){
+                    swal({
+                        title:"提示",
+                        text:"请先上传报修凭证！",
+                        type:"warning",
+                        confirmButtonColor: "#fcc44b"
+                    })
+                }
                 text='是否确认上传？'
             }else{
                 text='是否确认送达？'
@@ -635,9 +644,9 @@ var app = new Vue({
                 },
                 function(){
                     if(_this.appid==2){
-                        _this.subData.success=1;
+                        _this.subData.proof=_this.payment_voucher;
                     }else{
-                        _this.subData.success=_this.payment_voucher;
+                        _this.subData.success=1;
                     }
                     _this.isSubmit = true;
                     _this.subData.appid=_this.appid;
