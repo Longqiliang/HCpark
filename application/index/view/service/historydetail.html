@@ -117,7 +117,7 @@
             </div>
             <div class="card-upload"  v-if="info.image">
                 <div class="upload-img" v-for="img in info.image">
-                    <img :src="img" alt="缴费凭证">
+                    <img :src="img" alt="缴费凭证" @click="loadImg(img,info.image)">
                 </div>
             </div>
         </div>
@@ -125,7 +125,7 @@
             <div class="card-tit">报修凭证</div>
             <div class="card-upload">
                 <div class="upload-img" v-for="img in info.proof">
-                    <img :src="img" alt="报修凭证">
+                    <img :src="img" alt="报修凭证" @click="loadImg(img,info.proof)">
                 </div>
             </div>
         </div>
@@ -401,6 +401,7 @@
 
 {block name="script"}
 <script src="/static/viewer/viewer.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
 //    时间戳转字符串过滤器
     Vue.filter('timeToString', function(time) {
@@ -422,12 +423,33 @@ var app = new Vue({
     el:'#app',
     mounted(){
 //        图片查看器
-        if(this.info.img || this.info.image){
-            var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
-                toolbar:2,
-                title:2,
+//        if(this.info.img || this.info.image){
+//            var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
+//                toolbar:2,
+//                title:2,
+//            });
+//        }
+    },
+    created(){
+        var _this = this;
+        var test =window.location.href;
+        var data ={
+            url:test
+        };
+        _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+            var data = JSON.parse(res.data);
+            console.log(data);
+            wx.config({
+                debug: false,
+                appId: data.appid,
+                timestamp:data.timestamp ,
+                nonceStr: data.noncestr,
+                signature: data.signature,
+                jsApiList: ['previewImage']
             });
-        }
+        },function () {
+
+        })
     },
     data:{
         subData:{
@@ -446,6 +468,18 @@ var app = new Vue({
         },
     },
     methods:{
+        //            微信jssdk - 图片预览
+        loadImg(src,imglist) {
+                var urls=[];
+                var current=window.location.protocol+'//'+window.location.host+src;
+                for(var i in imglist){
+                    urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
+                }
+            wx.previewImage({
+                current: current,
+                urls: urls
+            });
+        },
         delImg: function (e) {
             this.imgSrc.dataUrl.splice(e,1);
             this.payment_voucher.splice(e,1);
