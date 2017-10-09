@@ -262,19 +262,24 @@ class Personal extends Base
         $userid = session('userId');
         //费用缴纳
         $userinfo = WechatUser::where(['userid' => $userid])->find();
-        $departmentId = $userinfo['department'];
-        $map = ['company_id' => $departmentId, 'status' => ['neq', -1]];
-        $list1 = FeePayment::where($map)->order('create_time desc')->field('type as service_name,status,create_time')->select();
-        $types = [1 => '费用缴纳（水电费)', 2 => "费用缴纳（物业费)", 3 => "费用缴纳（房租费)", 4 => "费用缴纳（公耗费)"];
-        foreach ($list1 as $k => $v) {
-            $v['service_name'] = $types[$v['service_name']];
-            if ($v['status'] == 1) {
-                $v['status'] = 0;
-            }
-            if ($v['status'] == 2) {
-                $v['status'] = 1;
-            }
-        };
+        if ($userinfo['fee_status'] == 1){
+            $departmentId = $userinfo['department'];
+            $map = ['company_id' => $departmentId, 'status' => ['neq', -1]];
+            $list1 = FeePayment::where($map)->order('create_time desc')->field('type as service_name,status,create_time')->select();
+            $types = [1 => '费用缴纳（水电费)', 2 => "费用缴纳（物业费)", 3 => "费用缴纳（房租费)", 4 => "费用缴纳（公耗费)"];
+            foreach ($list1 as $k => $v) {
+                $v['service_name'] = $types[$v['service_name']];
+                if ($v['status'] == 1) {
+                    $v['status'] = 0;
+                }
+                if ($v['status'] == 2) {
+                    $v['status'] = 1;
+                }
+            };
+        }else{
+            $list1 = [] ;
+        }
+
         //物业报修
         $types = [1 => '物业报修（空调报修）', 2 => "物业报修（电梯报修）", 3 => "物业报修（其他报修）"];
         $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('type as service_name,status,create_time')->select();
