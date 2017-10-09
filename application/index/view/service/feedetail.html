@@ -14,6 +14,16 @@
         overflow: hidden;
         white-space: nowrap;
     }
+    .card-img{
+        width:100%;
+        padding:1.2rem;
+        text-align: center;
+    }
+    .card-img>img{
+        max-width:100%;
+    }
+    .upload-img img{max-width:100%;max-height:100%}
+
 </style>
 {/block}
 
@@ -34,6 +44,14 @@
             <span>{{item.fee}}元</span>
         </div>
     </div>
+    <div class="card">
+        <div class="card-tit">催缴凭证</div>
+        <div class="card-upload"  v-if="imgs">
+            <div class="upload-img" v-for="(img,index) in imgs">
+                <img :src="img" alt="缴费凭证" @click="loadImg(imgs[index],imgs)">
+            </div>
+        </div>
+    </div>
     <div class="card-more">
         <button class="btn btn-warning btn-warning-outlined btn-sm" @click="goHistory"><i class="icon icon-record"></i>缴费记录</button>
     </div>
@@ -44,25 +62,45 @@
 </div>
 {/block}
 {block name="script"}
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     var vm = new Vue({
         el:"#app",
         data:{
             type:'',
             title:'',
+            imgs:{$image},
             info:JSON.parse('{$info}')
         },
         created(){
-            console.log(JSON.parse('{$info}'));
-            this.type=this.GetQueryString('t');
-            if(this.type==1){
-                this.title= "水电费";
-            }else if(this.type==3){
-                this.title= "房租费";
-            }else if(this.type==2){
-                this.title= "物业费";
+            var _this = this;
+            var test =window.location.href;
+            var data ={
+                url:test
+            };
+            _this.type=_this.GetQueryString('t');
+            if(_this.type==1){
+                _this.title= "水电费";
+            }else if(_this.type==3){
+                _this.title= "房租费";
+            }else if(_this.type==2){
+                _this.title= "物业费";
             }
-            document.title=this.title;
+            document.title=_this.title;
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                console.log(data);
+                wx.config({
+                    debug: false,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+            },function () {
+
+            })
         },
         methods: {
             GetQueryString(name){
@@ -72,6 +110,19 @@
             },
             goHistory(){
                 window.location.href='/index/service/history/type/'+this.type+"/id/"+this.info[0].appid;
+            },
+//            微信jssdk - 图片预览
+            loadImg:function (src,imglist) {
+//                var b=[];
+//                var a='http://192.168.1.52'+src;
+//                for(var a in imglist){
+//                    b[a]='http://192.168.1.52'+imglist[a];
+//                }
+//                console.log(a,b)
+                wx.previewImage({
+                    current: src,
+                    urls: imglist
+                });
             },
             orderBtn: function () {
                 if(this.type== 2){
