@@ -325,7 +325,7 @@ class Roomrent extends Base
                 ];
                 //推送给运营
                 $service =new Service();
-                $reult = $service->commonSend2(1, $message);
+                $reult = $service->commonSend(1, $message);
                 if ($reult) {
                     $this->success('提交成功', '', $msg);
                 } else {
