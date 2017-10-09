@@ -651,6 +651,7 @@ var app = new Vue({
                     _this.isSubmit = true;
                     _this.subData.appid=_this.appid;
                     _this.subData.id=_this.info.id;
+                    console.log(_this.subData);
                     _this.$http.post('/index/service/check',_this.subData).then(function (res) {
                         var data  = res.data;
                         _this.isSubmit = false;
