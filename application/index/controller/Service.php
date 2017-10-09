@@ -2196,9 +2196,11 @@ class Service extends Base
                 break;
 
             case  2:
-                $proof = json_encode(input('proof'));
+                $proof = input('proof/a');
                 if (!empty($proof)) {
-                    $res = PropertyServer::where('id', $id)->update(['proof' => $proof]);
+                    $res = PropertyServer::get( $id);
+                    $res['proof']=json_encode($proof);
+                    $res->save();
                     if ($res) {
                         return $this->success("上传凭证成功");
                     } else {
