@@ -285,6 +285,7 @@ class Personal extends Base
         $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('type as service_name,status,create_time')->select();
         foreach ($list2 as $k => $v) {
             $v['service_name'] = $types[$v['service_name']];
+            $v['create_time'] = date("Y-m-d H:i:s",$v['create_time']);
         }
 
         //饮水服务
