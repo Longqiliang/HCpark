@@ -150,6 +150,43 @@ class Index extends Admin {
         foreach($delete as $v){
             Park::where("id",$v)->delete();
         }
+       //同步园区企业列表
+        $deleteId=[];
+        $parkCompany =new ParkCompany();
+        $companyList=WechatDepartment::where(['parentid'=>4])->select();
+        foreach ($companyList as $k=>$v){
+            $parkid =$this->findParkid($v['id']);
+            $data=[
+                'id'=>$v['id'],
+                'name'=>$v['name'],
+                'park_id'=>$parkid,
+                'company_id'=>$v['id'],
+            ];
+            $number[$k]=$v['id'];
+            $isUpdate = false;
+            if (ParkCompany::get($data['id'])) {
+                $res=$parkCompany->where('id',$data['id'])->update($data);
+
+            }else{
+                $res=$parkCompany->data($data,true)->isUpdate($isUpdate)->save();
+            }
+        }
+        $parkNumber=ParkCompany::where(['park_id'=>$parkid])->select();
+        foreach($parkNumber as $k=>$v){
+            $companyNumber[$k]=$v['id'];
+        }
+        foreach ($companyNumber as $v){
+            if (!in_array(intval($v), $number)){
+                $deleteId[] =$v;
+            }
+        }
+        foreach($deleteId as $v){
+            ParkCompany::where(['id'=> $v])->delete();
+        }
+
+
+
+
 
         $this->success('同步部门成功！');
     }
