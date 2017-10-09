@@ -9,6 +9,7 @@
 namespace app\index\controller;
 
 use app\common\behavior\Service;
+use app\common\model\FeePayment;
 use app\index\model\WechatUser;
 use app\index\model\WechatDepartment;
 use think\Loader;
@@ -213,7 +214,7 @@ class Wechat extends Controller
             echo $xml;
         }
     }
-    // 判断（维修，物业，饮水 ）
+    // 判断（维修，物业，饮水 ,费用缴纳）
     public function quartz()
     {
         $property = new   PropertyServer();
@@ -273,7 +274,36 @@ class Wechat extends Controller
                 $value->save();
             }
         }
+        //费用缴纳3天内未点击重复推送
+        $feepayment = new FeePayment();
+        $times = time() - 60*60*24*3;
+        $list = $feepayment->distinct(true)->field('type,company_id')->select();
+        foreach($list as $k=>$v){
+            $maps[$k] = ['type'=>$v['type'],'company_id'=>$v['company_id']];
+        }
+        foreach($maps as $k=>$v){
+            $map = $v;
+            $info = $feepayment->where($map)->order('id desc')->find();
+            if ($info['onclick_time']){
+                if ($info['onclick_time'] < $times && $info['onclick'] !=1){
+                    $type = [1=>"水电费",2=>"物业费",3=>"房租费",4=>"公耗费"];
+                    $userList = WechatUser::where(['department'=>$info['company_id'],'fee_status'=>1])->select();
+                    if ($info['type'] == 4){
+                        $info['type'] = 2;
+                    }
+                    $title = $type[$info['type']];
+                    $message = [
+                        "title" => $title."缴纳提示",
+                        "description" => date('m月d日', time()) . "\n您的". $title."（到期时间：".$info['expiration_time']."）应缴纳".$info['fee']."元",
+                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/feedetail/t/'.$info['type'].'/id/1',
+                    ];
+                    foreach ($userList as $k=>$v){
+                        $res = Service::sendPersonalMessage($message,18867514826);
+                    }
+                }
+            }
 
+        }
 
     }
 

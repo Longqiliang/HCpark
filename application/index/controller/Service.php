@@ -1850,18 +1850,30 @@ class Service extends Base
         if ($type == 2) {
             $map1 = ['company_id' => $departmentId, 'type' => 4];
             $info = FeePayment::where($map)->order('id desc')->find();
+            if ($info){
+                FeePayment::where('id',$info['id'])->update(['onclick'=>1,'onclick_time'=>time()]);
+            }
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
             $info['appid'] = $appid;
             $info['title'] = '物业费';
+            $info['images'] = [$info['images']];
             $info1 = FeePayment::where($map1)->order('id desc')->find();
+            if ($info1){
+                FeePayment::where('id',$info1['id'])->update(['onclick'=>1,'onclick_time'=>time()]);
+            }
             $info1['appid'] = $appid;
             $info1['title'] = '公耗费';
+            $info1['images'] = [$info1['images']];
             $info1['payment_voucher'] = isset($info1['payment_voucher']) ? unserialize($info1["payment_voucher"]) : "";
             $this->assign('info', json_encode([$info, $info1]));
 
 
         } else {
             $info = FeePayment::where($map)->order('id desc')->find();
+            $info['images'] = [$info['images']];
+            if ($info){
+                FeePayment::where('id',$info['id'])->update(['onclick'=>1,'onclick_time'=>time()]);
+            }
             if ($type == 1) {
                 $info['title'] = '水电费';
             } else if ($type == 3) {
@@ -1870,6 +1882,7 @@ class Service extends Base
             $info['appid'] = $appid;
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
             $this->assign('info', json_encode([$info]));
+            return json_encode([$info]);
         }
 
         return $this->fetch();

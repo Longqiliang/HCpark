@@ -3,6 +3,7 @@
 {block name="style"}
 <link href="/static/summernote/summernote.css" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <!--<link rel="stylesheet" href="/static/datepicker/datepicker3.css" >
 <link rel="stylesheet" href="/static/datepicker/bootstrap-datetimepicker.min.css">-->
 <link rel="stylesheet" href="/admin/css/plugins/daterangepicker/daterangepicker-bs3.css" >
@@ -10,7 +11,7 @@
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
     .content{
         width: 45%;
-        height:300px;
+        height: 450px;
         background-color: #fff;
         margin: 20px;
         padding: 20px;
@@ -48,7 +49,16 @@
                 </div>
                 <div class="ibox-content">
                     <span class=" pull-right"><input type="text" name="expiration1" class="input datetimepicker" value="{$list1.expiration_time}" ></span>
-                    <h4>到期时间</h4>
+                    <h3>到期时间</h3>
+                </div>
+                <div class="ibox-content" style="height: 150px">
+                    <span class=" pull-right" style="width: 300px"><input type="file" name="file_data" class="input file1"></span>
+                    <h3>催缴单据</h3>
+                    <span>
+                         <a class="front_cover1" href="{$list1.images}">
+                             <img src="{$list1.images}" alt="" style='width: 200px;height: 100px;' class="img1 ">
+                         </a>
+                    </span>
                 </div>
                 <div class="ibox-content">
                     <h1 class="no-margins"></h1>
@@ -77,7 +87,16 @@
                 </div>
                 <div class="ibox-content">
                     <span class=" pull-right" ><input type="text" name="expiration2" class="input datetimepicker" value="{$list2.expiration_time}"></span>
-                    <h4>到期时间</h4>
+                    <h3>到期时间</h3>
+                </div>
+                <div class="ibox-content" style="height: 150px">
+                    <span class=" pull-right" style="width: 300px"><input type="file" name="file_data" class="input file2"></span>
+                    <h3>催缴单据</h3>
+                    <span>
+                         <a class="front_cover2" href="{$list2.images}">
+                             <img src="{$list2.images}" alt="" style='width: 200px;height: 100px;' class="img2 ">
+                         </a>
+                    </span>
                 </div>
                 <div class="ibox-content" >
                     <h1 class="no-margins"></h1>
@@ -108,7 +127,16 @@
                 </div>
                 <div class="ibox-content">
                     <span class=" pull-right"><input type="text" name="expiration3" class="input  datetimepicker" value="{$list3.expiration_time}"></span>
-                    <h4>到期时间</h4>
+                    <h3>到期时间</h3>
+                </div>
+                <div class="ibox-content" style="height: 150px">
+                    <span class=" pull-right" style="width: 300px"><input type="file" name="file_data" class="input file3"></span>
+                    <h3>催缴单据</h3>
+                    <span>
+                         <a class="front_cover3" href="{$list3.images}">
+                             <img src="{$list3.images}" alt="" style='width: 200px;height: 100px;' class="img3 ">
+                         </a>
+                    </span>
                 </div>
                 <div class="ibox-content">
                     <h1 class="no-margins"></h1>
@@ -136,7 +164,16 @@
                 </div>
                 <div class="ibox-content">
                     <span class=" pull-right"><input type="text" name="expiration4" class="input datetimepicker" value="{$list4.expiration_time}"></span>
-                    <h4>到期时间</h4>
+                    <h3>到期时间</h3>
+                </div>
+                <div class="ibox-content" style="height: 150px">
+                    <span class=" pull-right" style="width: 300px"><input type="file" name="file_data" class="input file4"></span>
+                    <h3>催缴单据</h3>
+                    <span>
+                         <a class="front_cover4" href="{$list4.images}">
+                             <img src="{$list4.images}" alt="" style='width: 200px;height: 100px;' class="img4">
+                         </a>
+                    </span>
                 </div>
                 <div class="ibox-content">
                     <h1 class="no-margins"></h1>
@@ -169,6 +206,10 @@
 -->
 <script src="/admin/js/plugins/datapicker/bootstrap-datepicker.js"></script>
 <script src="/admin/js/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script>
     $(document).ready(function () {
         $('.i-checks').iCheck({
@@ -184,13 +225,14 @@
             format: "yyyy-mm-dd"
         });
 
-
     });
     function makeOrder(id,uid){
         var fee = $("input[name='fee"+id+"']").val();
         var time = $("input[name='expiration"+id+"']").val();
+        var imagess = $(".img"+id+"").attr('src');
+        //return alert(images);
         $.ajax({
-            data:{type:id,name:"{$company.name}",company_id:"{$company.id}",fee:fee,expiration_time:time,uid:uid},
+            data:{type:id,name:"{$company.name}",company_id:"{$company.id}",fee:fee,expiration_time:time,uid:uid,images:imagess},
             type:"POST",
             url:"{:Url('Feepayment/add')}",
             success:function (data) {
@@ -223,6 +265,108 @@
             }
         });
     }
+    $(".file1").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $(".front_cover1").attr('href',response.data);
+            $(".img1").attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+    $(".file2").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $(".front_cover2").attr('href',response.data);
+            $(".img2").attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+    $(".file3").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $(".front_cover3").attr('href',response.data);
+            $(".img3").attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+    $(".file4").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $(".front_cover4").attr('href',response.data);
+            $(".img4").attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover1").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+    $(".front_cover2").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+    $(".front_cover4").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+    $(".front_cover3").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+
     highlight_subnav("{:Url('feepayment/index')}");
 </script>
 {/block}

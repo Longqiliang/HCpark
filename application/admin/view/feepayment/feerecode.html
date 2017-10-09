@@ -105,6 +105,7 @@
                     <td>
                         {lt name="$vo.status" value="2"}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
+                        <a href="javascript:void(0)" class="btn-sm btn-success" onclick="push('{$vo.id}')">推送</a>
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form1" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
@@ -213,6 +214,18 @@
             }
         })
 
+    }
+
+    //推送
+    function push(id) {
+        $.ajax({
+            data:{id:id},
+            url:"{:Url('pushUser')}",
+            type:"post",
+            success:function(data){
+
+            }
+        });
     }
     highlight_subnav("{:Url('feepayment/index')}");
 </script>
