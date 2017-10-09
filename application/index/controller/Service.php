@@ -1873,9 +1873,11 @@ class Service extends Base
 
         } else {
             $info = FeePayment::where($map)->order('id desc')->find();
+            $image = [];
             if ($info){
                 FeePayment::where('id',$info['id'])->update(['onclick'=>1,'onclick_time'=>time()]);
-                $this->assign('image',json_encode([$info['images']]));
+                array_push($image,$info['images']);
+
             }
             if ($type == 1) {
                 $info['title'] = '水电费';
@@ -1884,7 +1886,7 @@ class Service extends Base
             }
             $info['appid'] = $appid;
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
-
+            $this->assign('image',$image);
             $this->assign('info', json_encode([$info]));
 
         }
