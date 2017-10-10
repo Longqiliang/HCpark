@@ -1,0 +1,130 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>花卉租赁</title>
+<link rel="stylesheet" href="/static/swiper/swiper.min.css">
+<style>
+    #app{
+        color: #333;
+    }
+    .swiper-container {
+        width: 100%;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    .swiper-slide {
+        background-position: center;
+        background-size: cover;
+        width: 80vw;
+        height: 80vw;
+    }
+    .my-text{
+        font-size: 1.6rem;
+        padding:0 1.2rem;
+    }
+    .my-text>p{
+        padding:0 0 3.4rem 0;
+        text-indent:2em;
+    }
+    .my-text>p>a{
+        color: #333;
+    }
+    .my-btn{
+        display: block;
+        margin:0 auto;
+        width:93.6vw;
+        height:4rem;
+        line-height: 4rem;
+        background-color: #69B8FA;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 1.6rem;
+        text-align: center;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="(img,index) in imgs" :style="'background-image:url('+img+')'" @click="loadImg(img,imgs)"></div>
+        </div>
+        <!-- Add Pagination -->
+        <!--<div class="swiper-pagination"></div>-->
+    </div>
+    <div class="my-text">
+        <p>用花的装饰，美的点缀，带给您一整天的清新。盆栽免费设计摆放，死亡免费更换，物美价廉。联系电话：<a href="tel:18968056059">18968056059</a>（斯琴）</p>
+    </div>
+    <a href="tel:18968056059" class="my-btn">立即预约</a>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/swiper/swiper.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            imgs:[
+                '/index/images/service/flowerlease/flower1.jpeg',
+                '/index/images/service/flowerlease/flower2.jpeg',
+                '/index/images/service/flowerlease/flower3.jpeg',
+                '/index/images/service/flowerlease/flower4.jpeg',
+                '/index/images/service/flowerlease/flower5.jpeg',
+                '/index/images/service/flowerlease/flower6.jpeg'
+            ]
+        },
+        created(){
+            var _this = this;
+            var test =window.location.href;
+            var data ={
+                url:test
+            };
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                wx.config({
+                    debug: false,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+            },function () {
+
+            })
+        },
+        mounted(){
+            var swiper = new Swiper('.swiper-container', {
+//                pagination: '.swiper-pagination',
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                coverflow: {
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows : true
+                }
+            });
+        },
+        methods: {
+            loadImg(src,imglist) {
+                var urls=[];
+                var current=window.location.protocol+'//'+window.location.host+src;
+                for(var i in imglist){
+                    urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
+                }
+                wx.previewImage({
+                    current: current,
+                    urls: urls
+                });
+            },
+        }
+    })
+</script>
+{/block}
