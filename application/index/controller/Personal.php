@@ -269,8 +269,8 @@ class Personal extends Base
         } elseif ($userinfo['tagid'] == 2) {
             $type = 2;
         }
-        $appids = empty($userinfo->Operational->appids) ? array() : $userinfo->Operational->appids;
-        $appids = json_decode($appids);
+        $appids = empty($userinfo->Operational->appids) ? array() : json_decode($userinfo->Operational->appids);
+
         //费用缴纳
 
         $departmentId = $userinfo['department'];
