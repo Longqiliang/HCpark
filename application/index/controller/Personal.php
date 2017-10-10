@@ -28,6 +28,7 @@ use app\index\model\AdvertisingRecord;
 use app\index\model\FunctionRoomRecord;
 use app\index\model\LedRecord;
 use app\index\model\BroadbandPhone;
+use app\common\model\OperationalAuthority;
 
 
 class Personal extends Base
@@ -188,7 +189,7 @@ class Personal extends Base
                 'park_id' => $park_id,
                 'type' => array('neq', 3)
             ];
-            $list = $personMessage->where($map)->limit(0,6)->select();
+            $list = $personMessage->where($map)->limit(0, 6)->select();
 
         } //物业人员
         elseif ($user['tagid'] == 2) {
@@ -196,7 +197,7 @@ class Personal extends Base
                 'park_id' => $park_id,
                 'type' => array('eq', 2)
             ];
-            $list = $personMessage->where($map)->limit(0,6)->select();
+            $list = $personMessage->where($map)->limit(0, 6)->select();
         } //用户自己
         else {
 
@@ -205,26 +206,27 @@ class Personal extends Base
                 'type' => array('eq', 3),
                 'userid' => $user_id
             ];
-            $list = $personMessage->where($map)->limit(0,6)->select();
+            $list = $personMessage->where($map)->limit(0, 6)->select();
         }
         $this->assign('list', json_encode($list));
         return $this->fetch();
     }
 
     /*我的消息上拉加载*/
-    public function messageMore(){
+    public function messageMore()
+    {
         $personMessage = new PersonalMessage();
         $user_id = session('userId');
         $park_id = session('park_id');
         $user = WechatUser::where('userid', $user_id)->find();
-        $num =input('num');
+        $num = input('num');
         //运营人员
         if ($user['department'] == 76) {
             $map = [
                 'park_id' => $park_id,
                 'type' => array('neq', 3)
             ];
-            $list = $personMessage->where($map)->limit($num,6)->select();
+            $list = $personMessage->where($map)->limit($num, 6)->select();
 
         } //物业人员
         elseif ($user['tagid'] == 2) {
@@ -232,7 +234,7 @@ class Personal extends Base
                 'park_id' => $park_id,
                 'type' => array('eq', 2)
             ];
-            $list = $personMessage->where($map)->limit($num,6)->select();
+            $list = $personMessage->where($map)->limit($num, 6)->select();
         } //用户自己
         else {
 
@@ -241,16 +243,15 @@ class Personal extends Base
                 'type' => array('eq', 3),
                 'userid' => $user_id
             ];
-            $list = $personMessage->where($map)->limit($num,6)->select();
+            $list = $personMessage->where($map)->limit($num, 6)->select();
         }
-         if($list){
+        if ($list) {
 
-            return $this->success('成功','',json_encode($list));
-         }else{
+            return $this->success('成功', '', json_encode($list));
+        } else {
 
-             return $this->error('失败');
-         }
-
+            return $this->error('失败');
+        }
 
 
     }
@@ -260,32 +261,60 @@ class Personal extends Base
     public function service()
     {
         $userid = session('userId');
-        //费用缴纳
         $userinfo = WechatUser::where(['userid' => $userid])->find();
-        if ($userinfo['fee_status'] == 1){
-            $departmentId = $userinfo['department'];
-            $map = ['company_id' => $departmentId, 'status' => ['neq', -1]];
-            $list1 = FeePayment::where($map)->order('create_time desc')->field('type as service_name,status,create_time')->select();
-            $types = [1 => '费用缴纳（水电费)', 2 => "费用缴纳（物业费)", 3 => "费用缴纳（房租费)", 4 => "费用缴纳（公耗费)"];
-            foreach ($list1 as $k => $v) {
-                $v['service_name'] = $types[$v['service_name']];
-                if ($v['status'] == 1) {
-                    $v['status'] = 0;
-                }
-                if ($v['status'] == 2) {
-                    $v['status'] = 1;
-                }
-            };
-        }else{
-            $list1 = [] ;
+        //$type :1 运营 2 物业 3 普通企业
+        $type = 3;
+        if ($userinfo['department'] == 76) {
+            $type = 1;
+        } elseif ($userinfo['tagid'] == 2) {
+            $type = 2;
         }
+        $appids = empty($userinfo->Operational->appids) ? array() : $userinfo->Operational->appids;
+        $appids = json_decode($appids);
+        //费用缴纳
 
+        $departmentId = $userinfo['department'];
+        $map = ['company_id' => $departmentId, 'status' => ['neq', -1]];
+        if ($type == 3) {
+            $list1 = FeePayment::where($map)->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $appid = 1;
+            $can_check = 'no';
+        } else {
+            $list1 = FeePayment::where(['status' => ['neq', -1]])->order('create_time desc')->field('id,type as service_name,status,create_time,name')->select();
+            $appid = 1;
+            $can_check = 'yes';
+        }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+        $types = [1 => '费用缴纳（水电费)', 2 => "费用缴纳（物业费)", 3 => "费用缴纳（房租费)", 4 => "费用缴纳（公耗费)"];
+        foreach ($list1 as $k => $v) {
+            $v['service_name'] = $types[$v['service_name']];
+            if ($v['status'] == 1) {
+                $v['status'] = 0;
+            }
+
+            if ($v['status'] == 2) {
+                $v['status'] = 1;
+            }
+            $list1[$k]['url']=$url.$v['id'];
+
+        };
         //物业报修
         $types = [1 => '物业报修（空调报修）', 2 => "物业报修（电梯报修）", 3 => "物业报修（其他报修）"];
-        $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('type as service_name,status,create_time')->select();
+
+        if ($type == 3) {
+            $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $appid = 2;
+            $can_check = 'no';
+        } else {
+            $list2 = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0]])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $appid = 2;
+            $can_check = 'yes';
+        }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list2 as $k => $v) {
             $v['service_name'] = $types[$v['service_name']];
-            $v['create_time'] = date("Y-m-d H:i:s",$v['create_time']);
+            $v['create_time'] = date("Y-m-d H:i:s", $v['create_time']);
+            $list2[$k]['url']=$url.$v['id'];
         }
 
         //饮水服务
@@ -293,22 +322,52 @@ class Personal extends Base
             'status' => array('neq', -1),
             'userid' => $userid,
         ];
-        $list3 = WaterService::where($map)->order('create_time desc')->field('status,create_time')->select();
+        if ($type == 3) {
+            $list3 = WaterService::where($map)->order('create_time desc')->field('id,status,create_time')->select();
+            $appid = 3;
+            $can_check = 'no';
+        } else {
+            $list3 = WaterService::where(['status' => array('neq', -1)])->order('create_time desc')->field('id,name,status,create_time')->select();
+            $appid = 3;
+            $can_check = 'yes';
+        }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+
         foreach ($list3 as $k => $v) {
             $v['service_name'] = "饮水服务";
+            $list3 [$k]['url']=$url.$v['id'];
         }
         //室内保洁
-
-        $list4 = PropertyServer::where(['type' => ['=', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('type as service_name,status,create_time')->select();
+        if ($type == 3) {
+            $list4 = PropertyServer::where(['type' => ['=', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $appid = 4;
+            $can_check = 'no';
+        } else {
+            $list4 = PropertyServer::where(['type' => ['=', 4], 'status' => ['>=', 0]])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $appid = 4;
+            $can_check = 'yes';
+        }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list4 as $k => $v) {
             $v['service_name'] = "保洁服务";
+             $list4[$k]['url']=$url.$v['id'];
         }
 
         //车卡服务
-        $list5 = CarparkService::where(['user_id' => $userid, 'status' => array('neq', -1)])->select();
+        if ($type == 3) {
+            $list5 = CarparkService::where(['user_id' => $userid, 'status' => array('neq', -1)])->select();
+            $appid = 6;
+            $can_check = 'no';
+        } else {
+            $list5 = CarparkService::where(['status' => array('neq', -1)])->select();
+            $appid = 6;
+            $can_check = 'yes';
+        }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list5 as $k => $v) {
             $list5[$k]['service_name'] = $v['type'] == 1 ? "车卡服务（新卡办理）" : "车卡服务（旧卡续费）";
             $list5[$k]['create_time'] = date("Y-m-d", $v['create_time']);
+            $list5[$k]['url'] = $url.$v['id'];
             if ($list5[$k]['status'] == 0) {
                 $list5[$k]['status_text'] = '进行中';
             } elseif ($list5[$k]['status'] == 1) {
@@ -325,17 +384,22 @@ class Personal extends Base
             'user_id' => $user_id,
             'status' => array('neq', -1)
         ];
-        $list6 = $service->where($map)->order('create_time desc')->select();
-
-        int_to_string($list6, array('type' => array(1 => '充电柱办公(新柱办理)', 2 => '充电柱办公(旧柱续费)'), 'status' => array(0 => '进行中', 1 => '已完成', 2 => '审核失败')));
-        foreach ($list6 as $value) {
-            $value['service_name'] = $value['type_text'];
-
+        if ($type == 3) {
+            $list6 = $service->where($map)->order('create_time desc')->select();
+            $appid = 7;
+            $can_check = 'no';
+        } else {
+            $list6 = $service->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+            $appid = 7;
+            $can_check = 'yes';
         }
-
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+        int_to_string($list6, array('type' => array(1 => '充电柱办公(新柱办理)', 2 => '充电柱办公(旧柱续费)'), 'status' => array(0 => '进行中', 1 => '已完成', 2 => '审核失败')));
+        foreach ($list6 as $k=> $value) {
+            $value['service_name'] = $value['type_text'];
+            $list6[$k]['url'] = $url.$v['id'];
+        }
         //公共服务
-
-
         //大厅广告记录
         $service = new AdvertisingService();
         $ad = new AdvertisingRecord();
@@ -346,12 +410,17 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         $serviceInfo = $service->where('id', 1)->find();
-        $list = $ad->where('create_user', $user_id)->order('create_time desc')->select();
+        if ($type == 3) {
+            $list = $ad->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
+
+        } else {
+            $list = $ad->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+        }
+
         //所有的创建时间
         foreach ($list as $l) {
             array_push($create_time, $l['create_time']);
         }
-
         //数组去重
         $time = array_values(array_unique($create_time));
 
@@ -390,7 +459,11 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         $serviceInfo = $service->where('id', 2)->find();
-        $list = $fs->where('create_user', $user_id)->order('create_time desc')->select();
+        if ($type == 3) {
+            $list = $fs->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
+        } else {
+            $list = $fs->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+        }
         //所有的创建时间
         foreach ($list as $l) {
             array_push($create_time, $l['create_time']);
@@ -438,7 +511,11 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         $serviceInfo = $service->where('id', 3)->find();
-        $list = $led->where('create_user', $user_id)->order('create_time desc')->select();
+        if ($type == 3) {
+            $list = $led->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
+        } else {
+            $list = $led->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+        }
         //所有的创建时间
         foreach ($list as $l) {
             array_push($create_time, $l['create_time']);
@@ -482,7 +559,7 @@ class Personal extends Base
 
         }
 
-        //电话宽带
+        /*//电话宽带
         $userid = session('userId');
         //      echo  $userid;
         $map = [
@@ -497,13 +574,94 @@ class Personal extends Base
                 'status' => $v['status'],
                 'service_name' => "电话宽带",
             ];
+        }*/
+        $allList = array();
+        switch ($type) {
+            case 1:
+                if (in_array(1, $appids)) {
+                    $allList = array_merge($list1, $allList);
+                }
+                if (in_array(2, $appids)) {
+                    $allList = array_merge($list2, $allList);
+                }
+                if (in_array(3, $appids)) {
+                    $allList = array_merge($list3, $allList);
+                }
+                if (in_array(4, $appids)) {
+                    $allList = array_merge($list4, $allList);
+                }
+                if (in_array(6, $appids)) {
+                    $allList = array_merge($list5, $allList);
+                }
+                if (in_array(7, $appids)) {
+                    $allList = array_merge($list6, $allList);
+                }
+                if (in_array(8, $appids)) {
+                    $allList = array_merge($data1, $data2, $data3, $allList);
+                }
+                if (in_array(10, $appids)) {
+                    //企业服务
+                    $list = Db::table('tb_company_service')
+                        ->alias('s')
+                        ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
+                        ->field('a.name as service_name,s.status,s.create_time')
+                        ->where('s.user_id', 'eq', $userid)
+                        ->where('s.status', 'neq', -1)
+                        ->order('create_time desc')
+                        ->select();
+
+                    foreach ($list as $value) {
+                        $value['create_time'] = date("Y-m-d", $value['create_time']);
+
+                        if ($value['status'] == 0) {
+                            $value['status_text'] = '进行中';
+                        } else {
+                            $value['status_text'] = '已完成';
+                        }
+                    }
+                    $this->assign('company', $list);
+                }
+
+                break;
+            case 2:
+                $allList = array_merge($list2, $list3, $list4);
+
+                break;
+            case 3:
+                if ($userinfo['fee_status'] == 1) {
+                    $allList = array_merge($list1, $allList);
+                }
+
+                $allList = array_merge($allList, $list2, $list3, $list4, $list5, $list6, $data1, $data2, $data3, $list7);
+                //企业服务
+
+                $list = Db::table('tb_company_service')
+                    ->alias('s')
+                    ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
+                    ->field('a.name as service_name,s.status,s.create_time')
+                    ->where('s.user_id', 'eq', $userid)
+                    ->where('s.status', 'neq', -1)
+                    ->order('create_time desc')
+                    ->select();
+
+                foreach ($list as $value) {
+                    $value['create_time'] = date("Y-m-d", $value['create_time']);
+
+                    if ($value['status'] == 0) {
+                        $value['status_text'] = '进行中';
+                    } else {
+                        $value['status_text'] = '已完成';
+                    }
+                }
+                $this->assign('company', $list);
+                break;
         }
 
         //合并所有物业服务的数组
-        $list = array_merge($list1, $list2, $list3, $list4, $list5, $list6, $data1, $data2, $data3, $list7);
+        //$list = array_merge($list1, $list2, $list3, $list4, $list5, $list6, $data1, $data2, $data3, $list7);
 
         //把数组按时间排序
-        usort($list, function ($a, $b) {
+        usort($allList, function ($a, $b) {
             $al = strtotime($a['create_time']);
             $bl = strtotime($b['create_time']);
             if ($al == $bl)
@@ -511,39 +669,18 @@ class Personal extends Base
             return ($al > $bl) ? -1 : 1;
         });
 
-        foreach ($list as $k => $value) {
+        foreach ($allList as $k => $value) {
             if ($value['status'] == 0) {
-                $list[$k]['status_text'] = '进行中';
+                $allList[$k]['status_text'] = '进行中';
             } elseif ($value['status'] == 1) {
-                $list[$k]['status_text'] = '已完成';
+                $allList[$k]['status_text'] = '已完成';
             } else {
-                $list[$k]['status_text'] = '审核失败';
+                $allList[$k]['status_text'] = '审核失败';
             }
         }
 
-        $this->assign('property', $list);
-        //企业服务
+        $this->assign('property', $allList);
 
-        $list = Db::table('tb_company_service')
-            ->alias('s')
-            ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
-            ->field('a.name as service_name,s.status,s.create_time')
-            ->where('s.user_id', 'eq', $userid)
-            ->where('s.status', 'neq', -1)
-            ->order('create_time desc')
-            ->select();
-
-        foreach ($list as $value) {
-            $value['create_time'] = date("Y-m-d", $value['create_time']);
-
-            if ($value['status'] == 0) {
-                $value['status_text'] = '进行中';
-            } else {
-                $value['status_text'] = '已完成';
-            }
-        }
-        $this->assign('company', $list);
-        $this->assign('list', $list);
         return $this->fetch();
     }
 
