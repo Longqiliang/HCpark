@@ -101,7 +101,7 @@ class Operational extends Admin
             $reult['appids'] = json_encode($appids);
             $re = $reult->save();
             if ($re) {
-                return $this->success("保存成功" . json_encode($appids));
+                return $this->success("保存成功");
             } else {
                 return $this->error("保存失败");
             }

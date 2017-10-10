@@ -397,7 +397,7 @@ class Personal extends Base
         int_to_string($list6, array('type' => array(1 => '充电柱办公(新柱办理)', 2 => '充电柱办公(旧柱续费)'), 'status' => array(0 => '进行中', 1 => '已完成', 2 => '审核失败')));
         foreach ($list6 as $k=> $value) {
             $value['service_name'] = $value['type_text'];
-            $list6[$k]['url'] = $url.$v['id'];
+            $list6[$k]['url'] = $url.$value['id'];
         }
         //公共服务
         //大厅广告记录
