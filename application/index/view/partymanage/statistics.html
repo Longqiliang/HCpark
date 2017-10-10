@@ -4,6 +4,10 @@
 <title>园区统计</title>
 <link rel="stylesheet" href="/index/css/personal/message.css">
 <style>
+    *{
+        -webkit-tap-highlight-color:transparent;
+
+    }
     body{
         background-color: #fff;
     }
@@ -82,9 +86,20 @@
     /*样式覆盖*/
     .msg-lists>li{
         border-bottom:1px solid  #f1f1f1;
+        position: relative;
     }
     .msg-lists>li>div.msg-text>.msg-title>.msg-title-text{
         width: 100%;
+    }
+    .msg-lists>li a{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+    .msg-lists>li a:active{
+        background-color: inherit;
     }
 </style>
 {/block}
