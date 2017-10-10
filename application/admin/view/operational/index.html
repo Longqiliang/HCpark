@@ -1,0 +1,133 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style>
+    .mail-box .mail-ontact{
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+    .mail-box .mail-subject{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+
+    .mail-subject-div{
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-box .mail-main{
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mail-date{
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+    @media only screen and (max-width: 550px){
+        .mail-date{
+            display: none;
+        }
+    }
+    .list_banner {width: 80px}
+    .list_type {width: 80px}
+    th,td{
+        text-align: center;
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <form method="get" action="index.html" class="pull-right mail-search">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索标题">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary">搜索</button>
+                    </div>
+                </div>
+            </form>
+
+            <h2>运营人员推送权限管理</h2>
+            <!--<div class="mail-tools tooltip-demo m-t-md">-->
+            <!--&lt;!&ndash;<button type="button" class="btn btn-sm btn-primary" onclick="getCompany()">同步企业信息</button>&ndash;&gt;-->
+            <!--</div>-->
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+
+                <thead>
+                <tr>
+                    <!--<th style="width:0"></th>-->
+                    <th style="width:35%">运营人员</th>
+                    <th style="width:15%">联系方式</th>
+                    <th style="width:35%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr class="read">
+                    <!--<td class="check-mail">-->
+                    <!--&lt;!&ndash;<input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">&ndash;&gt;-->
+                    <!--</td>-->
+                    <td class="mail-subject">
+                        {$vo.name}
+                    </td>
+                    <td>
+                        {empty name="$vo.mobile"}暂无
+                        {else/}{$vo.mobile}
+                        {/empty}
+                    </td>
+
+                    <td>
+                        <a  href="{:Url('edit','userid='.$vo.userid)}" class="btn-sm btn-success" style="color:#fff">权限管理</a>
+
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+
+    function getCompany(){
+        $.ajax({
+            data: "",
+            type: "POST",
+            url: "{:Url('Company/getCompany')}",
+            success:function(data){
+                updateAlert(data.msg+' 页面稍后会自动跳转～',"success");
+                setTimeout(function(){
+                    location.href=data.url;
+                },2000);
+            }
+
+        })
+
+    }
+    highlight_subnav("{:Url('Company/index')}");
+</script>
+{/block}
