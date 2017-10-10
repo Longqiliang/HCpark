@@ -601,16 +601,15 @@ class Personal extends Base
                 }
                 if (in_array(10, $appids)) {
                     //企业服务
-                    $list = Db::table('tb_company_service')
+                    $company_list = Db::table('tb_company_service')
                         ->alias('s')
                         ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
                         ->field('a.name as service_name,s.status,s.create_time')
-                        ->where('s.user_id', 'eq', $userid)
                         ->where('s.status', 'neq', -1)
                         ->order('create_time desc')
                         ->select();
 
-                    foreach ($list as $value) {
+                    foreach ($company_list as $value) {
                         $value['create_time'] = date("Y-m-d", $value['create_time']);
 
                         if ($value['status'] == 0) {
@@ -619,9 +618,9 @@ class Personal extends Base
                             $value['status_text'] = '已完成';
                         }
                     }
-                    $this->assign('company', $list);
                 }
-
+                $company_list=empty($company_list)?array():$company_list;
+                $this->assign('company', $company_list);
                 break;
             case 2:
                 $allList = array_merge($list2, $list3, $list4);
@@ -632,7 +631,7 @@ class Personal extends Base
                     $allList = array_merge($list1, $allList);
                 }
 
-                $allList = array_merge($allList, $list2, $list3, $list4, $list5, $list6, $data1, $data2, $data3, $list7);
+                $allList = array_merge($allList, $list2, $list3, $list4, $list5, $list6, $data1, $data2, $data3);
                 //企业服务
 
                 $list = Db::table('tb_company_service')
