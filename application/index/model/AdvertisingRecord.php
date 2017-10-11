@@ -13,6 +13,7 @@ use think\Model;
 
 class AdvertisingRecord extends Model
 {
+    protected $dateFormat="Y-m-d";
     public function user()
     {
 

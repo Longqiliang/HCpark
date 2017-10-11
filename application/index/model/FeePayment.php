@@ -12,6 +12,6 @@ use think\Model;
 
 class FeePayment extends Model
 {
-
+    protected $dateFormat="Y-m-d";
 
 }

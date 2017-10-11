@@ -288,33 +288,47 @@ class Personal extends Base
         $types = [1 => '费用缴纳（水电费)', 2 => "费用缴纳（物业费)", 3 => "费用缴纳（房租费)", 4 => "费用缴纳（公耗费)"];
         foreach ($list1 as $k => $v) {
             $v['service_name'] = $types[$v['service_name']];
-            if ($v['status'] == 1) {
-                $v['status'] = 0;
-            }
-
-            if ($v['status'] == 2) {
-                $v['status'] = 1;
-            }
             $list1[$k]['url'] = $url . $v['id'];
-
+            if ($v['status'] == 0) {
+                $list1[$k]['status_text'] = '未缴费';
+            } elseif ($v['status'] == 1) {
+                $list1[$k]['status_text'] = '审核中';
+            } elseif ($v['status'] == 2) {
+                $list1[$k]['status_text'] = '审核成功';
+            } else {
+                $list1[$k]['status_text'] = '审核失败';
+            }
         };
+
+
         //物业报修
         $types = [1 => '物业报修（空调报修）', 2 => "物业报修（电梯报修）", 3 => "物业报修（其他报修）"];
 
         if ($type == 3) {
-            $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
             $appid = 2;
             $can_check = 'no';
         } else {
-            $list2 = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0]])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $list2 = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0]])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
             $appid = 2;
             $can_check = 'yes';
         }
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list2 as $k => $v) {
             $v['service_name'] = $types[$v['service_name']];
-            $v['create_time'] = date("Y-m-d H:i:s", $v['create_time']);
+            $v['create_time'] = date("Y-m-d", $v['create_time']);
+
             $list2[$k]['url'] = $url . $v['id'];
+            if ($v['status'] == 0) {
+                $list2[$k]['status_text'] = '审核中';
+            } elseif ($v['status'] == 1) {
+                $list2[$k]['status_text'] = '审核成功';
+            } elseif ($v['status'] == 2) {
+                $list2[$k]['status_text'] = '审核失败';
+            }
+            if(!empty($v['proof'])){
+                $list2[$k]['status_text'] = '已上传凭证';
+            }
         }
 
         //饮水服务
@@ -336,6 +350,16 @@ class Personal extends Base
         foreach ($list3 as $k => $v) {
             $v['service_name'] = "饮水服务";
             $list3 [$k]['url'] = $url . $v['id'];
+
+            if ($v['status'] == 0) {
+                $list3[$k]['status_text'] = '审核中';
+            } elseif ($v['status'] == 1) {
+                $list3[$k]['status_text'] = '审核成功';
+            } elseif ($v['status'] == 2) {
+                $list3[$k]['status_text'] = '审核失败';
+            }else{
+                $list3[$k]['status_text'] = '确认送水';
+            }
         }
         //室内保洁
         if ($type == 3) {
@@ -351,6 +375,14 @@ class Personal extends Base
         foreach ($list4 as $k => $v) {
             $v['service_name'] = "保洁服务";
             $list4[$k]['url'] = $url . $v['id'];
+            $v['create_time'] = date("Y-m-d", $v['create_time']);
+            if ($v['status'] == 0) {
+                $list4[$k]['status_text'] = '审核中';
+            } elseif ($v['status'] == 1) {
+                $list4[$k]['status_text'] = '审核成功';
+            } elseif ($v['status'] == 2) {
+                $list4[$k]['status_text'] = '审核失败';
+            }
         }
 
         //车卡服务
@@ -369,9 +401,9 @@ class Personal extends Base
             $list5[$k]['create_time'] = date("Y-m-d", $v['create_time']);
             $list5[$k]['url'] = $url . $v['id'];
             if ($list5[$k]['status'] == 0) {
-                $list5[$k]['status_text'] = '进行中';
+                $list5[$k]['status_text'] = '审核中';
             } elseif ($list5[$k]['status'] == 1) {
-                $list5[$k]['status_text'] = '已完成';
+                $list5[$k]['status_text'] = '审核成功';
             } else {
                 $list5[$k]['status_text'] = '审核失败';
             }
@@ -398,6 +430,13 @@ class Personal extends Base
         foreach ($list6 as $k => $value) {
             $value['service_name'] = $value['type_text'];
             $list6[$k]['url'] = $url . $value['id'];
+            if ($list6[$k]['status'] == 0) {
+                $list6[$k]['status_text'] = '审核中';
+            } elseif ($list5[$k]['status'] == 1) {
+                $list6[$k]['status_text'] = '审核成功';
+            } else {
+                $list6[$k]['status_text'] = '审核失败';
+            }
         }
         //公共服务
         //大厅广告记录
@@ -447,11 +486,13 @@ class Personal extends Base
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
+                $re['status_text']='已取消';
             } else if ($map[0]['status'] == 1) {
                 $re['status'] = 0;
-
+                $re['status_text']='审核中';
             } else {
                 $re['status'] = 1;
+                $re['status_text']='审核成功';
             }
 
             array_push($data1, $re);
@@ -498,11 +539,14 @@ class Personal extends Base
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
+                $re['status_text']='已取消';
             } else if ($map[0]['status'] == 1) {
                 $re['status'] = 0;
+                $re['status_text']='审核中';
 
             } else {
                 $re['status'] = 1;
+                $re['status_text']='审核成功';
             }
 
             array_push($data2, $re);
@@ -548,11 +592,13 @@ class Personal extends Base
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
+                $re['status_text']='已取消';
             } else if ($map[0]['status'] == 1) {
                 $re['status'] = 0;
-
+                $re['status_text']='审核中';
             } else {
                 $re['status'] = 1;
+                $re['status_text']='审核成功';
             }
 
             array_push($data3, $re);
@@ -668,7 +714,7 @@ class Personal extends Base
             return ($al > $bl) ? -1 : 1;
         });
 
-        foreach ($allList as $k => $value) {
+       /* foreach ($allList as $k => $value) {
             if ($value['status'] == 0) {
                 $allList[$k]['status_text'] = '进行中';
             } elseif ($value['status'] == 1) {
@@ -678,7 +724,7 @@ class Personal extends Base
             } else {
                 $allList[$k]['status_text'] = '审核失败';
             }
-        }
+        }*/
         //echo json_encode($allList);
         //echo json_encode($type);
         $this->assign('property', json_encode($allList));
