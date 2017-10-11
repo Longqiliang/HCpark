@@ -343,7 +343,7 @@
             </div>
         </div>
         <div class="rent-btn-box" v-if="can_check=='yes' && info.status==2">
-            <button class="btn btn-block btn-green" @click="cancelOrder">取消预约</button>
+            <button class="btn btn-block btn-green" @click="showRent">取消预约</button>
         </div>
     </div>
     <div v-if="appid>=10 && appid<19">
@@ -379,19 +379,23 @@
             </div>
         </div>
     </div>
-    <div class="rent-btn-box"  v-if="(appid!=1 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
+    <div class="rent-btn-box"  v-if="(appid!=1 && appid!=8 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
         <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
     </div>
     <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
-            <p>审核服务</p>
+            <p>{{appid==8?'取消预约':'审核服务'}}</p>
             <div class="remark">
                 <p>备注信息</p>
                 <textarea v-model="subData.check_remark"></textarea>
             </div>
-            <div class="table-view-cell group-cell btn-box" >
+            <div class="table-view-cell group-cell btn-box" v-if="appid!=8">
                 <button class="group-btn btn-warning btn" @click="subRent(2)">取消服务</button>
                 <button class="group-btn btn-primary btn" @click="subRent(1)">确认服务</button>
+            </div>
+            <div class="table-view-cell group-cell btn-box" v-if="appid==8">
+                <button class="group-btn btn-warning btn" @click="hideRent">取消</button>
+                <button class="group-btn btn-primary btn" @click="cancelOrder">确认</button>
             </div>
             <div class="my-cancel" @click="hideRent">
                 <span><i class="iconfont hc-cha1"></i></span>
@@ -490,6 +494,7 @@ var app = new Vue({
                 urls: urls
             });
         },
+//        图片上传/删除
         delImg: function (e) {
             this.imgSrc.dataUrl.splice(e,1);
             this.payment_voucher.splice(e,1);
@@ -640,6 +645,7 @@ var app = new Vue({
             }
             return st
         },
+//        遮罩显示/隐藏
         showRent:function () {
             var _this=this;
             if(!_this.subData.electricity_id && _this.appid== 7 && _this.info.type==1 ){
@@ -695,109 +701,38 @@ var app = new Vue({
                     _this.isSubmit = true;
                     _this.subData.appid=_this.appid;
                     _this.subData.id=_this.info.id;
-                    console.log(_this.subData);
-                    _this.$http.post('/index/service/check',_this.subData).then(function (res) {
-                        var data  = res.data;
-                        _this.isSubmit = false;
-                        if(data.code == 1){
-                            swal({
-                                title:'',
-                                text:'提交成功',
-                                html:true,
-                                type:"success",
-                                confirmButtonColor: "#fcc44b"
-                            },function () {
-                                _this.rentShow = false;
-                                //刷新页面 reload 等页面刷新方法在微信浏览器内失效——2017.10.09
-                                window.location.href=window.location.href+='/reload/true'
-                            });
-                        }else{
-                            swal({
-                                title:"提交失败!",
-                                text:"请重新提交！",
-                                type:"error",
-                                confirmButtonColor: "#fcc44b"
-                            },function () {
-                                window.location.reload(true);
-                                window.location.href=window.location.href+='/reload/true'
-                            });
-                        }
-                    },function (res) {
-                        _this.isSubmit = false;
-                        swal({
-                            title:"提交失败!",
-                            text:'请重新提交！',
-                            type:"error",
-                            confirmButtonColor: "#fcc44b"
-                        },function () {
-                            window.location.replace(window.location.href);
-                        });
-                    })
+                    _this.checkAjax(_this.subData)
                 }
             )
 
         },
+//        appid===8 , 取消预约
         cancelOrder(){
             var _this = this;
             if(_this.isSubmit){
                 return;
             }
-            swal({
-                        title:'',
-                        text:'是否取消预约',
-                        showCancelButton: true,
-                        confirmButtonColor: "#fcc44b",
-                        confirmButtonText: "确认",
-                        cancelButtonText:'取消',
-                        closeOnConfirm: false
-                    },
-                    function(){
-                        _this.isSubmit = true;
-                        _this.subData.appid=_this.appid;
-                        _this.subData.create_time=_this.info.create_time;
-                        _this.subData.type=_this.info.type;
-                        console.log(_this.subData);
-                        _this.$http.post('/index/service/check',_this.subData).then(function (res) {
-                            var data  = res.data;
-                            _this.isSubmit = false;
-                            if(data.code == 1){
-                                swal({
-                                    title:'',
-                                    text:'提交成功',
-                                    html:true,
-                                    type:"success",
-                                    confirmButtonColor: "#fcc44b"
-                                },function () {
-                                    _this.rentShow = false;
-                                    //刷新页面 reload 等页面刷新方法在微信浏览器内失效——2017.10.09
-                                    window.location.href=window.location.href+='/reload/true'
-                                });
-                            }else{
-                                swal({
-                                    title:"提交失败!",
-                                    text:"请重新提交！",
-                                    type:"error",
-                                    confirmButtonColor: "#fcc44b"
-                                },function () {
-                                    window.location.reload(true);
-                                    window.location.href=window.location.href+='/reload/true'
-                                });
-                            }
-                        },function (res) {
-                            _this.isSubmit = false;
-                            swal({
-                                title:"提交失败!",
-                                text:'请重新提交！',
-                                type:"error",
-                                confirmButtonColor: "#fcc44b"
-                            },function () {
-                                window.location.replace(window.location.href+='/reload/true');
-                            });
-                        })
-                    }
-            )
+//            swal({
+//                        title:'',
+//                        text:'是否取消预约',
+//                        showCancelButton: true,
+//                        confirmButtonColor: "#fcc44b",
+//                        confirmButtonText: "确认",
+//                        cancelButtonText:'取消',
+//                        closeOnConfirm: false
+//                    },
+//                    function(){
+            _this.isSubmit = true;
+            _this.subData.appid=_this.appid;
+            _this.subData.create_time=_this.info.create_time;
+            _this.subData.type=_this.info.type;
+            _this.checkAjax(_this.subData)
+
+//                    }
+//            )
 
         },
+//        审核服务
         subRent:function (isPass) {
             var _this = this;
             console.log(_this.subData);
@@ -817,7 +752,12 @@ var app = new Vue({
             _this.subData.appid=_this.appid;
             _this.subData.id=_this.info.id;
             var data = JSON.parse(JSON.stringify(_this.subData));
-            _this.$http.post('/index/service/check',data).then(function (res) {
+            _this.checkAjax(data)
+        },
+//        check接口 ajax
+        checkAjax(subData){
+            var _this=this;
+            _this.$http.post('/index/service/check',subData).then(function (res) {
                 var data  = res.data;
                 _this.isSubmit = false;
                 if(data.code == 1){
@@ -851,10 +791,10 @@ var app = new Vue({
                     type:"error",
                     confirmButtonColor: "#fcc44b"
                 },function () {
-                    window.location.replace(window.location.href);
+                    window.location.replace(window.location.href+='/reload/true');
                 });
             })
-        }
+        },
     }
 })
 </script>
