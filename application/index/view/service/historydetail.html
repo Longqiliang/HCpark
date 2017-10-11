@@ -311,7 +311,7 @@
             <div class="card-tit">设备服务</div>
             <div class="card-cell">
                 <span>预约类型</span>
-                <span>{{info.name}}</span>
+                <span>{{info.type_text}}</span>
             </div>
             <div class="card-cell">
                 <span>缴费金额</span>
@@ -319,7 +319,7 @@
             </div>
             <div class="card-cell">
                 <span>提交时间</span>
-                <span>{{info.create_time | timeToString}}</span>
+                <span>{{info.create_time*1000 | timeToString}}</span>
             </div>
             <div class="card-cell">
                 <span>审核进度</span>
@@ -327,20 +327,23 @@
             </div>
             <div class="remark">
                 <p>预约时间</p>
-                <div>{{info.day}}</div>
+                <div>{{info.order_time | orderTime}}</div>
             </div>
             <div class="remark" v-if="info.status!=0 && info.check_remark">
                 <p>物业提示</p>
                 <div>{{info.check_remark}}</div>
             </div>
         </div>
-        <div class="card" v-if="info.img">
+        <div class="card" v-if="info.payment_voucher">
             <div class="card-tit">缴费凭证</div>
             <div class="card-upload">
-                <div class="upload-img" v-for="img in info.img">
+                <div class="upload-img" v-for="img in info.payment_voucher">
                     <img :src="img" alt="缴费凭证">
                 </div>
             </div>
+        </div>
+        <div class="rent-btn-box" v-if="can_check=='yes' && info.status==2">
+            <button class="btn btn-block btn-green" @click="cancelOrder">取消预约</button>
         </div>
     </div>
     <div v-if="appid>=10 && appid<19">
@@ -382,7 +385,7 @@
     <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
             <p>审核服务</p>
-            <div class="remark" v-if="appid!=8">
+            <div class="remark">
                 <p>备注信息</p>
                 <textarea v-model="subData.check_remark"></textarea>
             </div>
@@ -404,21 +407,28 @@
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
 //    时间戳转字符串过滤器
-    Vue.filter('timeToString', function(time) {
-        if(time){
-            var newTime = new Date(time);
-            var m = newTime.getMonth()+1,
-                    dt=newTime.getDate(),
-                    y=newTime.getFullYear();
-            if(dt<10){
-                dt='0'+dt;
-            }
-            if(m<10){
-                m='0'+m;
-            }
-            return y+'-'+m+'-'+dt
+Vue.filter('timeToString', function(time) {
+    if(time){
+        var newTime = new Date(time);
+        var m = newTime.getMonth()+1,
+                dt=newTime.getDate(),
+                y=newTime.getFullYear();
+        if(dt<10){
+            dt='0'+dt;
         }
-    });
+        if(m<10){
+            m='0'+m;
+        }
+        return y+'-'+m+'-'+dt
+    }
+});
+//预约时间格式过滤器
+Vue.filter('orderTime', function(time) {
+    if(time){
+        var getStr=time.split('<br>').join('、')
+        return  getStr.substring(0,getStr.length-1)
+    }
+});
 var app = new Vue({
     el:'#app',
     mounted(){
@@ -724,6 +734,67 @@ var app = new Vue({
                         });
                     })
                 }
+            )
+
+        },
+        cancelOrder(){
+            var _this = this;
+            if(_this.isSubmit){
+                return;
+            }
+            swal({
+                        title:'',
+                        text:'是否取消预约',
+                        showCancelButton: true,
+                        confirmButtonColor: "#fcc44b",
+                        confirmButtonText: "确认",
+                        cancelButtonText:'取消',
+                        closeOnConfirm: false
+                    },
+                    function(){
+                        _this.isSubmit = true;
+                        _this.subData.appid=_this.appid;
+                        _this.subData.create_time=_this.info.create_time;
+                        _this.subData.type=_this.info.type;
+                        console.log(_this.subData);
+                        _this.$http.post('/index/service/check',_this.subData).then(function (res) {
+                            var data  = res.data;
+                            _this.isSubmit = false;
+                            if(data.code == 1){
+                                swal({
+                                    title:'',
+                                    text:'提交成功',
+                                    html:true,
+                                    type:"success",
+                                    confirmButtonColor: "#fcc44b"
+                                },function () {
+                                    _this.rentShow = false;
+                                    //刷新页面 reload 等页面刷新方法在微信浏览器内失效——2017.10.09
+                                    window.location.href=window.location.href+='/reload/true'
+                                });
+                            }else{
+                                swal({
+                                    title:"提交失败!",
+                                    text:"请重新提交！",
+                                    type:"error",
+                                    confirmButtonColor: "#fcc44b"
+                                },function () {
+                                    window.location.reload(true);
+                                    window.location.href=window.location.href+='/reload/true'
+                                });
+                            }
+                        },function (res) {
+                            _this.isSubmit = false;
+                            swal({
+                                title:"提交失败!",
+                                text:'请重新提交！',
+                                type:"error",
+                                confirmButtonColor: "#fcc44b"
+                            },function () {
+                                window.location.replace(window.location.href+='/reload/true');
+                            });
+                        })
+                    }
             )
 
         },
