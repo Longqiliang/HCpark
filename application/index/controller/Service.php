@@ -2076,7 +2076,7 @@ class Service extends Base
                 case 1:
                     $list = AdvertisingRecord::where(['create_time' => $create_time, 'status' => array('neq', -1)])->select();
                     foreach ($list as $value) {
-                        $time .= date('y-m-d', $value['order_time']) . "<br>";
+                        $time .= date('Y-m-d', $value['order_time']) . "<br>";
                         $value['payment_voucher'] = json_decode($value['payment_voucher']);
                     }
                     $info = [

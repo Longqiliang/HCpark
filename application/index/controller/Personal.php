@@ -477,7 +477,7 @@ class Personal extends Base
                 }
             }
             $re = [
-                'create_time' => $onetime,
+                'create_time' => date('Y-m-d',strtotime($onetime)),
                 'service_name' => "公共区服务（大厅广告位预约）",
                 'url' => $url . strtotime($onetime)
             ];
@@ -531,7 +531,7 @@ class Personal extends Base
                 }
             }
             $re = [
-                'create_time' => $onetime,
+                'create_time' => date('Y-m-d',strtotime($onetime)),
                 'service_name' => "公共区服务（多功能厅预约）",
                 'url' => $url . strtotime($onetime)
 
@@ -586,7 +586,7 @@ class Personal extends Base
             }
             $re = [
                 'service_name' => "公共区服务（大堂led屏预约）",
-                'create_time' => $onetime,
+                'create_time' => date('Y-m-d',strtotime($onetime)),
                 'url' => $url . strtotime($onetime)
             ];
             if ($map[0]['status'] == 0) {

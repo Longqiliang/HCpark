@@ -13,7 +13,7 @@ use think\Model;
 
 class LedRecord extends  Model
 {
-    protected $dateFormat="Y-m-d";
+
     public function user()
     {
 
