@@ -2196,7 +2196,7 @@ class Service extends Base
                         'type' => 3,
                         'status' => $list[0]['status'],
                         'create_time' => $create_time,
-                        'price' => count($map_time) * $serviceInfo['price']
+                        'price' => count($list) * $serviceInfo['price']
                     ];
                     break;
 
@@ -2630,7 +2630,7 @@ class Service extends Base
                         $message = [
                             "title" => "设备服务提示",
                             "description" => "您的大厅广告位预约申请被取消，请点击查看",
-                            "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/1/create_time/' . strtotime($data['create_time'])
+                            "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/1/create_time/' . $data['create_time']
                         ];
 
                         break;
@@ -2644,7 +2644,7 @@ class Service extends Base
                         $message = [
                             "title" => "设备服务提示",
                             "description" => "您的二楼多功能厅预约申请被取消，请点击查看",
-                            "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/2/create_time/' . strtotime($data['create_time'])
+                            "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/2/create_time/' . $data['create_time']
                         ];
 
                         break;
@@ -2657,7 +2657,7 @@ class Service extends Base
                             $message = [
                                 "title" => "设备服务提示",
                                 "description" => "您的大堂LED屏预约申请被取消，请点击查看",
-                                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/3/create_time/' . strtotime($data['create_time'])
+                                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/3/create_time/' . $data['create_time']
                             ];
                         }
                         break;
