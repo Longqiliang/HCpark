@@ -104,13 +104,13 @@
                         {eq name="$vo.status" value="2"}
                         <span class="txt-danger">{$vo.status_text}</span>
                         {/eq}
-                    </td>
+
                     <td>
+
                     {empty name="vo.proof"}<span class="txt-danger">未上传</span>
                     {else /} <span class="txt-success">已上传</span>
-                        {/empty}
-                    </td>>
-                    <td>
+                    {/empty}
+                <td>
                     <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看图片</a>
 
                     {eq name="$vo.status" value="0"}
