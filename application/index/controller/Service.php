@@ -2006,6 +2006,7 @@ class Service extends Base
         $id = input('id');
         $appid = input('appid');
         $can_check = empty(input('can_check')) ? "no" : input('can_check');
+        $service = new AdvertisingService();
         //费用缴纳
         if ($appid == 1) {
 
@@ -2075,6 +2076,7 @@ class Service extends Base
                 //大堂广告位
                 case 1:
                     $list = AdvertisingRecord::where(['create_time' => $create_time, 'status' => array('neq', -1)])->select();
+                    $serviceInfo = $service->where('id', 1)->find();
                     foreach ($list as $value) {
                         $time .= date('Y-m-d', $value['order_time']) . "<br>";
                         $value['payment_voucher'] = json_decode($value['payment_voucher']);
@@ -2086,13 +2088,14 @@ class Service extends Base
                         'create_user' => isset($list[0]->user->name) ? $list[0]->user->name : "",
                         'type' => 1,
                         'status' => $list[0]['status'],
-                        'create_time' => $create_time
+                        'create_time' => $create_time,
+                        'price' => count($list) * $serviceInfo['price']
                     ];
                     break;
                 //二楼多功能厅
                 case 2:
                     $list = FunctionRoomRecord::where(['create_time' => $create_time, 'status' => array('neq', -1)])->select();
-
+                    $serviceInfo = $service->where('id', 2)->find();
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
                     $map_time = array();
 
@@ -2100,9 +2103,20 @@ class Service extends Base
                         array_push($map_time, $value['order_time']);
                         $value['payment_voucher'] = json_decode($value['payment_voucher']);
                     }
+                    $price = 0;
+                    $timelist = array_count_values($map_time);
+                    foreach ($timelist as $key => $value) {
+                        if ($value == 1) {
+                            $price = $price + 500;
+                        } else if ($value == 2) {
+                            $price = $price + 800;
+                        }
+
+                    }
                     $mtime_list = array_values(array_unique($map_time));
 
                     foreach ($mtime_list as $value) {
+
                         $time .= date('Y-m-d', $value);
                         foreach ($list as $value2) {
                             if ($value == $value2['order_time']) {
@@ -2122,12 +2136,14 @@ class Service extends Base
                         'create_user' => isset($list[0]->user->name) ? $list[0]->user->name : "",
                         'type' => 2,
                         'status' => $list[0]['status'],
-                        'create_time' => $create_time
+                        'create_time' => $create_time,
+                        'price'=>$price
                     ];
                     break;
                 //led屏
                 case 3:
                     $list = LedRecord::where(['create_time' => $create_time, 'status' => array('neq', -1)])->select();
+                    $serviceInfo = $service->where('id', 3)->find();
                     $map_time = array();
                     foreach ($list as $value) {
                         array_push($map_time, $value['order_time']);
@@ -2179,7 +2195,8 @@ class Service extends Base
                         'create_user' => isset($list[0]->user->name) ? $list[0]->user->name : "",
                         'type' => 3,
                         'status' => $list[0]['status'],
-                        'create_time' => $create_time
+                        'create_time' => $create_time,
+                        'price' => count($map_time) * $serviceInfo['price']
                     ];
                     break;
 
