@@ -295,7 +295,7 @@ class Personal extends Base
             if ($v['status'] == 2) {
                 $v['status'] = 1;
             }
-            $list1[$k]['url']=$url.$v['id'];
+            $list1[$k]['url'] = $url . $v['id'];
 
         };
         //物业报修
@@ -314,7 +314,7 @@ class Personal extends Base
         foreach ($list2 as $k => $v) {
             $v['service_name'] = $types[$v['service_name']];
             $v['create_time'] = date("Y-m-d H:i:s", $v['create_time']);
-            $list2[$k]['url']=$url.$v['id'];
+            $list2[$k]['url'] = $url . $v['id'];
         }
 
         //饮水服务
@@ -335,7 +335,7 @@ class Personal extends Base
 
         foreach ($list3 as $k => $v) {
             $v['service_name'] = "饮水服务";
-            $list3 [$k]['url']=$url.$v['id'];
+            $list3 [$k]['url'] = $url . $v['id'];
         }
         //室内保洁
         if ($type == 3) {
@@ -350,7 +350,7 @@ class Personal extends Base
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list4 as $k => $v) {
             $v['service_name'] = "保洁服务";
-             $list4[$k]['url']=$url.$v['id'];
+            $list4[$k]['url'] = $url . $v['id'];
         }
 
         //车卡服务
@@ -367,7 +367,7 @@ class Personal extends Base
         foreach ($list5 as $k => $v) {
             $list5[$k]['service_name'] = $v['type'] == 1 ? "车卡服务（新卡办理）" : "车卡服务（旧卡续费）";
             $list5[$k]['create_time'] = date("Y-m-d", $v['create_time']);
-            $list5[$k]['url'] = $url.$v['id'];
+            $list5[$k]['url'] = $url . $v['id'];
             if ($list5[$k]['status'] == 0) {
                 $list5[$k]['status_text'] = '进行中';
             } elseif ($list5[$k]['status'] == 1) {
@@ -395,9 +395,9 @@ class Personal extends Base
         }
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         int_to_string($list6, array('type' => array(1 => '充电柱办公(新柱办理)', 2 => '充电柱办公(旧柱续费)'), 'status' => array(0 => '进行中', 1 => '已完成', 2 => '审核失败')));
-        foreach ($list6 as $k=> $value) {
+        foreach ($list6 as $k => $value) {
             $value['service_name'] = $value['type_text'];
-            $list6[$k]['url'] = $url.$value['id'];
+            $list6[$k]['url'] = $url . $value['id'];
         }
         //公共服务
         //大厅广告记录
@@ -414,14 +414,14 @@ class Personal extends Base
             $list = $ad->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
-            $type2= 1;
+            $type2 = 1;
         } else {
             $list = $ad->where(['status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
-            $type2= 1;
+            $type2 = 1;
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$type2.'/create_time/';
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
 
         //所有的创建时间
         foreach ($list as $l) {
@@ -434,13 +434,13 @@ class Personal extends Base
             $map = array();
             foreach ($list as $info) {
                 if ($info['create_time'] == $onetime) {
-                    array_push($map,$info);
+                    array_push($map, $info);
                 }
             }
             $re = [
                 'create_time' => $onetime,
                 'service_name' => "公共区服务（大厅广告位预约）",
-                'url'=>$url.strtotime($onetime)
+                'url' => $url . strtotime($onetime)
             ];
 
 
@@ -467,14 +467,14 @@ class Personal extends Base
             $list = $fs->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
-            $type2= 2;
+            $type2 = 2;
         } else {
             $list = $fs->where(['status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
-            $type2= 2;
+            $type2 = 2;
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$type2.'/create_time/';
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
             array_push($create_time, $l['create_time']);
@@ -491,8 +491,8 @@ class Personal extends Base
             }
             $re = [
                 'create_time' => $onetime,
-                'service_name'=>"公共区服务（多功能厅预约）",
-                'url'=>$url.strtotime($onetime)
+                'service_name' => "公共区服务（多功能厅预约）",
+                'url' => $url . strtotime($onetime)
 
             ];
             if ($map[0]['status'] == 0) {
@@ -517,15 +517,15 @@ class Personal extends Base
             $list = $led->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
-            $type2= 3;
+            $type2 = 3;
 
         } else {
             $list = $led->where(['status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
-            $type2= 3;
+            $type2 = 3;
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$type2.'/create_time/';
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
             array_push($create_time, $l['create_time']);
@@ -541,10 +541,10 @@ class Personal extends Base
                 }
             }
             $re = [
-                'service_name'=>"公共区服务（大堂led屏预约）",
+                'service_name' => "公共区服务（大堂led屏预约）",
                 'create_time' => $onetime,
-                'url'=>$url.strtotime($onetime)
-                ];
+                'url' => $url . strtotime($onetime)
+            ];
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
@@ -614,13 +614,13 @@ class Personal extends Base
 
                         if ($value['status'] == 0) {
                             $value['status_text'] = '进行中';
-                        } else {
+                        }  else {
                             $value['status_text'] = '已完成';
                         }
                     }
                 }
-                $company_list=empty($company_list)?array():$company_list;
-                $this->assign('company', json_encode($company_list));
+                $company_list = empty($company_list) ? array() : $company_list;
+                $this->assign('company', $company_list);
                 break;
             case 2:
                 $allList = array_merge($list2, $list3, $list4);
@@ -673,13 +673,15 @@ class Personal extends Base
                 $allList[$k]['status_text'] = '进行中';
             } elseif ($value['status'] == 1) {
                 $allList[$k]['status_text'] = '已完成';
+            } elseif ($value['status'] == 3) {
+                $allList[$k]['status_text'] = '确认送水';
             } else {
                 $allList[$k]['status_text'] = '审核失败';
             }
         }
         //echo json_encode($allList);
         //echo json_encode($type);
-        $this->assign('property', json_encode($allList));
+        $this->assign('property', $allList);
 
         return $this->fetch();
     }
