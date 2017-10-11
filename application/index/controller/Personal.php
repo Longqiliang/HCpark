@@ -620,7 +620,7 @@ class Personal extends Base
                     }
                 }
                 $company_list=empty($company_list)?array():$company_list;
-                $this->assign('company', $company_list);
+                $this->assign('company', json_encode($company_list));
                 break;
             case 2:
                 $allList = array_merge($list2, $list3, $list4);
@@ -652,7 +652,7 @@ class Personal extends Base
                         $value['status_text'] = '已完成';
                     }
                 }
-                $this->assign('company', $list);
+                $this->assign('company', json_encode($list));
                 break;
         }
 
@@ -677,9 +677,9 @@ class Personal extends Base
                 $allList[$k]['status_text'] = '审核失败';
             }
         }
-        echo json_encode($allList);
+        //echo json_encode($allList);
         //echo json_encode($type);
-        $this->assign('property', $allList);
+        $this->assign('property', json_encode($allList));
 
         return $this->fetch();
     }
