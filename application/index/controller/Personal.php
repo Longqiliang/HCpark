@@ -261,10 +261,17 @@ class Personal extends Base
     public function service()
     {
         $userid = session('userId');
+        $park_id= session('park_id');
         $userinfo = WechatUser::where(['userid' => $userid])->find();
+        $service = new \app\common\behavior\Service();
         //$type :1 运营 2 物业 3 普通企业
         $type = 3;
-        if ($userinfo['department'] == 76) {
+        if($park_id==3){
+            $userPower = 76;
+        }else{
+            $userPower =76;
+        }
+        if ($userinfo['department'] == $userPower) {
             $type = 1;
         } elseif ($userinfo['tagid'] == 2) {
             $type = 2;
@@ -275,14 +282,20 @@ class Personal extends Base
 
         $departmentId = $userinfo['department'];
         $map = ['company_id' => $departmentId, 'status' => ['neq', -1]];
+        $list1=array();
         if ($type == 3) {
-            $list1 = FeePayment::where($map)->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $list = FeePayment::where($map)->order('create_time desc')->field('id,type as service_name,status,create_time,company_id')->select();
             $appid = 1;
             $can_check = 'no';
         } else {
-            $list1 = FeePayment::where(['status' => ['neq', -1]])->order('create_time desc')->field('id,type as service_name,status,create_time,name')->select();
+            $list = FeePayment::where(['status' => ['neq', -1]])->order('create_time desc')->field('id,type as service_name,status,create_time,name,company_id')->select();
             $appid = 1;
             $can_check = 'yes';
+        }
+        foreach ($list as $value){
+           if( $service->findParkid($value['company_id'])==$park_id){
+               array_push($list1,$value);
+           }
         }
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         $types = [1 => '费用缴纳（水电费)', 2 => "费用缴纳（物业费)", 3 => "费用缴纳（房租费)", 4 => "费用缴纳（公耗费)"];
@@ -305,11 +318,11 @@ class Personal extends Base
         $types = [1 => '物业报修（空调报修）', 2 => "物业报修（电梯报修）", 3 => "物业报修（其他报修）"];
 
         if ($type == 3) {
-            $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
+            $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0],'park_id'=>$park_id])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
             $appid = 2;
             $can_check = 'no';
         } else {
-            $list2 = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0]])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
+            $list2 = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0],'park_id'=>$park_id])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
             $appid = 2;
             $can_check = 'yes';
         }
@@ -336,16 +349,28 @@ class Personal extends Base
             'status' => array('neq', -1),
             'userid' => $userid,
         ];
+        $list3=array();
         if ($type == 3) {
-            $list3 = WaterService::where($map)->order('create_time desc')->field('id,status,create_time')->select();
+            $list = WaterService::where($map)->order('create_time desc')->field('id,status,create_time,userid')->select();
             $appid = 3;
             $can_check = 'no';
         } else {
-            $list3 = WaterService::where(['status' => array('neq', -1)])->order('create_time desc')->field('id,name,status,create_time')->select();
+            $list = WaterService::where(['status' => array('neq', -1)])->order('create_time desc')->field('id,name,status,create_time,userid')->select();
             $appid = 3;
             $can_check = 'yes';
         }
+
+        foreach ($list as $value){
+            if(isset($value->user->park_id)){
+                if($value->user->park_id==$park_id){
+                    array_push($list3,$value);
+                }
+            }
+
+        }
+
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+
 
         foreach ($list3 as $k => $v) {
             $v['service_name'] = "饮水服务";
@@ -363,11 +388,11 @@ class Personal extends Base
         }
         //室内保洁
         if ($type == 3) {
-            $list4 = PropertyServer::where(['type' => ['=', 4], 'user_id' => $userid, 'status' => ['>=', 0]])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $list4 = PropertyServer::where(['type' => ['=', 4], 'user_id' => $userid, 'status' => ['>=', 0],'park_id'=>$park_id])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
             $appid = 4;
             $can_check = 'no';
         } else {
-            $list4 = PropertyServer::where(['type' => ['=', 4], 'status' => ['>=', 0]])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $list4 = PropertyServer::where(['type' => ['=', 4], 'status' => ['>=', 0],'park_id'=>$park_id])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
             $appid = 4;
             $can_check = 'yes';
         }
@@ -386,15 +411,26 @@ class Personal extends Base
         }
 
         //车卡服务
+        $list5=array();
         if ($type == 3) {
-            $list5 = CarparkService::where(['user_id' => $userid, 'status' => array('neq', -1)])->select();
+            $list = CarparkService::where(['user_id' => $userid, 'status' => array('neq', -1)])->select();
             $appid = 6;
             $can_check = 'no';
         } else {
-            $list5 = CarparkService::where(['status' => array('neq', -1)])->select();
+            $list = CarparkService::where(['status' => array('neq', -1)])->select();
             $appid = 6;
             $can_check = 'yes';
         }
+        foreach ($list as $value){
+            if(isset($value->user->park_id)){
+                if( $value->user->park_id==$park_id){
+                    array_push($list5,$value);
+                }
+            }
+
+        }
+
+
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list5 as $k => $v) {
             $list5[$k]['service_name'] = $v['type'] == 1 ? "车卡服务（新卡办理）" : "车卡服务（旧卡续费）";
@@ -410,21 +446,32 @@ class Personal extends Base
         }
 
         //充电柱办公
-        $service = new ElectricityService;
+        $list6 =array();
+        $electricityService = new ElectricityService;
         $user_id = session('userId');
         $map = [
             'user_id' => $user_id,
             'status' => array('neq', -1)
         ];
         if ($type == 3) {
-            $list6 = $service->where($map)->order('create_time desc')->select();
+            $list = $electricityService->where($map)->order('create_time desc')->select();
             $appid = 7;
             $can_check = 'no';
         } else {
-            $list6 = $service->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+            $list = $electricityService->where(['status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 7;
             $can_check = 'yes';
         }
+        foreach ($list as $value){
+            if(isset($value->user->park_id)){
+                if( $value->user->park_id==$park_id){
+                    array_push($list6,$value);
+                }
+            }
+
+        }
+
+
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         int_to_string($list6, array('type' => array(1 => '充电柱办公(新柱办理)', 2 => '充电柱办公(旧柱续费)'), 'status' => array(0 => '进行中', 1 => '已完成', 2 => '审核失败')));
         foreach ($list6 as $k => $value) {
@@ -440,7 +487,6 @@ class Personal extends Base
         }
         //公共服务
         //大厅广告记录
-        $service = new AdvertisingService();
         $ad = new AdvertisingRecord();
         $fs = new FunctionRoomRecord();
         $led = new LedRecord();
@@ -448,7 +494,6 @@ class Personal extends Base
         $data1 = array();
         $time = array();
         $create_time = array();
-        $serviceInfo = $service->where('id', 1)->find();
         if ($type == 3) {
             $list = $ad->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
@@ -461,10 +506,13 @@ class Personal extends Base
             $type2 = 1;
         }
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
-
         //所有的创建时间
         foreach ($list as $l) {
-            array_push($create_time, $l['create_time']);
+            if(isset($l->user->park_id)){
+                if( $l->user->park_id==$park_id){
+                    array_push($create_time, $l['create_time']);
+                }
+            }
         }
         //数组去重
         $time = array_values(array_unique($create_time));
@@ -503,7 +551,6 @@ class Personal extends Base
         $data2 = array();
         $time = array();
         $create_time = array();
-        $serviceInfo = $service->where('id', 2)->find();
         if ($type == 3) {
             $list = $fs->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
@@ -518,7 +565,11 @@ class Personal extends Base
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
-            array_push($create_time, $l['create_time']);
+            if(isset($l->user->park_id)){
+                if( $l->user->park_id==$park_id){
+                    array_push($create_time, $l['create_time']);
+                }
+            }
         }
         //数组去重
         $time = array_values(array_unique($create_time));
@@ -556,7 +607,6 @@ class Personal extends Base
         $data3 = array();
         $time = array();
         $create_time = array();
-        $serviceInfo = $service->where('id', 3)->find();
         if ($type == 3) {
             $list = $led->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
             $appid = 8;
@@ -572,7 +622,11 @@ class Personal extends Base
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
-            array_push($create_time, $l['create_time']);
+            if(isset($l->user->park_id)){
+                if( $l->user->park_id==$park_id){
+                    array_push($create_time, $l['create_time']);
+                }
+            }
         }
         //数组去重
         $time = array_values(array_unique($create_time));
@@ -650,8 +704,10 @@ class Personal extends Base
                     $company_list = Db::table('tb_company_service')
                         ->alias('s')
                         ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
+                        ->join('__WECHAT_USER__ b', 's.user_id=b.userid')
                         ->field('a.name as service_name,s.status,s.create_time')
                         ->where('s.status', 'neq', -1)
+                        ->where('b.park_id', 'eq', $park_id)
                         ->order('create_time desc')
                         ->select();
 
@@ -670,7 +726,7 @@ class Personal extends Base
                 break;
             case 2:
                 $allList = array_merge($list2, $list3, $list4);
-
+                $this->assign('company', '[]');
                 break;
             case 3:
                 if ($userinfo['fee_status'] == 1) {
