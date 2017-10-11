@@ -37,8 +37,7 @@ class Operational extends Admin
                 }
             }
             if ($type == 1) {
-                $map = ['userid' => $value['userid']];
-                array_push($dele, $map);
+                array_push($dele, $value['userid']);
             }
         }
         foreach ($list as $value) {
@@ -52,13 +51,12 @@ class Operational extends Admin
                 $map = ['userid' => $value['userid']];
                 array_push($user, $map);
             }
-
         }
-
         $add = $OperationalAuthority->saveAll($user);
         if (count($dele) > 0) {
-            $delete = $OperationalAuthority->destroy($dele);
+            $delete = $OperationalAuthority->where(['userid'=>array('in',$dele)])->delete();
         }
+
         $this->assign('list', $list);
         return $this->fetch();
     }

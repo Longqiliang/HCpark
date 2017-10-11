@@ -412,10 +412,16 @@ class Personal extends Base
         $serviceInfo = $service->where('id', 1)->find();
         if ($type == 3) {
             $list = $ad->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
-
+            $appid = 8;
+            $can_check = 'no';
+            $type2= 1;
         } else {
             $list = $ad->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+            $appid = 8;
+            $can_check = 'yes';
+            $type2= 1;
         }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$type2.'/create_time/';
 
         //所有的创建时间
         foreach ($list as $l) {
@@ -428,18 +434,16 @@ class Personal extends Base
             $map = array();
             foreach ($list as $info) {
                 if ($info['create_time'] == $onetime) {
-                    array_push($map, $info);
+                    array_push($map,$info);
                 }
             }
             $re = [
-                'create_time' => strtotime($onetime) * 1000,
-
+                'create_time' => $onetime,
+                'service_name' => "公共区服务（大厅广告位预约）",
+                'url'=>$url.strtotime($onetime)
             ];
 
-            foreach ($map as $k => $value) {
-                $re['service_name'] = "公共区服务（大厅广告位预约）";
-                $re['create_time'] = $map[$k]['create_time'];
-            }
+
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
@@ -461,9 +465,16 @@ class Personal extends Base
         $serviceInfo = $service->where('id', 2)->find();
         if ($type == 3) {
             $list = $fs->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
+            $appid = 8;
+            $can_check = 'no';
+            $type2= 2;
         } else {
             $list = $fs->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+            $appid = 8;
+            $can_check = 'yes';
+            $type2= 2;
         }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$type2.'/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
             array_push($create_time, $l['create_time']);
@@ -479,20 +490,11 @@ class Personal extends Base
                 }
             }
             $re = [
-                'create_time' => strtotime($onetime) * 1000,
+                'create_time' => $onetime,
+                'service_name'=>"公共区服务（多功能厅预约）",
+                'url'=>$url.strtotime($onetime)
+
             ];
-
-            //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
-            $map_time = array();
-            foreach ($map as $m) {
-                array_push($map_time, $m['order_time']);
-            }
-            $mtime_list = array_values(array_unique($map_time));
-
-            foreach ($mtime_list as $k => $value) {
-                $re['service_name'] = "公共区服务（多功能厅预约）";
-                $re['create_time'] = $map[$k]['create_time'];
-            }
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
@@ -506,16 +508,24 @@ class Personal extends Base
             array_push($data2, $re);
         }
 
-        //大堂led灯
+        //大堂led屏
         $data3 = array();
         $time = array();
         $create_time = array();
         $serviceInfo = $service->where('id', 3)->find();
         if ($type == 3) {
             $list = $led->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
+            $appid = 8;
+            $can_check = 'no';
+            $type2= 3;
+
         } else {
             $list = $led->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+            $appid = 8;
+            $can_check = 'yes';
+            $type2= 3;
         }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$type2.'/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
             array_push($create_time, $l['create_time']);
@@ -531,20 +541,10 @@ class Personal extends Base
                 }
             }
             $re = [
-                'create_time' => strtotime($onetime) * 1000,
-            ];
-
-            //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
-            $map_time = array();
-            foreach ($map as $m) {
-                array_push($map_time, $m['order_time']);
-            }
-            $mtime_list = array_values(array_unique($map_time));
-
-            foreach ($mtime_list as $k => $value) {
-                $re['service_name'] = "公共区服务（大堂led屏预约）";
-                $re['create_time'] = $map[$k]['create_time'];
-            }
+                'service_name'=>"公共区服务（大堂led屏预约）",
+                'create_time' => $onetime,
+                'url'=>$url.strtotime($onetime)
+                ];
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
@@ -677,7 +677,8 @@ class Personal extends Base
                 $allList[$k]['status_text'] = '审核失败';
             }
         }
-
+        echo json_encode($allList);
+        //echo json_encode($type);
         $this->assign('property', $allList);
 
         return $this->fetch();

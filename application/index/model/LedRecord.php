@@ -13,5 +13,11 @@ use think\Model;
 
 class LedRecord extends  Model
 {
+    public function user()
+    {
 
+
+        return $this->hasOne('WechatUser', 'userid', 'create_user');
+
+    }
 }

@@ -1710,9 +1710,7 @@ class Service extends Base
                 'status' => $v['status'],
             ];
         }
-
         return $info;
-
     }
 
     /*保洁服务记录*/
@@ -1729,9 +1727,7 @@ class Service extends Base
                 'name' => $v['address'],
             ];
         }
-
         return $info;
-
     }
 
     /*物业保洁下拉刷新*/
@@ -2081,6 +2077,129 @@ class Service extends Base
             if ($info['type'] == 1) {
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
+        } elseif ($appid == 8) {
+            $type = input('type');
+            $create_time = input('create_time');
+            $time = "";
+            switch ($type) {
+                //大堂广告位
+                case 1:
+                    $list = AdvertisingRecord::where(['create_time' => $create_time, 'status' => array('neq', -1)])->select();
+                    foreach ($list as $value) {
+                        $time .= date('y-m-d', $value['ordertime']) . "<br>";
+                        //todo 测试一下空对 json_decode 的影响
+                        $value['payment_voucher'] = json_decode($value['payment_voucher']);
+                    }
+                    $info = [
+                        'type_text' => "大堂广告位",
+                        'payment_voucher' => $list[0]['payment_voucher'],
+                        'order_time' => $time,
+                        'create_user' =>isset($list[0]->user->name)?$list[0]->user->name:"",
+                        'type' =>1,
+                        'status'=>$list[0]['status']
+                    ];
+                    break;
+                //二楼多功能厅
+                case 2:
+                    $list = FunctionRoomRecord::where(['create_time' => $create_time, 'status' => array('neq', -1)])->select();
+
+                    //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
+                    $map_time = array();
+
+                    foreach ($list as $value) {
+                        array_push($map_time, $value['order_time']);
+                        //todo 测试一下空对 json_decode 的影响
+                        $value['payment_voucher'] = json_decode($value['payment_voucher']);
+                    }
+                    $mtime_list = array_values(array_unique($map_time));
+
+                    foreach ($mtime_list as $value) {
+                        $time .= date('Y-m-d', $value);
+                        foreach ($list as $value2) {
+                            if ($value == $value2['order_time']) {
+                                if ($value2['date_type'] == 1) {
+                                    $time .= "上午 ";
+                                } elseif ($value2['date_type'] == 2) {
+                                    $time .= "下午 ";
+                                }
+                            }
+                        }
+                        $time .='<br>';
+                    }
+
+                    $info = [
+                        'type_text' => "二楼多功能厅",
+                        'payment_voucher' => $list[0]['payment_voucher'],
+                        'order_time' => $time,
+                        'create_user' =>isset($list[0]->user->name)?$list[0]->user->name:"",
+                        'type' =>2,
+                        'status'=>$list[0]['status']
+                    ];
+                    break;
+                //led屏
+                case 3:
+                    $list = LedRecord::where(['create_time' => $create_time, 'status' => array('neq', -1)])->select();
+                    $map_time = array();
+                    foreach ($list as $value) {
+                        array_push($map_time, $value['order_time']);
+                        //todo 测试一下空对 json_decode 的影响
+                        $value['payment_voucher'] = json_decode($value['payment_voucher']);
+                    }
+                    //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
+                    $mtime_list = array_values(array_unique($map_time));
+
+                    foreach ($mtime_list as $value) {
+                       $time .= date('Y-m-d', $value) . "| ";
+                        foreach ($list as $value2) {
+                            if ($value == $value2['order_time']) {
+                                switch ($value2['date_type']) {
+                                    case 1:
+                                        $time .= "9:00-10:00 ";
+                                        break;
+                                    case 2:
+                                        $time .= "10:00-11:00 ";
+                                        break;
+                                    case 3:
+                                        $time .= "11:00-12:00 ";
+                                        break;
+                                    case 4:
+                                        $time .= "12:00-13:00 ";
+                                        break;
+                                    case 5:
+                                        $time .= "13:00-14:00 ";
+                                        break;
+                                    case 6:
+                                        $time .= "14:00-15:00 ";
+                                        break;
+                                    case 7:
+                                        $time .= "15:00-16:00 ";
+                                        break;
+                                    case 8:
+                                        $time .= "16:00-17:00 ";
+                                        break;
+                                    case 9:
+                                        $time .= "17:00-18:00 ";
+                                        break;
+                                }
+
+                            }
+                        }
+                        $time .='<br>';
+                    }
+                    $info = [
+                        'type_text' => "led屏",
+                        'payment_voucher' => $list[0]['payment_voucher'],
+                        'order_time' => $time,
+                        'create_user' =>isset($list[0]->user->name)?$list[0]->user->name:"",
+                        'type' =>3,
+                        'status'=>$list[0]['status']
+                    ];
+                    break;
+
+
+            }
+
+
         } //企业服务
         else if (9 < $appid && $appid < 19) {
             $info = CompanyService::get($id);
@@ -2549,8 +2668,8 @@ class Service extends Base
                 $user = $wechatUser->where('department', $department_id)->select();
                 foreach ($user as $value) {
                     if (isset($value->operational->appids)) {
-                       $appids =json_decode( $value->operational->appids);
-                        if (in_array($appid, $appids)){
+                        $appids = json_decode($value->operational->appids);
+                        if (in_array($appid, $appids)) {
                             $useridlist .= '|' . $value['userid'];
                         }
                     }
@@ -2584,12 +2703,11 @@ class Service extends Base
                 break;
 
         }
-         if(!empty($useridlist)){
-             $res = commonService::sendPersonalMessage($message, $useridlist);
-         }
-         else{
-             return true;
-         }
+        if (!empty($useridlist)) {
+            $res = commonService::sendPersonalMessage($message, $useridlist);
+        } else {
+            return true;
+        }
 
         if ($res['errcode'] == 0) {
             return true;

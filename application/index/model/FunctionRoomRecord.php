@@ -13,5 +13,13 @@ use think\Model;
 
 class FunctionRoomRecord extends  Model
 {
+    public function user()
+    {
+
+
+        return $this->hasOne('WechatUser', 'userid', 'create_user');
+
+    }
+
 
 }
