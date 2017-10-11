@@ -1254,9 +1254,7 @@ class Service extends Base
                 'status' => array('neq', 0),
                 'create_user' => array('neq', $user_id),
                 'date_type' => $value['interval']
-
             ];
-
             $is = $ad->where($map)->find();
 
             if ($is) {
@@ -2665,7 +2663,7 @@ class Service extends Base
                           'userid' => $record['user_id']
                       ];
                       $savemessage = $personalMessage->save($new);*/
-                    return $this->success("报修成功");
+                    return $this->success("取消成功");
                 } else {
                     return $this->error("推送失败");
                 }

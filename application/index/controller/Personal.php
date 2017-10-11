@@ -672,7 +672,7 @@ class Personal extends Base
             if ($value['status'] == 0) {
                 $allList[$k]['status_text'] = '进行中';
             } elseif ($value['status'] == 1) {
-                $allList[$k]['status_text'] = '已完成';
+                $allList[$k]['status_text'] = '审核成功';
             } elseif ($value['status'] == 3) {
                 $allList[$k]['status_text'] = '确认送水';
             } else {
