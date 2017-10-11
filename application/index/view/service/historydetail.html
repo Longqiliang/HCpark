@@ -121,7 +121,7 @@
                 </div>
             </div>
         </div>
-        <div class="card"   v-if="info.proof">
+        <div class="card"   v-if="info.proof && info.status==1">
             <div class="card-tit">报修凭证</div>
             <div class="card-upload">
                 <div class="upload-img" v-for="img in info.proof">
@@ -129,7 +129,7 @@
                 </div>
             </div>
         </div>
-        <div  v-if="can_check == 'yes' &&  info.proof == ''">
+        <div  v-if="can_check == 'yes' &&  info.proof == '' && info.status==1">
             <div class="card">
                 <div class="card-tit">报修凭证</div>
                 <div class="card-upload">
