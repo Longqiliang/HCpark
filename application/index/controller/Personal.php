@@ -620,7 +620,7 @@ class Personal extends Base
                     }
                 }
                 $company_list = empty($company_list) ? array() : $company_list;
-                $this->assign('company', $company_list);
+                $this->assign('company', json_encode($company_list));
                 break;
             case 2:
                 $allList = array_merge($list2, $list3, $list4);
@@ -681,7 +681,7 @@ class Personal extends Base
         }
         //echo json_encode($allList);
         //echo json_encode($type);
-        $this->assign('property', $allList);
+        $this->assign('property', json_encode($allList));
 
         return $this->fetch();
     }
