@@ -33,7 +33,7 @@
     <div class="row">
         <div class="mail-box-header">
             <div class=" pull-right tooltip-demo">
-                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                <a href="javascript:ggg()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
             </div>
             <h2>{$company.name}本月缴费详情</h2>
         </div>
@@ -366,7 +366,9 @@
         alignment: 'center',       // Position - may be auto OR center.
         allowMultiple: false,
     });
-
+    function ggg() {
+        window.history.go(-1);
+    }
     highlight_subnav("{:Url('feepayment/index')}");
 </script>
 {/block}
