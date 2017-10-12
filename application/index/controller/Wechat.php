@@ -290,7 +290,7 @@ class Wechat extends Controller
             $map = $v;
             $info = $feepayment->where($map)->order('id desc')->find();
 
-            if ($info['create_time'] < $times && $info['onclick'] != 1 && $info['is_banner']=0) {
+            if (strtotime($info['create_time']) < $times && $info['onclick'] != 1 && $info['is_banner']==0) {
                 $type = [1 => "水电费", 2 => "物业费", 3 => "房租费", 4 => "公耗费"];
                 $userList = WechatUser::where(['department' => $info['company_id'], 'fee_status' => 1])->select();
                 if ($info['type'] == 4) {
