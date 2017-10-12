@@ -21,7 +21,7 @@ class Feepayment extends Admin
     public function index()
     {
         $parkid = session("user_auth")['park_id'];
-        $map = ['park_id' => $parkid];
+        $map = ['park_id' => $parkid ];
         $search = input('search');
         if (!empty($search)) {
             $map['name'] = ['like', "%$search%"];
@@ -202,7 +202,7 @@ class Feepayment extends Admin
     public function manageuser()
     {
         $id = input('id');
-        $list = WechatUser::where('department', $id)->order('id asc')->paginate();
+        $list = WechatUser::where(['department'=> $id,'status'=>1])->order('id asc')->paginate();
 
         $this->assign('list', $list);
         return $this->fetch();

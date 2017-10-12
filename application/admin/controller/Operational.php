@@ -24,7 +24,7 @@ class Operational extends Admin
         $wechatUser = new WechatUser();
         $OperationalAuthority = new OperationalAuthority();
         //$list = Db::query('select * from tb_wechat_user where department =76 and park_id=?', [$park_id]);
-        $list = $wechatUser->where(['department' => 76, 'park_id' => $park_id])->paginate();
+        $list = $wechatUser->where(['department' => 76, 'park_id' => $park_id ,'status'=>1])->paginate();
         $Operational = $OperationalAuthority->select();
         $user = array();
         $dele = array();
