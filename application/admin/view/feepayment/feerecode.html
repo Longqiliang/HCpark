@@ -47,6 +47,10 @@
     th:not(:first-child),td:not(:first-child){
         text-align: center;
     }
+    .imgs{
+        max-width: 540px;
+        max-height:400px;
+    }
 </style>
 {/block}
 
@@ -105,10 +109,12 @@
                     <td>
                         {lt name="$vo.status" value="2"}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
+                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal" data-text="{$vo.images}">查看单据</a>
                         <a href="javascript:void(0)" class="btn-sm btn-success" onclick="push('{$vo.id}')">推送</a>
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form1" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
+                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal" data-text="{$vo.images}">查看单据</a>
                         <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
 
                         {/lt}
@@ -163,6 +169,41 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+<div id="modal-form2" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title text-center"  name="dialog-title">查看凭证</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group" id="showOrder">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="remark-modal" aria-label="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">催缴单据</h4>
+            </div>
+            <div class="modal-body">
+                <img src="" alt="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
         </div>
     </div>
 </div>
@@ -227,6 +268,15 @@
             }
         });
     }
+    //绑定模态框展示的方法
+    $("#remark-modal").on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        console.log(button);
+        var recipient = button.data('text');
+        var modal = $(this);
+        var html = "<img src="+recipient+" alt='' class='imgs'>";
+        modal.find('.modal-body').html(html);
+    })
     highlight_subnav("{:Url('feepayment/index')}");
 </script>
 {/block}
