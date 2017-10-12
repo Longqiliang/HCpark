@@ -2361,7 +2361,7 @@ class Service extends Base
                             $message2 = [
                                 "title" => "物业报修提示",
                                 "description" => "服务类型：" . $user['type_text'] . "\n服务地点：" . $user['address'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile']."\n该服务已由园区运营完成审核，请尽快处理",
-                                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/no/id/' . $id
+                                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/yes/id/' . $id
                             ];
                             //推送给物业
                            $this->commonSend(2, $message2);
@@ -2466,6 +2466,16 @@ class Service extends Base
                 $user = PropertyServer::get($id);
                 if ($type == 1) {
                     $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
+                    if($userinfo['department']==76){
+
+                        $message2 = [
+                            "title" => "室内保洁服务提示",
+                            "description" => "服务类型：" . $user['type_text'] . "\n服务地点：" . $user['address'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile']."\n该服务已由园区运营完成审核，请尽快处理",
+                            "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $id
+                        ];
+                        //推送给物业
+                        $this->commonSend(2, $message2);
+                    }
 
                 } else {
                     $res = PropertyServer::where('id', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
