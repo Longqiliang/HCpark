@@ -533,7 +533,8 @@ class Personal extends Base
                 'create_time' => date('Y-m-d', strtotime($onetime)),
                 'service_name' => "公共区服务（大厅广告位预约）",
                 'url' => $url . strtotime($onetime),
-                'app_id'=>8
+                'app_id'=>8,
+                'status'=>$map[0]['status']
             ];
 
 
@@ -587,7 +588,8 @@ class Personal extends Base
                 'create_time' => date('Y-m-d', strtotime($onetime)),
                 'service_name' => "公共区服务（多功能厅预约）",
                 'url' => $url . strtotime($onetime),
-                'app_id'=>8
+                'app_id'=>8,
+                'status'=>$map[0]['status']
 
             ];
             if ($map[0]['status'] == 0) {
@@ -641,7 +643,8 @@ class Personal extends Base
                 'service_name' => "公共区服务（大堂led屏预约）",
                 'create_time' => date('Y-m-d', strtotime($onetime)),
                 'url' => $url . strtotime($onetime),
-                'app_id'=>8
+                'app_id'=>8,
+                'status'=>$map[0]['status']
             ];
             if ($map[0]['status'] == 0) {
                 $re['status_text'] = '已取消';
