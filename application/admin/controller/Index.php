@@ -59,8 +59,68 @@ class Index extends Admin {
         Service::sendNewsMessage(111, '18969030101');
     }
 
-    // 同步用户
-    public function syncUser() {
+    //同步用户(新方法：2017-9-14)
+    public function  syncUser(){
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $weObj = new TPWechat(config('party'));
+        $wxUserList = $weObj->getUserListInfo(1,1);
+        $localUserList = WechatUser::select();
+         $WechatUser = new WechatUser();
+        if($wxUserList['errcode']==0){
+            $delete=array();
+            $update =array();
+            foreach ($wxUserList['userlist'] as $wxUserkey =>$wxUser){
+                $id =$this->findParkid($wxUser['department'][0]);
+                $data = [
+                    'userid' => $wxUser['userid'],
+                    'name' => $wxUser['name'],
+                    'mobile' => $wxUser['mobile'],
+                    'gender' => $wxUser['gender'],
+                    'avatar' => $wxUser['avatar'],
+                    'department' => $wxUser['department'][0], //只选第一个所属部门
+                    'park_id'=>$id
+                ];
+                foreach ($localUserList as $localUserkey=> $localUser){
+                 if($localUser['userid']==$wxUser['userid']){
+                     $data['id']=$localUser['id'];
+                 }
+              }
+              array_push($update,$data);
+            }
+
+            foreach ($localUserList as $localUserkey =>$localUser){
+                $is_has=1;
+                foreach ($wxUserList['userlist'] as $wxUserkey => $wxUser){
+                    if($localUser['userid']==$wxUser['userid']){
+                        $is_has=2;
+                    }
+                }
+                if($is_has==1){
+                   array_push($delete,$localUser['userid']);
+                }
+            }
+            $result = $WechatUser->saveAll($update);
+            if (count($delete) > 0) {
+               //如果删除（微信客户端用户表无此用户，本地使用软删除，该用户（status=0））
+                $del = $WechatUser->where(['userid'=>array('in',$delete)])->update(['status'=>0]);
+
+            }
+            if($result){
+                $this->success('同步用户成功！');
+            }else{
+                $this->error("同步用户失败");
+            }
+        }else{
+
+            $this->error("取微信端用户表失败");
+        }
+
+
+      echo json_encode($wxUserList);
+    }
+
+    // 同步用户（老方法）
+    /*public function syncUser() {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('party'));
 
@@ -89,7 +149,7 @@ class Index extends Admin {
         }
         
         $this->success('同步用户成功！');
-    }
+    }*/
 
     // 获取部门
     public function syncDepartment() {
@@ -244,7 +304,7 @@ class Index extends Admin {
 //        var_dump($result);
 
     }
-      //查找园区id
+      //查找园区park_id by 部门id
      public  function  findParkid($Department){
          if($Department==1){
              return 1;
