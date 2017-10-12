@@ -142,12 +142,12 @@
                            data-payment="{$vo.payment_voucher}" class="btn-sm btn-success" style="color: #fff">查看凭证</a>
                         {eq name="$vo.state" value="2"}
 
-                        <a onclick="cancel(this)" data-time="{$vo.time}" data-type="{$vo.type}" data-day='{$vo.day}'
+                        <a data-toggle="modal" href="#modal-form1" onclick="saveData(this)" data-time="{$vo.time}" data-type="{$vo.type}" data-day='{$vo.day}'
                            data-price="{$vo.price}" data-user="{$vo.userid}"  class="btn-sm btn-primary"
                            style="color: #fff">取消</a>
 
                         {/eq}
-                        <a class="btn-sm btn-info" onclick="delItem1('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+                        <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
 
                     </td>
                 </tr>
@@ -157,45 +157,42 @@
             <div class="btn-group pull-right"></div>
         </div>
     </div>
+    <div id="modal-form1" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="form-horizontal" method="post" action="update">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h3 class="modal-title text-center">取消服务</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-center zt-big-padding">是否确定取消服务？</p>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <div class="col-sm-12 text-center zt-flex zt-space-around">
+                                <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+                                <a class="btn btn-primary " onclick="cancel()">确定</a>
+                                <a class="btn btn-warning " data-dismiss="modal" >取消</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {/block}
 
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script>
-
-    function delItem1(id,href) {
-               var ids = []
-
-                ids.push(id);
-
-            $.ajax({
-                data:{ids:ids},
-                type:"POST",
-                url:href,
-                success:function (data){
-                    console.log(data);
-                    if(data.code==1){
-                        swal({
-                            title: "",
-                            text: data.msg,
-                            type: "success",
-                            confirmButtonColor: "#1ab394",
-                            confirmButtonText: "确认"
-                        });
-                        window.location.reload();
-                    }else{
-                        swal({
-                            title: "",
-                            text: data.msg,
-                            type: "warning",
-                            confirmButtonColor: "#ef6060",
-                            confirmButtonText: "确认"
-                        });
-                    }
-                }
-            })
-    }
+    var subData={};
     function showpayment(a) {
         var $this = $(a);
         console.log($this);
@@ -211,17 +208,19 @@
         console.log(paymentHtml);
         $(".form-horizontal").attr('action', '{:Url("Appmanage/editApp")}');
     }
-
-    function cancel(a) {
-        var data = {
-            "type": $(a).attr('data-type'),
-            "create_time": $(a).attr('data-time'),
-            "user": $(a).attr('data-user'),
-            "price": $(a).attr('data-price'),
-            "day": $(a).attr('data-day'),
+    function saveData(the){
+        subData = {
+            "type": $(the).attr('data-type'),
+            "create_time": $(the).attr('data-time'),
+            "user": $(the).attr('data-user'),
+            "price": $(the).attr('data-price'),
+            "day": $(the).attr('data-day'),
         }
+    }
+    function cancel(a) {
+        subData.check_remark=$("input[name='check_remark']").val();
         $.ajax({
-            data: data,
+            data: subData,
             type: "POST",
             url: "{:Url('PublicArea/cancel')}",
             success: function (data) {
@@ -234,10 +233,7 @@
                     updateAlert(data.msg, 'error');
                 }
             }
-
         });
-
-
     }
 
     $(document).ready(function () {
