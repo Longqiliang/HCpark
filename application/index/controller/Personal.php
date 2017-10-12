@@ -261,15 +261,15 @@ class Personal extends Base
     public function service()
     {
         $userid = session('userId');
-        $park_id= session('park_id');
+        $park_id = session('park_id');
         $userinfo = WechatUser::where(['userid' => $userid])->find();
         $service = new \app\common\behavior\Service();
         //$type :1 运营 2 物业 3 普通企业
         $type = 3;
-        if($park_id==3){
+        if ($park_id == 3) {
             $userPower = 76;
-        }else{
-            $userPower =76;
+        } else {
+            $userPower = 76;
         }
         if ($userinfo['department'] == $userPower) {
             $type = 1;
@@ -282,7 +282,7 @@ class Personal extends Base
 
         $departmentId = $userinfo['department'];
         $map = ['company_id' => $departmentId, 'status' => ['neq', -1]];
-        $list1=array();
+        $list1 = array();
         if ($type == 3) {
             $list = FeePayment::where($map)->order('create_time desc')->field('id,type as service_name,status,create_time,company_id')->select();
             $appid = 1;
@@ -292,10 +292,10 @@ class Personal extends Base
             $appid = 1;
             $can_check = 'yes';
         }
-        foreach ($list as $value){
-           if( $service->findParkid($value['company_id'])==$park_id){
-               array_push($list1,$value);
-           }
+        foreach ($list as $value) {
+            if ($service->findParkid($value['company_id']) == $park_id) {
+                array_push($list1, $value);
+            }
         }
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         $types = [1 => '费用缴纳（水电费)', 2 => "费用缴纳（物业费)", 3 => "费用缴纳（房租费)", 4 => "费用缴纳（公耗费)"];
@@ -311,18 +311,17 @@ class Personal extends Base
             } else {
                 $list1[$k]['status_text'] = '审核失败';
             }
+            $list1[$k]['app_id'] = $appid;
         };
-
-
         //物业报修
         $types = [1 => '物业报修（空调报修）', 2 => "物业报修（电梯报修）", 3 => "物业报修（其他报修）"];
 
         if ($type == 3) {
-            $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0],'park_id'=>$park_id])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
+            $list2 = PropertyServer::where(['type' => ['<', 4], 'user_id' => $userid, 'status' => ['>=', 0], 'park_id' => $park_id])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
             $appid = 2;
             $can_check = 'no';
         } else {
-            $list2 = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0],'park_id'=>$park_id])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
+            $list2 = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0], 'park_id' => $park_id])->order('create_time desc')->field('proof,id,type as service_name,status,create_time')->select();
             $appid = 2;
             $can_check = 'yes';
         }
@@ -339,9 +338,10 @@ class Personal extends Base
             } elseif ($v['status'] == 2) {
                 $list2[$k]['status_text'] = '审核失败';
             }
-            if(!empty($v['proof'])){
+            if (!empty($v['proof'])) {
                 $list2[$k]['status_text'] = '已上传凭证';
             }
+            $list2[$k]['app_id'] = $appid;
         }
 
         //饮水服务
@@ -349,7 +349,7 @@ class Personal extends Base
             'status' => array('neq', -1),
             'userid' => $userid,
         ];
-        $list3=array();
+        $list3 = array();
         if ($type == 3) {
             $list = WaterService::where($map)->order('create_time desc')->field('id,status,create_time,userid')->select();
             $appid = 3;
@@ -360,10 +360,10 @@ class Personal extends Base
             $can_check = 'yes';
         }
 
-        foreach ($list as $value){
-            if(isset($value->user->park_id)){
-                if($value->user->park_id==$park_id){
-                    array_push($list3,$value);
+        foreach ($list as $value) {
+            if (isset($value->user->park_id)) {
+                if ($value->user->park_id == $park_id) {
+                    array_push($list3, $value);
                 }
             }
 
@@ -382,17 +382,18 @@ class Personal extends Base
                 $list3[$k]['status_text'] = '审核成功';
             } elseif ($v['status'] == 2) {
                 $list3[$k]['status_text'] = '审核失败';
-            }else{
+            } else {
                 $list3[$k]['status_text'] = '确认送水';
             }
+            $list3[$k]['app_id'] = $appid;
         }
         //室内保洁
         if ($type == 3) {
-            $list4 = PropertyServer::where(['type' => ['=', 4], 'user_id' => $userid, 'status' => ['>=', 0],'park_id'=>$park_id])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $list4 = PropertyServer::where(['type' => ['=', 4], 'user_id' => $userid, 'status' => ['>=', 0], 'park_id' => $park_id])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
             $appid = 4;
             $can_check = 'no';
         } else {
-            $list4 = PropertyServer::where(['type' => ['=', 4], 'status' => ['>=', 0],'park_id'=>$park_id])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
+            $list4 = PropertyServer::where(['type' => ['=', 4], 'status' => ['>=', 0], 'park_id' => $park_id])->order('create_time desc')->field('id,type as service_name,status,create_time')->select();
             $appid = 4;
             $can_check = 'yes';
         }
@@ -408,10 +409,11 @@ class Personal extends Base
             } elseif ($v['status'] == 2) {
                 $list4[$k]['status_text'] = '审核失败';
             }
+            $list4[$k]['app_id'] = $appid;
         }
 
         //车卡服务
-        $list5=array();
+        $list5 = array();
         if ($type == 3) {
             $list = CarparkService::where(['user_id' => $userid, 'status' => array('neq', -1)])->select();
             $appid = 6;
@@ -421,10 +423,10 @@ class Personal extends Base
             $appid = 6;
             $can_check = 'yes';
         }
-        foreach ($list as $value){
-            if(isset($value->user->park_id)){
-                if( $value->user->park_id==$park_id){
-                    array_push($list5,$value);
+        foreach ($list as $value) {
+            if (isset($value->user->park_id)) {
+                if ($value->user->park_id == $park_id) {
+                    array_push($list5, $value);
                 }
             }
 
@@ -443,10 +445,11 @@ class Personal extends Base
             } else {
                 $list5[$k]['status_text'] = '审核失败';
             }
+            $list5[$k]['app_id'] = $appid;
         }
 
         //充电柱办公
-        $list6 =array();
+        $list6 = array();
         $electricityService = new ElectricityService;
         $user_id = session('userId');
         $map = [
@@ -462,10 +465,10 @@ class Personal extends Base
             $appid = 7;
             $can_check = 'yes';
         }
-        foreach ($list as $value){
-            if(isset($value->user->park_id)){
-                if( $value->user->park_id==$park_id){
-                    array_push($list6,$value);
+        foreach ($list as $value) {
+            if (isset($value->user->park_id)) {
+                if ($value->user->park_id == $park_id) {
+                    array_push($list6, $value);
                 }
             }
 
@@ -484,6 +487,7 @@ class Personal extends Base
             } else {
                 $list6[$k]['status_text'] = '审核失败';
             }
+            $list6[$k]['app_id'] = $appid;
         }
         //公共服务
         //大厅广告记录
@@ -508,8 +512,8 @@ class Personal extends Base
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
-            if(isset($l->user->park_id)){
-                if( $l->user->park_id==$park_id){
+            if (isset($l->user->park_id)) {
+                if ($l->user->park_id == $park_id) {
                     array_push($create_time, $l['create_time']);
                 }
             }
@@ -525,22 +529,23 @@ class Personal extends Base
                 }
             }
             $re = [
-                'create_time' => date('Y-m-d',strtotime($onetime)),
+                'create_time' => date('Y-m-d', strtotime($onetime)),
                 'service_name' => "公共区服务（大厅广告位预约）",
-                'url' => $url . strtotime($onetime)
+                'url' => $url . strtotime($onetime),
+                'app_id'=>8
             ];
 
 
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
-                $re['status_text']='已取消';
+                $re['status_text'] = '已取消';
             } else if ($map[0]['status'] == 1) {
                 $re['status'] = 0;
-                $re['status_text']='审核中';
+                $re['status_text'] = '审核中';
             } else {
                 $re['status'] = 1;
-                $re['status_text']='审核成功';
+                $re['status_text'] = '审核成功';
             }
 
             array_push($data1, $re);
@@ -565,8 +570,8 @@ class Personal extends Base
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
-            if(isset($l->user->park_id)){
-                if( $l->user->park_id==$park_id){
+            if (isset($l->user->park_id)) {
+                if ($l->user->park_id == $park_id) {
                     array_push($create_time, $l['create_time']);
                 }
             }
@@ -582,22 +587,23 @@ class Personal extends Base
                 }
             }
             $re = [
-                'create_time' => date('Y-m-d',strtotime($onetime)),
+                'create_time' => date('Y-m-d', strtotime($onetime)),
                 'service_name' => "公共区服务（多功能厅预约）",
-                'url' => $url . strtotime($onetime)
+                'url' => $url . strtotime($onetime),
+                'app_id'=>8
 
             ];
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
-                $re['status_text']='已取消';
+                $re['status_text'] = '已取消';
             } else if ($map[0]['status'] == 1) {
                 $re['status'] = 0;
-                $re['status_text']='审核中';
+                $re['status_text'] = '审核中';
 
             } else {
                 $re['status'] = 1;
-                $re['status_text']='审核成功';
+                $re['status_text'] = '审核成功';
             }
 
             array_push($data2, $re);
@@ -622,8 +628,8 @@ class Personal extends Base
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
-            if(isset($l->user->park_id)){
-                if( $l->user->park_id==$park_id){
+            if (isset($l->user->park_id)) {
+                if ($l->user->park_id == $park_id) {
                     array_push($create_time, $l['create_time']);
                 }
             }
@@ -640,19 +646,20 @@ class Personal extends Base
             }
             $re = [
                 'service_name' => "公共区服务（大堂led屏预约）",
-                'create_time' => date('Y-m-d',strtotime($onetime)),
-                'url' => $url . strtotime($onetime)
+                'create_time' => date('Y-m-d', strtotime($onetime)),
+                'url' => $url . strtotime($onetime),
+                'app_id'=>8
             ];
             if ($map[0]['status'] == 0) {
 
                 $re['status'] = 2;
-                $re['status_text']='已取消';
+                $re['status_text'] = '已取消';
             } else if ($map[0]['status'] == 1) {
                 $re['status'] = 0;
-                $re['status_text']='审核中';
+                $re['status_text'] = '审核中';
             } else {
                 $re['status'] = 1;
-                $re['status_text']='审核成功';
+                $re['status_text'] = '审核成功';
             }
 
             array_push($data3, $re);
@@ -716,7 +723,7 @@ class Personal extends Base
 
                         if ($value['status'] == 0) {
                             $value['status_text'] = '进行中';
-                        }  else {
+                        } else {
                             $value['status_text'] = '已完成';
                         }
                     }
@@ -770,17 +777,17 @@ class Personal extends Base
             return ($al > $bl) ? -1 : 1;
         });
 
-       /* foreach ($allList as $k => $value) {
-            if ($value['status'] == 0) {
-                $allList[$k]['status_text'] = '进行中';
-            } elseif ($value['status'] == 1) {
-                $allList[$k]['status_text'] = '审核成功';
-            } elseif ($value['status'] == 3) {
-                $allList[$k]['status_text'] = '确认送水';
-            } else {
-                $allList[$k]['status_text'] = '审核失败';
-            }
-        }*/
+        /* foreach ($allList as $k => $value) {
+             if ($value['status'] == 0) {
+                 $allList[$k]['status_text'] = '进行中';
+             } elseif ($value['status'] == 1) {
+                 $allList[$k]['status_text'] = '审核成功';
+             } elseif ($value['status'] == 3) {
+                 $allList[$k]['status_text'] = '确认送水';
+             } else {
+                 $allList[$k]['status_text'] = '审核失败';
+             }
+         }*/
         //echo json_encode($allList);
         //echo json_encode($type);
         $this->assign('property', json_encode($allList));
