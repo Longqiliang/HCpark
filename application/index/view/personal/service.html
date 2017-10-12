@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="state">
-                        <span class="ing" :class="{'end':(p.status==1||p.status==3)}" >{{p.status_text}}</span>
+                        <span class="ing" :class="{'end':status(p.app_id,p.status)}" >{{p.status_text}}</span>
                     </div>
                 </a>
                 <img src="/index/images/service/card/icon-default.jpg" v-if="!property" class="no-list">
@@ -109,6 +109,21 @@
             this.isOut();
         },
         methods:{
+            status(appid,status){
+                if(appid===1){
+                    return status===2?true:false
+                }else if(appid===8){
+                    console.log(status,status===2?true:false)
+                    return status===2?true:false
+                }else{
+                    console.log(appid,status)
+                    if(status===1||status===3){
+                        return true
+                    }else{
+                        return false
+                    }
+                }
+            },
             tabChange(key){
                 this.active=key;
                 this.setCookie("type",key+11);

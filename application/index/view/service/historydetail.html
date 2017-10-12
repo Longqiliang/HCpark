@@ -103,7 +103,7 @@
             </div>
             <div class="card-cell">
                 <span>服务状态</span>
-                <span>{{status(info.status)}}</span>
+                <span>{{status(info.status,info.proof)}}</span>
             </div>
             <div class="remark" v-if="info.status!=0 && info.check_remark">
                 <p>物业提示</p>
@@ -452,7 +452,6 @@ var app = new Vue({
         };
         _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
             var data = JSON.parse(res.data);
-            console.log(data);
             wx.config({
                 debug: false,
                 appId: data.appid,
@@ -552,7 +551,6 @@ var app = new Vue({
                     formData.append("picture",img);
                     _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
                         var data = JSON.parse(res.data);
-                        console.log(data);
                         _this.isSubmit = false;
                         if(data.code == 1){
                             // 在获取到文件对象进行预览
@@ -580,7 +578,7 @@ var app = new Vue({
             }
         },
 //        状态判断
-        status:function(status) {
+        status:function(status,proof) {
             var s='';
             if(status!==undefined && status !== null){
                 if(this.appid==1){
@@ -598,7 +596,9 @@ var app = new Vue({
                     }
                 }else if(this.appid!=8 && this.appid!=1){
                     if(this.appid==3 && status==3){
-                        s='服务完成'
+                        s='确认送水'
+                    }else if(this.appid==2 && proof.length){
+                        s='已上传凭证'
                     }else{
                         if (status==0){
                             s='审核中'
@@ -614,7 +614,7 @@ var app = new Vue({
                     if(status==0){
                         s='已取消'
                     }else{
-                        s='预约成功'
+                        s='审核成功'
                     }
                 }
             }
@@ -623,7 +623,6 @@ var app = new Vue({
 //        服务类型判断（typr）
         serviceType:function (type) {
             var st='';
-            console.log(this);
             if(type!==undefined && type !== null){
                 if(this.appid==2){
                     if (type==1){
@@ -664,14 +663,11 @@ var app = new Vue({
         isSuccess(){
             var _this = this,
                     text='';
-            console.log(_this.subData);
             if(_this.isSubmit){
-                console.log('isSubmit')
                 return;
             }
 
             if(_this.appid==2){
-                console.log(_this.payment_voucher)
                 if(!_this.payment_voucher.length){
                     swal({
                         title:"提示",
@@ -738,7 +734,6 @@ var app = new Vue({
 //        审核服务
         subRent:function (isPass) {
             var _this = this;
-            console.log(_this.subData);
 
             if(_this.isSubmit){
                 return;
