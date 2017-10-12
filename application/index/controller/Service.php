@@ -2773,10 +2773,10 @@ class Service extends Base
         switch ($type) {
             //运营
             case 1 :
-                $user = $wechatUser->where('department', $department_id)->select();
+                $user = $wechatUser->where(['department'=>$department_id,'status'=>1])->select();
                 foreach ($user as $value) {
                     if (isset($value->operational->appids)) {
-                        $appids = json_decode($value->operational->appids);
+                        $appids = empty($value->operational->appids)?array():json_decode($value->operational->appids);
                         if (in_array($appid, $appids)) {
                             $useridlist .= '|' . $value['userid'];
                         }
