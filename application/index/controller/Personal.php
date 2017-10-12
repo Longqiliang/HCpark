@@ -288,7 +288,7 @@ class Personal extends Base
             $appid = 1;
             $can_check = 'no';
         } else {
-            $list = FeePayment::where(['status' => ['neq', -1]])->order('create_time desc')->field('id,type as service_name,status,create_time,name,company_id')->select();
+            $list = FeePayment::where(['status' => ['in', [1,2,3]]])->order('create_time desc')->field('id,type as service_name,status,create_time,name,company_id')->select();
             $appid = 1;
             $can_check = 'yes';
         }
@@ -313,6 +313,7 @@ class Personal extends Base
             }
             $list1[$k]['app_id'] = $appid;
         };
+
         //物业报修
         $types = [1 => '物业报修（空调报修）', 2 => "物业报修（电梯报修）", 3 => "物业报修（其他报修）"];
 
@@ -476,7 +477,7 @@ class Personal extends Base
 
 
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
-        int_to_string($list6, array('type' => array(1 => '充电柱办公(新柱办理)', 2 => '充电柱办公(旧柱续费)'), 'status' => array(0 => '进行中', 1 => '已完成', 2 => '审核失败')));
+        int_to_string($list6, array('type' => array(1 => '充电柱办公(新柱办理)', 2 => '充电柱办公(旧柱续费)'), 'status' => array(0 => '审核中', 1 => '审核成功', 2 => '审核失败')));
         foreach ($list6 as $k => $value) {
             $value['service_name'] = $value['type_text'];
             $list6[$k]['url'] = $url . $value['id'];
@@ -499,12 +500,12 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         if ($type == 3) {
-            $list = $ad->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
+            $list = $ad->where(['create_user' => $user_id, 'status' => array('in', [0,2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
             $type2 = 1;
         } else {
-            $list = $ad->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+            $list = $ad->where(['status' => array('in', [0,2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
             $type2 = 1;
@@ -537,14 +538,10 @@ class Personal extends Base
 
 
             if ($map[0]['status'] == 0) {
-
-                $re['status'] = 2;
                 $re['status_text'] = '已取消';
             } else if ($map[0]['status'] == 1) {
-                $re['status'] = 0;
-                $re['status_text'] = '审核中';
-            } else {
-                $re['status'] = 1;
+                $re['status_text'] = '选定未付款';
+            } else if( $map[0]['status'] == 2){
                 $re['status_text'] = '审核成功';
             }
 
@@ -557,12 +554,12 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         if ($type == 3) {
-            $list = $fs->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
+            $list = $fs->where(['create_user' => $user_id, 'status' => array('in', [0,2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
             $type2 = 2;
         } else {
-            $list = $fs->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+            $list = $fs->where(['status' => array('in', [0,2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
             $type2 = 2;
@@ -594,15 +591,11 @@ class Personal extends Base
 
             ];
             if ($map[0]['status'] == 0) {
-
-                $re['status'] = 2;
                 $re['status_text'] = '已取消';
             } else if ($map[0]['status'] == 1) {
-                $re['status'] = 0;
                 $re['status_text'] = '审核中';
 
             } else {
-                $re['status'] = 1;
                 $re['status_text'] = '审核成功';
             }
 
@@ -614,13 +607,13 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         if ($type == 3) {
-            $list = $led->where(['create_user' => $user_id, 'status' => array('neq', -1)])->order('create_time desc')->select();
+            $list = $led->where(['create_user' => $user_id, 'status' => array('in', [0,2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
             $type2 = 3;
 
         } else {
-            $list = $led->where(['status' => array('neq', -1)])->order('create_time desc')->select();
+            $list = $led->where(['status' => array('in', [0,2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
             $type2 = 3;
@@ -651,14 +644,10 @@ class Personal extends Base
                 'app_id'=>8
             ];
             if ($map[0]['status'] == 0) {
-
-                $re['status'] = 2;
                 $re['status_text'] = '已取消';
             } else if ($map[0]['status'] == 1) {
-                $re['status'] = 0;
                 $re['status_text'] = '审核中';
             } else {
-                $re['status'] = 1;
                 $re['status_text'] = '审核成功';
             }
 
