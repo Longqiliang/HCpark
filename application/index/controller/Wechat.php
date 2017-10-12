@@ -220,7 +220,7 @@ class Wechat extends Controller
         $property = new   PropertyServer();
         $water = new WaterService();
         $time = time() - 900;
-        //15 分钟后，状态仍为进行中 ，未推给运营的 记录要进行推送
+        //15 分钟后，状态仍为进行中 ，未推给运营的(is_banner=0) 记录要进行推送
         $propertyBanner = $property->where(['create_time' => array('lt', $time), 'is_banner' => 0, 'status' => 0])->select();
         $waterBanner = $water->where(['create_time' => array('lt', $time), 'is_banner' => 0, 'status' => 0])->select();
         $serviceController = new ServiceController();
@@ -247,15 +247,17 @@ class Wechat extends Controller
                     "description" => "服务地点：" . $value['address'] . "\n服务时间：" . date('m月d日', $value['clear_time']) . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $value['id']
                 ];
+                $app_id=4;
             } else {
                 $message = [
                     "title" => "物业报修提示",
                     "description" => "服务类型：" . $type . "\n服务地点：" . $value['address'] . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/yes/id/' . $value['id']
                 ];
+                $app_id=3;
             }
             //推送给运营
-            $reult = $serviceController->commonSend2(1, $message);
+            $reult = $serviceController->commonSend(1, $message,'',$app_id);
             if ($reult) {
                 $value['is_banner'] = 1;
                 $value->save();
@@ -267,8 +269,9 @@ class Wechat extends Controller
                 "description" => "送水地点：" . $value['address'] . "\n送水桶数：" . $value['number'] . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $value['id']
             ];
+
             //推送给运营
-            $reult = $serviceController->commonSend2(1, $message);
+            $reult = $serviceController->commonSend(1, $message,'',3);
             if ($reult) {
                 $value['is_banner'] = 1;
                 $value->save();
