@@ -307,7 +307,7 @@ class Wechat extends Controller
 
                 }
                 if ($userId != ''){
-                    $res = Service::sendPersonalMessage($message, 18867514826);
+                    $res = Service::sendPersonalMessage($message, $userId);
                     $info['is_banner']=1;
                     $info->save();
                 }
