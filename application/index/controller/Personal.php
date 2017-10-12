@@ -288,7 +288,7 @@ class Personal extends Base
             $appid = 1;
             $can_check = 'no';
         } else {
-            $list = FeePayment::where(['status' => ['in', [1,2,3]]])->order('create_time desc')->field('id,type as service_name,status,create_time,name,company_id')->select();
+            $list = FeePayment::where(['status' => ['neq', -1]])->order('create_time desc')->field('id,type as service_name,status,create_time,name,company_id')->select();
             $appid = 1;
             $can_check = 'yes';
         }
