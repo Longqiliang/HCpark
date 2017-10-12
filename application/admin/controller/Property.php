@@ -115,6 +115,23 @@ class Property extends Admin
         return $html;
 
     }
+    /*显示物业上传维修凭证*/
+    public function showProof(){
+        $id = input("id");
+        $html="";
+        $feepayment = PropertyServer::get($id);
+        if ($feepayment['proof']){
+            $image = json_decode($feepayment['proof']);
+
+            foreach($image as $value){
+                $html .= "<div class='col-md-4'><img class='front_cover_img' src='$value' style='width: 150px;height: 200px;'></div>";
+
+            }
+        }
+
+        return $html;
+
+    }
 
     //逻辑删除
     public function moveToTrash() {

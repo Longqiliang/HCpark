@@ -314,6 +314,7 @@ class PublicArea extends Admin
     public function cancel()
     {
         $create_time = input('create_time');
+        $check_remark = input('check_remark');
         $type = input('type');
         $advertisingRecord = new AdvertisingRecord();
         $led =new LedRecord();
@@ -323,7 +324,9 @@ class PublicArea extends Admin
                 $list = $advertisingRecord->where('create_time', $create_time)->select();
                 foreach ($list as $value) {
                     $value['status'] = 0;
+                    $value['check_remark']=$check_remark;
                     $value->save();
+
                 }
                 $title ="大厅广告位";
                 break;
@@ -331,6 +334,7 @@ class PublicArea extends Admin
                 $list = $FunctionRoomRecord->where('create_time', $create_time)->select();
                 foreach ($list as $value) {
                     $value['status'] = 0;
+                    $value['check_remark']=$check_remark;
                     $value->save();
                 }
                 $title ="二楼多功能厅";
@@ -339,6 +343,7 @@ class PublicArea extends Admin
                 $list = $led->where('create_time', $create_time)->select();
                 foreach ($list as $value) {
                     $value['status'] = 0;
+                    $value['check_remark']=$check_remark;
                     $value->save();
                     $title ="大堂LED屏";
                 }

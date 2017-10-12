@@ -112,6 +112,9 @@
                     {/empty}
                 <td>
                     <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看图片</a>
+                    {empty name="vo.proof"}
+                    {else /}    <a data-toggle="modal" href="#modal-form1" onclick="showProof('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">报修凭证</a>
+                    {/empty}
 
                     {eq name="$vo.status" value="0"}
                         <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>-->
@@ -161,6 +164,8 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h3 class="modal-title text-center"  name="dialog-title">查看凭证</h3>
+
+
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -274,6 +279,20 @@
         $.ajax({
             data:{id:id},
             url:"{:Url('showImage')}",
+            type:"post",
+            success:function(data){
+                $("#showImg").empty();
+                $("#showImg").append(data);
+            }
+        })
+
+    }
+
+    //查看凭证
+    function showProof(id) {
+        $.ajax({
+            data:{id:id},
+            url:"{:Url('showProof')}",
             type:"post",
             success:function(data){
                 $("#showImg").empty();
