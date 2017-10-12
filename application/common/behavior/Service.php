@@ -153,7 +153,7 @@ class Service
     {
         $config = config('personal');
 
-        return self::sendTextCard($config, $message,18867514826);
+        return self::sendTextCard($config, $message,$toUser);
     }
 
     /**
@@ -172,7 +172,22 @@ class Service
     {
         $config = config('personal');
 
-        return self::sendMessage($config, $message, 18867514826);
+        return self::sendMessage($config, $message, $toUser);
+    }
+
+    //查找园区id
+    public function findParkid($Department)
+    {
+        if ($Department == 1) {
+            return 1;
+        }
+        $WeDepartment = new WechatDepartment();
+        $de = $WeDepartment->where('id', $Department)->find();
+        if ($de['parentid'] == 1) {
+            return $de['id'];
+        } else {
+            return $this->findParkid($de['parentid']);
+        }
     }
 
 }
