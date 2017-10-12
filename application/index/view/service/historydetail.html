@@ -129,7 +129,7 @@
                 </div>
             </div>
         </div>
-        <div  v-if="can_check == 'yes' &&  info.proof == '' && info.status==1">
+        <div  v-if="can_check == 'yes' &&  !info.proof.length && info.status==1">
             <div class="card">
                 <div class="card-tit">报修凭证</div>
                 <div class="card-upload">
@@ -671,13 +671,16 @@ var app = new Vue({
             }
 
             if(_this.appid==2){
-                if(!_this.payment_voucher){
+                console.log(_this.payment_voucher)
+                if(!_this.payment_voucher.length){
                     swal({
                         title:"提示",
-                        text:"请先上传报修凭证！",
+                        text:"请先添加报修凭证！",
                         type:"warning",
+                        confirmButtonText: "确认",
                         confirmButtonColor: "#fcc44b"
                     })
+                    return;
                 }
                 text='是否确认上传？'
             }else{
@@ -766,6 +769,7 @@ var app = new Vue({
                         text:'提交成功',
                         html:true,
                         type:"success",
+                        confirmButtonText: "确认",
                         confirmButtonColor: "#fcc44b"
                     },function () {
                         _this.rentShow = false;
