@@ -279,6 +279,7 @@ class Wechat extends Controller
             }
         }
         //费用缴纳3天内未点击重复推送
+        $userId = '';
         $feepayment = new FeePayment();
         $times = time() - 60 * 60 * 24 * 3;
         $list = $feepayment->distinct(true)->field('type,company_id')->select();
@@ -302,11 +303,15 @@ class Wechat extends Controller
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/feedetail/t/' . $info['type'] . '/id/1',
                 ];
                 foreach ($userList as $k => $v) {
+                    $userId .= '|'.$v;
+
+                }
+                if ($userId != ''){
                     $res = Service::sendPersonalMessage($message, 18867514826);
                     $info['is_banner']=1;
                     $info->save();
-
                 }
+
             }
         }
     }
