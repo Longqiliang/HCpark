@@ -100,15 +100,11 @@
                 </div>
                 <div class="ibox-content">
                     <div class="text-center p-lg">
-                        <button class="ladda-button btn-user btn btn-info" data-style="slide-left">
-                            <span class="ladda-label">1、同步用户</span><span class="ladda-spinner"></span>
-                        </button>
+
                         <button class="ladda-button btn-dep btn btn-warning" data-style="slide-left">
-                            <span class="ladda-label">2、同步部门</span><span class="ladda-spinner"></span>
+                            <span class="ladda-label">一键同步</span><span class="ladda-spinner"></span>
                         </button>
-                        <button class="ladda-button btn-tag btn btn-info" data-style="slide-left">
-                            <span class="ladda-label">3、同步标签</span><span class="ladda-spinner"></span>
-                        </button>
+
                     </div>
                 </div>
             </div>
@@ -187,7 +183,7 @@
         var dep = $( '.btn-dep' ).ladda();
         dep.click(function(){
             dep.ladda( 'start' );
-            $.get('syncDepartment').then(function () { dep.ladda('stop'); });
+            $.get('syncAll2').then(function () { dep.ladda('stop'); });
         });
 
         var tag = $( '.btn-tag' ).ladda();

@@ -111,14 +111,23 @@ class Index extends Admin
 
             }
             if ($result) {
-                $this->success('同步用户成功！');
+                //$this->success('同步用户成功！');
             } else {
-                $this->error("同步用户失败");
+                //$this->error("同步用户失败");
             }
         } else {
 
-            $this->error("取微信端用户表失败");
+            //$this->error("取微信端用户表失败");
         }
+    }
+
+    public  function  syncAll2(){
+    $this->syncDepartment();
+    $this->syncUser();
+    $this->syncTag();
+    return $this->success('成功');
+
+
     }
 
     // 同步用户（老方法）
@@ -248,7 +257,7 @@ class Index extends Admin
         }
 
 
-        $this->success('同步部门成功！');
+        //$this->success('同步部门成功！');
     }
 
     // 同步标签
@@ -277,7 +286,7 @@ class Index extends Admin
             }
         }
 
-        $this->success('同步标签成功！');
+       // $this->success('同步标签成功！');
     }
 
     //
