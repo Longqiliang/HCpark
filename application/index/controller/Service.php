@@ -1728,6 +1728,7 @@ class Service extends Base
                 'type' => "保洁服务",
                 'time' => date("Y-m-d", $v['clear_time']),
                 'name' => $v['address'],
+                'status'=>$v['status']
             ];
         }
         return $info;
