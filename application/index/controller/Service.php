@@ -1808,6 +1808,7 @@ class Service extends Base
                 'name' => $v['name'],
                 'time' => $v['create_time'],
                 'num' => $v['number'],
+                'status' =>$v['status']
             ];
         }
 
@@ -2355,9 +2356,11 @@ class Service extends Base
             //物业报修
             case  2:
                 $proof = input('proof/a');
-                if (!empty($proof)) {
+
+                if ($type==3) {
                     $res = PropertyServer::get($id);
                     $res['proof'] = json_encode($proof);
+                    $res['status']=3;
                     $res->save();
                     if ($res) {
                         return $this->success("上传凭证成功");

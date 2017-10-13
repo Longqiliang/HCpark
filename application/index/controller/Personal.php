@@ -338,10 +338,10 @@ class Personal extends Base
                 $list2[$k]['status_text'] = '审核成功';
             } elseif ($v['status'] == 2) {
                 $list2[$k]['status_text'] = '审核失败';
+            }elseif ($v['status'] == 3) {
+                $list2[$k]['status_text'] = '完成服务';
             }
-            if (!empty($v['proof'])) {
-                $list2[$k]['status_text'] = '已上传凭证';
-            }
+
             $list2[$k]['app_id'] = $appid;
         }
 
@@ -384,7 +384,7 @@ class Personal extends Base
             } elseif ($v['status'] == 2) {
                 $list3[$k]['status_text'] = '审核失败';
             } else {
-                $list3[$k]['status_text'] = '确认送水';
+                $list3[$k]['status_text'] = '确认送达';
             }
             $list3[$k]['app_id'] = $appid;
         }
