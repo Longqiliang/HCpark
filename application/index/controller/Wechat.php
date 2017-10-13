@@ -21,8 +21,6 @@ use app\common\model\PayLog as PayLogModel;
 use app\common\model\PointsLog as PointsLogModel;
 use app\index\model\PropertyServer;
 use app\index\model\WaterService;
-use app\index\controller\Service as ServiceController;
-
 class Wechat extends Controller
 {
     public function index()
@@ -224,7 +222,6 @@ class Wechat extends Controller
         //15 分钟后，状态仍为进行中 ，未推给运营的(is_banner=0) 记录要进行推送
         $propertyBanner = $property->where(['create_time' => array('lt', $time), 'is_banner' => 0, 'status' => 0])->select();
         $waterBanner = $water->where(['create_time' => array('lt', $time), 'is_banner' => 0, 'status' => 0])->select();
-        $serviceController = new ServiceController();
         foreach ($propertyBanner as $value) {
             //服务类型 1为空调，2为电梯，3为其他 4 室内保洁
             $is = 1;
@@ -258,7 +255,7 @@ class Wechat extends Controller
                 $app_id = 3;
             }
             //推送给运营
-            $reult = $serviceController->commonSend(1, $message, '', $app_id);
+            $reult = $this->commonSend(1, $message, '', $app_id);
             if ($reult) {
                 $value['is_banner'] = 1;
                 $value->save();
@@ -272,7 +269,7 @@ class Wechat extends Controller
             ];
 
             //推送给运营
-            $reult = $serviceController->commonSend(1, $message, '', 3);
+            $reult = $this->commonSend(1, $message, '', 3);
             if ($reult) {
                 $value['is_banner'] = 1;
                 $value->save();
@@ -311,8 +308,8 @@ class Wechat extends Controller
                     $userId .= '|'.$v;
                 }
                 if ($userId != ''){
-                    $reult = $serviceController->commonSend(4, $message, $userId);
-                    $reult2 = $serviceController->commonSend(1, $message2, '',1);
+                    $reult = $this->commonSend(4, $message, $userId);
+                    $reult2 = $this->commonSend(1, $message2, '',1);
                     $info['is_banner']=1;
                     $info->save();
                 }
@@ -320,4 +317,78 @@ class Wechat extends Controller
             }
         }
     }
+
+    public function commonSend($type, $message, $userid = "", $appid = 0)
+    {
+        $service =new service();
+        $wechatUser = new WechatUser();
+        $useridlist = "";
+        $park_id = 3;
+        //该园区运营的department——id
+        switch ($park_id) {
+            case  3 :
+                $department_id = 76;
+                break;
+            default:
+                $department_id = 76;
+                break;
+        }
+        switch ($type) {
+            //运营
+            case 1 :
+                $user = $wechatUser->where(['department'=>$department_id,'status'=>1])->select();
+                foreach ($user as $value) {
+                    if (isset($value->operational->appids)) {
+                        $appids = empty($value->operational->appids)?array():json_decode($value->operational->appids);
+                        if (in_array($appid, $appids)) {
+                            $useridlist .= '|' . $value['userid'];
+                        }
+                    }
+                }
+
+                break;
+            //物业
+            case 2 :
+                $user = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                foreach ($user as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
+            /*
+             * 现在没有运营+物业一起推的情况
+             * case 3:
+                //该园区运营团队
+                $user1 = $wechatUser->where('department', $department_id)->select();
+                foreach ($user1 as $value) {
+                    $useridlist .= '|' . $value['userid'];
+                }
+                //该园区物业管理
+                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                foreach ($user2 as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;*/
+
+            case 4:
+                $useridlist = $userid;
+                break;
+
+        }
+        if (!empty($useridlist)) {
+            $res = $service->sendPersonalMessage($message, $useridlist);
+        } else {
+            return true;
+        }
+
+        if ($res['errcode'] == 0) {
+            return true;
+        } else {
+
+            return false;
+        }
+
+    }
+
+
+
 }
