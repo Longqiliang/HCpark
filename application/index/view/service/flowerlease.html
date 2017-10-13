@@ -41,6 +41,54 @@
         font-size: 1.6rem;
         text-align: center;
     }
+    .my-mask{
+        position: fixed;
+        top:0;
+        right:0;
+        bottom: 0;
+        left:0;
+        z-index: 995;
+    }
+    .my-mask-back{
+        position: absolute;
+        top:0;
+        right:0;
+        bottom: 0;
+        left:0;
+        z-index: 996;
+        background-color: rgba(0,0,0,0.3);
+    }
+    .my-mask-content{
+        width:79.2vw;
+        background-color: #f9f9f9;
+        position: absolute;
+        top:50%;
+        left:50%;
+        -webkit-transform: translate(-50%,-60%);
+        -moz-transform: translate(-50%,-60%);
+        -ms-transform: translate(-50%,-60%);
+        -o-transform: translate(-50%,-60%);
+        transform: translate(-50%,-60%);
+        transform: translate(-50%,-60%);
+        z-index: 999;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .my-mask-content>h3{
+        padding:1.7rem 0;
+        margin:0;
+        text-align: center;
+        color: #333;
+        font-size:1.8rem;
+    }
+    .my-phone-list>li{
+        width:53vw;
+        margin:0 auto;
+        padding-bottom: 2rem;
+        color: #333;
+        font-size: 1.5rem;
+    }
+
 </style>
 {/block}
 
@@ -57,6 +105,31 @@
         <p>用花的装饰，美的点缀，带给您一整天的清新。盆栽免费设计摆放，枯败免费更换，物美价廉。联系人：斯琴</p>
     </div>
     <a href="tel:18968056059" class="my-btn">电话预约</a>
+    <!--遮罩-->
+    <div class="my-mask">
+        <div class="my-mask-back"></div>
+        <div class="my-mask-content">
+            <h3>拨打电话</h3>
+            <ul class="my-phone-list">
+                <li>
+                    <label for="tel1">
+                        <input type="radio" id="tel1" class="my-radio" name="tel" value="1" hidden>
+                        <span>物业：0571-88610333</span>
+                    </label>
+                </li>
+                <li>
+                    <label for="tel2">
+                        <input type="radio" id="tel2" class="my-radio" name="tel" value="2" hidden>
+                        <span>斯琴：18968056059</span>
+                    </label>
+                </li>
+            </ul>
+            <ul>
+                <li>取消</li>
+                <li><a href="">确定</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 {/block}
 
