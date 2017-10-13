@@ -477,7 +477,7 @@ class Personal extends Base
 
 
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
-        int_to_string($list6, array('type' => array(1 => '充电柱办公(新柱办理)', 2 => '充电柱办公(旧柱续费)'), 'status' => array(0 => '审核中', 1 => '审核成功', 2 => '审核失败')));
+        int_to_string($list6, array('type' => array(1 => '充电柱办理(新柱办理)', 2 => '充电柱办理(旧柱续费)'), 'status' => array(0 => '审核中', 1 => '审核成功', 2 => '审核失败')));
         foreach ($list6 as $k => $value) {
             $value['service_name'] = $value['type_text'];
             $list6[$k]['url'] = $url . $value['id'];
@@ -531,7 +531,7 @@ class Personal extends Base
             }
             $re = [
                 'create_time' => date('Y-m-d', strtotime($onetime)),
-                'service_name' => "公共区服务（大厅广告位预约）",
+                'service_name' => "设备服务（大厅广告位预约）",
                 'url' => $url . strtotime($onetime),
                 'app_id'=>8,
                 'status'=>$map[0]['status']
@@ -586,7 +586,7 @@ class Personal extends Base
             }
             $re = [
                 'create_time' => date('Y-m-d', strtotime($onetime)),
-                'service_name' => "公共区服务（多功能厅预约）",
+                'service_name' => "设备服务（多功能厅预约）",
                 'url' => $url . strtotime($onetime),
                 'app_id'=>8,
                 'status'=>$map[0]['status']
@@ -640,7 +640,7 @@ class Personal extends Base
                 }
             }
             $re = [
-                'service_name' => "公共区服务（大堂led屏预约）",
+                'service_name' => "设备服务（大堂LED屏预约）",
                 'create_time' => date('Y-m-d', strtotime($onetime)),
                 'url' => $url . strtotime($onetime),
                 'app_id'=>8,
