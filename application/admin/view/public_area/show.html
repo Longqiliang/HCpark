@@ -131,9 +131,11 @@
                     <td>
                         {$vo.price}
                     </td>
-                    <td>
-                        {$vo.status}
-                    </td>
+                    {eq  name="$vo.state" value="2"}
+                    <td class="txt-success">{$vo.status}</td>
+                    {else/}
+                    <td class="txt-danger">{$vo.status}</td>
+                    {/eq}
                     <td hidden id="payment_voucher">
                         {$vo.payment_voucher}
                     </td>
