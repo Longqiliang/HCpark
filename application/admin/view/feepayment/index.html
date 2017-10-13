@@ -94,7 +94,7 @@
                     <td>
                         <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-success" style="color:#fff">编辑</a>
                         <a  href="{:Url('manageUser','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">查看权限</a>
-                        <a id="feerecode" href="{:Url('feerecode','id='.$vo.id)}" class="btn-sm btn-info" style="color:#fff">查看缴费记录</a>
+                        <a  href="{:Url('feerecode','id='.$vo.id)}" class="btn-sm btn-info feerecode" style="color:#fff">查看缴费记录</a>
                     </td>
 
                 </tr>
@@ -120,16 +120,13 @@
         });
         var p=GetQueryString('page');
         console.log(p);
-
-       var href = $("#feerecode").attr('href');
-       console.log(href);
-            href =resetHref(href,p);
-        $("#feerecode").attr('href',href);
-//
-//        console.log(resetHref(href,p));
+        var href = $(".feerecode").attr('href');
+        console.log(href)
+        href =resetHref(href,p);
+        $(".feerecode").attr('href',href);
     });
     function  resetHref(href,p) {
-        href = href + '?page='+p;
+        href = href + '?p='+p;
         return href;
     }
     function GetQueryString(name)

@@ -186,13 +186,14 @@ class Feepayment extends Admin
     public function feeRecode()
     {
         $feepayment = new FeePaymentModel();
+        $infos = input('p');
+        //return dump($infos);
         $id = input('id');
-        $p =input('page');
         $company = ParkCompany::get($id);
         $list = $feepayment->where(['company_id' => $id,'status' => ['>',-1]])->order('id desc')->paginate();
         int_to_string($list, ['type' => [1 => "水电费", 2 => "物业费", 3 => "房租费", 4 => "公耗费"],
             'status' => [-1 => "删除", 0 => "未缴费", 1 => "审核中", 2 => "审核成功",3=>"审核失败"]]);
-        $this->assign('p',$p);
+        $this->assign('p',$infos);
         $this->assign('company', $company);
         $this->assign('list', $list);
         return $this->fetch();
