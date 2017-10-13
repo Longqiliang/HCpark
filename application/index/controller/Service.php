@@ -1851,6 +1851,12 @@ class Service extends Base
             if ($info) {
                 FeePayment::where('id', $info['id'])->update(['onclick' => 1, 'onclick_time' => time()]);
                 array_push($property, "http://" . $_SERVER['HTTP_HOST'] . $info['images']);
+                $member = $info['number'];
+                $memberArr = explode('|',$member);
+                if (!in_array($userid,$memberArr)){
+                    $member = $member.$userid."|" ;
+                    FeePayment::where('id',$info['id'])->update(['number'=>$member]);
+                }
             }
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
             $info['appid'] = $appid;
@@ -1859,6 +1865,12 @@ class Service extends Base
             if ($info1) {
                 FeePayment::where('id', $info1['id'])->update(['onclick' => 1, 'onclick_time' => time()]);
                 array_push($property, "http://" . $_SERVER['HTTP_HOST'] . $info1['images']);
+                $member = $info1['number'];
+                $memberArr = explode('|',$member);
+                if (!in_array($userid,$memberArr)){
+                    $member = $member.$userid."|" ;
+                    FeePayment::where('id',$info1['id'])->update(['number'=>$member]);
+                }
             }
             $info1['appid'] = $appid;
             $info1['title'] = '公耗费';
@@ -1873,7 +1885,12 @@ class Service extends Base
             if ($info) {
                 FeePayment::where('id', $info['id'])->update(['onclick' => 1, 'onclick_time' => time()]);
                 array_push($image, "http://" . $_SERVER['HTTP_HOST'] . $info['images']);
-
+                $member = $info['number'];
+                $memberArr = explode('|',$member);
+                if (!in_array($userid,$memberArr)){
+                    $member = $member.$userid."|" ;
+                    FeePayment::where('id',$info['id'])->update(['number'=>$member]);
+                }
             }
             if ($type == 1) {
                 $info['title'] = '水电费';

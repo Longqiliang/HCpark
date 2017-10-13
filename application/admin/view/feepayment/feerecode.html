@@ -79,11 +79,13 @@
                 <thead>
                 <tr>
                     <th style="width:10%"></th>
-                    <th style="width:15%">费用类型</th>
-                    <th style="width:15%">费用金额</th>
-                    <th style="width:15%">到期时间</th>
+                    <th style="width:10%">费用类型</th>
+                    <th style="width:10%">费用金额</th>
+                    <th style="width:10%">到期时间</th>
+                    <th>推送人数</th>
+                    <th>点击人数</th>
                     <th style="width:15%">状态</th>
-                    <th style="width:15%">操作</th>
+                    <th style="width:30%">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -100,6 +102,12 @@
                     </td>
                     <td>
                         {$vo.expiration_time}
+                    </td>
+                    <td>
+                        {$vo.totalNumber}
+                    </td>
+                    <td>
+                        {$vo.number}
                     </td>
                     <td>
 
