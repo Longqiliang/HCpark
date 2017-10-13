@@ -31,7 +31,7 @@
         <span></span>
     </div>
     <ul class="my-record">
-        <li v-for="item in record">
+        <li v-for="item in record" @click="jumpTo(item.url)">
             <div class="my-time">
                 <div>
                     <span>
@@ -85,7 +85,10 @@ var app = new Vue({
         }
     },
     methods:{
-
+        jumpTo(url){
+            console.log(1111)
+            window.location.href=url;
+        }
     }
 
 })

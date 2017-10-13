@@ -49,14 +49,8 @@
 
 {block name="body"}
 <div id="app">
-    <ul v-for="item in historyList" @click="jumpTo(item.id)">
-        <li v-if="appid!=1">
-            <span>{{item.name}}</span>
-            <span class="unPay" v-if="item.status==-1">已删除</span>
-            <span class="auditing" v-if="item.status==0">审核中</span>
-            <span class="payed" v-if="item.status==1">审核成功</span>
-            <span class="unPay" v-if="item.status==2">审核失败</span>
-        </li>
+    <ul v-for="item in historyList" @click="jumpTo(item.url)">
+
         <li v-if="appid==1">
             <!-- -1为删除 ，0为未缴费，1为审核中，2为审核成功，3为审核失败-->
             <span>{{item.name}}</span>
@@ -65,6 +59,29 @@
             <span class="auditing" v-if="item.status==1">审核中</span>
             <span class="payed" v-if="item.status==2">审核成功</span>
             <span class="unPay" v-if="item.status==3">审核失败</span>
+        </li>
+        <li v-if="appid==2">
+            <span>{{item.name}}</span>
+            <span class="unPay" v-if="item.status==-1">已删除</span>
+            <span class="auditing" v-if="item.status==0">审核中</span>
+            <span class="payed" v-if="item.status==1">确认接单</span>
+            <span class="payed" v-if="item.status==2">取消订单</span>
+            <span class="payed" v-if="item.status==3">完成服务</span>
+        </li>
+        <li v-if="appid==3">
+            <span>{{item.name}}</span>
+            <span class="unPay" v-if="item.status==-1">已删除</span>
+            <span class="auditing" v-if="item.status==0">审核中</span>
+            <span class="payed" v-if="item.status==1">确认接单</span>
+            <span class="payed" v-if="item.status==2">取消订单</span>
+            <span class="payed" v-if="item.status==3">确认送达</span>
+        </li>
+        <li v-if="appid!=1 && appid!=2 &&　appid!=3">
+            <span>{{item.name}}</span>
+            <span class="unPay" v-if="item.status==-1">已删除</span>
+            <span class="auditing" v-if="item.status==0">审核中</span>
+            <span class="payed" v-if="item.status==1">审核成功</span>
+            <span class="unPay" v-if="item.status==2">审核失败</span>
         </li>
         <li>
             <span>{{item.time}}</span>
@@ -109,21 +126,21 @@
                         info.title='保洁记录';
                         break;
                     case 6:
-                        info.title='办理记录';
+                        info.title='车卡办理记录';
                         break;
                     case 7:
-                        info.title='办理记录';
+                        info.title='电柱办理记录';
+                        break;
+                    case 8:
+                        info.title='设备服务记录';
                         break;
                 }
                 return info;
             }
         },
         methods:{
-            jumpTo(id){
-                var aid=this.appid;
-                if(aid == 1 || aid == 6 || aid == 7){
-                    window.location.href='/index/service/historyDetail/appid/'+this.appid+'/id/'+id
-                }
+            jumpTo(url){
+                window.location.href=url;
             }
         }
 })

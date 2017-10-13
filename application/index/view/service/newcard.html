@@ -28,6 +28,10 @@
                 <input type="text" placeholder="请输入车牌号码" id="number" v-model="defaultData.car_card" name="car_card">
             </div>
             <div class="card-cell">
+                <label for="company">公司名称</label>
+                <input type="text" placeholder="请输入公司名称" id="company" v-model="defaultData.company" name="car_card">
+            </div>
+            <div class="card-cell">
                 <label for="idCard">身份证号</label>
                 <input type="text" placeholder="请输入身份证号" id="idCard" v-model="defaultData.people_card" name="people_card">
             </div>
@@ -147,10 +151,15 @@
                     _this.$toast('请填写车牌号码');
                     return;
                 }
+                if(!_this.defaultData.company){
+                    _this.$toast('请填写公司名称');
+                    return;
+                }
                 if(!_this.defaultData.aging){
                     _this.$toast('请选择办理时长');
                     return;
                 }
+
                 if(!_this.defaultData.people_card){
                     _this.$toast('请填写身份证号');
                     return;

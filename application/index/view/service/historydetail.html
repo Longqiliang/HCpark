@@ -138,7 +138,7 @@
                         <img :src="imgUrl" class="img-responsive">
                     </div>
                     <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
-                        <img src="/index/images/service/card/card-camera.png" >
+                        <img src="/index/images/service/card/card-camera.png">
                         <span class="upload-info" >上传凭证</span>
                     </div>
                 </div>
@@ -147,7 +147,7 @@
                 </form>
             </div>
             <div class="rent-btn-box">
-                <button class="btn btn-block btn-green" @click="isSuccess">确认上传</button>
+                <button class="btn btn-block btn-green" @click="isSuccess">完成服务</button>
             </div>
         </div>
     </div>
@@ -260,6 +260,10 @@
             <div class="card-cell">
                 <span>手机号码</span>
                 <span>{{info.mobile}}</span>
+            </div>
+            <div class="card-cell">
+                <span>公司名称</span>
+                <span>{{info.company}}</span>
             </div>
             <div class="card-cell" v-if="appid==6">
                 <span>身份证号</span>
@@ -380,18 +384,18 @@
         </div>
     </div>
     <div class="rent-btn-box"  v-if="(appid!=1 && appid!=8 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
-        <button class="btn btn-block btn-green" @click="showRent">前往审核</button>
+        <button class="btn btn-block btn-green" @click="showRent">{{(appid==6||appid==7)?'前往审核':'确认接单'}}</button>
     </div>
     <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
-            <p>{{appid==8?'取消预约':'审核服务'}}</p>
+            <p>{{appid==8?'是否取消预约？':(appid==1||appid==6||appid==7)?'审核':'是否确认接单？'}}</p>
             <div class="remark">
                 <p>备注信息</p>
                 <textarea v-model="subData.check_remark"></textarea>
             </div>
             <div class="table-view-cell group-cell btn-box" v-if="appid!=8">
-                <button class="group-btn btn-warning btn" @click="subRent(2)">取消服务</button>
-                <button class="group-btn btn-primary btn" @click="subRent(1)">确认服务</button>
+                <button class="group-btn btn-warning btn" @click="subRent(2)">{{(appid==1||appid==6||appid==7)?'审核失败':'取消订单'}}</button>
+                <button class="group-btn btn-primary btn" @click="subRent(1)">{{(appid==1||appid==6||appid==7)?'审核成功':'确认接单'}}</button>
             </div>
             <div class="table-view-cell group-cell btn-box" v-if="appid==8">
                 <button class="group-btn btn-warning btn" @click="hideRent">取消</button>
@@ -660,17 +664,7 @@ var app = new Vue({
             }
 
             if(_this.appid==2){
-                if(!_this.payment_voucher.length){
-                    swal({
-                        title:"提示",
-                        text:"请先添加报修凭证！",
-                        type:"warning",
-                        confirmButtonText: "确认",
-                        confirmButtonColor: "#fcc44b"
-                    })
-                    return;
-                }
-                text='是否确认上传？'
+                text='是否确认完成服务？'
             }else{
                 text='是否确认送达？'
             }

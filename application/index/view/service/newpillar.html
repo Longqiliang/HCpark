@@ -23,6 +23,10 @@
                 <label for="phone">车主电话</label>
                 <input type="number" placeholder="请输入车主电话" id="phone" v-model="defaultData.mobile" name="mobile" maxlength="11">
             </div>
+            <div class="card-cell">
+                <label for="company">公司名称</label>
+                <input type="text" placeholder="请输入公司名称" id="company" v-model="defaultData.company" name="company" >
+            </div>
             <input type="hidden" v-model="defaultData.aging" name="aging">
             <input type="hidden" v-model="subData.charging_deposit" name="charging_deposit">
             <input type="hidden" v-model="subData.charging_price" name="charging_price">
@@ -132,6 +136,10 @@
                 }
                 if(!checkMobile(_this.defaultData.mobile)){
                     _this.$toast('请填写正确的车主电话');
+                    return;
+                }
+                if(!_this.defaultData.company){
+                    _this.$toast('请填写公司名称');
                     return;
                 }
                 if(!_this.defaultData.aging){
