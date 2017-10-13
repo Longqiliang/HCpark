@@ -1398,7 +1398,8 @@ class Service extends Base
                     }
                     $re = [
                         'create_time' => strtotime($onetime) * 1000,
-                        'price' => count($map) * $serviceInfo['price']
+                        'price' => count($map) * $serviceInfo['price'],
+                        'url' =>  '/index/service/historyDetail/appid/8/can_check/no/type/1/create_time/' . strtotime($onetime)
                     ];
                     $re['day'] = "";
 
@@ -1456,7 +1457,8 @@ class Service extends Base
                     }
                     $re = [
                         'create_time' => strtotime($onetime) * 1000,
-                        'price' => $price
+                        'price' => $price,
+                        'url' =>  '/index/service/historyDetail/appid/8/can_check/no/type/2/create_time/' . strtotime($onetime)
                     ];
                     $re['day'] = "";
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
@@ -1518,7 +1520,8 @@ class Service extends Base
                     }
                     $re = [
                         'create_time' => strtotime($onetime) * 1000,
-                        'price' => count($map) * $serviceInfo['price']
+                        'price' => count($map) * $serviceInfo['price'],
+                        'url' =>  '/index/service/historyDetail/appid/8/can_check/no/type/3/create_time/' . strtotime($onetime)
                     ];
                     $re['day'] = "";
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
