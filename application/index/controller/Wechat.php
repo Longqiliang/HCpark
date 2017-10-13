@@ -307,7 +307,7 @@ class Wechat extends Controller
 
                 }
                 if ($userId != ''){
-                    $reult = $serviceController->commonSend(1, $message, '', 1);
+                    $reult = $serviceController->commonSend(4, $message, $userId);
                     $info['is_banner']=1;
                     $info->save();
                 }
