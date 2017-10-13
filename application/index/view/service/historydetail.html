@@ -73,7 +73,7 @@
             <div class="card-tit">缴费凭证</div>
             <div class="card-upload">
                 <div class="upload-img" v-for="img in info.img">
-                    <img :src="img" alt="缴费凭证">
+                    <img :src="img" alt="缴费凭证" @click="loadImg(img,info.img)">
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@
             </div>
             <div class="card-upload"  v-if="info.image">
                 <div class="upload-img" v-for="img in info.image">
-                    <img :src="img" alt="缴费凭证">
+                    <img :src="img" alt="缴费凭证" @click="loadImg(img,info.image)">
                 </div>
             </div>
         </div>
@@ -301,7 +301,7 @@
             <div class="card-tit">缴费凭证</div>
             <div class="card-upload">
                 <div class="upload-img" v-for="img in info.img">
-                    <img :src="img" alt="缴费凭证">
+                    <img :src="img" alt="缴费凭证" @click="loadImg(img,info.img)">
                 </div>
             </div>
         </div>
@@ -337,8 +337,8 @@
         <div class="card" v-if="info.payment_voucher">
             <div class="card-tit">缴费凭证</div>
             <div class="card-upload">
-                <div class="upload-img" v-for="img in info.payment_voucher">
-                    <img :src="img" alt="缴费凭证">
+                <div class="upload-img" v-for="img in info.payment_voucher" >
+                    <img :src="img" alt="缴费凭证" @click="loadImg(img,info.payment_voucher)">
                 </div>
             </div>
         </div>
@@ -436,13 +436,6 @@ Vue.filter('orderTime', function(time) {
 var app = new Vue({
     el:'#app',
     mounted(){
-//        图片查看器
-//        if(this.info.img || this.info.image){
-//            var viewer = new Viewer(document.getElementsByClassName('card-upload')[0],{
-//                toolbar:2,
-//                title:2,
-//            });
-//        }
     },
     created(){
         var _this = this;
@@ -461,7 +454,6 @@ var app = new Vue({
                 jsApiList: ['previewImage']
             });
         },function () {
-
         })
     },
     data:{
