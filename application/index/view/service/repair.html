@@ -7,7 +7,18 @@
     body{
         background-color: #f0eff5;
     }
-
+    .prompt-message{
+        color: #fcc44b;
+        margin-bottom: 3.3rem;
+        margin-top:2rem;
+    }
+    .prompt-message>a:not(:last-child):after{
+        content: '、';
+        display: inline;
+    }
+    .prompt-message>a{
+        color: #fcc44b;
+    }
 </style>
 {/block}
 
@@ -73,13 +84,13 @@
             <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
         </form>
     </div>
-    <p class="prompt-message">咨询电话：<a :href="'tel:'+subData.propretyMobile">{{subData.propretyMobile}}</a></p>
     <div class="card-more">
         <button class="btn btn-warning btn-warning-outlined btn-sm" @click="goHistory"><i class="icon icon-record"></i>预约记录</button>
     </div>
-    <div class="card-btn-box payment-btn">
+    <div class="repair-btn">
         <button class="btn btn-block btn-warning" @click="orderBtn" >确定报修</button>
     </div>
+    <p class="prompt-message">咨询电话：<a :href="'tel:'+subData.propretyMobile" v-for="tel in subData.propretyMobile.split('/')">{{subData.propretyMobile}}</a></p>
 
 </div>
 {/block}

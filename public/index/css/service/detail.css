@@ -453,6 +453,9 @@ textarea::-webkit-input-placeholder {
 .card-btn-box.payment-btn{
     margin-bottom: 2.13vw;
 }
+.repair-btn{
+    margin:2.13vw 2.4vw
+}
 .card-upload{
     display: flex;
     justify-content: space-around;
