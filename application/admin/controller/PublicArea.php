@@ -319,6 +319,10 @@ class PublicArea extends Admin
         $advertisingRecord = new AdvertisingRecord();
         $led =new LedRecord();
         $FunctionRoomRecord =new FunctionRoomRecord();
+        $message = [
+            "title" => "设备服务提示",
+            "description" => "您的二楼多功能厅预约申请被取消，请点击查看",
+        ];
         switch ($type) {
             case 1:
                 $list = $advertisingRecord->where('create_time', $create_time)->select();
@@ -328,7 +332,8 @@ class PublicArea extends Admin
                     $value->save();
 
                 }
-                $title ="大厅广告位";
+                $type2=1;
+                $message['description']="您有大厅广告位申请被取消，请点击查看";
                 break;
             case 2:
                 $list = $FunctionRoomRecord->where('create_time', $create_time)->select();
@@ -337,7 +342,7 @@ class PublicArea extends Admin
                     $value['check_remark']=$check_remark;
                     $value->save();
                 }
-                $title ="二楼多功能厅";
+                $type2=2;
                 break;
             case 3:
                 $list = $led->where('create_time', $create_time)->select();
@@ -345,14 +350,14 @@ class PublicArea extends Admin
                     $value['status'] = 0;
                     $value['check_remark']=$check_remark;
                     $value->save();
-                    $title ="大堂LED屏";
                 }
+                $type2=3;
+                $message['description']="您有大堂LED屏申请被取消，请点击查看";
                 break;
         }
         $send =new Service();
-
-        $message = "设备服务提示\n您有".$title."\n金额为".input('price')."元\n预约时间为:".input('day')."\n的预约已被取消了。";
-        $reult = $send->sendPersonalText($message,input('user'));
+        $message['url'] = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/'.$type2.'/create_time/' . $create_time ;
+        $reult = $send->sendPersonalMessage($message,input('user'));
 
 
 

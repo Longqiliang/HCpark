@@ -90,7 +90,7 @@ class Feepayment extends Admin
                     }
                     $message = [
                         "title" => $title."缴纳提示",
-                        "description" => date('m月d日', time()) . "\n您的". $title."（到期时间：".$data['expiration_time']."）应缴纳".$data['fee']."元",
+                        "description" => "您的". $title."（到期时间：".$data['expiration_time']."）应缴纳".$data['fee']."元",
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/feedetail/t/'.$data['type'].'/id/1',
                     ];
                     foreach ($userList as $k=>$v){
@@ -158,13 +158,13 @@ class Feepayment extends Admin
             if ($uid ==2){
                 $message = [
                     "title" => "费用缴纳提示",
-                    "description" => date('m月d日', time()) . "\n您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元确认成功。",
+                    "description" => "您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元确认成功。",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$id,
                 ];
             }else{
                 $message = [
                     "title" => "费用缴纳提示",
-                    "description" => date('m月d日', time()) . "\n您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元审核失败。",
+                    "description" => "您的".$feeInfo['types']."（到期时间：".$feeInfo['expiration_time']."）缴纳".$feeInfo['fee']."元审核失败。",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/id/'.$id,
                 ];
 
@@ -268,7 +268,7 @@ class Feepayment extends Admin
         $title = $type[$data['type']];
         $message = [
             "title" => $title."缴纳提示",
-            "description" => date('m月d日', time()) . "\n您的". $title."（到期时间：".$data['expiration_time']."）应缴纳".$data['fee']."元",
+            "description" => "您的". $title."（到期时间：".$data['expiration_time']."）应缴纳".$data['fee']."元",
             "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/feedetail/t/'.$data['type'].'/id/1',
         ];
         foreach ($userList as $k=>$v){

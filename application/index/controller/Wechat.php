@@ -299,15 +299,20 @@ class Wechat extends Controller
                 $title = $type[$info['type']];
                 $message = [
                     "title" => $title . "缴纳提示",
-                    "description" => date('m月d日', time()) . "\n您的" . $title . "（到期时间：" . $info['expiration_time'] . "）应缴纳" . $info['fee'] . "元",
+                    "description" => "您的" . $title . "（到期时间：" . $info['expiration_time'] . "）应缴纳" . $info['fee'] . "元",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/feedetail/t/' . $info['type'] . '/id/1',
+                ];
+                $message2=[
+                    "title" => $title . "缴纳提示",
+                    "description" => $info['name'].$title."（到期时间：" . $info['expiration_time'] . "）应缴纳" . $info['fee'] . "元,仍未缴纳",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $info['id']
                 ];
                 foreach ($userList as $k => $v) {
                     $userId .= '|'.$v;
-
                 }
                 if ($userId != ''){
                     $reult = $serviceController->commonSend(4, $message, $userId);
+                    $reult2 = $serviceController->commonSend(1, $message2, '',1);
                     $info['is_banner']=1;
                     $info->save();
                 }
