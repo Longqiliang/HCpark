@@ -74,10 +74,8 @@ class Service extends Base
                 if ($value2 == $park_id) {
                     $value['park_id'] = $park_id;
                     array_push($PropertyServices, $value);
-
                 }
             }
-
         }
         //企业服务
         $companyApps = $app->where('type', 1)->order('id asc')->select();
@@ -1629,7 +1627,7 @@ class Service extends Base
             $savemessage = $personalMessage->save($new);*/
 
             //推送给物业
-            $reult = $this->commonSend(2, $message);
+            $reult = $this->commonSend(3, $message,'',2);
 
             if ($reult) {
                 return $this->success("报修成功");
@@ -1668,7 +1666,7 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $property->getLastInsID()
             ];
             //推送物业
-            $reult = $this->commonSend(2, $message);
+            $reult = $this->commonSend(3, $message,'',4);
 
             /*$new = [
                 "title" => $message['title'],
@@ -1762,7 +1760,7 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $waterModel->getLastInsID()
             ];
             //推送给物业
-            $reult = $this->commonSend(2, $message);
+            $reult = $this->commonSend(3, $message,'',3);
             /*$new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
@@ -1931,15 +1929,18 @@ class Service extends Base
                     'status' => $v['status'],
                     'time' => $v['expiration_time'],
                     'pay' => $v['fee'],
+                    'url' =>  '/index/service/historyDetail/appid/'.$appid.'/can_check/no/id/' . $v['id']
                 ];
             }
 
         } elseif ($appid == 2) {
-
             $info = $this->repairRecord();
+
+
         } elseif ($appid == 3) {
 
             $info = $this->waterList();
+
         } elseif ($appid == 4) {
 
             $info = $this->clearRecord();
@@ -1949,7 +1950,9 @@ class Service extends Base
 
             $info = $this->pillarRecord();
         }
-
+        foreach ($info as $k => $value){
+            $info[$k]['url']=   '/index/service/historyDetail/appid/'.$appid.'/can_check/no/id/' . $info[$k]['id'];
+        }
         $this->assign('info', json_encode($info));
         $this->assign('appId', $appid);
 
@@ -2808,20 +2811,23 @@ class Service extends Base
                     $useridlist .= '|' . $value2['userid'];
                 }
                 break;
-            /*
-             * 现在没有运营+物业一起推的情况
-             * case 3:
+              case 3:
                 //该园区运营团队
-                $user1 = $wechatUser->where('department', $department_id)->select();
-                foreach ($user1 as $value) {
-                    $useridlist .= '|' . $value['userid'];
-                }
+                  $user1 = $wechatUser->where(['department'=>$department_id,'status'=>1])->select();
+                  foreach ($user1 as $value) {
+                      if (isset($value->operational->appids)) {
+                          $appids = empty($value->operational->appids)?array():json_decode($value->operational->appids);
+                          if (in_array($appid, $appids)) {
+                              $useridlist .= '|' . $value['userid'];
+                          }
+                      }
+                  }
                 //该园区物业管理
-                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id,'status'=>1])->select();
                 foreach ($user2 as $value2) {
                     $useridlist .= '|' . $value2['userid'];
                 }
-                break;*/
+                break;
 
             case 4:
                 $useridlist = $userid;
