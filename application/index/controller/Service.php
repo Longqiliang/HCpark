@@ -410,6 +410,7 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['charging_price'] * (int)$data['aging']) + (int)$data['charging_deposit'],
+            'company'=>$data['company']
         ];
 
         $re = $PillarService->save($service);
@@ -509,6 +510,7 @@ class Service extends Base
             'create_time' => time(),
             'status' => 0,
             'money' => ((int)$data['charging_price'] * (int)$data['aging']),
+            'company'=>$data['company']
         ];
         $re2 = $er->save($record);
         if ($re2) {
@@ -565,6 +567,7 @@ class Service extends Base
             $res[$k]['time'] = $val['create_time'];
             $res[$k]['status'] = $val['status'];
             $res[$k]['id'] = $val['id'];
+            $res[$k]['company'] = $val['company'];
         }
         return $res;
     }
@@ -644,6 +647,7 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']) + (int)$data['carpark_deposit'],
+            'company'=>$data['company']
         ];
         $re = $CardparkService->save($service);
 
@@ -739,6 +743,7 @@ class Service extends Base
             'create_time' => time(),
             'status' => 0,
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']),
+            'company'=>$data['company']
         ];
         $re2 = $CardparkService->save($service);
         if ($re2) {
@@ -2043,6 +2048,7 @@ class Service extends Base
                 'status' => $infos['status'],
                 'fee' => $infos['fee'],
                 'type' => $infos['type']
+
             ];
         } //物业维护 $types = [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"];
         else if ($appid == 2) {
@@ -2088,6 +2094,7 @@ class Service extends Base
             $info['money'] = $service['money'];
             $info['status'] = $service['status'];
             $info['id'] = $service['id'];
+            $info['company'] = $service['company'];
             if ($info['type'] == 1) {
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }
