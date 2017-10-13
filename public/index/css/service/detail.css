@@ -453,9 +453,6 @@ textarea::-webkit-input-placeholder {
 .card-btn-box.payment-btn{
     margin-bottom: 2.13vw;
 }
-.repair-btn{
-    margin:2.13vw 2.4vw
-}
 .card-upload{
     display: flex;
     justify-content: space-around;
@@ -551,7 +548,7 @@ textarea::-webkit-input-placeholder {
     text-align: center;
 }
 .prompt-message>a{
-    color: #59b7f4;
+    color: #ccc;
 }
 .mint-popup, .picker-slot{
     width: 100%;
