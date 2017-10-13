@@ -127,7 +127,7 @@ class Wechat extends Controller
             'mobile' => $userInfo['mobile'],
             'gender' => $userInfo['gender'],
             'avatar' => $userInfo['avatar'],
-            //'department' => $userInfo['department'][0], //只选第一个所属部门
+            'department' => $userInfo['department'][0], //只选第一个所属部门
             'park_id' => $park_id
         ];
 
@@ -216,7 +216,7 @@ class Wechat extends Controller
     // 判断（维修，物业，饮水 ,费用缴纳）推送定时任务
     public function quartz()
     {
-        $property = new   PropertyServer();
+   /*     $property = new   PropertyServer();
         $water = new WaterService();
         $time = time() - 900;
         //15 分钟后，状态仍为进行中 ，未推给运营的(is_banner=0) 记录要进行推送
@@ -274,7 +274,7 @@ class Wechat extends Controller
                 $value['is_banner'] = 1;
                 $value->save();
             }
-        }
+        }*/
         //费用缴纳3天内未点击重复推送
         $userId = '';
         $feepayment = new FeePayment();
