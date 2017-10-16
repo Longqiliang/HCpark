@@ -776,7 +776,7 @@ var app = new Vue({
                     },function () {
                         _this.rentShow = false;
                         //刷新页面 reload 等页面刷新方法在微信浏览器内失效——2017.10.09
-                        window.location.href=window.location.href+='/reload/true'
+                        window.location.replace(window.location.href+='/reload/true')
                     });
                 }else{
                     swal({
@@ -786,7 +786,7 @@ var app = new Vue({
                         confirmButtonColor: "#fcc44b"
                     },function () {
                         window.location.reload(true);
-                        window.location.href=window.location.href+='/reload/true'
+                        window.location.replace(window.location.href+='/reload/true')
                     });
                 }
             },function (res) {

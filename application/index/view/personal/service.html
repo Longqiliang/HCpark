@@ -33,7 +33,7 @@
         <!--物业服务-->
         <div class="notices" v-if="active==0">
             <div class="notice property">
-                <a class="list" v-for="p in property" :href="p.url">
+                <a class="list" v-for="p in property" @click="jumpTo(p.url)">
                     <div class="info">
                         <div class="title">{{p.service_name}}</div>
                         <div class="time">
@@ -109,6 +109,10 @@
             this.isOut();
         },
         methods:{
+            jumpTo(url){
+                //ios返回莫名返回两级+安卓莫名返回需要按两次解决
+                window.location.replace(url);
+            },
             status(appid,status){
                 if(appid===1){
                     return status===2?true:false
