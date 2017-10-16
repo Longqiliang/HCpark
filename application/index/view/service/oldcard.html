@@ -301,8 +301,8 @@
                             _this.$toast('请填写车牌号码');
                             return;
                         }
-                        console.log(_this.$refs.company.value)
-                        if(!_this.$refs.company.value){
+                        console.log(_this.$refs.company[0].value)
+                        if(!_this.$refs.company[0].value){
                             _this.$toast('请填写公司名称');
                             return;
                         }
