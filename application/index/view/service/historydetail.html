@@ -36,6 +36,7 @@
     .card .remark>div.no_msg{color:#e5e5e5}
     .card .remark>div{margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);min-height:18vh;border:1px solid #e5e5e5;border-radius:5px}
     .group-cell.btn-box{margin:0}
+    .card-cell a{color:#333}
 </style>
 {/block}
 
@@ -99,7 +100,7 @@
             </div>
             <div class="card-cell">
                 <span>联系电话</span>
-                <span>{{info.mobile}}</span>
+                <span><a :href="'tel:'+info.mobile">{{info.mobile}}</a></span>
             </div>
             <div class="card-cell">
                 <span>服务状态</span>
@@ -172,7 +173,7 @@
             </div>
             <div class="card-cell">
                 <span>联系电话</span>
-                <span>{{info.mobile}}</span>
+                <span><a :href="'tel:'+info.mobile">{{info.mobile}}</a></span>
             </div>
             <div class="card-cell">
                 <span>服务状态</span>
@@ -213,7 +214,7 @@
             </div>
             <div class="card-cell">
                 <span>联系电话</span>
-                <span>{{info.mobile}}</span>
+                <span><a :href="'tel:'+info.mobile">{{info.mobile}}</a></span>
             </div>
             <div class="card-cell">
                 <span>审核进度</span>
@@ -259,7 +260,7 @@
             </div>
             <div class="card-cell">
                 <span>手机号码</span>
-                <span>{{info.mobile}}</span>
+                <span><a :href="'tel:'+info.mobile">{{info.mobile}}</a></span>
             </div>
             <div class="card-cell">
                 <span>公司名称</span>
@@ -590,10 +591,16 @@ var app = new Vue({
                     }else{
                         s='已删除'
                     }
-                }else if(this.appid!=8 && this.appid!=1){
+                }else if(this.appid=8){
+                    if(status==0){
+                        s='已取消'
+                    }else{
+                        s='预约成功'
+                    }
+                }else{
                     if(this.appid==3 && status==3){
                         s='确认送达'
-                    }else if(this.appid==2 && proof.length){
+                    }else if(this.appid==2 && status==3){
                         s='已上传凭证'
                     }else{
                         if (status==0){
@@ -606,12 +613,7 @@ var app = new Vue({
                             s='已删除'
                         }
                     }
-                }else{
-                    if(status==0){
-                        s='已取消'
-                    }else{
-                        s='审核成功'
-                    }
+
                 }
             }
             return s

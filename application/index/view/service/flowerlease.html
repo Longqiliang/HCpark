@@ -89,6 +89,42 @@
         color: #333;
         font-size: 1.5rem;
     }
+    .my-radio+span{
+        position: relative;
+        line-height: 1.5rem;
+        padding-left: 3rem;
+    }
+    .my-radio+span>b{
+        content: '';
+        display: flex;
+        box-sizing: border-box;
+        height:1.5rem;
+        width:1.5rem;
+        border-radius: 50%;
+        border:1px solid #979797;
+        position: absolute;
+        left:0;
+        justify-content: center;
+        align-items: center;
+    }
+    .my-radio+span>b:before{
+        content: '';
+        display: inline-block;
+        box-sizing: border-box;
+        height:1rem;
+        width:1rem;
+        border-radius: 50%;
+        border:1px solid #979797;
+    }
+    .my-radio:checked+span>b{
+        border-color: #1F85EB;
+    }
+    .my-radio:checked+span>b:before{
+        border:none;
+        background-color: #1F85EB;
+    }
+
+
     .my-btn-group{
         display: -webkit-flex;
         display: flex;
@@ -114,6 +150,7 @@
     .my-btn-group>li:not(:last-child){
         border-right: 1px solid #dcdcdc;
     }
+
 
 
     .my-show{
@@ -142,22 +179,16 @@
         <div class="my-mask-content">
             <h3>拨打电话</h3>
             <ul class="my-phone-list">
-                <li>
-                    <label for="tel1">
-                        <input type="radio" id="tel1" class="my-radio" name="tel" value="1" hidden>
-                        <span>物业：0571-88610333</span>
-                    </label>
-                </li>
-                <li>
-                    <label for="tel2">
-                        <input type="radio" id="tel2" class="my-radio" name="tel" value="2" hidden>
-                        <span>斯琴：18968056059</span>
+                <li v-for="(tel,index) in tels">
+                    <label :for="'tel'+index" @click="changeTelIndex(index)">
+                        <input type="radio" :id="'tel'+index" class="my-radio" name="tel" :value="index" hidden>
+                        <span><b></b>{{tel.label}}</span>
                     </label>
                 </li>
             </ul>
             <ul class="my-btn-group">
                 <li @click="showMask()">取消</li>
-                <li><a href="">确定</a></li>
+                <li><a :href="'tel:'+tels[telIndex].value">确定</a></li>
             </ul>
         </div>
     </div>
@@ -172,6 +203,11 @@
         el: '#app',
         data: {
             isShow:false,
+            telIndex:0,
+            tels:[
+                {value:'18968056059', label:'斯琴：18968056059'},
+                {value:'0571-88610333', label:'物业：0571-88610333'},
+            ],
             imgs:[
                 '/index/images/service/flowerlease/flower1.jpeg',
                 '/index/images/service/flowerlease/flower2.jpeg',
@@ -216,8 +252,12 @@
                     slideShadows : true
                 }
             });
+            document.getElementsByClassName('my-radio')[0].checked='checked';
         },
         methods: {
+            changeTelIndex(index){
+                this.telIndex=index
+            },
             showMask(){
                 this.isShow=!this.isShow
             },
