@@ -18,7 +18,7 @@ class Property extends Admin
         $parkid =session("user_auth")['park_id'];
         $list=PropertyServer::where(['park_id'=> $parkid,'type'=>['<',4],'status'=>['in',[0,1,2]]])->order('create_time desc')->paginate();
         int_to_string($list,['type'=>[1=>'空调报修',2=>"电梯报修",3=>"其他报修"]]);
-        int_to_string($list,['status'=>[0=>"进行中",1=>"已完成",2=>"审核失败"]]);
+        int_to_string($list,['status'=>[0=>"进行中",1=>"审核成功",2=>"审核失败",3=>'服务完成']]);
         $this->assign("list",$list);
 
         return $this->fetch();
