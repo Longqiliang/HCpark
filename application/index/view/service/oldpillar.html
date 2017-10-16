@@ -46,7 +46,7 @@
                     </div>
                     <div class="card-cell">
                         <span>公司名称</span>
-                        <input type="text" placeholder="请输入公司名称" v-model="defaultData.company" ref="mobile" name="company" >
+                        <input type="text" placeholder="请输入公司名称" v-model="defaultData.company" ref="company" name="company" >
                     </div>
                 </div>
             </div>
@@ -256,6 +256,7 @@
                         _this.$toast('请填写正确的车主电话');
                         return;
                     }
+                    console.log(_this.$refs.company[0])
                     if(!_this.$refs.company[0].value){
                         _this.$toast('请填写公司名称');
                         return;
