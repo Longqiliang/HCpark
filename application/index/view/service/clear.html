@@ -84,12 +84,32 @@
         </form>
     </div>
     <p class="prompt-message">保洁价格：780元/月    实际价格以具体协商为主</p>
-    <p class="prompt-message">咨询电话：{{subData.propretyMobile}}</p>
+    <!--<p class="prompt-message">咨询电话：{{subData.propretyMobile}}</p>-->
     <div class="card-more">
         <button class="btn btn-warning btn-warning-outlined btn-sm" @click="goHistory"><i class="icon icon-record"></i>预约记录</button>
     </div>
     <div class="card-btn-box payment-btn">
-        <button class="btn btn-block btn-warning" @click="orderBtn">确定预约</button>
+        <button class="btn btn-block" @click="showMask()" >电话预约</button>
+        <button class="btn btn-block btn-warning" @click="orderBtn">提交预约</button>
+    </div>
+    <!--遮罩-->
+    <div class="my-mask" :class="{'my-show':isShow}">
+        <div class="my-mask-back" @click="showMask()"></div>
+        <div class="my-mask-content">
+            <h3>拨打电话</h3>
+            <ul class="my-phone-list">
+                <li v-for="(tel,index) in tels">
+                    <label :for="'tel'+index" @click="changeTelIndex(index)">
+                        <input type="radio" :id="'tel'+index" class="my-radio" name="tel" :value="index" hidden>
+                        <span><b></b>{{tel}}</span>
+                    </label>
+                </li>
+            </ul>
+            <ul class="my-btn-group">
+                <li @click="showMask()">取消</li>
+                <li><a :href="'tel:'+tels[telIndex]">确定</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 {/block}
@@ -144,6 +164,9 @@
             defaultData:defaultData,
             subData:data,
             isSubmit:true,
+            isShow:false,
+            telIndex:0,
+            tels:[],
             pickerValue:'',
             startDate:nowDate,
             endDate:endDate,
@@ -162,6 +185,7 @@
                     _this.addressList[2].defaultIndex = 0;
                 }, 100);
             });
+            this.tels=this.subData.propretyMobile.split('/');
         },
         computed:{
             dateStatus:function () {
@@ -174,6 +198,13 @@
             }
         },
         methods: {
+            changeTelIndex(index){
+                this.telIndex=index
+            },
+            showMask(){
+                document.getElementsByClassName('my-radio')[0].checked='checked';
+                this.isShow=!this.isShow
+            },
             checkAddress:function () {
                 var _this = this;
                 _this.addressVisible = true;

@@ -163,6 +163,27 @@
                 }
             },
             register: function() {
+                if(!this.$refs.name.value){
+                    swal({
+                        title: "",
+                        text: "姓名不能为空",
+                        type: "error",
+                        confirmButtonColor: "#338cec",
+                        confirmButtonText: "确定",
+                    });
+                    return ;
+                }
+                if(!this.$refs.phone.value){
+                    swal({
+                        title: "",
+                        text: "手机号不能为空",
+
+                        type: "error",
+                        confirmButtonColor: "#338cec",
+                        confirmButtonText: "确定",
+                    });
+                    return ;
+                }
                 if(!(/^1[34578]\d{9}$/.test(this.$refs.phone.value))){
                     swal({
                         title: "",
