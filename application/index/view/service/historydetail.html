@@ -591,18 +591,38 @@ var app = new Vue({
                     }else{
                         s='已删除'
                     }
-                }else if(this.appid=8){
+                }else if(this.appid==2){
+                    if (status==0){
+                        s='审核中'
+                    }else if(status==1){
+                        s='确认接单'
+                    }else if(status==2){
+                        s='取消订单'
+                    }else if(status==3){
+                        s='已上传凭证'
+                    }else{
+                        s='已删除'
+                    }
+                }else if(this.appid==3){
+                    if (status==0){
+                        s='审核中'
+                    }else if(status==1){
+                        s='审核成功'
+                    }else if(status==2){
+                        s='审核失败'
+                    }else if(status==3){
+                        s='确认送达'
+                    }else{
+                        s='已删除'
+                    }
+                }else if(this.appid==8){
                     if(status==0){
                         s='已取消'
                     }else{
                         s='预约成功'
                     }
                 }else{
-                    if(this.appid==3 && status==3){
-                        s='确认送达'
-                    }else if(this.appid==2 && status==3){
-                        s='已上传凭证'
-                    }else{
+
                         if (status==0){
                             s='审核中'
                         }else if(status==1){
@@ -614,7 +634,6 @@ var app = new Vue({
                         }
                     }
 
-                }
             }
             return s
         },
