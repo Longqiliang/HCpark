@@ -42,6 +42,7 @@
         text-align: center;
     }
     .my-mask{
+        display: none;
         position: fixed;
         top:0;
         right:0;
@@ -88,7 +89,36 @@
         color: #333;
         font-size: 1.5rem;
     }
+    .my-btn-group{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top:1px solid #dcdcdc;
+    }
+    .my-btn-group>li{
+        height:4.8rem;
+        line-height: 4.8rem;
+        font-size: 1.8rem;
+        color: #1F85EB;
+        text-align: center;
+        width:50%;
+        box-sizing: border-box;
+    }
+    .my-btn-group>li>a{
+        display: block;
+        height:100%;
+        width:100%;
+        color: #1F85EB;
+    }
+    .my-btn-group>li:not(:last-child){
+        border-right: 1px solid #dcdcdc;
+    }
 
+
+    .my-show{
+        display: block;
+    }
 </style>
 {/block}
 
@@ -104,10 +134,11 @@
     <div class="my-text">
         <p>用花的装饰，美的点缀，带给您一整天的清新。盆栽免费设计摆放，枯败免费更换，物美价廉。联系人：斯琴</p>
     </div>
-    <a href="tel:18968056059" class="my-btn">电话预约</a>
+    <!--href="tel:18968056059"-->
+    <a  class="my-btn" @click="showMask()">电话预约</a>
     <!--遮罩-->
-    <div class="my-mask">
-        <div class="my-mask-back"></div>
+    <div class="my-mask" :class="{'my-show':isShow}">
+        <div class="my-mask-back" @click="showMask()"></div>
         <div class="my-mask-content">
             <h3>拨打电话</h3>
             <ul class="my-phone-list">
@@ -124,8 +155,8 @@
                     </label>
                 </li>
             </ul>
-            <ul>
-                <li>取消</li>
+            <ul class="my-btn-group">
+                <li @click="showMask()">取消</li>
                 <li><a href="">确定</a></li>
             </ul>
         </div>
@@ -140,6 +171,7 @@
     var app = new Vue({
         el: '#app',
         data: {
+            isShow:false,
             imgs:[
                 '/index/images/service/flowerlease/flower1.jpeg',
                 '/index/images/service/flowerlease/flower2.jpeg',
@@ -186,6 +218,9 @@
             });
         },
         methods: {
+            showMask(){
+                this.isShow=!this.isShow
+            },
             loadImg(src,imglist) {
                 var urls=[];
                 var current=window.location.protocol+'//'+window.location.host+src;
