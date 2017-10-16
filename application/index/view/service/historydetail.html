@@ -683,7 +683,6 @@ var app = new Vue({
             if(_this.isSubmit){
                 return;
             }
-
             if(_this.appid==2){
                 text='是否确认完成服务？'
             }else{
@@ -701,6 +700,7 @@ var app = new Vue({
                 function(){
                     if(_this.appid==2){
                         _this.subData.proof=_this.payment_voucher;
+                        _this.subData.type=3;
                     }else{
                         _this.subData.success=1;
                     }
