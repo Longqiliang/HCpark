@@ -54,6 +54,10 @@
                         <!--<span>{{ item.people_card}}</span>-->
                         <input type="text" placeholder="请输入身份证号" v-model="item.people_card" name="people_card"  ref="people_card">
                     </div>
+                    <div class="card-cell">
+                        <span>公司名称</span>
+                        <input type="text" placeholder="请输入公司名称" v-model="defaultData.company" name="company" ref="company" >
+                    </div>
                 </div>
                 <input type="hidden" v-model="subData.app_id" name="app_id">
                 <input type="hidden" v-model="defaultData.type" name="type">
@@ -85,7 +89,10 @@
                 <label for="idCard">身份证号</label>
                 <input type="text" placeholder="请输入身份证号" id="idCard"  name="people_card" v-model="defaultData.people_card">
             </div>
-
+            <div class="card-cell">
+                <label for="company_name">公司名称</label>
+                <input type="text" placeholder="请输入公司名称" id="company_name" name="company" v-model="defaultData.company" >
+            </div>
                 <input type="hidden" v-model="subData.app_id" name="app_id">
                 <input type="hidden" v-model="defaultData.type" name="type">
                 <input type="hidden" name="aging" v-model="defaultData.aging">
@@ -132,6 +139,7 @@
             park_card:'',
             people_card:'',
             car_card:'',
+            company:'',
             mobile:'',
             name:'',
             aging:0
@@ -140,7 +148,8 @@
         var defaultData = {
             type:'keepOldCard',
             car_id:data.cardlist[0].car_card,
-            aging:0
+            aging:0,
+            company:''
         };
     }
 //      console.log(data);
@@ -271,6 +280,10 @@
                                 return;
                             }
                         }
+                        if(!_this.defaultData.company){
+                            _this.$toast('请填写公司名称');
+                            return;
+                        }
                     }else{
                         if(!_this.$refs.park_card[0].value){
                             _this.$toast('请填写停车卡号');
@@ -288,6 +301,11 @@
                             _this.$toast('请填写车牌号码');
                             return;
                         }
+                        console.log(_this.$refs.company[0].value)
+                        if(!_this.$refs.company[0].value){
+                            _this.$toast('请填写公司名称');
+                            return;
+                        }
                         if(!_this.$refs.people_card[0].value){
                             _this.$toast('请填写身份证号');
                             return;
@@ -297,6 +315,7 @@
                                 return;
                             }
                         }
+
                     }
                     if(!_this.defaultData.aging){
                         _this.$toast('请选择办理时长');

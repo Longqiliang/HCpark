@@ -104,7 +104,7 @@
         <div class="card-tit">其他常用电话</div>
         <div class="card-cell" v-for="tel in commonTel">
             <span>{{tel.name}}</span>
-            <a :href="'tel://'+tel.value">{{tel.value}}</a>
+            <a :href="'tel:'+tel.value">{{tel.value}}</a>
         </div>
     </div>
 </div>
