@@ -7,28 +7,10 @@
         background: #fff;
         text-align: center;
     }
-.codeword{
-    text-align: center;
-    margin-top: 86px;
-}
-/*.codeword img{*/
-    /*width:17px;*/
-    /*height:20px;*/
-/*}*/
-/*.codeword span{*/
-    /*font-size: 1.5rem;*/
-    /*color: #333;*/
-/*}*/
-    /*#qrcode{*/
-        /*position: absolute;*/
-        /*left:50%;*/
-        /*margin-left: -129px;*/
-        /*margin-top: 80px;*/
-    /*}*/
     .my-text{
         display: inline-block;
-        margin-top: 32vw;
-        margin-bottom: 10.6vw;
+        margin-top: 6rem;
+        margin-bottom: 1rem;
         font-size: 15px;
         color: #333;
         padding-left: 30px;
@@ -36,20 +18,30 @@
         background-size: contain;
     }
     img{
+        display: block;
+        margin: auto;
         width:66vw;
     }
     .my-content{
         text-align: center;
         color: #333;
         font-size: 15px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        -webkit-transform: translate(-50%,-50%);
+        -moz-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        -o-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
     }
 </style>
 {/block}
 
 {block name="body"}
-<div class="my-text">长按下方二维码进入企业号</div>
 <div class="my-content">
     <img src="/index/images/index/code.png" alt="">
+    <div class="my-text">长按下方二维码进入企业号</div>
     <div>可在通讯录-企业号列表中进入企业号</div>
 </div>
 {/block}
