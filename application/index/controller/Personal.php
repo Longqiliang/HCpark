@@ -297,7 +297,7 @@ class Personal extends Base
                 array_push($list1, $value);
             }
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         $types = [1 => '费用缴纳（水电费)', 2 => "费用缴纳（物业费)", 3 => "费用缴纳（房租费)", 4 => "费用缴纳（公耗费)"];
         foreach ($list1 as $k => $v) {
             $v['service_name'] = $types[$v['service_name']];
@@ -326,7 +326,7 @@ class Personal extends Base
             $appid = 2;
             $can_check = 'yes';
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list2 as $k => $v) {
             $v['service_name'] = $types[$v['service_name']];
             $v['create_time'] = date("Y-m-d", $v['create_time']);
@@ -370,7 +370,7 @@ class Personal extends Base
 
         }
 
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
 
 
         foreach ($list3 as $k => $v) {
@@ -398,7 +398,7 @@ class Personal extends Base
             $appid = 4;
             $can_check = 'yes';
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list4 as $k => $v) {
             $v['service_name'] = "保洁服务";
             $list4[$k]['url'] = $url . $v['id'];
@@ -434,7 +434,7 @@ class Personal extends Base
         }
 
 
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         foreach ($list5 as $k => $v) {
             $list5[$k]['service_name'] = $v['type'] == 1 ? "车卡服务（新卡办理）" : "车卡服务（旧卡续费）";
             $list5[$k]['create_time'] = date("Y-m-d", $v['create_time']);
@@ -476,7 +476,7 @@ class Personal extends Base
         }
 
 
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
         int_to_string($list6, array('type' => array(1 => '充电柱办理(新柱办理)', 2 => '充电柱办理(旧柱续费)'), 'status' => array(0 => '审核中', 1 => '审核成功', 2 => '审核失败')));
         foreach ($list6 as $k => $value) {
             $value['service_name'] = $value['type_text'];
@@ -510,7 +510,7 @@ class Personal extends Base
             $can_check = 'yes';
             $type2 = 1;
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
             if (isset($l->user->park_id)) {
@@ -565,7 +565,7 @@ class Personal extends Base
             $can_check = 'yes';
             $type2 = 2;
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
             if (isset($l->user->park_id)) {
@@ -620,7 +620,7 @@ class Personal extends Base
             $can_check = 'yes';
             $type2 = 3;
         }
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
+        $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/' . $type2 . '/create_time/';
         //所有的创建时间
         foreach ($list as $l) {
             if (isset($l->user->park_id)) {
