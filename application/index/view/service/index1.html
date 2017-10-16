@@ -1,0 +1,799 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>企业服务</title>
+<link rel="stylesheet" href="/static/swiper/swiper-3.3.1.min.css">
+<style>
+    body{
+        background: #f0edf1;
+        padding-bottom: 3rem;
+    }
+    .my-items{
+        /*padding:0 1.2rem 2rem 1.2rem;*/
+    }
+    .my-item{
+        position: relative;
+        width:94.67%;
+        margin:0 auto;
+        margin-top: 3rem;
+        background: #ffffff;
+        border:1px solid #e2e2e2;
+        border-radius: .5rem;
+        /*padding:15px 10px 0 10px;*/
+        padding-top: 1.5rem;
+        padding-bottom: 2.8rem;
+    }
+    .my-item:first-child{
+        margin-top: 2.25rem;
+    }
+    .my-item-title{
+        width:10rem;
+        height:2.7rem;
+        color: #ffffff;
+        font-size: 1.6rem;
+        text-align: center;
+        line-height: 2.7rem;
+        border-radius: 10rem;
+        position: absolute;
+        top:-1.35rem;
+        left:50%;
+        -webkit-transform: translateX(-50%);
+        -moz-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        -o-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+    .my-item-title.color1{
+        box-shadow: 0 .2rem .2rem 0 rgba(252,196,75,0.5);
+        background: #fcc44b;
+    }
+    .my-item-title.color2{
+        box-shadow: 0 .2rem .2rem 0 rgba(105,185,249,0.5);
+        background: #69b9f9;
+    }
+    .my-item-title.color3{
+        box-shadow: 0 .2rem .2rem 0 rgba(145,143,230,0.5);
+        background: #918FE6;
+    }
+    .my-lists{
+        display: -webkit-flex;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .my-list{
+        width:33.33333333%;
+        text-align: center;
+        padding-top:2.5rem;
+    }
+    .my-list>img{
+        width:3.2rem;
+        height:3.2rem;
+        display: block;
+        margin:0 auto;
+    }
+    .my-list>span{
+        display: block;
+        margin-top: 1.5rem;
+        color:#333;
+        font-size: 1.4rem;
+    }
+    .my-park{
+        display: -webkit-flex;
+        display: flex;
+        padding:0 5vw;
+        height:5rem;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 1.4rem;
+        color: #666;
+    }
+    .my-park select{
+        background-color: #fff;
+        color: #666;
+        height: 2.5rem;
+        border-radius: 5px;
+        font-size: 14px;
+        border: 1px solid #e5e5e5;
+        outline: none;
+    }
+
+    /*政策法规文字轮播*/
+    .banner-list{
+        height: 16vw;
+        background: #fff;
+        display: flex;
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        margin:0 2.4vw ;
+        border-radius: 5px;
+        box-shadow: 0 0 4px rgba(0,0,0,.1);
+    }
+    .banner-list .list-tit{
+        padding: 3.2vw;
+        font-size: 1.6rem;
+        position: relative;
+    }
+    .banner-list .list-tit:after{
+        content: '';
+        position: absolute;
+        height: 8vw;
+        width: 1px;
+        right: 0;
+        background-color: #e8e8e8;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .banner-list .list-tit .icon-policy{
+        display: inline-block;
+        width: 8vw;
+        height: 9.2vw;
+        background: url("/index/images/service/index/icon-policy.png") no-repeat;
+        background-size:100%;
+    }
+    .banner-list .list-group{
+        width: 74vw;
+        margin:2.67vw 3.2vw;
+        /*height: 16vw;*/
+        overflow: hidden;
+    }
+    .swiper-slide .list-item{
+        font-size: 1.3rem;
+        width: 100%;
+        align-items: center;
+        /*height: 100%;*/
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: 1.5;
+        position: relative;
+        padding-left: 4.8vw;
+    }
+    .swiper-slide .list-item:before {
+        position: absolute;
+        content: '';
+        width: 6px;
+        height: 6px;
+        top: 50%;
+        border-radius: 50%;
+        background-color: #f97878;
+        vertical-align: middle;
+        transform: translateY(-50%);
+        left: 0;
+    }
+    .listSwiper{
+        height: 10.67vw;
+    }
+</style>
+<style>
+    *,ul,p,ul li{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+    button{
+        outline: none;
+    }
+    input::-webkit-input-placeholder,
+    textarea::-webkit-input-placeholder {
+        color: #999!important;
+    }
+    :after, :before {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .hide{
+        display: none!important;
+    }
+    .img-responsive{
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+        display: block;
+    }
+    .content{
+        background-color: #fff;
+    }
+    .banner{
+        position: relative;
+    }
+    .banner img{
+        width: 100%;
+        margin: auto;
+        display: block;
+    }
+    .banner-txt-box{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        bottom: 0;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .banner-tit{
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        padding:8px 0;
+    }
+    .banner-tit span{
+        font-size: 2.4rem;
+    }
+    .banner-tit .icon{
+        margin-left:10px;
+    }
+    .banner-info{
+        display: flex;
+        font-size: 1.5rem;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+    .banner-info span{
+        padding: 5px 3px;
+        border-top: 2px solid #fff;
+        letter-spacing:7.5px
+    }
+    .icon{
+        width: 13px;
+        height: 13px;
+        background-color: #333;
+    }
+
+    .grid{
+        display: flex;
+        justify-content: center;
+        padding: 6.67vw 0;
+        align-items: center;
+        font-size: 1.4rem;
+    }
+    .grid .grid-item{
+        flex: 1;
+    }
+    .grid .grid-item img{
+        width: 38px;
+        height: 38px;
+        display: block;
+        margin: auto;
+    }
+    .grid .grid-item span{
+        width: 100%;
+        padding-top: 2.67vw;
+        display: inline-block;
+        text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .col-xs-3{
+        width: 25%;
+        min-height: 1px;
+    }
+    .tab-box{
+        height: 15.2vw;
+    }
+    .tab{
+        display: flex;
+        font-size: 16px;
+        position: relative;
+        background-color: #fff;
+    }
+    .tab:after{
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        content: '';
+        bottom: 0;
+        background-color: #e8e8e8;
+    }
+    .tab-layer{
+        position: fixed;
+        width: 100%;
+        z-index: 10;
+        top: 0;
+    }
+    .tab-list{
+        flex:1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 3px;
+        height:15.2vw;
+        position: relative;
+    }
+    .tab-list a{
+        line-height: 15.2vw;
+        color: #333;
+    }
+
+    .tab-list:before{
+        content:' ';
+        position: absolute;
+        z-index:2;
+        left:0;
+        top:0;
+        width:100%;
+        height:1px;
+        background-color: transparent;
+    }
+    .tab-list.active{
+        color: white;
+
+    }
+    .tab-control-content{
+        display: none;
+    }
+    .tab-control-content.active{
+        display: block;
+    }
+
+    .tab-list:nth-of-type(3n-2):before{
+        background-color: #FCC44B;
+    }
+    .tab-list:nth-of-type(3n-1):before{
+        background-color: #69B9F9;
+    }
+    .tab-list:nth-of-type(3n):before{
+        background-color: #52CC92;
+    }
+    .tab-list:nth-of-type(3n-2) .active{
+        background-color: #FCC44B;
+    }
+    .tab-list:nth-of-type(3n-1) .active{
+        background-color: #69B9F9;
+    }
+    .tab-list:nth-of-type(3n) .active{
+        background-color: #52CC92;
+    }
+
+    .warning{
+        background-color: #FCC44B;
+        color: #fff;
+    }
+    .success{
+        background-color: #52CC92;
+        color: #fff;
+    }
+    .primary{
+        background-color: #69B9F9;
+        color: #fff;
+    }
+
+
+
+
+
+    .dot{
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+
+
+    .dot.active {
+        position: absolute;
+        z-index:1;
+        width:100%;
+        height:100%;
+        top: 0;
+        left: 0;
+        color: #fff;
+        -webkit-animation-name:'slideDown';/*动画属性名，也就是我们前面keyframes定义的动画名*/
+        -webkit-animation-duration: .5s;/*动画持续时间*/
+        -webkit-animation-timing-function: ease; /*动画频率，和transition-timing-function是一样的*/
+        -webkit-animation-delay: 0s;/*动画延迟时间*/
+        /*-webkit-animation-iteration-count: infinite;!*定义循环资料，infinite为无限次*!*/
+        /*-webkit-animation-direction: normal;!*定义动画方式*!*/
+    }
+
+    .list{
+
+    }
+    .list .list-item-tit{
+        font-size: 16px;
+        color: #999;
+        margin: 0 8.53vw;
+        padding-top: 4vw;
+    }
+    .list-item{
+        margin:0 8.53vw;
+        padding: 3.2vw 0;
+        font-size: 15px;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .list-item:after{
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 1px;
+        background-color: #E8E8E8;
+        bottom: 0;
+    }
+    .list-item .item-cell{
+        width: 50%;
+        padding: 3.46vw 0;
+        display: flex;
+        align-items: center;
+    }
+    .list-item .item-cell:nth-of-type(2n){
+        justify-content: flex-end;
+        padding-right: 4vw;
+    }
+    .list-item .item-cell img{
+        width: 26px;
+        height: 26px;
+        margin-right: 5vw;
+        vertical-align: middle;
+    }
+    @-webkit-keyframes slideDown {
+        0% {
+            left:0;
+            top:0;
+            width:100%;
+            height:0;
+        }
+        100% {
+            left:0;
+            top:0;
+            width:100%;
+            height:100%;
+        }
+    }
+    @keyframes slideDown {
+        0% {
+            left:0;
+            top:0;
+            width:100%;
+            height:0;
+        }
+        100% {
+            left:0;
+            top:0;
+            width:100%;
+            height:100%;
+        }
+    }
+</style>
+{/block}
+{block name="body"}
+<div id="app" class="content" @scroll="a($event)">
+    <!--<div class="my-park">-->
+        <!--<span>欢迎来到企业服务！</span>-->
+        <!--<div>-->
+            <!--<span>当前：</span>-->
+            <!--<select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">-->
+                <!--<option :value="item.value" v-for="(item,key) in parks" >-->
+                    <!--{{item.name}}-->
+                <!--</option>-->
+            <!--</select>-->
+            <!--<select   v-else>-->
+                <!--<option >-->
+                    <!--希垦科技园-->
+                <!--</option>-->
+            <!--</select>-->
+        <!--</div>-->
+
+    <!--</div>-->
+    <div class="banner">
+        <img src="/index/images/news/article.jpg" alt="">
+        <div class="banner-txt-box">
+            <div class="banner-tit">
+                <span>
+                    希恳科技园
+                </span>
+                <i class="icon icon-check"></i>
+            </div>
+            <div class="banner-info">
+                <span>智新泽地园区服务平台</span>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="grid-item col-xs-3">
+            <img src="/index/images/service/index/p1.png" alt="费用缴纳" class="img-responsive">
+            <span>费用缴纳</span>
+        </div>
+        <div class="grid-item col-xs-3">
+            <img src="/index/images/service/index/p1.png" alt="费用缴纳" class="img-responsive">
+            <span>费用缴纳</span>
+        </div>
+        <div class="grid-item col-xs-3">
+            <img src="/index/images/service/index/p1.png" alt="费用缴纳" class="img-responsive">
+            <span>费用缴纳</span>
+        </div>
+        <div class="grid-item col-xs-3">
+            <img src="/index/images/service/index/p1.png" alt="费用缴纳" class="img-responsive">
+            <span>费用缴纳</span>
+        </div>
+    </div>
+    <div id="tabBar" class="tab-box" >
+        <ul class="tab" :class="{'tab-layer':tabBarFixed}">
+            <li class="tab-list">
+                <a class="dot " :class="{'active':(tabIndex == 0)}" @click="animate(0)" >
+                    物业服务
+                </a>
+            </li>
+            <li class="tab-list" >
+                <a class="dot"  :class="{'active':(tabIndex == 1)}" @click="animate(1)" >
+                    物业服务
+                </a>
+            </li>
+            <li class="tab-list" >
+                <a class="dot" :class="{'active':(tabIndex == 2)}" @click="animate(2)">
+                    物业服务
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="list">
+        <div class="item_jump">
+            <div class="list-item">
+                <div class="item-cell">
+                    <img src="/index/images/service/index/p1.png"  >
+                    <span>费用缴收到纳</span>
+                </div>
+                <div class="item-cell">
+                    <img src="/index/images/service/index/p1.png"  >
+                    <span>费用缴纳</span>
+                </div>
+                <div class="item-cell">
+                    <img src="/index/images/service/index/p1.png"  >
+                    <span>费用缴纳</span>
+                </div>
+                <div class="item-cell">
+                    <img src="/index/images/service/index/p1.png"  >
+                    <span>费用缴纳</span>
+                </div>
+            </div>
+        </div>
+        <div  class="item_jump">
+            <div class="list-item-tit">企业服务</div>
+            <div class="list-item">
+                <div class="item-cell">
+                    <img src="/index/images/service/index/p1.png"  >
+                    <span>费用缴收到纳</span>
+                </div>
+                <div class="item-cell">
+                    <img src="/index/images/service/index/p1.png"  >
+                    <span>费用缴纳</span>
+                </div>
+                <div class="item-cell">
+                    <img src="/index/images/service/index/p1.png"  >
+                    <span>费用缴纳</span>
+                </div>
+                <div class="item-cell">
+                    <img src="/index/images/service/index/p1.png"  >
+                    <span>费用缴纳</span>
+                </div>
+            </div>
+        </div>
+       <div  class="item_jump">
+           <div class="list-item-tit">物业服务</div>
+           <div class="list-item" >
+               <div class="item-cell">
+                   <img src="/index/images/service/index/p1.png"  >
+                   <span>费用缴收到纳</span>
+               </div>
+               <div class="item-cell">
+                   <img src="/index/images/service/index/p1.png"  >
+                   <span>费用缴纳</span>
+               </div>
+               <div class="item-cell">
+                   <img src="/index/images/service/index/p1.png"  >
+                   <span>费用缴纳</span>
+               </div>
+               <div class="item-cell">
+                   <img src="/index/images/service/index/p1.png"  >
+                   <span>费用缴纳</span>
+               </div>
+           </div>
+       </div>
+    </div>
+    <!--<div class="banner-list">-->
+    <!--<div class="list-tit">-->
+    <!--<i class="icon-policy"></i>-->
+    <!--</div>-->
+    <!--<div class="list-group" @click="jump('/index/policy/index')">-->
+    <!--<div class="swiper-container listSwiper" id="listSwiper">-->
+    <!--<div class="swiper-wrapper" v-if="news.length > 0">-->
+    <!--<div class="swiper-slide" v-for="item of news">-->
+    <!--<div class="list-item">{{item.title}}</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div v-else>-->
+    <!--<div class="list-item">暂无信息</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="my-items">
+        <div class="my-item">
+            <div class="my-item-title color1">
+                物业服务
+            </div>
+            <ul class="my-lists">
+                <li class="my-list" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.propertyServices">
+                    <img :src="item.img" alt="图标">
+                    <span>{{item.name}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="my-item">
+            <div class="my-item-title color2">
+                企业服务
+            </div>
+            <ul class="my-lists">
+                <li class="my-list" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.companyService">
+                    <img :src="item.img" alt="图标">
+                    <span>{{item.name}}</span>
+                </li>
+
+            </ul>
+        </div>
+        <div class="my-item">
+            <div class="my-item-title color3">
+                人才服务
+            </div>
+            <ul class="my-lists">
+                <li class="my-list" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.talentService">
+                    <img :src="item.img" alt="图标">
+                    <span>{{item.name}}</span>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+
+{/block}
+{block name="script"}
+<script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
+<script>
+
+
+
+    var app=new Vue({
+        el:'#app',
+        data:{
+            baseData:{
+                isBoss:'{$is_boss}',
+                isFee:'{$is_fee}',
+                propertyServices:JSON.parse('{$propert}'),
+                companyService:JSON.parse('{$company}'),
+                talentService:JSON.parse('{$talent}')
+            },
+            news:{$policy},
+            nowPark:0,
+            tabIndex:0,
+            tabBarFixed:false,
+            parks:[
+                {name:'希垦科技园',value:0},
+                {name:'浙江互联网产业园',value:1},
+                {name:'人工智能产业园',value:2}
+            ],
+            changeApi:'{:Url("Service/changePark")}'
+        },
+        mounted(){
+            this.$nextTick(function () {
+                window.addEventListener('scroll', this.handleScroll);
+            });
+
+            console.log(this.baseData);
+            listSwiper = new Swiper('#listSwiper',{
+                observer:true,
+                observeParents:true,
+                direction : 'vertical',
+                slidesPerGroup : 2,
+                autoplay: 2000,
+                slidesPerView : 2,
+                loopedSlides :8,
+                loop:true
+            })
+        },
+        methods:{
+            handleScroll () {
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+                var tabBarOffsetTop = document.querySelector('#tabBar').offsetTop;
+                var  cateItem = document.querySelectorAll('.item_jump');
+
+                if (scrollTop > tabBarOffsetTop) {
+                    this.tabBarFixed = true;
+//                    var index = arrayIndex(cateItem,scrollTop,57);
+//                    this.tabIndex = index;
+//                    console.log("scroll:"+index);
+                } else {
+                    this.tabBarFixed = false
+
+                }
+                console.log(scrollTop);
+                if (scrollTop >= cateItem[2].offsetTop - 57) {
+                    this.tabIndex = 2
+                } else if (scrollTop < cateItem[2].offsetTop - 57 && scrollTop >= cateItem[1].offsetTop - 57) {
+                    this.tabIndex = 1
+                } else {
+                    this.tabIndex = 0
+                }
+
+//                function  arrayIndex(cateItem,scrollTop,tabHeight) {
+//                    for(var i =0,length = cateItem.length ;i < length ; i++){
+//                       if(scrollTop < cateItem[i].offsetTop - tabHeight) {
+//                           return i - 1;
+//                       }else if(scrollTop >= cateItem[length - 1].offsetTop - tabHeight){
+//                           return length-1 ;
+//                       }
+//                    }
+//                }
+            },
+            destroyed () {
+                window.removeEventListener('scroll', this.handleScroll)
+            },
+            a(e){
+              console.log(this.e);
+            },
+            animate(index){
+                var  cateItem = document.querySelectorAll('.item_jump');
+                var total = cateItem[index].offsetTop-57;
+                var distance = document.documentElement.scrollTop || document.body.scrollTop
+                var step = total / 50;
+                this.tabIndex =  index;
+                console.log(index);
+                var _this = this;
+                if (total > distance) {
+                    smoothDown()
+                } else {
+                    var newTotal = distance - total,
+                    step = newTotal / 50;
+                    smoothUp()
+                }
+                function smoothDown () {
+                    if (distance < total) {
+                        distance += step
+                        document.body.scrollTop = distance
+                        document.documentElement.scrollTop = distance
+                        setTimeout(smoothDown, 10)
+                    } else {
+                        document.body.scrollTop = total
+                        document.documentElement.scrollTop = total
+                    }
+                }
+                function smoothUp () {
+                    if (distance > total) {
+                        distance -= step
+                        document.body.scrollTop = distance
+                        document.documentElement.scrollTop = distance
+                        setTimeout(smoothUp,2)
+                    } else {
+                        document.body.scrollTop = total
+                        document.documentElement.scrollTop = total
+                    }
+                }
+            },
+            jumpTo(path,id){
+//                if(id==1 && this.baseData.isFee=='no'){
+//                    window.location.href='/index/service/noPermissions';
+//                    return;
+//                }
+                window.location.href='/index/service/onCheck/id/'+id+'/path/'+path;
+            },
+            jump:function (href) {
+                window.location.href=href;
+            },
+            parkChange(){
+                this.$http.post(this.changeApi,{value:this.nowPark}).then(function (res) {
+                    console.log(res)
+                })
+            }
+        }
+    });
+</script>
+{/block}
