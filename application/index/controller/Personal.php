@@ -335,9 +335,9 @@ class Personal extends Base
             if ($v['status'] == 0) {
                 $list2[$k]['status_text'] = '审核中';
             } elseif ($v['status'] == 1) {
-                $list2[$k]['status_text'] = '审核成功';
+                $list2[$k]['status_text'] = '确认接单';
             } elseif ($v['status'] == 2) {
-                $list2[$k]['status_text'] = '审核失败';
+                $list2[$k]['status_text'] = '取消订单';
             }elseif ($v['status'] == 3) {
                 $list2[$k]['status_text'] = '完成服务';
             }
@@ -380,9 +380,9 @@ class Personal extends Base
             if ($v['status'] == 0) {
                 $list3[$k]['status_text'] = '审核中';
             } elseif ($v['status'] == 1) {
-                $list3[$k]['status_text'] = '审核成功';
+                $list3[$k]['status_text'] = '确认接单';
             } elseif ($v['status'] == 2) {
-                $list3[$k]['status_text'] = '审核失败';
+                $list3[$k]['status_text'] = '取消订单';
             } else {
                 $list3[$k]['status_text'] = '确认送达';
             }
