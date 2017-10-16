@@ -108,7 +108,16 @@ class Service extends Base
             }
 
         }
+        //置顶服务
+        $TopServices = array();
+        $num = 0;
+        foreach ($PropertyServices as $value) {
 
+            if ($value['is_top'] == 1 && $num < 4) {
+                $num++;
+                array_push($TopServices, $value);
+            }
+        }
         $is_boss = "no";
         /*}*/
         //政策法规轮播
@@ -118,6 +127,7 @@ class Service extends Base
         $this->assign('is_boss', $is_boss);
         $this->assign('propert', json_encode($PropertyServices));
         $this->assign('company', json_encode($CompanyService));
+        $this->assign('top_service', json_encode($TopServices));
         $this->assign('talent', json_encode($Talent));
         $this->assign('is_fee', $is);
         return $this->fetch();
@@ -410,7 +420,7 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['charging_price'] * (int)$data['aging']) + (int)$data['charging_deposit'],
-            'company'=>$data['company']
+            'company' => $data['company']
         ];
 
         $re = $PillarService->save($service);
@@ -510,7 +520,7 @@ class Service extends Base
             'create_time' => time(),
             'status' => 0,
             'money' => ((int)$data['charging_price'] * (int)$data['aging']),
-            'company'=>$data['company']
+            'company' => $data['company']
         ];
         $re2 = $er->save($record);
         if ($re2) {
@@ -647,7 +657,7 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']) + (int)$data['carpark_deposit'],
-            'company'=>$data['company']
+            'company' => $data['company']
         ];
         $re = $CardparkService->save($service);
 
@@ -743,7 +753,7 @@ class Service extends Base
             'create_time' => time(),
             'status' => 0,
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']),
-            'company'=>$data['company']
+            'company' => $data['company']
         ];
         $re2 = $CardparkService->save($service);
         if ($re2) {
@@ -780,10 +790,11 @@ class Service extends Base
 
     //车卡记录
     public function carRecord()
-    {
+    {   $user =session('userId');
         $service = new CarparkService();
         $map = [
-            'status' => array('neq', -1)
+            'status' => array('neq', -1),
+            'user_id' =>$user
         ];
         $list = $service->where($map)->field('id,type,money,status,create_time')->order('create_time desc')->select();
         foreach ($list as $v) {
@@ -1404,7 +1415,7 @@ class Service extends Base
                     $re = [
                         'create_time' => strtotime($onetime) * 1000,
                         'price' => count($map) * $serviceInfo['price'],
-                        'url' =>  '/index/service/historyDetail/appid/8/can_check/no/type/1/create_time/' . strtotime($onetime)
+                        'url' => '/index/service/historyDetail/appid/8/can_check/no/type/1/create_time/' . strtotime($onetime)
                     ];
                     $re['day'] = "";
 
@@ -1463,7 +1474,7 @@ class Service extends Base
                     $re = [
                         'create_time' => strtotime($onetime) * 1000,
                         'price' => $price,
-                        'url' =>  '/index/service/historyDetail/appid/8/can_check/no/type/2/create_time/' . strtotime($onetime)
+                        'url' => '/index/service/historyDetail/appid/8/can_check/no/type/2/create_time/' . strtotime($onetime)
                     ];
                     $re['day'] = "";
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
@@ -1526,7 +1537,7 @@ class Service extends Base
                     $re = [
                         'create_time' => strtotime($onetime) * 1000,
                         'price' => count($map) * $serviceInfo['price'],
-                        'url' =>  '/index/service/historyDetail/appid/8/can_check/no/type/3/create_time/' . strtotime($onetime)
+                        'url' => '/index/service/historyDetail/appid/8/can_check/no/type/3/create_time/' . strtotime($onetime)
                     ];
                     $re['day'] = "";
                     //这个map为这一条记录的所有用户选中预约天数（因为要考虑上下午，还要按天分）
@@ -1635,7 +1646,7 @@ class Service extends Base
             $savemessage = $personalMessage->save($new);*/
 
             //推送给物业
-            $reult = $this->commonSend(3, $message,'',2);
+            $reult = $this->commonSend(3, $message, '', 2);
 
             if ($reult) {
                 return $this->success("报修成功");
@@ -1674,7 +1685,7 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $property->getLastInsID()
             ];
             //推送物业
-            $reult = $this->commonSend(3, $message,'',4);
+            $reult = $this->commonSend(3, $message, '', 4);
 
             /*$new = [
                 "title" => $message['title'],
@@ -1728,7 +1739,7 @@ class Service extends Base
                 'type' => "保洁服务",
                 'time' => date("Y-m-d", $v['clear_time']),
                 'name' => $v['address'],
-                'status'=>$v['status']
+                'status' => $v['status']
             ];
         }
         return $info;
@@ -1769,7 +1780,7 @@ class Service extends Base
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $waterModel->getLastInsID()
             ];
             //推送给物业
-            $reult = $this->commonSend(3, $message,'',3);
+            $reult = $this->commonSend(3, $message, '', 3);
             /*$new = [
                 "title" => $message['title'],
                 "message" => $message['description'],
@@ -1809,7 +1820,7 @@ class Service extends Base
                 'name' => $v['name'],
                 'time' => $v['create_time'],
                 'num' => $v['number'],
-                'status' =>$v['status']
+                'status' => $v['status']
             ];
         }
 
@@ -1860,10 +1871,10 @@ class Service extends Base
                 FeePayment::where('id', $info['id'])->update(['onclick' => 1, 'onclick_time' => time()]);
                 array_push($property, "http://" . $_SERVER['HTTP_HOST'] . $info['images']);
                 $member = $info['number'];
-                $memberArr = explode('|',$member);
-                if (!in_array($userid,$memberArr)){
-                    $member = $member.$userid."|" ;
-                    FeePayment::where('id',$info['id'])->update(['number'=>$member]);
+                $memberArr = explode('|', $member);
+                if (!in_array($userid, $memberArr)) {
+                    $member = $member . $userid . "|";
+                    FeePayment::where('id', $info['id'])->update(['number' => $member]);
                 }
             }
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
@@ -1874,10 +1885,10 @@ class Service extends Base
                 FeePayment::where('id', $info1['id'])->update(['onclick' => 1, 'onclick_time' => time()]);
                 array_push($property, "http://" . $_SERVER['HTTP_HOST'] . $info1['images']);
                 $member = $info1['number'];
-                $memberArr = explode('|',$member);
-                if (!in_array($userid,$memberArr)){
-                    $member = $member.$userid."|" ;
-                    FeePayment::where('id',$info1['id'])->update(['number'=>$member]);
+                $memberArr = explode('|', $member);
+                if (!in_array($userid, $memberArr)) {
+                    $member = $member . $userid . "|";
+                    FeePayment::where('id', $info1['id'])->update(['number' => $member]);
                 }
             }
             $info1['appid'] = $appid;
@@ -1894,10 +1905,10 @@ class Service extends Base
                 FeePayment::where('id', $info['id'])->update(['onclick' => 1, 'onclick_time' => time()]);
                 array_push($image, "http://" . $_SERVER['HTTP_HOST'] . $info['images']);
                 $member = $info['number'];
-                $memberArr = explode('|',$member);
-                if (!in_array($userid,$memberArr)){
-                    $member = $member.$userid."|" ;
-                    FeePayment::where('id',$info['id'])->update(['number'=>$member]);
+                $memberArr = explode('|', $member);
+                if (!in_array($userid, $memberArr)) {
+                    $member = $member . $userid . "|";
+                    FeePayment::where('id', $info['id'])->update(['number' => $member]);
                 }
             }
             if ($type == 1) {
@@ -1939,7 +1950,7 @@ class Service extends Base
                     'status' => $v['status'],
                     'time' => $v['expiration_time'],
                     'pay' => $v['fee'],
-                    'url' =>  '/index/service/historyDetail/appid/'.$appid.'/can_check/no/id/' . $v['id']
+                    'url' => '/index/service/historyDetail/appid/' . $appid . '/can_check/no/id/' . $v['id']
                 ];
             }
 
@@ -1960,8 +1971,8 @@ class Service extends Base
 
             $info = $this->pillarRecord();
         }
-        foreach ($info as $k => $value){
-            $info[$k]['url']=   '/index/service/historyDetail/appid/'.$appid.'/can_check/no/id/' . $info[$k]['id'];
+        foreach ($info as $k => $value) {
+            $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/id/' . $info[$k]['id'];
         }
         $this->assign('info', json_encode($info));
         $this->assign('appId', $appid);
@@ -2169,7 +2180,7 @@ class Service extends Base
                         'type' => 2,
                         'status' => $list[0]['status'],
                         'create_time' => $create_time,
-                        'price'=>$price
+                        'price' => $price
                     ];
                     break;
                 //led屏
@@ -2277,7 +2288,7 @@ class Service extends Base
 
     public function check()
     {
-        $userid =session('userId');
+        $userid = session('userId');
         $appid = input('appid');
         $type = input('type');
         $id = input('id');
@@ -2291,7 +2302,7 @@ class Service extends Base
         $led = new LedRecord();
         $FunctionRoomRecord = new FunctionRoomRecord();
         $wechatUser = new WechatUser();
-        $userinfo = $wechatUser->where('userid',$userid)->find();
+        $userinfo = $wechatUser->where('userid', $userid)->find();
         //$personalMessage = new PersonalMessage();
         switch ($appid) {
             //费用缴纳
@@ -2358,10 +2369,10 @@ class Service extends Base
             case  2:
                 $proof = input('proof/a');
 
-                if ($type==3) {
+                if ($type == 3) {
                     $res = PropertyServer::get($id);
                     $res['proof'] = json_encode($proof);
-                    $res['status']=3;
+                    $res['status'] = 3;
                     $res->save();
                     if ($res) {
                         return $this->success("上传凭证成功");
@@ -2378,7 +2389,7 @@ class Service extends Base
                     $user = PropertyServer::get($id);
                     if ($type == 1) {
                         $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
-                        if($userinfo['department']==76){
+                        if ($userinfo['department'] == 76) {
 
                             //服务类型 1为空调，2为电梯，3为其他
                             switch ($user['type']) {
@@ -2394,11 +2405,11 @@ class Service extends Base
                             }
                             $message2 = [
                                 "title" => "物业报修提示",
-                                "description" => "服务类型：" . $user['type_text'] . "\n服务地点：" . $user['address'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile']."\n该服务已由园区运营完成审核，请尽快处理",
+                                "description" => "服务类型：" . $user['type_text'] . "\n服务地点：" . $user['address'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile'] . "\n该服务已由园区运营完成审核，请尽快处理",
                                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/yes/id/' . $id
                             ];
                             //推送给物业
-                           $this->commonSend(2, $message2);
+                            $this->commonSend(2, $message2);
                         }
                     } else {
                         $res = PropertyServer::where('id', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
@@ -2449,11 +2460,11 @@ class Service extends Base
                     $user = WaterModel::get($id);
                     if ($type == 1) {
                         $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
-                        if($userinfo['department']==76){
+                        if ($userinfo['department'] == 76) {
                             $message2 = [
                                 "title" => "饮水服务提示",
-                                "description" => "送水地点：" . $user['address'] . "\n送水桶数：" . $user['number'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile']."\n该服务已由园区运营完成审核，请尽快处理",
-                                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' .$id
+                                "description" => "送水地点：" . $user['address'] . "\n送水桶数：" . $user['number'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile'] . "\n该服务已由园区运营完成审核，请尽快处理",
+                                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $id
                             ];
                             //推送给物业
                             $this->commonSend(2, $message2);
@@ -2500,11 +2511,11 @@ class Service extends Base
                 $user = PropertyServer::get($id);
                 if ($type == 1) {
                     $res = PropertyServer::where('id', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
-                    if($userinfo['department']==76){
+                    if ($userinfo['department'] == 76) {
 
                         $message2 = [
                             "title" => "室内保洁服务提示",
-                            "description" => "服务类型：" . $user['type_text'] . "\n服务地点：" . $user['address'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile']."\n该服务已由园区运营完成审核，请尽快处理",
+                            "description" => "服务类型：" . $user['type_text'] . "\n服务地点：" . $user['address'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile'] . "\n该服务已由园区运营完成审核，请尽快处理",
                             "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $id
                         ];
                         //推送给物业
@@ -2807,10 +2818,10 @@ class Service extends Base
         switch ($type) {
             //运营
             case 1 :
-                $user = $wechatUser->where(['department'=>$department_id,'status'=>1])->select();
+                $user = $wechatUser->where(['department' => $department_id, 'status' => 1])->select();
                 foreach ($user as $value) {
                     if (isset($value->operational->appids)) {
-                        $appids = empty($value->operational->appids)?array():json_decode($value->operational->appids);
+                        $appids = empty($value->operational->appids) ? array() : json_decode($value->operational->appids);
                         if (in_array($appid, $appids)) {
                             $useridlist .= '|' . $value['userid'];
                         }
@@ -2825,19 +2836,19 @@ class Service extends Base
                     $useridlist .= '|' . $value2['userid'];
                 }
                 break;
-              case 3:
+            case 3:
                 //该园区运营团队
-                  $user1 = $wechatUser->where(['department'=>$department_id,'status'=>1])->select();
-                  foreach ($user1 as $value) {
-                      if (isset($value->operational->appids)) {
-                          $appids = empty($value->operational->appids)?array():json_decode($value->operational->appids);
-                          if (in_array($appid, $appids)) {
-                              $useridlist .= '|' . $value['userid'];
-                          }
-                      }
-                  }
+                $user1 = $wechatUser->where(['department' => $department_id, 'status' => 1])->select();
+                foreach ($user1 as $value) {
+                    if (isset($value->operational->appids)) {
+                        $appids = empty($value->operational->appids) ? array() : json_decode($value->operational->appids);
+                        if (in_array($appid, $appids)) {
+                            $useridlist .= '|' . $value['userid'];
+                        }
+                    }
+                }
                 //该园区物业管理
-                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id,'status'=>1])->select();
+                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id, 'status' => 1])->select();
                 foreach ($user2 as $value2) {
                     $useridlist .= '|' . $value2['userid'];
                 }
