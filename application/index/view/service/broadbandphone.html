@@ -97,7 +97,7 @@
         <div class="card-tit">园区常用电话</div>
         <div class="card-cell" v-for="tel in partyTel">
             <span>{{tel.name}}</span>
-            <a :href="'tel://'+tel.value">{{tel.value}}</a>
+            <a :href="'tel:'+tel.value">{{tel.value}}</a>
         </div>
     </div>
     <div class="card">

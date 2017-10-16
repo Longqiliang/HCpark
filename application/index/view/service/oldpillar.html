@@ -45,8 +45,8 @@
                         <input type="number"   name="mobile"  v-model.number="item.mobile" ref="mobile" placeholder="请输入车主电话">
                     </div>
                     <div class="card-cell">
-                        <label for="company">公司名称</label>
-                        <input type="text" placeholder="请输入公司名称" id="company" v-model="defaultData.company" name="company" >
+                        <span>公司名称</span>
+                        <input type="text" placeholder="请输入公司名称" v-model="defaultData.company" ref="company" name="company" >
                     </div>
                 </div>
             </div>
@@ -72,6 +72,10 @@
                 <div class="card-cell">
                     <label for="mobile">车主电话</label>
                     <input type="text" placeholder="请输入车主电话" id="mobile"  name="mobile" v-model="defaultData.mobile">
+                </div>
+                <div class="card-cell">
+                    <label for="company">公司名称</label>
+                    <input type="text" placeholder="请输入公司名称" id="company" v-model="defaultData.company" name="company" >
                 </div>
             </div>
             <input type="hidden" v-model="subData.app_id" name="app_id">
@@ -112,7 +116,7 @@
 <script>
 
     var data = {$data};
-
+    console.log(data)
     console.log(data);
     if(!data.cardlist.length ){
          var   defaultData = {
@@ -126,7 +130,8 @@
         var  defaultData = {
             type:'addOldpillar',
             aging:0,
-            elect_id : data.cardlist[0].electricity_id
+            elect_id : data.cardlist[0].electricity_id,
+            company : data.cardlist[0].company
         };
 
     }
@@ -251,7 +256,8 @@
                         _this.$toast('请填写正确的车主电话');
                         return;
                     }
-                    if(!_this.defaultData.company){
+                    console.log(_this.$refs.company[0])
+                    if(!_this.$refs.company[0].value){
                         _this.$toast('请填写公司名称');
                         return;
                     }

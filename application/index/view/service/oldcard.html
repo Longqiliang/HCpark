@@ -149,7 +149,7 @@
             type:'keepOldCard',
             car_id:data.cardlist[0].car_card,
             aging:0,
-            company:''
+            company:data.cardlist[0].company
         };
     }
 //      console.log(data);
@@ -239,7 +239,7 @@
                 checkTime: function () {
                     this.popupVisible = true;
                 },
-                onTimesChange: function (picker,values) {
+                onTimesChange: function (picker,values){
                     this.timePicker =  picker;
                     if(!isNaN(parseInt(values[0]))){
                         this.timeTxt = parseInt(values[0]);
