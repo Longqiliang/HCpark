@@ -599,7 +599,7 @@ var app = new Vue({
                     }else if(status==2){
                         s='取消订单'
                     }else if(status==3){
-                        s='已上传凭证'
+                        s='完成服务'
                     }else{
                         s='已删除'
                     }
@@ -607,9 +607,9 @@ var app = new Vue({
                     if (status==0){
                         s='审核中'
                     }else if(status==1){
-                        s='审核成功'
+                        s='确认接单'
                     }else if(status==2){
-                        s='审核失败'
+                        s='取消订单'
                     }else if(status==3){
                         s='确认送达'
                     }else{
