@@ -4,169 +4,6 @@
 <title>企业服务</title>
 <link rel="stylesheet" href="/static/swiper/swiper-3.3.1.min.css">
 <style>
-    body{
-        background: #f0edf1;
-        padding-bottom: 3rem;
-    }
-    .my-items{
-        /*padding:0 1.2rem 2rem 1.2rem;*/
-    }
-    .my-item{
-        position: relative;
-        width:94.67%;
-        margin:0 auto;
-        margin-top: 3rem;
-        background: #ffffff;
-        border:1px solid #e2e2e2;
-        border-radius: .5rem;
-        /*padding:15px 10px 0 10px;*/
-        padding-top: 1.5rem;
-        padding-bottom: 2.8rem;
-    }
-    .my-item:first-child{
-        margin-top: 2.25rem;
-    }
-    .my-item-title{
-        width:10rem;
-        height:2.7rem;
-        color: #ffffff;
-        font-size: 1.6rem;
-        text-align: center;
-        line-height: 2.7rem;
-        border-radius: 10rem;
-        position: absolute;
-        top:-1.35rem;
-        left:50%;
-        -webkit-transform: translateX(-50%);
-        -moz-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        -o-transform: translateX(-50%);
-        transform: translateX(-50%);
-    }
-    .my-item-title.color1{
-        box-shadow: 0 .2rem .2rem 0 rgba(252,196,75,0.5);
-        background: #fcc44b;
-    }
-    .my-item-title.color2{
-        box-shadow: 0 .2rem .2rem 0 rgba(105,185,249,0.5);
-        background: #69b9f9;
-    }
-    .my-item-title.color3{
-        box-shadow: 0 .2rem .2rem 0 rgba(145,143,230,0.5);
-        background: #918FE6;
-    }
-    .my-lists{
-        display: -webkit-flex;
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .my-list{
-        width:33.33333333%;
-        text-align: center;
-        padding-top:2.5rem;
-    }
-    .my-list>img{
-        width:3.2rem;
-        height:3.2rem;
-        display: block;
-        margin:0 auto;
-    }
-    .my-list>span{
-        display: block;
-        margin-top: 1.5rem;
-        color:#333;
-        font-size: 1.4rem;
-    }
-    .my-park{
-        display: -webkit-flex;
-        display: flex;
-        padding:0 5vw;
-        height:5rem;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 1.4rem;
-        color: #666;
-    }
-    .my-park select{
-        background-color: #fff;
-        color: #666;
-        height: 2.5rem;
-        border-radius: 5px;
-        font-size: 14px;
-        border: 1px solid #e5e5e5;
-        outline: none;
-    }
-
-    /*政策法规文字轮播*/
-    .banner-list{
-        height: 16vw;
-        background: #fff;
-        display: flex;
-        position: relative;
-        top: 0;
-        left: 0;
-        z-index: 1;
-        margin:0 2.4vw ;
-        border-radius: 5px;
-        box-shadow: 0 0 4px rgba(0,0,0,.1);
-    }
-    .banner-list .list-tit{
-        padding: 3.2vw;
-        font-size: 1.6rem;
-        position: relative;
-    }
-    .banner-list .list-tit:after{
-        content: '';
-        position: absolute;
-        height: 8vw;
-        width: 1px;
-        right: 0;
-        background-color: #e8e8e8;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-    .banner-list .list-tit .icon-policy{
-        display: inline-block;
-        width: 8vw;
-        height: 9.2vw;
-        background: url("/index/images/service/index/icon-policy.png") no-repeat;
-        background-size:100%;
-    }
-    .banner-list .list-group{
-        width: 74vw;
-        margin:2.67vw 3.2vw;
-        /*height: 16vw;*/
-        overflow: hidden;
-    }
-    .swiper-slide .list-item{
-        font-size: 1.3rem;
-        width: 100%;
-        align-items: center;
-        /*height: 100%;*/
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        line-height: 1.5;
-        position: relative;
-        padding-left: 4.8vw;
-    }
-    .swiper-slide .list-item:before {
-        position: absolute;
-        content: '';
-        width: 6px;
-        height: 6px;
-        top: 50%;
-        border-radius: 50%;
-        background-color: #f97878;
-        vertical-align: middle;
-        transform: translateY(-50%);
-        left: 0;
-    }
-    .listSwiper{
-        height: 10.67vw;
-    }
-</style>
-<style>
     *,ul,p,ul li{
         padding: 0;
         margin: 0;
@@ -242,9 +79,12 @@
     .icon{
         width: 13px;
         height: 13px;
-        background-color: #333;
-    }
 
+    }
+ .icon.icon-check{
+     background: url("/index/images/service/index/icon-check.png") no-repeat;
+     background-size:100%;
+ }
     .grid{
         display: flex;
         justify-content: center;
@@ -350,7 +190,6 @@
     .tab-list:nth-of-type(3n) .active{
         background-color: #52CC92;
     }
-
     .warning{
         background-color: #FCC44B;
         color: #fff;
@@ -364,17 +203,11 @@
         color: #fff;
     }
 
-
-
-
-
     .dot{
         width: 100%;
         height: 100%;
         text-align: center;
     }
-
-
     .dot.active {
         position: absolute;
         z-index:1;
@@ -389,10 +222,6 @@
         -webkit-animation-delay: 0s;/*动画延迟时间*/
         /*-webkit-animation-iteration-count: infinite;!*定义循环资料，infinite为无限次*!*/
         /*-webkit-animation-direction: normal;!*定义动画方式*!*/
-    }
-
-    .list{
-
     }
     .list .list-item-tit{
         font-size: 16px;
@@ -432,6 +261,83 @@
         margin-right: 5vw;
         vertical-align: middle;
     }
+
+    /*政策法规文字轮播*/
+    .banner-list{
+        height: 16vw;
+        background: #fff;
+        display: flex;
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        margin:0 2.4vw ;
+        border-radius: 5px;
+        box-shadow: 0 0 4px rgba(0,0,0,.1);
+    }
+    .banner-list .list-tit{
+        padding: 3.2vw;
+        font-size: 1.6rem;
+        position: relative;
+    }
+    .banner-list .list-tit:after{
+        content: '';
+        position: absolute;
+        height: 8vw;
+        width: 1px;
+        right: 0;
+        background-color: #e8e8e8;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .banner-list .list-tit .icon-policy{
+        display: inline-block;
+        width: 8vw;
+        height: 9.2vw;
+        background: url("/index/images/service/index/icon-policy.png") no-repeat;
+        background-size:100%;
+    }
+    .banner-list .list-group{
+        width: 74vw;
+        margin:2.67vw 3.2vw;
+        /*height: 16vw;*/
+        overflow: hidden;
+    }
+    .swiper-slide .list-item{
+        font-size: 1.3rem;
+        width: 100%;
+        align-items: center;
+        /*height: 100%;*/
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: 1.5;
+        position: relative;
+        padding-left: 4.8vw;
+    }
+    .swiper-slide .list-item:before {
+        position: absolute;
+        content: '';
+        width: 6px;
+        height: 6px;
+        top: 50%;
+        border-radius: 50%;
+        background-color: #f97878;
+        vertical-align: middle;
+        transform: translateY(-50%);
+        left: 0;
+    }
+    .listSwiper{
+        height: 10.67vw;
+    }
+    .mint-popup, .picker-slot{
+        width: 100%;
+    }
+    .mint-popup .picker-slot-wrapper, .page-popup .mint-popup .picker-item {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
     @-webkit-keyframes slideDown {
         0% {
             left:0;
@@ -482,52 +388,36 @@
 
     <!--</div>-->
     <div class="banner">
-        <img src="/index/images/news/article.jpg" alt="">
+        <img src="/index/images/service/index/banner.png" >
         <div class="banner-txt-box">
-            <div class="banner-tit">
-                <span>
-                    希恳科技园
+            <div class="banner-tit" @click="checkPark">
+                <span v-html="nowPark.name">
                 </span>
                 <i class="icon icon-check"></i>
             </div>
+            <mt-popup  position="bottom"  v-model="parkVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelPark">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
+                </div>
+                <mt-picker :slots="slots" @change="onParkChange" value-key="name"></mt-picker>
+            </mt-popup>
             <div class="banner-info">
                 <span>智新泽地园区服务平台</span>
             </div>
         </div>
     </div>
     <div class="grid">
-        <div class="grid-item col-xs-3">
-            <img src="/index/images/service/index/p1.png" alt="费用缴纳" class="img-responsive">
-            <span>费用缴纳</span>
-        </div>
-        <div class="grid-item col-xs-3">
-            <img src="/index/images/service/index/p1.png" alt="费用缴纳" class="img-responsive">
-            <span>费用缴纳</span>
-        </div>
-        <div class="grid-item col-xs-3">
-            <img src="/index/images/service/index/p1.png" alt="费用缴纳" class="img-responsive">
-            <span>费用缴纳</span>
-        </div>
-        <div class="grid-item col-xs-3">
-            <img src="/index/images/service/index/p1.png" alt="费用缴纳" class="img-responsive">
-            <span>费用缴纳</span>
+        <div class="grid-item col-xs-3" v-for="top in baseData.topService" @click="jumpTo(top.path,top.app_id)">
+            <img :src="top.top_img" >
+            <span>{{top.name}}</span>
         </div>
     </div>
     <div id="tabBar" class="tab-box" >
-        <ul class="tab" :class="{'tab-layer':tabBarFixed}">
-            <li class="tab-list">
-                <a class="dot " :class="{'active':(tabIndex == 0)}" @click="animate(0)" >
-                    物业服务
-                </a>
-            </li>
-            <li class="tab-list" >
-                <a class="dot"  :class="{'active':(tabIndex == 1)}" @click="animate(1)" >
-                    物业服务
-                </a>
-            </li>
-            <li class="tab-list" >
-                <a class="dot" :class="{'active':(tabIndex == 2)}" @click="animate(2)">
-                    物业服务
+        <ul class="tab" :class="{'tab-layer':tabBarFixed}" >
+            <li class="tab-list" v-for="(tabItem,index) in tab">
+                <a class="dot " :class="{'active':(tabIndex == index)}" @click="animate(index)" >
+                    {{tabItem.name}}
                 </a>
             </li>
         </ul>
@@ -536,63 +426,27 @@
     <div class="list">
         <div class="item_jump">
             <div class="list-item">
-                <div class="item-cell">
-                    <img src="/index/images/service/index/p1.png"  >
-                    <span>费用缴收到纳</span>
-                </div>
-                <div class="item-cell">
-                    <img src="/index/images/service/index/p1.png"  >
-                    <span>费用缴纳</span>
-                </div>
-                <div class="item-cell">
-                    <img src="/index/images/service/index/p1.png"  >
-                    <span>费用缴纳</span>
-                </div>
-                <div class="item-cell">
-                    <img src="/index/images/service/index/p1.png"  >
-                    <span>费用缴纳</span>
+                <div class="item-cell" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.propertyServices">
+                    <img :src="item.img"  alt="图标">
+                    <span>{{item.name}}</span>
                 </div>
             </div>
         </div>
         <div  class="item_jump">
             <div class="list-item-tit">企业服务</div>
             <div class="list-item">
-                <div class="item-cell">
-                    <img src="/index/images/service/index/p1.png"  >
-                    <span>费用缴收到纳</span>
-                </div>
-                <div class="item-cell">
-                    <img src="/index/images/service/index/p1.png"  >
-                    <span>费用缴纳</span>
-                </div>
-                <div class="item-cell">
-                    <img src="/index/images/service/index/p1.png"  >
-                    <span>费用缴纳</span>
-                </div>
-                <div class="item-cell">
-                    <img src="/index/images/service/index/p1.png"  >
-                    <span>费用缴纳</span>
+                <div class="item-cell" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.companyService">
+                    <img :src="item.img"  alt="图标">
+                    <span>{{item.name}}</span>
                 </div>
             </div>
         </div>
        <div  class="item_jump">
-           <div class="list-item-tit">物业服务</div>
+           <div class="list-item-tit">人才服务</div>
            <div class="list-item" >
-               <div class="item-cell">
-                   <img src="/index/images/service/index/p1.png"  >
-                   <span>费用缴收到纳</span>
-               </div>
-               <div class="item-cell">
-                   <img src="/index/images/service/index/p1.png"  >
-                   <span>费用缴纳</span>
-               </div>
-               <div class="item-cell">
-                   <img src="/index/images/service/index/p1.png"  >
-                   <span>费用缴纳</span>
-               </div>
-               <div class="item-cell">
-                   <img src="/index/images/service/index/p1.png"  >
-                   <span>费用缴纳</span>
+               <div class="item-cell" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.talentService">
+                   <img :src="item.img"  alt="图标">
+                   <span>{{item.name}}</span>
                </div>
            </div>
        </div>
@@ -614,54 +468,25 @@
     <!--</div>-->
     <!--</div>-->
     <!--</div>-->
-    <div class="my-items">
-        <div class="my-item">
-            <div class="my-item-title color1">
-                物业服务
-            </div>
-            <ul class="my-lists">
-                <li class="my-list" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.propertyServices">
-                    <img :src="item.img" alt="图标">
-                    <span>{{item.name}}</span>
-                </li>
-            </ul>
-        </div>
-        <div class="my-item">
-            <div class="my-item-title color2">
-                企业服务
-            </div>
-            <ul class="my-lists">
-                <li class="my-list" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.companyService">
-                    <img :src="item.img" alt="图标">
-                    <span>{{item.name}}</span>
-                </li>
-
-            </ul>
-        </div>
-        <div class="my-item">
-            <div class="my-item-title color3">
-                人才服务
-            </div>
-            <ul class="my-lists">
-                <li class="my-list" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.talentService">
-                    <img :src="item.img" alt="图标">
-                    <span>{{item.name}}</span>
-                </li>
-
-            </ul>
-        </div>
-    </div>
-
-
 </div>
 
 {/block}
 {block name="script"}
 <script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
 <script>
-
-
-
+    var parkSlots =[];
+    if('{$is_boss}' == 'yes'){
+        parkSlots = [
+            {name:'希垦科技园',value:0},
+            {name:'浙江互联网产业园',value:1},
+            {name:'人工智能产业园',value:2}
+        ];
+    }else{
+        parkSlots = [
+            {name:'希垦科技园',value:0}
+        ];
+    }
+     console.log(parkSlots);
     var app=new Vue({
         el:'#app',
         data:{
@@ -670,24 +495,38 @@
                 isFee:'{$is_fee}',
                 propertyServices:JSON.parse('{$propert}'),
                 companyService:JSON.parse('{$company}'),
-                talentService:JSON.parse('{$talent}')
+                talentService:JSON.parse('{$talent}'),
+                topService:{$top_service}
             },
+            tab:[
+                {type:1,name:'物业服务'},
+                {type:2,name:'企业服务'},
+                {type:3,name:'人才服务'}
+            ],
             news:{$policy},
-            nowPark:0,
             tabIndex:0,
             tabBarFixed:false,
-            parks:[
-                {name:'希垦科技园',value:0},
-                {name:'浙江互联网产业园',value:1},
-                {name:'人工智能产业园',value:2}
+            isScroll:true,
+            parkPicker:'',
+            parkVisible:false,
+            parkObj:{name:'希垦科技园',value:0},
+            nowPark:{name:'希垦科技园',value:0},
+            slots: [
+                {
+                    defaultIndex:1,
+                    values: parkSlots
+                }
             ],
             changeApi:'{:Url("Service/changePark")}'
         },
         mounted(){
-            this.$nextTick(function () {
+            var _this = this;
+            _this.$nextTick(function () {
+                setTimeout(function() {
+                    _this.slots[0].defaultIndex = 0;
+                }, 100);
                 window.addEventListener('scroll', this.handleScroll);
             });
-
             console.log(this.baseData);
             listSwiper = new Swiper('#listSwiper',{
                 observer:true,
@@ -701,38 +540,49 @@
             })
         },
         methods:{
+            checkPark: function () {
+                this.parkVisible = true;
+            },
+            onParkChange: function (picker,values){
+                this.parkPicker =  picker;
+                if(values[0]){
+                    console.log(values[0]);
+                    this.parkObj = values[0];
+                }
+            },
+            cancelPark: function () {
+                this.parkVisible = false;
+            },
+            selectPark: function () {
+                var _this = this;
+                _this.parkVisible = false;
+                _this.nowPark = _this.parkObj;
+                //console.log(_this.nowPark.value);
+            },
             handleScroll () {
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
                 var tabBarOffsetTop = document.querySelector('#tabBar').offsetTop;
                 var  cateItem = document.querySelectorAll('.item_jump');
+                    if (scrollTop > tabBarOffsetTop) {
+                        this.tabBarFixed = true;
+                        if(this.isScroll) {
+                            var index = arrayIndex(cateItem, scrollTop, 57);
+                            this.tabIndex = index;
+                        }
+                    } else {
+                        this.tabBarFixed = false
 
-                if (scrollTop > tabBarOffsetTop) {
-                    this.tabBarFixed = true;
-//                    var index = arrayIndex(cateItem,scrollTop,57);
-//                    this.tabIndex = index;
-//                    console.log("scroll:"+index);
-                } else {
-                    this.tabBarFixed = false
+                    }
 
+                function  arrayIndex(cateItem,scrollTop,tabHeight) {
+                    for(var i =0,length = cateItem.length ;i < length ; i++){
+                       if(scrollTop < cateItem[i].offsetTop - tabHeight) {
+                           return i - 1;
+                       }else if(scrollTop >= cateItem[length - 1].offsetTop - tabHeight){
+                           return length-1 ;
+                       }
+                    }
                 }
-                console.log(scrollTop);
-                if (scrollTop >= cateItem[2].offsetTop - 57) {
-                    this.tabIndex = 2
-                } else if (scrollTop < cateItem[2].offsetTop - 57 && scrollTop >= cateItem[1].offsetTop - 57) {
-                    this.tabIndex = 1
-                } else {
-                    this.tabIndex = 0
-                }
-
-//                function  arrayIndex(cateItem,scrollTop,tabHeight) {
-//                    for(var i =0,length = cateItem.length ;i < length ; i++){
-//                       if(scrollTop < cateItem[i].offsetTop - tabHeight) {
-//                           return i - 1;
-//                       }else if(scrollTop >= cateItem[length - 1].offsetTop - tabHeight){
-//                           return length-1 ;
-//                       }
-//                    }
-//                }
             },
             destroyed () {
                 window.removeEventListener('scroll', this.handleScroll)
@@ -746,8 +596,8 @@
                 var distance = document.documentElement.scrollTop || document.body.scrollTop
                 var step = total / 50;
                 this.tabIndex =  index;
-                console.log(index);
                 var _this = this;
+                _this.isScroll = false;
                 if (total > distance) {
                     smoothDown()
                 } else {
@@ -757,24 +607,26 @@
                 }
                 function smoothDown () {
                     if (distance < total) {
-                        distance += step
-                        document.body.scrollTop = distance
-                        document.documentElement.scrollTop = distance
+                        distance += step;
+                        document.body.scrollTop = distance;
+                        document.documentElement.scrollTop = distance;
                         setTimeout(smoothDown, 10)
                     } else {
-                        document.body.scrollTop = total
-                        document.documentElement.scrollTop = total
+                        document.body.scrollTop = total;
+                        document.documentElement.scrollTop = total;
+                        _this.isScroll = true;
                     }
                 }
                 function smoothUp () {
                     if (distance > total) {
-                        distance -= step
-                        document.body.scrollTop = distance
-                        document.documentElement.scrollTop = distance
-                        setTimeout(smoothUp,2)
+                        distance -= step;
+                        document.body.scrollTop = distance;
+                        document.documentElement.scrollTop = distance;
+                        setTimeout(smoothUp,5)
                     } else {
-                        document.body.scrollTop = total
-                        document.documentElement.scrollTop = total
+                        document.body.scrollTop = total;
+                        document.documentElement.scrollTop = total;
+                        _this.isScroll = true;
                     }
                 }
             },
