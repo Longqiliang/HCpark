@@ -51,6 +51,7 @@
         display: flex;
         justify-content: center;
         flex-direction: column;
+        background-color: rgba(0,0,0,.2);
     }
     .banner-tit{
         display: inline-flex;
@@ -203,6 +204,9 @@
         color: #fff;
     }
 
+    .item_jump:last-child{
+        min-height:calc(100vh - 11.2vw + 21px);
+    }
     .dot{
         width: 100%;
         height: 100%;
@@ -369,7 +373,7 @@
 </style>
 {/block}
 {block name="body"}
-<div id="app" class="content" @scroll="a($event)">
+<div id="app" class="content" >
     <!--<div class="my-park">-->
         <!--<span>欢迎来到企业服务！</span>-->
         <!--<div>-->
@@ -416,7 +420,7 @@
     <div id="tabBar" class="tab-box" >
         <ul class="tab" :class="{'tab-layer':tabBarFixed}" >
             <li class="tab-list" v-for="(tabItem,index) in tab">
-                <a class="dot " :class="{'active':(tabIndex == index)}" @click="animate(index)" >
+                <a class="dot " :class="{'active':(tabIndex == index)}" @click="animate(index,$event)" >
                     {{tabItem.name}}
                 </a>
             </li>
@@ -563,10 +567,13 @@
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
                 var tabBarOffsetTop = document.querySelector('#tabBar').offsetTop;
                 var  cateItem = document.querySelectorAll('.item_jump');
+
                     if (scrollTop > tabBarOffsetTop) {
                         this.tabBarFixed = true;
+                            var tabBar = document.getElementById("tabBar"),
+                        tabHeight = tabBar.childNodes[0].clientHeight;
                         if(this.isScroll) {
-                            var index = arrayIndex(cateItem, scrollTop, 57);
+                            var index = arrayIndex(cateItem, scrollTop, tabHeight);
                             this.tabIndex = index;
                         }
                     } else {
@@ -587,12 +594,10 @@
             destroyed () {
                 window.removeEventListener('scroll', this.handleScroll)
             },
-            a(e){
-              console.log(this.e);
-            },
-            animate(index){
-                var  cateItem = document.querySelectorAll('.item_jump');
-                var total = cateItem[index].offsetTop-57;
+            animate(index,e){
+                var  cateItem = document.querySelectorAll('.list-item');
+                var tabHeight = e.target.clientHeight;
+                var total = cateItem[index].offsetTop- tabHeight;
                 var distance = document.documentElement.scrollTop || document.body.scrollTop
                 var step = total / 50;
                 this.tabIndex =  index;
