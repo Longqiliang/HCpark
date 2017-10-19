@@ -21,7 +21,6 @@ class News extends Base
             'status' => 1,
             'type' => 1,
             'is_banner' => 1,
-            'park_id'  =>session("park_id")
         ];
         $count = NewsModel::where($bannerMap)->order('create_time desc')->count();
         $banners = NewsModel::where($bannerMap)->order('create_time desc')->limit(3)->select();
@@ -31,7 +30,6 @@ class News extends Base
             'type' => 1,
             'status' => 1,
             'is_banner' => 0,
-            'park_id'  =>session("park_id")
         ];
         $list = NewsModel::where($listMap)->order('create_time desc')->limit(6)->select();
 
@@ -121,7 +119,6 @@ class News extends Base
         $listFileMap = [
             'type' => 2,
             'status' => 1,
-            'park_id'  =>session("park_id")
         ];
         $listFile = NewsModel::where($listFileMap)->order('create_time desc')->limit(6)->select();
         $this->assign('listFile', $listFile);
@@ -135,7 +132,6 @@ class News extends Base
         $articleMap= [
             'type' => 3,
             'status' => 1,
-            'park_id'  =>session("park_id")
         ];
         $articleList =  NewsModel::where($articleMap)->order('create_time desc')->limit(6)->select();
         $this->assign('article',  json_encode($articleList));
@@ -152,7 +148,6 @@ class News extends Base
                 'type' => 1,
                 'status' => 1,
                 'is_banner' => 0,
-                'park_id'  =>session("park_id")
             ];
             $list = NewsModel::where($listMap)->order('create_time desc')->limit($len,6)->select();
             if ($list){

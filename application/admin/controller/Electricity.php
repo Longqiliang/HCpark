@@ -18,11 +18,13 @@ class Electricity extends Admin
     {
 
         $ElectricityService = new ElectricityService();
+        $parkId = session("user_auth")['park_id'];
         $search = input('search');
         if (!empty($search)) {
             $map = [
                 'electricity_id' => array('like', '%' . $search . '%'),
-                'status'=>array('neq',-1)
+                'status'=>array('neq',-1),
+                'park_id'=>$parkId,
             ];
             $list = $ElectricityService->where($map)->order('status asc')->paginate();
             int_to_string($list, array(
@@ -37,6 +39,7 @@ class Electricity extends Admin
 
         } else {
             $map['status'] = array('neq', -1);
+            $map['park_id']  = $parkId;
             $list = $ElectricityService->where($map)->order('status asc')->paginate();
             int_to_string($list, array(
                 'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败'),

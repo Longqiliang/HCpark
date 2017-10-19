@@ -18,7 +18,6 @@ class Talentservice extends Base
     public function index(){
         $parkid =session('park_id');
         $map=array(
-            'park_id'=>$parkid,
             'status'=>1,
         );
 
@@ -44,7 +43,6 @@ class Talentservice extends Base
     public function serviceIndex(){
         $parkid =session('park_id');
         $map=array(
-            'park_id'=>$parkid,
             'status'=>1,
         );
 
@@ -59,7 +57,6 @@ class Talentservice extends Base
         $len = input("length");
         $parkid =session('park_id');
         $map=array(
-            'park_id'=>$parkid,
             'status'=>1,
         );
 
@@ -86,7 +83,7 @@ class Talentservice extends Base
         $info->save();
         $parkid =session('park_id');
         //发布园区
-        $park=Park::where('id','eq',$parkid)->field('name')->find();
+        $park=Park::where('id','eq',$info['park_id'])->field('name')->find();
 
         $this->assign('park', $park['name']);
         $this->assign('news', $info);

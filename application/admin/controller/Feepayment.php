@@ -287,11 +287,21 @@ class Feepayment extends Admin
 
             $this->error("推送失败");
         }
-
-
     }
 
+    public function pushImg(){
+        $id = input('id');
+        $img = input('images');
+        $feePayment = new FeePaymentModel();
+        $res = $feePayment->save(['images'=>$img],['id'=>$id]);
+        if ($res){
 
+            $this->success('上传成功');
+        }else{
+
+            $this->error("上传失败".$feePayment->getError());
+        }
+    }
 
 
 

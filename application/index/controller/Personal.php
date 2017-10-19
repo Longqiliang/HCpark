@@ -29,6 +29,8 @@ use app\index\model\FunctionRoomRecord;
 use app\index\model\LedRecord;
 use app\index\model\BroadbandPhone;
 use app\common\model\OperationalAuthority;
+use wechat\TPWechat;
+use think\Loader;
 
 
 class Personal extends Base
@@ -859,4 +861,33 @@ class Personal extends Base
             }
         }
     }
+    /**
+     * 更改部门
+     */
+    public function changeDepartment(){
+        $userId = input('user_id');
+        //echo $userId;
+        $department = input('park_id');
+        $data = [
+            'userid' => $userId,
+            'department' => [$department],
+        ];
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $wechat = new TPWechat(config('party'));
+        $user = new WechatUser();
+        $result = $user->where(['userid'=>$userId])->update(['park_id'=>$department]);
+        $res = $wechat->updateUser($data);
+        if ($result){
+
+            $this->success("修改成功");
+        }else{
+
+            $this->error("修改失败");
+        }
+
+    }
+
+
+
+
 }

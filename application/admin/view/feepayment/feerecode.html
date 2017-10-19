@@ -1,6 +1,8 @@
 {extend name="base/common"}
 
 {block name="style"}
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style>
     .mail-box .mail-ontact{
         width: 150px;
@@ -48,6 +50,7 @@
         text-align: center;
     }
     .imgs{
+        margin-top: 20px;
         max-width: 540px;
         max-height:400px;
     }
@@ -117,12 +120,12 @@
                     <td>
                         {lt name="$vo.status" value="2"}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
-                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal" data-text="{$vo.images}">查看单据</a>
+                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal" onclick="setImg('{$vo.id}','{$vo.images}')">收费单据</a>
                         <a href="javascript:void(0)" class="btn-sm btn-success" onclick="push('{$vo.id}')">推送</a>
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form1" onclick="changestates('{$vo.id}')">审核</a>
                         {else/}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
-                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal" data-text="{$vo.images}">查看单据</a>
+                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal"  onclick="setImg('{$vo.id}','{$vo.images}')">收费单据</a>
                         <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
 
                         {/lt}
@@ -204,22 +207,30 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">催缴单据</h4>
+                <h4 class="modal-title" id="myModalLabel">收费单据</h4>
             </div>
             <div class="modal-body">
-                <img src="" alt="">
+                <input type="file" name="file_data" class="input file">
+                <img src="" alt="" id="set_img" class="imgs">
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="pushImg()">上传</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
 </div>
 <input type="hidden" name="is_id" value="">
+<input type="hidden" name="set_id" value="">
+<input type="hidden" name="front_cover">
 {/block}
 
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
@@ -282,10 +293,61 @@
         console.log(button);
         var recipient = button.data('text');
         var modal = $(this);
-        var html = "<img src="+recipient+" alt='' class='imgs'>";
-        modal.find('.modal-body').html(html);
+        var html = "<input type='hidden' id="+recipient+">";
+        //var html = "<img src="+recipient+" alt='' class='imgs'>";
+        //modal.find('.modal-body').html(html);
     })
+     $(".file").fileinput({
+       showPreview: false,
+       language: 'zh', //设置语言
+       uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+       allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+       maxFileSize: 1024 * 200,
+   }).on("filebatchselected", function(event, files) {
+       $(this).fileinput("upload");
+   }).on('fileuploaded', function(event, data, previewId, index) {
+       var response = $.parseJSON(data.response);
+       if(response.code == 1) {
+           $("#set_img").attr('src',response.data);
+           $("input[name='front_cover']").val(response.data);
+           //$(".img1").attr('src',response.data);
+       } else {
+           updateAlert(response.msg, 'warning');
+       }
+   });
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+    function setImg(id,img) {
+        $("input[name='set_id']").val(id);
+        $("#set_img").attr('src',img);
+        $("input[name='front_cover']").val(img);
+    }
+    function pushImg() {
+        var id = $("input[name='set_id']").val();
+        var image = $("input[name='front_cover']").val();
+        $.ajax({
+            data:{id:id,images:image},
+            url:"{:Url('pushImg')}",
+            type:"post",
+            success:function (data) {
+                if(data.code ==1 ){
+                    updateAlert(data.msg+" 稍后页面自动刷新～",'success');
+                    setTimeout(function () {
+                        location.href = data.url;
+                    },2000);
 
-    highlight_subnav("{:Url('feepayment/index')}");
+                }else {
+                    updateAlert(data.msg,'info')
+                }
+            }
+        });
+    }
+   highlight_subnav("{:Url('feepayment/index')}");
 </script>
 {/block}

@@ -11,7 +11,7 @@
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
     .content{
         width: 45%;
-        height: 450px;
+        height: 300px;
         background-color: #fff;
         margin: 20px;
         padding: 20px;
@@ -51,7 +51,7 @@
                     <span class=" pull-right"><input type="text" name="expiration1" class="input datetimepicker" value="{$list1.expiration_time}" ></span>
                     <h3>到期时间</h3>
                 </div>
-                <div class="ibox-content" style="height: 150px">
+               <!-- <div class="ibox-content" style="height: 150px">
                     <span class=" pull-right" style="width: 300px"><input type="file" name="file_data" class="input file1"></span>
                     <h3>催缴单据</h3>
                     <span>
@@ -59,7 +59,7 @@
                              <img src="{$list1.images}" alt="" style='width: 200px;height: 100px;' class="img1 ">
                          </a>
                     </span>
-                </div>
+                </div>-->
                 <div class="ibox-content">
                     <h1 class="no-margins"></h1>
                     <div class="stat-percent font-bold text-success" name="status1">
@@ -89,7 +89,7 @@
                     <span class=" pull-right" ><input type="text" name="expiration2" class="input datetimepicker" value="{$list2.expiration_time}"></span>
                     <h3>到期时间</h3>
                 </div>
-                <div class="ibox-content" style="height: 150px">
+                <!--<div class="ibox-content" style="height: 150px">
                     <span class=" pull-right" style="width: 300px"><input type="file" name="file_data" class="input file2"></span>
                     <h3>催缴单据</h3>
                     <span>
@@ -97,7 +97,7 @@
                              <img src="{$list2.images}" alt="" style='width: 200px;height: 100px;' class="img2 ">
                          </a>
                     </span>
-                </div>
+                </div>-->
                 <div class="ibox-content" >
                     <h1 class="no-margins"></h1>
                     <div class="stat-percent font-bold text-success" name="status2">
@@ -129,7 +129,7 @@
                     <span class=" pull-right"><input type="text" name="expiration3" class="input  datetimepicker" value="{$list3.expiration_time}"></span>
                     <h3>到期时间</h3>
                 </div>
-                <div class="ibox-content" style="height: 150px">
+               <!-- <div class="ibox-content" style="height: 150px">
                     <span class=" pull-right" style="width: 300px"><input type="file" name="file_data" class="input file3"></span>
                     <h3>催缴单据</h3>
                     <span>
@@ -137,7 +137,7 @@
                              <img src="{$list3.images}" alt="" style='width: 200px;height: 100px;' class="img3 ">
                          </a>
                     </span>
-                </div>
+                </div>-->
                 <div class="ibox-content">
                     <h1 class="no-margins"></h1>
                     <div class="stat-percent font-bold text-success" name="status3">
@@ -166,7 +166,7 @@
                     <span class=" pull-right"><input type="text" name="expiration4" class="input datetimepicker" value="{$list4.expiration_time}"></span>
                     <h3>到期时间</h3>
                 </div>
-                <div class="ibox-content" style="height: 150px">
+                <!--<div class="ibox-content" style="height: 150px">
                     <span class=" pull-right" style="width: 300px"><input type="file" name="file_data" class="input file4"></span>
                     <h3>催缴单据</h3>
                     <span>
@@ -174,7 +174,7 @@
                              <img src="{$list4.images}" alt="" style='width: 200px;height: 100px;' class="img4">
                          </a>
                     </span>
-                </div>
+                </div>-->
                 <div class="ibox-content">
                     <h1 class="no-margins"></h1>
                     <div class="stat-percent font-bold text-success" name="status4">
@@ -229,10 +229,10 @@
     function makeOrder(id,uid){
         var fee = $("input[name='fee"+id+"']").val();
         var time = $("input[name='expiration"+id+"']").val();
-        var imagess = $(".img"+id+"").attr('src');
+        //var imagess = $(".img"+id+"").attr('src');
         //return alert(images);
         $.ajax({
-            data:{type:id,name:"{$company.name}",company_id:"{$company.id}",fee:fee,expiration_time:time,uid:uid,images:imagess},
+            data:{type:id,name:"{$company.name}",company_id:"{$company.id}",fee:fee,expiration_time:time,uid:uid,},
             type:"POST",
             url:"{:Url('Feepayment/add')}",
             success:function (data) {
@@ -265,7 +265,7 @@
             }
         });
     }
-    $(".file1").fileinput({
+   /* $(".file1").fileinput({
         showPreview: false,
         language: 'zh', //设置语言
         uploadUrl: '{:Url("Upload/picture")}', //上传的地址
@@ -365,7 +365,7 @@
         theme: 'dark',
         alignment: 'center',       // Position - may be auto OR center.
         allowMultiple: false,
-    });
+    });*/
     function ggg() {
         window.history.go(-1);
     }

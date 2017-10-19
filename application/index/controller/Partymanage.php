@@ -868,16 +868,11 @@ class Partymanage extends Base
     /*企业楼房表*/
     public function companyFloor()
     {
-        $floor = [];
+        /*$floor = [];
         $floor1 = [];
         $newArr = [];
         $newArr1 = [];
         $parkId = session('park_id');
-        if ($parkId == 3) {
-            $common = "（公共区域)";
-        } else {
-            $common = "";
-        }
         $parkInfo = Park::where('id', $parkId)->find();
         $parkName = $parkInfo['name'];
         $parkRoom = new ParkRoom();
@@ -902,39 +897,10 @@ class Partymanage extends Base
                 }
                 $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
             }
-
         }
         foreach ($floor as $k => $v) {
             $newArr[$k]['floor'] = $v;
             $newArr[$k]['combine'] = false;
-            $newArr[$k]['rooms'] = $roomArray[$k];
-        }
-        $map1 = [
-            'park_id' => $parkId,
-            'build_block' => "B",
-        ];
-        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor desc')->select();
-        //return  dump($list1);
-        foreach ($list1 as $k => $v) {
-            $floor1[$k] = $v['floor'];
-        }
-        //return dump($floor1);
-        foreach ($floor1 as $k => $v) {
-            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
-            foreach ($roomList1 as $k1 => $v1) {
-                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                if (!$res) {
-                    $status1 = false;
-                    $roomsId1 = 0;
-                } else {
-                    $status1 = true;
-                    $roomsId1 = $res['room_id'];
-                }
-                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id'], 'room_id' => $roomsId1];
-            }
-        }
-        foreach ($floor as $k => $v) {
-            $newArr[$k]['floor'] = $v;
             $newArr[$k]['rooms'] = $roomArray[$k];
         }
         $map1 = [
@@ -955,21 +921,18 @@ class Partymanage extends Base
                 }
                 $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'id' => $v1['company_id']];
             }
-
         }
         foreach ($floor1 as $k => $v) {
             $newArr1[$k]['floor'] = $v;
             $newArr1[$k]['combine'] = false;
             $newArr1[$k]['rooms'] = $roomArray1[$k];
-            /* if ($v != 1 && $v != 11 && $v != 12 && $v != 13) {
-                 $newArr1[$k]['combine'] = true;
-                 $newArr1[$k]['depart'] = $roomArray1[$k][0]['department_id'];
-                 $newArr1[$k]['rooms'] = "B$v";
-             }*/
         }
+
         $resArr = array_merge(["A幢" => $newArr], ["B幢" => $newArr1]);
-        $resArr1 = ["$parkName" => $resArr];
-        $this->assign('commonArea', $common);
+        $resArr1 = ["$parkName" => $resArr];*/
+        $parkRoom = new ParkRoom();
+        $resArr1 = $parkRoom->companyRoom();
+
         $this->assign('list', json_encode($resArr1));
 
 
@@ -1011,10 +974,12 @@ class Partymanage extends Base
             return "获取signature失败" . $weObj->errCode . '|' . $weObj->errMsg;;
         }
         $signature['imgurl']='http://xk.0519ztnet.com/';
+
         return json_encode($signature);
-
-
     }
+
+
+
 
 
 

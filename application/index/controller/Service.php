@@ -407,6 +407,7 @@ class Service extends Base
     {
 
         $PillarService = new ElectricityService();
+        $park_id = session('park_id');
         //$personalMessage = new PersonalMessage();
         $id = session('userId');
         $data = input('');
@@ -420,7 +421,8 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['charging_price'] * (int)$data['aging']) + (int)$data['charging_deposit'],
-            'company' => $data['company']
+            'company' => $data['company'],
+            'park_id' => $park_id,
         ];
 
         $re = $PillarService->save($service);
@@ -506,6 +508,7 @@ class Service extends Base
     public function addOldPillar()
     {
         $er = new ElectricityService();
+        $parkId = session('park_id');
         //$personalMessage = new PersonalMessage();
         $id = session('userId');
         $data = input('');
@@ -520,7 +523,8 @@ class Service extends Base
             'create_time' => time(),
             'status' => 0,
             'money' => ((int)$data['charging_price'] * (int)$data['aging']),
-            'company' => $data['company']
+            'company' => $data['company'],
+            'park_id' => $parkId,
         ];
         $re2 = $er->save($record);
         if ($re2) {
@@ -637,6 +641,7 @@ class Service extends Base
         $CardparkService = new CarparkService();
         //$personalMessage = new PersonalMessage();
         $id = session('userId');
+        $parkId = session('park_id');
         $data = input('');
         $p_v = array();
         $file = new File();
@@ -657,7 +662,8 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']) + (int)$data['carpark_deposit'],
-            'company' => $data['company']
+            'company' => $data['company'],
+            'park_id' =>$parkId,
         ];
         $re = $CardparkService->save($service);
 
@@ -739,6 +745,7 @@ class Service extends Base
         $CardparkService = new CarparkService();
         //$personalMessage = new PersonalMessage();
         $id = session('userId');
+        $parkId = session('park_id');
         $data = input('');
         $service = [
             'name' => $data['name'],
@@ -753,7 +760,8 @@ class Service extends Base
             'create_time' => time(),
             'status' => 0,
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']),
-            'company' => $data['company']
+            'company' => $data['company'],
+            'park_id' =>$parkId,
         ];
         $re2 = $CardparkService->save($service);
         if ($re2) {
