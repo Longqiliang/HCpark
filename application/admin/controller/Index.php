@@ -225,7 +225,7 @@ class Index extends Admin
         //同步园区企业列表
         $deleteId = [];
         $parkCompany = new ParkCompany();
-        $companyList = WechatDepartment::where(['parentid' => 4])->select();
+        $companyList = WechatDepartment::where(['parentid' => ['in',[4,92]]])->select();
         foreach ($companyList as $k => $v) {
             $parkid = $this->findParkid($v['id']);
             $data = [
