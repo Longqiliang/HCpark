@@ -3038,6 +3038,7 @@ class Service extends Base
 
         }
         foreach ($floor as $k => $v) {
+            $newArr[$k]['name'] = $v."楼" ;
             $newArr[$k][$v . "楼"] = $roomArray[$k];
             //$newArr[$k]['rooms'] = $roomArray[$k];
         }
@@ -3057,6 +3058,7 @@ class Service extends Base
             }
         }
         foreach ($floor1 as $k => $v) {
+            $newArr1[$k]['name'] = $v."楼" ;
             $newArr1[$k][$v . "楼"] = $roomArray1[$k];
             //$newArr1[$k]['rooms'] = $roomArray1[$k];
         }
@@ -3064,9 +3066,55 @@ class Service extends Base
             " A幢" => $newArr,
             " B幢" => $newArr1,
         ];
+        if ($parkId == 80){
+            $map2 = [
+                'park_id' => $parkId,
+                'build_block' => "C",
+            ];
+            $list2 = $parkRoom->where($map2)->distinct(true)->field('floor')->order('floor desc')->select();
+            foreach ($list2 as $k => $v) {
+                $floor2[$k] = $v['floor'];
+            }
+            foreach ($floor2 as $k => $v) {
+                $roomList2 = $parkRoom->where(['floor' => $v, 'build_block' => "C", 'del' => 0])->order("room asc")->select();
+                foreach ($roomList2 as $k1 => $v1) {
+                    $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
+                    $roomArray2[$k][$k1] = $v1['room'];
+                }
+            }
+            foreach ($floor2 as $k => $v) {
+                $newArr2[$k]['name'] = $v."楼" ;
+                $newArr2[$k][$v . "楼"] = $roomArray2[$k];
+                //$newArr1[$k]['rooms'] = $roomArray1[$k];
+            }
 
-        return $list;
-        //echo json_encode($list);
+            $map3 = [
+                'park_id' => $parkId,
+                'build_block' => "D",
+            ];
+            $list3 = $parkRoom->where($map3)->distinct(true)->field('floor')->order('floor desc')->select();
+            foreach ($list3 as $k => $v) {
+                $floor3[$k] = $v['floor'];
+            }
+            foreach ($floor3 as $k => $v) {
+                $roomList3 = $parkRoom->where(['floor' => $v, 'build_block' => "D", 'del' => 0])->order("room asc")->select();
+                foreach ($roomList3 as $k1 => $v1) {
+                    $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
+                    $roomArray3[$k][$k1] = $v1['room'];
+                }
+            }
+            foreach ($floor3 as $k => $v) {
+                $newArr3[$k]['name'] = $v."楼" ;
+                $newArr3[$k][$v . "楼"] = $roomArray3[$k];
+                //$newArr1[$k]['rooms'] = $roomArray1[$k];
+            }
+            $list["C幢"] = $newArr2;
+            $list["D幢"] = $newArr3;
+        }
+
+
+        //return $list;
+        echo json_encode($list);
 
     }
 
