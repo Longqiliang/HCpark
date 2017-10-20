@@ -50,8 +50,6 @@ class Personal extends Base
     /*个人信息*/
     public function personalinfo()
     {
-
-
         $user_id = session('userId');
         $wu = new  WechatUser();
         $info = $wu->where('userid', $user_id)->find();
@@ -63,7 +61,12 @@ class Personal extends Base
             'department' => isset($info->departmentName->name) ? $info->departmentName->name : "",
             'header' => $info['header']
         ];
-
+        //$list = WechatDepartment::where("parentid",1)->order('id asc')->select();
+        /*foreach($list as $k=>$v){
+            $parkArr[$k] = $v['id'];
+        }*/
+        $parkArr = [3=>"希垦科技园",80=>"人工智能产业园"];
+        $this->assign('park',$parkArr);
         $this->assign('info', $data);
         return $this->fetch();
     }

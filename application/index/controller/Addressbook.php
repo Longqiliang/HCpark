@@ -21,22 +21,28 @@ class Addressbook extends Base
         //全部的部门
         $department = $this->findChild($hand);
         $sd = $this->mydeparment();
-
+        //return dump($sd);
         if($user['department']==1){
             $this->assign('department', $department);
-
-
         }else {
             if(count($sd)!=4){
                 return $this->error("该用户所属部门结构不为4层（例：智新则地/希垦园区/运营团队/其他员工）");
             }
-
-
             //所在园区id
             $parkid = $sd[1];
             $parkdeparment = WechatDepartment::where('parentid', $parkid)->select();
             //所在园区下的所有部门id
             $alldepartmentid = array();
+            if($parkid == 80){
+                //滨江园区企业通讯里方法；
+                $hand2 = WechatDepartment::where('parentid', 0)->find();
+                $allDepartment = $this->findChild($hand2);
+                $allDepartment['child'] =  [$allDepartment['child'][1]];
+                $this->assign('department', $allDepartment);
+                $this->assign('user', $user);
+
+                return $this->fetch();
+            }
             foreach ($parkdeparment as $deparment) {
                 switch ($deparment['name']) {
                     case '服务团队':
@@ -65,6 +71,8 @@ class Addressbook extends Base
             } //用户不为忠经理，进行其他判断
             else {
                 $hand2 = WechatDepartment::where('parentid', 0)->find();
+                $res = $this->findChild($hand2);
+                return json_encode($res);
                 $hand2['child'] = array();
                 $map = [
                     'id' => $parkid,

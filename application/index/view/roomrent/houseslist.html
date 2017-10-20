@@ -345,7 +345,7 @@
                 var _this = this;
                 for(var obj in _this.list){
                     for(var arr in _this.list[obj]){
-                        if(_this.parkName.txt == arr){
+                        if(_this.parkName.index == obj && _this.parkName.txt == arr){
                             //console.log(_this.list[obj][arr].rentlist);
                             return _this.list[obj][arr].rentlist;
                         }

@@ -288,9 +288,9 @@ class Roomrent extends Base
         ];
         $list1 = ["$parkName" => $list];
         $this->assign('type', $type);*/
-       $parkId = 
-        $list1 = $this->rentlist();
 
+        $list1 = $this->rentlist();
+        //return json_encode($list1);
         $this->assign('list', json_encode($list1));
 
 
