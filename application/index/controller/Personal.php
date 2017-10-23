@@ -54,14 +54,22 @@ class Personal extends Base
         $user_id = session('userId');
         $wu = new  WechatUser();
         $info = $wu->where('userid', $user_id)->find();
+        if ($info['park_id'] == 3){
+            $info['park_id'] = "希垦科技园区";
+        }else{
+            $info['park_id'] = "人工智能产业园区";
+        };
+
         $data = [
             'name' => $info['name'],
             'avatar' => $info['avatar'],
             'sex' => $info['gender'] == 1 ? "男" : "女",
             'mobile' => $info['mobile'],
             'department' => isset($info->departmentName->name) ? $info->departmentName->name : "",
-            'header' => $info['header']
+            'header' => $info['header'],
+            'park_name' => $info['park_id'],
         ];
+        return json_encode($data);
         //$list = WechatDepartment::where("parentid",1)->order('id asc')->select();
         /*foreach($list as $k=>$v){
             $parkArr[$k] = $v['id'];
