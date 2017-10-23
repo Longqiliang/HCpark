@@ -59,7 +59,6 @@ class Personal extends Base
         }else{
             $info['park_id'] = "人工智能产业园区";
         };
-
         $data = [
             'name' => $info['name'],
             'avatar' => $info['avatar'],
@@ -75,7 +74,7 @@ class Personal extends Base
             $parkArr[$k] = $v['id'];
         }*/
 
-        $this->assign('info', $data);
+        $this->assign('info', json_encode($data));
         return $this->fetch();
     }
 
@@ -883,10 +882,15 @@ class Personal extends Base
             'userid' => $userId,
             'department' => [$department],
         ];
+        if ($department == 78){
+            $park = 3;
+        }else{
+            $park = 80;
+        }
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
-        //$result = $user->where(['userid'=>$userId])->update(['park_id'=>$department]);
+        $result = $user->where(['userid'=>$userId])->update(['department'=>$department,'park_id'=>$park]);
         $res = $wechat->updateUser($data);
         if ($res){
 
