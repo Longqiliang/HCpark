@@ -68,6 +68,7 @@ class Personal extends Base
             'department' => isset($info->departmentName->name) ? $info->departmentName->name : "",
             'header' => $info['header'],
             'park_name' => $info['park_id'],
+            'user_id' => $user_id
         ];
         //$list = WechatDepartment::where("parentid",1)->order('id asc')->select();
         /*foreach($list as $k=>$v){
