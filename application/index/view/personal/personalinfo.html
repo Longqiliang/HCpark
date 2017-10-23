@@ -8,12 +8,19 @@
     .head-info{
         line-height: 36px;
     }
+    .park-txt{
+        margin-right: 5px;
+    }
+    .content{
+        height: 100vh;
+        position: relative;
+    }
 </style>
 {/block}
 
 
 {block name="body"}
-<div class="content">
+<div class="content" id="app">
     <ul class="list default-list">
         <li>
             <a href="javascript:;" class="item-pull-right" id="checkImg">
@@ -35,13 +42,90 @@
         <li><a href="javascript:;"><p>姓名 <span class="ft-right">{$info.name}</span> </p></a></li>
         <li><a href="javascript:;"><p>性别 <span class="ft-right">{$info.sex}</span></p></a></li>
         <li><a href="javascript:;"><p>电话 <span class="ft-right">{$info.mobile}</span></p></a></li>
-        <li><a href="javascript:;"><p>单位 <span class="ft-right">{$info.department}</span></p></a></li>
+        <li><a href="javascript:;" ><p>单位 <span class="ft-right">{$info.department}</span></p></a></li>
+        <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.name"></span></p></a></li>
+        <mt-popup  position="bottom"  v-model="parkVisible" class="mint-popup">
+            <div class="picker-toolbar">
+                <span class="mint-datetime-action mint-datetime-cancel" @click="cancelParkPopup">取消</span>
+                <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
+            </div>
+            <mt-picker :slots="slots" @change="onParkChange" value-key="name"></mt-picker>
+        </mt-popup>
     </ul>
+    <div class="btn-box" v-show="showBtn">
+        <button class="btn btn-primary" @click="savePark">保存</button>
+    </div>
 </div>
 {/block}
 
 {block name="script"}
 <script>
+    var park  = [
+        {
+            departmentId:78,
+            name: '希垦科技园区'
+        },
+        {
+            departmentId:91,
+            name:'人工智能产业园区'
+        }
+    ];
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            park:park,
+            checkPark:park[0],
+            nowPark:park[0],
+            parkVisible:false,
+            slots:[
+                {
+                    defaultIndex:1,
+                    values:park
+                }
+            ],
+            showBtn:false
+        },
+        methods:{
+            showParkPopup:function () {
+                this.parkVisible = true;
+            },
+            cancelParkPopup:function () {
+                this.parkVisible = false;
+            },
+            selectPark:function () {
+                this.parkVisible = false;
+                this.showBtn = true;
+                this.nowPark = this.checkPark;
+            },
+            onParkChange:function (p,v) {
+                var _this = this;
+                if(v[0]){
+                    _this.checkPark = v[0];
+                }
+            },
+            savePark:function () {
+                var _this = this;
+                console.log(_this.nowPark);
+                _this.$http.post('',{
+                    departmentId:_this.nowPark.departmentId
+                }).then(function (e) {
+
+                },function () {
+
+                })
+            }
+        },
+        mounted:function () {
+            var _this = this;
+            _this.$nextTick(function() {
+                setTimeout(function() {
+                    _this.slots[0].defaultIndex = 0;
+                }, 100);
+            });
+        },
+        computed:{
+        }
+    });
     $(function () {
         $("#checkImg").on('click',function () {
             $("#upImg").click();
