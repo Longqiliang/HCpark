@@ -25,9 +25,6 @@ class Addressbook extends Base
         if($user['department']==1){
             $this->assign('department', $department);
         }else {
-            if(count($sd)!=4){
-                return $this->error("该用户所属部门结构不为4层（例：智新则地/希垦园区/运营团队/其他员工）");
-            }
             //所在园区id
             $parkid = $sd[1];
             $parkdeparment = WechatDepartment::where('parentid', $parkid)->select();
@@ -42,6 +39,9 @@ class Addressbook extends Base
                 $this->assign('user', $user);
 
                 return $this->fetch();
+            }
+            if(count($sd)!=4){
+                return $this->error("该用户所属部门结构不为4层（例：智新则地/希垦园区/运营团队/其他员工）");
             }
             foreach ($parkdeparment as $deparment) {
                 switch ($deparment['name']) {
@@ -72,7 +72,7 @@ class Addressbook extends Base
             else {
                 $hand2 = WechatDepartment::where('parentid', 0)->find();
                 $res = $this->findChild($hand2);
-                return json_encode($res);
+                //return json_encode($res);
                 $hand2['child'] = array();
                 $map = [
                     'id' => $parkid,
