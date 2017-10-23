@@ -29,6 +29,7 @@ use app\index\model\FunctionRoomRecord;
 use app\index\model\LedRecord;
 use app\index\model\BroadbandPhone;
 use app\common\model\OperationalAuthority;
+use think\Exception;
 use wechat\TPWechat;
 use think\Loader;
 
@@ -65,8 +66,7 @@ class Personal extends Base
         /*foreach($list as $k=>$v){
             $parkArr[$k] = $v['id'];
         }*/
-        $parkArr = [3=>"希垦科技园",80=>"人工智能产业园"];
-        $this->assign('park',$parkArr);
+
         $this->assign('info', $data);
         return $this->fetch();
     }
@@ -870,7 +870,7 @@ class Personal extends Base
     public function changeDepartment(){
         $userId = input('user_id');
         //echo $userId;
-        $department = input('park_id');
+        $department = input('departmentId');
         $data = [
             'userid' => $userId,
             'department' => [$department],
@@ -878,9 +878,9 @@ class Personal extends Base
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
-        $result = $user->where(['userid'=>$userId])->update(['park_id'=>$department]);
+        //$result = $user->where(['userid'=>$userId])->update(['park_id'=>$department]);
         $res = $wechat->updateUser($data);
-        if ($result){
+        if ($res){
 
             $this->success("修改成功");
         }else{
@@ -890,6 +890,28 @@ class Personal extends Base
 
     }
 
+    //test
+    public function test(){
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $wechat = new TPWechat(config('party'));
+        Db::startTrans();
+        try{
+            $re = $wechat->getDepartment();
+            $res = $wechat->getServerIp();
+            if ($res == false || $re ==false ){
+                throw new Exception($wechat->Message()."111");
+            }
+        Db::commit();
+        }catch (Exception $ex){
+            Db::rollback();
+            Log::error("msg:".$ex->getMessage());
+            return json_encode(['code'=>0,'data'=>"test"]);
+        };
+        //$res = $wechat->getDepartment();
+        //$res = $wechat->getServerIp();
+        return json_encode($re);
+
+    }
 
 
 
