@@ -69,7 +69,6 @@ class Personal extends Base
             'header' => $info['header'],
             'park_name' => $info['park_id'],
         ];
-        return json_encode($data);
         //$list = WechatDepartment::where("parentid",1)->order('id asc')->select();
         /*foreach($list as $k=>$v){
             $parkArr[$k] = $v['id'];
