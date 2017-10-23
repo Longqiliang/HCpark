@@ -26,12 +26,12 @@
             <a href="javascript:;" class="item-pull-right" id="checkImg">
                 <p class="head-info">
                     头像
-                    <span class="ft-right">
-                      {eq name="info.header" value=""}
-                        <img src="{$info.avatar}"  class="head-img">
-                       {else/}
-                         <img src="{$info.header}"  class="head-img">
-                        {/eq}
+                    <span class="ft-right" v-if="!info.header">
+
+                        <img :src="info.avatar"class="head-img">
+                    </span>
+                    <span v-else class="ft-right">
+                         <img :src="info.header"class="head-img">
                     </span>
                 </p>
             </a>
@@ -39,11 +39,11 @@
     </ul>
     <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg">
     <ul class="list default-list">
-        <li><a href="javascript:;"><p>姓名 <span class="ft-right">{$info.name}</span> </p></a></li>
-        <li><a href="javascript:;"><p>性别 <span class="ft-right">{$info.sex}</span></p></a></li>
-        <li><a href="javascript:;"><p>电话 <span class="ft-right">{$info.mobile}</span></p></a></li>
-        <li><a href="javascript:;" ><p>单位 <span class="ft-right">{$info.department}</span></p></a></li>
-        <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.name"></span></p></a></li>
+        <li><a href="javascript:;"><p>姓名 <span class="ft-right">{{info.name}}</span> </p></a></li>
+        <li><a href="javascript:;"><p>性别 <span class="ft-right">{{info.sex}}</span></p></a></li>
+        <li><a href="javascript:;"><p>电话 <span class="ft-right">{{info.mobile}}</span></p></a></li>
+        <li><a href="javascript:;" ><p>单位 <span class="ft-right">{{info.department}}</span></p></a></li>
+        <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="info.park_name"></span></p></a></li>
         <mt-popup  position="bottom"  v-model="parkVisible" class="mint-popup">
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="cancelParkPopup">取消</span>
@@ -60,6 +60,8 @@
 
 {block name="script"}
 <script>
+    var info  = {$info};
+    console.log(info);
     var park  = [
         {
             departmentId:78,
@@ -70,9 +72,11 @@
             name:'人工智能产业园区'
         }
     ];
+
     var vm = new Vue({
         el:'#app',
         data:{
+            info:info,
             park:park,
             checkPark:park[0],
             nowPark:park[0],
@@ -83,7 +87,8 @@
                     values:park
                 }
             ],
-            showBtn:false
+            showBtn:false,
+            isCheckBtn:true,
         },
         methods:{
             showParkPopup:function () {
@@ -96,6 +101,7 @@
                 this.parkVisible = false;
                 this.showBtn = true;
                 this.nowPark = this.checkPark;
+                this.info.park_name = this.checkPark.name;
             },
             onParkChange:function (p,v) {
                 var _this = this;
@@ -105,13 +111,40 @@
             },
             savePark:function () {
                 var _this = this;
-                console.log(_this.nowPark);
-                _this.$http.post('',{
+                if(!_this.isCheckBtn){
+                    return;
+                }
+                _this.isCheckBtn = false;
+                _this.$http.post("{:Url('Personal/changeDepartment')}",{
+                    user_id:_this.info.user_id,
                     departmentId:_this.nowPark.departmentId
                 }).then(function (e) {
-
+                    console.log(e);
+                    _this.isCheckBtn = true;
+                    var data = e.data;
+                    if(data.code == 1){
+                        swal({
+                            title:data.msg,
+                            type:"success"
+                        },function (e) {
+                            window.location.reload();
+                        });
+                    }else{
+                        swal({
+                            title:data.msg,
+                            type:"error"
+                        },function (e) {
+                            window.location.reload();
+                        });
+                    }
                 },function () {
-
+                    _this.isCheckBtn = true;
+                    swal({
+                        title:'保存失败',
+                        type:"error"
+                    },function (e) {
+                        window.location.reload();
+                    });
                 })
             }
         },
