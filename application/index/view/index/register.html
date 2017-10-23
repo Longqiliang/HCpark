@@ -36,7 +36,7 @@
     /*logo图片*/
     .mui-table-logo{
         text-align: center;
-        margin: 10vw auto;
+        margin: 10vw auto 0;
     }
     .mui-table-logo>p{
         padding-top: 10px;
@@ -110,9 +110,40 @@
         font-size: 1.5rem;
         border-radius: 5px;
     }
+    .mui-table-park{
+        display: flex;
+        align-items: center;
+        font-size: 1.4rem;
+        height: 40px;
+        padding-right: 25px;
+        position: relative;
+    }
+    .mui-table-park:after{
+        display: block;
+        content: '';
+        width: 8px;
+        height: 8px;
+        border: 1px solid #999;
+        border-bottom-width: 0;
+        border-left-width: 0;
+        -webkit-transform:translateY(-50%) rotate(45deg);
+        transform:translateY(-50%)   rotate(45deg);
+        text-align: right;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+    }
+    .mui-table-park span:first-child{
+        margin-right: 5vw;
+    }
+    .mint-popup, .picker-slot{
+        width: 100%;
+    }
+    .mint-popup .picker-slot-wrapper, .page-popup .mint-popup .picker-item {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
 </style>
-<script src="/index/js/index/vue.js"></script>
-<script src="/index/js/index/vue-resource.js"></script>
 {/block}
 
 {block name="body"}
@@ -122,6 +153,17 @@
         <p>智新泽地园区服务平台</p>
     </div>
     <div class="mui-table-content">
+        <div class="mui-table-park" @click="showPopup">
+            <span>请选择园区：</span>
+            <span v-html="checkPark.name"></span>
+        </div>
+        <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+            <div class="picker-toolbar">
+                <span class="mint-datetime-action mint-datetime-cancel" @click="cancelPark">取消</span>
+                <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
+            </div>
+            <mt-picker :slots="slots" @change="onParkChange" value-key="name"></mt-picker>
+        </mt-popup>
         <div class="mui-table-user">
             <input type="text" placeholder="请输入姓名" ref="name">
         </div>
@@ -139,17 +181,60 @@
 {/block}
 {block name="script"}
 <script>
-    var main = new Vue({
+    var arr = [
+        {
+            departmentId:78,
+            name: '希恳科技园区'
+        },
+        {
+            departmentId:91,
+            name:'人工智能产业园区'
+        }
+    ];
+    var vm = new Vue({
         el: '#reigster',
         data: {
             apiRegister:"{:Url('Index/register')}",
             ischecked:true,
             ischecked2:false,
-            gender:1
+            gender:1,
+            slots:[
+                {
+                    defaultIndex:1,
+                    values:arr
+                }
+            ],
+            defaultPark:arr[0],
+            checkPark:arr[0],
+            popupVisible:false
         },
         mounted: function() {
+            var _this = this;
+            _this.$nextTick(function() {
+                setTimeout(function() {
+                    _this.slots[0].defaultIndex = 0;
+                }, 100);
+            });
         },
         methods: {
+            showPopup:function () {
+                this.popupVisible = true;
+            },
+            onParkChange:function (picker,values) {
+                var _this = this;
+                if(values[0]){
+                    _this.defaultPark = values[0];
+                }
+            },
+            selectPark:function () {
+                var _this = this;
+                _this.checkPark = _this.defaultPark;
+                _this.popupVisible = false;
+            },
+            cancelPark:function () {
+                var _this = this;
+                _this.popupVisible = false;
+            },
             check: function(e) {
                 if(e==1){
                     this.ischecked = true;
@@ -194,7 +279,7 @@
                     });
                     return ;
                 }
-                var data={name:this.$refs.name.value,mobile:this.$refs.phone.value,gender:this.gender};
+                var data={name:this.$refs.name.value,mobile:this.$refs.phone.value,gender:this.gender,departmentId:this.checkPark.departmentId};
                 this.$http.post(this.apiRegister,data,{emulateJSON: true})
                         .then(function(response) {
                             if(response.data.code==1){
