@@ -51,13 +51,19 @@
         width:84.53vw;
         margin: 0 auto;
     }
+    .mui-table-user,.mui-table-phone{
+        height: 50px;
+        font-size: 1.4rem;
+    }
+    .mui-table-user label,.mui-table-phone label{
+        margin-right:4vw;
+    }
     .mui-table-user input,.mui-table-phone input{
-        display: block;
+        display: inline-block;
         border-bottom: 1px solid #f00;
         height: 50px;
         margin-bottom: 0;
         font-size: 1.4rem;
-        width:84.53vw;
     }
     .mui-table-user:after,.mui-table-phone:after{
         display: block;
@@ -154,7 +160,7 @@
     </div>
     <div class="mui-table-content">
         <div class="mui-table-park" @click="showPopup">
-            <span>请选择园区：</span>
+            <span>园区：</span>
             <span v-html="checkPark.name"></span>
         </div>
         <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
@@ -165,10 +171,12 @@
             <mt-picker :slots="slots" @change="onParkChange" value-key="name"></mt-picker>
         </mt-popup>
         <div class="mui-table-user">
-            <input type="text" placeholder="请输入姓名" ref="name">
+            <label for="name">姓名：</label>
+            <input type="text" placeholder="请输入姓名" ref="name" id="name">
         </div>
         <div class="mui-table-phone">
-            <input type="tel" placeholder="请输入手机号" ref="phone">
+            <label for="phone">手机：</label>
+            <input type="tel" placeholder="请输入手机号" ref="phone" id="phone">
         </div>
         <p class="mui-table-tip">注：请填入与该微信号绑定的手机号</p>
         <div class="mui-table-radio">
