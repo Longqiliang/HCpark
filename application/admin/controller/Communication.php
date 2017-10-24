@@ -35,6 +35,7 @@ class Communication extends Admin
         $list = $CommunicateGroup->where($map)->paginate();
         int_to_string($list, $map = array('status' => array(0 => '禁用', 1 => '启用'), 'park_id' => array(3 => '希垦园区')));
         $this->assign('search', $serch);
+        $this->assign('park_id',$paek_id);
         $this->assign('list', $list);
         return $this->fetch();
     }
