@@ -52,13 +52,10 @@ class Service extends Base
         if ($info['fee_status'] == 0) {
             $is = "no";
         }
-        if ($info['tagid']==1){
-            $parkName = ['希垦园区','人工智能产业园区'];
-        }
         if ($park_id == 3){
-            $parkName = ['希垦园区'];
+            $parkName = ['name'=>'希垦园区'];
         }if ($park_id == 80){
-        $parkName = ['人工智能产业园区'];
+        $parkName = ['name'=>'人工智能产业园区'];
     }
         /*if($info['tagid']==1){
                 $map=[
