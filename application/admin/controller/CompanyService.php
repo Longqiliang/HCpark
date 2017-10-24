@@ -23,10 +23,13 @@ class CompanyService extends Admin
         $list = Db::table('tb_company_service')
             ->alias('s')
             ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
+            ->join('__WECHAT_USER__ c', 'c.userid=s.user_id')
             ->field('a.name,s.id,s.company,s.people,s.mobile,s.remark,s.status,s.create_time')
             ->where($map)
-            ->where('a.park_id','like','%'.$parkid.'%')
+            ->where('c.park_id',$parkid)
             ->paginate();
+        echo json_encode(Db::getLastSql());
+
         $total=count($list);
         $this->assign('search',$search);
         $this->assign('total',$total);
