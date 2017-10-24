@@ -28,7 +28,7 @@ class CompanyService extends Admin
             ->where($map)
             ->where('c.park_id',$parkid)
             ->paginate();
-        echo json_encode(Db::getLastSql());
+
 
         $total=count($list);
         $this->assign('search',$search);
