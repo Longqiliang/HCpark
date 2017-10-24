@@ -77,6 +77,7 @@ class QYWechat
     const MASS_SEND_URL 		= '/message/send?';
     const MENU_CREATE_URL 		= '/menu/create?';
     const MENU_GET_URL 			= '/menu/get?';
+    const AGENT_GET_URL         = '/agent/get?';
     const MENU_DELETE_URL 		= '/menu/delete?';
     const TOKEN_GET_URL 		= '/gettoken?';
     const TICKET_GET_URL 		= '/get_jsapi_ticket?';
@@ -2081,5 +2082,29 @@ class QYWechat
         }
         return false;
     }
+
+    /**
+     * 获取应用
+     */
+    public function getApplication($agentid){
+        if (!$this->access_token && !$this->checkAuth()) return false;
+        $result = $this->http_get(self::API_URL_PREFIX.self::AGENT_GET_URL.'access_token='.$this->access_token.'&agentid='.$agentid);
+        if ($result)
+        {
+            $json = json_decode($result,true);
+            if (!$json || !empty($json['errcode']) || $json['errcode']!=0) {
+                $this->errCode = $json['errcode'];
+                $this->errMsg = $json['errmsg'];
+                return false;
+            }
+            return $json;
+        }
+        return false;
+
+    }
+
+
+
+
 
 }
