@@ -2828,6 +2828,8 @@ class Service extends Base
             case  3 :
                 $department_id = 76;
                 break;
+            case  80 :
+                $department_id = 91;
             default:
                 $department_id = 76;
                 break;
