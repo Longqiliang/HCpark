@@ -53,9 +53,9 @@ class Service extends Base
             $is = "no";
         }
         if ($park_id == 3){
-            $parkName = ['name'=>'希垦园区'];
+            $parkName = [['name'=>'希垦园区']];
         }if ($park_id == 80){
-        $parkName = ['name'=>'人工智能产业园区'];
+        $parkName = [['name'=>'人工智能产业园区']];
     }
         /*if($info['tagid']==1){
                 $map=[

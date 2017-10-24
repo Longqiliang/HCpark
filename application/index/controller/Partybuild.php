@@ -14,12 +14,20 @@ use app\index\model\WechatUser;
 class Partybuild extends Base{
 
     public function index(){
+        $parkName = [];
+        $park_id = session('park_id');
+        if ($park_id == 3){
+            $parkName = [['name'=>'希垦园区']];
+        }if ($park_id == 80){
+            $parkName = [['name'=>'人工智能产业园区']];
+        }
         $list1=PartyBuildingModel::where(['type'=>1,'status'=>1])->order('id desc')->find();
         $list2=PartyBuildingModel::where(['type'=>2,'status'=>1])->order('id desc')->find();
         $list3=PartyBuildingModel::where(['type'=>3,'status'=>1])->order('id desc')->find();
         $this->assign('list1',$list1);
         $this->assign('list2',$list2);
         $this->assign('list3',$list3);
+        $this->assign('parkName',$parkName);
 
         return $this->fetch();
     }
