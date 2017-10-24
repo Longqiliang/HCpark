@@ -57,8 +57,9 @@ body{
         font-size: 1.4rem;
     }
 .main>li a{
-    font-size: 1.4rem;
-    color: #5d9cec;
+    font-size: 1.5rem;
+    /*color: #5d9cec;*/
+    color:#333
 }
 </style>
 {/block}
@@ -88,8 +89,9 @@ body{
 </div>
 
 <ul class="main">
-    <li><span>手机</span><a href="tel:{$info.mobile}">{$info.mobile}</a></li>
-    <li><span>部门</span><a href="{:Url('/index/Addressbook/userlist/'.$info->departmentName->id)}">{$info->departmentName->name}</a></li>
+    <li><span>手机</span><a href="tel:{$info.mobile}" style="color: #5d9cec;">{$info.mobile}</a></li>
+    <!--<li><span>部门</span><a href="{:Url('/index/Addressbook/userlist/'.$info->departmentName->id)}">{$info->departmentName->name}</a></li>-->
+    <li><span>部门</span><a>{$info->departmentName->name}</a></li>
 </ul>
 {/block}
 {block name="script"}

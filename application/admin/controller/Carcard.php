@@ -17,15 +17,20 @@ class Carcard extends Admin
     public function index()
     {
         $CardparkService = new CarparkService();
+        $parkId = session("user_auth")['park_id'];
         $search = input('search');
         if (!empty($search)) {
             $map = [
                 'park_card' => array('like', '%' . $search . '%'),
-                'status'=>array('neq',-1)
+                'status'=>array('neq',-1),
+                'park_id'=>$parkId,
             ];
             $list = $CardparkService->where($map)->order('status asc')->paginate();
         } else {
-            $map['status'] = array('neq', -1);
+            $map = [
+                'status'=>array('neq',-1),
+                'park_id'=>$parkId,
+            ];
             $list = $CardparkService->where($map)->order('status asc')->paginate();
         }
         int_to_string($list, array(

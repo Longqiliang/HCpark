@@ -47,10 +47,16 @@ class Service extends Base
         $app = new  CompanyApplication();
         $info = $user->where('userid', $user_id)->find();
         $map = ['type ' => 0];
+        $parkName = [];
         $is = 'yes';
         if ($info['fee_status'] == 0) {
             $is = "no";
         }
+        if ($park_id == 3){
+            $parkName = [['name'=>'希垦园区']];
+        }if ($park_id == 80){
+        $parkName = [['name'=>'人工智能产业园区']];
+    }
         /*if($info['tagid']==1){
                 $map=[
                     'park_id'=>3,
@@ -130,6 +136,7 @@ class Service extends Base
         $this->assign('top_service', json_encode($TopServices));
         $this->assign('talent', json_encode($Talent));
         $this->assign('is_fee', $is);
+        $this->assign('parkName',json_encode($parkName));
         return $this->fetch();
 
     }
@@ -258,7 +265,9 @@ class Service extends Base
                 break;
         }
         $info['app_id'] = $app_id;
+        $info['park_id'] = $parkid ;
         $this->assign('info', json_encode($info));
+
         return $this->fetch($path);
     }
 
@@ -407,6 +416,7 @@ class Service extends Base
     {
 
         $PillarService = new ElectricityService();
+        $park_id = session('park_id');
         //$personalMessage = new PersonalMessage();
         $id = session('userId');
         $data = input('');
@@ -420,7 +430,8 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['charging_price'] * (int)$data['aging']) + (int)$data['charging_deposit'],
-            'company' => $data['company']
+            'company' => $data['company'],
+            'park_id' => $park_id,
         ];
 
         $re = $PillarService->save($service);
@@ -506,6 +517,7 @@ class Service extends Base
     public function addOldPillar()
     {
         $er = new ElectricityService();
+        $parkId = session('park_id');
         //$personalMessage = new PersonalMessage();
         $id = session('userId');
         $data = input('');
@@ -520,7 +532,8 @@ class Service extends Base
             'create_time' => time(),
             'status' => 0,
             'money' => ((int)$data['charging_price'] * (int)$data['aging']),
-            'company' => $data['company']
+            'company' => $data['company'],
+            'park_id' => $parkId,
         ];
         $re2 = $er->save($record);
         if ($re2) {
@@ -637,6 +650,7 @@ class Service extends Base
         $CardparkService = new CarparkService();
         //$personalMessage = new PersonalMessage();
         $id = session('userId');
+        $parkId = session('park_id');
         $data = input('');
         $p_v = array();
         $file = new File();
@@ -657,7 +671,8 @@ class Service extends Base
             'aging' => $data['aging'],
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']) + (int)$data['carpark_deposit'],
-            'company' => $data['company']
+            'company' => $data['company'],
+            'park_id' =>$parkId,
         ];
         $re = $CardparkService->save($service);
 
@@ -739,6 +754,7 @@ class Service extends Base
         $CardparkService = new CarparkService();
         //$personalMessage = new PersonalMessage();
         $id = session('userId');
+        $parkId = session('park_id');
         $data = input('');
         $service = [
             'name' => $data['name'],
@@ -753,7 +769,8 @@ class Service extends Base
             'create_time' => time(),
             'status' => 0,
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']),
-            'company' => $data['company']
+            'company' => $data['company'],
+            'park_id' =>$parkId,
         ];
         $re2 = $CardparkService->save($service);
         if ($re2) {
@@ -2811,6 +2828,8 @@ class Service extends Base
             case  3 :
                 $department_id = 76;
                 break;
+            case  80 :
+                $department_id = 91;
             default:
                 $department_id = 76;
                 break;
@@ -3030,6 +3049,7 @@ class Service extends Base
 
         }
         foreach ($floor as $k => $v) {
+            $newArr[$k]['name'] = $v."楼" ;
             $newArr[$k][$v . "楼"] = $roomArray[$k];
             //$newArr[$k]['rooms'] = $roomArray[$k];
         }
@@ -3049,13 +3069,60 @@ class Service extends Base
             }
         }
         foreach ($floor1 as $k => $v) {
+            $newArr1[$k]['name'] = $v."楼" ;
             $newArr1[$k][$v . "楼"] = $roomArray1[$k];
             //$newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $list = [
-            " A幢" => $newArr,
-            " B幢" => $newArr1,
+            "A幢" => $newArr,
+            "B幢" => $newArr1,
         ];
+        if ($parkId == 80){
+            $map2 = [
+                'park_id' => $parkId,
+                'build_block' => "C",
+            ];
+            $list2 = $parkRoom->where($map2)->distinct(true)->field('floor')->order('floor desc')->select();
+            foreach ($list2 as $k => $v) {
+                $floor2[$k] = $v['floor'];
+            }
+            foreach ($floor2 as $k => $v) {
+                $roomList2 = $parkRoom->where(['floor' => $v, 'build_block' => "C", 'del' => 0])->order("room asc")->select();
+                foreach ($roomList2 as $k1 => $v1) {
+                    $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
+                    $roomArray2[$k][$k1] = $v1['room'];
+                }
+            }
+            foreach ($floor2 as $k => $v) {
+                $newArr2[$k]['name'] = $v."楼" ;
+                $newArr2[$k][$v . "楼"] = $roomArray2[$k];
+                //$newArr1[$k]['rooms'] = $roomArray1[$k];
+            }
+
+            $map3 = [
+                'park_id' => $parkId,
+                'build_block' => "D",
+            ];
+            $list3 = $parkRoom->where($map3)->distinct(true)->field('floor')->order('floor desc')->select();
+            foreach ($list3 as $k => $v) {
+                $floor3[$k] = $v['floor'];
+            }
+            foreach ($floor3 as $k => $v) {
+                $roomList3 = $parkRoom->where(['floor' => $v, 'build_block' => "D", 'del' => 0])->order("room asc")->select();
+                foreach ($roomList3 as $k1 => $v1) {
+                    $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
+                    $roomArray3[$k][$k1] = $v1['room'];
+                }
+            }
+            foreach ($floor3 as $k => $v) {
+                $newArr3[$k]['name'] = $v."楼" ;
+                $newArr3[$k][$v . "楼"] = $roomArray3[$k];
+                //$newArr1[$k]['rooms'] = $roomArray1[$k];
+            }
+            $list["C幢"] = $newArr2;
+            $list["D幢"] = $newArr3;
+        }
+
 
         return $list;
         //echo json_encode($list);

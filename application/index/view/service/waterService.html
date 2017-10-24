@@ -26,7 +26,7 @@
                     <span class="mint-datetime-action mint-datetime-cancel" @click="cancelAddress">取消</span>
                     <span class="mint-datetime-action mint-datetime-confirm" @click="selectAddress">确定</span>
                 </div>
-                <mt-picker :slots="addressList" @change="onAddressChange" ></mt-picker>
+                <mt-picker :slots="addressList" @change="onAddressChange" value-key="name" ></mt-picker>
             </mt-popup>
         </div>
         <div class="card-cell">
@@ -52,13 +52,8 @@
 {/block}
 {block name="script"}
 <script>
-    console.log(JSON.parse('{$info}'));
+    //console.log(JSON.parse('{$info}'));
     var floorlist = {$floorlist};
-    var houseList = Object.values(floorlist)[0];
-    var floor = [];
-    for(var list in houseList){
-        floor.push(Object.keys(houseList[list])[0]);
-    }
     var vm = new Vue({
         el:"#app",
         data:{
@@ -77,11 +72,11 @@
                 },
                 {
                     defaultIndex:1,
-                    values: floor
+                    values: Object.values(floorlist)[0]
                 },
                 {
                     defaultIndex:1,
-                    values:Object.values(houseList[0])[0]
+                    values:[]
                 }
             ],
             floorList:floorlist,
@@ -99,8 +94,6 @@
             _this.$nextTick(function() {
                 setTimeout(function() {
                     _this.addressList[0].defaultIndex = 0;
-                    _this.addressList[1].defaultIndex = 0;
-                    _this.addressList[2].defaultIndex = 0;
                 }, 100);
             });
         },
@@ -115,17 +108,13 @@
             onAddressChange:function (pick,values) {
                 var _this = this;
                 _this.addressPicker =  pick;
-                if(values[0]&& values[2]){
-                    var floor = [];
-                    for(var list in _this.floorList[values[0]]){
-                        floor.push(Object.keys(_this.floorList[values[0]][list])[0]);
-                        if(values[1] == Object.keys(_this.floorList[values[0]][list])[0]){
-                            pick.setSlotValues(1,floor);
-                            pick.setSlotValues(2,Object.values(_this.floorList[values[0]][list])[0]);
-                            _this.addressName = {
-                                house:values[0].substring(0,values[0].length - 1),
-                                room:values[2]
-                            }
+                if(values[0]){
+                    pick.setSlotValues(1,Object.values(_this.floorList[values[0]]));
+                    if(values[1]){
+                        pick.setSlotValues(2,values[1][values[1][pick.valueKey]]);
+                        _this.addressName = {
+                            house:values[0].substring(0,values[0].length - 1),
+                            room:values[2]
                         }
                     }
                 }

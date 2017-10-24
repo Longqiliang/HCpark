@@ -333,17 +333,25 @@ ul.list li:after{
 .txt-center{
     text-align: center!important;
 }
-.btn{
+.btn-box{
     position: absolute;
+    width: 100%;
     bottom: 0;
-    line-height: 45px;
+    left: 0;
+    padding: 8vw 4.8vw;
+}
+.btn{
+    border-radius: 5px;
+    text-align: center;
     border: none;
+    height: 10.67vw;
     font-size: 15px;
     color: #fff;
-    width: 100%;
-    background-color: #2baf2b;
-    text-align: center;
     outline:none;
+    width: 100%;
+}
+.btn-primary{
+    background-color: #7DB8F2;
 }
 
 .mui-toast-container {

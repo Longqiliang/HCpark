@@ -28,6 +28,8 @@ class Feedback extends Base
     //意见反馈（用户）
     public function demand() {
         //提交反馈
+        $parkId = session('park_id');
+        $wechatUser = new WechatUser();
         if(IS_POST){
             $data = [
                 'title' => input('title'),
@@ -47,8 +49,23 @@ class Feedback extends Base
                 $list = FeedbackModel::where($map)->find();
                 Loader::import('wechat\TPWechat', EXTEND_PATH);
                 $weObj = new TPWechat(config('reply'));
+                $application = $weObj ->getApplication(1000007);
+                $userLists = '';
+                if (isset($application['allow_userinfos'])){
+                    $userList = $application['allow_userinfos']['user'];
+                    foreach($userList as $k=>$v){
+                        $users[$k] = $v['userid'];
+                        $userInfo = $wechatUser->where('userid',$v['userid'])->find();
+                        if ($userInfo){
+                            if ($userInfo['park_id'] ==$parkId){
+                                $userLists .= "|".$v['userid'];
+                            }
+                        }
+
+                    }
+                }
                 $data = [
-                    "touser" => "@all",
+                    "touser" => "$userLists",
                     'safe' => 0,
                     'msgtype' => 'textcard',
                     'agentid' => 1000007,
@@ -115,7 +132,6 @@ class Feedback extends Base
                 //todo 推送给该反馈对应用户一条文字卡片推文（已回复）
                 $list = FeedbackModel::where('id',input('id'))->find();
                 Loader::import('wechat\TPWechat', EXTEND_PATH);
-                /*$weObj = new TPWechat(config('feedback'));*/
                 $u_d=WechatUser::where('userid',$list['create_user'])->field('department')->find();
                 $depart=WechatDepartment::where('id',$u_d['department'])->find();
                 $data = [
@@ -160,7 +176,14 @@ class Feedback extends Base
         return $result;
     }
 
+    //test
+    public function test(){
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $weObj = new TPWechat(config('reply'));
+        $res = $weObj->getApplication(1000007);
+        return json_encode($res);
 
+    }
 
 
 }

@@ -28,10 +28,21 @@
                     <div class="form-group"><label class="col-md-2 text-right"><h3>&nbsp;&nbsp;&nbsp;&nbsp;园区名称:</h3></label>
                         <div class="col-sm-3"><input type="text" class="form-control"   value="{$parkName}" readonly></div>
                         <div class="col-sm-4">
+                            {eq name="$park_id" value="3"}
                             <select name="build_block" id="" style="width: 100px;height: 30px;">
                                 <option value="A"{eq name="$info.build_block" value="A"}selected{/eq}>A幢</option>
                                 <option value="B"{eq name="$info.build_block" value="B"}selected{/eq}>B幢</option>
                             </select>
+                            {/eq}
+                            {eq name="$park_id" value="80"}
+                            <select name="build_block" id="" style="width: 100px;height: 30px;">
+                                <option value="A"{eq name="$info.build_block" value="A"}selected{/eq}>A幢</option>
+                                <option value="B"{eq name="$info.build_block" value="B"}selected{/eq}>B幢</option>
+                                <option value="C"{eq name="$info.build_block" value="C"}selected{/eq}>C幢</option>
+                                <option value="D"{eq name="$info.build_block" value="D"}selected{/eq}>D幢</option>
+
+                            </select>
+                            {/eq}
                         </div>
                     </div>
 

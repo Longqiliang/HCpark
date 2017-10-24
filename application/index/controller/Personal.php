@@ -29,6 +29,9 @@ use app\index\model\FunctionRoomRecord;
 use app\index\model\LedRecord;
 use app\index\model\BroadbandPhone;
 use app\common\model\OperationalAuthority;
+use think\Exception;
+use wechat\TPWechat;
+use think\Loader;
 
 
 class Personal extends Base
@@ -48,21 +51,30 @@ class Personal extends Base
     /*个人信息*/
     public function personalinfo()
     {
-
-
         $user_id = session('userId');
         $wu = new  WechatUser();
         $info = $wu->where('userid', $user_id)->find();
+        if ($info['park_id'] == 3){
+            $info['park_id'] = "希垦科技园区";
+        }else{
+            $info['park_id'] = "人工智能产业园区";
+        };
         $data = [
             'name' => $info['name'],
             'avatar' => $info['avatar'],
             'sex' => $info['gender'] == 1 ? "男" : "女",
             'mobile' => $info['mobile'],
             'department' => isset($info->departmentName->name) ? $info->departmentName->name : "",
-            'header' => $info['header']
+            'header' => $info['header'],
+            'park_name' => $info['park_id'],
+            'user_id' => $user_id
         ];
+        //$list = WechatDepartment::where("parentid",1)->order('id asc')->select();
+        /*foreach($list as $k=>$v){
+            $parkArr[$k] = $v['id'];
+        }*/
 
-        $this->assign('info', $data);
+        $this->assign('info', json_encode($data));
         return $this->fetch();
     }
 
@@ -859,4 +871,60 @@ class Personal extends Base
             }
         }
     }
+    /**
+     * 更改部门
+     */
+    public function changeDepartment(){
+        $userId = input('user_id');
+        //echo $userId;
+        $department = input('departmentId');
+        $data = [
+            'userid' => $userId,
+            'department' => [$department],
+        ];
+        if ($department == 78){
+            $park = 3;
+        }else{
+            $park = 80;
+        }
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $wechat = new TPWechat(config('party'));
+        $user = new WechatUser();
+        $result = $user->where(['userid'=>$userId])->update(['department'=>$department,'park_id'=>$park]);
+        $res = $wechat->updateUser($data);
+        if ($res){
+
+            $this->success("修改成功");
+        }else{
+
+            $this->error("修改失败");
+        }
+
+    }
+
+    //test
+    public function test(){
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $wechat = new TPWechat(config('party'));
+        Db::startTrans();
+        try{
+            $re = $wechat->getDepartment();
+            $res = $wechat->getServerIp();
+            if ($res == false || $re ==false ){
+                throw new Exception($wechat->Message()."111");
+            }
+        Db::commit();
+        }catch (Exception $ex){
+            Db::rollback();
+            Log::error("msg:".$ex->getMessage());
+            return json_encode(['code'=>0,'data'=>"test"]);
+        };
+        //$res = $wechat->getDepartment();
+        //$res = $wechat->getServerIp();
+        return json_encode($re);
+
+    }
+
+
+
 }

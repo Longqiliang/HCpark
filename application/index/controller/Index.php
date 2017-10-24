@@ -23,6 +23,7 @@ class Index  extends  Controller
             $mobile = input('mobile');
             $name = input('name');
             $gender = input('gender');
+            $department = input('departmentId');
 
             if (empty($mobile)) { $this->error('手机号码不能空'); }
             if (empty($name)) { $this->error('用户名不能空'); }
@@ -31,7 +32,7 @@ class Index  extends  Controller
                 "userid" => $mobile,
                 "name"=> $name,
                 "mobile" => $mobile,
-                'department'=> [78],
+                'department'=> [$department],
                 "gender" => $gender,
                 "enable" => 1,
             ];
