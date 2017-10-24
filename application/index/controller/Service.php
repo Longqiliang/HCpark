@@ -47,10 +47,19 @@ class Service extends Base
         $app = new  CompanyApplication();
         $info = $user->where('userid', $user_id)->find();
         $map = ['type ' => 0];
+        $parkName = [];
         $is = 'yes';
         if ($info['fee_status'] == 0) {
             $is = "no";
         }
+        if ($info['tagid']==1){
+            $parkName = ['希垦园区','人工智能产业园区'];
+        }
+        if ($park_id == 3){
+            $parkName = ['希垦园区'];
+        }if ($park_id == 80){
+        $parkName = ['人工智能产业园区'];
+    }
         /*if($info['tagid']==1){
                 $map=[
                     'park_id'=>3,
@@ -130,6 +139,7 @@ class Service extends Base
         $this->assign('top_service', json_encode($TopServices));
         $this->assign('talent', json_encode($Talent));
         $this->assign('is_fee', $is);
+        $this->assign('parkName',$parkName);
         return $this->fetch();
 
     }
