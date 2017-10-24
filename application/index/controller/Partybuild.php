@@ -127,7 +127,6 @@ class Partybuild extends Base{
             $listMap = [
                 'type' => 1,
                 'status' => 1,
-                'park_id'  =>session("park_id")
             ];
             $list = PartyBuildingModel::where($listMap)->order('create_time desc')->limit($len,6)->select();
             if ($list){
