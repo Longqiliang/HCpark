@@ -480,18 +480,19 @@
 {block name="script"}
 <script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
 <script>
-    var parkSlots =[];
-    if('{$is_boss}' == 'yes'){
-        parkSlots = [
-            {name:'希垦科技园',value:0},
-            {name:'浙江互联网产业园',value:1},
-            {name:'人工智能产业园',value:2}
-        ];
-    }else{
-        parkSlots = [
-            {name:'希垦科技园',value:0}
-        ];
-    }
+    console.log({$parkName});
+//    var parkSlots =[];
+//    if('{$is_boss}' == 'yes'){
+//        parkSlots = [
+//            {name:'希垦科技园',value:0},
+//            {name:'人工智能产业园区',value:1}
+//        ];
+//    }else{
+//        parkSlots = [
+//            {name:'希垦科技园',value:0}
+//        ];
+//    }
+    var parkSlots = {$parkName};
     console.log(parkSlots);
     var app=new Vue({
         el:'#app',
@@ -515,8 +516,8 @@
             isScroll:true,
             parkPicker:'',
             parkVisible:false,
-            parkObj:{name:'希垦科技园',value:0},
-            nowPark:{name:'希垦科技园',value:0},
+            parkObj:parkSlots[0],
+            nowPark:parkSlots[0],
             slots: [
                 {
                     defaultIndex:1,

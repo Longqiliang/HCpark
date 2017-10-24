@@ -112,16 +112,19 @@
 var vm = new Vue({
     el:'#app',
     mounted(){
-        listSwiper = new Swiper('#listSwiper',{
-            observer:true,
-            observeParents:true,
-            direction : 'vertical',
-            slidesPerGroup : 2,
-            autoplay: 2000,
-            slidesPerView : 2,
-            loopedSlides :8,
-            loop:true
-        })
+        if(this.news.length){
+            listSwiper = new Swiper('#listSwiper',{
+                observer:true,
+                observeParents:true,
+                direction : 'vertical',
+                slidesPerGroup : 2,
+                autoplay: 2000,
+                slidesPerView : 2,
+                loopedSlides :8,
+                loop:true
+            })
+        }
+
     },
     data:{
         nowPark:nowPark,
