@@ -268,7 +268,9 @@ class Service extends Base
                 break;
         }
         $info['app_id'] = $app_id;
+        $info['park_id'] = $parkid ;
         $this->assign('info', json_encode($info));
+
         return $this->fetch($path);
     }
 
