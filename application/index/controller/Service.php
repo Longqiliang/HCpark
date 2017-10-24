@@ -139,7 +139,7 @@ class Service extends Base
         $this->assign('top_service', json_encode($TopServices));
         $this->assign('talent', json_encode($Talent));
         $this->assign('is_fee', $is);
-        $this->assign('parkName',$parkName);
+        $this->assign('parkName',json_encode($parkName));
         return $this->fetch();
 
     }
