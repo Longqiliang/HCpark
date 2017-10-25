@@ -30,6 +30,7 @@ use app\index\model\LedRecord;
 use app\index\model\BroadbandPhone;
 use app\common\model\OperationalAuthority;
 use think\Exception;
+use think\Session;
 use wechat\TPWechat;
 use think\Loader;
 
@@ -878,6 +879,7 @@ class Personal extends Base
         $userId = input('user_id');
         //echo $userId;
         $department = input('departmentId');
+        //return $department;
         $data = [
             'userid' => $userId,
             'department' => [$department],
@@ -893,8 +895,8 @@ class Personal extends Base
         $result = $user->where(['userid'=>$userId])->update(['department'=>$department,'park_id'=>$park]);
         $res = $wechat->updateUser($data);
         if ($res){
-
-            $this->success("修改成功");
+            Session::set('park_id',$park);
+            $this->success("修改成功",'',session('park_id'));
         }else{
 
             $this->error("修改失败");
