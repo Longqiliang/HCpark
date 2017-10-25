@@ -207,6 +207,7 @@
                 <a :href="'/index/roomrent/rent?rent_id='+item.id">
                     <div class="item-img">
                         <img :src="item.img[0]" v-if="item.img" />
+                        <img src="/index/images/index/icon-no.png" v-else  />
                     </div>
                     <div class="item-info">
                         <h3>{{item.room}}</h3>
