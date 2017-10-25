@@ -4,6 +4,23 @@
 <title>我要租房</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
+    .list-item .remark-box{
+        position: relative;
+    }
+    .list-item .default-bg{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        background-color:rgba(0,0,0,.3);
+        font-size: 1.6rem;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .content{
         min-height: 100vh;
         position: relative;
@@ -161,6 +178,7 @@
     .center img{
         margin: 0 auto;
     }
+
 </style>
 {/block}
 
@@ -205,9 +223,12 @@
             infinite-scroll-distance="40">
             <li class="list-item" v-for="item of showrentList" >
                 <a :href="'/index/roomrent/rent?rent_id='+item.id">
-                    <div class="item-img">
+                    <div class="item-img" >
                         <img :src="item.img[0]" v-if="item.img" />
-                        <img src="/index/images/index/icon-no.png" v-else  />
+                        <div v-else class="remark-box">
+                            <img src="/index/images/roomrent/img-default.jpg"  />
+                            <div class="default-bg">暂无图片</div>
+                        </div>
                     </div>
                     <div class="item-info">
                         <h3>{{item.room}}</h3>

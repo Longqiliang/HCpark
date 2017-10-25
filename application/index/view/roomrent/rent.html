@@ -11,6 +11,20 @@
         background-color: #fff;
         height: 100vh;
     }
+    .banner-remark{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        background-color:rgba(0,0,0,.3);
+        font-size: 2.4rem;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     /*modal框*/
     .modal-box{
         width: 100%;
@@ -115,7 +129,8 @@
                 </div>
             </div>
             <div v-else class="swiper-wrapper">
-                <img src="/index/images/index/icon-no.png" >
+                <img src="/index/images/roomrent/img-default1.jpg" >
+                <div class="banner-remark">暂无图片</div>
             </div>
             <div class="swiper-pagination"></div>
         </div>
