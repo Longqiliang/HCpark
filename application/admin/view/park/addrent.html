@@ -211,8 +211,7 @@
             updateAlert("请添加价格","info");
             return "";
         }else if (imgsSrc.length == 0){
-            updateAlert("请添加照片","info");
-            return "";
+            imgsSrc = "" ;
         }
         $.ajax({
             data:{floor:floors,room:rooms,build_block:build,panorama:panoramas,area:areas,price:prices,id:id,img:imgsSrc},

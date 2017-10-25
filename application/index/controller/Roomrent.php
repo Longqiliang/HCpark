@@ -50,18 +50,23 @@ class Roomrent extends Base
 
 
         $a=array();
-        foreach ($data['img'] as $v){
-           $v="http://".$_SERVER['HTTP_HOST'].$v;
-           array_push($a,$v);
+        if ($data['img']){
+            foreach ($data['img'] as $v){
+                $v="http://".$_SERVER['HTTP_HOST'].$v;
+                array_push($a,$v);
+            }
+            $data['img']=$a;
         }
-        $data['img']=$a;
 
         $b=array();
-        foreach ($data['imgs'] as $v2){
-            $v2="http://".$_SERVER['HTTP_HOST'].$v2;
-            array_push($b,$v2);
+        if ($data['imgs']){
+            foreach ($data['imgs'] as $v2){
+                $v2="http://".$_SERVER['HTTP_HOST'].$v2;
+                array_push($b,$v2);
+            }
+            $data['imgs']=$b;
         }
-        $data['imgs']=$b;
+
         /* if ($data['img']) {
              foreach ($data['img'] as $k1 => $v1) {
                  if (is_file(PUBLIC_PATH . $v1)) {

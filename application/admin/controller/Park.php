@@ -200,6 +200,7 @@ class Park extends Admin
         if (IS_POST) {
             if (input('id')) {
                 $data = input('post.');
+                //return $data;
                 unset($data['floor']);
                 $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'),'park_id'=>$parkId])->find();
                 if ($rooms['company']){
@@ -208,9 +209,12 @@ class Park extends Admin
                 }
                 $data['room_id'] = $rooms['id'];
                 unset($data['room']);
-                foreach ($data['img'] as $k => $v) {
-                    $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
+                if ($data['img']){
+                    foreach ($data['img'] as $k => $v) {
+                        $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
+                    }
                 }
+
                 if ($data['img']) {
                     foreach ($data['img'] as $k1 => $v1) {
                         if (is_file(PUBLIC_PATH . $v1)) {
@@ -222,9 +226,12 @@ class Park extends Admin
                             $data['imgs'][$k1] = $data['img'][$k1];
                         }
                     }
+                    $data['imgs'] = json_encode($data['imgs']);
+                }else{
+                    $data['imgs'] = json_encode($data['img']);
                 }
                 $data['img'] = json_encode($data['img']);
-                $data['imgs'] = json_encode($data['imgs']);
+
                 $res = $parkRent->where('id', $id)->update($data);
                 if ($res) {
 
@@ -251,8 +258,10 @@ class Park extends Admin
                 $data['room_id'] = $rooms['id'];
                 $data['park_id'] = session("user_auth")['park_id'];
                 unset($data['room']);
-                foreach ($data['img'] as $k => $v) {
-                    $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
+                if ($data['img']){
+                    foreach ($data['img'] as $k => $v) {
+                        $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
+                    }
                 }
                 if ($data['img']) {
                     foreach ($data['img'] as $k1 => $v1) {
@@ -265,9 +274,10 @@ class Park extends Admin
                             $data['imgs'][$k1] = $data['img'][$k1];
                         }
                     }
+                    $data['imgs'] = json_encode($data['imgs']);
                 }
                 $data['img'] = json_encode($data['img']);
-                $data['imgs'] = json_encode($data['imgs']);
+
                 $res = $parkRent->save($data);
                 if ($res) {
 
