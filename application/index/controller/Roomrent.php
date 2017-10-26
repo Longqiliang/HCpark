@@ -22,8 +22,6 @@ class Roomrent extends Base
     /*我要租房页面*/
     public function rent()
     {
-        $parkId = session("park_id");
-        $park = Park::where('id', $parkId)->find();
         $roomId = input("room_id");
         $rentId = input("rent_id");
         if ($roomId) {
@@ -33,7 +31,8 @@ class Roomrent extends Base
             $roomInfo = ParkRent::where('id', $rentId)->find();
             $room = ParkRoom::where('id', $roomInfo['room_id'])->find();
         }
-
+        $parkId = $roomInfo['park_id'];
+        $park = Park::where('id', $parkId)->find();
         $data = [
             'position' => $room['build_block'] . $room['room'] . "室",
             'area' => $roomInfo['area'] . "㎡",
