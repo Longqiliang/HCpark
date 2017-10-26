@@ -169,8 +169,8 @@ class Roomrent extends Base
                 $data[$k] = [
                     'img' => json_decode($v['imgs']),
                     'panorama' => $v['panorama'],
-                    'area' => $v['area'],
-                    'price' => $v['price'],
+                    'area' => $v['area']. "㎡",
+                    'price' => $v['price']. "元/㎡·天",
                     'name' => $parkInfo['name'],
                     'id' => $v['id'],
                     'room' => $room['build_block'] . "幢" . $room['room'] . "室"
