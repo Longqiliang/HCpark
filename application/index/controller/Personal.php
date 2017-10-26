@@ -496,7 +496,7 @@ class Personal extends Base
             $list6[$k]['url'] = $url . $value['id'];
             if ($list6[$k]['status'] == 0) {
                 $list6[$k]['status_text'] = '审核中';
-            } elseif ($list5[$k]['status'] == 1) {
+            } elseif ($list6[$k]['status'] == 1) {
                 $list6[$k]['status_text'] = '审核成功';
             } else {
                 $list6[$k]['status_text'] = '审核失败';
