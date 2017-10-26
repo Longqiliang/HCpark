@@ -33,6 +33,7 @@ class Roomrent extends Base
             $roomInfo = ParkRent::where('id', $rentId)->find();
             $room = ParkRoom::where('id', $roomInfo['room_id'])->find();
         }
+
         $data = [
             'position' => $room['build_block'] . $room['room'] . "室",
             'area' => $roomInfo['area'] . "㎡",
@@ -44,10 +45,11 @@ class Roomrent extends Base
             'imgs' => json_decode($roomInfo['imgs']),
             'panorama' => $roomInfo['panorama'],
             'rent_id' => $roomInfo['id'],
-
         ];
+        if (floatval($roomInfo['price']) == 0){
+            $data['price'] = $roomInfo['price'] ;
 
-
+        }
 
         $a=array();
         if ($data['img']){
@@ -175,6 +177,9 @@ class Roomrent extends Base
                     'id' => $v['id'],
                     'room' => $room['build_block'] . "幢" . $room['room'] . "室"
                 ];
+                if (floatval($v['price']) == 0){
+                    $data[$k]['price'] = $v['price'] ;
+                }
             }
 
             return ['code' => 1, 'data' => json_encode($data)];
@@ -366,6 +371,9 @@ class Roomrent extends Base
                             'id' => $v['id'],
                             'room' => $room['build_block'] . "幢" . $room['room'] . "室"
                         ];
+                        if (floatval($v['price']) == 0){
+                            $data[$k]['price'] = $v['price'] ;
+                        }
                     }
                     $data = array_slice($data,0,$k+1);
                 }else{
