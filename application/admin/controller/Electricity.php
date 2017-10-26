@@ -32,7 +32,7 @@ class Electricity extends Admin
                 'type' => array(1 => '新柱办理', 2 => '旧柱办理')
             ));
 
-            $re = $ElectricityService->where('status', 0)->select();
+            $re = $ElectricityService->where(['status'=>0,'park_id'=>$parkId])->select();
             $data['data'] = $list;
             $data['num'] = count($re);
 
@@ -46,7 +46,7 @@ class Electricity extends Admin
                 'type' => array(1 => '新柱办理', 2 => '旧柱办理')
             ));
 
-            $re = $ElectricityService->where('status', 0)->select();
+            $re = $ElectricityService->where(['status'=>0,'park_id'=>$parkId])->select();
             $data['data'] = $list;
             $data['num'] = count($re);
         }
