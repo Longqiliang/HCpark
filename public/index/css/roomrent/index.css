@@ -102,6 +102,12 @@ body{
     display: flex;
     justify-content: space-between;
 }
+.info-detail span:first-child{
+    min-width: 40% ;
+}
+.info-detail span:last-child{
+    text-align: right;
+}
 .allow-down{
     display: inline-block;
     margin:0 0 1vw 3.2vw;
