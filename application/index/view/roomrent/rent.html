@@ -114,6 +114,10 @@
         position: relative;
         left: 50%;
     }
+    .my-tel-cell>a:not(:last-child):after{
+        content: '/';
+        display: inline;
+    }
 </style>
 {/block}
 
@@ -153,7 +157,10 @@
             <span><i class="icon rent-ads"></i></span><span>地址：</span><span>{{info.address}}</span>
         </div>
         <div class="table-view-cell">
-            <span><i class="icon rent-phone"></i></span><span>电话：</span><span>{{info.moblie}}</span>
+            <span><i class="icon rent-phone"></i></span><span>电话：</span>
+            <span class="my-tel-cell">
+                <a :href="'tel:'+tel" v-for="tel in info.moblie.split('/')">{{tel}}</a>
+            </span>
         </div>
     </div>
     <div class="rent-btn-box">
