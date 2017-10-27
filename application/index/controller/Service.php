@@ -171,6 +171,7 @@ class Service extends Base
                 ];
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
+                $this->assign('propretyMobile',$parkInfo['property_phone']);
                 break;
             //室内保洁
             case 4:

@@ -144,6 +144,12 @@
                     }
                 }
                 return text;
+            },
+            tels:function () {
+                var tel='{$propretyMobile}';
+                if(tel){
+                    return tel.split('/');
+                }
             }
         },
         data:{
@@ -165,8 +171,7 @@
             isSubmit:true,
             isShow:false,
             telIndex:0,
-            tels:[
-            ],
+      
             imgSrc:{
                 imgLength:3,
                 dataUrl:[],
@@ -208,7 +213,12 @@
                 this.telIndex=index
             },
             showMask(){
-                document.getElementsByClassName('my-radio')[0].checked='checked';
+                if(this.tels.length!==0){
+                    console.log(this.tels.length)
+                    document.getElementsByClassName('my-radio')[0].checked='checked';
+                }else{
+                    document.getElementsByClassName('my-phone-list')[0].innerHTML('<li>暂无电话</li>')
+                }
                 this.isShow=!this.isShow
             },
             delImg: function (e) {
