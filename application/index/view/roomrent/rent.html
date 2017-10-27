@@ -159,7 +159,8 @@
         <div class="table-view-cell">
             <span><i class="icon rent-phone"></i></span><span>电话：</span>
             <span class="my-tel-cell">
-                <a :href="'tel:'+tel" v-for="tel in info.moblie.split('/')">{{tel}}</a>
+                <a v-if="infoTel.length==0">暂无电话</a>
+                <a :href="'tel:'+tel" v-for="tel in infoTel" v-else>{{tel}}</a>
             </span>
         </div>
     </div>
@@ -211,6 +212,7 @@
         el:'#app',
         data:{
             info:info,
+            infoTel:[],
             vrShow:true,
             viewer:null,
             mySwiper:null,
@@ -223,12 +225,15 @@
                 remark:''
             }
         },
-        create:function () {
+        created:function () {
             var _this = this;
             var test =window.location.href;
             var data ={
                 url:test
             };
+            if(_this.info.moblie){
+                _this.infoTel=_this.info.moblie.split('/');
+            }
             _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
                 var data = JSON.parse(res.data);
                 //console.log(data);
