@@ -39,7 +39,7 @@ class Roomrent extends Base
             'price' => $roomInfo['price'] . "元/㎡·天",
             'park' => $park['name'],
             'address' => $park['address'],
-            'moblie' => $park['property_phone'],
+            'moblie' => $park['business_phone'],
             'img' => json_decode($roomInfo['img']),
             'imgs' => json_decode($roomInfo['imgs']),
             'panorama' => $roomInfo['panorama'],
