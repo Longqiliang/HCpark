@@ -147,6 +147,7 @@ class Carcard extends Admin
     {
         $id = input('id');
         $path = input('images');
+        $path = str_replace('\\','/',$path);;
         $car = CarparkService::get($id);
         $car['charge_voucher'] = $path;
         $car->save();

@@ -171,6 +171,7 @@ class Electricity extends Admin
     {
         $id = input('id');
         $path = input('images');
+        $path=str_replace('\\','/',$path);
         $car = ElectricityService::get($id);
         $car['charge_voucher'] = $path;
         $car->save();
