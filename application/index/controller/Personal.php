@@ -60,6 +60,21 @@ class Personal extends Base
         }else{
             $info['park_id'] = "人工智能产业园区";
         };
+        $people_card="";
+        $car_card="";
+        $office="";
+        //从车卡中取身份证号和车牌号
+        $car =CarparkService::where('user_id',$user_id)->order("create_time desc")->select();
+        //从送水地点中取 办公地址
+        $water = WaterService::where('userid',$user_id)->order("create_time desc")->select();
+        if($car){
+            $people_card= $car[0]["people_card"];
+            $car_card=$car[0]["car_card"];
+        }
+        if($water){
+            $office=$water[0]['address'];
+
+        }
         $data = [
             'name' => $info['name'],
             'avatar' => $info['avatar'],
@@ -68,7 +83,10 @@ class Personal extends Base
             'department' => isset($info->departmentName->name) ? $info->departmentName->name : "",
             'header' => $info['header'],
             'park_name' => $info['park_id'],
-            'user_id' => $user_id
+            'user_id' => $user_id,
+            'people_card'=>$people_card,
+            'car_card'=>$car_card,
+            'office'=>$office,
         ];
         //$list = WechatDepartment::where("parentid",1)->order('id asc')->select();
         /*foreach($list as $k=>$v){
