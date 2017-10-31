@@ -1,6 +1,9 @@
 {extend name="base/common"}
 
 {block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style>
     .mail-box .mail-ontact{
         width: 150px;
@@ -125,6 +128,7 @@
                         <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-success" >审核</a>
                         {else}
                         <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-primary" >查看</a>
+                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal"  onclick="setImg('{$vo.id}','{$vo.charge_voucher}')">收费凭据</a>
                         {/if}
                         <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
 
@@ -137,10 +141,36 @@
         </div>
     </div>
 </div>
+
+<div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="remark-modal" aria-label="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">缴费凭证</h4>
+            </div>
+            <div class="modal-body">
+                <input type="file" name="file_data" class="input file">
+                <img src="" alt="" id="charge_voucher"     class="imgs">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="pushImg()">上传</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" name="set_id" value="">
+<input type="hidden" name="charge_voucher">
 {/block}
 
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
@@ -151,6 +181,59 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
+    $(".file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $("#charge_voucher").attr('src',response.data);
+            $("input[name='charge_voucher']").val(response.data);
+            //$(".img1").attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+    $(".charge_voucher").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+
+
+    function setImg(id,img) {
+        $("input[name='set_id']").val(id);
+        $("#charge_voucher").attr('src',img);
+        $("input[name='charge_voucher']").val(img);
+    }
+    function pushImg() {
+        var id = $("input[name='set_id']").val();
+        var image = $("input[name='charge_voucher']").val();
+        $.ajax({
+            data:{id:id,images:image},
+            url:"{:Url('pushImg')}",
+            type:"post",
+            success:function (data) {
+                if(data.code ==1 ){
+                    updateAlert(data.msg+" 稍后页面自动刷新～",'success');
+                    setTimeout(function () {
+                     location.href = data.url;
+                     },2000);
+
+                }else {
+                    updateAlert(data.msg,'info')
+                }
+            }
+        });
+    }
 
 </script>
 {/block}
