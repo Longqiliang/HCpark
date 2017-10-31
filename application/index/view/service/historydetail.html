@@ -78,6 +78,14 @@
                 </div>
             </div>
         </div>
+        <div class="card" v-if="info.charge_voucher">
+            <div class="card-tit">收费凭证</div>
+            <div class="card-upload">
+                <div class="upload-img">
+                    <img :src="info.charge_voucher" alt="收费凭证" @click="loadImg(info.charge_voucher,info.charge_voucher)">
+                </div>
+            </div>
+        </div>
     </div>
     <div v-if="appid==2">
         <div class="card">
@@ -310,6 +318,14 @@
                 </div>
             </div>
         </div>
+        <div class="card" v-if="info.charge_voucher">
+            <div class="card-tit">收费凭证</div>
+            <div class="card-upload">
+                <div class="upload-img">
+                    <img :src="info.charge_voucher" alt="收费凭证" @click="loadImg(info.charge_voucher,[info.charge_voucher])">
+                </div>
+            </div>
+        </div>
     </div>
     <div v-if="appid==8">
         <div class="card">
@@ -467,7 +483,7 @@ var app = new Vue({
         },
         rentShow:false,
         appid:JSON.parse('{$type}'),
-        info:JSON.parse('{$info}'),
+        info:{$info},
         can_check:'{$can_check}',
         isSubmit:false,
         payment_voucher:[],
@@ -481,6 +497,8 @@ var app = new Vue({
         //            微信jssdk - 图片预览
         loadImg(src,imglist) {
                 var urls=[];
+            console.log(src)
+            console.log(imglist)
                 var current=window.location.protocol+'//'+window.location.host+src;
                 for(var i in imglist){
                     urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
