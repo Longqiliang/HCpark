@@ -37,7 +37,7 @@ class Carcard extends Admin
             'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败'),
             'type' => array(1 => '新卡办理', 2 => '旧卡办理')
         ));
-        $re = $CardparkService->where('status', 0)->select();
+        $re = $CardparkService->where(['status'=> 0,'park_id'=>$parkId])->select();
         $data['data'] = $list;
         $data['num'] = count($re);
         $this->assign('search',$search);
@@ -141,6 +141,18 @@ class Carcard extends Admin
             return $this->error('删除失败');
         }
     }
+
+
+    public function pushImg()
+    {
+        $id = input('id');
+        $path = input('images');
+        $car = CarparkService::get($id);
+        $car['charge_voucher'] = $path;
+        $car->save();
+        return $this->success('上传成功');
+    }
+
 
 
 }

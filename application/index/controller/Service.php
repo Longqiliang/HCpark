@@ -268,7 +268,6 @@ class Service extends Base
         $info['app_id'] = $app_id;
         $info['park_id'] = $parkid ;
         $this->assign('info', json_encode($info));
-
         return $this->fetch($path);
     }
 
@@ -2126,6 +2125,7 @@ class Service extends Base
             $info['status'] = $service['status'];
             $info['id'] = $service['id'];
             $info['company'] = $service['company'];
+            $info['charge_voucher'] = $service['charge_voucher'];//收费凭证
             if ($info['type'] == 1) {
                 $info['money'] = $service['money'] - $park['charging_deposit'];
             }

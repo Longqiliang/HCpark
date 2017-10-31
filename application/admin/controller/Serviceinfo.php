@@ -8,7 +8,7 @@
 namespace app\admin\controller;
 
 use app\common\model\ServiceInformation as ServiceModel;
-
+use app\common\behavior\Service;
 class Serviceinfo extends Admin
 {
     public function index()
@@ -58,6 +58,38 @@ class Serviceinfo extends Admin
             $this->assign('res',$result);
             return $this->fetch();
         }
+    }
+    public  function  send(){
+
+        $info = ServiceModel::get(input('id'));
+
+        if ($info) {
+            $des = msubstr(str_replace('&nbsp;','',strip_tags($info['content'])), 0, 36);
+            $message= [
+                'title' => $info['title'],
+                'description' => $des,
+                'url' => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/infoDetail/id/' . input('id'),
+                'picurl' => empty($info['front_cover'])?'http://' . $_SERVER['HTTP_HOST'] .'/index/images/news/news.jpg':'http://'.$_SERVER['HTTP_HOST'] .$info['front_cover']
+            ];
+
+            $result =  Service::sendNewsNews($message,'15706844655');
+//            var_dump($result);
+//            var_dump($weObj->errCode.'|'.$weObj->errMsg);
+            if ($result['errcode'] == 0 ) {
+                ServiceModel::where('id', input('id'))->update(['is_send' => 1]);
+                return $this->success('推送成功');
+            } else {
+                return $this->error('推送失败');
+            }
+        } else {
+            $this->error('参数错误');
+        }
+
+
+
+
+
+
     }
 
 //逻辑删除

@@ -165,4 +165,16 @@ class Electricity extends Admin
             return $this->error('删除失败');
         }
     }
+
+
+    public function pushImg()
+    {
+        $id = input('id');
+        $path = input('images');
+        $car = ElectricityService::get($id);
+        $car['charge_voucher'] = $path;
+        $car->save();
+        return $this->success('上传成功');
+    }
+
 }
