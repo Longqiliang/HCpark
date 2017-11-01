@@ -131,15 +131,15 @@
             <label for="phone">手机：</label>
             <input type="tel" placeholder="请输入手机号" ref="phone" id="phone">
         </div>
-        <div class="mui-table-park"  @click="toggleMark">
+        <div class="mui-table-park"  @click="toggleMark"  v-if="this.parkInfo.park_id===80">
             <span>公司：</span>
             <span>{{checkedCompany?checkedCompany.name:'请选择公司'}}</span>
         </div>
-        <div class="mui-table-park"  @click="togglePopup">
+        <div class="mui-table-park"  @click="togglePopup" v-if="this.parkInfo.park_id===80">
             <span>房号：</span>
             <span >{{room}}</span>
         </div>
-        <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup">
+        <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup" >
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="togglePopup">取消</span>
                 <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
@@ -339,10 +339,19 @@
                     return ;
                 }
                 var data={name:this.$refs.name.value,mobile:this.$refs.phone.value,gender:this.gender};
-                if(this.checkedCompany){
-                    data.department=this.checkedCompany.id;
-                    data.room=this.room
+                if(this.parkInfo.park_id===80){
+                    if(this.checkedCompany){
+                        data.department=this.checkedCompany.id;
+                        data.room=this.room
+                    }else{
+                        data.department=91;
+                        data.room=''
+                    }
+                }else{
+                    data.department=76;
+                    data.room=''
                 }
+
                 console.log(data)
                 this.$http.post(this.apiRegister,data,{emulateJSON: true})
                         .then(function(response) {
