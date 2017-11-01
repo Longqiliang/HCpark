@@ -28,6 +28,7 @@ class Index extends Controller
     {
         if (IS_POST) {
             Loader::import('wechat\TPQYWechat', EXTEND_PATH);
+            $wechatUser = new WechatUser();
             $weObj = new TPWechat(config('register'));
             $mobile = input('mobile');
             $name = input('name');
@@ -39,7 +40,6 @@ class Index extends Controller
             if (empty($name)) {
                 $this->error('用户名不能空');
             }
-
             $newUser = [
                 "userid" => $mobile,
                 "name" => $name,
@@ -54,11 +54,10 @@ class Index extends Controller
             $tableUser =$newUser;
             $tableUser['department']=$department;
             $tableUser['company_address']=input('room');
-            WechatUser::save($tableUser);
+            unset($tableUser['enable']);
+            $wechatUser->save($tableUser);
 
             if ($result && $result['errcode'] == 0) {
-
-
                 // 跳转到微信插件二维码
                 return $this->success('恭喜您，注册成功！');
             } else {
@@ -72,6 +71,7 @@ class Index extends Controller
             }
         } else {
             $park_id = input('park_id');
+            $parentid=4;
             if ($park_id == 3) {
 
                 $parentid = 4;
@@ -98,7 +98,7 @@ class Index extends Controller
                 'park_id'=>$park['id']
             ];
             $this->assign('department', json_encode($departmentlist));
-            $this->assign('park', $parkinfo);
+            $this->assign('park', json_encode($parkinfo));
             return $this->fetch();
         }
 
