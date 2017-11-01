@@ -53,11 +53,12 @@ class Service extends Base
         if ($info['fee_status'] == 0) {
             $is = "no";
         }
-        if ($park_id == 3){
-            $parkName = [['name'=>'希垦园区']];
-        }if ($park_id == 80){
-        $parkName = [['name'=>'人工智能产业园区']];
-    }
+        if ($park_id == 3) {
+            $parkName = [['name' => '希垦园区']];
+        }
+        if ($park_id == 80) {
+            $parkName = [['name' => '人工智能产业园区']];
+        }
         /*if($info['tagid']==1){
                 $map=[
                     'park_id'=>3,
@@ -137,7 +138,7 @@ class Service extends Base
         $this->assign('top_service', json_encode($TopServices));
         $this->assign('talent', json_encode($Talent));
         $this->assign('is_fee', $is);
-        $this->assign('parkName',json_encode($parkName));
+        $this->assign('parkName', json_encode($parkName));
         return $this->fetch();
 
     }
@@ -172,11 +173,11 @@ class Service extends Base
                 ];
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
-                $this->assign('propretyMobile',$parkInfo['property_phone']);
+                $this->assign('propretyMobile', $parkInfo['property_phone']);
                 break;
             //饮水
             case 3:
-                $watertype =WaterType::where('id',array('lt',0))->select();
+                $watertype = WaterType::where(['id', array('gt', 0)])->select();
                 $this->assign('watertype', json_encode($watertype));
                 $user = $UserModel->where('userid', $userid)->find();
                 $info['name'] = $user['name'];
@@ -276,7 +277,7 @@ class Service extends Base
                 break;
         }
         $info['app_id'] = $app_id;
-        $info['park_id'] = $parkid ;
+        $info['park_id'] = $parkid;
         $this->assign('info', json_encode($info));
         return $this->fetch($path);
     }
@@ -682,7 +683,7 @@ class Service extends Base
             'payment_voucher' => json_encode($data['payment_voucher']),
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']) + (int)$data['carpark_deposit'],
             'company' => $data['company'],
-            'park_id' =>$parkId,
+            'park_id' => $parkId,
         ];
         $re = $CardparkService->save($service);
 
@@ -780,7 +781,7 @@ class Service extends Base
             'status' => 0,
             'money' => ((int)$data['carpark_price'] * (int)$data['aging']),
             'company' => $data['company'],
-            'park_id' =>$parkId,
+            'park_id' => $parkId,
         ];
         $re2 = $CardparkService->save($service);
         if ($re2) {
@@ -817,11 +818,12 @@ class Service extends Base
 
     //车卡记录
     public function carRecord()
-    {   $user =session('userId');
+    {
+        $user = session('userId');
         $service = new CarparkService();
         $map = [
             'status' => array('neq', -1),
-            'user_id' =>$user
+            'user_id' => $user
         ];
         $list = $service->where($map)->field('id,type,money,status,create_time')->order('create_time desc')->select();
         foreach ($list as $v) {
@@ -1798,7 +1800,7 @@ class Service extends Base
         //$personalMessage = new PersonalMessage();
         $data['userid'] = session('userId');
         $data['park_id'] = session('park_id');
-        $result = $waterModel->allowField(true)->validate(true)->save($data);
+        $result = $waterModel->allowField(true)->validate(true)->save(qu);
         if ($result) {
             //todo： 推送点击到详情页面代码
             $message = [
@@ -2472,12 +2474,21 @@ class Service extends Base
             //饮水
             case  3:
                 $success = input('success');
+                $user = WaterModel::get($id);
                 if ($success == 1) {
                     $result = WaterModel::where('id', 'in', $id)->update(['status' => 3]);
                     if ($result) {
-                        return $this->success("报修成功");
+                        //推送物业，运营 已送达
+                        $message = [
+                            "title" => "饮水服务提示",
+                            "description" =>"送水地点：" . $user['address'] . "\n送水桶数：" . $user['number'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile'] . "\n您的饮水服务订单用户已确认送达。",
+                            "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/no/id/' . $id
+                        ];
+                        $this->commonSend(3, $message);
+
+                        return $this->success("送达成功");
                     } else {
-                        return $this->error("推送失败");
+                        return $this->error("送达失败");
                     }
                 } else {
                     $message = [
@@ -2485,7 +2496,7 @@ class Service extends Base
                         "description" => "您的饮水服务园区已确认，稍后将有服务人员送水，请您耐心等待",
                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/no/id/' . $id
                     ];
-                    $user = WaterModel::get($id);
+
                     if ($type == 1) {
                         $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
                         if ($userinfo['department'] == 76) {
@@ -3052,7 +3063,7 @@ class Service extends Base
             $floor[$k] = $v['floor'];
         }
         foreach ($floor as $k => $v) {
-            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0,'park_id'=>$parkId])->order("room asc")->select();
+            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
             foreach ($roomList as $k1 => $v1) {
                 $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                 $roomArray[$k][$k1] = $v1['room'];
@@ -3060,7 +3071,7 @@ class Service extends Base
 
         }
         foreach ($floor as $k => $v) {
-            $newArr[$k]['name'] = $v."楼" ;
+            $newArr[$k]['name'] = $v . "楼";
             $newArr[$k][$v . "楼"] = $roomArray[$k];
             //$newArr[$k]['rooms'] = $roomArray[$k];
         }
@@ -3073,14 +3084,14 @@ class Service extends Base
             $floor1[$k] = $v['floor'];
         }
         foreach ($floor1 as $k => $v) {
-            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0,'park_id'=>$parkId])->order("room asc")->select();
+            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
             foreach ($roomList1 as $k1 => $v1) {
                 $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                 $roomArray1[$k][$k1] = $v1['room'];
             }
         }
         foreach ($floor1 as $k => $v) {
-            $newArr1[$k]['name'] = $v."楼" ;
+            $newArr1[$k]['name'] = $v . "楼";
             $newArr1[$k][$v . "楼"] = $roomArray1[$k];
             //$newArr1[$k]['rooms'] = $roomArray1[$k];
         }
@@ -3088,7 +3099,7 @@ class Service extends Base
             "A幢" => $newArr,
             "B幢" => $newArr1,
         ];
-        if ($parkId == 80){
+        if ($parkId == 80) {
             $map2 = [
                 'park_id' => $parkId,
                 'build_block' => "C",
@@ -3098,14 +3109,14 @@ class Service extends Base
                 $floor2[$k] = $v['floor'];
             }
             foreach ($floor2 as $k => $v) {
-                $roomList2 = $parkRoom->where(['floor' => $v, 'build_block' => "C", 'del' => 0,'park_id'=>$parkId])->order("room asc")->select();
+                $roomList2 = $parkRoom->where(['floor' => $v, 'build_block' => "C", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
                 foreach ($roomList2 as $k1 => $v1) {
                     $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                     $roomArray2[$k][$k1] = $v1['room'];
                 }
             }
             foreach ($floor2 as $k => $v) {
-                $newArr2[$k]['name'] = $v."楼" ;
+                $newArr2[$k]['name'] = $v . "楼";
                 $newArr2[$k][$v . "楼"] = $roomArray2[$k];
                 //$newArr1[$k]['rooms'] = $roomArray1[$k];
             }
@@ -3119,14 +3130,14 @@ class Service extends Base
                 $floor3[$k] = $v['floor'];
             }
             foreach ($floor3 as $k => $v) {
-                $roomList3 = $parkRoom->where(['floor' => $v, 'build_block' => "D", 'del' => 0,'park_id'=>$parkId])->order("room asc")->select();
+                $roomList3 = $parkRoom->where(['floor' => $v, 'build_block' => "D", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
                 foreach ($roomList3 as $k1 => $v1) {
                     $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                     $roomArray3[$k][$k1] = $v1['room'];
                 }
             }
             foreach ($floor3 as $k => $v) {
-                $newArr3[$k]['name'] = $v."楼" ;
+                $newArr3[$k]['name'] = $v . "楼";
                 $newArr3[$k][$v . "楼"] = $roomArray3[$k];
                 //$newArr1[$k]['rooms'] = $roomArray1[$k];
             }
