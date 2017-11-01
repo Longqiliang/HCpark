@@ -24,6 +24,104 @@
 body{
     background-color: #fff;
 }
+.header{
+    position: fixed;
+    top:0;
+    left:0;
+    z-index: 10;
+}
+.sieving-box{
+    position: fixed;
+    width:100%;
+    top:53px;
+    left:0;
+    z-index: 6;
+}
+.sieving-header{
+    font-size: 1.4rem;
+    padding: 0 1.6rem;
+    line-height: 50px;
+    color: #666;
+    background-color: #fff;
+    z-index: 10;
+    position: relative;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #dddddd;
+}
+.sieving-header>span{
+    display:inline-block;
+    width:0;
+    height:0;
+    border-left: 5px solid transparent;
+    border-right:5px solid transparent;
+    border-bottom:5px solid #999;
+    margin-left: 1rem;
+}
+.sieving-header>span.close{
+    border-bottom:none;
+    border-top:5px solid #999;
+}
+.sieving-bg{
+    position: absolute;
+    width:100vw;
+    height:0;
+    background-color: rgba(0,0,0,0);
+    -webkit-transition: opacity 1s;
+    -moz-transition: opacity 1s;
+    -ms-transition: opacity 1s;
+    -o-transition: opacity 1s;
+    transition: opacity 500ms;
+    z-index:5;
+}
+.sieving-bg.active{
+    height:100vh;
+    background-color: rgba(0,0,0,.3);
+}
+.sieving-list{
+    /*display: none;*/
+    box-sizing: border-box;
+    position: relative;
+    z-index: 5;
+    height:0;
+    overflow: hidden;
+    padding:0 4.266666vw 0;
+    background-color: #fff;
+    display: -webkit-flex;
+    display: flex;
+    /*justify-content: space-between;*/
+    flex-wrap: wrap;
+    -webkit-transition: all 200ms linear;
+    -moz-transition:all 200ms linear;
+    -ms-transition:all 200ms linear;
+    -o-transition:all 200ms linear;
+    transition: all 100ms linear;
+}
+.sieving-list.active{
+    height:auto;
+    padding:1rem 4.266666vw 1rem;
+}
+.sieving-list>li{
+    box-sizing: border-box;
+    border:1px solid #e8e8e8;
+    border-radius: 5px;
+        width:25.6vw;
+    text-align: center;
+    height:2.8rem;
+    line-height: 2.8rem;
+    font-size: 1.4rem;
+    color: #666;
+    margin-bottom: 3rem;
+    -webkit-tap-highlight-color:rgba(0,0,0,0)!important;
+}
+.sieving-list>li:not(:nth-child(3n+1)){
+    margin-left: 7.2vw;
+}
+.sieving-list>li.active{
+    border-color: #69B9F9;
+    color: #69B9F9;
+}
 .tabs {
     width: 100vw;
     border-bottom:1px solid #dddddd;
@@ -68,8 +166,14 @@ body{
 .tabs .tab:nth-child(2) {
     border-right: none;
 }
-
+.content{
+    padding-top: 103px;
+}
 /*列表修改*/
+.notice{
+    position: relative;
+    z-index: 1;
+}
 .notice .list {
     display: block;
     padding: 1.5rem 1.2rem;
