@@ -650,6 +650,19 @@ class Service extends Base
         $data['payment_alipay'] = $CA['has_alipay'] == 1 ? $park['payment_alipay'] : "";
         //缴费支付宝账号
         $data['payment_bank'] = $CA['has_bank'] == 1 ? $park['payment_bank'] : "";
+
+       if($park_id==3){
+
+           $imgs="/index/images/service/payment-code-xiken.png";
+
+       }elseif ($park_id==80){
+
+           $imgs="/index/images/service/payment-code-binjiang.png";
+
+       }
+        $data['code']=$imgs;
+
+
         $this->assign('data', json_encode($data));
 
         return $this->fetch();
