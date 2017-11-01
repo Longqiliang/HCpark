@@ -178,7 +178,9 @@
     .center img{
         margin: 0 auto;
     }
-
+    .houses-list-item span.room-lg{
+        width: 81.05vw;
+    }
 </style>
 {/block}
 
@@ -216,10 +218,18 @@
             <div class="houses-list-tit">
                 {{item.floor}}楼
             </div>
-            <div class="houses-list-item" >
-            <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.room_id,rooms.empty)">
-                {{rooms.room}}
-            </span>
+            <div class="houses-list-item">
+             <template v-if="parkName.index =='人工智能产业园' && parkName.txt =='A幢' && item.floor == '2'">
+                 <span  :class="classBar(item.rooms[0].empty)" @click="jump(item.rooms[0].room_id,item.rooms[0].empty)" class="room-lg">
+                   运营中心
+                </span>
+             </template>
+             <template v-else>
+                 <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.room_id,rooms.empty)">
+                    {{rooms.room}}
+                </span>
+             </template>
+
             </div>
 
         </div>
