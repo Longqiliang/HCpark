@@ -33,7 +33,7 @@ class Index extends Controller
             $mobile = input('mobile');
             $name = input('name');
             $gender = input('gender');
-            $department=input('department');
+            $department = input('department');
             if (empty($mobile)) {
                 $this->error('手机号码不能空');
             }
@@ -51,11 +51,19 @@ class Index extends Controller
             $result = $weObj->createUser($newUser);
 //            var_dump($weObj->errCode.'||'.$weObj->errMsg);
 //            var_dump($result);
-            $tableUser =$newUser;
-            $tableUser['department']=$department;
-            $tableUser['company_address']=input('room');
+            $tableUser = $newUser;
+            $tableUser['department'] = $department;
+            $tableUser['company_address'] = input('room');
             unset($tableUser['enable']);
-            $wechatUser->save($tableUser);
+
+            $is_user = $wechatUser->where('userid', $mobile)->find();
+            if ($is_user) {
+                $wechatUser->where('userid', $mobile)->save($tableUser);
+
+            } else {
+                $wechatUser->save($tableUser);
+            }
+
 
             if ($result && $result['errcode'] == 0) {
                 // 跳转到微信插件二维码
@@ -71,7 +79,7 @@ class Index extends Controller
             }
         } else {
             $park_id = input('park_id');
-            $parentid=4;
+            $parentid = 4;
             if ($park_id == 3) {
 
                 $parentid = 4;
@@ -92,10 +100,10 @@ class Index extends Controller
                     unset($departmentlist[$key]['room']);
                 }
             }
-            $park=WechatDepartment::where('id',$park_id)->find();
-            $parkinfo=[
-                'name'=>$park['name'],
-                'park_id'=>$park['id']
+            $park = WechatDepartment::where('id', $park_id)->find();
+            $parkinfo = [
+                'name' => $park['name'],
+                'park_id' => $park['id']
             ];
             $this->assign('department', json_encode($departmentlist));
             $this->assign('park', json_encode($parkinfo));
