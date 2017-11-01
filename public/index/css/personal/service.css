@@ -64,21 +64,19 @@ body{
     border-top:5px solid #999;
 }
 .sieving-bg{
-    /*display: none;*/
     position: absolute;
     width:100vw;
-    height:100vh;
+    height:0;
     background-color: rgba(0,0,0,0);
-    /*opacity:0;*/
-    -webkit-transition: all 1s;
-    -moz-transition: all 1s;
-    -ms-transition: all 1s;
-    -o-transition: all 1s;
-    transition: all 500ms;
-    z-index:-1;
+    -webkit-transition: opacity 1s;
+    -moz-transition: opacity 1s;
+    -ms-transition: opacity 1s;
+    -o-transition: opacity 1s;
+    transition: opacity 500ms;
+    z-index:5;
 }
 .sieving-bg.active{
-    z-index: 5;
+    height:100vh;
     background-color: rgba(0,0,0,.3);
 }
 .sieving-list{
