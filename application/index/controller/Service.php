@@ -2101,6 +2101,11 @@ class Service extends Base
         } //饮水
         elseif ($appid == 3) {
             $info = WaterService::get($id);
+            $info['water_name']=isset($info->watertype->water_name)?$info->watertype->water_name:"";
+            $info['format']=isset($info->watertype->format)?$info->watertype->format:"";
+            $info['price']=isset($info->watertype->price)?$info->watertype->price:"";
+           unset($info['watertype']);
+
         } elseif ($appid == 4) {
             $info = PropertyServer::get($id);
             $info['image'] = json_decode($info['image']);
