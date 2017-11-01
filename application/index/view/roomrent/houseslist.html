@@ -217,7 +217,7 @@
                 {{item.floor}}楼
             </div>
             <div class="houses-list-item" >
-            <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.id,rooms.empty)">
+            <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.room_id,rooms.empty)">
                 {{rooms.room}}
             </span>
             </div>

@@ -45,27 +45,27 @@ class Roomrent extends Base
             'panorama' => $roomInfo['panorama'],
             'rent_id' => $roomInfo['id'],
         ];
-        if (floatval($roomInfo['price']) == 0){
-            $data['price'] = $roomInfo['price'] ;
+        if (floatval($roomInfo['price']) == 0) {
+            $data['price'] = $roomInfo['price'];
 
         }
 
-        $a=array();
-        if ($data['img']){
-            foreach ($data['img'] as $v){
-                $v="http://".$_SERVER['HTTP_HOST'].$v;
-                array_push($a,$v);
+        $a = array();
+        if ($data['img']) {
+            foreach ($data['img'] as $v) {
+                $v = "http://" . $_SERVER['HTTP_HOST'] . $v;
+                array_push($a, $v);
             }
-            $data['img']=$a;
+            $data['img'] = $a;
         }
 
-        $b=array();
-        if ($data['imgs']){
-            foreach ($data['imgs'] as $v2){
-                $v2="http://".$_SERVER['HTTP_HOST'].$v2;
-                array_push($b,$v2);
+        $b = array();
+        if ($data['imgs']) {
+            foreach ($data['imgs'] as $v2) {
+                $v2 = "http://" . $_SERVER['HTTP_HOST'] . $v2;
+                array_push($b, $v2);
             }
-            $data['imgs']=$b;
+            $data['imgs'] = $b;
         }
 
         /* if ($data['img']) {
@@ -170,14 +170,14 @@ class Roomrent extends Base
                 $data[$k] = [
                     'img' => json_decode($v['imgs']),
                     'panorama' => $v['panorama'],
-                    'area' => $v['area']. "㎡",
-                    'price' => $v['price']. "元/㎡·天",
+                    'area' => $v['area'] . "㎡",
+                    'price' => $v['price'] . "元/㎡·天",
                     'name' => $parkInfo['name'],
                     'id' => $v['id'],
                     'room' => $room['build_block'] . "幢" . $room['room'] . "室"
                 ];
-                if (floatval($v['price']) == 0){
-                    $data[$k]['price'] = $v['price'] ;
+                if (floatval($v['price']) == 0) {
+                    $data[$k]['price'] = $v['price'];
                 }
             }
 
@@ -192,118 +192,116 @@ class Roomrent extends Base
     /*楼盘表*/
     public function housesList()
     {
-       /* $floor = [];
-        $floor1 = [];
-        $newArr = [];
-        $newArr1 = [];
-        $parkId = session('park_id');
-        $parkInfo = Park::where('id', $parkId)->find();
-        $parkRoom = new ParkRoom();
-        $map = [
-            'park_id' => $parkId,
-            'build_block' => "A",
-        ];
-        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
-        foreach ($list as $k => $v) {
-            $floor[$k] = $v['floor'];
-        }
-        foreach ($floor as $k => $v) {
-            $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
-            foreach ($roomList as $k1 => $v1) {
-                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                if (!$res) {
-                    $status = false;
-                } else {
-                    $status = true;
-                }
+        /* $floor = [];
+         $floor1 = [];
+         $newArr = [];
+         $newArr1 = [];
+         $parkId = session('park_id');
+         $parkInfo = Park::where('id', $parkId)->find();
+         $parkRoom = new ParkRoom();
+         $map = [
+             'park_id' => $parkId,
+             'build_block' => "A",
+         ];
+         $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
+         foreach ($list as $k => $v) {
+             $floor[$k] = $v['floor'];
+         }
+         foreach ($floor as $k => $v) {
+             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0])->order("room asc")->select();
+             foreach ($roomList as $k1 => $v1) {
+                 $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
+                 if (!$res) {
+                     $status = false;
+                 } else {
+                     $status = true;
+                 }
 
-                $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'department_id' => $v1['company_id'], 'id' => $v1['id']];
-            }
+                 $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'department_id' => $v1['company_id'], 'id' => $v1['id']];
+             }
 
-        }
-        foreach ($floor as $k => $v) {
-            $newArr[$k]['floor'] = $v;
-            $newArr[$k]['combine'] = false;
-            $newArr[$k]['rooms'] = $roomArray[$k];
-        }
-        $map1 = [
-            'park_id' => $parkId,
-            'build_block' => "B",
-        ];
-        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor desc')->select();
-        foreach ($list1 as $k => $v) {
-            $floor1[$k] = $v['floor'];
-        }
-        foreach ($floor1 as $k => $v) {
-            $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
-            foreach ($roomList1 as $k1 => $v1) {
-                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                if (!$res) {
-                    $status1 = false;
-                } else {
-                    $status1 = true;
-                }
-                $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'department_id' => $v1['company_id'], 'id' => $v1['id']];
-            }
+         }
+         foreach ($floor as $k => $v) {
+             $newArr[$k]['floor'] = $v;
+             $newArr[$k]['combine'] = false;
+             $newArr[$k]['rooms'] = $roomArray[$k];
+         }
+         $map1 = [
+             'park_id' => $parkId,
+             'build_block' => "B",
+         ];
+         $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor desc')->select();
+         foreach ($list1 as $k => $v) {
+             $floor1[$k] = $v['floor'];
+         }
+         foreach ($floor1 as $k => $v) {
+             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0])->order("room asc")->select();
+             foreach ($roomList1 as $k1 => $v1) {
+                 $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
+                 if (!$res) {
+                     $status1 = false;
+                 } else {
+                     $status1 = true;
+                 }
+                 $roomArray1[$k][$k1] = ['room' => $v1['room'], 'empty' => $status1, 'department_id' => $v1['company_id'], 'id' => $v1['id']];
+             }
 
-        }
-        foreach ($floor1 as $k => $v) {
-            $newArr1[$k]['floor'] = $v;
-            $newArr1[$k]['combine'] = false;
-            $newArr1[$k]['rooms'] = $roomArray1[$k];
-        }
+         }
+         foreach ($floor1 as $k => $v) {
+             $newArr1[$k]['floor'] = $v;
+             $newArr1[$k]['combine'] = false;
+             $newArr1[$k]['rooms'] = $roomArray1[$k];
+         }
 
 
-        //rentlist
-        $data = [];
-        $data1 = [];
-        $type = input('type');
-        $parkId = session("park_id");
-        $map = ['park_id' => $parkId, "build_block" => "A", 'status' => 0, 'manage' => 0];
-        $parkInfo = Park::where('id', $parkId)->find();
-        $parkRent = new ParkRent();
-        $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
-        foreach ($list as $k => $v) {
-            $room = ParkRoom::where('id', $v['room_id'])->find();
-            $data[$k] = [
-                'img' => json_decode($v['imgs']),
-                'panorama' => $v['panorama'],
-                'area' => $v['area'] . "㎡",
-                'price' => $v['price'] . "元/㎡·天",
-                'name' => $parkInfo['name'],
-                'id' => $v['id'],
-                'room' => $room['build_block'] . "幢" . $room['room'] . "室"
-            ];
+         //rentlist
+         $data = [];
+         $data1 = [];
+         $type = input('type');
+         $parkId = session("park_id");
+         $map = ['park_id' => $parkId, "build_block" => "A", 'status' => 0, 'manage' => 0];
+         $parkInfo = Park::where('id', $parkId)->find();
+         $parkRent = new ParkRent();
+         $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
+         foreach ($list as $k => $v) {
+             $room = ParkRoom::where('id', $v['room_id'])->find();
+             $data[$k] = [
+                 'img' => json_decode($v['imgs']),
+                 'panorama' => $v['panorama'],
+                 'area' => $v['area'] . "㎡",
+                 'price' => $v['price'] . "元/㎡·天",
+                 'name' => $parkInfo['name'],
+                 'id' => $v['id'],
+                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
+             ];
 
-        }
-        $map1 = ['park_id' => $parkId, "build_block" => "B", 'status' => 0, 'manage' => 0];
-        $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
-        foreach ($list1 as $k => $v) {
-            $room = ParkRoom::where('id', $v['room_id'])->find();
-            $data1[$k] = [
-                'img' => json_decode($v['imgs']),
-                'panorama' => $v['panorama'],
-                'area' => $v['area'] . "㎡",
-                'price' => $v['price'] . "元/㎡·天",
-                'name' => $parkInfo['name'],
-                'id' => $v['id'],
-                'room' => $room['build_block'] . "幢" . $room['room'] . "室"
-            ];
-        }
-        $parkName = $parkInfo['name'];
-        $list = [
-            " A幢" => ['houselist' => $newArr, 'rentlist' => $data],
-            " B幢" => ['houselist' => $newArr1, 'rentlist' => $data1],
-        ];
-        $list1 = ["$parkName" => $list];
-        $this->assign('type', $type);*/
+         }
+         $map1 = ['park_id' => $parkId, "build_block" => "B", 'status' => 0, 'manage' => 0];
+         $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
+         foreach ($list1 as $k => $v) {
+             $room = ParkRoom::where('id', $v['room_id'])->find();
+             $data1[$k] = [
+                 'img' => json_decode($v['imgs']),
+                 'panorama' => $v['panorama'],
+                 'area' => $v['area'] . "㎡",
+                 'price' => $v['price'] . "元/㎡·天",
+                 'name' => $parkInfo['name'],
+                 'id' => $v['id'],
+                 'room' => $room['build_block'] . "幢" . $room['room'] . "室"
+             ];
+         }
+         $parkName = $parkInfo['name'];
+         $list = [
+             " A幢" => ['houselist' => $newArr, 'rentlist' => $data],
+             " B幢" => ['houselist' => $newArr1, 'rentlist' => $data1],
+         ];
+         $list1 = ["$parkName" => $list];
+         $this->assign('type', $type);*/
 
         $list1 = $this->rentlist();
         //return json_encode($list1);
-       echo json_encode($list1);
+        echo json_encode($list1);
         $this->assign('list', json_encode($list1));
-
-
         return $this->fetch();
 
 
@@ -312,24 +310,25 @@ class Roomrent extends Base
     /**
      * 重写租房信息
      */
-    public function rentlist(){
+    public function rentlist()
+    {
         $setArr = [
-            '3' => ['A','B'],
-            '80' => ['A','B','C','D']
+            '3' => ['A', 'B'],
+            '80' => ['A', 'B', 'C', 'D']
         ];
         $newData = [];
         $parkRoom = new ParkRoom();
         $park = new Park();
         $parkRent = new ParkRent();
-        foreach($setArr as $k=>$v){
+        foreach ($setArr as $k => $v) {
             $number = $k;
-            $parkInfo = $park->where(['id'=>$number])->find();
+            $parkInfo = $park->where(['id' => $number])->find();
             $newData[$parkInfo['name']] = [];
-            foreach($v as $k1=>$v1){
+            foreach ($v as $k1 => $v1) {
                 $element = $v1;
                 $newArr = [];
-                $floor = [] ;
-                $map = ['park_id'=>$number,'build_block' => $element,'del' => 0 ];
+                $floor = [];
+                $map = ['park_id' => $number, 'build_block' => $element, 'del' => 0];
                 //获取楼层信息
                 $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
                 foreach ($list as $k => $v) {
@@ -337,24 +336,29 @@ class Roomrent extends Base
                 }
                 //每层楼房间数目
                 foreach ($floor as $k => $v) {
-                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0 ,'park_id' => $number])->order("room asc")->select();
+                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number])->order("room asc")->select();
                     //判断房间是否出租
                     foreach ($roomList as $k1 => $v1) {
-                        $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0 ])->find();
+                        $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
                         if (!$res) {
                             $status = 0;
                             $roomsId = 0;
                         } else {
-                            $rent =PeopleRent::where('rent_id',$res['id'])->select();
-                            if($rent){
-                                $status = 2;
-                            }else{
+                            $rent = PeopleRent::where('rent_id', $res['id'])->select();
+                            if ($rent) {
+
+                                if ($res['park_id'] == 3) {
+                                    $status = 1;
+                                } else {
+                                    $status = 2;
+                                }
+                            } else {
                                 $status = 1;
                             }
                             $roomsId = $res['room_id'];
                         }
                         $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
-                        $roomArray[$k] = array_slice($roomArray[$k],0,$k1+1);
+                        $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
                     }
                 }
                 foreach ($floor as $k => $v) {
@@ -364,7 +368,7 @@ class Roomrent extends Base
                 //rentList 找出所有出租信息
                 $map1 = ['park_id' => $number, "build_block" => $element, 'status' => 0, 'manage' => 0];
                 $rentList = $parkRent->where($map1)->order('id desc')->limit(6)->select();
-                if ($rentList){
+                if ($rentList) {
                     foreach ($rentList as $k => $v) {
                         $room = ParkRoom::where('id', $v['room_id'])->find();
                         $data[$k] = [
@@ -376,20 +380,19 @@ class Roomrent extends Base
                             'id' => $v['id'],
                             'room' => $room['build_block'] . "幢" . $room['room'] . "室"
                         ];
-                        if (floatval($v['price']) == 0){
-                            $data[$k]['price'] = $v['price'] ;
+                        if (floatval($v['price']) == 0) {
+                            $data[$k]['price'] = $v['price'];
                         }
                     }
-                    $data = array_slice($data,0,$k+1);
-                }else{
-                    $data = [] ;
+                    $data = array_slice($data, 0, $k + 1);
+                } else {
+                    $data = [];
                 }
-                $newData[$parkInfo['name']][$element.'幢'] = ['houselist' => $newArr, 'rentlist' => $data];
+                $newData[$parkInfo['name']][$element . '幢'] = ['houselist' => $newArr, 'rentlist' => $data];
             }
         }
 
         return $newData;
-
 
 
     }
@@ -408,11 +411,11 @@ class Roomrent extends Base
                 //todo： 推送点击到详情页面代码
                 $message = [
                     "title" => "租房服务提示",
-                    "description" =>  "您有新的租房申请，请点击查看。",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/type/1/id/'.$people->getLastInsID()
+                    "description" => "您有新的租房申请，请点击查看。",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/type/1/id/' . $people->getLastInsID()
                 ];
                 //推送给运营
-                $service =new Service();
+                $service = new Service();
                 $reult = $service->commonSend(1, $message);
                 if ($reult) {
                     $this->success('提交成功', '', $msg);
@@ -535,8 +538,9 @@ class Roomrent extends Base
     }
 
     /*租房意向申请*/
-    public function intention(){
-        if (IS_POST){
+    public function intention()
+    {
+        if (IS_POST) {
             $data = input('post.');
             $data['create_time'] = time();
             $data['park_id'] = session('park_id');
@@ -544,15 +548,15 @@ class Roomrent extends Base
 
             $parkIntention = new ParkIntention();
             $res = $parkIntention->allowField(true)->save($data);
-            if ($res){
+            if ($res) {
                 //todo： 推送点击到详情页面代码
                 $message = [
                     "title" => "租房意向服务提示",
                     "description" => "您有新的租房意向，请点击查看。",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/type/2/id/'.$parkIntention->getLastInsID()
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/Roomrent/record/type/2/id/' . $parkIntention->getLastInsID()
                 ];
                 //推送给运营
-                $service =new Service();
+                $service = new Service();
                 $reult = $service->commonSend(1, $message);
                 if ($reult) {
                     $this->success('添加成功');
@@ -560,11 +564,11 @@ class Roomrent extends Base
                     return $this->error("推送失败");
                 }
 
-            }else{
+            } else {
 
                 $this->error("添加失败");
             }
-        }else{
+        } else {
 
             return $this->fetch();
         }
@@ -574,37 +578,38 @@ class Roomrent extends Base
 //    记录
     public function record()
     {
-        $id=input('id');
-        $type =input('type');
-        $peopleRent =new PeopleRent();
+        $id = input('id');
+        $type = input('type');
+        $peopleRent = new PeopleRent();
         $parkIntention = new ParkIntention();
-        if(IS_POST){
+        if (IS_POST) {
             $info = $peopleRent->where('id', $id)->find();
-            $info['status']=2;
+            $info['status'] = 2;
             $info->save();
             return $this->success('成功');
-        }else {
+        } else {
 
             //我要租房
             if ($type == 1) {
                 $info = $peopleRent->where('id', $id)->find();
                 $info['area'] = isset($info->roominfo->area) ? $info->roominfo->area : "";
                 $info['price'] = isset($info->roominfo->price) ? $info->roominfo->price : "";
-                $info['room'] = isset($info->roominfo->room->room) ? $info->roominfo->room->build_block."幢".$info->roominfo->room->room : "";
+                $info['room'] = isset($info->roominfo->room->room) ? $info->roominfo->room->build_block . "幢" . $info->roominfo->room->room : "";
 
-               unset($info['roominfo']);
+                unset($info['roominfo']);
 
             } //租房意向
             else {
                 $info = $parkIntention->where('id', $id)->find();
             }
 
-            $info['type']=$type;
-          $this->assign('info',json_encode($info));
-           return $this->fetch();
+            $info['type'] = $type;
+            $this->assign('info', json_encode($info));
+            return $this->fetch();
         }
 
     }
+
     /*楼房信息*/
     public function gaoshiqings()
     {
@@ -623,78 +628,64 @@ class Roomrent extends Base
             $floor[$k] = $v['floor'];
         }
         //dump($floor);
-        foreach($floor as $k=>$v){
-            $map['floor'] = $v ;
+        foreach ($floor as $k => $v) {
+            $map['floor'] = $v;
             $roomList[$k]['floor'] = $v;
             $roomList[$k]['rooms'] = $parkRoom->where($map)->order('room  asc')->field('room,id')->select();
 
         }
         $area = $this->gaoshiqing();
-        for ($i=13;$i>0;$i--){
-            foreach($area as $k=>$v){
-                if ($v['floor'] == $i){
-                    $newArr[] =['floor'=>$i,'rooms'=>$v['rooms']];
+        for ($i = 13; $i > 0; $i--) {
+            foreach ($area as $k => $v) {
+                if ($v['floor'] == $i) {
+                    $newArr[] = ['floor' => $i, 'rooms' => $v['rooms']];
                 }
             }
-            foreach($roomList as $k=>$v){
-                if ($v['floor'] == $i){
-                    $newArr[] =['floor'=>$i,'rooms'=>$v['rooms']];
+            foreach ($roomList as $k => $v) {
+                if ($v['floor'] == $i) {
+                    $newArr[] = ['floor' => $i, 'rooms' => $v['rooms']];
                 }
             }
         }
 
-        foreach ($newArr as $k=>$v){
-            if ($k ==(count($newArr)-1)){
-               break;
-            }
-            if ($newArr[$k]['floor'] ==$newArr[$k+1]['floor']){
-                    $newArr[$k]['rooms'] = array_merge($newArr[$k]['rooms'],$newArr[$k+1]['rooms']);
-                }
-        }
-        foreach ($newArr as $k=>$v){
-            if ($k ==(count($newArr)-1)){
+        foreach ($newArr as $k => $v) {
+            if ($k == (count($newArr) - 1)) {
                 break;
             }
-            if ($newArr[$k]['floor'] ==$newArr[$k+1]['floor']){
-                $newArr1[] = $k+1;
+            if ($newArr[$k]['floor'] == $newArr[$k + 1]['floor']) {
+                $newArr[$k]['rooms'] = array_merge($newArr[$k]['rooms'], $newArr[$k + 1]['rooms']);
             }
         }
-        foreach ( $newArr1 as $k=>$v){
+        foreach ($newArr as $k => $v) {
+            if ($k == (count($newArr) - 1)) {
+                break;
+            }
+            if ($newArr[$k]['floor'] == $newArr[$k + 1]['floor']) {
+                $newArr1[] = $k + 1;
+            }
+        }
+        foreach ($newArr1 as $k => $v) {
             unset($newArr[$v]);
         }
         $asp = "";
-        foreach ($newArr as $k=>$v){
-           foreach ($v['rooms'] as $k1=>$v1){
+        foreach ($newArr as $k => $v) {
+            foreach ($v['rooms'] as $k1 => $v1) {
 
-               if ($k1 == (count($v['rooms'])-1)){break;}
+                if ($k1 == (count($v['rooms']) - 1)) {
+                    break;
+                }
 
-               if ($v['rooms'][$k1]['room'] > $v['rooms'][$k1+1]['room']){
-                   $asp = $v['rooms'][$k1+1]['room'] ;
-                   $v['rooms'][$k1+1]['room'] = $v['rooms'][$k1]['room'];
-                   $v['rooms'][$k1]['room'] =$asp;
-               }
-           }
+                if ($v['rooms'][$k1]['room'] > $v['rooms'][$k1 + 1]['room']) {
+                    $asp = $v['rooms'][$k1 + 1]['room'];
+                    $v['rooms'][$k1 + 1]['room'] = $v['rooms'][$k1]['room'];
+                    $v['rooms'][$k1]['room'] = $asp;
+                }
+            }
         }
         echo json_encode($newArr);
 
 
-
-
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
