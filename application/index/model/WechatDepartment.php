@@ -25,4 +25,15 @@ class WechatDepartment extends Model
             return $sd;
         }
     }
+
+    public  function room(){
+
+       return $this->hasMany('ParkRoom','company_id','id');
+
+    }
+
+
+
 }
+
+

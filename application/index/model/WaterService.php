@@ -22,4 +22,13 @@ class WaterService extends Model
         return $this->hasOne('WechatUser','userid','userid');
 
     }
+
+    public function watertype()
+    {
+        return $this->hasOne("WaterType", "id","water_id" );
+    }
+
+
+
+
 }
