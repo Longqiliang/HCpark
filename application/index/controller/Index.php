@@ -96,11 +96,8 @@ class Index extends Controller
             $parkinfo=[
                 'name'=>$park['name'],
                 'park_id'=>$park['id']
-
-
             ];
-
-            $this->assign('department', $departmentlist);
+            $this->assign('department', json_encode($departmentlist));
             $this->assign('park', $parkinfo);
             return $this->fetch();
         }
