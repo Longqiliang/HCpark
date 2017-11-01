@@ -300,6 +300,7 @@ class Roomrent extends Base
 
         $list1 = $this->rentlist();
         //return json_encode($list1);
+       echo json_encode($list1);
         $this->assign('list', json_encode($list1));
 
 
@@ -341,10 +342,15 @@ class Roomrent extends Base
                     foreach ($roomList as $k1 => $v1) {
                         $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0 ])->find();
                         if (!$res) {
-                            $status = false;
+                            $status = 0;
                             $roomsId = 0;
                         } else {
-                            $status = true;
+                            $rent =PeopleRent::where('rent_id',$res['id'])->select();
+                            if($rent){
+                                $status = 2;
+                            }else{
+                                $status = 1;
+                            }
                             $roomsId = $res['room_id'];
                         }
                         $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
