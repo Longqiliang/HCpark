@@ -191,8 +191,17 @@
             <i class="header-icon" @click.stop="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list']"></i>
         </h2>
         <div class="houses-icon-box" v-show="isHouseList">
-            <span ><i class="houses-icon icon-rentable"></i>可租</span>
-            <span ><i class="houses-icon icon-renewable"></i>已租</span>
+            <template v-if="parkName.index =='人工智能产业园'">
+                <span class="mar-sm"><i class="houses-icon icon-rentable"></i>空置</span>
+                <span class="mar-sm"><i class="houses-icon icon-reserve"></i>预订</span>
+               <span class="mar-sm"><i class="houses-icon icon-renewable"></i>已租</span>
+            </template>
+            <template v-else>
+                <span ><i class="houses-icon icon-rentable"></i>可租</span>
+                <span ><i class="houses-icon icon-renewable"></i>已租</span>
+                <!--<span ><i class="houses-icon icon-renewable"></i>已租</span>-->
+            </template>
+
         </div>
         <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
             <div class="picker-toolbar">
@@ -208,7 +217,7 @@
                 {{item.floor}}楼
             </div>
             <div class="houses-list-item" >
-            <span v-for="rooms of item.rooms" :class="{selectable :rooms.empty}" @click="jump(rooms.id,rooms.empty)">
+            <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.id,rooms.empty)">
                 {{rooms.room}}
             </span>
             </div>
@@ -377,9 +386,18 @@
             showPark:function () {
                 var _this = this;
                 return _this.parkName.index + _this.parkName.txt;
+            },
+            showState:function () {
+                var _this = this;
+                _this.parkName
             }
         },
         methods:{
+            classBar:function (type) {
+                if(type == '0') return '';
+                if(type == '1') return 'selectable';
+                if(type == '2') return 'reserve-able';
+            },
             showModel:function () {
               var _this = this;
                 _this.intention = true;

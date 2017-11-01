@@ -125,6 +125,11 @@ body{
     font-size: 1.5rem;
     line-height: 1.4;
     margin: 0 8vw;
+    display: flex;
+    align-items: center;
+}
+.houses-icon-box span.mar-sm{
+    margin: 0 4vw;
 }
 .houses-icon{
     display: inline-block;
@@ -140,6 +145,9 @@ body{
 }
 .icon-rentable{
     background-image: url('/index/images/roomrent/icon-rentable.png');
+}
+.icon-reserve{
+    background-image: url('/index/images/roomrent/icon-reserve.png');
 }
 .houses-list-tit{
     font-size: 1.8rem;
@@ -168,6 +176,9 @@ body{
 .houses-list-item span.selectable{
     color: #fff;
     background-color: #52CC92;
+}
+.houses-list-item span.reserve-able{
+    background-color: #E5E5E5;
 }
 /*园区列表*/
 .list-card{
