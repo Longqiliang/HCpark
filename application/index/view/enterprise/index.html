@@ -6,151 +6,33 @@
 <title>企业搜索</title>
 <style>
 
-    body{
-        background-color: #f1f1f1;
-    }
-    .search{
-        background: #f0eff5;
-        padding:0.8rem 2.133vw;
-        border-bottom: 1px solid #f0eff5;
-        position: relative;
-        z-index: 999;
-    }
-    .search>.searchBox{
-        border-radius: 0.3rem;
-        height:3.2rem;
-        background: #ffffff;
-        text-align: center;
-    }
-    .search>.unBtn{
-        display: none;
-    }
-    .search>.searchBox>.searchInput{
-        display: none;
-    }
-    .search>.searchBox>.searchText{
-        display: inline-block;
-        font-size:1.4rem;
-        color: #999;
-        padding-left:2.0rem;
-        min-width: 1px;
-        line-height: 3.2rem;
-        height:3.2rem;
-        background: url("/index/images/enterprise/search.png") 0 50% no-repeat;
-        background-size: 1.4rem 1.4rem;
-    }
-    .search.isClick{
-        background: #ffffff;
-        border-bottom: 1px solid #f1f1f1;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .search.isClick>.searchBox{
-        background: #f0eff5;
-        padding-left: 2.66vw;
-        width:78vw;
-        display: flex;
-        align-items: center;
-    }
-    .search.isClick>.searchBox>.searchText{
-        display: inline-block;
-    }
-    .search.isClick>.searchBox>.searchText>.searchText_c{
-        display: none;
-    }
-    .search.isClick .searchInput{
-        background: #f0eff5;
-        display: inline-block;
-        font-size:1.4rem;
-        height:3.2rem;
-        width:61.33vw;
-    }
-    .search.isClick>.unBtn{
-        display: block;
-        padding:0;
-        box-sizing: border-box;
-        width:3.8rem;
-        height:2.8rem;
-        line-height: 2.8rem;
-        border-radius: 5px;
-        border:1px solid #5d9cec;
-        color: #5d9cec;
-        text-align: center;
-        font-size: 1.4rem;
-    }
-    .searchList{
-        min-height:100vh;
-        /*padding-top:4.4rem;*/
-        width:100%;
-        background-color: rgba(0,0,0,.5);
-        position:absolute;
-        top:0;
-        left:0;
-    }
-    .searchList.company-list{
-        padding:0;
-    }
-    .searchList.company-list>li{
-        margin-bottom: 0;
-        border-bottom: 1px solid #f1f1f1;
-    }
-    .searchList.bgWhite{
-        background-color: rgba(255,255,255,1);
-    }
-    .searchList>li:first-child{
-        margin-top: 4.8rem;
-    }
-    .company-list{
-        box-sizing: border-box;
-        width: 100%;
-        position: absolute;
-        top:0;
-        left:0;
-        padding:5.2rem 3.7vw 0.4rem 3.7vw;
-    }
-    .company-list>li{
-        margin-bottom: 0.8rem;
-        padding:0.8rem 3.7333333vw;
-        display: -webkit-flex;
-        display: flex;
-        align-items: center;
-        background-color: #fff;
-    }
-    .company-logo>img{
-        text-align: center;
-        line-height: 59px;
-        display: block;
-        width:59px;
-        height:59px;
-        border-radius: 3px;
-    }
-    .company-list .company-logo{
-        margin-right: 1.4rem;
-    }
-    .company-info>li{
-        width:65vw;
-        line-height: 2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .company-info>li:first-child{
-        font-size: 1.6rem;
-        font-weight: bold;
-        color: #333;
-    }
-    .company-info>li:last-child{
-        font-size: 1.2rem;
-        color: #999;
-    }
-    .hidden{
-        display: none;
-    }
-    .overflow{
-        height:100vh;
-        overflow: hidden;
-    }
+    body{background-color:#f1f1f1}
+    .search{background:#f0eff5;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;position:relative;z-index:999}
+    .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center}
+    .search>.unBtn{display:none}
+    .search>.searchBox>.searchInput{display:none}
+    .search>.searchBox>.searchText{display:inline-block;font-size:1.4rem;color:#999;padding-left:2rem;min-width:1px;line-height:3.2rem;height:3.2rem;background:url(/index/images/enterprise/search.png) 0 50% no-repeat;background-size:1.4rem 1.4rem}
+    .search.isClick{background:#fff;border-bottom:1px solid #f1f1f1;display:flex;align-items:center;justify-content:space-between}
+    .search.isClick>.searchBox{background:#f0eff5;padding-left:2.66vw;width:78vw;display:flex;align-items:center}
+    .search.isClick>.searchBox>.searchText{display:inline-block}
+    .search.isClick>.searchBox>.searchText>.searchText_c{display:none}
+    .search.isClick .searchInput{background:#f0eff5;display:inline-block;font-size:1.4rem;height:3.2rem;width:61.33vw}
+    .search.isClick>.unBtn{display:block;padding:0;box-sizing:border-box;width:3.8rem;height:2.8rem;line-height:2.8rem;border-radius:5px;border:1px solid #5d9cec;color:#5d9cec;text-align:center;font-size:1.4rem}
+    .searchList{min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:absolute;top:0;left:0}
+    .searchList.company-list{padding:0}
+    .searchList.company-list>li{margin-bottom:0;border-bottom:1px solid #f1f1f1}
+    .searchList.bgWhite{background-color:rgba(255,255,255,1)}
+    .searchList>li:first-child{margin-top:4.8rem}
+    .company-list{box-sizing:border-box;width:100%;position:absolute;top:0;left:0;padding:5.2rem 3.7vw .4rem 3.7vw}
+    .company-list>li{margin-bottom:.8rem;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;align-items:center;background-color:#fff}
+    .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
+    .company-list .company-logo{margin-right:1.4rem}
+    .company-info>li{width:65vw;line-height:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .company-info>li:first-child{font-size:1.6rem;font-weight:700;color:#333}
+    .company-info>li:last-child{font-size:1.2rem;color:#999}
+    .hidden{display:none}
+    .overflow{height:100vh;overflow:hidden}
+
 </style>
 
 {/block}

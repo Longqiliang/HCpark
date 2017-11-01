@@ -39,7 +39,7 @@
                 <div class="sieving-header"><div @click="toggleSieving">{{sieving.serviceIndex===''?'全部分类':sieving.serviceList[sieving.serviceIndex].text}}</div> <span :class="{close:!sieving.isShowSieving}"></span></div>
                 <div class="sieving-bg" :class="{active:sieving.isShowSieving}"  @click="toggleSieving"></div>
                 <ul class="sieving-list" :class="{active:sieving.isShowSieving}">
-                    <li @click="sievingChange('')" :class="{active:''===sieving.serviceIndex}">全部分类</li>
+                        <li @click="sievingChange('')" :class="{active:''===sieving.serviceIndex}">全部分类</li>
                     <li v-for="(v,key) in sieving.serviceList" @click="sievingChange(key)" :class="{active:key===sieving.serviceIndex}">{{v.text}}</li>
                 </ul>
             </div>

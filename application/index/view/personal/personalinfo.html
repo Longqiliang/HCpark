@@ -15,6 +15,12 @@
         height: 100vh;
         position: relative;
     }
+    .list>li p{
+        font-size: 1.5rem;
+    }
+    #app .list{
+        margin:0;
+    }
 </style>
 {/block}
 
@@ -42,8 +48,11 @@
         <li><a href="javascript:;"><p>姓名 <span class="ft-right">{{info.name}}</span> </p></a></li>
         <li><a href="javascript:;"><p>性别 <span class="ft-right">{{info.sex}}</span></p></a></li>
         <li><a href="javascript:;"><p>电话 <span class="ft-right">{{info.mobile}}</span></p></a></li>
-        <li><a href="javascript:;" ><p>单位 <span class="ft-right">{{info.department}}</span></p></a></li>
+        <li v-if="info.people_card"><a href="javascript:;" ><p>身份证号 <span class="ft-right">{{info.people_card}}</span></p></a></li>
+        <li v-if="info.car_card"><a href="javascript:;" ><p>车牌号 <span class="ft-right">{{info.car_card}}</span></p></a></li>
         <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="info.park_name"></span></p></a></li>
+        <li><a href="javascript:;" ><p>公司 <span class="ft-right">{{info.department}}</span></p></a></li>
+        <li v-if="info.office"><a href="javascript:;" ><p>办公地点 <span class="ft-right">{{info.office}}</span></p></a></li>
         <mt-popup  position="bottom"  v-model="parkVisible" class="mint-popup">
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="cancelParkPopup">取消</span>
