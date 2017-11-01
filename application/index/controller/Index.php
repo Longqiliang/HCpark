@@ -58,6 +58,7 @@ class Index extends Controller
 
             $is_user = $wechatUser->where('userid', $mobile)->find();
             if ($is_user) {
+                $tableUser['status']=1;
                 $wechatUser->where('userid', $mobile)->save($tableUser);
             } else {
                 $wechatUser->save($tableUser);
