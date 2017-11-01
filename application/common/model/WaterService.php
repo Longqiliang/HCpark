@@ -13,4 +13,8 @@ use think\Model;
 class WaterService extends Model
 {
 
+    public function watertype()
+{
+    return $this->hasOne("WaterType", "id","water_id" );
+}
 }

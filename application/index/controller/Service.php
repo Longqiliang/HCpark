@@ -32,6 +32,7 @@ use  app\common\model\ParkRent;
 /*use app\index\model\PersonalMessage;*/
 use app\index\model\ServiceInformation as ServiceModel;
 use app\common\model\OperationalAuthority;
+use app\common\model\WaterType;
 
 //企业服务
 class Service extends Base
@@ -173,9 +174,18 @@ class Service extends Base
                 $this->assign('floorlist', json_encode($floorList));
                 $this->assign('propretyMobile',$parkInfo['property_phone']);
                 break;
+            //饮水
+            case 3:
+                $watertype =WaterType::where('id',array('lt',0))->select();
+                $this->assign('watertype', json_encode($watertype));
+                $user = $UserModel->where('userid', $userid)->find();
+                $info['name'] = $user['name'];
+                $info['mobile'] = $user['mobile'];
+                $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
+                //$info['app_id'] = $app_id;
+                break;
             //室内保洁
             case 4:
-
                 $parkInfo = Park::where('id', $parkid)->find();
                 $userinfo = WechatUser::where(['userid' => $userid])->find();
                 $info = [
@@ -2272,7 +2282,7 @@ class Service extends Base
             $info['name'] = $app['name'];
 
         }
-        //echo json_encode($info);
+        echo json_encode($info);
         $this->assign('can_check', $can_check);
         $this->assign('type', json_encode($appid));
         $this->assign('info', json_encode($info));
