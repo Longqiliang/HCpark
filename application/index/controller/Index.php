@@ -92,8 +92,16 @@ class Index extends Controller
                     unset($departmentlist[$key]['room']);
                 }
             }
+            $park=WechatDepartment::where('id',$park_id)->find();
+            $parkinfo=[
+                'name'=>$park['name'],
+                'park_id'=>$park['id']
+
+
+            ];
+
             $this->assign('department', $departmentlist);
-            $this->assign('park_id', $park_id);
+            $this->assign('park', $parkinfo);
             return $this->fetch();
         }
 
