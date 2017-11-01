@@ -497,8 +497,6 @@ var app = new Vue({
         //            微信jssdk - 图片预览
         loadImg(src,imglist) {
                 var urls=[];
-            console.log(src)
-            console.log(imglist)
                 var current=window.location.protocol+'//'+window.location.host+src;
                 for(var i in imglist){
                     urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];

@@ -23,17 +23,28 @@
 <!--</div>-->
 <!--tab-->
 <div id="app">
-    <div class="tabs clear">
-        <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">物业服务</span></div>
-        <!--<span class="line"></span>-->
-        <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >企业服务</span></div>
+    <div class="header">
+        <div class="tabs clear">
+            <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">物业服务</span></div>
+            <!--<span class="line"></span>-->
+            <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >企业服务</span></div>
+        </div>
+
     </div>
     <!--切换列表-->
     <div class="content">
         <!--物业服务-->
         <div class="notices" v-if="active==0">
+            <div class="sieving-box">
+                <div class="sieving-header"><div @click="toggleSieving">{{sieving.serviceIndex===''?'全部分类':sieving.serviceList[sieving.serviceIndex].text}}</div> <span :class="{close:!sieving.isShowSieving}"></span></div>
+                <div class="sieving-bg" :class="{active:sieving.isShowSieving}"  @click="toggleSieving"></div>
+                <ul class="sieving-list" :class="{active:sieving.isShowSieving}">
+                    <li @click="sievingChange('')" :class="{active:''===sieving.serviceIndex}">全部分类</li>
+                    <li v-for="(v,key) in sieving.serviceList" @click="sievingChange(key)" :class="{active:key===sieving.serviceIndex}">{{v.text}}</li>
+                </ul>
+            </div>
             <div class="notice property">
-                <a class="list" v-for="p in property" @click="jumpTo(p.url)">
+                <a class="list" v-for="p in propertyShow" @click="jumpTo(p.url)">
                     <div class="info">
                         <div class="title">{{p.service_name}}</div>
                         <div class="time">
@@ -44,7 +55,7 @@
                         <span class="ing" :class="{'end':status(p.app_id,p.status)}" >{{p.status_text}}</span>
                     </div>
                 </a>
-                <img src="/index/images/service/card/icon-default.jpg" v-if="!property" class="no-list">
+                <img src="/index/images/service/card/icon-default.jpg" v-if="propertyShow.length===0" class="no-list">
             </div>
         </div>
         <!--企业服务-->
@@ -62,7 +73,7 @@
                         <span class="ing" v-else>进行中</span>
                     </div>
                 </a>
-                <img src="/index/images/service/card/icon-default.jpg" v-if="!company" class="no-list">
+                <img src="/index/images/service/card/icon-default.jpg" v-if="company.length===0" class="no-list">
             </div>
         </div>
     </div>
@@ -97,7 +108,23 @@
         data:{
             active:0,
             property:{$property},
-            company:{$company}
+            propertyShow:{$property},
+            company:{$company},
+            sieving:{
+                isShowSieving:false,
+                serviceList:[
+                    {appid:1,text:'费用缴纳'},
+                    {appid:2,text:'物业报修'},
+                    {appid:3,text:'饮水服务'},
+                    {appid:4,text:'室内保洁'},
+//                    {appid:5,text:'花卉租赁'},
+                    {appid:6,text:'车卡服务'},
+                    {appid:7,text:'充电柱办理'},
+                    {appid:8,text:'设备服务'},
+//                    {appid:9,text:'常用电话'},
+                ],
+                serviceIndex:''
+            },
         },
         created(){
             var c =  parseInt(window.location.href.split("service/c/")[1]);
@@ -131,6 +158,23 @@
             tabChange(key){
                 this.active=key;
                 this.setCookie("type",key+11);
+            },
+            sievingChange(key){
+                this.sieving.serviceIndex=key;
+                this.propertyShow=[];
+                if(this.sieving.serviceIndex===''){
+                    this.propertyShow=this.property;
+                }else{
+                    for(var i=0;i<this.property.length;i++){
+                        if(this.property[i].app_id===this.sieving.serviceList[this.sieving.serviceIndex].appid){
+                            this.propertyShow.push(this.property[i]);
+                        }
+                    }
+                }
+                this.toggleSieving();
+            },
+            toggleSieving(){
+                this.sieving.isShowSieving = !this.sieving.isShowSieving;
             },
             //退出清理tab缓存
             isOut(){
