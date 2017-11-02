@@ -398,25 +398,18 @@ class Personal extends Base
             'status' => array('neq', -1),
             'userid' => $userid,
         ];
-        $list3 = array();
+
         if ($type == 3) {
-            $list = WaterService::where($map)->order('create_time desc')->field('id,status,create_time,userid')->select();
+            $list3 = WaterService::where($map)->order('create_time desc')->field('id,status,create_time,userid')->select();
             $appid = 3;
             $can_check = 'no';
         } else {
-            $list = WaterService::where(['status' => array('neq', -1)])->order('create_time desc')->field('id,name,status,create_time,userid')->select();
+            $list3 = WaterService::where(['status' => array('neq', -1),'park_id'=>$park_id])->order('create_time desc')->field('id,name,status,create_time,userid')->select();
             $appid = 3;
             $can_check = 'yes';
         }
 
-        foreach ($list as $value) {
-            if (isset($value->user->park_id)) {
-                if ($value->user->park_id == $park_id) {
-                    array_push($list3, $value);
-                }
-            }
 
-        }
 
         $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
 
