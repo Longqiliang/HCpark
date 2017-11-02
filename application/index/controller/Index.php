@@ -51,10 +51,18 @@ class Index extends Controller
             $result = $weObj->createUser($newUser);
 //            var_dump($weObj->errCode.'||'.$weObj->errMsg);
 //            var_dump($result);
-        /*    $tableUser = $newUser;
+            $tableUser = $newUser;
             $tableUser['department'] = $department;
             $tableUser['company_address'] = input('room');
-            unset($tableUser['enable']);*/
+            unset($tableUser['enable']);
+            unset($tableUser['userid']);
+            $is_user = $wechatUser->where('userid', $mobile)->find();
+            if ($is_user) {
+                $tableUser['status']=1;
+                $wechatUser->save(['status'=>1,'company_address'=>input('room')],['userid'=>$mobile]);
+            } else {
+                $wechatUser->save($tableUser);
+            }
             if ($result && $result['errcode'] == 0) {
                 // 跳转到微信插件二维码
                 return $this->success('恭喜您，注册成功！');
