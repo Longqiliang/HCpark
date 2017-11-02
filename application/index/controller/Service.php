@@ -2124,7 +2124,6 @@ class Service extends Base
             $info = WaterService::get($id);
             $info['water_name'] = isset($info->watertype->water_name) ? $info->watertype->water_name : "";
             $info['format'] = isset($info->watertype->format) ? $info->watertype->format : "";
-            $info['price'] = isset($info->watertype->price) ? $info->watertype->price : "";
             unset($info['watertype']);
             $info['create_time'] = !empty($info['create_time'])?date('m月d日 H:i', $info['create_time']):"";
             $info['check_time'] = !empty($info['check_time'])?date('m月d日 H:i', $info['check_time']):"";
