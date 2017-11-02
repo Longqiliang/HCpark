@@ -173,7 +173,7 @@
                 <ul class="water-card">
                     <li><span>送水地点</span><span>{{info.address}}</span></li>
                     <li><span>送水桶数</span><span>{{info.number}}</span></li>
-                    <li v-if="appid==80"><span>送水种类</span><span>{{info.water_name}}（{{info.format}}）</span></li>
+                    <li v-if="info.park_id==80"><span>送水种类</span><span>{{info.water_name}}（{{info.format}}）</span></li>
                     <li><span>金<b style="padding: 0 1em;"></b>额</span><span>{{info.price}}</span></li>
                     <li><span>联系方式</span><a :href="'tel:'+info.mobile">{{info.mobile}}（{{info.name}}）</a></li>
                     <li v-if="info.check_remark"><span>物业提示</span><span>{{info.check_remark}}</span></li>
