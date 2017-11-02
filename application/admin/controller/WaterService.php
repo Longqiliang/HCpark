@@ -150,19 +150,19 @@ class WaterService extends Admin
         $list = Db::table('tb_water_service')
             ->alias('s')
             ->join('__WATER_TYPE__ t', 't.id=s.water_id')
-            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,s.price totalprice,t.water_name,t.format ,t.price ')
+            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,s.price totalprice,t.water_name,t.format ,t.price ,s.price totalprice' )
             ->where('s.park_id', 'eq', $parkid)
             ->where($map)
             ->order('create_time desc')
             ->select();
-
+        int_to_string($list, $map = array('status' => array(0 => '提交预约', 1 => '确认接单',2=>"取消接单",3=>"确认送达")));
         $excel = new PHPExcel();
         $letter = array('A', 'B', 'C', 'D', 'E', 'F', 'F', 'G', 'H', 'I');
         $celltitle = [
-            '联系人', '送水地址', '送水桶数', '送水种类', '送水规格', '送水价格', '联系电话', '创建时间', '状态'
+            '联系人', '送水地址', '送水桶数', '送水种类', '送水规格', '送水单格','送水总价', '联系电话', '创建时间', '状态'
         ];
         foreach ($list as $key => $value) {
-            $cellData[$key] = [$value['name'], $value['address'], $value['number'], $value['water_name'], $value['format'], $value['price'], $value['mobile'], date('Y-m-d H:i:s',$value['create_time']), $value['status']];
+            $cellData[$key] = [$value['name'], $value['address'], $value['number'], $value['water_name'], $value['format'], $value['price'],$value['totalprice']  , $value['mobile'], date('Y-m-d H:i:s',$value['create_time']), $value['status_text']];
         }
         for ($i = 0; $i < count($celltitle); $i++) {
             $excel->getActiveSheet()->setCellValue("$letter[$i]1", "$celltitle[$i]");
@@ -191,7 +191,20 @@ class WaterService extends Admin
         $write->save('php://output');
 
     }
+  public  function  test(){
+      $map['s.status'] = ['neq', -1];
+      $list = Db::table('tb_water_service')
+          ->alias('s')
+          ->join('__WATER_TYPE__ t', 't.id=s.water_id')
+          ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,s.price totalprice,t.water_name,t.format ,t.price ,s.price totalprice' )
+          ->where('s.park_id', 'eq', 80)
+          ->where($map)
+          ->order('create_time desc')
+          ->select();
+  echo  json_encode($list);
 
+
+  }
     /* private function a()
      {
          Excel::create('学生成绩', function ($excel) use ($cellData) {
