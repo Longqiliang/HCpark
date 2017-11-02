@@ -178,9 +178,13 @@ class Service extends Base
                 $watertype = WaterType::where(['id' => array('gt', 1), 'status' => 1])->select();
                 $this->assign('watertype', json_encode($watertype));
                 $user = $UserModel->where('userid', $userid)->find();
+                $parkroom = ParkRoom::where('company_id',$user['department'])->find();
+                $info['build_block'] = !empty($parkroom)?$parkroom['build_block']:"";
                 $info['name'] = $user['name'];
                 $info['mobile'] = $user['mobile'];
                 $info['office'] = $user['company_address'];
+
+
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
