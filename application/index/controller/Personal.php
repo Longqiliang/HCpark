@@ -322,7 +322,7 @@ class Personal extends Base
         }
         if ($userinfo['department'] == $userPower) {
             $type = 1;
-        } elseif ($userinfo['tagid'] == 2) {
+        } elseif ($userinfo['department'] == 86||$userinfo['department'] == 90) {
             $type = 2;
         }
         $appids = empty($userinfo->Operational->appids) ? array() : json_decode($userinfo->Operational->appids);
