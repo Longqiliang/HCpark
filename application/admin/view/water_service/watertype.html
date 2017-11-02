@@ -1,0 +1,243 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style>
+
+    .mail-box .mail-subject{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+
+
+    @media only screen and (max-width: 550px){
+        .mail-date{
+            display: none;
+        }
+    }
+
+
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+
+            <h2>饮水种类管理</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteWaterType')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+                <a class="btn btn-white btn-sm" data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)"><i class="fa fa-file-text-o"></i> 添加</a>
+            </div>
+        </div>
+
+        <div id="modal-form" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="post" action="{:Url('WaterService/typeEdit')}">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h3 class="modal-title text-center"  name="dialog-title">编辑饮水种类</h3>
+                        </div>
+                        <div class="modal-body">
+                            <!--<div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
+                                <div class="col-sm-10">
+                                    <input id="input-file" type="file" class="file">
+                                    <sapn>
+
+                                        <img  width="200px" height="200px" class="front_cover_img" name="group_img"  id ="group_img" src="" />
+
+                                    </sapn>
+                                </div>
+                            </div>-->
+                            <div class="form-group"><label class="col-sm-2 control-label">饮水种类</label>
+                                <div class="col-sm-10"><input type="text" placeholder="饮水种类" class="form-control" required="" name="water_name"></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">规格</label>
+                                <div class="col-sm-10"><input type="text" placeholder="规格" class="form-control" required="" name="format"></div>
+                            </div>
+
+                            <div class="form-group"><label class="col-sm-2 control-label">单价</label>
+                                <div class="col-sm-10"><input type="text" placeholder="单价" class="form-control" required="" name="price"></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">状态</label>
+                                <div class="col-sm-10"><select class="form-control m-b" name="status" >
+                                    <option value="1">启用</option>
+                                    <option value="0">禁用</option>
+                                </select></div>
+                            </div>
+                            <input type="hidden"  name="img">
+                            <!-- 富文本框<div class="mail-text h-200">
+                                 <div class="summernote"></div>
+                                 <div class="clearfix"></div>
+                             </div>-->
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-primary ajax-post" type="submit" target-form="form-horizontal">保存</button>
+                            <input type="hidden" name="id" value="">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>id</th>
+                    <th>饮水种类名</th>
+                    <th>饮水规格</th>
+                    <th>饮水价格</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr class="read">
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                    </td>
+                    <td class="mail-subject">
+                        {$vo.id}
+                    </td>
+                    <td>
+                        {$vo.water_name}
+                    </td>
+                    <td>
+                        {$vo.format}
+                    </td>
+                    <td>
+                        {$vo.price}
+                    </td>
+                    <td>
+                        <span>{$vo.status_text}</span>
+                    </td>
+                    <td>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-watername="{$vo.water_name}"  data-gg="{$vo.format}"   data-price="{$vo.price}"  data-status="{$vo.status}"     class="btn-sm btn-primary" style="color:#fff">编辑</a>
+                        <a onclick="delItem('{$vo.id}','{:Url('deleteWaterType')}')" class=" confirm btn-sm btn-info">删除</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged",function(){
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+
+    $('.summernote').summernote({
+        lang: 'zh-CN',
+        height: 300,
+        minHeight: 210,
+        callbacks: {
+            onImageUpload: function (files) { //the onImageUpload API
+                img = sendFile(files[0]);
+            }
+        }
+    });
+    function edit(a) {
+
+
+        var name =$(a).attr('data-gg');
+        console.log(name);
+        $("input[name='id']").val($(a).attr('data-id'));
+        $("input[name='water_name']").val($(a).attr('data-watername'));
+        $("input[name='format']").val($(a).attr('data-gg'));
+        $("select[name='status']").val($(a).attr('data-status'));
+        $("input[name='price']").val($(a).attr('data-price'));
+       /* var pic = document.getElementById("group_img");
+        pic.src=$(a).attr('data-img');*/
+
+
+    }
+
+    function sendFile(file) {
+        var data = new FormData();
+        data.append("file_data", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: "{:Url('Upload/picture')}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                var data = $.parseJSON(response);
+                $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+            }
+        });
+    }
+
+    $("#input-file").fileinput({
+
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("/admin/Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        console.log(response);
+
+        if(response.code == 1) {
+            $("input[name='front_cover']").val(response.data);
+            $("input[name='img']").val(response.data);
+            console.log( $("input[name='img']").val());
+            var pic = document.getElementById("group_img");
+            pic.src=response.data;
+
+        } else {
+
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+</script>
+{/block}

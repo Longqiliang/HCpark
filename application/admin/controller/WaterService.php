@@ -52,14 +52,50 @@ class WaterService extends Admin
         $this->assign('res', $result);
         return $this->fetch();
     }
-   //饮水种类管理
-    public  function   watertype(){
-        $result = WaterType::where('status', 'neq', -1)->find();
-        $this->assign('res', $result);
+
+    //饮水种类管理
+    public function watertype()
+    {
+        $result = WaterType::where('status', 'neq', -1)->paginate();
+        int_to_string($result, $map = array('status' => array(0 => '禁用', 1 => '启用')));
+        $this->assign('list', $result);
         return $this->fetch();
     }
 
+    //饮水种类编辑
+    public function typeEdit()
+    {
+        $water = new WaterType();
+        $data = input('');
+        $id = isset($data['id']) ? $data['id'] : "";
+        if (!empty($id)) {
+            $reult = $water->allowField(true)->save($data, ['id' => $id]);
+        } else {
+            unset($data['id']);
 
+            $reult = $water->allowField(true)->save($data);
+        }
+        if ($reult) {
+            return $this->success("成功");
+
+        } else {
+
+            return $this->error($water->getError());
+        }
+    }
+
+
+    public function deleteWaterType()
+    {
+        $ids = input('ids/a');;
+        $re = WaterType::Where('id', 'in', $ids)->update(['status' => -1]);
+        if ($re) {
+            return $this->success('删除成功', url('WaterService/watertype'));
+        } elseif (!$re) {
+            return $this->error('删除失败');
+        }
+
+    }
 
 
 //逻辑删除
@@ -128,7 +164,7 @@ class WaterService extends Admin
             '联系人', '送水地址', '送水桶数', '送水种类', '送水规格', '送水价格', '联系电话', '创建时间', '状态'
         ];
         foreach ($list as $key => $value) {
-            $cellData[$key] = [$value['name'], $value['address'], $value['number'], $value['water_name'], $value['format'],$value['price'], $value['mobile'], $value['create_time'], $value['status']];
+            $cellData[$key] = [$value['name'], $value['address'], $value['number'], $value['water_name'], $value['format'], $value['price'], $value['mobile'], $value['create_time'], $value['status']];
         }
         for ($i = 0; $i < count($celltitle); $i++) {
             $excel->getActiveSheet()->setCellValue("$letter[$i]1", "$celltitle[$i]");
