@@ -34,20 +34,24 @@
         </div>
         <div class="card-cell" v-if="info.park_id==80">
             <label >送水种类</label>
-            <div class="cell-address" @click="toggleWater">
+            <div class="cell-address" @click="toggleWater(false)">
                 <span :class="{'font-gray':!checkedWater}">{{checkedWater?checkedWater:'请选择送水种类'}}</span>
             </div>
             <mt-popup  position="bottom"  v-model="waterVisible" class="mint-popup">
                 <div class="picker-toolbar">
-                    <span class="mint-datetime-action mint-datetime-cancel" @click="toggleWater">取消</span>
-                    <span class="mint-datetime-action mint-datetime-confirm" @click="toggleWater">确定</span>
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="toggleWater(false)">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="toggleWater(true)">确定</span>
                 </div>
                 <mt-picker :slots="waterList" @change="onWaterChange"></mt-picker>
             </mt-popup>
         </div>
         <div class="card-cell">
             <label for="num">送水桶数</label>
-            <input type="number" placeholder="请输入送水桶数" id="num" v-model="defaultData.number">
+            <input type="tel" placeholder="请输入送水桶数" id="num" v-model="defaultData.number" min="1" max="99" maxlength="2">
+        </div>
+        <div class="card-cell">
+            <span>金<b style="padding: 0 1em;"></b>额</span>
+            <span>{{waterPrice*defaultData.number}}</span>
         </div>
         <div class="card-cell">
             <label for="name">联系人员</label>
@@ -69,10 +73,10 @@
 {block name="script"}
 <script>
     //console.log(JSON.parse('{$info}'));
-    var floorlist = {$floorlist};
-    var waterType ={$watertype};
+    var floorlist = {$floorlist},
+         waterType ={$watertype};
     for(var i=0,wType=[];i<waterType.length;i++){
-        wType[waterType[i].water_name+"("+waterType[i].format+")"]=waterType[i].id
+        wType[waterType[i].water_name+"("+waterType[i].format+")"]={id:waterType[i].id,price:waterType[i].price}
     }
     var vm = new Vue({
         el:"#app",
@@ -90,6 +94,7 @@
                     values:Object.keys(wType)
                 }
             ],
+            waterPrice:0,
             //地址
             addressOne:'',
             addressTwo:'',
@@ -124,6 +129,11 @@
             },
             isSubmit:true
         },
+        created(){
+            var _this=this;
+            _this.addressOne=_this.info.build_block?_this.info.build_block:'';
+            _this.addressTwo=_this.info.office?_this.info.office:'';
+        },
         mounted:function () {
             var _this = this;
             _this.$nextTick(function() {
@@ -141,12 +151,13 @@
                 var _this = this;
                 _this.addressVisible = true;
             },
-            toggleWater:function () {
+            toggleWater:function (change) {
                 var _this = this;
                 _this.waterVisible = !_this.waterVisible;
-                if(!_this.waterVisible){
+                if(change){
                     _this.checkedWater=_this.checkWater;
-                    _this.defaultData.water_id=wType[_this.checkWater]
+                    _this.defaultData.water_id=wType[_this.checkWater].id;
+                    _this.waterPrice=wType[_this.checkWater].price;
                 }
             },
             onAddressChange:function (pick,values) {
