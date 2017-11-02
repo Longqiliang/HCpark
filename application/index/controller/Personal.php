@@ -317,8 +317,8 @@ class Personal extends Base
         $type = 3;
         if ($park_id == 3) {
             $userPower = 76;
-        } else {
-            $userPower = 76;
+        } elseif($park_id==80) {
+            $userPower = 87;
         }
         if ($userinfo['department'] == $userPower) {
             $type = 1;
@@ -418,7 +418,7 @@ class Personal extends Base
         foreach ($list3 as $k => $v) {
             $v['service_name'] = "饮水服务";
             $list3 [$k]['url'] = $url . $v['id'];
-
+           $v['create_time']=date('Y-m-d', $v['create_time']);
             if ($v['status'] == 0) {
                 $list3[$k]['status_text'] = '审核中';
             } elseif ($v['status'] == 1) {
