@@ -6,7 +6,7 @@
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style type="text/css">
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
-    .front_cover_img {height: 40px; width: 40px; margin-top: 4px}
+    .front_cover_img {    height: 100px; width: 100px; margin-top: 4px}
     .send_type_label {
         padding-left: 12px;
     }
@@ -57,6 +57,21 @@
                         </div>
                     </div>
 
+                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
+                        <div class="col-sm-10">
+                            <input id="input-file" type="file"  class="file">
+
+                            <sapn>
+                                <a class="front_cover" href="{$res.front_cover}">
+
+                                    <img  width="400px" height="400px" class="front_cover_img" id="images" name="images" src="{$res.front_cover}"/>
+
+                                </a>
+                            </sapn>
+                        </div>
+                    </div>
+                    <input name="front_cover" type="hidden"  value="{$res.front_cover}">
+
                     <label class="col-sm-2 control-label">状态:</label>
                     <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
                         <div class="summernote col-sm-10">{$res.content}</div>
@@ -96,6 +111,7 @@
 <script>
     $(document).ready(function () {
 
+
         $('.summernote').summernote({
             lang: 'zh-CN',
             height: 300,
@@ -106,7 +122,6 @@
                 }
             }
         });
-
         function sendFile(file) {
             var data = new FormData();
             data.append("file_data", file);
@@ -123,13 +138,43 @@
                 }
             });
         }
-
-
     });
+    $("#input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $("input[name='front_cover']").val(response.data);
+            $("input[name='images']").val(response.data);
+            var pic = document.getElementById("images");
+            pic.src=response.data;
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+
+
 
     function ggg() {
         window.history.go(-1);
     }
+
+
 
     highlight_subnav("{:Url('Serviceinfo/index')}");
 </script>

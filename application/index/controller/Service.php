@@ -651,16 +651,16 @@ class Service extends Base
         //缴费支付宝账号
         $data['payment_bank'] = $CA['has_bank'] == 1 ? $park['payment_bank'] : "";
 
-       if($park_id==3){
+        if ($park_id == 3) {
 
-           $imgs="/index/images/service/payment-code-xiken.png";
+            $imgs = "/index/images/service/payment-code-xiken.png";
 
-       }elseif ($park_id==80){
+        } elseif ($park_id == 80) {
 
-           $imgs="/index/images/service/payment-code-binjiang.png";
+            $imgs = "/index/images/service/payment-code-binjiang.png";
 
-       }
-        $data['code']=$imgs;
+        }
+        $data['code'] = $imgs;
 
 
         $this->assign('data', json_encode($data));
@@ -1869,7 +1869,7 @@ class Service extends Base
         return $info;
     }
 
-//饮水服务详情页
+     //饮水服务详情页()
     public function waterDetail()
     {
         $id = input('id');
@@ -2114,10 +2114,10 @@ class Service extends Base
         } //饮水
         elseif ($appid == 3) {
             $info = WaterService::get($id);
-            $info['water_name']=isset($info->watertype->water_name)?$info->watertype->water_name:"";
-            $info['format']=isset($info->watertype->format)?$info->watertype->format:"";
-            $info['price']=isset($info->watertype->price)?$info->watertype->price:"";
-           unset($info['watertype']);
+            $info['water_name'] = isset($info->watertype->water_name) ? $info->watertype->water_name : "";
+            $info['format'] = isset($info->watertype->format) ? $info->watertype->format : "";
+            $info['price'] = isset($info->watertype->price) ? $info->watertype->price : "";
+            unset($info['watertype']);
 
         } elseif ($appid == 4) {
             $info = PropertyServer::get($id);
@@ -2302,10 +2302,11 @@ class Service extends Base
             $info['name'] = $app['name'];
 
         }
-        echo json_encode($info);
+        //echo json_encode($info);
         $this->assign('can_check', $can_check);
         $this->assign('type', json_encode($appid));
         $this->assign('info', json_encode($info));
+        $this->assign('park_id', session('park_id'));
         return $this->fetch();
 
     }
@@ -2494,12 +2495,12 @@ class Service extends Base
                 $success = input('success');
                 $user = WaterModel::get($id);
                 if ($success == 1) {
-                    $result = WaterModel::where('id', 'in', $id)->update(['status' => 3]);
+                    $result = WaterModel::where('id', 'in', $id)->update(['status' => 3, 'end_time' => time()]);
                     if ($result) {
                         //推送物业，运营 已送达
                         $message = [
                             "title" => "饮水服务提示",
-                            "description" =>"送水地点：" . $user['address'] . "\n送水桶数：" . $user['number'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile'] . "\n您的饮水服务订单用户已确认送达。",
+                            "description" => "送水地点：" . $user['address'] . "\n送水桶数：" . $user['number'] . "\n联系人员：" . $user['name'] . "\n联系电话：" . $user['mobile'] . "\n您的饮水服务订单用户已确认送达。",
                             "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/no/id/' . $id
                         ];
                         $this->commonSend(3, $message);
@@ -2516,7 +2517,7 @@ class Service extends Base
                     ];
 
                     if ($type == 1) {
-                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark']]);
+                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark'],'check_time'=>time()]);
                         if ($userinfo['department'] == 76) {
                             $message2 = [
                                 "title" => "饮水服务提示",
@@ -2528,7 +2529,7 @@ class Service extends Base
                         }
 
                     } else {
-                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 2, 'check_remark' => $data['check_remark']]);
+                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 2, 'check_remark' => $data['check_remark'],'check_time'=>time()]);
                         $message['description'] = "饮水服务暂时无法提供";
                     }
                     if (!empty($data['check_remark'])) {

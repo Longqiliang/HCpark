@@ -5,87 +5,167 @@
  * Date: 2017/8/17
  * Time: 9:33
  */
+
 namespace app\admin\controller;
 
 use app\common\model\WaterService as WaterModel;
 use app\common\model\WechatUser;
+use app\common\model\WaterType;
 use think\Db;
 use app\common\behavior\Service as ServiceModel;
+use PHPExcel;
+
 class WaterService extends Admin
 {
     public function index()
     {
-        $parkid =session("user_auth")['park_id'];
+        $parkid = session("user_auth")['park_id'];
+
+
         $search = input('search');
-        $map['s.status']  = ['neq',-1];
+        $map['s.status'] = ['neq', -1];
         if ($search != '') {
-            $map['s.name'] = ['like','%'.$search.'%'];
+            $map['s.name'] = ['like', '%' . $search . '%'];
         }
+
         $list = Db::table('tb_water_service')
             ->alias('s')
             ->join('__WECHAT_USER__ w', 's.userid=w.userid')
-            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark')
-            ->where('w.park_id','eq',$parkid)
+            ->join('__WATER_TYPE__ t', 't.id=s.water_id')
+            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,t.water_name,t.format ,t.price ')
+            ->where('w.park_id', 'eq', $parkid)
             ->where($map)
             ->order('create_time desc')
             ->paginate();
 
-        $this->assign('list',$list);
+        //ECHO json_encode($list);
+        $this->assign('list', $list);
+        $this->assign('park_id', $parkid);
         return $this->fetch();
     }
 
 //详情页
-    public function detail(){
-        $id=input('id');
-        $result=WaterModel::where('id','eq',$id)->find();
-        $this->assign('res',$result);
+    public function detail()
+    {
+        $id = input('id');
+        $result = WaterModel::where('id', 'eq', $id)->find();
+        $this->assign('res', $result);
+        return $this->fetch();
+    }
+   //饮水种类管理
+    public  function   watertype(){
+        $result = WaterType::where('status', 'neq', -1)->find();
+        $this->assign('res', $result);
         return $this->fetch();
     }
 
+
+
+
 //逻辑删除
-    public function moveToTrash() {
+    public function moveToTrash()
+    {
         $ids = input('ids/a');
         $result = WaterModel::where('id', 'in', $ids)->update(['status' => -1]);
-        if($result) {
+        if ($result) {
             return $this->success('删除成功', url('WaterService/index'));
-        } elseif(!$result) {
+        } elseif (!$result) {
             return $this->error('删除失败');
         }
     }
 
     //完成
-    public function complete() {
+    public function complete()
+    {
 
         $id = input('id');
         $uid = input('uid');
         $remark = input('check_remark');
-        $result = WaterModel::where('id', 'in', $id)->update(['status' => $uid,'check_remark'=>$remark]);
+        $result = WaterModel::where('id', 'in', $id)->update(['status' => $uid, 'check_remark' => $remark]);
         $data = WaterModel::get($id);
         $userId = $data['userid'];
-        if ($result){
-            if ($uid ==1){
+        if ($result) {
+            if ($uid == 1) {
                 $message = [
                     "title" => "饮水服务提示",
                     "description" => "送水地点：" . $data['address'] . "\n送水桶数：" . $data['number'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/'.$id,
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $id,
                 ];
-            }else{
+            } else {
                 $message = [
                     "title" => "饮水服务提示",
-                    "description" => date('m月d日',time())."\n饮水服务暂时无法提供\n备注:".$data['check_remark'],
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/'.$id,
+                    "description" => date('m月d日', time()) . "\n饮水服务暂时无法提供\n备注:" . $data['check_remark'],
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $id,
                 ];
 
             }
 
-            ServiceModel::sendPersonalMessage($message,$userId);
+            ServiceModel::sendPersonalMessage($message, $userId);
             $this->success("已审核");
-        }else{
+        } else {
 
             $this->error("未成功");
         }
     }
 
+    public function outexcel()
+    {
+        $parkid = session("user_auth")['park_id'];
+        $map['s.status'] = ['neq', -1];
+        $list = Db::table('tb_water_service')
+            ->alias('s')
+            ->join('__WECHAT_USER__ w', 's.userid=w.userid')
+            ->join('__WATER_TYPE__ t', 't.id=s.water_id')
+            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,t.water_name,t.format，t.price  ')
+            ->where('w.park_id', 'eq', $parkid)
+            ->where($map)
+            ->order('create_time desc')
+            ->select();
+
+        $excel = new PHPExcel();
+        $letter = array('A', 'B', 'C', 'D', 'E', 'F', 'F', 'G', 'H', 'I');
+        $celltitle = [
+            '联系人', '送水地址', '送水桶数', '送水种类', '送水规格', '送水价格', '联系电话', '创建时间', '状态'
+        ];
+        foreach ($list as $key => $value) {
+            $cellData[$key] = [$value['name'], $value['address'], $value['number'], $value['water_name'], $value['format'],$value['price'], $value['mobile'], $value['create_time'], $value['status']];
+        }
+        for ($i = 0; $i < count($celltitle); $i++) {
+            $excel->getActiveSheet()->setCellValue("$letter[$i]1", "$celltitle[$i]");
+        }
+
+        $data = $cellData;
+        //填充表格信息
+        for ($i = 2; $i <= count($data) + 1; $i++) {
+            $j = 0;
+            foreach ($data[$i - 2] as $key => $value) {
+                $excel->getActiveSheet()->setCellValue("$letter[$j]$i", "$value");
+                $j++;
+            }
+        }
+        //创建Excel输入对象
+        $write = new \PHPExcel_Writer_Excel5($excel);
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type:application/force-download");
+        header("Content-Type:application/vnd.ms-execl");
+        header("Content-Type:application/octet-stream");
+        header("Content-Type:application/download");
+        header('Content-Disposition:attachment;filename="饮水记录表.xls"');
+        header("Content-Transfer-Encoding:binary");
+        $write->save('php://output');
+
+    }
+
+    /* private function a()
+     {
+         Excel::create('学生成绩', function ($excel) use ($cellData) {
+             $excel->sheet('score', function ($sheet) use ($cellData) {
+                 $sheet->rows($cellData);
+             });
+         })->export('xls');
+     }*/
 
 
 }

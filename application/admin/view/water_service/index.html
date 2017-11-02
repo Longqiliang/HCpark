@@ -72,6 +72,10 @@
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+                {eq name="$park_id" value="80"}
+                <a href="{:Url('outexcel')}" class="btn-sm btn-info" style="color: #fff" >导出</a>
+                <a href="{:Url('watertype')}" class="btn-sm btn-info" style="color: #fff" >饮水种类管理</a>
+            {/eq}
             </div>
         </div>
 
@@ -112,6 +116,11 @@
                     <th>联系人</th>
                     <th>送水地址</th>
                     <th>送水桶数</th>
+                    {eq name="$park_id" value="80"}
+                    <th>饮水种类</th>
+                    <th>饮水规格</th>
+                    <th>饮水价格</th>
+                    {/eq}
                     <th>联系电话</th>
                     <th>创建时间</th>
                     <th>状态</th>
@@ -128,7 +137,13 @@
                     <td>{$vo.id}</td>
                     <td>{$vo.name}</td>
                 <td>{$vo.address|msubstr=0,20}</td>
-                <td>{$vo.number}</td>
+                    <td>{$vo.number}</td>
+                    {eq name="$park_id" value="80"}
+                    <td>{$vo.water_name}</td>
+                    <td>{$vo.format}</td>
+                    <td>{$vo.price}</td>
+                    {/eq}
+
                 <td>{$vo.mobile}</td>
                 <td>{$vo.create_time|date='Y-m-d H:i',###}</td>
 
@@ -163,6 +178,9 @@
 </div>
 <input type="hidden" name="is_id" value="">
 <input type="hidden" name="is_uid" value="">
+
+
+
 {/block}
 
 {block name="script"}

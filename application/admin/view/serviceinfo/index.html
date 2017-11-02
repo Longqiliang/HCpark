@@ -84,7 +84,7 @@
                     <th>内容</th>
                     <th>发布人</th>
                     <th>创建时间</th>
-                    <th>是否推送</th>
+                    <!--<th>是否推送</th>-->
                     <th>状态</th>
                     <th width="200px">操作</th>
                 </tr>
@@ -107,13 +107,13 @@
                     <td><span>{$vo.content|strip_tags|msubstr=0,50}</span></td>
                     <td><span>{$vo.source}</span></td>
                     <td class="text-right mail-date" style="white-space: nowrap"><span>{$vo.create_time|strtotime|date='Y-m-d H:i',###}</span></td>
-                    <td class="list_type">
+                   <!-- <td class="list_type">
                         {eq name="vo.is_send" value="1"}
                         <span class="txt-success">已推送</span>
                         {else/}
                         <span>未推送</span>
                         {/eq}
-                    </td>
+                    </td>-->
 
 
                     {eq name="$vo.status" value="1"}
@@ -124,7 +124,7 @@
                     {/eq}
 
                     <td width="200px">
-                        <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始推送</a>
+                       <!-- <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始推送</a>-->
                         <a href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-success">编辑</a>
                         <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                     </td>
