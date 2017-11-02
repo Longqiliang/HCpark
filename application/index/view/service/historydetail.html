@@ -37,6 +37,14 @@
     .card .remark>div{margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);min-height:18vh;border:1px solid #e5e5e5;border-radius:5px}
     .group-cell.btn-box{margin:0}
     .card-cell a{color:#333}
+    .my-line{
+        width:100vw;
+        height:0;
+        border-top: 1px dashed #f1f1f1;
+        position: absolute;
+        top:44px;
+        left:0;
+    }
 </style>
 {/block}
 
@@ -178,11 +186,12 @@
                     <li><span>联系方式</span><a :href="'tel:'+info.mobile">{{info.mobile}}（{{info.name}}）</a></li>
                     <li v-if="info.check_remark"><span>物业提示</span><span>{{info.check_remark}}</span></li>
                 </ul>
+                <div style="position: relative;">
                 <ul class="water-process">
                     <li>
                         <ul class="water-process-detail">
                             <li>用户</li>
-                            <li><span :class="{'water-font-black':info.status>=0}">1</span></li>
+                            <li><span :class="{'water-font-black':info.status>=0}" class="my-first-bool">1</span></li>
                             <li :class="{'water-font-black':info.status>=0}">{{info.create_time}}</li>
                             <li :class="{'water-font-black':info.status>=0}">提交预约</li>
                         </ul>
@@ -204,6 +213,8 @@
                         </ul>
                     </li>
                 </ul>
+                    <div class="my-line"></div>
+                </div>
                 <div class="water-btn-box">
                     <button class="water-btn water-btn-b" v-if="can_check=='no' && info.status==1" @click="isSuccess">确认送达</button>
                     <button class="water-btn water-btn-r" v-if="can_check=='yes' && info.status==0" @click="showRent">取消订单</button>
@@ -496,6 +507,14 @@ var app = new Vue({
             console.log(3)
             document.getElementsByTagName('body')[0].style.background='#fff'
         }
+
+        var viewWidth=document.body.clientWidth,
+             myFirst=document.getElementsByClassName('my-first-bool')[0],
+             line=document.getElementsByClassName('my-line')[0];
+        var l=getElementViewLeft(myFirst);
+        line.style.left=l+6+'px';
+        line.style.width=viewWidth-(l*2+12)+'px'
+
     },
     data:{
         subData:{
@@ -839,5 +858,44 @@ var app = new Vue({
         },
     }
 })
+function getElementViewLeft(element){
+    var actualLeft = element.offsetLeft;
+    var current = element.offsetParent;
+
+    while (current !== null){
+        actualLeft += current.offsetLeft;
+        current = current.offsetParent;
+    }
+
+    if (document.compatMode == "BackCompat"){
+        var elementScrollLeft=document.body.scrollLeft;
+    } else {
+        var elementScrollLeft=document.documentElement.scrollLeft;
+    }
+
+    return actualLeft-elementScrollLeft;
+}
+function getTop(e){
+    var offset=e.offsetTop;
+    if(e.offsetParent!=null) offset+=getTop(e.offsetParent);
+    return offset;
+}
+function getElementViewTop(element){
+    var actualTop = element.offsetTop;
+    var current = element.offsetParent;
+
+    while (current !== null){
+        actualTop += current. offsetTop;
+        current = current.offsetParent;
+    }
+
+    if (document.compatMode == "BackCompat"){
+        var elementScrollTop=document.body.scrollTop;
+    } else {
+        var elementScrollTop=document.documentElement.scrollTop;
+    }
+
+    return actualTop-elementScrollTop;
+}
 </script>
 {/block}
