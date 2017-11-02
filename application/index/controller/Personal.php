@@ -915,6 +915,7 @@ class Personal extends Base
         $userId = input('user_id');
         //echo $userId;
         $department = input('departmentId');
+        $room=input('room');
         //return $department;
         $data = [
             'userid' => $userId,
@@ -928,7 +929,7 @@ class Personal extends Base
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
-        $result = $user->where(['userid' => $userId])->update(['department' => $department, 'park_id' => $park]);
+        $result = $user->where(['userid' => $userId])->update(['department' => $department, 'park_id' => $park,'company_address'=>$room]);
         $res = $wechat->updateUser($data);
         if ($res) {
             Session::set('park_id', $park);
@@ -937,31 +938,6 @@ class Personal extends Base
 
             $this->error("修改失败");
         }
-
-    }
-    /**
-     * 更改部门（仅滨江用户可用）
-     */
-    public function editDepartment()
-    {
-        $userId = input('user_id');
-        $department = input('departmentId');
-        $room =input('room');
-        $data = [
-            'userid' => $userId,
-            'department' => [$department],
-        ];
-        Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $wechat = new TPWechat(config('party'));
-        $user = new WechatUser();
-        $result = $user->where(['userid' => $userId])->update(['department' => $department, 'company_address'=>$room]);
-        $res = $wechat->updateUser($data);
-        if ($res) {
-            $this->success("修改成功", '', session('park_id'));
-        } else {
-            $this->error("修改失败");
-        }
-
     }
 
 
