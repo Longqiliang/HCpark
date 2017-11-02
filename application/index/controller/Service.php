@@ -1810,6 +1810,7 @@ class Service extends Base
 
     }
 
+
      //饮水服务
     public function waterService()
     {
@@ -2882,6 +2883,7 @@ class Service extends Base
             case  80 :
                 $department_id = 91;
                 $propertyDepartment=90;
+                break;
             default:
                 $department_id = 76;
                 $propertyDepartment=86;
