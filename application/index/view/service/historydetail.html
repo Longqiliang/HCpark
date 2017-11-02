@@ -217,8 +217,8 @@
                 </div>
                 <div class="water-btn-box">
                     <button class="water-btn water-btn-b" v-if="can_check=='no' && info.status==1" @click="isSuccess">确认送达</button>
-                    <button class="water-btn water-btn-r" v-if="can_check=='yes' && info.status==0" @click="showRent">取消订单</button>
-                    <button class="water-btn water-btn-g" v-if="can_check=='yes' && info.status==0" @click="showRent">确认接单</button>
+                    <!--<button class="water-btn water-btn-r" v-if="can_check=='yes' && info.status==0" @click="showRent">取消订单</button>-->
+                    <button class="water-btn water-btn-g" v-if="can_check=='yes' && info.status==0" @click="showRent">审核订单</button>
                 </div>
             </div>
         </div>
