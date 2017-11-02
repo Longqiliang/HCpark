@@ -2305,7 +2305,7 @@ class Service extends Base
             $info['name'] = $app['name'];
 
         }
-        echo json_encode($info);
+        //echo json_encode($info);
         $this->assign('can_check', $can_check);
         $this->assign('type', json_encode($appid));
         $this->assign('info', json_encode($info));
