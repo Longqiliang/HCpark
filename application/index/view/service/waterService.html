@@ -7,6 +7,9 @@
     body{
         background-color: #f0eff5;
     }
+    .font-gray{
+        color: #999;
+    }
 </style>
 {/block}
 
@@ -27,6 +30,19 @@
                     <span class="mint-datetime-action mint-datetime-confirm" @click="selectAddress">确定</span>
                 </div>
                 <mt-picker :slots="addressList" @change="onAddressChange" value-key="name" ></mt-picker>
+            </mt-popup>
+        </div>
+        <div class="card-cell" v-if="info.park_id==80">
+            <label >送水种类</label>
+            <div class="cell-address" @click="toggleWater">
+                <span :class="{'font-gray':!checkedWater}">{{checkedWater?checkedWater:'请选择送水种类'}}</span>
+            </div>
+            <mt-popup  position="bottom"  v-model="waterVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="toggleWater">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="toggleWater">确定</span>
+                </div>
+                <mt-picker :slots="waterList" @change="onWaterChange"></mt-picker>
             </mt-popup>
         </div>
         <div class="card-cell">
@@ -54,9 +70,27 @@
 <script>
     //console.log(JSON.parse('{$info}'));
     var floorlist = {$floorlist};
+    var waterType ={$watertype};
+    for(var i=0,wType=[];i<waterType.length;i++){
+        wType[waterType[i].water_name+"("+waterType[i].format+")"]=waterType[i].id
+    }
     var vm = new Vue({
         el:"#app",
         data:{
+            info:{$info},
+            //饮水
+            waterType:wType,
+            checkWater:'',
+            checkedWater:'',
+            waterVisible:false,
+            waterPicker:'',
+            waterList:[
+                {
+                    defaultIndex:1,
+                    values:Object.keys(wType)
+                }
+            ],
+            //地址
             addressOne:'',
             addressTwo:'',
             addressName:{
@@ -83,6 +117,7 @@
             defaultData:{
                 address:'',
                 number:'',
+                water_id:1,
                 appid:JSON.parse('{$info}').app_id,
                 name:JSON.parse('{$info}').name,
                 mobile:JSON.parse('{$info}').mobile
@@ -94,6 +129,7 @@
             _this.$nextTick(function() {
                 setTimeout(function() {
                     _this.addressList[0].defaultIndex = 0;
+                    _this.waterList[0].defaultIndex = 0;
                 }, 100);
             });
         },
@@ -104,6 +140,14 @@
             checkAddress:function () {
                 var _this = this;
                 _this.addressVisible = true;
+            },
+            toggleWater:function () {
+                var _this = this;
+                _this.waterVisible = !_this.waterVisible;
+                if(!_this.waterVisible){
+                    _this.checkedWater=_this.checkWater;
+                    _this.defaultData.water_id=wType[_this.checkWater]
+                }
             },
             onAddressChange:function (pick,values) {
                 var _this = this;
@@ -117,6 +161,13 @@
                             room:values[2]
                         }
                     }
+                }
+            },
+            onWaterChange:function (pick,values) {
+                var _this = this;
+                _this.waterPicker =  pick;
+                if(values[0]){
+                    _this.checkWater=values[0]
                 }
             },
             cancelAddress:function () {
@@ -136,6 +187,10 @@
                     return;
                 }else if(!_this.addressOne || !_this.addressTwo ){
                     _this.$toast('请输入正确送水地点');
+                    return;
+                }
+                if(_this.defaultData.water_id==1 && _this.info.park_id==80){
+                    _this.$toast('请选择送水种类');
                     return;
                 }
                 _this.defaultData.address = _this.addressOne +"幢"+ _this.addressTwo;
@@ -161,7 +216,7 @@
                 this.$http.post("/index/service/waterService",data).then(function (res) {
                     _this.isSubmit = true;
                     var resData = res.data;
-                    console.log(resData)
+                    console.log(resData);
                     if(resData.code == 1){
                         swal({
                             title:"预约成功!",

@@ -161,42 +161,6 @@
         </div>
     </div>
     <div v-if="appid==3">
-        <div style="display: none">
-        <div class="card">
-            <div class="card-tit">送水服务</div>
-            <div class="card-cell">
-                <span>送水地点</span>
-                <span>{{info.address}}</span>
-            </div>
-            <div class="card-cell">
-                <span>送水桶数</span>
-                <span>{{info.number}}</span>
-            </div>
-            <div class="card-cell">
-                <span>提交时间</span>
-                <span>{{info.create_time}}</span>
-            </div>
-            <div class="card-cell">
-                <span>联系人员</span>
-                <span>{{info.name}}</span>
-            </div>
-            <div class="card-cell">
-                <span>联系电话</span>
-                <span><a :href="'tel:'+info.mobile">{{info.mobile}}</a></span>
-            </div>
-            <div class="card-cell">
-                <span>服务状态</span>
-                <span>{{status(info.status)}}</span>
-            </div>
-            <div class="remark" v-if="info.status!=0 && info.check_remark">
-                <p>物业提示</p>
-                <div>{{info.check_remark}}</div>
-            </div>
-        </div>
-        <div class="rent-btn-box" v-if="can_check=='yes' && info.status==1">
-            <button class="btn btn-block btn-green" @click="isSuccess">确认送达</button>
-        </div>
-        </div>
         <div class="water-view">
             <div class="water-header">
                 <div class="water-header-bg" :class="{green:info.status==1,blue:info.status==3,orange:info.status==0,red:info.status==2}"></div>
@@ -241,7 +205,7 @@
                     </li>
                 </ul>
                 <div class="water-btn-box">
-                    <button class="water-btn water-btn-b" v-if="can_check=='yes' && info.status==1">确认送达</button>
+                    <button class="water-btn water-btn-b" v-if="can_check=='no' && info.status==1" @click="isSuccess">确认送达</button>
                     <button class="water-btn water-btn-r" v-if="can_check=='yes' && info.status==0" @click="showRent">取消订单</button>
                     <button class="water-btn water-btn-g" v-if="can_check=='yes' && info.status==0" @click="showRent">确认接单</button>
                 </div>
