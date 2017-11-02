@@ -1813,7 +1813,7 @@ class Service extends Base
         //$personalMessage = new PersonalMessage();
         $data['userid'] = session('userId');
         $data['park_id'] = session('park_id');
-        $result = $waterModel->allowField(true)->validate(true)->save(qu);
+        $result = $waterModel->allowField(true)->validate(true)->save( $data);
         if ($result) {
             //todo： 推送点击到详情页面代码
             $message = [
