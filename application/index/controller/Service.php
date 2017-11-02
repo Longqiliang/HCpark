@@ -177,12 +177,14 @@ class Service extends Base
                 break;
             //饮水
             case 3:
-                $watertype = WaterType::where(['id', array('gt', 0)])->select();
+                $watertype = WaterType::where(['id'=> array('gt', 0)])->select();
                 $this->assign('watertype', json_encode($watertype));
                 $user = $UserModel->where('userid', $userid)->find();
                 $info['name'] = $user['name'];
                 $info['mobile'] = $user['mobile'];
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
+                $floorList = $this->commonFloor();
+                $this->assign('floorlist', json_encode($floorList));
                 //$info['app_id'] = $app_id;
                 break;
             //室内保洁
