@@ -71,7 +71,7 @@
         <li v-if="appid==3">
             <span>{{item.name}}</span>
             <span class="unPay" v-if="item.status==-1">已删除</span>
-            <span class="auditing" v-if="item.status==0">审核中</span>
+            <span class="auditing" v-if="item.status==0">提交预约</span>
             <span class="payed" v-if="item.status==1">确认接单</span>
             <span class="payed" v-if="item.status==2">取消订单</span>
             <span class="payed" v-if="item.status==3">确认送达</span>
