@@ -787,7 +787,7 @@ textarea::-webkit-input-placeholder {
     color: #fff;
     padding:2.7rem 0;
     font-weight: 200;
-    line-height: 1;
+    line-height: 1.5;
 }
 .water-title>span{
     font-size: 1.3rem;
