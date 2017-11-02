@@ -62,7 +62,7 @@
             <h2>预约信息 ({$list->total()})</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrashs2')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -113,9 +113,9 @@
                         <div class="col-md-5 col-sm-1"></div>
                         {eq name="$vo.status" value ="1"}
                         <a  href="javascript:void(0)" class="btn-sm btn-primary" onclick="changeState('{$vo.id}')">联系</a>
-                        <a  href="javascript:void(0)" class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+                        <a  href="javascript:void(0)" class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrashs2')}')">删除</a>
                         {else/}
-                        <a  href="javascript:void(0)" class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
+                        <a  href="javascript:void(0)" class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrashs2')}')">删除</a>
                         {/eq}
                     </td>
                 </tr>

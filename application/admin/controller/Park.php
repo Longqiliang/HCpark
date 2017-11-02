@@ -335,7 +335,7 @@ class Park extends Admin
         $parkid = session('user_auth')['park_id'];
         $park = ParkModel::where('id', session("user_auth")['park_id'])->find();
         $parkName = $park['name'];
-        $map = ['park_id' => $parkid];
+        $map = ['park_id' => $parkid,'status'=>array('neq',-1)];
         $list = PeopleRent::where($map)->order('id desc')->paginate();
 
         foreach ($list as $k => $v) {
@@ -345,7 +345,6 @@ class Park extends Admin
         }
         int_to_string($list, ['status' => [1 => "未联系", 2 => "已联系"]]);
         $this->assign('list', $list);
-
         return $this->fetch();
     }
 
@@ -368,6 +367,21 @@ class Park extends Admin
     {
         $ids = input('ids/a');
         $result = ParkRent::where('id', 'in', $ids)->update(['status' => -1]);
+
+        if ($result) {
+
+            return $this->success('删除成功');
+
+        } else {
+
+            return $this->error('删除失败');
+        }
+    }
+    /*删除预约信息*/
+    public function moveToTrashs2()
+    {
+        $ids = input('ids/a');
+        $result = PeopleRent::where('id', 'in', $ids)->update(['status' => -1]);
 
         if ($result) {
 
