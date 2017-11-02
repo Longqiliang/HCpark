@@ -180,6 +180,7 @@ class Service extends Base
                 $user = $UserModel->where('userid', $userid)->find();
                 $info['name'] = $user['name'];
                 $info['mobile'] = $user['mobile'];
+                $info['office'] = $user['company_address'];
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
