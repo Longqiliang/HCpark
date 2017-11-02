@@ -281,6 +281,7 @@ class Service extends Base
                 $this->assign('floorlist', json_encode($floorList));
                 break;
         }
+        //echo json_encode($info);
         $info['app_id'] = $app_id;
         $info['park_id'] = $parkid;
         $this->assign('info', json_encode($info));
@@ -2876,11 +2877,14 @@ class Service extends Base
         switch ($park_id) {
             case  3 :
                 $department_id = 76;
+                $propertyDepartment=86;
                 break;
             case  80 :
                 $department_id = 91;
+                $propertyDepartment=90;
             default:
                 $department_id = 76;
+                $propertyDepartment=86;
                 break;
         }
         switch ($type) {
@@ -2899,7 +2903,7 @@ class Service extends Base
                 break;
             //物业
             case 2 :
-                $user = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id])->select();
+                $user = $wechatUser->where(['department' => $propertyDepartment, 'park_id' => $park_id])->select();
                 foreach ($user as $value2) {
                     $useridlist .= '|' . $value2['userid'];
                 }
@@ -2916,7 +2920,7 @@ class Service extends Base
                     }
                 }
                 //该园区物业管理
-                $user2 = $wechatUser->where(['tagid' => 2, 'park_id' => $park_id, 'status' => 1])->select();
+                $user2 = $wechatUser->where(['department' => $propertyDepartment, 'park_id' => $park_id, 'status' => 1])->select();
                 foreach ($user2 as $value2) {
                     $useridlist .= '|' . $value2['userid'];
                 }
@@ -3172,8 +3176,6 @@ class Service extends Base
             $list["C幢"] = $newArr2;
             $list["D幢"] = $newArr3;
         }
-
-
         return $list;
         //echo json_encode($list);
 
