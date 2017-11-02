@@ -21,6 +21,43 @@
     #app .list{
         margin:0;
     }
+    .search_mark{position:fixed;top:0;left:0;bottom:0;right:0;z-index:10}
+    .search_mark>.search_bg{position:absolute;top:0;left:0;bottom:0;right:0;z-index:15;background-color:rgba(0,0,0,.3)}
+    .search_content{position:absolute;padding-bottom:3.2vw;top:5vh;left:5vw;background:#fff;z-index:20;border-radius:5px;overflow: hidden}
+    .search_content_box{position:relative;width:90vw;height:70vh;overflow:scroll}
+    .search{background:#f0eff5;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;width:90vw;position:fixed;top:5vh;left:5vw;z-index:999}
+    .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center;overflow:hidden}
+    .search>.unBtn{display:none}
+    .search>.searchBox>.searchInput{display:none}
+    .search>.searchBox>.searchText{display:inline-block;font-size:1.4rem;color:#999;padding-left:2rem;min-width:1px;line-height:3.2rem;height:3.2rem;background:url(/index/images/enterprise/search.png) 0 50% no-repeat;background-size:1.4rem 1.4rem}
+    .search.isClick{background:#fff;border-bottom:1px solid #f1f1f1;display:flex;align-items:center;justify-content:space-between}
+    .search.isClick>.searchBox{background:#f0eff5;padding-left:2.66vw;flex-grow:1;margin-right:2.66vw;display:flex;align-items:center}
+    .search.isClick>.searchBox>.searchText{display:inline-block}
+    .search.isClick>.searchBox>.searchText>.searchText_c{display:none}
+    .search.isClick .searchInput{background:#f0eff5;display:inline-block;font-size:1.4rem;height:3.2rem;flex-grow:1}
+    .search.isClick>.unBtn{display:block;padding:0;box-sizing:border-box;width:3.8rem;height:2.8rem;line-height:2.8rem;border-radius:5px;border:1px solid #5d9cec;color:#5d9cec;text-align:center;font-size:1.4rem}
+    .searchList{min-height:100vh;width:100%;position:absolute;top:0;left:0}
+    .searchList.company-list{padding:0}
+    .searchList.company-list>li{margin-bottom:0;border-bottom:1px solid #f1f1f1;font-size:1.4rem}
+    .searchList{background-color:rgba(255,255,255,1)}
+    .searchList>li:first-child{margin-top:4.8rem}
+    .company-list{box-sizing:border-box;width:100%;position:absolute;top:0;left:0;padding:5.2rem 3.7vw .4rem 3.7vw}
+    .company-list>li{padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;align-items:center;background-color:#fff;font-size:1.4rem}
+    .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
+    .company-list .company-logo{margin-right:1.4rem}
+    .company-info>li{width:65vw;line-height:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .company-info>li:first-child{font-size:1.6rem;font-weight:700;color:#333}
+    .company-info>li:last-child{font-size:1.2rem;color:#999}
+    .hidden{display:none}
+    .overflow{height:100vh;overflow:hidden}
+    .color_h{color:#999}
+    .my-must:before{content:'*';display:block;font-size:1.2rem;color:red;position:absolute;left:-.7rem;top:0}
+    .search-mask-close{height:3.6rem;width:3.6rem;border-radius:50%;border:2px solid #fff;position:absolute;bottom:-6.6rem;left:50%;-webkit-transform:translateX(-50%);-moz-transform:translateX(-50%);-ms-transform:translateX(-50%);-o-transform:translateX(-50%);transform:translateX(-50%);z-index:101}
+    .search-mask-close>span{display:block;width:2px;height:3.2rem;margin:-3.2rem auto 0;background-color:#fff}
+    .search-mask-close:after,.search-mask-close:before{content:'';display:block;width:0;height:2rem;border-left:2px solid #fff;position:absolute;left:50%;top:50%}
+    .search-mask-close:after{-webkit-transform:rotate(45deg) translate(-50%,-50%);-moz-transform:rotate(45deg) translate(-50%,-50%);-ms-transform:rotate(45deg) translate(-50%,-50%);-o-transform:rotate(45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(45deg)}
+    .search-mask-close:before{-webkit-transform:rotate(-45deg) translate(-50%,-50%);-moz-transform:rotate(-45deg) translate(-50%,-50%);-ms-transform:rotate(-45deg) translate(-50%,-50%);-o-transform:rotate(-45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(-45deg)}
+
 </style>
 {/block}
 
@@ -51,8 +88,15 @@
         <li v-if="info.people_card"><a href="javascript:;" ><p>身份证号 <span class="ft-right">{{info.people_card}}</span></p></a></li>
         <li v-if="info.car_card"><a href="javascript:;" ><p>车牌号 <span class="ft-right">{{info.car_card}}</span></p></a></li>
         <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="info.park_name"></span></p></a></li>
-        <li><a href="javascript:;" ><p>公司 <span class="ft-right">{{info.department}}</span></p></a></li>
-        <li v-if="info.office"><a href="javascript:;" ><p>办公地点 <span class="ft-right">{{info.office}}</span></p></a></li>
+        <li @click="toggleMark" v-if="(nowPark.park_id==3 && info.department) || nowPark.park_id==80"><a href="javascript:;"class="item-pull-right" ><p>公司 <span class="ft-right">{{info.department}}</span></p></a></li>
+        <li v-if="(nowPark.park_id==3 && info.office)||nowPark.park_id==80"><a href="javascript:;" @click="togglePopup" class="item-pull-right"><p>办公地点 <span class="ft-right">{{info.office}}</span></p></a></li>
+        <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup" >
+            <div class="picker-toolbar">
+                <span class="mint-datetime-action mint-datetime-cancel" @click="togglePopup">取消</span>
+                <span class="mint-datetime-action mint-datetime-confirm" @click="selectRoom">确定</span>
+            </div>
+            <mt-picker :slots="roomSlots" @change="onRoomChange" value-key="name"></mt-picker>
+        </mt-popup>
         <mt-popup  position="bottom"  v-model="parkVisible" class="mint-popup">
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="cancelParkPopup">取消</span>
@@ -64,6 +108,37 @@
     <div class="btn-box" v-show="showBtn">
         <button class="btn btn-primary" @click="savePark">保存</button>
     </div>
+    <div class="search_mark" v-show="isShowMark">
+        <div class="search_bg" @click="toggleMark"></div>
+        <div class="search_content">
+            <div class="search_content_box">
+                <div class="search" :class="{isClick:inputStatus}" >
+                    <div class="searchBox" @click="isClick">
+                        <div class="searchText"><span class="searchText_c">请在此搜索企业</span></div>
+                        <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" placeholder="请输入企业名" v-focus="inputStatus">
+                    </div>
+                    <div class="unBtn" @click="isCancel">取消</div>
+                </div>
+                <!--公司列表-->
+                <ul class="company-list" :class="{overflow:inputStatus}">
+                    <li v-for="item in companyList" @click="checkCompany(item)">
+                        {{item.name}}
+                    </li>
+                </ul>
+                <!--搜索列表-->
+                <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
+                    <li v-for="item in searchList" @click="checkCompany(item)">
+                        <ul class="company-info">
+                            {{item.name}}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="search-mask-close" @click="toggleMark">
+                <span></span>
+            </div>
+        </div>
+    </div>
 </div>
 {/block}
 
@@ -73,15 +148,25 @@
     console.log(info);
     var park  = [
         {
+            park_id:3,
             departmentId:78,
             name: '希垦科技园区'
         },
         {
+            park_id:80,
             departmentId:91,
             name:'人工智能产业园区'
         }
     ];
-
+    Vue.directive('focus', {
+        // When the bound element is inserted into the DOM...
+        update: function (el,value) {
+            // Focus the element
+            if(value.value){
+                el.focus()
+            }
+        }
+    })
     var vm = new Vue({
         el:'#app',
         data:{
@@ -98,8 +183,133 @@
             ],
             showBtn:false,
             isCheckBtn:true,
+            //            搜索框
+            isShowMark:false,
+            inputStatus:false,
+            inputValue:'',
+            companyList:[],
+            searchList:[],
+//            选折器
+            room:'',
+            checkedRoom:'',
+            roomVisible:false,
+            roomSlots:[
+                {
+                    defaultIndex:1,
+                    values:[]
+                }
+            ],
+            departmentId:''
+        },
+        mounted:function () {
+            var _this = this;
+            if(_this.info.park_id==80){
+                _this.nowPark=park[1]
+            }else{
+                _this.nowPark=park[0]
+            }
+
+            _this.companyList=_this.info.departmentlist;
+            //            checkedCompany
+            console.log(this.department)
+            for(var i=0;i<this.companyList.length;i++){
+                console.log(this.companyList[i].name)
+                if(this.companyList[i].name==this.info.department){
+                    this.checkedCompany=this.companyList[i];
+                    this.roomSlots[0].values=this.companyList[i].roomlist;
+                }
+            }
+            _this.departmentId=_this.info.department_id;
+            console.log(this.checkedCompany)
+            _this.$nextTick(function() {
+                setTimeout(function() {
+                    _this.slots[0].defaultIndex = 0;
+                    _this.roomSlots[0].defaultIndex = 0;
+                }, 100);
+            });
+        },
+        computed:{
         },
         methods:{
+            //            搜索
+            toggleMark(){
+                if(this.nowPark.park_id==3){return }
+                this.isShowMark=!this.isShowMark;
+            },
+            checkCompany(item){
+                console.log(item)
+                this.checkedCompany=item;
+                this.info.department=item.name;
+                this.roomSlots[0].values=item.roomlist;
+                this.info.office=this.room=item.roomlist[0];
+                this.toggleMark();
+                this.departmentId=item.id;
+                this.showBtn = true;
+            },
+            isClick:function () {
+                this.inputStatus=true;
+            },
+            isCancel:function () {
+                this.inputStatus=false;
+                this.inputValue='',
+                        this.searchList=[]
+            },
+            toSearch:function () {
+                let reg=new RegExp(this.inputValue);
+                this.searchList=[];
+                if(!this.inputValue){
+                    this.searchList=[];
+                }else{
+                    for(let i=0;i<this.companyList.length;i++){
+                        if(reg.test(this.companyList[i].name)){
+                            this.searchList.push(this.companyList[i])
+                        }
+                    }
+                }
+            },
+//            选折器
+            togglePopup(){
+                if(this.nowPark.park_id==3){return}
+                console.log(this.roomVisible)
+                if(!this.roomVisible){
+                    console.log(this.checkedCompany)
+                    if(!this.checkedCompany){
+                        swal({
+                            title: "",
+                            text: "请先选择公司！",
+                            type: "warning",
+                            confirmButtonColor: "#338cec",
+                        })
+                    }else if(this.checkedCompany.roomlist.length==0){
+                        swal({
+                            title: "",
+                            text: "该公司还未录入房间号！",
+                            type: "warning",
+                            confirmButtonColor: "#338cec",
+                        })
+                    }else{
+                        this.roomVisible = !this.roomVisible ;
+                    }
+                }else{
+                    this.roomVisible = !this.roomVisible ;
+                }
+
+            },
+            selectRoom:function () {
+                this.togglePopup();
+                this.info.office=this.room=this.checkedRoom;
+                this.showBtn = true;
+                console.log(this.checkedRoom);
+            },
+            onRoomChange:function (p,v) {
+                var _this = this;
+                console.log(v[0]);
+                if(v[0]){
+                    _this.checkedRoom = v[0];
+                    console.log(_this.checkedRoom)
+                }
+            },
+            //园区选择
             showParkPopup:function () {
                 this.parkVisible = true;
             },
@@ -110,11 +320,16 @@
                 this.parkVisible = false;
                 this.showBtn = true;
                 this.nowPark = this.checkPark;
+                console.log(this.nowPark)
                 this.info.park_name = this.checkPark.name;
+                this.info.office=this.room='';
+                this.info.department='';
+                this.departmentId=this.checkPark.departmentId;
             },
             onParkChange:function (p,v) {
                 var _this = this;
                 if(v[0]){
+                    _this.department = v[0].departmentId;
                     _this.checkPark = v[0];
                 }
             },
@@ -124,10 +339,13 @@
                     return;
                 }
                 _this.isCheckBtn = false;
-                _this.$http.post("{:Url('Personal/changeDepartment')}",{
+                var data={
                     user_id:_this.info.user_id,
-                    departmentId:_this.nowPark.departmentId
-                }).then(function (e) {
+                    departmentId:_this.departmentId,
+                    room:_this.room
+                };
+                console.log(data);
+                _this.$http.post("{:Url('Personal/changeDepartment')}",data).then(function (e) {
                     console.log(e);
                     _this.isCheckBtn = true;
                     var data = e.data;
@@ -157,16 +375,7 @@
                 })
             }
         },
-        mounted:function () {
-            var _this = this;
-            _this.$nextTick(function() {
-                setTimeout(function() {
-                    _this.slots[0].defaultIndex = 0;
-                }, 100);
-            });
-        },
-        computed:{
-        }
+
     });
     $(function () {
         $("#checkImg").on('click',function () {
