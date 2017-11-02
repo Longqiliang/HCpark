@@ -167,7 +167,7 @@
             </div>
             <div class="water-body">
                 <div class="water-title">
-                    <div>{{info.status==0?'提交预约':info.status==1?'确认接单':info.status==2?'取消订单':'确认送达'}}</div>
+                    {{info.status==0?'提交预约':info.status==1?'确认接单':info.status==2?'取消订单':'确认送达'}}<br/>
                     <span>{{info.status==0?info.create_time:info.status==1?info.check_time:info.status==2?info.check_time:info.end_time}}</span>
                 </div>
                 <ul class="water-card">
