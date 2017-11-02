@@ -787,7 +787,7 @@ textarea::-webkit-input-placeholder {
     color: #fff;
     padding:2.7rem 0;
     font-weight: 200;
-    line-height: 1.5;
+    line-height: 1;
 }
 .water-title>span{
     font-size: 1.3rem;
@@ -814,7 +814,7 @@ textarea::-webkit-input-placeholder {
     font-size: 1.5rem;
 }
 .water-card>li>span:first-child{
-    width:6rem;
+    width:7rem;
     margin-right: 1rem;
 }
 .water-card>li>span:last-child,.water-card>li>a:last-child{

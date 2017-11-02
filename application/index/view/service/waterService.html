@@ -49,7 +49,7 @@
             <label for="num">送水桶数</label>
             <input type="tel" placeholder="请输入送水桶数" id="num" v-model="defaultData.number" min="1" max="99" maxlength="2">
         </div>
-        <div class="card-cell">
+        <div class="card-cell"  v-if="info.park_id==80">
             <span>金<b style="padding: 0 1em;"></b>额</span>
             <span>{{waterPrice*defaultData.number}}</span>
         </div>
