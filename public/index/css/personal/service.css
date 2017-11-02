@@ -167,7 +167,10 @@ body{
     border-right: none;
 }
 .content{
-    padding-top: 103px;
+    padding-top: 53px;
+}
+.property{
+    padding-top: 50px;
 }
 /*列表修改*/
 .notice{
