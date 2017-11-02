@@ -21,7 +21,9 @@
         "topthink/think-helper": "*",
         "topthink/think-image": "*",
         "topthink/think-captcha": "*",
-        "overtrue/wechat": "~3.1"
+        "overtrue/wechat": "~3.1",
+        "phpoffice/phpexcel": "dev-master"
+
     },
     "extra": {
         "think-path": "thinkphp"
