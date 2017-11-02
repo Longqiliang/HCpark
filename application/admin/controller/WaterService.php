@@ -30,10 +30,9 @@ class WaterService extends Admin
 
         $list = Db::table('tb_water_service')
             ->alias('s')
-            ->join('__WECHAT_USER__ w', 's.userid=w.userid')
             ->join('__WATER_TYPE__ t', 't.id=s.water_id')
             ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,s.price totalprice,t.water_name,t.format ,t.price ')
-            ->where('w.park_id', 'eq', $parkid)
+            ->where('s.park_id', 'eq', $parkid)
             ->where($map)
             ->order('create_time desc')
             ->paginate();
@@ -150,10 +149,9 @@ class WaterService extends Admin
         $map['s.status'] = ['neq', -1];
         $list = Db::table('tb_water_service')
             ->alias('s')
-            ->join('__WECHAT_USER__ w', 's.userid=w.userid')
             ->join('__WATER_TYPE__ t', 't.id=s.water_id')
             ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,t.water_name,t.format，t.price  ')
-            ->where('w.park_id', 'eq', $parkid)
+            ->where('s.park_id', 'eq', $parkid)
             ->where($map)
             ->order('create_time desc')
             ->select();
