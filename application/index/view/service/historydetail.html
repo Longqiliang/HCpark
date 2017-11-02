@@ -3,7 +3,7 @@
 {block name="style"}
 <title>服务记录</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
-<link rel="stylesheet" href="/static/viewer/viewer.min.css">
+<!--<link rel="stylesheet" href="/static/viewer/viewer.min.css">-->
 <style>
     body{padding-bottom:1rem;background-color:#f0eff5}
     #app:before{display:table;height:0;content:''}
@@ -23,7 +23,7 @@
     .my-cancel>span:first-child{display:inline-block;display:-webkit-flex;width:28px;height:28px;border:1px solid #fff;border-radius:15px;-webkit-align-items:center;-webkit-justify-content:center}
     .my-cancel i::before{width:20px;height:20px;color:#fff}
     .my-cancel>span:last-child{position:relative;left:50%;display:inline-block;width:0;height:22px;border-right:1px solid #fff}
-    .rent-btn-box{padding:8vw 4.8vw;width:100%}
+    .rent-btn-box{padding:3.5rem 4.8vw;width:100%}
     .btn{height:5rem}
     .btn-box{padding:4vw 4.8vw;width:100%}
     .btn{height:10.67vw;border:none;border-radius:5px;color:#fff;text-align:center;font-size:1.5rem}
@@ -161,6 +161,7 @@
         </div>
     </div>
     <div v-if="appid==3">
+        <div style="display: none">
         <div class="card">
             <div class="card-tit">送水服务</div>
             <div class="card-cell">
@@ -195,7 +196,57 @@
         <div class="rent-btn-box" v-if="can_check=='yes' && info.status==1">
             <button class="btn btn-block btn-green" @click="isSuccess">确认送达</button>
         </div>
-
+        </div>
+        <div class="water-view">
+            <div class="water-header">
+                <div class="water-header-bg" :class="{green:info.status==1,blue:info.status==3,orange:info.status==0,red:info.status==2}"></div>
+            </div>
+            <div class="water-body">
+                <div class="water-title">
+                    <div>{{info.status==0?'提交预约':info.status==1?'确认接单':info.status==2?'取消订单':'确认送达'}}</div>
+                    <span>{{info.status==0?info.create_time:info.status==1?info.check_time:info.status==2?info.check_time:info.end_time}}</span>
+                </div>
+                <ul class="water-card">
+                    <li><span>送水地点</span><span>{{info.address}}</span></li>
+                    <li><span>送水桶数</span><span>{{info.number}}</span></li>
+                    <li v-if="appid==80"><span>送水种类</span><span>{{info.water_name}}（{{info.format}}）</span></li>
+                    <li><span>金<b style="padding: 0 1em;"></b>额</span><span>{{info.price}}</span></li>
+                    <li><span>联系方式</span><a :href="'tel:'+info.mobile">{{info.mobile}}（{{info.name}}）</a></li>
+                    <li v-if="info.check_remark"><span>物业提示</span><span>{{info.check_remark}}</span></li>
+                </ul>
+                <ul class="water-process">
+                    <li>
+                        <ul class="water-process-detail">
+                            <li>用户</li>
+                            <li><span :class="{'water-font-black':info.status>=0}">1</span></li>
+                            <li :class="{'water-font-black':info.status>=0}">{{info.create_time}}</li>
+                            <li :class="{'water-font-black':info.status>=0}">提交预约</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="water-process-detail">
+                            <li>物业/运营</li>
+                            <li><span :class="{'water-font-black':info.status>=1}">2</span></li>
+                            <li :class="{'water-font-black':info.status>=1}">{{info.check_time?(info.check_time):'未知'}}</li>
+                            <li :class="{'water-font-black':info.status>=1}">{{info.status==2?'取消接单':'确认接单'}}</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="water-process-detail">
+                            <li>用户</li>
+                            <li><span :class="{'water-font-black':info.status==3}">3</span></li>
+                            <li :class="{'water-font-black':info.status==3}">{{info.end_time?(info.end_time):'未知'}}</li>
+                            <li :class="{'water-font-black':info.status==3}">确认送达</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="water-btn-box">
+                    <button class="water-btn water-btn-b" v-if="can_check=='yes' && info.status==1">确认送达</button>
+                    <button class="water-btn water-btn-r" v-if="can_check=='yes' && info.status==0" @click="showRent">取消订单</button>
+                    <button class="water-btn water-btn-g" v-if="can_check=='yes' && info.status==0" @click="showRent">确认接单</button>
+                </div>
+            </div>
+        </div>
     </div>
     <div v-if="appid==4">
         <div class="card">
@@ -400,7 +451,7 @@
             </div>
         </div>
     </div>
-    <div class="rent-btn-box"  v-if="(appid!=1 && appid!=8 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
+    <div class="rent-btn-box"  v-if="(appid!=1 && appid!=3 && appid!=8 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
         <button class="btn btn-block btn-green" @click="showRent">{{(appid==6||appid==7)?'前往审核':'确认接单'}}</button>
     </div>
     <div class="modal-box"  :class="{'show':rentShow}">
@@ -428,7 +479,7 @@
 {/block}
 
 {block name="script"}
-<script src="/static/viewer/viewer.min.js"></script>
+<!--<script src="/static/viewer/viewer.min.js"></script>-->
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
 //    时间戳转字符串过滤器
@@ -475,7 +526,12 @@ var app = new Vue({
                 jsApiList: ['previewImage']
             });
         },function () {
-        })
+        });
+
+        if(this.appid==3){
+            console.log(3)
+            document.getElementsByTagName('body')[0].style.background='#fff'
+        }
     },
     data:{
         subData:{

@@ -725,3 +725,197 @@ textarea::-webkit-input-placeholder {
 .my-show{
     display: block;
 }
+/**饮水详情-样式**/
+.water-view{
+    position: relative;
+    background-color: #fff;
+}
+.water-header{
+    position: relative;
+    top:0;
+    left:0;
+    height:20.3rem;
+    width:100vw;
+    float: left;
+    z-index: 1;
+    overflow: hidden;
+}
+.water-header-bg{
+    position: absolute;
+    bottom:0;
+    left:50%;
+    width:190.933333vw;
+    height:190.933333vw;
+    border-radius: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+.water-header-bg.green{
+    background-color: #52CC92;
+}
+.water-header-bg.orange {
+    background-color: #FCC44B;
+}
+.water-header-bg.red{
+    background-color: #F97878;
+}
+
+.water-header-bg.blue{
+    background-color: #69B9F9;
+}
+.water-body:before{
+    content: '';
+    display: table;
+}
+.water-body{
+    position: absolute;
+    top:0;
+    left: 0;
+    width:100%;
+    height:auto;
+    z-index: 2;
+    overflow: hidden;
+}
+.water-title{
+    width:100%;
+    height:12rem;
+    box-sizing: border-box;
+    font-size: 3.4rem;
+    text-align: center;
+    color: #fff;
+    padding:2.7rem 0;
+    font-weight: 200;
+    line-height: 1;
+}
+.water-title>span{
+    font-size: 1.3rem;
+}
+.water-card{
+
+    box-sizing: border-box;
+    width:88vw;
+    margin:0 auto;
+    background-color: #fff;
+    -webkit-box-shadow: 0 1px 20px 0 rgba(0,0,0,.15);
+    -moz-box-shadow: 0 1px 20px 0 rgba(0,0,0,.15);
+    box-shadow:  0 1px 20px 0 rgba(0,0,0,.15);
+    -webkit-border-radius:.5rem;
+    -moz-border-radius:.5rem;
+    border-radius:.5rem;
+    padding:0 1rem;
+}
+.water-card>li{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-between;
+    padding:1.5rem 0;
+    font-size: 1.5rem;
+}
+.water-card>li>span:first-child{
+    width:6rem;
+    margin-right: 1rem;
+}
+.water-card>li>span:last-child,.water-card>li>a:last-child{
+    text-align: right;
+    flex-grow: 1;
+}
+.water-card>li>a{
+    color: #333;
+}
+.water-card>li:not(:last-child){
+    border-bottom: 1px solid #f1f1f1;
+}
+.water-process{
+    /*width:88vw;*/
+    margin:4rem auto 0;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-around;
+
+}
+.water-process-detail>li{
+    text-align: center;
+    color: #b2b2b2;
+    position: relative;
+    z-index: 200;
+}
+.water-process-detail>li:first-child{
+    font-size: 1.3rem;
+}
+.water-process-detail>li:nth-child(2){
+    height:40px;
+    width:40px;
+    position: relative;
+    margin:0.8rem auto;
+    align-items:center;
+    -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,.3);
+    -moz-box-shadow:  0 1px 4px 0 rgba(0,0,0,.3);
+    box-shadow:  0 0 4px 0 rgba(0,0,0,.3);
+    background-color: #fff;
+}
+.water-process-detail>li:nth-child(2)>span{
+    display: block;
+    width:32px;
+    height:32px;
+    border:1px dashed #e8e8e8;
+    line-height: 32px;
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    top:4px;
+    left:4px;
+}
+.water-process-detail>li:nth-child(2),.water-process-detail>li:nth-child(2)>span{
+    -webkit-border-radius:50%;
+    -moz-border-radius:50%;
+    border-radius:50%;
+}
+.water-process-detail>li:nth-child(3){
+    font-size: 1.2rem;
+}
+.water-process-detail>li:nth-child(4){
+    font-size: 1.5rem;
+}
+.water-font-black{
+    color: #333!important;
+}
+.water-btn-box{
+    display: -webkit-flex;
+    display: flex;
+    box-sizing: border-box;
+    width:100%;
+    padding:3.5rem 0.8rem;
+    justify-content: space-between;
+}
+.water-btn{
+    width:100%;
+    height:4rem;
+    line-height: 4rem;
+    text-align: center;
+    font-size: 1.5rem;
+    -webkit-border-radius:0.5rem;
+    -moz-border-radius:0.5rem;
+    border-radius:0.5rem;
+    outline: none;
+    border:none;
+}
+.water-btn:not(:last-child){
+    margin-right:1.7rem;
+}
+.water-btn-r{
+    color: #fff;
+    background-color: #F97878;
+}
+.water-btn-g{
+    color: #fff;
+    background-color: #52CC92;
+}
+.water-btn-b{
+    color: #fff;
+    background-color: #69B9F9;
+}
+
+
