@@ -37,7 +37,17 @@ class WaterService extends Admin
             ->order('create_time desc')
             ->paginate();
 
+
+        $list2 = Db::table('tb_water_service')
+            ->alias('s')
+            ->join('__WATER_TYPE__ t', 't.id=s.water_id')
+            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,s.price totalprice,t.water_name,t.format ,t.price ')
+            ->where('s.park_id', 'eq', $parkid)
+            ->where('s.status <2 and s.status>-1')
+            ->order('create_time desc')
+            ->paginate();
         //ECHO json_encode($list);
+        $this->assign('count', count($list2));
         $this->assign('list', $list);
         $this->assign('park_id', $parkid);
         return $this->fetch();
