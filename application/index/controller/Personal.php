@@ -55,25 +55,40 @@ class Personal extends Base
         $user_id = session('userId');
         $wu = new  WechatUser();
         $info = $wu->where('userid', $user_id)->find();
-        if ($info['park_id'] == 3){
-            $info['park_id'] = "希垦科技园区";
-        }else{
-            $info['park_id'] = "人工智能产业园区";
+        if ($info['park_id'] == 3) {
+            $info['park_name'] = "希垦科技园区";
+        } else {
+            $info['park_name'] = "人工智能产业园区";
         };
-        $people_card="";
-        $car_card="";
-        $office="";
-        //从车卡中取身份证号和车牌号
-        $car =CarparkService::where('user_id',$user_id)->order("create_time desc")->select();
-        //从送水地点中取 办公地址
-        $water = WaterService::where('userid',$user_id)->order("create_time desc")->select();
-        if($car){
-            $people_card= $car[0]["people_card"];
-            $car_card=$car[0]["car_card"];
-        }
-        if($water){
-            $office=$water[0]['address'];
+        $people_card = "";
+        $car_card = "";
+        $office = !empty($info['company_address'])?$info['company_address']:"";
 
+        //从车卡中取身份证号和车牌号
+        $car = CarparkService::where('user_id', $user_id)->order("create_time desc")->select();
+        //从送水地点中取 办公地址
+        $water = WaterService::where('userid', $user_id)->order("create_time desc")->select();
+        if ($car) {
+            $people_card = $car[0]["people_card"];
+            $car_card = $car[0]["car_card"];
+        }
+        if (empty($office)) {
+            if ($water) {
+                $office = $water[0]['address'];
+            }
+        }
+        //宾江
+        $departmentlist = WechatDepartment::where('parentid', 92)->select();
+        foreach ($departmentlist as $key => $value) {
+
+            $list = array();
+            if (isset($value->room)) {
+                foreach ($value->room as $value) {
+                    array_push($list, $value['room']);
+                }
+                $departmentlist[$key]['roomlist'] = $list;
+                unset($departmentlist[$key]['room']);
+            }
         }
         $data = [
             'name' => $info['name'],
@@ -82,12 +97,14 @@ class Personal extends Base
             'mobile' => $info['mobile'],
             'department' => isset($info->departmentName->name) ? $info->departmentName->name : "",
             'header' => $info['header'],
-            'park_name' => $info['park_id'],
+            'park_name' => $info['park_name'],
+            'park_id' =>$info['park_id'],
             'user_id' => $user_id,
-            'people_card'=>$people_card,
-            'car_card'=>$car_card,
-            'office'=>$office,
-        ];
+            'people_card' => $people_card,
+            'car_card' => $car_card,
+            'office' => $office,
+            'departmentlist'=>$departmentlist
+            ];
         //$list = WechatDepartment::where("parentid",1)->order('id asc')->select();
         /*foreach($list as $k=>$v){
             $parkArr[$k] = $v['id'];
@@ -369,7 +386,7 @@ class Personal extends Base
                 $list2[$k]['status_text'] = '确认接单';
             } elseif ($v['status'] == 2) {
                 $list2[$k]['status_text'] = '取消订单';
-            }elseif ($v['status'] == 3) {
+            } elseif ($v['status'] == 3) {
                 $list2[$k]['status_text'] = '完成服务';
             }
 
@@ -531,12 +548,12 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         if ($type == 3) {
-            $list = $ad->where(['create_user' => $user_id, 'status' => array('in', [0,2])])->order('create_time desc')->select();
+            $list = $ad->where(['create_user' => $user_id, 'status' => array('in', [0, 2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
             $type2 = 1;
         } else {
-            $list = $ad->where(['status' => array('in', [0,2])])->order('create_time desc')->select();
+            $list = $ad->where(['status' => array('in', [0, 2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
             $type2 = 1;
@@ -564,8 +581,8 @@ class Personal extends Base
                 'create_time' => date('Y-m-d', strtotime($onetime)),
                 'service_name' => "设备服务（大厅广告位预约）",
                 'url' => $url . strtotime($onetime),
-                'app_id'=>8,
-                'status'=>$map[0]['status']
+                'app_id' => 8,
+                'status' => $map[0]['status']
             ];
 
 
@@ -573,7 +590,7 @@ class Personal extends Base
                 $re['status_text'] = '已取消';
             } else if ($map[0]['status'] == 1) {
                 $re['status_text'] = '选定未付款';
-            } else if( $map[0]['status'] == 2){
+            } else if ($map[0]['status'] == 2) {
                 $re['status_text'] = '审核成功';
             }
 
@@ -586,12 +603,12 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         if ($type == 3) {
-            $list = $fs->where(['create_user' => $user_id, 'status' => array('in', [0,2])])->order('create_time desc')->select();
+            $list = $fs->where(['create_user' => $user_id, 'status' => array('in', [0, 2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
             $type2 = 2;
         } else {
-            $list = $fs->where(['status' => array('in', [0,2])])->order('create_time desc')->select();
+            $list = $fs->where(['status' => array('in', [0, 2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
             $type2 = 2;
@@ -619,8 +636,8 @@ class Personal extends Base
                 'create_time' => date('Y-m-d', strtotime($onetime)),
                 'service_name' => "设备服务（多功能厅预约）",
                 'url' => $url . strtotime($onetime),
-                'app_id'=>8,
-                'status'=>$map[0]['status']
+                'app_id' => 8,
+                'status' => $map[0]['status']
 
             ];
             if ($map[0]['status'] == 0) {
@@ -640,13 +657,13 @@ class Personal extends Base
         $time = array();
         $create_time = array();
         if ($type == 3) {
-            $list = $led->where(['create_user' => $user_id, 'status' => array('in', [0,2])])->order('create_time desc')->select();
+            $list = $led->where(['create_user' => $user_id, 'status' => array('in', [0, 2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'no';
             $type2 = 3;
 
         } else {
-            $list = $led->where(['status' => array('in', [0,2])])->order('create_time desc')->select();
+            $list = $led->where(['status' => array('in', [0, 2])])->order('create_time desc')->select();
             $appid = 8;
             $can_check = 'yes';
             $type2 = 3;
@@ -674,8 +691,8 @@ class Personal extends Base
                 'service_name' => "设备服务（大堂LED屏预约）",
                 'create_time' => date('Y-m-d', strtotime($onetime)),
                 'url' => $url . strtotime($onetime),
-                'app_id'=>8,
-                'status'=>$map[0]['status']
+                'app_id' => 8,
+                'status' => $map[0]['status']
             ];
             if ($map[0]['status'] == 0) {
                 $re['status_text'] = '已取消';
@@ -891,9 +908,10 @@ class Personal extends Base
         }
     }
     /**
-     * 更改部门
+     * 更改园区（只在 滨江模拟与希垦模拟中切换）
      */
-    public function changeDepartment(){
+    public function changeDepartment()
+    {
         $userId = input('user_id');
         //echo $userId;
         $department = input('departmentId');
@@ -902,49 +920,74 @@ class Personal extends Base
             'userid' => $userId,
             'department' => [$department],
         ];
-        if ($department == 78){
+        if ($department == 78) {
             $park = 3;
-        }else{
+        } else {
             $park = 80;
         }
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
-        $result = $user->where(['userid'=>$userId])->update(['department'=>$department,'park_id'=>$park]);
+        $result = $user->where(['userid' => $userId])->update(['department' => $department, 'park_id' => $park]);
         $res = $wechat->updateUser($data);
-        if ($res){
-            Session::set('park_id',$park);
-            $this->success("修改成功",'',session('park_id'));
-        }else{
+        if ($res) {
+            Session::set('park_id', $park);
+            $this->success("修改成功", '', session('park_id'));
+        } else {
 
             $this->error("修改失败");
         }
 
     }
+    /**
+     * 更改部门（仅滨江用户可用）
+     */
+    public function editDepartment()
+    {
+        $userId = input('user_id');
+        $department = input('departmentId');
+        $room =input('room');
+        $data = [
+            'userid' => $userId,
+            'department' => [$department],
+        ];
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $wechat = new TPWechat(config('party'));
+        $user = new WechatUser();
+        $result = $user->where(['userid' => $userId])->update(['department' => $department, 'company_address'=>$room]);
+        $res = $wechat->updateUser($data);
+        if ($res) {
+            $this->success("修改成功", '', session('park_id'));
+        } else {
+            $this->error("修改失败");
+        }
+
+    }
+
 
     //test
-    public function test(){
+    public function test()
+    {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         Db::startTrans();
-        try{
+        try {
             $re = $wechat->getDepartment();
             $res = $wechat->getServerIp();
-            if ($res == false || $re ==false ){
-                throw new Exception($wechat->Message()."111");
+            if ($res == false || $re == false) {
+                throw new Exception($wechat->Message() . "111");
             }
-        Db::commit();
-        }catch (Exception $ex){
+            Db::commit();
+        } catch (Exception $ex) {
             Db::rollback();
-            Log::error("msg:".$ex->getMessage());
-            return json_encode(['code'=>0,'data'=>"test"]);
+            Log::error("msg:" . $ex->getMessage());
+            return json_encode(['code' => 0, 'data' => "test"]);
         };
         //$res = $wechat->getDepartment();
         //$res = $wechat->getServerIp();
         return json_encode($re);
 
     }
-
 
 
 }

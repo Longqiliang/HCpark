@@ -157,8 +157,6 @@ class Service extends Base
         $info = [];
         switch ($app_id) {
             case 1:
-
-
                 break;
 
             //物业报修
@@ -177,7 +175,7 @@ class Service extends Base
                 break;
             //饮水
             case 3:
-                $watertype = WaterType::where(['id'=> array('gt', 0)])->select();
+                $watertype = WaterType::where(['id' => array('gt', 0), 'status' => 1])->select();
                 $this->assign('watertype', json_encode($watertype));
                 $user = $UserModel->where('userid', $userid)->find();
                 $info['name'] = $user['name'];
@@ -1445,7 +1443,6 @@ class Service extends Base
                 foreach ($list as $l) {
                     array_push($create_time, $l['create_time']);
                 }
-
                 //数组去重
                 $time = array_values(array_unique($create_time));
 
@@ -1807,7 +1804,7 @@ class Service extends Base
 
     }
 
-//饮水服务
+     //饮水服务
     public function waterService()
     {
         $data = input('post.');
@@ -1815,7 +1812,9 @@ class Service extends Base
         //$personalMessage = new PersonalMessage();
         $data['userid'] = session('userId');
         $data['park_id'] = session('park_id');
-        $result = $waterModel->allowField(true)->validate(true)->save( $data);
+        $watertype = WaterType::get($data['water_id']);
+        $data['price'] = $watertype['price'] * $data['number'];
+        $result = $waterModel->allowField(true)->validate(true)->save($data);
         if ($result) {
             //todo： 推送点击到详情页面代码
             $message = [
@@ -1862,7 +1861,7 @@ class Service extends Base
             $info[$k] = [
                 'id' => $v['id'],
                 'name' => $v['name'],
-                'time' => $v['create_time'],
+                'time' => date('Y-m-d', $v['create_time']),
                 'num' => $v['number'],
                 'status' => $v['status']
             ];
@@ -1871,7 +1870,7 @@ class Service extends Base
         return $info;
     }
 
-     //饮水服务详情页()
+//饮水服务详情页()
     public function waterDetail()
     {
         $id = input('id');
@@ -2120,7 +2119,9 @@ class Service extends Base
             $info['format'] = isset($info->watertype->format) ? $info->watertype->format : "";
             $info['price'] = isset($info->watertype->price) ? $info->watertype->price : "";
             unset($info['watertype']);
-
+            $info['create_time'] = date('m月d日 h:m', $info['create_time']);
+            $info['check_time'] = date('m月d日 h:m', $info['check_time']);
+            $info['end_time'] = date('m月d日 h:m', $info['end_time']);
         } elseif ($appid == 4) {
             $info = PropertyServer::get($id);
             $info['image'] = json_decode($info['image']);
@@ -2304,7 +2305,7 @@ class Service extends Base
             $info['name'] = $app['name'];
 
         }
-        //echo json_encode($info);
+        echo json_encode($info);
         $this->assign('can_check', $can_check);
         $this->assign('type', json_encode($appid));
         $this->assign('info', json_encode($info));
@@ -2519,7 +2520,7 @@ class Service extends Base
                     ];
 
                     if ($type == 1) {
-                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark'],'check_time'=>time()]);
+                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark'], 'check_time' => time()]);
                         if ($userinfo['department'] == 76) {
                             $message2 = [
                                 "title" => "饮水服务提示",
@@ -2531,7 +2532,7 @@ class Service extends Base
                         }
 
                     } else {
-                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 2, 'check_remark' => $data['check_remark'],'check_time'=>time()]);
+                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 2, 'check_remark' => $data['check_remark'], 'check_time' => time()]);
                         $message['description'] = "饮水服务暂时无法提供";
                     }
                     if (!empty($data['check_remark'])) {
@@ -2935,6 +2936,7 @@ class Service extends Base
         }
 
     }
+
     /*推个人中心，推送人员选择公共方法
      *$type =1  该园区运营人员
      *$type =2  该园区物业管理
