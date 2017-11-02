@@ -2125,9 +2125,9 @@ class Service extends Base
             $info['format'] = isset($info->watertype->format) ? $info->watertype->format : "";
             $info['price'] = isset($info->watertype->price) ? $info->watertype->price : "";
             unset($info['watertype']);
-            $info['create_time'] = date('m月d日 h:m', $info['create_time']);
-            $info['check_time'] = date('m月d日 h:m', $info['check_time']);
-            $info['end_time'] = date('m月d日 h:m', $info['end_time']);
+            $info['create_time'] = !empty($info['create_time'])?date('m月d日 H:i', $info['create_time']):"";
+            $info['check_time'] = !empty($info['check_time'])?date('m月d日 H:i', $info['check_time']):"";
+            $info['end_time'] = !empty($info['end_time'])?date('m月d日 H:i', $info['end_time']):"";
         } elseif ($appid == 4) {
             $info = PropertyServer::get($id);
             $info['image'] = json_decode($info['image']);
