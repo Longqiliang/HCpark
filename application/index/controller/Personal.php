@@ -96,6 +96,7 @@ class Personal extends Base
             'sex' => $info['gender'] == 1 ? "男" : "女",
             'mobile' => $info['mobile'],
             'department' => isset($info->departmentName->name) ? $info->departmentName->name : "",
+            'department_id'=>$info['department'],
             'header' => $info['header'],
             'park_name' => $info['park_name'],
             'park_id' =>$info['park_id'],
