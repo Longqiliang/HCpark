@@ -150,7 +150,7 @@ class WaterService extends Admin
         $list = Db::table('tb_water_service')
             ->alias('s')
             ->join('__WATER_TYPE__ t', 't.id=s.water_id')
-            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,t.water_name,t.format，t.price  ')
+            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,s.price totalprice,t.water_name,t.format ,t.price ')
             ->where('s.park_id', 'eq', $parkid)
             ->where($map)
             ->order('create_time desc')
@@ -162,7 +162,7 @@ class WaterService extends Admin
             '联系人', '送水地址', '送水桶数', '送水种类', '送水规格', '送水价格', '联系电话', '创建时间', '状态'
         ];
         foreach ($list as $key => $value) {
-            $cellData[$key] = [$value['name'], $value['address'], $value['number'], $value['water_name'], $value['format'], $value['price'], $value['mobile'], $value['create_time'], $value['status']];
+            $cellData[$key] = [$value['name'], $value['address'], $value['number'], $value['water_name'], $value['format'], $value['price'], $value['mobile'], date('Y-m-d H:i:s',$value['create_time']), $value['status']];
         }
         for ($i = 0; $i < count($celltitle); $i++) {
             $excel->getActiveSheet()->setCellValue("$letter[$i]1", "$celltitle[$i]");
