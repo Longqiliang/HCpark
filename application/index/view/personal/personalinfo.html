@@ -89,7 +89,7 @@
         <li v-if="info.car_card"><a href="javascript:;" ><p>车牌号 <span class="ft-right">{{info.car_card}}</span></p></a></li>
         <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="info.park_name"></span></p></a></li>
         <li @click="toggleMark" v-if="(nowPark.park_id==3 && info.department) || nowPark.park_id==80"><a href="javascript:;"class="item-pull-right" ><p>公司 <span class="ft-right">{{info.department}}</span></p></a></li>
-        <li v-if="(nowPark.park_id==3 && info.office)||nowPark.park_id==80"><a href="javascript:;" @click="togglePopup" class="item-pull-right"><p>办公地点 <span class="ft-right">{{info.office}}</span></p></a></li>
+        <li v-if="((nowPark.park_id==3 && info.office!='')||nowPark.park_id==80 )&&!(departmentId==78 ||departmentId==91)"><a href="javascript:;" @click="togglePopup" class="item-pull-right"><p>办公地点 <span class="ft-right">{{info.office}}</span></p></a></li>
         <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup" >
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="togglePopup">取消</span>
