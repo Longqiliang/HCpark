@@ -65,7 +65,7 @@
                     </div>
                 </div>
             </form>
-            <h2>饮水服务 ({$list->total()})</h2>
+            <h2>饮水服务 (待办数量:{$list->total()})</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
@@ -119,7 +119,8 @@
                     {eq name="$park_id" value="80"}
                     <th>饮水种类</th>
                     <th>饮水规格</th>
-                    <th>饮水价格</th>
+                    <th>饮水单价</th>
+                    <th>饮水总价</th>
                     {/eq}
                     <th>联系电话</th>
                     <th>创建时间</th>
@@ -137,11 +138,12 @@
                     <td>{$vo.id}</td>
                     <td>{$vo.name}</td>
                 <td>{$vo.address|msubstr=0,20}</td>
-                    <td>{$vo.number}</td>
+                    <td>{$vo.number}桶</td>
                     {eq name="$park_id" value="80"}
                     <td>{$vo.water_name}</td>
                     <td>{$vo.format}</td>
-                    <td>{$vo.price}</td>
+                    <td>{$vo.price}元</td>
+                    <td>{$vo.totalprice}元</td>
                     {/eq}
 
                 <td>{$vo.mobile}</td>
