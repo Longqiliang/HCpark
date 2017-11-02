@@ -175,7 +175,7 @@ class Service extends Base
                 break;
             //饮水
             case 3:
-                $watertype = WaterType::where(['id' => array('gt', 0), 'status' => 1])->select();
+                $watertype = WaterType::where(['id' => array('gt', 1), 'status' => 1])->select();
                 $this->assign('watertype', json_encode($watertype));
                 $user = $UserModel->where('userid', $userid)->find();
                 $info['name'] = $user['name'];
