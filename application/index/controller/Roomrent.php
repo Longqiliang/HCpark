@@ -344,7 +344,7 @@ class Roomrent extends Base
                             $status = 0;
                             $roomsId = 0;
                         } else {
-                            $rent = PeopleRent::where('rent_id', $res['id'])->select();
+                            $rent = PeopleRent::where(['rent_id'=> $res['id'],'status'=>array('neq',-1)])->select();
                             if ($rent) {
 
                                 if ($res['park_id'] == 3) {
