@@ -454,20 +454,20 @@
             },
             loadMore:function (event) {
                 var _this = this;
-//                console.log(_this.loading,_this.canLoad,_this.isHouseList);
+                //console.log(_this.loading,_this.isHouseList);
                 if((!_this.loading) && !_this.isHouseList){
                     _this.loading = true;
                     var build = (_this.parkName.txt).substr(-2,1);
                     var rentList =null;
                     for(var obj in _this.list){
                         for(var arr in _this.list[obj]){
-                            if(_this.parkName.txt == arr){
+                            if(_this.parkName.index == obj && _this.parkName.txt == arr){
                                 //console.log(_this.list[obj][arr].rentlist);
                                 rentList = _this.list[obj][arr].rentlist;
                             }
                         }
                     }
-                    //console.log(rentList.length);
+                   // console.log(rentList.length);
                     if(!rentList || rentList.length % 6 !=0 || rentList.length === 0){
                         return;
                     }
