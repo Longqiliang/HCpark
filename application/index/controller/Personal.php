@@ -77,19 +77,7 @@ class Personal extends Base
                 $office = $water[0]['address'];
             }
         }
-        //宾江
-        $departmentlist = WechatDepartment::where('parentid', 92)->select();
-        foreach ($departmentlist as $key => $value) {
-
-            $list = array();
-            if (isset($value->room)) {
-                foreach ($value->room as $value) {
-                    array_push($list, $value['room']);
-                }
-                $departmentlist[$key]['roomlist'] = $list;
-                unset($departmentlist[$key]['room']);
-            }
-        }
+        $departmentlist =$this->departmentData();
         $data = [
             'name' => $info['name'],
             'avatar' => $info['avatar'],
@@ -114,6 +102,51 @@ class Personal extends Base
         $this->assign('info', json_encode($data));
         return $this->fetch();
     }
+
+    //
+    public function departmentData(){
+
+
+       $departmentXK=WechatDepartment::where('parentid',4)->select();
+       $departmentBj=WechatDepartment::where('parentid',92)->select();
+       $data=[['park_id'=>3,'park_name'=>'希垦科技园','departmentlist'=>array()],
+           ['park_id'=>80,'park_name'=>'人工智能产业园','departmentlist'=>array()]];
+
+
+       foreach ($departmentXK  as $key => $value){
+           $list = array();
+           if (isset($value->room)) {
+               foreach ($value->room as $room) {
+                   array_push($list, $room['room']);
+               }
+           }
+        $map=[
+            'department_id'=>$value['id'],
+            'depart_name'=>$value['name'],
+            'roomlist'=>$list
+        ];
+         array_push($data[0]['departmentlist'],$map);
+
+       }
+
+        foreach ($departmentBj  as $key => $value){
+            $list = array();
+            if (isset($value->room)) {
+                foreach ($value->room as $room) {
+                    array_push($list, $room['room']);
+                }
+            }
+            $map=[
+                'department_id'=>$value['id'],
+                'depart_name'=>$value['name'],
+                'roomlist'=>$list
+            ];
+            array_push($data[1]['departmentlist'],$map);
+
+        }
+        return $data;
+    }
+
 
     /*个人收藏*/
     public function collection()
@@ -393,13 +426,11 @@ class Personal extends Base
 
             $list2[$k]['app_id'] = $appid;
         }
-
         //饮水服务
         $map = [
             'status' => array('neq', -1),
             'userid' => $userid,
         ];
-
         if ($type == 3) {
             $list3 = WaterService::where($map)->order('create_time desc')->field('id,status,create_time,userid')->select();
             $appid = 3;
@@ -409,12 +440,7 @@ class Personal extends Base
             $appid = 3;
             $can_check = 'yes';
         }
-
-
-
         $url = '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/id/';
-
-
         foreach ($list3 as $k => $v) {
             $v['service_name'] = "饮水服务";
             $list3 [$k]['url'] = $url . $v['id'];
