@@ -87,9 +87,9 @@
         <li><a href="javascript:;"><p>电话 <span class="ft-right">{{info.mobile}}</span></p></a></li>
         <li v-if="info.people_card"><a href="javascript:;" ><p>身份证号 <span class="ft-right">{{info.people_card}}</span></p></a></li>
         <li v-if="info.car_card"><a href="javascript:;" ><p>车牌号 <span class="ft-right">{{info.car_card}}</span></p></a></li>
-        <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="info.park_name"></span></p></a></li>
-        <li @click="toggleMark" v-if="(nowPark.park_id==3 && info.department) || nowPark.park_id==80"><a href="javascript:;"class="item-pull-right" ><p>公司 <span class="ft-right">{{info.department}}</span></p></a></li>
-        <li v-if="((nowPark.park_id==3 && info.office!='')||nowPark.park_id==80 )&&!(departmentId==78 ||departmentId==91)"><a href="javascript:;" @click="togglePopup" class="item-pull-right"><p>办公地点 <span class="ft-right">{{info.office}}</span></p></a></li>
+        <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.park_name"></span></p></a></li>
+        <li @click="toggleMark"><a href="javascript:;"class="item-pull-right" ><p>公司 <span class="ft-right">{{nowCompany.depart_name}}</span></p></a></li>
+        <li v-if="nowCompany.department_id!=78 && nowCompany.department_id!=91"><a href="javascript:;" @click="togglePopup" class="item-pull-right"><p>办公地点 <span class="ft-right">{{nowRoom}}</span></p></a></li>
         <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup" >
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="togglePopup">取消</span>
@@ -102,7 +102,7 @@
                 <span class="mint-datetime-action mint-datetime-cancel" @click="cancelParkPopup">取消</span>
                 <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
             </div>
-            <mt-picker :slots="slots" @change="onParkChange" value-key="name"></mt-picker>
+            <mt-picker :slots="slots" @change="onParkChange" value-key="park_name"></mt-picker>
         </mt-popup>
     </ul>
     <div class="btn-box" v-show="showBtn">
@@ -122,14 +122,14 @@
                 <!--公司列表-->
                 <ul class="company-list" :class="{overflow:inputStatus}">
                     <li v-for="item in companyList" @click="checkCompany(item)">
-                        {{item.name}}
+                        {{item.depart_name}}
                     </li>
                 </ul>
                 <!--搜索列表-->
                 <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
                     <li v-for="item in searchList" @click="checkCompany(item)">
                         <ul class="company-info">
-                            {{item.name}}
+                            {{item.depart_name}}
                         </ul>
                     </li>
                 </ul>
@@ -144,20 +144,9 @@
 
 {block name="script"}
 <script>
+
     var info  = {$info};
-    console.log(info);
-    var park  = [
-        {
-            park_id:3,
-            departmentId:78,
-            name: '希垦科技园区'
-        },
-        {
-            park_id:80,
-            departmentId:91,
-            name:'人工智能产业园区'
-        }
-    ];
+    var baseData=info.departmentlist;
     Vue.directive('focus', {
         // When the bound element is inserted into the DOM...
         update: function (el,value) {
@@ -171,17 +160,17 @@
         el:'#app',
         data:{
             info:info,
-            park:park,
-            checkPark:park[0],
-            nowPark:park[0],
+            showBtn:false,
+//            选择园区
+            checkPark:{},
+            nowPark:{},
             parkVisible:false,
             slots:[
                 {
                     defaultIndex:1,
-                    values:park
+                    values:baseData
                 }
             ],
-            showBtn:false,
             isCheckBtn:true,
             //            搜索框
             isShowMark:false,
@@ -189,9 +178,11 @@
             inputValue:'',
             companyList:[],
             searchList:[],
+            nowCompany:{},
+            checkedCompany:{},
 //            选折器
-            room:'',
-            checkedRoom:'',
+            nowRoom:'',
+            checkRoom:'',
             roomVisible:false,
             roomSlots:[
                 {
@@ -203,24 +194,20 @@
         },
         mounted:function () {
             var _this = this;
-            if(_this.info.park_id==80){
-                _this.nowPark=park[1]
-            }else{
-                _this.nowPark=park[0]
-            }
-
-            _this.companyList=_this.info.departmentlist;
-            //            checkedCompany
-            console.log(this.department)
-            for(var i=0;i<this.companyList.length;i++){
-                console.log(this.companyList[i].name)
-                if(this.companyList[i].name==this.info.department){
-                    this.checkedCompany=this.companyList[i];
-                    this.roomSlots[0].values=this.companyList[i].roomlist;
+            for(var o=0;o<baseData.length;o++){
+                if(_this.info.park_id==baseData[o].park_id){
+                    _this.nowPark=baseData[o];
+                    _this.companyList=baseData[o].departmentlist;
+                    console.log(_this.companyList)
                 }
             }
-            _this.departmentId=_this.info.department_id;
-            console.log(this.checkedCompany)
+            for(var n=0;n<_this.companyList.length;n++){
+                if(_this.info.department_id == _this.companyList[n].department_id){
+                    _this.nowCompany = _this.companyList[n];
+                    _this.roomSlots[0].value = _this.companyList[n].roomlist
+                }
+            }
+            _this.nowRoom=_this.info.office;
             _this.$nextTick(function() {
                 setTimeout(function() {
                     _this.slots[0].defaultIndex = 0;
@@ -228,22 +215,43 @@
                 }, 100);
             });
         },
-        computed:{
-        },
         methods:{
-            //            搜索
+            //园区选择
+            showParkPopup:function () {
+                this.parkVisible = true;
+            },
+            cancelParkPopup:function () {
+                this.parkVisible = false;
+            },
+            selectPark:function () {
+                var _this=this;
+                _this.parkVisible = false;
+                _this.showBtn = true;
+                _this.nowPark = this.checkPark;
+                _this.nowRoom='';
+                _this.nowCompany={};
+                for(var o=0;o<baseData.length;o++){
+                    if(_this.nowPark.park_id==baseData[o].park_id){
+                        _this.companyList=baseData[o].departmentlist;
+                    }
+                }
+                _this.departmentId=_this.checkPark.departmentId;
+            },
+            onParkChange:function (p,v) {
+                var _this = this;
+                if(v[0]){
+                    _this.checkPark = v[0];
+                }
+            },
+            //           公司搜索
             toggleMark(){
-                if(this.nowPark.park_id==3){return }
                 this.isShowMark=!this.isShowMark;
             },
             checkCompany(item){
-                console.log(item)
-                this.checkedCompany=item;
-                this.info.department=item.name;
+                this.nowCompany=item;
                 this.roomSlots[0].values=item.roomlist;
-                this.info.office=this.room=item.roomlist[0];
+                this.nowRoom=this.nowRoom=item.roomlist[0];
                 this.toggleMark();
-                this.departmentId=item.id;
                 this.showBtn = true;
             },
             isClick:function () {
@@ -261,26 +269,23 @@
                     this.searchList=[];
                 }else{
                     for(let i=0;i<this.companyList.length;i++){
-                        if(reg.test(this.companyList[i].name)){
+                        if(reg.test(this.companyList[i].depart_name)){
                             this.searchList.push(this.companyList[i])
                         }
                     }
                 }
             },
-//            选折器
+//            房号选择器
             togglePopup(){
-                if(this.nowPark.park_id==3){return}
-                console.log(this.roomVisible)
                 if(!this.roomVisible){
-                    console.log(this.checkedCompany)
-                    if(!this.checkedCompany){
+                    if(!this.nowCompany){
                         swal({
                             title: "",
                             text: "请先选择公司！",
                             type: "warning",
                             confirmButtonColor: "#338cec",
                         })
-                    }else if(this.checkedCompany.roomlist.length==0){
+                    }else if(this.nowCompany.roomlist.length==0){
                         swal({
                             title: "",
                             text: "该公司还未录入房间号！",
@@ -297,42 +302,16 @@
             },
             selectRoom:function () {
                 this.togglePopup();
-                this.info.office=this.room=this.checkedRoom;
+                this.nowRoom=this.checkRoom;
                 this.showBtn = true;
-                console.log(this.checkedRoom);
             },
             onRoomChange:function (p,v) {
                 var _this = this;
-                console.log(v[0]);
                 if(v[0]){
-                    _this.checkedRoom = v[0];
-                    console.log(_this.checkedRoom)
+                    _this.checkRoom = v[0];
                 }
             },
-            //园区选择
-            showParkPopup:function () {
-                this.parkVisible = true;
-            },
-            cancelParkPopup:function () {
-                this.parkVisible = false;
-            },
-            selectPark:function () {
-                this.parkVisible = false;
-                this.showBtn = true;
-                this.nowPark = this.checkPark;
-                console.log(this.nowPark)
-                this.info.park_name = this.checkPark.name;
-                this.info.office=this.room='';
-                this.info.department='';
-                this.departmentId=this.checkPark.departmentId;
-            },
-            onParkChange:function (p,v) {
-                var _this = this;
-                if(v[0]){
-                    _this.department = v[0].departmentId;
-                    _this.checkPark = v[0];
-                }
-            },
+
             savePark:function () {
                 var _this = this;
                 if(!_this.isCheckBtn){
@@ -341,8 +320,9 @@
                 _this.isCheckBtn = false;
                 var data={
                     user_id:_this.info.user_id,
-                    departmentId:_this.departmentId,
-                    room:_this.room
+                    park_id:_this.nowPark.park_id,
+                    departmentId:_this.nowCompany.department_id ||'',
+                    room:_this.nowRoom
                 };
                 console.log(data);
                 _this.$http.post("{:Url('Personal/changeDepartment')}",data).then(function (e) {
