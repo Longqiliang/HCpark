@@ -155,18 +155,29 @@ class Service extends Base
         $CardparkService = new CarparkService();
         $AdService = new AdvertisingService();
         $info = [];
+        $user = $UserModel->where('userid', $userid)->find();
+        $parkInfo = Park::where('id', $parkid)->find();
+        $parkroom = ParkRoom::where('company_id',$user['department'])->find();
+        $build_block = !empty($parkroom)?$parkroom['build_block']:"";
+        if(empty($user['company_address'])){
+            if(empty($parkroom)){
+                $office="";
+            }else {
+                $office= $parkroom['room'];
+            }
+        }else{
+            $office=$user['company_address'];
+        }
+
         switch ($app_id) {
             case 1:
                 break;
 
             //物业报修
             case 2:
-
-                $parkInfo = Park::where('id', $parkid)->find();
-                $userinfo = WechatUser::where(['userid' => $userid])->find();
                 $info = [
-                    'name' => $userinfo['name'],
-                    'mobile' => $userinfo['mobile'],
+                    'name' => $user['name'],
+                    'mobile' => $user['mobile'],
                     'propretyMobile' => $parkInfo['property_phone']
                 ];
                 $floorList = $this->commonFloor();
@@ -177,14 +188,10 @@ class Service extends Base
             case 3:
                 $watertype = WaterType::where(['id' => array('gt', 1), 'status' => 1])->select();
                 $this->assign('watertype', json_encode($watertype));
-                $user = $UserModel->where('userid', $userid)->find();
-                $parkroom = ParkRoom::where('company_id',$user['department'])->find();
-                $info['build_block'] = !empty($parkroom)?$parkroom['build_block']:"";
                 $info['name'] = $user['name'];
                 $info['mobile'] = $user['mobile'];
-                $info['office'] = $user['company_address'];
-
-
+                $info['office'] = $office;
+                $info['build_block']=$build_block;
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
@@ -192,11 +199,9 @@ class Service extends Base
                 break;
             //室内保洁
             case 4:
-                $parkInfo = Park::where('id', $parkid)->find();
-                $userinfo = WechatUser::where(['userid' => $userid])->find();
                 $info = [
-                    'name' => $userinfo['name'],
-                    'mobile' => $userinfo['mobile'],
+                    'name' => $user['name'],
+                    'mobile' => $user['mobile'],
                     'propretyMobile' => $parkInfo['property_phone']
                 ];
                 $floorList = $this->commonFloor();
