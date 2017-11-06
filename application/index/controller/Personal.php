@@ -966,10 +966,6 @@ class Personal extends Base
         $department = input('departmentId');
         $room = input('room');
         //return $department;
-        $data = [
-            'userid' => $userId,
-            'department' => [$department],
-        ];
         if (empty($department)) {
             if ($park_id == 3) {
                 $department = 78;
@@ -977,7 +973,10 @@ class Personal extends Base
                 $department = 91;
             }
         }
-
+        $data = [
+            'userid' => $userId,
+            'department' => [$department],
+        ];
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
