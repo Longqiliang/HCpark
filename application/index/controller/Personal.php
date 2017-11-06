@@ -60,14 +60,39 @@ class Personal extends Base
         } else {
             $info['park_name'] = "人工智能产业园区";
         };
+        $can_change = "yes";
+        switch ($info['department']) {
+            //希垦运营
+            case 76:
+                $can_change = "no";
+                break;
+            //希垦物业
+            case 86:
+                $can_change = "no";
+                break;
+            //人工运营
+            case 87:
+                $can_change = "no";
+                break;
+            //人工物业
+            case 90:
+                $can_change = "no";
+                break;
+            //人工游客
+            case 91:
+                break;
+            //希垦游客
+            case 78:
+                break;
+
+        }
         $people_card = "";
         $car_card = "";
-        $office = !empty($info['company_address'])?$info['company_address']:"";
-
+        $office = !empty($info['company_address']) ? $info['company_address'] : "";
         //从车卡中取身份证号和车牌号
-        $car = CarparkService::where('user_id', $user_id)->order("create_time desc")->select();
+        $car = CarparkService::where(['user_id' => $user_id, 'park_id' => $info['park_id']])->order("create_time desc")->select();
         //从送水地点中取 办公地址
-        $water = WaterService::where('userid', $user_id)->order("create_time desc")->select();
+        $water = WaterService::where(['userid' => $user_id, 'park_id' => $info['park_id']])->order("create_time desc")->select();
         if ($car) {
             $people_card = $car[0]["people_card"];
             $car_card = $car[0]["car_card"];
@@ -77,23 +102,24 @@ class Personal extends Base
                 $office = $water[0]['address'];
             }
         }
-        $departmentlist =$this->departmentData();
+        $departmentlist = $this->departmentData();
         $data = [
             'name' => $info['name'],
             'avatar' => $info['avatar'],
             'sex' => $info['gender'] == 1 ? "男" : "女",
             'mobile' => $info['mobile'],
             'department' => isset($info->departmentName->name) ? $info->departmentName->name : "",
-            'department_id'=>$info['department'],
+            'department_id' => $info['department'],
             'header' => $info['header'],
             'park_name' => $info['park_name'],
-            'park_id' =>$info['park_id'],
+            'park_id' => $info['park_id'],
             'user_id' => $user_id,
             'people_card' => $people_card,
             'car_card' => $car_card,
             'office' => $office,
-            'departmentlist'=>$departmentlist
-            ];
+            'departmentlist' => $departmentlist,
+            'can_change' => $can_change
+        ];
         //$list = WechatDepartment::where("parentid",1)->order('id asc')->select();
         /*foreach($list as $k=>$v){
             $parkArr[$k] = $v['id'];
@@ -104,44 +130,45 @@ class Personal extends Base
     }
 
     //
-    public function departmentData(){
+    public function departmentData()
+    {
 
 
-       $departmentXK=WechatDepartment::where('parentid',4)->select();
-       $departmentBj=WechatDepartment::where('parentid',92)->select();
-       $data=[['park_id'=>3,'park_name'=>'希垦科技园','departmentlist'=>array()],
-           ['park_id'=>80,'park_name'=>'人工智能产业园','departmentlist'=>array()]];
+        $departmentXK = WechatDepartment::where('parentid', 4)->select();
+        $departmentBj = WechatDepartment::where('parentid', 92)->select();
+        $data = [['park_id' => 3, 'park_name' => '希垦科技园', 'departmentlist' => array()],
+            ['park_id' => 80, 'park_name' => '人工智能产业园', 'departmentlist' => array()]];
 
 
-       foreach ($departmentXK  as $key => $value){
-           $list = array();
-           if (isset($value->room)) {
-               foreach ($value->room as $room) {
-                   array_push($list, $room['room']);
-               }
-           }
-        $map=[
-            'department_id'=>$value['id'],
-            'depart_name'=>$value['name'],
-            'roomlist'=>$list
-        ];
-         array_push($data[0]['departmentlist'],$map);
-
-       }
-
-        foreach ($departmentBj  as $key => $value){
+        foreach ($departmentXK as $key => $value) {
             $list = array();
             if (isset($value->room)) {
                 foreach ($value->room as $room) {
                     array_push($list, $room['room']);
                 }
             }
-            $map=[
-                'department_id'=>$value['id'],
-                'depart_name'=>$value['name'],
-                'roomlist'=>$list
+            $map = [
+                'department_id' => $value['id'],
+                'depart_name' => $value['name'],
+                'roomlist' => $list
             ];
-            array_push($data[1]['departmentlist'],$map);
+            array_push($data[0]['departmentlist'], $map);
+
+        }
+
+        foreach ($departmentBj as $key => $value) {
+            $list = array();
+            if (isset($value->room)) {
+                foreach ($value->room as $room) {
+                    array_push($list, $room['room']);
+                }
+            }
+            $map = [
+                'department_id' => $value['id'],
+                'depart_name' => $value['name'],
+                'roomlist' => $list
+            ];
+            array_push($data[1]['departmentlist'], $map);
 
         }
         return $data;
@@ -350,12 +377,12 @@ class Personal extends Base
         $type = 3;
         if ($park_id == 3) {
             $userPower = 76;
-        } elseif($park_id==80) {
+        } elseif ($park_id == 80) {
             $userPower = 87;
         }
         if ($userinfo['department'] == $userPower) {
             $type = 1;
-        } elseif ($userinfo['department'] == 86||$userinfo['department'] == 90) {
+        } elseif ($userinfo['department'] == 86 || $userinfo['department'] == 90) {
             $type = 2;
         }
         $appids = empty($userinfo->Operational->appids) ? array() : json_decode($userinfo->Operational->appids);
@@ -436,7 +463,7 @@ class Personal extends Base
             $appid = 3;
             $can_check = 'no';
         } else {
-            $list3 = WaterService::where(['status' => array('neq', -1),'park_id'=>$park_id])->order('create_time desc')->field('id,name,status,create_time,userid')->select();
+            $list3 = WaterService::where(['status' => array('neq', -1), 'park_id' => $park_id])->order('create_time desc')->field('id,name,status,create_time,userid')->select();
             $appid = 3;
             $can_check = 'yes';
         }
@@ -444,7 +471,7 @@ class Personal extends Base
         foreach ($list3 as $k => $v) {
             $v['service_name'] = "饮水服务";
             $list3 [$k]['url'] = $url . $v['id'];
-           $v['create_time']=date('Y-m-d', $v['create_time']);
+            $v['create_time'] = date('Y-m-d', $v['create_time']);
             if ($v['status'] == 0) {
                 $list3[$k]['status_text'] = '审核中';
             } elseif ($v['status'] == 1) {
@@ -927,63 +954,71 @@ class Personal extends Base
             }
         }
     }
+
     /**
      * 更改园区（只在 滨江模拟与希垦模拟中切换）
      */
     public function changeDepartment()
     {
+        $park_id = input('park_id');
         $userId = input('user_id');
         //echo $userId;
         $department = input('departmentId');
-        $room=input('room');
+        $room = input('room');
         //return $department;
         $data = [
             'userid' => $userId,
             'department' => [$department],
         ];
-        if ($department == 78) {
-            $park = 3;
-        } else {
-            $park = 80;
+        if (empty($department)) {
+            if ($park_id == 3) {
+                $department = 78;
+            } elseif ($park_id == 80) {
+                $department = 91;
+            }
         }
+
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
-        $result = $user->where(['userid' => $userId])->update(['department' => $department, 'park_id' => $park,'company_address'=>$room]);
+        $result = $user->where(['userid' => $userId])->update(['department' => $department, 'park_id' => $park_id,'company_address'=>$room]);
         $res = $wechat->updateUser($data);
         if ($res) {
-            Session::set('park_id', $park);
+            Session::set('park_id', $park_id);
             $this->success("修改成功", '', session('park_id'));
-        } else {
-
-            $this->error("修改失败");
         }
-    }
+
+else {
+
+    $this->error("修改失败");
+}
+}
 
 
-    //test
-    public function test()
-    {
-        Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $wechat = new TPWechat(config('party'));
-        Db::startTrans();
-        try {
-            $re = $wechat->getDepartment();
-            $res = $wechat->getServerIp();
-            if ($res == false || $re == false) {
-                throw new Exception($wechat->Message() . "111");
-            }
-            Db::commit();
-        } catch (Exception $ex) {
-            Db::rollback();
-            Log::error("msg:" . $ex->getMessage());
-            return json_encode(['code' => 0, 'data' => "test"]);
-        };
-        //$res = $wechat->getDepartment();
-        //$res = $wechat->getServerIp();
-        return json_encode($re);
+//test
+public
+function test()
+{
+    Loader::import('wechat\TPWechat', EXTEND_PATH);
+    $wechat = new TPWechat(config('party'));
+    Db::startTrans();
+    try {
+        $re = $wechat->getDepartment();
+        $res = $wechat->getServerIp();
+        if ($res == false || $re == false) {
+            throw new Exception($wechat->Message() . "111");
+        }
+        Db::commit();
+    } catch (Exception $ex) {
+        Db::rollback();
+        Log::error("msg:" . $ex->getMessage());
+        return json_encode(['code' => 0, 'data' => "test"]);
+    };
+    //$res = $wechat->getDepartment();
+    //$res = $wechat->getServerIp();
+    return json_encode($re);
 
-    }
+}
 
 
 }
