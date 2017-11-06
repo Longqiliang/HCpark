@@ -35,7 +35,7 @@
         <div class="card-cell" v-if="info.park_id==80">
             <label >送水种类</label>
             <div class="cell-address" @click="toggleWater(false)">
-                <span :class="{'font-gray':!checkedWater}">{{checkedWater?checkedWater:'请选择送水种类'}}</span>
+                <span><span :class="{'font-gray':!checkedWater}" class="ft-right">{{checkedWater?checkedWater:'请选择送水种类'}}</span><i class="allow-right"></i></span>
             </div>
             <mt-popup  position="bottom"  v-model="waterVisible" class="mint-popup">
                 <div class="picker-toolbar">

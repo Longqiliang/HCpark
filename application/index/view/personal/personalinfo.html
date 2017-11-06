@@ -193,6 +193,7 @@
             departmentId:''
         },
         mounted:function () {
+//            初始化信息
             var _this = this;
             for(var o=0;o<baseData.length;o++){
                 if(_this.info.park_id==baseData[o].park_id){
@@ -204,10 +205,11 @@
             for(var n=0;n<_this.companyList.length;n++){
                 if(_this.info.department_id == _this.companyList[n].department_id){
                     _this.nowCompany = _this.companyList[n];
-                    _this.roomSlots[0].value = _this.companyList[n].roomlist
+                    _this.roomSlots[0].values = _this.companyList[n].roomlist
                 }
             }
             _this.nowRoom=_this.info.office;
+//            初始化选择器选项位置
             _this.$nextTick(function() {
                 setTimeout(function() {
                     _this.slots[0].defaultIndex = 0;
@@ -215,10 +217,15 @@
                 }, 100);
             });
         },
+        updated(){
+            console.log(this.roomSlots[0])
+        },
         methods:{
             //园区选择
             showParkPopup:function () {
-                this.parkVisible = true;
+                if(this.info.can_change==='yes'){
+                    this.parkVisible = true;
+                }
             },
             cancelParkPopup:function () {
                 this.parkVisible = false;
@@ -245,12 +252,14 @@
             },
             //           公司搜索
             toggleMark(){
-                this.isShowMark=!this.isShowMark;
+                if(this.info.can_change==='yes') {
+                    this.isShowMark = !this.isShowMark;
+                }
             },
             checkCompany(item){
                 this.nowCompany=item;
                 this.roomSlots[0].values=item.roomlist;
-                this.nowRoom=this.nowRoom=item.roomlist[0];
+                this.nowRoom=item.roomlist[0];
                 this.toggleMark();
                 this.showBtn = true;
             },
@@ -259,8 +268,8 @@
             },
             isCancel:function () {
                 this.inputStatus=false;
-                this.inputValue='',
-                        this.searchList=[]
+                this.inputValue='';
+                this.searchList=[]
             },
             toSearch:function () {
                 let reg=new RegExp(this.inputValue);
@@ -277,7 +286,10 @@
             },
 //            房号选择器
             togglePopup(){
-                if(!this.roomVisible){
+                if(this.info.can_change==='no') {
+                    return;
+                }
+                    if(!this.roomVisible){
                     if(!this.nowCompany){
                         swal({
                             title: "",
@@ -285,7 +297,7 @@
                             type: "warning",
                             confirmButtonColor: "#338cec",
                         })
-                    }else if(this.nowCompany.roomlist.length==0){
+                    }else if(this.nowCompany.roomlist &&　this.nowCompany.roomlist.length==0){
                         swal({
                             title: "",
                             text: "该公司还未录入房间号！",
