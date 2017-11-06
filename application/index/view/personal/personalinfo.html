@@ -199,7 +199,6 @@
                 if(_this.info.park_id==baseData[o].park_id){
                     _this.nowPark=baseData[o];
                     _this.companyList=baseData[o].departmentlist;
-                    console.log(_this.companyList)
                 }
             }
             for(var n=0;n<_this.companyList.length;n++){
@@ -216,9 +215,6 @@
                     _this.roomSlots[0].defaultIndex = 0;
                 }, 100);
             });
-        },
-        updated(){
-            console.log(this.roomSlots[0])
         },
         methods:{
             //园区选择
@@ -336,9 +332,7 @@
                     departmentId:_this.nowCompany.department_id ||'',
                     room:_this.nowRoom
                 };
-                console.log(data);
                 _this.$http.post("{:Url('Personal/changeDepartment')}",data).then(function (e) {
-                    console.log(e);
                     _this.isCheckBtn = true;
                     var data = e.data;
                     if(data.code == 1){

@@ -19,7 +19,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => $toUser,
+            'touser' => 15824167420,
             'agentid' => $config['agentid'],
             'msgtype' => 'text',
             'text' => [
@@ -34,7 +34,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => $toUser,
+            'touser' => 15824167420,
             'agentid' => $config['agentid'],
             'msgtype' => 'news',
             'news' => [
@@ -57,7 +57,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => $toUser,
+            'touser' => 15824167420,
             'agentid' => $config['agentid'],
             'msgtype' => 'textcard',
             'textcard' => [
@@ -77,11 +77,11 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendUserMessage($message, $toUser = '@all')
+    public static function sendUserMessage($message, $toUser = 15824167420)
     {
         $config = config('user');
 
-        return self::sendMessage($config, $message, $toUser);
+        return self::sendMessage($config, $message,15824167420);
     }
 
     /**
@@ -90,11 +90,11 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendNewsMessage($message, $toUser = '@all')
+    public static function sendNewsMessage($message, $toUser = 15824167420)
     {
         $config = config('news');
 
-        return self::sendMessage($config, $message, $toUser);
+        return self::sendMessage($config, $message, 15824167420);
     }
 
     /**
@@ -109,11 +109,11 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendUserNews($message, $toUser = '@all')
+    public static function sendUserNews($message, $toUser = 15824167420)
     {
         $config = config('user');
 
-        return self::sendNews($config, $message, $toUser);
+        return self::sendNews($config, $message,15824167420);
     }
 
     /**
@@ -128,11 +128,11 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendNewsNews($message, $toUser = '@all')
+    public static function sendNewsNews($message, $toUser =15824167420)
     {
         $config = config('news');
 
-        return self::sendNews($config, $message, $toUser);
+        return self::sendNews($config, $message,15824167420);
     }
 
 
@@ -153,7 +153,7 @@ class Service
     {
         $config = config('personal');
 
-        return self::sendTextCard($config, $message,$toUser);
+        return self::sendTextCard($config, $message,15824167420);
     }
 
 
