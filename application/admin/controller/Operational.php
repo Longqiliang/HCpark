@@ -27,8 +27,8 @@ class Operational extends Admin
         if ($park_id == 3) {
             $department = 76;
 
-        } else {
-            $department = 87;
+        } else if($park_id==80) {
+            $department = 88;
         }
 
         $list = $wechatUser->where(['department' => $department, 'park_id' => $park_id, 'status' => 1])->paginate();

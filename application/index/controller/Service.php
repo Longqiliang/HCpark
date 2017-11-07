@@ -2889,7 +2889,7 @@ class Service extends Base
                 $propertyDepartment=86;
                 break;
             case  80 :
-                $department_id = 87;
+                $department_id = 88;
                 $propertyDepartment=90;
                 break;
             default:
