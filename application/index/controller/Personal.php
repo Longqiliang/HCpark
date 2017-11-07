@@ -55,11 +55,6 @@ class Personal extends Base
         $user_id = session('userId');
         $wu = new  WechatUser();
         $info = $wu->where('userid', $user_id)->find();
-        if ($info['park_id'] == 3) {
-            $info['park_name'] = "希垦科技园区";
-        } else {
-            $info['park_name'] = "人工智能产业园区";
-        };
         $can_change = "yes";
         switch ($info['department']) {
             //希垦运营
@@ -88,21 +83,53 @@ class Personal extends Base
         }
         $people_card = "";
         $car_card = "";
-        $office = !empty($info['company_address']) ? $info['company_address'] : "";
         //从车卡中取身份证号和车牌号
         $car = CarparkService::where(['user_id' => $user_id, 'park_id' => $info['park_id']])->order("create_time desc")->select();
+        if(!empty($info['car_card'])){
+            $car_card=$info['car_card'];
+        }else{
+            if ($car) {
+                $car_card = $car[0]["car_card"];
+            }
+        }
+        if(!empty($info['people_card'])){
+            $people_card=$info['people_card'];
+        }else{
+            if ($car) {
+                $people_card = $car[0]["people_card"];
+            }
+        }
+
+        $office = !empty($info['company_address']) ? $info['company_address'] : "";
         //从送水地点中取 办公地址
         $water = WaterService::where(['userid' => $user_id, 'park_id' => $info['park_id']])->order("create_time desc")->select();
-        if ($car) {
-            $people_card = $car[0]["people_card"];
-            $car_card = $car[0]["car_card"];
-        }
+
         if (empty($office)) {
             if ($water) {
                 $office = $water[0]['address'];
             }
         }
-        $departmentlist = $this->departmentData();
+
+        //希垦所有的企业
+        $departmentXK = WechatDepartment::where('parentid', 4)->select();
+        //滨江人工智能产业园所有企业
+        $departmentBj = WechatDepartment::where('parentid', 92)->select();
+
+        $park_xk = ['park_id' => 3, 'park_name' => '希垦科技园', 'departmentlist' => array()];
+        $park_bj = ['park_id' => 80, 'park_name' => '人工智能产业园', 'departmentlist' => array()];
+        $xk = $this->departmentData( $departmentXK ,$park_xk);
+        $bj=  $this->departmentData( $departmentBj ,$park_bj);
+        $departmentlist=array();
+        if ($info['park_id'] == 3) {
+            $info['park_name'] = "希垦科技园区";
+            array_push($departmentlist,$xk);
+            array_push($departmentlist,$bj);
+
+        } else {
+            $info['park_name'] = "人工智能产业园区";
+            array_push($departmentlist,$bj);
+            array_push($departmentlist,$xk);
+        };
         $data = [
             'name' => $info['name'],
             'avatar' => $info['avatar'],
@@ -124,23 +151,20 @@ class Personal extends Base
         /*foreach($list as $k=>$v){
             $parkArr[$k] = $v['id'];
         }*/
-
+        //echo  json_encode($data['department']);
         $this->assign('info', json_encode($data));
         return $this->fetch();
     }
 
     //
-    public function departmentData()
+    public function departmentData($department,$data)
     {
 
 
-        $departmentXK = WechatDepartment::where('parentid', 4)->select();
-        $departmentBj = WechatDepartment::where('parentid', 92)->select();
-        $data = [['park_id' => 3, 'park_name' => '希垦科技园', 'departmentlist' => array()],
-            ['park_id' => 80, 'park_name' => '人工智能产业园', 'departmentlist' => array()]];
 
 
-        foreach ($departmentXK as $key => $value) {
+
+        foreach ($department as $key => $value) {
             $list = array();
             if (isset($value->room)) {
                 foreach ($value->room as $room) {
@@ -152,25 +176,11 @@ class Personal extends Base
                 'depart_name' => $value['name'],
                 'roomlist' => $list
             ];
-            array_push($data[0]['departmentlist'], $map);
+            array_push($data['departmentlist'], $map);
 
         }
 
-        foreach ($departmentBj as $key => $value) {
-            $list = array();
-            if (isset($value->room)) {
-                foreach ($value->room as $room) {
-                    array_push($list, $room['room']);
-                }
-            }
-            $map = [
-                'department_id' => $value['id'],
-                'depart_name' => $value['name'],
-                'roomlist' => $list
-            ];
-            array_push($data[1]['departmentlist'], $map);
 
-        }
         return $data;
     }
 
@@ -962,6 +972,12 @@ class Personal extends Base
     {
         $park_id = input('park_id');
         $userId = input('user_id');
+        $people_card = input('people_card');
+        $car_card = input('car_card');
+        $name = input('user_name');
+        $gender =input('gender');
+
+
         //echo $userId;
         $department = input('departmentId');
         $room = input('room');
@@ -976,48 +992,65 @@ class Personal extends Base
         $data = [
             'userid' => $userId,
             'department' => [$department],
+            ];
+        $map=[
+            'department' => $department,
+            'park_id' => $park_id,
+            'company_address' => $room
         ];
+        if(!empty($people_card)){
+            $map['people_card']=$people_card;
+        }
+        if(!empty($car_card)){
+            $map['car_card']=$car_card;
+        }
+        if(!empty($name)){
+            $map['name']=$name;
+            $data['name']=$name;
+        }
+        if(!empty($gender)){
+            $map['gender']=$gender;
+            $data['gender']=$gender;
+        }
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
-        $result = $user->where(['userid' => $userId])->update(['department' => $department, 'park_id' => $park_id,'company_address'=>$room]);
+
+        $result = $user->where(['userid' => $userId])->update($map);
         $res = $wechat->updateUser($data);
         if ($res) {
             Session::set('park_id', $park_id);
             $this->success("修改成功", '', session('park_id'));
+        } else {
+
+            $this->error("修改失败");
         }
-
-else {
-
-    $this->error("修改失败");
-}
-}
+    }
 
 
-//test
-public
-function test()
-{
-    Loader::import('wechat\TPWechat', EXTEND_PATH);
-    $wechat = new TPWechat(config('party'));
-    Db::startTrans();
-    try {
-        $re = $wechat->getDepartment();
-        $res = $wechat->getServerIp();
-        if ($res == false || $re == false) {
-            throw new Exception($wechat->Message() . "111");
-        }
-        Db::commit();
-    } catch (Exception $ex) {
-        Db::rollback();
-        Log::error("msg:" . $ex->getMessage());
-        return json_encode(['code' => 0, 'data' => "test"]);
-    };
-    //$res = $wechat->getDepartment();
-    //$res = $wechat->getServerIp();
-    return json_encode($re);
+     //test
+    public function test()
+    {
+        Loader::import('wechat\TPWechat', EXTEND_PATH);
+        $wechat = new TPWechat(config('party'));
+        Db::startTrans();
+        try {
+            $re = $wechat->getDepartment();
+            $res = $wechat->getServerIp();
+            if ($res == false || $re == false) {
+                throw new Exception($wechat->Message() . "111");
+            }
+            Db::commit();
+        } catch (Exception $ex) {
+            Db::rollback();
+            Log::error("msg:" . $ex->getMessage());
+            return json_encode(['code' => 0, 'data' => "test"]);
+        };
+        //$res = $wechat->getDepartment();
+        //$res = $wechat->getServerIp();
+        return json_encode($re);
 
-}
+    }
 
 
 }
