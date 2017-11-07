@@ -122,7 +122,6 @@
 //    console.log(data);
 //    console.log({$floorlist});
     var floorlist = {$floorlist};
-
     var vm = new Vue({
         el:"#app",
         computed:{
@@ -204,10 +203,11 @@
                     _this.addressList[0].defaultIndex = 0;
                 }, 100);
             });
+            _this.addressOne=_this.subData.build_block?_this.subData.build_block:'';
+            _this.addressTwo=_this.subData.office?_this.subData.office:'';
             //this.tels=this.subData.propretyMobile.split('/');
         },
-        created(){
-        },
+
         methods: {
             changeTelIndex(index){
                 this.telIndex=index

@@ -54,7 +54,7 @@ class Service extends Base
             $is = "no";
         }
         if ($park_id == 3) {
-            $parkName = [['name' => '希垦园区']];
+            $parkName = [['name' => '希垦科技园']];
         }
         if ($park_id == 80) {
             $parkName = [['name' => '人工智能产业园区']];
@@ -178,7 +178,9 @@ class Service extends Base
                 $info = [
                     'name' => $user['name'],
                     'mobile' => $user['mobile'],
-                    'propretyMobile' => $parkInfo['property_phone']
+                    'propretyMobile' => $parkInfo['property_phone'],
+                    'office' => $office,
+                    'build_block'=>$build_block,
                 ];
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
@@ -202,6 +204,8 @@ class Service extends Base
                 $info = [
                     'name' => $user['name'],
                     'mobile' => $user['mobile'],
+                    'office' => $office,
+                    'build_block'=>$build_block,
                     'propretyMobile' => $parkInfo['property_phone']
                 ];
                 $floorList = $this->commonFloor();

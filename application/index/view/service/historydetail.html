@@ -182,7 +182,7 @@
                     <li><span>送水地点</span><span>{{info.address}}</span></li>
                     <li><span>送水桶数</span><span>{{info.number}}</span></li>
                     <li v-if="info.park_id==80"><span>送水种类</span><span>{{info.water_name}}（{{info.format}}）</span></li>
-                    <li><span>金<b style="padding: 0 1em;"></b>额</span><span>{{info.price}}</span></li>
+                    <li v-if="info.park_id==80"><span>金<b style="padding: 0 1em;"></b>额</span><span>{{info.price}}</span></li>
                     <li><span>联系方式</span><a :href="'tel:'+info.mobile">{{info.mobile}}（{{info.name}}）</a></li>
                     <li v-if="info.check_remark"><span>物业提示</span><span>{{info.check_remark}}</span></li>
                 </ul>
@@ -191,7 +191,7 @@
                     <li>
                         <ul class="water-process-detail">
                             <li>用户</li>
-                            <li><span :class="{'water-font-black':info.status>=0}" class="my-first-bool">1</span></li>
+                            <li><span :class="{'water-font-black':info.status>=0}" class="my-first-ball">1</span></li>
                             <li :class="{'water-font-black':info.status>=0}">{{info.create_time}}</li>
                             <li :class="{'water-font-black':info.status>=0}">提交预约</li>
                         </ul>
@@ -504,15 +504,17 @@ var app = new Vue({
         });
 
         if(this.appid==3){
-            console.log(3)
             document.getElementsByTagName('body')[0].style.background='#fff'
         }
-
+//        线位置
         var viewWidth=document.body.clientWidth,
-             myFirst=document.getElementsByClassName('my-first-bool')[0],
-             line=document.getElementsByClassName('my-line')[0];
+             myFirst=document.getElementsByClassName('my-first-ball')[0],
+//                myFirstLI=document.getElementsByClassName('water-process-detail')[0].firstElementChild,
+                mySecondLi=document.querySelector('.water-process-detail').querySelectorAll('li')[1],
+                line=document.getElementsByClassName('my-line')[0];
         var l=getElementViewLeft(myFirst);
         line.style.left=l+6+'px';
+        line.style.top=mySecondLi.offsetTop+20+'px';
         line.style.width=viewWidth-(l*2+12)+'px'
 
     },
