@@ -408,7 +408,7 @@
                     room:_this.nowRoom,
                     gender:_this.gender.now==='男'?'1':'2',
                     user_name:_this.personName,
-                    car_card:_this.palteNumber,
+                    car_card:_this.plateNumber,
                     people_card:_this.idNumber
                 };
                 _this.$http.post("{:Url('Personal/changeDepartment')}",data).then(function (e) {
