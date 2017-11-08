@@ -1,0 +1,141 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    body{
+        background-color: rgba(0,0,0,0.4);
+    }
+    .code-card{
+        width:89.3333333vw;
+        background-color: #fff;
+        text-align: center;
+        -webkit-border-radius:20px;
+        -moz-border-radius:20px;
+        border-radius:20px;
+        margin:4.1rem auto;
+        overflow: hidden;
+    }
+    .code-card>h2{
+        padding:3rem;
+        margin:0;
+        font-size: 1.7rem;
+        color: #333;
+        font-weight: normal;
+        line-height: 1.5;
+    }
+    .code-card>.code{
+        margin:0 auto   4.5rem;
+        width:58.666667vw;
+        height:58.666667vw;
+        padding:1rem;
+        -webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+        -moz-box-shadow:  0 0 10px 0 rgba(0,0,0,0.2);
+        box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+    }
+    .code-card>.code>img{
+        height:100%;
+        width:100%;
+    }
+    .code-card>.code-change-btn{
+        background-color: #FCC44B;
+        height:7rem;
+        line-height: 7rem;
+        color: #fff;
+        font-size: 2rem;
+    }
+    .code-change-btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .code-change-btn>div:first-child{
+        margin-right: 1rem;
+    }
+    .code-card .code-icon{
+        display: flex;
+        justify-content: center;
+        flex-direction:column;
+    }
+    .code-card .code-icon span{
+        display: inline-block;
+        height:0.5rem;
+        width:1.7rem;
+        border-right:2px solid #fff;
+        border-bottom:2px solid #fff;
+        -webkit-transform: skew(30deg,0deg);
+        -moz-transform: skew(30deg,0deg);
+        -ms-transform: skew(30deg,0deg);
+        -o-transform: skew(30deg,0deg);
+        transform: skew(30deg,0deg);
+    }
+    .code-card .code-icon span:last-child{
+        -webkit-transform:rotate(180deg) skew(30deg,0deg);
+        -moz-transform:rotate(180deg) skew(30deg,0deg);
+        -ms-transform:rotate(180deg) skew(30deg,0deg);
+        -o-transform:rotate(180deg) skew(30deg,0deg);
+        transform:rotate(180deg) skew(30deg,0deg);
+        margin-top: 0.5rem;
+        margin-left:3px;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="code-card">
+        <h2>扫描下方二维码 <br/>关注智新泽地园区服务平台</h2>
+        <div class="code">
+            <img :src="park[parkIndex].src" alt="希垦园区注册二维码">
+        </div>
+        <div class="code-change-btn" @click="changeParkCode">
+            <div class="code-icon">
+                <span></span>
+                <span></span>
+            </div>
+            <div>
+                切换到<span>{{park[nextParkIndex].btn_text}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            park:[
+                {
+                    btn_text:'滨江园区',
+                    alt:'滨江园区注册二维码',
+                    code_index:0,
+                    src:'/index/images/index/code-register-BJ.png'
+                },
+                {
+                    btn_text:'希垦园区',
+                    alt:'希垦园区注册二维码',
+                    code_index:1,
+                    src:'/index/images/index/code-register-XK.png'
+                }
+            ],
+            parkIndex:0,
+            nextParkIndex:1
+        },
+        methods: {
+            changeParkCode(){
+                var _this=this;
+                var len=_this.park.length;
+                _this.parkIndex+=1;
+                _this.nextParkIndex+=1;
+                if(_this.parkIndex>=len){
+                    _this.parkIndex=0
+                }
+                if(_this.nextParkIndex>=len){
+                    _this.nextParkIndex=0
+                }
+            }
+        }
+    })
+</script>
+{/block}
