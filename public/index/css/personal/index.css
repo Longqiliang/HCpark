@@ -247,6 +247,9 @@ ul.list li:after{
 .icon-feedback{
     background-image: url(/index/images/personal/icon-feedback.png);
 }
+.icon-recommend{
+    background-image: url(/index/images/personal/icon-recommend.png);
+}
 .ft-right{
     float: right;
     color: #999;
