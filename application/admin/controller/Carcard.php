@@ -19,20 +19,18 @@ class Carcard extends Admin
         $CardparkService = new CarparkService();
         $parkId = session("user_auth")['park_id'];
         $search = input('search');
-        if (!empty($search)) {
-            $map = [
-                'park_card' => array('like', '%' . $search . '%'),
-                'status'=>array('neq',-1),
-                'park_id'=>$parkId,
-            ];
-            $list = $CardparkService->where($map)->order('status asc')->paginate();
-        } else {
-            $map = [
-                'status'=>array('neq',-1),
-                'park_id'=>$parkId,
-            ];
-            $list = $CardparkService->where($map)->order('status asc')->paginate();
+        $status_change = input('status_type');
+        $map = [
+            'status'=>array('neq',-1),
+            'park_id'=>$parkId,
+        ];
+        if($status_change!==null&&$status_change!=-1){
+            $map['status']=$status_change;
         }
+        if (!empty($search)) {
+            $map['park_card']= array('like', '%' . $search . '%');
+        }
+        $list = $CardparkService->where($map)->order('status asc')->paginate(10,false,['query' => request()->param()]);
         int_to_string($list, array(
             'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败'),
             'type' => array(1 => '新卡办理', 2 => '旧卡办理')
@@ -42,6 +40,7 @@ class Carcard extends Admin
         $data['num'] = count($re);
         $this->assign('search',$search);
         $this->assign('list', $data);
+        $this->assign('checkType',$status_change);
         return $this->fetch();
 
     }

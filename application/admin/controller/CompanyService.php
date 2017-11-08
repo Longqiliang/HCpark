@@ -28,9 +28,16 @@ class CompanyService extends Admin
             ->where($map)
             ->where('c.park_id',$parkid)
             ->paginate();
-
-
-        $total=count($list);
+        $map['s.status']=0;
+        $list2 = Db::table('tb_company_service')
+            ->alias('s')
+            ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
+            ->join('__WECHAT_USER__ c', 'c.userid=s.user_id')
+            ->field('a.name,s.id,s.company,s.people,s.mobile,s.remark,s.status,s.create_time')
+            ->where($map)
+            ->where('c.park_id',$parkid)
+            ->select();
+        $total=count($list2);
         $this->assign('search',$search);
         $this->assign('total',$total);
         $this->assign('list',$list);

@@ -13,6 +13,7 @@ use  app\common\model\AdvertisingRecord;
 use  app\common\model\FunctionRoomRecord;
 use  app\common\model\LedRecord;
 use  app\common\behavior\Service;
+use  app\common\behavior\MyPaginate;
 
 class PublicArea extends Admin
 {
@@ -28,7 +29,7 @@ class PublicArea extends Admin
             ];
             $data = $AdvertisingService->where($map)->order('id asc')->paginate();
             foreach ($data as $value) {
-                $value['park_id'] = isset($value->findPark->name) ? $value->findPark->name :"";
+                $value['park_id'] = isset($value->findPark->name) ? $value->findPark->name : "";
 
             }
             int_to_string($data, array(
@@ -39,7 +40,7 @@ class PublicArea extends Admin
             $map['park_id'] = $park_id;
             $data = $AdvertisingService->where($map)->order('id asc')->paginate();
             foreach ($data as $value) {
-                $value['park_id'] = isset($value->findPark->name) ? $value->findPark->name :"";
+                $value['park_id'] = isset($value->findPark->name) ? $value->findPark->name : "";
 
             }
             int_to_string($data, array(
@@ -53,20 +54,19 @@ class PublicArea extends Admin
     }
 
     //公共场所编辑
-    public  function  edit(){
-     $data =input('');
-     $id =$data['id'];
-     unset($data['id']);
-     $AdvertisingService = new AdvertisingService();
-     $reult = $AdvertisingService->save($data,['id' => $id]);
-     if($reult){
+    public function edit()
+    {
+        $data = input('');
+        $id = $data['id'];
+        unset($data['id']);
+        $AdvertisingService = new AdvertisingService();
+        $reult = $AdvertisingService->save($data, ['id' => $id]);
+        if ($reult) {
 
-         return $this->success("更新成功");
-     }else{
-         return $this->success("更新失败");
-     }
-
-
+            return $this->success("更新成功");
+        } else {
+            return $this->success("更新失败");
+        }
     }
 
 
@@ -86,7 +86,7 @@ class PublicArea extends Admin
                 $time = array();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('in',[0,2])
+                    'status' => array('in', [0, 2])
                 ];
                 $serviceInfo = $AdvertisingService->where('id', 1)->find();
                 $list = $AdvertisingRecord->where($map)->select();
@@ -114,8 +114,8 @@ class PublicArea extends Admin
                     $re['day'] = "";
                     $re['id'] = [1, array()];
                     foreach ($map as $value) {
-                        $re['day'] .= date('Y-m-d', $value['order_time'])."   " ;
-                        array_push($re['id'][1],$value['id']);
+                        $re['day'] .= date('Y-m-d', $value['order_time']) . "   ";
+                        array_push($re['id'][1], $value['id']);
                     }
                     if ($map[0]['status'] == 0) {
 
@@ -127,7 +127,7 @@ class PublicArea extends Admin
                     }
                     $re['type'] = 1;
                     $re['state'] = $map[0]['status'];
-                    $re['id']=json_encode( $re['id']);
+                    $re['id'] = json_encode($re['id']);
                     array_push($data, $re);
 
                 }
@@ -138,7 +138,7 @@ class PublicArea extends Admin
                 $create_time = array();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('in',[0,2])
+                    'status' => array('in', [0, 2])
                 ];
                 $serviceInfo = $AdvertisingService->where('id', 2)->find();
                 $list = $Fa->where($map)->order('create_time desc')->select();
@@ -174,9 +174,9 @@ class PublicArea extends Admin
                     $re['id'] = [2, array()];
                     foreach ($mtime_list as $value) {
                         $re['day'] .= date('Y-m-d', $value);
-                        $length =0;
+                        $length = 0;
                         foreach ($map as $value2) {
-                            $length+=1;
+                            $length += 1;
                             if ($value == $value2['order_time']) {
                                 if ($value2['date_type'] == 1) {
                                     $re['day'] .= "上午 ";
@@ -184,10 +184,10 @@ class PublicArea extends Admin
                                     $re['day'] .= "下午 ";
                                 }
                             }
-                            if($length==count($map)){
-                                $re['day'].="<br>";
+                            if ($length == count($map)) {
+                                $re['day'] .= "<br>";
                             }
-                            array_push($re['id'][1],$value2['id']);
+                            array_push($re['id'][1], $value2['id']);
                         }
 
                     }
@@ -202,7 +202,7 @@ class PublicArea extends Admin
                     }
                     $re['type'] = 2;
                     $re['state'] = $map[0]['status'];
-                    $re['id']=json_encode( $re['id']);
+                    $re['id'] = json_encode($re['id']);
                     array_push($data, $re);
 
                 }
@@ -214,7 +214,7 @@ class PublicArea extends Admin
                 $serviceInfo = $AdvertisingService->where('id', 3)->find();
                 $map = [
                     'service_id' => $id,
-                    'status' => array('in',[0,2])
+                    'status' => array('in', [0, 2])
                 ];
                 $list = $led->where($map)->order('create_time desc')->select();
                 //所有的创建时间
@@ -249,10 +249,10 @@ class PublicArea extends Admin
                     $mtime_list = array_values(array_unique($map_time));
 
                     foreach ($mtime_list as $value) {
-                        $re['day'] .= date('Y-m-d', $value) .":";
-                        $length=0;
+                        $re['day'] .= date('Y-m-d', $value) . ":";
+                        $length = 0;
                         foreach ($map as $value2) {
-                            $length +=1;
+                            $length += 1;
                             if ($value == $value2['order_time']) {
                                 switch ($value2['date_type']) {
                                     case 1:
@@ -284,10 +284,10 @@ class PublicArea extends Admin
                                         break;
                                 }
                             }
-                            if($length==count($map)){
-                             $re['day'] .= "<br>";
+                            if ($length == count($map)) {
+                                $re['day'] .= "<br>";
                             }
-                            array_push($re['id'][1],$value2['id']);
+                            array_push($re['id'][1], $value2['id']);
                         }
                     }
                     if ($map[0]['status'] == 0) {
@@ -301,13 +301,28 @@ class PublicArea extends Admin
                     }
                     $re['type'] = 3;
                     $re['state'] = $map[0]['status'];
-                    $re['id']=json_encode( $re['id']);
+                    $re['id'] = json_encode($re['id']);
                     array_push($data, $re);
-
                 }
                 break;
         }
-        $this->assign('data', $data);
+
+        $data2 = array();
+        $status_change = input('status_type');
+       /* echo $status_change;*/
+        if ($status_change != null && $status_change != -1) {
+            foreach ($data as $value) {
+                if ($value['state'] == $status_change) {
+                    array_push($data2, $value);
+                }
+            }
+        } else {
+            $data2 = $data;
+        }
+        $qu = new  MyPaginate();
+        $data3 = $qu->paginate2($data2, 10, false, ['query' => request()->param()]);
+        $this->assign('data', $data3);
+        $this->assign('checkType', $status_change);
         return $this->fetch();
     }
 
@@ -317,8 +332,8 @@ class PublicArea extends Admin
         $check_remark = input('check_remark');
         $type = input('type');
         $advertisingRecord = new AdvertisingRecord();
-        $led =new LedRecord();
-        $FunctionRoomRecord =new FunctionRoomRecord();
+        $led = new LedRecord();
+        $FunctionRoomRecord = new FunctionRoomRecord();
         $message = [
             "title" => "设备服务提示",
             "description" => "您的二楼多功能厅预约申请被取消，请点击查看",
@@ -328,67 +343,67 @@ class PublicArea extends Admin
                 $list = $advertisingRecord->where('create_time', $create_time)->select();
                 foreach ($list as $value) {
                     $value['status'] = 0;
-                    $value['check_remark']=$check_remark;
+                    $value['check_remark'] = $check_remark;
                     $value->save();
 
                 }
-                $type2=1;
-                $message['description']="您有大厅广告位申请被取消，请点击查看";
+                $type2 = 1;
+                $message['description'] = "您有大厅广告位申请被取消，请点击查看";
                 break;
             case 2:
                 $list = $FunctionRoomRecord->where('create_time', $create_time)->select();
                 foreach ($list as $value) {
                     $value['status'] = 0;
-                    $value['check_remark']=$check_remark;
+                    $value['check_remark'] = $check_remark;
                     $value->save();
                 }
-                $type2=2;
+                $type2 = 2;
                 break;
             case 3:
                 $list = $led->where('create_time', $create_time)->select();
                 foreach ($list as $value) {
                     $value['status'] = 0;
-                    $value['check_remark']=$check_remark;
+                    $value['check_remark'] = $check_remark;
                     $value->save();
                 }
-                $type2=3;
-                $message['description']="您有大堂LED屏申请被取消，请点击查看";
+                $type2 = 3;
+                $message['description'] = "您有大堂LED屏申请被取消，请点击查看";
                 break;
         }
-        $send =new Service();
-        $message['url'] = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/'.$type2.'/create_time/' . $create_time ;
-        $reult = $send->sendPersonalMessage($message,input('user'));
+        $send = new Service();
+        $message['url'] = 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/' . $type2 . '/create_time/' . $create_time;
+        $reult = $send->sendPersonalMessage($message, input('user'));
 
 
-
-          return  $this->success("取消成功");
+        return $this->success("取消成功");
 
     }
 
-    public function moveToTrash(){
+    public function moveToTrash()
+    {
         $data = input('');
 
-        $item=array();
-        foreach ($data['ids'] as $id){
-           $a = json_decode($id);
-           switch ($a[0]){
-               case  1:
-                   $item= array_values(array_unique($a[1]));
-                   $result = AdvertisingRecord::where('id', 'in', $item)->update(['status' => -1]);
-                   break;
-               case  2:
-                   $item= array_values(array_unique($a[1]));
-                   $result = FunctionRoomRecord::where('id', 'in', $item)->update(['status' => -1]);
-                   break;
-               case  3:
-                   $item= array_values(array_unique($a[1]));
-                   $result = LedRecord::where('id', 'in', $item)->update(['status' => -1]);
-                   break;
-           }
+        $item = array();
+        foreach ($data['ids'] as $id) {
+            $a = json_decode($id);
+            switch ($a[0]) {
+                case  1:
+                    $item = array_values(array_unique($a[1]));
+                    $result = AdvertisingRecord::where('id', 'in', $item)->update(['status' => -1]);
+                    break;
+                case  2:
+                    $item = array_values(array_unique($a[1]));
+                    $result = FunctionRoomRecord::where('id', 'in', $item)->update(['status' => -1]);
+                    break;
+                case  3:
+                    $item = array_values(array_unique($a[1]));
+                    $result = LedRecord::where('id', 'in', $item)->update(['status' => -1]);
+                    break;
+            }
         }
-        if($result) {
+        if ($result) {
             return $this->success('删除成功');
-        } elseif(!$result) {
+        } elseif (!$result) {
             return $this->error('删除失败');
         }
     }

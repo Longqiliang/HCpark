@@ -106,7 +106,11 @@
                     <th>联系电话</th>
                     <th>预约时间</th>
                     <th>总金额</th>
-                    <th>状态</th>
+                    <th><select name="type" id="changeType" onchange="changeType()">
+                        <option  value="-1" >全部状态</option>
+                        <option value="0" {eq name="$checkType" value="0"}selected{/eq}>被取消</option>
+                        <option value="2" {eq name="$checkType" value="2"}selected{/eq}>预约成功</option>
+                    </select></th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -142,12 +146,14 @@
                     <td>
                         <a data-toggle="modal" title="查看凭证" href="#modal-form" onclick="showpayment(this)"
                            data-payment="{$vo.payment_voucher}" class="btn-sm btn-success" style="color: #fff">查看凭证</a>
+
+
                         {eq name="$vo.state" value="2"}
 
                         <a data-toggle="modal" href="#modal-form1" onclick="saveData(this)" data-time="{$vo.time}" data-type="{$vo.type}" data-day='{$vo.day}'
                            data-price="{$vo.price}" data-user="{$vo.userid}"  class="btn-sm btn-primary"
                            style="color: #fff">取消</a>
-
+                         {else/}  <span class="btn-default2" >取消</span>
                         {/eq}
                         <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
 
@@ -156,7 +162,7 @@
                 {/volist}
                 </tbody>
             </table>
-            <div class="btn-group pull-right"></div>
+            <div class="btn-group pull-right">{$data->render()}</div>
         </div>
     </div>
     <div id="modal-form1" class="modal fade" aria-hidden="true">
@@ -247,6 +253,11 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
+    function changeType(){
+        var types = $('#changeType').val();
+        location.href =  window.location.href+"/status_type/"+types+"";
+
+    }
     highlight_subnav("{:Url('publicArea/index')}");
 </script>
 {/block}

@@ -124,7 +124,13 @@
                     {/eq}
                     <th>联系电话</th>
                     <th>创建时间</th>
-                    <th>状态</th>
+                    <th><select name="type" id="changeType" onchange="changeType()">
+                        <option  value="-1" >全部状态</option>
+                        <option value="0" {eq name="$checkType" value="0"}selected{/eq}>进行中</option>
+                        <option value="1" {eq name="$checkType" value="1"}selected{/eq}>审核成功</option>
+                        <option value="2" {eq name="$checkType" value="2"}selected{/eq}>审核失败</option>
+                        <option value="3" {eq name="$checkType" value="3"}selected{/eq}>确认送达</option>
+                    </select></th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -166,6 +172,7 @@
                         <div class=" col-sm-1 col-md-1 col-lg-4"></div>
                        {eq name="$vo.status" value="0"}
                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">审核</a>
+                       {else/}  <span class="btn-default2" >审核</span>
                        {/eq}
                        <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                    </td>
@@ -234,6 +241,11 @@
                 }
             }
         })
+
+    }
+    function changeType(){
+        var types = $('#changeType').val();
+        location.href = "{:Url('water_service/index')}?status_type="+types+"";
 
     }
 </script>

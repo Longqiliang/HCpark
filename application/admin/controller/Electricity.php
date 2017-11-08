@@ -20,38 +20,29 @@ class Electricity extends Admin
         $ElectricityService = new ElectricityService();
         $parkId = session("user_auth")['park_id'];
         $search = input('search');
-        if (!empty($search)) {
-            $map = [
-                'electricity_id' => array('like', '%' . $search . '%'),
-                'status'=>array('neq',-1),
-                'park_id'=>$parkId,
-            ];
-            $list = $ElectricityService->where($map)->order('status asc')->paginate();
-            int_to_string($list, array(
-                'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败'),
-                'type' => array(1 => '新柱办理', 2 => '旧柱办理')
-            ));
-
-            $re = $ElectricityService->where(['status'=>0,'park_id'=>$parkId])->select();
-            $data['data'] = $list;
-            $data['num'] = count($re);
-
-
-        } else {
-            $map['status'] = array('neq', -1);
-            $map['park_id']  = $parkId;
-            $list = $ElectricityService->where($map)->order('status asc')->paginate();
-            int_to_string($list, array(
-                'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败'),
-                'type' => array(1 => '新柱办理', 2 => '旧柱办理')
-            ));
-
-            $re = $ElectricityService->where(['status'=>0,'park_id'=>$parkId])->select();
-            $data['data'] = $list;
-            $data['num'] = count($re);
+        $status_change = input('status_type');
+        $map = [
+            'status' => array('neq', -1),
+            'park_id' => $parkId
+        ];
+        if ($status_change !== null && $status_change != -1) {
+            $map['status'] = $status_change;
         }
-        $this->assign('search',$search);
+        if (!empty($search)) {
+            $map['electricity_id'] = array('like', '%' . $search . '%');
+        }
+        $list = $ElectricityService->where($map)->order('status asc')->paginate(10,false,['query' => request()->param()]);
+        int_to_string($list, array(
+            'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败'),
+            'type' => array(1 => '新柱办理', 2 => '旧柱办理')
+        ));
+
+        $re = $ElectricityService->where(['status' => 0, 'park_id' => $parkId])->select();
+        $data['data'] = $list;
+        $data['num'] = count($re);
+        $this->assign('search', $search);
         $this->assign('list', $data);
+        $this->assign('checkType',$status_change);
         return $this->fetch();
 
     }
@@ -77,18 +68,18 @@ class Electricity extends Admin
                 }
                 $record = $ElectricityService->where('id', $id)->find();
                 //新柱申请
-                if($record['type']==1){
-                    $map['electricity_id']=$electricity_id;
-                    $map['status']=1;
-                    $is_has =$ElectricityService->where($map)->find();
-                    if($is_has){
+                if ($record['type'] == 1) {
+                    $map['electricity_id'] = $electricity_id;
+                    $map['status'] = 1;
+                    $is_has = $ElectricityService->where($map)->find();
+                    if ($is_has) {
                         return $this->error('此柱已有使用者');
                     }
                 }
                 $record['status'] = 1;
-                $record['electricity_id']=$electricity_id;
+                $record['electricity_id'] = $electricity_id;
                 $record->save();
-                $userId =  $record['user_id'];
+                $userId = $record['user_id'];
                 //新柱
                 if ($record['type'] == 1) {
                     $message ['description'] = "您的新柱缴费已经完成，请2小时后前往领取";
@@ -104,19 +95,19 @@ class Electricity extends Admin
             } //没通过
             elseif ($type == 2) {
                 $record = $ElectricityService->where('id', $id)->find();
-                $userId =  $record['user_id'];
+                $userId = $record['user_id'];
                 $record['status'] = 2;
                 $record['check_remark'] = $checkRemark;
                 $record->save();
                 //新柱
                 if ($record['type'] == 1) {
-                    $message ['description'] = "您的新柱缴费无法通过审核\n备注:".$record['check_remark'];
+                    $message ['description'] = "您的新柱缴费无法通过审核\n备注:" . $record['check_remark'];
 
                 } // 旧柱
                 else {
-                    $message ['description'] = "您的旧柱续费无法通过审核\n备注:".$record['check_remark'];
+                    $message ['description'] = "您的旧柱续费无法通过审核\n备注:" . $record['check_remark'];
                 }
-                ServiceModel::sendPersonalMessage($message,$userId);
+                ServiceModel::sendPersonalMessage($message, $userId);
 
                 return $this->success("审核成功");
             }
@@ -125,7 +116,7 @@ class Electricity extends Admin
             $info = $ElectricityService->where('id', $id)->find();
             $info['payment_voucher'] = json_decode($info['payment_voucher']);
             $info['type'] = $info['type'] == 1 ? "新柱办理" : "旧柱续费";
-            $info['user'] = isset($info->user->name )?$info->user->name:"";
+            $info['user'] = isset($info->user->name) ? $info->user->name : "";
             switch ($info['status']) {
                 case 0:
                     $info['status_text'] = "审核中";
@@ -141,6 +132,7 @@ class Electricity extends Admin
             return $this->fetch();
         }
     }
+
     public function del()
     {
         $CardparkRecord = new ElectricityService();
@@ -156,12 +148,13 @@ class Electricity extends Admin
     }
 
     //逻辑删除
-    public function moveToTrash() {
+    public function moveToTrash()
+    {
         $ids = input('ids/a');
         $result = ElectricityService::where('id', 'in', $ids)->update(['status' => -1]);
-        if($result) {
+        if ($result) {
             return $this->success('删除成功');
-        } elseif(!$result) {
+        } elseif (!$result) {
             return $this->error('删除失败');
         }
     }
@@ -171,7 +164,7 @@ class Electricity extends Admin
     {
         $id = input('id');
         $path = input('images');
-        $path=str_replace('\\','/',$path);
+        $path = str_replace('\\', '/', $path);
         $car = ElectricityService::get($id);
         $car['charge_voucher'] = $path;
         $car->save();

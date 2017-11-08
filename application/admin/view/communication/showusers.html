@@ -118,6 +118,7 @@
                     <th>公司</th>
                     <th>备注</th>
                     <th>状态</th>
+                    <th>权限</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -143,12 +144,20 @@
                         {$vo.remark}
                     </td>
                     <td>
+                        {if condition="$vo.status <2"}
                         {$vo.status_text}
+                        {else/}
+                        <span class="txt-success" >审核完成</span>
+                        {/if}
+                    </td>
+                    <td>
+                        {if condition="$vo.status >2"}
+                        {$vo.status_text}
+                        {else/}无{/if}
                     </td>
                     <td>
                         <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$vo.id}"   data-username="{$vo.user_name}"  data-mobile="{$vo.mobile}"   data-company="{$vo.company}"  data-status="{$vo.status}"   data-remark="{$vo.remark}"class="btn-sm btn-success" style="color: #fff" >审核</a>
                         <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
-
                     </td>
                 </tr>
                 {/volist}

@@ -16,23 +16,48 @@ class Property extends Admin
     public function index(){
 
         $parkid =session("user_auth")['park_id'];
-        $list=PropertyServer::where(['park_id'=> $parkid,'type'=>['<',4],'status'=>['in',[0,1,2]]])->order('create_time desc')->paginate();
+        $status_change = input('status_type');
+        $map=[
+            'park_id'=> $parkid,
+            'type'=>['<',4],
+            'status'=>['in',[0,1,2]]
+        ];
+        if($status_change!==null&&$status_change!=-1){
+            $map['status']=$status_change;
+
+        }
+        $list=PropertyServer::where($map)->order('create_time desc')->paginate(10,false,['query' => request()->param()]);
         $list2=PropertyServer::where(['park_id'=> $parkid,'type'=>['<',4],'status'=>0])->order('create_time desc')->select();
         int_to_string($list,['type'=>[1=>'空调报修',2=>"电梯报修",3=>"其他报修"]]);
         int_to_string($list,['status'=>[0=>"进行中",1=>"审核成功",2=>"审核失败",3=>'服务完成']]);
         $this->assign("list",$list);
         $this->assign("count",count($list2));
+        $this->assign('checkType',$status_change);
+
         return $this->fetch();
     }
     /*保洁服务列表*/
     public function clear(){
         $parkid =session("user_auth")['park_id'];
-        $list=PropertyServer::where(['park_id'=> $parkid,'type'=>4,'status'=>['in',[0,1,2]]])->order('id desc')->paginate();
+        $status_change = input('status_type');
+        $map=[
+            'park_id'=> $parkid,
+            'type'=>4,
+            'status'=>['in',[0,1,2]]
+        ];
+        if($status_change!==null&&$status_change!=-1){
+            $map['status']=$status_change;
+
+        }
+
+
+        $list=PropertyServer::where($map)->order('id desc')->paginate(10,false,['query' => request()->param()]);
         $list2=PropertyServer::where(['park_id'=> $parkid,'type'=>4,'status'=>0])->order('id desc')->select();
         int_to_string($list,['type'=>[4=>'室内保洁']]);
         int_to_string($list,['status'=>[0=>"进行中",1=>"已完成",2=>"审核失败"]]);
         $this->assign("list",$list);
         $this->assign('count',count($list2));
+        $this->assign('checkType',$status_change);
         return $this->fetch();
 
 

@@ -43,6 +43,7 @@
     th,td{
         text-align: center;
     }
+
 </style>
 {/block}
 
@@ -81,7 +82,12 @@
                     <th>联系人员</th>
                     <th>联系方式</th>
                     <th>备注</th>
-                    <th>状态</th>
+                    <th> <select name="type" id="changeType" onchange="changeType()">
+                        <option  value="-1" >全部状态</option>
+                        <option value="0" {eq name="$checkType" value="0"}selected{/eq}>进行中</option>
+                        <option value="1" {eq name="$checkType" value="1"}selected{/eq}>审核成功</option>
+                        <option value="2" {eq name="$checkType" value="2"}selected{/eq}>审核失败</option>
+                    </select></th>
                     <th>维修状况</th>
                     <th>操作</th>
                 </tr>
@@ -104,7 +110,9 @@
                         {eq name="$vo.status" value="2"}
                         <span class="txt-danger">{$vo.status_text}</span>
                         {/eq}
-
+                        {eq name="$vo.status" value="0"}
+                        <span >{$vo.status_text}</span>
+                        {/eq}
                     <td>
 
                     {empty name="vo.proof"}<span class="txt-danger">无</span>
@@ -112,7 +120,7 @@
                     {/empty}
                 <td>
                     <a data-toggle="modal" href="#modal-form1" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看图片</a>
-                    {empty name="vo.proof"}
+                    {empty name="vo.proof"} <span class="btn-default2" >报修凭证</span>
                     {else /}    <a data-toggle="modal" href="#modal-form1" onclick="showProof('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">报修凭证</a>
                     {/empty}
 
@@ -120,7 +128,9 @@
                         <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-primary" onclick="changestates('{$vo.id}',1)" style="color: #fff">审核通过</a>-->
                         <!--<a data-toggle="modal" href="#modal-form" class=" btn-sm btn-info " onclick="changestates('{$vo.id}',2)" style="color: #fff">审核不通过</a>-->
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">审核</a>
+                        <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                         {else/}
+                        <span class="btn-default2" >审核</span>
                         <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                         {/eq}
                     </td>
@@ -301,5 +311,13 @@
         })
 
     }
+
+    function changeType(){
+        var types = $('#changeType').val();
+        location.href = "{:Url('property/index')}?status_type="+types+"";
+
+    }
+
+
 </script>
 {/block}

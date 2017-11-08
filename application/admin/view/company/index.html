@@ -76,17 +76,24 @@
                 <tr>
                     <!--<th style="width:0"></th>-->
                     <th style="width:35%">企业名称</th>
-                    <th>企业类型</th>
+                    <th> <select name="type" id="changeType" onchange="changeType()">
+                        <option value="-1" {eq name="$checkType" value="-1"}selected{/eq}>企业类型</option>
+                        <option value="0" {eq name="$checkType" value="0"}selected{/eq}>生活配置</option>
+                        <option value="1" {eq name="$checkType" value="1"}selected{/eq}>中介服务</option>
+                        <option value="2" {eq name="$checkType" value="2"}selected{/eq}>科技创新</option>
+                    </select></th>
                     <th style="width:15%">联系方式</th>
                     <th style="width:35%">操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 {volist name="list" id="vo"}
+
                 <tr class="read">
                     <!--<td class="check-mail">-->
                         <!--&lt;!&ndash;<input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">&ndash;&gt;-->
                     <!--</td>-->
+
                     <td class="mail-subject">
                             {$vo.name}
                     </td>
@@ -108,6 +115,7 @@
                 {/volist}
                 </tbody>
             </table>
+
             <div class="btn-group pull-right">{$list->render()}</div>
         </div>
     </div>
@@ -117,6 +125,7 @@
 {block name="script"}
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script>
+
     $(document).ready(function(){
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
@@ -142,5 +151,13 @@
 
     }
     highlight_subnav("{:Url('Company/index')}");
+
+    function changeType(){
+        var types = $('#changeType').val();
+        location.href = "{:Url('company/index')}?company_type="+types+"";
+
+    }
+
+
 </script>
 {/block}

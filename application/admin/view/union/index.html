@@ -40,6 +40,9 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+
+
+
 </style>
 {/block}
 
@@ -109,14 +112,16 @@
                         <span>未推送</span>
                         {/eq}
                     </td>
-                    <td class="text-right mail-date" style="white-space: nowrap">{$vo.create_time|strtotime|date='Y-m-d H:i',###}</td>
+                    <td class=" mail-date" style="white-space: nowrap">{$vo.create_time|strtotime|date='Y-m-d H:i',###}</td>
                     <td>
                         {eq name="vo.is_send" value="0"}
                         <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success" style="color: #fff">开始推送</a>
                         {/eq}
+                        {eq name="vo.is_send" value="1"}
+                        <span class="btn-default2" >开始推送</span>
+                        {/eq}
                         <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-primary">编辑</a>
                         <a class="n btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('moveToTrash')}')">删除</a>
-
                     </td>
                 </tr>
                 {/volist}

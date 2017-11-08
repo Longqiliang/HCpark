@@ -16,7 +16,9 @@ class Company extends Admin
     /*企业详细列表*/
     public function index (){
 
-        $type = config('company_type');
+
+        $company_type=input('company_type')==null?-1:input('company_type');
+        echo  $company_type;
         //dump($type);
        // echo $type[0];
         $search = input('search');
@@ -26,7 +28,11 @@ class Company extends Admin
         if (!empty($search)) {
             $map['name'] = ['like', "%$search%"];
         }
-        $companyList = ParkCompany::where($map)->order('id  asc')->paginate();
+        if ($company_type!=-1) {
+            $map['type'] =input('company_type');
+        }
+        $companyList = ParkCompany::where($map)->order('id  asc')->paginate(10,false,['query' => request()->param()]);
+
         foreach ($companyList as $k=>$v){
             $v['present'] = mb_substr(strip_tags($v['present']),0,30);
             if ($v['type'] >= 0){
@@ -35,7 +41,7 @@ class Company extends Admin
                 $v['type'] = '暂未分类';
             }
         }
-
+        $this->assign('checkType',$company_type);
         $this->assign('list',$companyList);
 
         return  $this->fetch();

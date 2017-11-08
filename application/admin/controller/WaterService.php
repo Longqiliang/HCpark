@@ -20,14 +20,15 @@ class WaterService extends Admin
     public function index()
     {
         $parkid = session("user_auth")['park_id'];
-
-
+        $status_change = input('status_type');
         $search = input('search');
         $map['s.status'] = ['neq', -1];
         if ($search != '') {
             $map['s.name'] = ['like', '%' . $search . '%'];
         }
-
+        if($status_change!==null&&$status_change!=-1){
+            $map['s.status']=$status_change;
+        }
         $list = Db::table('tb_water_service')
             ->alias('s')
             ->join('__WATER_TYPE__ t', 't.id=s.water_id')
@@ -35,9 +36,7 @@ class WaterService extends Admin
             ->where('s.park_id', 'eq', $parkid)
             ->where($map)
             ->order('create_time desc')
-            ->paginate();
-
-
+            ->paginate(10,false,['query' => request()->param()]);
         $list2 = Db::table('tb_water_service')
             ->alias('s')
             ->join('__WATER_TYPE__ t', 't.id=s.water_id')
@@ -45,11 +44,12 @@ class WaterService extends Admin
             ->where('s.park_id', 'eq', $parkid)
             ->where('s.status <2 and s.status>-1')
             ->order('create_time desc')
-            ->paginate();
+            ->select();
         //ECHO json_encode($list);
         $this->assign('count', count($list2));
         $this->assign('list', $list);
         $this->assign('park_id', $parkid);
+        $this->assign('checkType',$status_change);
         return $this->fetch();
     }
 

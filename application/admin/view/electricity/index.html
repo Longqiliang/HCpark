@@ -86,7 +86,12 @@
                     <th>办理时效</th>
                     <th>总金额</th>
                     <th>办理时间</th>
-                    <th>状态</th>
+                    <th><select name="type" id="changeType" onchange="changeType()">
+                        <option  value="-1" >全部状态</option>
+                        <option value="0" {eq name="$checkType" value="0"}selected{/eq}>进行中</option>
+                        <option value="1" {eq name="$checkType" value="1"}selected{/eq}>审核成功</option>
+                        <option value="2" {eq name="$checkType" value="2"}selected{/eq}>审核失败</option>
+                    </select></th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -115,7 +120,7 @@
                         {$vo.create_time|strtotime|date='Y-m-d H:i',###}
                     </td>
                     {eq name="$vo.status" value="0"}
-                    <td>未审核</td>
+                    <td>进行中</td>
                     {/eq}
                     {eq name="$vo.status" value="1"}
                     <td class="txt-success">审核成功</td>
@@ -126,6 +131,7 @@
                     <td>
                         {if condition="$vo.status eq 0"}
                         <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-success" >审核</a>
+                        <span class="btn-default2" >收费凭证</span>
                         {else}
                         <a  href="{:Url('check','id='.$vo.id)}" class="btn-sm btn-primary" >查看</a>
                         <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal"  onclick="setImg('{$vo.id}','{$vo.charge_voucher}')">收费凭据</a>
@@ -234,6 +240,10 @@
             }
         });
     }
+    function changeType(){
+        var types = $('#changeType').val();
+        location.href = "{:Url('electricity/index')}?status_type="+types+"";
 
+    }
 </script>
 {/block}

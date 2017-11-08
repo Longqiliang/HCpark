@@ -45,6 +45,8 @@
     }
     .list_banner {width: 80px}
     .list_type {width: 80px}
+
+
 </style>
 {/block}
 
@@ -64,7 +66,7 @@
                     </div>
                 </div>
             </form>
-            <h2>企业服务 ({$total})</h2>
+            <h2>企业服务 (未联系数量：{$total})</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
@@ -123,7 +125,10 @@
                     </td>
                     {/eq}
                     {eq name="$vo.status" value="1"}
-                    <td><button class="btn btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button></td>
+
+                    <td>
+                        <scan class="btn-default2">联系</scan>
+                        <button class="btn btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</button></td>
                     <!--<td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>-->
                     {/eq}
                 </tr>
