@@ -57,7 +57,8 @@
     .search-mask-close:after,.search-mask-close:before{content:'';display:block;width:0;height:2rem;border-left:2px solid #fff;position:absolute;left:50%;top:50%}
     .search-mask-close:after{-webkit-transform:rotate(45deg) translate(-50%,-50%);-moz-transform:rotate(45deg) translate(-50%,-50%);-ms-transform:rotate(45deg) translate(-50%,-50%);-o-transform:rotate(45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(45deg)}
     .search-mask-close:before{-webkit-transform:rotate(-45deg) translate(-50%,-50%);-moz-transform:rotate(-45deg) translate(-50%,-50%);-ms-transform:rotate(-45deg) translate(-50%,-50%);-o-transform:rotate(-45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(-45deg)}
-
+    .input-ft-right{text-align: right;float: right;color: #999;font-size: 1.5rem}
+    .btn-gray{background-color: #c3c3c3;}
 </style>
 {/block}
 
@@ -66,11 +67,10 @@
 <div class="content" id="app">
     <ul class="list default-list">
         <li>
-            <a href="javascript:;" class="item-pull-right" id="checkImg">
+            <a href="javascript:;" :class="{'item-pull-right':showBtn}" id="checkImg" @click="upImg">
                 <p class="head-info">
                     头像
                     <span class="ft-right" v-if="!info.header">
-
                         <img :src="info.avatar"class="head-img">
                     </span>
                     <span v-else class="ft-right">
@@ -82,14 +82,14 @@
     </ul>
     <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg">
     <ul class="list default-list">
-        <li><a href="javascript:;"><p>姓名 <span class="ft-right">{{info.name}}</span> </p></a></li>
-        <li><a href="javascript:;"><p>性别 <span class="ft-right">{{info.sex}}</span></p></a></li>
+        <li><a href="javascript:;"><p>姓名 <input type="text" class="input-ft-right" v-model="personName" @input="()=>isChanged=true" placeholder="请输入姓名" :readonly="!showBtn"> </p></a></li>
+        <li @click="toggleGender"><a href="javascript:;" :class="{'item-pull-right':showBtn}"><p>性别 <span class="ft-right park-txt">{{gender.now}}</span></p></a></li>
         <li><a href="javascript:;"><p>电话 <span class="ft-right">{{info.mobile}}</span></p></a></li>
-        <li v-if="info.people_card"><a href="javascript:;" ><p>身份证号 <span class="ft-right">{{info.people_card}}</span></p></a></li>
-        <li v-if="info.car_card"><a href="javascript:;" ><p>车牌号 <span class="ft-right">{{info.car_card}}</span></p></a></li>
-        <li><a href="javascript:;" class="item-pull-right" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.park_name"></span></p></a></li>
-        <li @click="toggleMark"><a href="javascript:;"class="item-pull-right" ><p>公司 <span class="ft-right">{{nowCompany.depart_name}}</span></p></a></li>
-        <li v-if="nowCompany.department_id!=78 && nowCompany.department_id!=91"><a href="javascript:;" @click="togglePopup" class="item-pull-right"><p>办公地点 <span class="ft-right">{{nowRoom}}</span></p></a></li>
+        <li><a href="javascript:;" ><p>身份证号 <input type="text" class="input-ft-right" v-model="idNumber" @input="()=>isChanged=true"  placeholder="请输入身份证号码" :readonly="!showBtn"></p></a></li>
+        <li><a href="javascript:;" ><p>车牌号 <input type="text" class="input-ft-right" v-model="plateNumber" @input="()=>isChanged=true"  placeholder="请输入车牌号码" :readonly="!showBtn"></p></a></li>
+        <li><a href="javascript:;" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.park_name"></span></p></a></li>
+        <li @click="toggleMark"><a href="javascript:;" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>公司 <span class="ft-right">{{nowCompany.depart_name}}</span></p></a></li>
+        <li v-if="nowCompany.department_id!=78 && nowCompany.department_id!=91"><a href="javascript:;" @click="togglePopup" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>办公地点 <span class="ft-right">{{nowRoom}}</span></p></a></li>
         <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup" >
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="togglePopup">取消</span>
@@ -104,10 +104,20 @@
             </div>
             <mt-picker :slots="slots" @change="onParkChange" value-key="park_name"></mt-picker>
         </mt-popup>
+        <mt-popup  position="bottom"  v-model="gender.visible" class="mint-popup">
+            <div class="picker-toolbar">
+                <span class="mint-datetime-action mint-datetime-cancel" @click="toggleGender">取消</span>
+                <span class="mint-datetime-action mint-datetime-confirm" @click="toggleGender">确定</span>
+            </div>
+            <mt-picker :slots="gender.slots" @change="onGenderChange"></mt-picker>
+        </mt-popup>
     </ul>
-    <div class="btn-box" v-show="showBtn">
-        <button class="btn btn-primary" @click="savePark">保存</button>
+    <!--按钮-->
+    <div class="btn-box" >
+        <button class="btn btn-primary" @click="()=>showBtn=true" v-show="!showBtn">编辑</button>
+        <button class="btn btn-primary" :class="{'btn-gray':!isChanged}" @click="savePark" v-show="showBtn">保存</button>
     </div>
+    <!--企业搜索-->
     <div class="search_mark" v-show="isShowMark">
         <div class="search_bg" @click="toggleMark"></div>
         <div class="search_content">
@@ -161,6 +171,19 @@
         data:{
             info:info,
             showBtn:false,
+            isChanged:false,
+//            选择性别
+            gender:{
+                now:'',
+                check:'',
+                visible:false,
+                slots:[
+                    {
+                        defaultIndex:1,
+                        values:['男','女']
+                    }
+                ]
+            },
 //            选择园区
             checkPark:{},
             nowPark:{},
@@ -190,7 +213,11 @@
                     values:[]
                 }
             ],
-            departmentId:''
+            //姓名 + 身份证 + 车牌号
+            personName:'',
+            idNumber:'',
+            plateNumber:''
+
         },
         mounted:function () {
 //            初始化信息
@@ -205,20 +232,28 @@
                 if(_this.info.department_id == _this.companyList[n].department_id){
                     _this.nowCompany = _this.companyList[n];
                     _this.roomSlots[0].values = _this.companyList[n].roomlist
+                }else{
+                    _this.nowCompany={depart_name:info.department}
                 }
             }
+            _this.plateNumber=_this.info.car_card;
+            _this.idNumber=_this.info.people_card;
             _this.nowRoom=_this.info.office;
+            _this.gender.now = _this.info.sex;
+            _this.personName = _this.info.name;
 //            初始化选择器选项位置
             _this.$nextTick(function() {
                 setTimeout(function() {
                     _this.slots[0].defaultIndex = 0;
                     _this.roomSlots[0].defaultIndex = 0;
+                    _this.gender.slots[0].defaultIndex = 0;
                 }, 100);
             });
         },
         methods:{
             //园区选择
             showParkPopup:function () {
+                if(!this.showBtn){return ;}
                 if(this.info.can_change==='yes'){
                     this.parkVisible = true;
                 }
@@ -229,7 +264,7 @@
             selectPark:function () {
                 var _this=this;
                 _this.parkVisible = false;
-                _this.showBtn = true;
+                _this.isChanged = true;
                 _this.nowPark = this.checkPark;
                 _this.nowRoom='';
                 _this.nowCompany={};
@@ -238,7 +273,6 @@
                         _this.companyList=baseData[o].departmentlist;
                     }
                 }
-                _this.departmentId=_this.checkPark.departmentId;
             },
             onParkChange:function (p,v) {
                 var _this = this;
@@ -248,6 +282,7 @@
             },
             //           公司搜索
             toggleMark(){
+                if(!this.showBtn){return ;}
                 if(this.info.can_change==='yes') {
                     this.isShowMark = !this.isShowMark;
                 }
@@ -257,7 +292,7 @@
                 this.roomSlots[0].values=item.roomlist;
                 this.nowRoom=item.roomlist[0];
                 this.toggleMark();
-                this.showBtn = true;
+                this.isChanged = true;
             },
             isClick:function () {
                 this.inputStatus=true;
@@ -282,6 +317,7 @@
             },
 //            房号选择器
             togglePopup(){
+                if(!this.showBtn){return ;}
                 if(this.info.can_change==='no') {
                     return;
                 }
@@ -311,7 +347,7 @@
             selectRoom:function () {
                 this.togglePopup();
                 this.nowRoom=this.checkRoom;
-                this.showBtn = true;
+                this.isChanged = true;
             },
             onRoomChange:function (p,v) {
                 var _this = this;
@@ -319,18 +355,61 @@
                     _this.checkRoom = v[0];
                 }
             },
-
+            //            性别选择器
+            toggleGender(){
+                if(!this.showBtn){return ;}
+                var gender=this.gender;
+                if(gender.visible){
+                    gender.now = gender.check;
+                    gender.visible = false;
+                    this.isChanged = true;
+                }else{
+                    gender.visible = true;
+                }
+            },
+            onGenderChange(p,v) {
+                var _this = this;
+                if(v[0]){
+                    _this.gender.check = v[0];
+                }
+            },
+            upImg(){
+                if(this.showBtn){
+                    $("#upImg").click();
+                }
+            },
             savePark:function () {
                 var _this = this;
+                if(!_this.isChanged){
+                    return
+                }
                 if(!_this.isCheckBtn){
                     return;
                 }
                 _this.isCheckBtn = false;
+                if(_this.idNumber !== _this.info.people_card){
+                    var reg = /^([0-9]{15}|[0-9]{18})$/;
+                    if(!reg.test(_this.idNumber)){
+                        console.warn('身份验不证通过');
+                        swal({
+                            title:'',
+                            text:'请输入正确的身份证号码！',
+                            type:"warning",
+                            confirmButtonText:'确定',
+                            confirmButtonColor:'#7DB8F2'
+                        })
+                    }
+
+                }
                 var data={
                     user_id:_this.info.user_id,
                     park_id:_this.nowPark.park_id,
                     departmentId:_this.nowCompany.department_id ||'',
-                    room:_this.nowRoom
+                    room:_this.nowRoom,
+                    gender:_this.gender.now==='男'?'1':'2',
+                    user_name:_this.personName,
+                    car_card:_this.plateNumber,
+                    people_card:_this.idNumber
                 };
                 _this.$http.post("{:Url('Personal/changeDepartment')}",data).then(function (e) {
                     _this.isCheckBtn = true;
@@ -361,12 +440,8 @@
                 })
             }
         },
-
     });
     $(function () {
-        $("#checkImg").on('click',function () {
-            $("#upImg").click();
-        });
         $("#upImg").off("change").on("change",function () {
             var img = $(this)[0].files[0];
             if(img){
@@ -392,11 +467,23 @@
                                     data:{header:path},
                                     dataType:'json',
                                     success: function () {
-                                        mui.toast('上传成功',{ duration:'1000ms', type:'div' })
+                                        swal({
+                                            title:'',
+                                            text:'上传成功',
+                                            type:"success",
+                                            confirmButtonText:'确定',
+                                            confirmButtonColor:'#7DB8F2'
+                                        })
                                     }
                                 })
                            } else {
-                               mui.toast('上传失败',{ duration:'1000ms', type:'div' });
+                               swal({
+                                   title:'',
+                                   text:'上传失败',
+                                   type:"error",
+                                   confirmButtonText:'确定',
+                                   confirmButtonColor:'#7DB8F2'
+                               })
                                return;
                            }
                        }
