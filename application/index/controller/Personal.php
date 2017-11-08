@@ -1052,5 +1052,10 @@ class Personal extends Base
 
     }
 
+    //推荐关注
+    public function recommend()
+    {
+        return $this->fetch();
+    }
 
 }
