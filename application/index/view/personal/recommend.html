@@ -24,7 +24,7 @@
         line-height: 1.5;
     }
     .code-card>.code{
-        margin:0 auto   4.5rem;
+        margin:0 auto;
         width:58.666667vw;
         height:58.666667vw;
         padding:1rem;
@@ -78,6 +78,11 @@
         margin-top: 0.5rem;
         margin-left:2px;
     }
+    .now-park{
+        margin:1rem 0 4.5rem;
+        color: #999;
+        font-size: 1.4rem;
+    }
 </style>
 {/block}
 
@@ -88,6 +93,7 @@
         <div class="code">
             <img :src="park[parkIndex].src" alt="希垦园区注册二维码">
         </div>
+        <div class="now-park">当前园区：{{park[parkIndex].btn_text}}</div>
         <div class="code-change-btn" @click="changeParkCode">
             <div class="code-icon">
                 <span></span>
