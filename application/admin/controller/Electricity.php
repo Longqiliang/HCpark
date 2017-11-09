@@ -31,7 +31,7 @@ class Electricity extends Admin
         if (!empty($search)) {
             $map['electricity_id'] = array('like', '%' . $search . '%');
         }
-        $list = $ElectricityService->where($map)->order('status asc')->paginate(10,false,['query' => request()->param()]);
+        $list = $ElectricityService->where($map)->order('status asc')->paginate(12,false,['query' => request()->param()]);
         int_to_string($list, array(
             'status' => array(0 => '审核中', 1 => '审核通过', 2 => '审核失败'),
             'type' => array(1 => '新柱办理', 2 => '旧柱办理')

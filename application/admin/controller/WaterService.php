@@ -36,7 +36,7 @@ class WaterService extends Admin
             ->where('s.park_id', 'eq', $parkid)
             ->where($map)
             ->order('create_time desc')
-            ->paginate(10,false,['query' => request()->param()]);
+            ->paginate(12,false,['query' => request()->param()]);
         $list2 = Db::table('tb_water_service')
             ->alias('s')
             ->join('__WATER_TYPE__ t', 't.id=s.water_id')

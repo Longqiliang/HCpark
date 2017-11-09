@@ -180,6 +180,7 @@ class Park extends Admin
             $room = ParkRoom::where('id', $v['room_id'])->find();
             $v['room_id'] = $room['room'];
             $v['build'] = $room['build_block'];
+            $v['price']=number_format($v['price'], 2, '.', '');
         }
         $map = ['id' => session("user_auth")['park_id']];
         $park = ParkModel::where(['id' => session("user_auth")['park_id']])->find();

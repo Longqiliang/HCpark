@@ -31,7 +31,7 @@ class Company extends Admin
         if ($company_type!=-1) {
             $map['type'] =input('company_type');
         }
-        $companyList = ParkCompany::where($map)->order('id  asc')->paginate(10,false,['query' => request()->param()]);
+        $companyList = ParkCompany::where($map)->order('id  asc')->paginate(12,false,['query' => request()->param()]);
 
         foreach ($companyList as $k=>$v){
             $v['present'] = mb_substr(strip_tags($v['present']),0,30);

@@ -197,6 +197,7 @@ class Feepayment extends Admin
         foreach($list as $k=>$v){
             $list[$k]['number'] = count(explode('|',$v['number']))-1;
             $list[$k]['totalNumber'] = count($totalNumber);
+            $v['fee']=number_format( $v['fee'], 2, '.', '');
         }
         $this->assign('p',$infos);
         $this->assign('company', $company);

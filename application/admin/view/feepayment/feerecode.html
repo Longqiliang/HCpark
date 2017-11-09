@@ -123,9 +123,12 @@
                         <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal" onclick="setImg('{$vo.id}','{$vo.images}')">收费单据</a>
                         <a href="javascript:void(0)" class="btn-sm btn-success" onclick="push('{$vo.id}')">推送</a>
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form1" onclick="changestates('{$vo.id}')">审核</a>
+                        <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
                         {else/}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
                         <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal"  onclick="setImg('{$vo.id}','{$vo.images}')">收费单据</a>
+                        <span class="btn-default2">推送</span>
+                        <span class="btn-default2" >审核</span>
                         <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
 
                         {/lt}

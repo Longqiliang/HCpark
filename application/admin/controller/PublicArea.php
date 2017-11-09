@@ -320,7 +320,7 @@ class PublicArea extends Admin
             $data2 = $data;
         }
         $qu = new  MyPaginate();
-        $data3 = $qu->paginate2($data2, 10, false, ['query' => request()->param()]);
+        $data3 = $qu->paginate2($data2, 12, false, ['query' => request()->param()]);
         $this->assign('data', $data3);
         $this->assign('checkType', $status_change);
         return $this->fetch();
