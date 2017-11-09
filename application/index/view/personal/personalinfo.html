@@ -156,6 +156,7 @@
 <script>
 
     var info  = {$info};
+    console.log(info)
     var baseData=info.departmentlist;
     Vue.directive('focus', {
         // When the bound element is inserted into the DOM...
@@ -230,10 +231,9 @@
             }
             for(var n=0;n<_this.companyList.length;n++){
                 if(_this.info.department_id == _this.companyList[n].department_id){
+                    console.log( _this.companyList[n])
                     _this.nowCompany = _this.companyList[n];
                     _this.roomSlots[0].values = _this.companyList[n].roomlist
-                }else{
-                    _this.nowCompany={depart_name:info.department}
                 }
             }
             _this.plateNumber=_this.info.car_card;
