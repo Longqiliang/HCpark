@@ -471,7 +471,9 @@
                     if(!rentList || rentList.length % 6 !=0 || rentList.length === 0){
                         return;
                     }
+
                     var data = {
+                        name:_this.parkName.index,
                         build:build,
                         length:rentList.length
                     };
