@@ -417,14 +417,18 @@
                     if(data.code == 1){
                         swal({
                             title:data.msg,
-                            type:"success"
+                            type:"success",
+                            confirmButtonText:'确认',
+                            confirmButtonColor:'#7DB8F2'
                         },function (e) {
                             window.location.reload();
                         });
                     }else{
                         swal({
                             title:data.msg,
-                            type:"error"
+                            type:"error",
+                            confirmButtonText:'确认',
+                            confirmButtonColor:'#7DB8F2'
                         },function (e) {
                             window.location.reload();
                         });
@@ -433,7 +437,9 @@
                     _this.isCheckBtn = true;
                     swal({
                         title:'保存失败',
-                        type:"error"
+                        type:"error",
+                        confirmButtonText:'确认',
+                        confirmButtonColor:'#7DB8F2'
                     },function (e) {
                         window.location.reload();
                     });
