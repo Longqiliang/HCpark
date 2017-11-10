@@ -484,7 +484,7 @@
                     });
                     _this.$http.post('/index/Roomrent/moreList',data).then(function (res) {
                         _this.$indicator.close();
-                        console.log(res.data);
+                        //console.log(res.data);
 //                        console.log(res.data.data);
                         if(res.data.code==0){
 
@@ -492,7 +492,7 @@
                             var list = JSON.parse(res.data.data);
                             for( var i = 0 ;i < list.length;i++){
 //                                console.log(list[i]);
-                                console.log(rentList);
+                                //console.log(rentList);
                                 rentList.push(list[i]);
                             }
                             _this.loading = false;
