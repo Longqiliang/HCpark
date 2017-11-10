@@ -159,6 +159,7 @@ class Service extends Base
         $parkInfo = Park::where('id', $parkid)->find();
         $parkroom = ParkRoom::where('company_id',$user['department'])->find();
         $build_block = !empty($parkroom)?$parkroom['build_block']:"";
+        //echo json_encode($user);
         if(empty($user['company_address'])){
             if(empty($parkroom)){
                 $office="";
@@ -166,7 +167,9 @@ class Service extends Base
                 $office= $parkroom['room'];
             }
         }else{
-            $office=$user['company_address'];
+            $array=explode("幢",$user['company_address']);
+            $build_block=$array[0];
+            $office=$array[1];
         }
 
         switch ($app_id) {
