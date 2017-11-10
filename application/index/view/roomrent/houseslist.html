@@ -314,7 +314,7 @@
 {block name="script"}
 <script type="text/javascript">
     var list = {$list};
-    console.log(list);
+   //console.log(list);
     var values = [];
     for(var i in list){
         values.push(list[i]);
@@ -541,7 +541,7 @@
                 }
                 _this.isSubmit = false;
                 var data = JSON.parse(JSON.stringify(_this.subData));
-                console.log(data);
+                //console.log(data);
                 _this.$http.post('/index/roomrent/intention',data).then(function (res) {
                     console.log(res.data);
                     var data  = res.data;
