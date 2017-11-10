@@ -155,12 +155,14 @@ class Roomrent extends Base
     public function moreList()
     {
         $len = input('length');
-        $parkId = session('park_id');
         $build = input('build');
         if (!$build) {
             $build = "A";
         }
-        $map = ['park_id' => $parkId, 'build_block' => $build];
+        $parkName = input('name');
+        $park = new Park();
+        $parkId = $park->where(['name'=>['like',"%$parkName%"]])->find();
+        $map = ['park_id' => $parkId['id'], 'build_block' => $build];
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRent = new ParkRent();
         $list = $parkRent->where($map)->order('id desc')->limit($len, 6)->select();
