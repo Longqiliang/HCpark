@@ -167,9 +167,9 @@ class Service extends Base
                 $office= $parkroom['room'];
             }
         }else{
-            $array=explode("幢",$user['company_address']);
-            $build_block=$array[0];
-            $office=$array[1];
+            //$array=explode("幢",$user['company_address']);
+            //$build_block=$array[0]."幢";
+            $office=$user['company_address'];
         }
 
         switch ($app_id) {

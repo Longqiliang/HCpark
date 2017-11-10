@@ -79,7 +79,6 @@ class Personal extends Base
             //希垦游客
             case 78:
                 break;
-
         }
         $people_card = "";
         $car_card = "";
@@ -106,7 +105,8 @@ class Personal extends Base
 
         if (empty($office)) {
             if ($water) {
-                $office = $water[0]['address'];
+                 $water= explode("幢",$water[0]['address']);
+                $office=$water[1];
             }
         }
 
