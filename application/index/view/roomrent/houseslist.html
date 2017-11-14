@@ -314,7 +314,7 @@
 {block name="script"}
 <script type="text/javascript">
     var list = {$list};
-    console.log(list);
+   //console.log(list);
     var values = [];
     for(var i in list){
         values.push(list[i]);
@@ -471,7 +471,9 @@
                     if(!rentList || rentList.length % 6 !=0 || rentList.length === 0){
                         return;
                     }
+
                     var data = {
+                        name:_this.parkName.index,
                         build:build,
                         length:rentList.length
                     };
@@ -482,7 +484,7 @@
                     });
                     _this.$http.post('/index/Roomrent/moreList',data).then(function (res) {
                         _this.$indicator.close();
-                        console.log(res.data);
+                        //console.log(res.data);
 //                        console.log(res.data.data);
                         if(res.data.code==0){
 
@@ -490,7 +492,7 @@
                             var list = JSON.parse(res.data.data);
                             for( var i = 0 ;i < list.length;i++){
 //                                console.log(list[i]);
-                                console.log(rentList);
+                                //console.log(rentList);
                                 rentList.push(list[i]);
                             }
                             _this.loading = false;
@@ -539,7 +541,7 @@
                 }
                 _this.isSubmit = false;
                 var data = JSON.parse(JSON.stringify(_this.subData));
-                console.log(data);
+                //console.log(data);
                 _this.$http.post('/index/roomrent/intention',data).then(function (res) {
                     console.log(res.data);
                     var data  = res.data;

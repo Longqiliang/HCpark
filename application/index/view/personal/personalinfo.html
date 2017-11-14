@@ -386,7 +386,6 @@
                 if(!_this.isCheckBtn){
                     return;
                 }
-                _this.isCheckBtn = false;
                 if(_this.idNumber !== _this.info.people_card){
                     var reg = /^([0-9]{15}|[0-9]{18})$/;
                     if(!reg.test(_this.idNumber)){
@@ -398,6 +397,7 @@
                             confirmButtonText:'确定',
                             confirmButtonColor:'#7DB8F2'
                         })
+                        return;
                     }
 
                 }
@@ -411,20 +411,25 @@
                     car_card:_this.plateNumber,
                     people_card:_this.idNumber
                 };
+                _this.isCheckBtn = false;
                 _this.$http.post("{:Url('Personal/changeDepartment')}",data).then(function (e) {
                     _this.isCheckBtn = true;
                     var data = e.data;
                     if(data.code == 1){
                         swal({
                             title:data.msg,
-                            type:"success"
+                            type:"success",
+                            confirmButtonText:'确认',
+                            confirmButtonColor:'#7DB8F2'
                         },function (e) {
                             window.location.reload();
                         });
                     }else{
                         swal({
                             title:data.msg,
-                            type:"error"
+                            type:"error",
+                            confirmButtonText:'确认',
+                            confirmButtonColor:'#7DB8F2'
                         },function (e) {
                             window.location.reload();
                         });
@@ -433,7 +438,9 @@
                     _this.isCheckBtn = true;
                     swal({
                         title:'保存失败',
-                        type:"error"
+                        type:"error",
+                        confirmButtonText:'确认',
+                        confirmButtonColor:'#7DB8F2'
                     },function (e) {
                         window.location.reload();
                     });
