@@ -12,8 +12,8 @@ use app\index\model\ExchangeRecord;
 
 class ExchangeProduct extends  Model
 {
-    public  function getAllProductOrderById(){
-        $product = $this->where(['status' =>0])->order('id desc')->select();
+    public  function getAllProductOrderById($park_id){
+        $product = $this->where(['status' =>0,'park_id'=>$park_id])->order('id desc')->select();
         // 重新排序 将兑光的排在最后
         foreach($product as $key => $value){
             if ($value->left == 0){
