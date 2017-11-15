@@ -13,5 +13,15 @@ use think\Model;
 
 class ExchangeRecord extends Model
 {
+ public  function  user(){
+
+     return $this->hasOne('WechatUser','userid','create_user');
+
+ }
+
+    public function productinfo()
+    {
+        return $this->hasOne('ExchangeProduct', 'id', 'product_id');
+    }
 
 }
