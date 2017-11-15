@@ -67,10 +67,10 @@ class Exchange extends Base
     {
         $product = new ExchangeProduct();
         $record = new ExchangeRecord();
+        $user = new WechatUser();
+        $userid = session('userId');
         if (IS_POST) {
             $data = input('');
-            $userid = session('userId');
-            $user = new WechatUser();
             //开启事务
             $product->startTrans();
             $userinfo = $user->where('userid', $userid)->find();  //  获取总积分
@@ -127,7 +127,16 @@ class Exchange extends Base
         } else {
             $product_id = input('product_id');
             $re = $product->getPoductInfoById($product_id);
-            $this->assign('info', $re);
+            $userinfo = $user->where('userid', $userid)->find();  //  获取总积分
+            $data=['id'=>$re['id'],
+                   'title'=>$re['title'],
+                   'front_cover'=>$re['front_cover'],
+                   'content' =>$re['content'],
+                   'num'=>$re['num'],
+                   'price'=>$re['price'],
+                   'score'=>$userinfo['score']
+            ];
+            $this->assign('info', $data);
             return $this->fetch();
         }
     }
