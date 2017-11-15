@@ -1,0 +1,57 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/exchange/index.css">
+<style>
+
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="banner">
+        <div class="score">
+            <span>1/2</span>
+        </div>
+        <div class="record" @click="jumpTo(2)">兑换记录</div>
+    </div>
+    <div class="title">
+        <span class="title_icon_fire">新品上市</span>
+    </div>
+    <div class="new_lists"  id="pullrefresh">
+        <div class="new_list" v-for="product in baseData.product" @click="jumpTo(1,product.id)">
+            <div class="box">
+                <span class="nomore" v-if="product.left==0"></span>
+                <div class="new_img" :style="{'background': 'url('+product.front_cover+') 50% 50% no-repeat','background-size': 'cover'}"></div>
+                <div class="new_title">{{product.title}}</div>
+                <div class="new_msg">
+                    <span class="new_over">剩余{{product.left}}</span>
+                    <span class="new_score has" :class="{hasnot:(product.left==0)}">{{product.price}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var info= {$score};
+    console.log(info)
+    var app = new Vue({
+        el: '#app',
+        data: {
+            baseData:{$score}
+        },
+        methods: {
+            jumpTo(urlID,id){
+                if(urlID===1){
+                    window.location.href="/index/exchange/productInfo/product_id/" + id
+                }else{
+                    window.location.href="/index/exchange/record/"
+                }
+            }
+        }
+    })
+</script>
+{/block}

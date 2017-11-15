@@ -1058,4 +1058,8 @@ class Personal extends Base
         return $this->fetch();
     }
 
+    public function version(){
+        return $this->fetch();
+    }
+
 }

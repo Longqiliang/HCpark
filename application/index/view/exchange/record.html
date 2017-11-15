@@ -1,0 +1,121 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>兑换记录</title>
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: 'Microsoft YaHei';
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
+    body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, input, p, table, th, td, select, option {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    .clearfix:before{
+        display:table;
+        content:'';
+    }
+    .clearfix:after{
+        display:table;
+        content:'';
+        clear:both;
+    }
+    .nomessage{
+        text-align: center;
+        position:fixed;
+        top:50%;
+        left:50%;
+        -webkit-transform: translateY(-50%) translateX(-50%);
+        /*display:none;*/
+        width:100%;
+    }
+    .nomessage>img{
+        width:36%;
+        margin-bottom:1.5rem;
+    }
+    .nomessage>span{
+        font-size: 1.7rem;
+        color:#ccc;
+        display:inline-block;
+    }
+
+
+    .list>li{
+        height:7rem;
+        border-bottom:1px solid #e5e5e5;
+        position:relative;
+    }
+    .list>li>div{
+        width:5rem;
+        height:5rem;
+        position:absolute;
+        left: 1.2rem;
+        top:1.2rem;
+        background:url("/index/images/exchange/18.png") no-repeat center center;
+        background-size:cover;
+    }
+    .list>li>p{
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+        color:#333;
+        position: absolute;
+        top: 1.2rem;
+        left: 7rem;
+    }
+    .list>li>span{
+        color:#999;
+        font-size: 1.4rem;
+        position:absolute;
+        left: 7rem;
+        bottom:1.2rem;
+    }
+    .list>li>a{
+        font-size: 2.4rem;
+        line-height: 7rem;
+        color:#fc4f41;
+        position:absolute;
+        right:1.2rem;
+    }
+    .hidden{
+        display: none;
+    }
+
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="nomessage" v-if="baseData.length===0">
+        <img src="/index/images/exchange/23.png" alt="" ><br>
+        <span>积分换好礼，期待您的光临!</span>
+    </div>
+    <ul class="list" v-for="info in baseData">
+        <li @click="jumpTo(info.id)">
+            <div :style="{'background-image':'url('+ info.front_cover + ')'}"></div>
+            <p>{{info.title}}</p>
+            <span>{{info.create_time}}</span>
+            <a>-{{info.need_score}}</a>
+        </li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var info={$list};
+    console.log(info)
+    var app = new Vue({
+        el: '#app',
+        data: {
+            baseData:info,
+        },
+        methods: {
+            jumpTo(id){
+                window.location.href="/index/exchange/recordinfo/record_id/"+id
+            }
+        }
+    })
+</script>
+{/block}
