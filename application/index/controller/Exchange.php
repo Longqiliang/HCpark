@@ -50,7 +50,7 @@ class Exchange extends Base
     /**
      * 用户兑换记录详情
      */
-    public function recordinfo()
+    public function recordInfo()
     {
         $record_id = input('record_id');
         $record = new ExchangeRecord();
@@ -63,7 +63,7 @@ class Exchange extends Base
     /**
      * 商品详情
      */
-    public function ProductInfo()
+    public function productInfo()
     {
         $product = new ExchangeProduct();
         $record = new ExchangeRecord();
