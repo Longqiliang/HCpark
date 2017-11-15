@@ -63,78 +63,75 @@ class Exchange extends Base
     /**
      * 商品详情
      */
-    public function getProductInfoById()
+    public function ProductInfo()
     {
-        $product_id = input('product_id');
         $product = new ExchangeProduct();
         $record = new ExchangeRecord();
-        $re = $product->getPoductInfoById($product_id);
-        $this->assign('info', $re);
-        return $this->fetch();
-
-    }
-
-    /**
-     * 用户兑换
-     */
-    public function exchange()
-    {
-        $data = input('');
-        $userid = session('userId');
-        $user = new WechatUser();
-        $product = new  Product();
-        $record = new Record();
-        //开启事务
-        $product->startTrans();
-        $userinfo = $user->where('userid', $userid)->find();  //  获取总积分
-        // 更新产品表
-        //查询并锁表（product）
-        $res = $product->getLockProduct($data['product_id']);
-        $sum = $data['num'] * $res['price'];
-        if ($userinfo['score'] < $sum) {
-            $product->rollback();
-            return $this->error('积分不足');
-        }
-        if ($res->left < $data['num']) {
-            //事务回滚
-            $product->rollback();
-            return $this->error('商品数量不足');
-        }
-        $temp = $res->left - $data['num'];
-        //更新那一行表数据（left=left-num）
-        $result = $product->updateLeft($data['product_id'], $temp);
-        if ($result) {
-            // 产品表更新成功 存储兑换记录表
-            $info['userid'] = $data['user_id'];
-            $info['product_id'] = $data['product_id'];
-            $info['content'] = $sum;
-            $info['num'] = $data['num'];
-            $info['create_time'] = time();
-            $info['need_score'] = $sum;
-            $info['left_score'] = $userinfo['score'] - $sum;
-            $info['name'] = $this->_safegs($data['name']);
-            $info['phone'] = $this->_safegs($data['phone']);
-            $info['remark'] = $this->_safegs($data['remark']);
-            $flag = $record->save($info);
-            //购买成功后
-            if ($flag) {
-                $userinfo['score'] = $userinfo['score'] - $sum;
-                $re = $userinfo->save();
-                if ($re) {
-                    $product->commit();
-                    return $this->success('成功');
+        if (IS_POST) {
+            $data = input('');
+            $userid = session('userId');
+            $user = new WechatUser();
+            //开启事务
+            $product->startTrans();
+            $userinfo = $user->where('userid', $userid)->find();  //  获取总积分
+            // 更新产品表
+            //查询并锁表（product）
+            $res = $product->getLockProduct($data['product_id']);
+            $sum = $data['num'] * $res['price'];
+            if ($userinfo['score'] < $sum) {
+                $product->rollback();
+                return $this->error('积分不足');
+            }
+            if ($res->left < $data['num']) {
+                //事务回滚
+                $product->rollback();
+                return $this->error('商品数量不足');
+            }
+            $temp = $res->left - $data['num'];
+            //更新那一行表数据（left=left-num）
+            $result = $product->updateLeft($data['product_id'], $temp);
+            if ($result) {
+                // 产品表更新成功 存储兑换记录表
+                $info['userid'] = $data['user_id'];
+                $info['product_id'] = $data['product_id'];
+                $info['content'] = $sum;
+                $info['num'] = $data['num'];
+                $info['create_time'] = time();
+                $info['need_score'] = $sum;
+                $info['left_score'] = $userinfo['score'] - $sum;
+                $info['commodity_code'] = $this->random();
+                $info['name'] = $this->_safegs($data['name']);
+                $info['phone'] = $this->_safegs($data['phone']);
+                $info['remark'] = $this->_safegs($data['remark']);
+                $flag = $record->save($info);
+                //购买成功后
+                if ($flag) {
+                    $userinfo['score'] = $userinfo['score'] - $sum;
+                    $re = $userinfo->save();
+                    if ($re) {
+                        $product->commit();
+                        return $this->success('成功');
+                    } else {
+                        $product->rollback();
+                        return $this->error("更新用户剩余积分错误");
+                    }
                 } else {
                     $product->rollback();
-                    return $this->error("更新用户剩余积分错误");
+                    return $this->error("更新兑换记录表失败");
                 }
             } else {
                 $product->rollback();
-                return $this->error("更新兑换记录表失败");
+                return $this->error("更新商品数量失败");
             }
+
         } else {
-            $product->rollback();
-            return $this->error("更新商品数量失败");
+            $product_id = input('product_id');
+            $re = $product->getPoductInfoById($product_id);
+            $this->assign('info', $re);
+            return $this->fetch();
         }
+
+
     }
 
     public function _safegs($data)
@@ -147,6 +144,46 @@ class Exchange extends Base
         //3.替换（这里是空格）
         $content1 = str_replace("&nbsp;", "", $des1);
         return $content1;
+
+    }
+
+
+    /**
+     * 随机字符
+     * @param number $length 长度
+     * @param string $type 类型
+     * @param number $convert 转换大小写
+     * @return string
+     */
+    public function random($length = 6, $type = 'string', $convert = 0)
+    {
+        $config = array(
+            'number' => '1234567890',
+            'letter' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            'string' => 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789',
+            'all' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+        );
+
+        if (!isset($config[$type])) $type = 'string';
+        $string = $config[$type];
+
+        $code = '';
+        $strlen = strlen($string) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $code .= $string{mt_rand(0, $strlen)};
+        }
+        if (!empty($convert)) {
+            $code = ($convert > 0) ? strtoupper($code) : strtolower($code);
+        }
+        //校验是否重复
+        $record = new ExchangeRecord();
+        $re = $record->where('commodity_code', $code)->find();
+        if ($re) {
+            return $this->random();
+        } else {
+            return $code;
+        }
+
 
     }
 
