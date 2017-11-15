@@ -92,7 +92,7 @@ class Exchange extends Base
             $result = $product->updateLeft($data['product_id'], $temp);
             if ($result) {
                 // 产品表更新成功 存储兑换记录表
-                $info['userid'] = $data['user_id'];
+                $info['userid'] = $userid;
                 $info['product_id'] = $data['product_id'];
                 $info['content'] = $sum;
                 $info['num'] = $data['num'];
