@@ -110,7 +110,7 @@ class Exchange extends Base
                     $re = $userinfo->save();
                     if ($re) {
                         $product->commit();
-                        return $this->success('成功');
+                        return $this->success('成功','',$info['commodity_code']);
                     } else {
                         $product->rollback();
                         return $this->error("更新用户剩余积分错误");
