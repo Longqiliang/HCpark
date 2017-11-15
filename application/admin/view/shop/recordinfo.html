@@ -1,0 +1,132 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style>
+    .shadow{width: 100%;height: 100%;position: absolute;left: 0;top: 0;background: rgba(0,0,0,0.4);z-index: 88;}
+</style>
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>兑换记录管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                兑换管理
+            </li>
+            <li class="active">
+                <strong><a href="{:Url('Shop/index')}">列表页</a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>记录列表</h5>
+                    <div class="ibox-tools">
+                      <!--  <a data-toggle="modal" class="btn btn-sm btn-primary" href="{:Url('Shop/add')}">添加商品</a>-->
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input class="i-checks check-all" type="checkbox"></th>
+                                <th>id</th>
+                                <th>兑换商品</th>
+                                <th>兑换用户 </th>
+                                <th>兑换数量</th>
+                                <th>总积分</th>
+                                <th>状态 </th>
+                                <th>兑换时间</th>
+                                <th>用户备注姓名 </th>
+                                <th>用户备注信息</th>
+                                <th>用户备注手机号</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="vo"}
+                            <tr>
+                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                <td>{$vo.id}</td>
+                                <td>{$vo.title}</td>
+                                <td>{$vo.nickname}</td>
+                                <td>{$vo.num}</td>
+                                <td>{$vo.content}</td>
+                                <td>{$vo.status_text}</td>
+                                <td>{$vo.create_time|time_format='Y-m-d H:i'}</td>
+                                <td>{$vo.name}</td>
+                                <td> <a  href="javascript:void(0)"  onclick="scan(this)"  data-remark="{$vo.remark}">  {$vo.remark}</a></td>
+                                <td>{$vo.phone}</td>
+                                <td>
+                                    {eq name="vo.status" value="0"}
+                                    <a href="{:Url('Shop/checkrecord?id='.$vo['id'])}">确认兑换</a>
+                                    {else/}确认兑换
+                                    {/eq}
+                                    <a href="{:Url('Shop/delrecord?id='.$vo['id'])}" class="confirm ajax-del">删除</a>
+                                </td>
+                            </tr>
+                           <input type="hidden"  name="remark"  value="{$vo.remark}" >
+                            {/volist}
+                            </tbody>
+
+
+                            <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="page">{$list->render();}</div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+
+<script src="/admin/js/layer/layer.js"></script>
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function(){
+        highlight_subnav("{:Url('Shop/index')}");
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+    function   scan(a) {
+
+    // var remark =$('input[name=remark]').val();
+
+         var remark =$(a).attr('data-remark');
+                    html = "<br><p>&emsp;<textarea style='width: 360px;height: 200px;    ' readonly='true' >"+remark+"</textarea></p>";
+                parent.layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    area: ['400px', '300px'], //宽高
+                    content:html
+                });
+
+        return false
+    }
+</script>
+{/block}

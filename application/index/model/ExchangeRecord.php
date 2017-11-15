@@ -29,7 +29,6 @@ class ExchangeRecord extends Model
 
         return $Record;
     }
-
     //查询兑换详情
     public function getRecordInfo($id)
     {
@@ -39,7 +38,6 @@ class ExchangeRecord extends Model
         return $Record;
 
     }
-
     /**
      * @return \think\model\Relation
      */

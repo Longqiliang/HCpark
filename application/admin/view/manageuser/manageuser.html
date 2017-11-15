@@ -1,0 +1,266 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style>
+    .mail-box .mail-ontact {
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+
+    .mail-box .mail-subject {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+
+    .mail-subject-div {
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-box .mail-main {
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-date {
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+
+    @media only screen and (max-width: 550px) {
+        .mail-date {
+            display: none;
+        }
+    }
+
+    .list_banner {
+        width: 80px
+    }
+
+    .list_type {
+        width: 80px
+    }
+
+    .fade {
+        height: 1000px;
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <div class=" pull-right tooltip-demo">
+                <a href="javascript:ggg()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                        class="fa fa-times"></i> 关闭</a>
+            </div>
+            <h2>权限设置</h2>
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+
+                <thead>
+                <tr>
+                    <th style="width:10%"></th>
+                    <th style="width:15%">姓名</th>
+                    <th style="width:15%">费用缴纳</th>
+                    <th style="width:15%">饮水服务</th>
+                    <th style="width:15%">权限身份</th>
+                    <th style="width:15%">操作</th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr class="read">
+                    <td class="check-mail">
+                    </td>
+                    <td class="mail-subject">
+                        {$vo.name}
+                    </td>
+                    <td>
+                        {eq name="$vo.fee_status" value="1"}
+                        <span>是</span>
+                        {else/}
+                        <span>否</span>
+                        {/eq}
+                    </td>
+
+                    <td>
+                        {eq name="$vo.water_status" value="1"}
+                        <span>是</span>
+                        {else/}
+                        <span>否</span>
+                        {/eq}
+                    </td>
+                    <td>
+                        {eq name="$vo.manage" value="1"}
+                        <span>分级管理员</span>
+                        {else/}
+                        <span>普通成员</span>
+                        {/eq}
+                    </td>
+
+                    <td>
+                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="saveData(this)"
+                           data-userid='{$vo.userid}' data-fee_status='{$vo.fee_status}'
+                           data-water_status='{$vo.water_status}' data-manage='{$vo.manage}'>设置权限</a>
+                    </td>
+
+
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="edit">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">设置权限</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">费用缴纳:</label>
+                        <div class="col-sm-10">
+                            <label class="checkbox-inline i-checks">
+                                否&nbsp;<input type="radio" value="0" name="fee_status" >　
+                            </label>
+                            <label class="checkbox-inline i-checks">
+                                是&nbsp;<input type="radio" value="1" name="fee_status">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">饮水服务:</label>
+                        <div class="col-sm-10">
+                            <label class="checkbox-inline i-checks">
+                                否&nbsp;<input type="radio" value="0" name="water_status" >　
+
+                            </label>
+                            <label class="checkbox-inline i-checks">
+                                是&nbsp;<input type="radio" value="1" name="water_status">
+
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">权限设置:</label>
+                        <div class="col-sm-10">
+                            <label class="checkbox-inline i-checks">
+                                普通成员&nbsp;<input type="radio" value="0" name="manage" >　
+
+                            </label>
+                            <label class="checkbox-inline i-checks">
+
+                                分级管理&nbsp;<input type="radio" value="1" name="manage">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden"  name="userid" >　
+
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center zt-flex zt-space-around">
+                            <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+                            <a class="btn btn-primary " onclick="edit()">确定</a>
+                            <a class="btn btn-warning " data-dismiss="modal" >取消</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged", function () {
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+    });
+
+    function saveData(the) {
+        var a  =$(the).attr('data-fee_status');
+        var b  =$(the).attr('data-water_status');
+        var c  =$(the).attr('data-manage');
+        console.log('a=:'+a+"b=:"+b+"c=:"+c);
+        $("input[name='fee_status'][value="+a+"]").parents('label').iCheck('check');
+        $("input[name='water_status'][value="+b+"]").parents('label').iCheck('check');
+        $("input[name='manage'][value="+c+"]").parents('label').iCheck('check');
+        // $("input[name='manage'][$(the).attr('data-manage')]").attr("checked",true);
+        $("input[name='userid']").val($(the).attr('data-userid'));
+    }
+    function  edit(a){
+        var subData={};
+        $(a).attr('disabled','disabled');
+        $('input[name="fee_status"]:checked').each(function() {
+            subData.fee_status=$(this).val();
+        });
+
+        $('input[name="water_status"]:checked').each(function() {
+            subData.water_status=$(this).val();
+        });
+        $('input[name="manage"]:checked').each(function() {
+            subData.manage=$(this).val();
+        });
+        subData.userid=$("input[name='userid']").val();
+        //console.log('a=:'+JSON.stringify(subData))
+        $.ajax({
+            data: subData,
+            type: "POST",
+            url: "{:Url('Manageuser/edit')}",
+            success: function (data) {
+                $(a).attr('disabled','false');
+                if (data.code == 1) {
+                    updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
+                    setTimeout(function () {
+                        location.href = data.url;
+                    }, 3000);
+                } else {
+                    updateAlert(data.msg, 'error');
+                }
+            }
+        });
+    }
+
+
+
+    highlight_subnav("{:Url('Manageuser/index')}");
+    function ggg() {
+        window.history.go(-1);
+    }
+</script>
+{/block}

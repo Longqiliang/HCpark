@@ -78,7 +78,6 @@
                     <th width="200px">新闻标题</th>
                     <th  width="200px">创建时间</th>
                     <th  width="200px">是否轮播</th>
-                    <th >是否推送</th>
                     <th>
                         <select name="type" id="changeType" onchange="changeType()">
                             <option value="0" {eq name="$checkType" value="0"}selected{/eq}>所有类型</option>
@@ -100,33 +99,27 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                           {$vo.title}
+                            {$vo.title}
                         </div>
                     </td>
                     <td>{$vo.create_time|strtotime|date='Y-m-d H:i',###}</td>
                     <td >{eq name="vo.is_banner" value="1"}<span>是</span>{else/}<span>否</span> {/eq}</td>
-                    <td class="list_type">
-                        {eq name="vo.is_send" value="1"}
-                        <span class="txt-success">已推送</span>
-                        {else/}
-                        <span>未推送</span>
-                        {/eq}
-                    </td>
+
                     <td class="list_type">
                         {volist name="Think.config.news_type" id="type"}
                         {eq name="$key" value="$vo.type"}{$type}{/eq}
                         {/volist}
                     </td>
                     <td class="list_type">
-                        {$vo.status_text}
+                        {eq name="vo.status" value="0"}待审核{/eq}
+                        {eq name="vo.status" value="1"}<span class="txt-success">审核成功<span>{/eq}
+                        {eq name="vo.status" value="2"}<span class="txt-danger">审核失败<span>{/eq}
                     </td>
 
-                    <td> <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始推送</a>
+                    <td>
+                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="saveData(this)"
+                           data-id='{$vo.id}'>审核</a>
                         <a href="{:Url('add','id='.$vo.id)}" class=" confirm btn-sm btn-success">编辑</a>
-                        {gt name="$vo.type" value="1"}
-                        <a href="{:Url('showcomment','id='.$vo.id)}" class=" confirm btn-sm btn-primary">查看评论</a>
-                        {else/} <span class="btn-default2">查看评论</span>
-                        {/gt}
                         <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
                     </td>
 
@@ -136,6 +129,38 @@
             </table>
             <div class="btn-group pull-right">{$list->render()}</div>
         </div>
+
+
+        <div id="modal-form" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!--<form class="form-horizontal" method="post" action="siteapprove.html">-->
+                    <div class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h3 class="modal-title text-center">发布审核</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center zt-big-padding">请进行新闻公告审核</p>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                               <input type="hidden" name="id">
+                                <div class="col-sm-12 text-center zt-flex zt-space-around">
+                                    <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+                                    <button class="btn btn-primary " onclick="newcheck(1)">通过</button>
+                                    <button class="btn btn-warning " onclick="newcheck(2)" >不通过</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>>
+                    <!--</form>-->
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </div>
 {/block}
@@ -167,7 +192,7 @@
                             confirmButtonColor: "#1ab394",
                             confirmButtonText: "确认",
                         });
-                      window.location.reload();
+                        window.location.reload();
                     }else{
                         swal({
                             title: "",
@@ -182,6 +207,32 @@
         });
 
     }
+
+    function saveData(the){
+
+        $("input[name='id']").val($(the).attr('data-id'));
+
+    }
+
+
+    function newcheck($type) {
+       var id = $("input[name='id']").val();
+        $.ajax({
+            data: {'type':$type,'id':id},
+            type: "POST",
+            url: "{:Url('news/check')}",
+            success: function (data) {
+                if (data.code == 1) {
+                    updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
+                    setTimeout(function () {
+                        location.href = data.url;
+                    }, 3000);
+                } else {
+                    updateAlert(data.msg, 'error');
+                }
+            }
+        });
+    }
     $(document).ready(function(){
 
         $('.i-checks').iCheck({
@@ -192,10 +243,10 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
-        function changeType(){
-            var types = $('#changeType').val();
-            location.href = "{:Url('News/index')}?type="+types+"";
+    function changeType(){
+        var types = $('#changeType').val();
+        location.href = "{:Url('News/check')}?type="+types+"";
 
-        }
+    }
 </script>
 {/block}

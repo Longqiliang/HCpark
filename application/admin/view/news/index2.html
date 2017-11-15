@@ -100,7 +100,7 @@
                     </td>
                     <td class="mail-subject">
                         <div class="mail-subject-div">
-                           {$vo.title}
+                            {$vo.title}
                         </div>
                     </td>
                     <td>{$vo.create_time|strtotime|date='Y-m-d H:i',###}</td>
@@ -167,7 +167,7 @@
                             confirmButtonColor: "#1ab394",
                             confirmButtonText: "确认",
                         });
-                      window.location.reload();
+                        window.location.reload();
                     }else{
                         swal({
                             title: "",
@@ -192,10 +192,10 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
-        function changeType(){
-            var types = $('#changeType').val();
-            location.href = "{:Url('News/index')}?type="+types+"";
+    function changeType(){
+        var types = $('#changeType').val();
+        location.href = "{:Url('News/index2')}?type="+types+"";
 
-        }
+    }
 </script>
 {/block}
