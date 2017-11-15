@@ -10,24 +10,36 @@ namespace app\index\model;
 
 
 use think\Model;
+use app\index\model\ExchangeProduct;
 
-class ExchangeRecord extends  Model
+class ExchangeRecord extends Model
 {
 
-    //查询该用户兑换过的积分记录
-    public  function  getRecordList($uid){
-        $map =['userid'=>$uid,
-            'status'=>['neq',-1]
+    //查询该用户兑换过的积分记
+    public function getRecordList($uid)
+    {
+        $map = ['userid' => $uid,
+            'status' => ['neq', -1]
         ];
-        $Record = $this->where($map)->select();  // 获取兑换过得积分
+        $Record = $this->where($map)->select();
+        foreach ($Record as $value) {
+            $value['front_cover'] = isset($value->productInfo->front_cover) ? $value->productInfo->front_cover : "";
+            $value['title'] = isset($value->productInfo->title) ? $value->productInfo->title : "";
+        }
+
         return $Record;
     }
+
     //查询兑换详情
-    public  function  getRecordInfo($id){
-        $Record = $this->where('id',$id)->find();
+    public function getRecordInfo($id)
+    {
+        $Record = $this->where('id', $id)->find();
+        $Record['front_cover'] = isset($Record->productInfo->front_cover) ? $Record->productInfo->front_cover : "";
+        $Record['title'] = isset($Record->productInfo->title) ? $Record->productInfo->title : "";
         return $Record;
 
     }
+
     /**
      * @return \think\model\Relation
      */
@@ -35,7 +47,6 @@ class ExchangeRecord extends  Model
     {
         return $this->hasOne('ExchangeProduct', 'id', 'product_id');
     }
-
 
 
 }
