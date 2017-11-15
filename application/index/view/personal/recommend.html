@@ -7,13 +7,12 @@
         background-color: rgba(0,0,0,0.4);
     }
     .code-card{
-        width:89.3333333vw;
+        width:100%;
         background-color: #fff;
         text-align: center;
         -webkit-border-radius:20px;
         -moz-border-radius:20px;
         border-radius:20px;
-        margin:4.1rem auto;
         overflow: hidden;
     }
     .code-card>h2{
@@ -84,24 +83,75 @@
         color: #999;
         font-size: 1.4rem;
     }
+    #app{
+          perspective: 800px;
+        position: relative;
+
+    }
+    .code-card-box{
+        width:89.3333333vw;
+        position: relative;
+        top:0;
+        left:0;
+        margin:4.1rem auto;
+        transform-style: preserve-3d;
+        transition: transform 1s;
+        transform-origin: right center;
+    }
+    .code-card{
+        transition:500ms transform;
+        position: absolute;
+        top:0;
+        left:0;
+    }
+    .code-card-a{
+        backface-visibility: hidden;
+        transform:rotateY(-180deg);
+    }
+    .code-card-active .code-card-a{
+        transform:rotateY(0deg);
+        z-index: 998;
+
+    }
+    .code-card-active .code-card-b{
+        transform:rotateY(180deg);
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
-    <div class="code-card">
-        <h2>扫描下方二维码 <br/>关注智新泽地园区服务平台</h2>
-        <div class="code">
-            <img :src="park[parkIndex].src" alt="希垦园区注册二维码">
-        </div>
-        <div class="now-park">当前园区：{{park[parkIndex].btn_text}}</div>
-        <div class="code-change-btn" @click="changeParkCode">
-            <div class="code-icon">
-                <span></span>
-                <span></span>
+    <div class="code-card-box" :class="{'code-card-active':card_active}">
+        <div class="code-card code-card-a">
+            <h2>扫描下方二维码 <br/>关注智新泽地园区服务平台</h2>
+            <div class="code">
+                <img :src="park[parkIndex].src" alt="希垦园区注册二维码">
             </div>
-            <div>
-                切换到<span>{{park[nextParkIndex].btn_text}}</span>
+            <div class="now-park">当前园区：{{park[parkIndex].btn_text}}</div>
+            <div class="code-change-btn" @click="changeParkCode">
+                <div class="code-icon">
+                    <span></span>
+                    <span></span>
+                </div>
+                <div>
+                    切换到<span>{{park[nextParkIndex].btn_text}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="code-card code-card-b">
+            <h2>扫描下方二维码 <br/>关注智新泽地园区服务平台</h2>
+            <div class="code">
+                <img :src="park[parkIndex].src" alt="希垦园区注册二维码">
+            </div>
+            <div class="now-park">当前园区：{{park[parkIndex].btn_text}}</div>
+            <div class="code-change-btn" @click="changeParkCode">
+                <div class="code-icon">
+                    <span></span>
+                    <span></span>
+                </div>
+                <div>
+                    切换到<span>{{park[nextParkIndex].btn_text}}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -127,6 +177,7 @@
                     src:'/index/images/index/code-register-XK.png'
                 }
             ],
+            card_active:false,
             parkIndex:0,
             nextParkIndex:1
         },
@@ -134,14 +185,18 @@
             changeParkCode(){
                 var _this=this;
                 var len=_this.park.length;
-                _this.parkIndex+=1;
-                _this.nextParkIndex+=1;
-                if(_this.parkIndex>=len){
-                    _this.parkIndex=0
-                }
-                if(_this.nextParkIndex>=len){
-                    _this.nextParkIndex=0
-                }
+                _this.card_active = !_this.card_active;
+                window.setTimeout(function () {
+                    _this.parkIndex+=1;
+                    _this.nextParkIndex+=1;
+                    if(_this.parkIndex>=len){
+                        _this.parkIndex=0
+                    }
+                    if(_this.nextParkIndex>=len){
+                        _this.nextParkIndex=0
+                    }
+                },10)
+
             }
         }
     })

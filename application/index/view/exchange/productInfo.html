@@ -1,0 +1,262 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>商品详情</title>
+<style>
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    header.header{background:#2a2c33;color:#fff}
+    .header h1{color:#fff;font-size:18px}
+    .header a{color:#fff}
+    .clearfix:before{display:table;content:''}
+    .clearfix:after{display:table;content:'';clear:both}
+    body{padding-bottom:10px}
+    .top{width:100%;display:block;height:50vw}
+    .top1{padding-left:12px}
+    .top1>p{font-size:16px;color:#333;margin-top:10px;line-height:22px}
+    .top1>span{font-size:14px;color:#666;float:left;line-height:34px}
+    .top1>a{padding-left:20px;height:34px;background:url(/index/images/exchange/icon_score_yellow.png) no-repeat left center;background-size:15px 15px;float:right;line-height:34px;color:#ffc51e;font-size:18px;margin-right:12px}
+    .title1{font-size:15px;color:#333;height:35px;line-height:35px;padding-left:12px;background-size:5px 15px;border-top:1px solid #f5f5f5}
+    .main{padding-top:10px;padding-bottom:15px;padding-left:12px;padding-right:12px}
+    .main>p{color:#666;font-size:14px}
+    .fixed_btn{position:fixed;height:5.5rem;bottom:0;left:0;width:100%;padding-left:3.12vw;display:flex;justify-content:space-between;align-items:center;background:#fff;box-shadow:0 -2px 3px rgba(0,0,0,.1)}
+    .fixed_btn>div{-ms-word-wrap:normal;word-wrap:normal}
+    .numbox{border:0;background:#fff;height:100%;width:26vw;display: flex;justify-content: space-around;align-items: center}
+    .numbox>.btn{height:3rem;width:3rem;font-size:1.8rem;border:1px solid #f3f3f3;border-radius:5px;background: #f1f1f1;color:#999;outline:none;}
+    .numbox>.numbox-input{flex-grow:1;width: 3rem;font-size: 1.5rem;text-align: center;}
+    .fixed_btn>div:first-child{font-size:1.6rem}
+    .fixed_btn .go_buy{width:100px;height:100%;border:0;border-radius:0;color:#fff;font-size:1.6rem;  background: -webkit-linear-gradient(left, #F8D600 , #F19300); /* Safari 5.1 - 6.0 */
+        background: -o-linear-gradient(right, #F8D600 , #F19300); /* Opera 11.1 - 12.0 */
+        background: -moz-linear-gradient(right, #F8D600 , #F19300); /* Firefox 3.6 - 15 */
+        background: linear-gradient(to right, #F8D600  , #F19300); /* 标准的语法（必须放在最后） */}
+    .fixed_btn .sum{color:#fe8c07;font-size:1.3rem}
+    .self_msg{
+        position: fixed;
+        top:0;
+        right:0;
+        bottom:0;
+        left: 0;
+        background: rgba(0,0,0,.4);
+        z-index: 100;
+    }
+    .self_msg>.msg_box{padding:4.8vw 3.75vw;width:82vw;height:auto;position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);transform:translate(-50%,-50%);border-radius:10px;background:#fff}
+    .msg_box>.msg_banner>img{width:50%}
+    .msg_box>.msg_title>img{width:60%}
+    .msg_box>.msg_banner,.msg_box>.msg_title{text-align:center;margin-bottom:2rem;font-size: 1.6rem}
+    .msg_box>.msg_content{
+        text-align: center;
+        font-size: 2.8rem;
+        font-weight: bold;
+        color: #FFA81D;
+    }
+    .msg_box>input{height:30px;
+        width:100%;font-size:1.4rem;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;border:1px solid #e5e5e5;margin:2.66vw 0;padding:5px 10px}
+    .msg_box>.self_remark{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;border:1px solid #e5e5e5;margin:2.66vw 0;padding:5px 10px;height:20vw;width:100%;font-size: 1.4rem}
+    .msg_box>span{font-size:1.4rem;display: block}
+    .msg_box>span>b{color:red}
+    .msg_box>.msg_up{width:100%;background:#FFA81D;border:0;margin-top:1rem;color:#fff;
+        -webkit-border-radius:5px;
+        -moz-border-radius:5px;
+        border-radius:5px;
+        height:4rem;
+    font-size: 1.4rem}
+    .self_msg .close_btn{height:8vw;width:8vw;background:url(/index/images/exchange/closebtn.png) no-repeat;background-size:cover;text-align:center;position:absolute;top:0;right:0;-webkit-transform:translate(35%,-35%);-moz-transform:translate(35%,-35%);-ms-transform:translate(35%,-35%);-o-transform:translate(35%,-35%);transform:translate(35%,-35%)}
+    .mui-backdrop{background:rgba(0,0,0,.6)}
+    .fixed_btn .not_enough{background:#D8D8D8;color:#858585}
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <img :src="baseData.front_cover" class="top" alt="">
+    <div class="top1 clearfix">
+    <p>{{baseData.title}}</p>
+    <span>剩余 {{baseData.left}}</span>
+    <a>{{baseData.num}}</a>
+    </div>
+    <div class="title1">宝贝详情</div>
+    <div class="main" v-html="baseData.content">
+    main
+    </div>
+    <div class="self_msg" v-show="showMask">
+        <div class="msg_box">
+            <div style="" class="close_btn" @click="toggleMask"></div>
+            <!--<div class="msg_title"><img src="/index/images/exchange/mtitle.png" style="" alt=""></div>-->
+            <!--<div class="msg_banner"><img src="/index/images/exchange/mbanner.png" style="" alt=""></div>-->
+            <!--<span><b>*&nbsp;</b>姓名：</span>-->
+            <!--<input type="text" class="self_name" placeholder="请输入姓名" v-model="subData.name">-->
+            <!--<span><b>*&nbsp;</b>电话：</span>-->
+            <!--<input type="text" class="self_tel" placeholder="请输入电话" v-model="subData.phone">-->
+            <!--<span><b>&nbsp;</b>备注：</span>-->
+            <!--<textarea type="text" class="self_remark" placeholder="请输入备注" v-model="subData.remark"></textarea>-->
+            <!--<button class="msg_up" @click="goBuy">提交</button>-->
+            <div class="msg_title">兑换码</div>
+            <div class="msg_content">{{commodity_code}}</div>
+        </div>
+    </div>
+    <div class="fixed_btn">
+        <div>数量</div>
+        <div class="numbox"  data-numbox-min="0" data-numbox-max="">
+            <!-- "-"按钮，点击可减小当前数值 -->
+            <button class="btn" type="button" @click="clickChangeNumber(false)">-</button>
+            <input class="numbox-input" type="tel" v-model="buyNumber" @input="inputChangeNumber"/>
+            <!-- "+"按钮，点击可增大当前数值 -->
+            <button class="btn " type="button" @click="clickChangeNumber(true)">+</button>
+        </div>
+        <div class="sum">
+            <span>合计：</span><span class="score">{{ baseData.price * buyNumber }}</span><span>积分</span>
+        </div>
+        <button class="go_buy" :class="{'not_enough':(baseData.price * buyNumber>baseData.score)}" @click="toggleMask">{{baseData.price * buyNumber>baseData.score?'积分不足':'立即兑换'}}</button>
+    </div>
+</div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    console.log({$info})
+    var app = new Vue({
+        el: '#app',
+        data: {
+            baseData:{$info},
+            buyNumber:0,
+            isSubmit:false,
+            showMask:false,
+            subData:{
+                name:'',
+                remark:'',
+                phone:'',
+                product_id:'',
+                num:''
+            },
+            commodity_code:''
+        },
+        methods: {
+            inputChangeNumber(){
+                var _this=this;
+                if(_this.buyNumber > _this.baseData.left){
+                    this.$toast({
+                        message: '商品剩余不足',
+                        position: 'middle',
+                        duration: 2000
+                    });
+                    _this.buyNumber = _this.baseData.left
+                }else if(_this.buyNumber*_this.baseData.price > _this.baseData.score){
+                    this.$toast({
+                        message: '您的积分不足',
+                        position: 'middle',
+                        duration: 2000
+                    });
+                    _this.buyNumber = parseInt(_this.baseData.score/_this.baseData.price)
+                }
+            },
+            clickChangeNumber(toggle){
+                var _this = this;
+                if(toggle){
+                    if(_this.buyNumber){
+                        _this.buyNumber = parseInt(_this.buyNumber) + 1;
+                        _this.inputChangeNumber();
+                    }else{
+                        _this.buyNumber = 1
+                    }
+                }else{
+                    if(_this.buyNumber){
+                        if(_this.buyNumber>0){
+                            _this.buyNumber =  parseInt(_this.buyNumber) - 1
+                        }
+
+                    }else{
+                        _this.buyNumber = 0
+                    }
+
+                }
+            },
+//            显示遮罩
+            toggleMask(){
+                var _this = this;
+//                是否为显示
+                if(!_this.showMask){
+//                    商品是否剩余
+                    if(_this.baseData.left == 0){
+                        _this.$toast({
+                        message: '该商品已被兑换完',
+                        position: 'bottom',
+                        duration: 2000
+                        });
+                        return;
+//                        积分是否足够
+                    }else if(_this.baseData.price * _this.buyNumber <= _this.baseData.score) {
+//                        是否有选择商品数量
+                        if(_this.buyNumber==0){
+                            _this.$toast({
+                                message: '请选择兑换数量',
+                                position: 'bottom',
+                                duration: 2000
+                            });
+                            return;
+                        }
+//                        发起请求
+                        _this.goBuy()
+                    }else{
+                        _this.$toast({
+                            message: '您的积分不足',
+                            position: 'bottom',
+                            duration: 2000
+                        });
+                    }
+                }else{
+                    _this.showMask = false;
+                }
+            },
+            goBuy(){
+                var _this = this;
+//                if(!_this.subData.name){
+//                    this.$toast({
+//                        message: '请输入您的姓名',
+//                        position: 'middle',
+//                        duration: 2000
+//                    });
+//                    return;
+//                }else if(!_this.subData.phone){
+//                    this.$toast({
+//                        message: '请输入您的电话',
+//                        position: 'middle',
+//                        duration: 2000
+//                    });
+//                    return;
+//                }
+                _this.subData.product_id = _this.baseData.id;
+                _this.subData.num = _this.buyNumber;
+                _this.$http.post("{:Url('Exchange/productInfo')}",_this.subData).then(function (response) {
+                    console.log(response)
+                    if(response.data.code === 1){
+                        _this.commodity_code = response.data.data;
+                        _this.baseData.score -= _this.buyNumber * _this.baseData.price;
+                        _this.buyNumber = 0;
+                        _this.baseData.left -= _this.buyNumber;
+                        swal({
+                            title: "",
+                            text: "兑换成功，请凭兑换码到物业兑换商品",
+                            type: "success",
+                            confirmButtonColor: "#FFA81D",
+                            confirmButtonText: "确定"
+                        },function(isConfirm){
+//                            if(isConfirm){
+//                                window.location.href="/index/exchange/index.html"
+//                            }
+                            _this.showMask = true;
+                        })
+                    }else{
+                        swal({
+                            title: "",
+                            text: response.data.msg,
+                            type: "error",
+                            confirmButtonColor: "#FFA81D",
+                            confirmButtonText: "确定"
+                        });
+                    }
+                })
+            }
+        }
+    })
+</script>
+{/block}

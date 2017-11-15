@@ -1,0 +1,127 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    .grade1{
+        padding:0 1.2rem;
+        font-size: 1.4rem;
+        color: #333;
+    }
+    .grade1>li{
+        border-bottom: 1px dashed #f1f1f1;
+    }
+    .grade1>li>a{
+        display: block;
+        width:100%;
+        line-height: 5rem;
+        height:5rem;
+    }
+    .grade1>li>a>span:first-child{
+        margin-right: 2rem;
+    }
+    .grade1>li>div{
+        overflow: hidden;
+        height:0;
+        -webkit-transition: all 500ms linear;
+        -moz-transition: all 500ms linear;
+        -ms-transition: all 500ms linear;
+        -o-transition: all 500ms linear;
+        transition: all 100ms linear;
+    }
+    .grade2{
+        padding:0 2rem
+    }
+    .grade2>li>span{
+        display: inline-block;
+        margin-bottom: 0.9rem;
+    }
+    .grade2>li{
+        list-style: decimal;
+    }
+    .grade3{
+        padding-left: 3rem;
+    }
+    .grade3>li{
+        list-style: disc;
+        color: #bbb;
+        margin-bottom: 0.9rem;
+    }
+    .grade3>li>span{
+        color: #333;
+    }
+
+    #app .active{
+        height:auto;
+        padding-top: 4px;
+        padding-bottom: 15px;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <ul class="grade1">
+        <li v-for="version in versionData">
+            <a @click="toOpen(version.number)">
+                <span>{{version.number}} </span><span>{{version.date}}</span>
+            </a>
+            <div :class="{active:(version.number===openNumber)}" >
+            <ul class="grade2">
+                <li v-for="info in version.info">
+                    <span>{{info.title}}</span>
+                    <ul class="grade3">
+                        <li v-for="detail in info.detail"><span>{{detail}}</span></li>
+                    </ul>
+                </li>
+            </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            versionData:[
+                {
+                    number:'园区1.0',
+                    date:'2017-11-15',
+                    info:[
+                        {
+                            title:'更新1',
+                            detail:['更新1.1','更新1.2','更新1.3']
+                        },
+                        {
+                            title:'更新1_1',
+                            detail:['更新1_1','更新1_2','更新1_3']
+                        }
+                    ]
+                },
+                {
+                    number:'园区1.1',
+                    date:'2017-11-16',
+                    info:[
+                        {
+                            title:'更新2',
+                            detail:['更新2.1','更新2.2','更新2.3']
+                        }
+                    ]
+                }
+            ],
+            openNumber:''
+        },
+        methods: {
+            toOpen(number){
+                if(this.openNumber !== number){
+                    this.openNumber = number;
+                }else{
+                    this.openNumber = ''
+                }
+            }
+        }
+    })
+</script>
+{/block}

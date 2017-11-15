@@ -1,0 +1,142 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>兑换详情</title>
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: 'Microsoft YaHei';
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
+    body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, input, p, table, th, td, select, option {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    body{
+
+        border-bottom: 1px solid #e5e5e5;
+    }
+    header.header{
+        background: #2a2c33;
+        color: #ffffff;
+    }
+    .header h1{
+        color:#fff;
+        font-size:18px;
+    }
+    .header a{
+        color:#fff;
+    }
+    .clearfix:before{
+        display:table;
+        content:'';
+    }
+    .clearfix:after{
+        display:table;
+        content:'';
+        clear:both;
+    }
+    .top{
+        height:55px;
+        border-bottom: 1px dotted #e5e5e5;
+        margin-left:10px;
+        margin-right:10px;
+    }
+    .top>li{
+        float:left;
+        line-height: 55px;
+        font-size: 14px;
+        color:#666;
+    }
+    .top>li:last-child{
+        color:#fc4f41;
+        font-size: 24px;
+        float:right;
+    }
+    .list{
+        padding-bottom:10px;
+        margin-left:10px;
+        margin-right:10px;
+    }
+    .list>li{
+        min-height:24px;
+        padding-top:10px;
+        line-height: 2;
+    }
+    .list>li:before{
+        content: '';
+        display: table;
+        clear: both;
+    }
+    .list>li>span{
+        float:left;
+        max-width:20vw;
+        font-size: 14px;
+        color:#666;
+        line-height: 14px;
+    }
+    .list>li>p{
+        max-width:70vw;
+        float: right;
+        font-size: 14px;
+        color:#333;
+        line-height: 14px;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <ul class="top">
+        <li>花费积分</li>
+        <li class="use_score">{{baseData.content}}</li>
+    </ul>
+    <ul class="top">
+        <li>兑换码</li>
+        <li class="use_score">{{baseData.commodity_code}}</li>
+    </ul>
+    <ul class="list clearfix">
+        <li>
+            <span>商品名称</span>
+            <p class="p_name">{{baseData.title}}</p>
+        </li>
+        <li>
+            <span>商品数量</span>
+            <p class="p_num">{{baseData.num}}</p>
+        </li>
+        <li>
+            <span>当前状态</span>
+            <p class="now_status">{{baseData.status==0?"未兑换":"已兑换"}}</p>
+        </li>
+        <li>
+            <span>支付时间</span>
+            <p class="pay_time">{{baseData.create_time}}</p>
+        </li>
+        <!--<li>-->
+            <!--<span>姓名</span>-->
+            <!--<p class="msg_name">{{baseData.name}}</p>-->
+        <!--</li>-->
+        <!--<li>-->
+            <!--<span>电话</span>-->
+            <!--<p class="msg_phone">{{baseData.phone}}</p>-->
+        <!--</li>-->
+        <!--<li>-->
+            <!--<span>备注</span>-->
+            <!--<p class="msg_remark">{{baseData.remark}}</p>-->
+        <!--</li>-->
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            baseData:{$info}
+        },
+        methods: {}
+    })
+</script>
+{/block}
