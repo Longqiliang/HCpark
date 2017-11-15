@@ -134,7 +134,8 @@ class Exchange extends Base
                    'content' =>$re['content'],
                    'num'=>$re['num'],
                    'price'=>$re['price'],
-                   'score'=>$userinfo['score']
+                   'score'=>$userinfo['score'],
+                   'left'=>$re['left'],
             ];
             $this->assign('info', json_encode($data));
             return $this->fetch();
