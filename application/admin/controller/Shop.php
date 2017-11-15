@@ -45,7 +45,7 @@ class Shop extends Admin
     public function add()
     {
         if (IS_POST) {
-            $data = input('post.');
+            $data = input('');
             $data['create_user'] = $_SESSION['think']['user_auth']['id'];
             if (empty($data['id'])) {
                 unset($data['id']);
@@ -53,7 +53,7 @@ class Shop extends Admin
             $data['create_time'] = time();
             $data['left'] = $data['num'];
             $productModel = new ExchangeProduct();
-            $info = $productModel->validate('product')->save($data);
+            $info = $productModel->save($data);
             if ($info) {
                 return $this->success("新增成功", Url('Shop/index'));
             } else {
@@ -136,7 +136,7 @@ class Shop extends Admin
             $id = input('id');
             $msg = ExchangeProduct::get($id);
 
-            $this->assign('msg', $msg);
+            $this->assign('info', $msg);
             return $this->fetch();
         }
     }

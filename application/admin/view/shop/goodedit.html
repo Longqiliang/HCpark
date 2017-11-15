@@ -5,8 +5,18 @@
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style type="text/css">
-    .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
-    .front_cover_img {height: 40px; width: 40px; margin-top: 4px}
+    .note-editor.note-frame {
+        border-radius: 0;
+        border: 0;
+        margin-bottom: 0;
+    }
+
+    .front_cover_img {
+        height: 40px;
+        width: 40px;
+        margin-top: 4px
+    }
+
     .send_type_label {
         padding-left: 12px;
     }
@@ -26,101 +36,66 @@
                 <!--target-form="form-horizontal" data-edit="content">-->
                 <!--<i class="fa fa-pencil"></i> 保存草稿-->
                 <!--</button>-->
-                <a href="javascript:ggg()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                <a href="javascript:ggg()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                        class="fa fa-times"></i> 关闭</a>
             </div>
             <h2>
-                {empty name="$pageType"}
-                {empty name="$news.id" }新闻通告
-                {/empty}
-                {volist name="Think.config.news_type" id="type"}
-                {eq name="$news.type" value="$key"}{$type}
-                {/eq}
-                {/volist}
-                {/empty}
-                {notempty name="$pageType"}
-                {empty name="$news.id" }政策法规
-                {/empty}
-                {notempty name="$news.id"}
-                {eq name="$news.type" value="4"}政策
-                {else/}法规
-                {/eq}
-                {/notempty}
-
-                {/notempty}
+                商品添加
             </h2>
         </div>
         <div class="mail-box">
             <form class="form-horizontal" method="post">
                 <div class="mail-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">新闻标题:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="消息的标题" name="title" value='{$news.title}'></div>
+                    <div class="form-group"><label class="col-sm-2 control-label">商品名称:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="消息的标题" name="title"
+                                                      value='{$info.title}'></div>
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">发布人:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="新闻的出处" name="source" value='{$news.source}'></div>
-                    </div>
-
                     <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
                         <div class="col-sm-10">
                             <input id="input-file" type="file" class="file">
                             <sapn>
                                 {empty name="info.front_cover"}图片预览{else/}
-                                <a class="front_cover" href="{$info.front_cover}">
-                                    <img class="front_cover_img" src="{info.front_cover}"/>
-                                </a>
+                                    <img class="front_cover_img"  id="front_cover"  name="front_cover"  src="{info.front_cover}"/>
                                 {/empty}
                             </sapn>
                         </div>
                     </div>
-
-
-
-
-                    {eq name="$news.type" value="1"}
-                    <div class="form-group" {notempty name='$pageType'}style="display:none"{/notempty}><label class="col-sm-2 control-label">Banner:</label>
-                    <div class="col-sm-10">
-                        <label class="checkbox-inline i-checks">
-                            <input type="radio" value="1" name="is_banner" {eq name="news.is_banner" value="1"}checked{/eq}> 是
-                            <input type="radio" value="0" name="is_banner" {empty name="news.is_banner"}checked {/empty}{eq name="news.is_banner" value="0"}checked{/eq}> 否
-                        </label>
+                    <div class="form-group"><label class="col-sm-2 control-label">商品总数:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="新闻的出处" name="num"
+                                                      value='{$info.num}'></div>
                     </div>
-                </div>
-            </form></div></div></div>
-</div>
-{/eq}
-{/eq}
-<!-- <div class="clearfix"></div>
- <div class="mail-body">
-     <div class="form-group"><label class="col-sm-2 control-label">是否发送:</label>
-         <div class="col-sm-10 checkbox-inline i-checks send_type_label">
-             <label><input type="radio" value="0" name="is_send"
-                           {eq name="news.is_send" value="0"} checked {/eq} {empty name="news.is_send"}checked {/empty}> 未发送</label>
-             <label><input type="radio" value="1" name="is_send" {eq name="news.is_send" value="1"}checked{/eq}> 已发送</label>
-         </div>
-     </div>
- </div>-->
-<div class="mail-text h-200">
-    <div class="summernote">{$news.content}</div>
-    <div class="clearfix"></div>
-</div>
-<div class="mail-body text-right tooltip-demo">
+                    <div class="form-group"><label class="col-sm-2 control-label">商品剩余:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="新闻的出处" name="left"
+                                                      value='{$info.left}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">商品单价:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="新闻的出处" name="price"
+                                                      value='{$info.price}'></div>
+                    </div>
 
-    <button url="{:Url('add')}{notempty name='$pageType'}?page_type=1{/notempty}" class="btn btn-primary ajax-post" target-form="form-horizontal"
-            data-toggle="tooltip" data-placement="top" data-edit="content">
-        保存
-    </button>
-    <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
-    <!--target-form="form-horizontal" data-edit="content">-->
-    <!--<i class="fa fa-pencil"></i> 保存草稿-->
-    <!--</button>-->
-    <!--<a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>-->
-</div>
-<div class="clearfix"></div>
-<input type="hidden" name="content" class="to_hiden" value="">
-<input type="hidden" name="id" value="{$news.id}">
-<input type="hidden" name="front_cover" value="{$news.front_cover}">
-</form>
-</div>
-</div>
+
+                    <div class="mail-text h-200">
+                        <div class="summernote">{$info.content}</div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="mail-body text-right tooltip-demo">
+
+                        <button class="btn btn-primary submit-btn post-put" type="button" target-form="form-horizontal" >新增</button>
+                        <a class="btn btn-default" href="javascript:window.history.go(-1);">返回</a>
+                        <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
+                        <!--target-form="form-horizontal" data-edit="content">-->
+                        <!--<i class="fa fa-pencil"></i> 保存草稿-->
+                        <!--</button>-->
+                        <!--<a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>-->
+                    </div>
+                    <div class="clearfix"></div>
+                    <input type="hidden" name="content" class="to_hiden" value="">
+                    <input type="hidden" name="id" value="{$info.id}">
+                    <input type="hidden" name="front_cover" value="{$info.front_cover}">
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {/block}
 
@@ -155,7 +130,7 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function(response) {
+                success: function (response) {
                     var data = $.parseJSON(response);
                     $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
                 }
@@ -163,7 +138,7 @@
         }
 
         console.log($(this).val())
-        $('.send_type').on('ifChecked', function(event){
+        $('.send_type').on('ifChecked', function (event) {
             switch ($(this).val()) {
                 case '0' :
                     $("#send_target").empty();
@@ -173,10 +148,10 @@
                     $.ajax({
                         type: "get",
                         url: "{:Url('getDepartment')}",
-                        success: function(response) {
+                        success: function (response) {
                             $("#send_target").empty();
-                            $.each(response.department, function(i,item){
-                                $("#send_target").append("<option value='"+item.id+"'>"+item.name+"</option>");
+                            $.each(response.department, function (i, item) {
+                                $("#send_target").append("<option value='" + item.id + "'>" + item.name + "</option>");
                             });
                         }
                     });
@@ -185,10 +160,10 @@
                     $.ajax({
                         type: "get",
                         url: "{:Url('getTag')}",
-                        success: function(response) {
+                        success: function (response) {
                             $("#send_target").empty();
-                            $.each(response.taglist, function(i,item){
-                                $("#send_target").append("<option value='"+item.tagid+"'>"+item.tagname+"</option>");
+                            $.each(response.taglist, function (i, item) {
+                                $("#send_target").append("<option value='" + item.tagid + "'>" + item.tagname + "</option>");
                             });
                         }
                     });
@@ -201,18 +176,23 @@
         showPreview: false,
         language: 'zh', //设置语言
         uploadUrl: '{:Url("Upload/picture")}', //上传的地址
-        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
         maxFileSize: 1024 * 200,
-    }).on("filebatchselected", function(event, files) {
+    }).on("filebatchselected", function (event, files) {
         $(this).fileinput("upload");
-    }).on('fileuploaded', function(event, data, previewId, index) {
+    }).on('fileuploaded', function (event, data, previewId, index) {
         var response = $.parseJSON(data.response);
-        if(response.code == 1) {
+        if (response.code == 1) {
             $("input[name='front_cover']").val(response.data);
+            var pic = document.getElementById("front_cover");
+            pic.src=response.data;
         } else {
             updateAlert(response.msg, 'warning');
         }
     });
+
+
+
 
     $(".front_cover").imgbox({
         overlayShow: false,
@@ -225,19 +205,63 @@
 
     //把content内容赋给隐藏表单
 
-    $('.btn-primary').click(function(){
-        $('.to_hiden').attr('value',$('.panel-body').text());
+    $('.btn-primary').click(function () {
+        $('.to_hiden').attr('value', $('.panel-body').text());
     })
 
-    if (isNaN({$pageType})){
-        highlight_subnav("{:Url('News/index')}");
-    }else {
-        highlight_subnav("{:Url('News/policyLaw')}");
-    }
 
     function ggg() {
         window.history.go(-1);
     }
+
+    //新增
+    $(".post-put").off('click').on("click",function(){
+        var it=$(this);
+        var data = {
+            id:$("input[name='id']").val(),
+            front_cover:$("input[name='front_cover']").val(),
+            title:$("input[name='title']").val(),
+            content:ue.getContent(),
+            num:$("input[name='num']").val(),
+            price:$("input[name='price']").val(),
+            left:$("input[name='left']").val(),
+            status:0,
+        };
+        $.ajax({
+            type:"post",
+            url:$("#form").attr("action"),
+            data:data,
+            success:function(data){
+                if(data.code == 1){
+                    if (data.url) {
+                        updateAlert(data.msg + ' 页面即将自动跳转~','success');
+                    }else{
+                        updateAlert(data.msg ,'success');
+                    }
+                    it.prop('disabled','true');
+                    it.prev().prop('disabled','true');
+                    setTimeout(function(){
+                        if (data.url) {
+                            location.href=data.url;
+                        } else {
+                            location.reload();
+                        }
+                        it.removeAttr('disabled');
+                        it.prev().removeAttr('disabled')
+                    },2000);
+                } else {
+                    updateAlert(data.msg, 'error');
+                    it.attr('disabled','true');
+                    it.prev().prop('disabled','true');
+                    setTimeout(function(){
+                        it.removeAttr('disabled');
+                        it.prev().removeAttr('disabled')
+                    },2000);
+                }
+            }
+        });
+        return false;
+    });
 
 </script>
 {/block}
