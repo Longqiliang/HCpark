@@ -136,7 +136,7 @@ class Exchange extends Base
                    'price'=>$re['price'],
                    'score'=>$userinfo['score']
             ];
-            $this->assign('info', $data);
+            $this->assign('info', json_encode($data));
             return $this->fetch();
         }
     }
