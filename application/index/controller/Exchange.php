@@ -43,7 +43,7 @@ class Exchange extends Base
         $userid = session('userId');
         $record = new ExchangeRecord();
         $list = $record->getRecordList($userid);
-        $this->assign('list', $list);
+        $this->assign('list', json_encode($list));
         return $this->fetch();
     }
 
@@ -56,7 +56,7 @@ class Exchange extends Base
         $record = new ExchangeRecord();
         $list = $record->getRecordInfo($record_id);
         $list['title'] = isset($list->productInfo->title) ? $list->productInfo->title : "";
-        $this->assign('info', $list);
+        $this->assign('info', json_encode($list));
         return $this->fetch();
     }
 
@@ -130,8 +130,6 @@ class Exchange extends Base
             $this->assign('info', $re);
             return $this->fetch();
         }
-
-
     }
 
     public function _safegs($data)
