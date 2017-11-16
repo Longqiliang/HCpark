@@ -100,9 +100,6 @@ class Exchange extends Base
                 $info['need_score'] = $sum;
                 $info['left_score'] = $userinfo['score'] - $sum;
                 $info['commodity_code'] = $this->random();
-                $info['name'] = $this->_safegs($data['name']);
-                $info['phone'] = $this->_safegs($data['phone']);
-                $info['remark'] = $this->_safegs($data['remark']);
                 $flag = $record->save($info);
                 //购买成功后
                 if ($flag) {
