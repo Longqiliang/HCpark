@@ -44,8 +44,8 @@
             <h2>商品管理</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l  confirm ajax-del " url="{:Url('del')}" data-original-title="移动到回收站"
-                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                <button class="btn btn-white btn-sm m-l ajax-post " url="{:Url('del')}" data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="id"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
                 <a data-toggle="modal" class="btn btn-sm btn-primary" href="{:Url('Shop/add')}">添加商品</a>
@@ -68,7 +68,7 @@
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr>
-                    <td> <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}"></td>
+                    <td class="check-mail"> <input type="checkbox" class="i-checks id" name="id[]" value="{$vo.id}"></td>
                     <td>{$vo.title|msubstr=0,20}</td>
                     <td>{$vo.left}</td>
                     <td>{$vo.num}</td>
@@ -76,7 +76,7 @@
                     <td>{$vo.status_text}</td>
                     <td>
                         <a class="btn-sm btn-success"  href="{:Url('Shop/add?id='.$vo['id'])}">修改</a>
-                        <a  class="btn-sm btn-defralut" href="{:Url('Shop/recordinfo?id='.$vo['id'])}">查看兑换记录</a>
+                        <a  class="btn-sm btn-primary" href="{:Url('Shop/recordinfo?id='.$vo['id'])}">查看兑换记录</a>
                         <a   href="{:Url('Shop/del?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-danger">删除</a>
                     </td>
                 </tr>
@@ -105,7 +105,7 @@
             radioClass: 'iradio_square-green',
         });
         $(".check-all").on("ifChanged",function(){
-            $("tbody").find(".ids").iCheck("toggle");
+            $("tbody").find(".id").iCheck("toggle");
         });
     });
 
@@ -119,10 +119,5 @@
             }
         }
     });
-
-
-
-
-
 </script>
 {/block}

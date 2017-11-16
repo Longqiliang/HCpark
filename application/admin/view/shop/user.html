@@ -33,22 +33,16 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
-            <form method="get" action="index.html" class="pull-right mail-search">
+            <form method="get" action="user.html" class="pull-right mail-search">
                 <div class="input-group">
-                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索商品名" value="{$search}">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="搜索用户信息(手机，姓名)" value="{$search}">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                     </div>
                 </div>
             </form>
-            <h2>商品管理</h2>
+            <h2>用户积分查询</h2>
             <div class="mail-tools tooltip-demo m-t-md">
-                <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteGroup')}" data-original-title="移动到回收站"
-                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
-                </button>
-                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
-                <a data-toggle="modal" class="btn btn-sm btn-primary" href="{:Url('Shop/add')}">添加商品</a>
             </div>
         </div>
 
@@ -61,21 +55,22 @@
                     <th>用户昵称</th>
                     <th>用户手机</th>
                     <th>剩余积分</th>
-                    <th> </th>
+                    <th>状态</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr>
-                    <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                    <td></td>
                     <td>{$vo.id|msubstr=0,20}</td>
                     <td>{$vo.name}</td>
                     <td>{$vo->mobile}</td>
                     <td>{$vo->score}</td>
+                    <td>{$vo->status_text}</td>
 
                     <td>
-                        <a  class="btn-sm btn-defralut" href="{:Url('Shop/recordinfo?id='.$vo['id'])}">查看兑换记录</a>
+                        <a  class="btn-sm btn-primary" href="{:Url('Shop/user_record?id='.$vo['userid'])}">查看兑换记录</a>
                     </td>
                 </tr>
                 {/volist}

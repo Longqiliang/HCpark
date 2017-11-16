@@ -119,7 +119,7 @@ class Shop extends Admin
     /*删除兑换记录*/
     public function delrecord()
     {
-        $id = (array)input('id/a');
+        $id = input('id/a');
 
         $data = [
             'status' => -1
@@ -129,7 +129,7 @@ class Shop extends Admin
 
             return $this->success('删除成功');
         } else {
-            return $this->error('删除失败');
+            return $this->error('删除失败','',ExchangeRecord::getLastSql());
         }
 
     }
@@ -138,7 +138,7 @@ class Shop extends Admin
      * 删除商品功能
      */
     public function del(){
-        $id = (array)input('id/a');
+        $id = input('id/a');
         $data['status'] = '-1';
         $info = ExchangeProduct::where(['id'=>array('in',$id)])->update($data);
         if($info) {
@@ -149,15 +149,21 @@ class Shop extends Admin
     }
     public function user()
     {
+        $search = input('search');
+        if(!empty($serrch)){
+
+
+        }
         $UserProfile = new  WechatUser();
-        $userlist = $UserProfile->paginate(12);
+        $userlist = $UserProfile->where(['mobile'=>['like','%'.$search.'%']])->whereOr(['name'=>['like','%'.$search.'%']])->paginate(12);
 
             int_to_string($userlist, array
             ('status' => array(1 => '启用', 2 => '禁用')));
 
             $this->assign("list", $userlist);
+            $this->assign('search',$search );
 
-        return $this->fetch();
+            return $this->fetch();
     }
 
     public function user_record($id)
@@ -168,8 +174,10 @@ class Shop extends Admin
         foreach ($recordinfo as $child) {
             $child['title'] = isset($child->productinfo->title) ? $child->productinfo->title : "";
             $child['name'] = isset($child->user->name) ? $child->user->name : "";
+            $child['phone'] = isset($child->user->mobile) ? $child->user->mobile : "";
         }
         $this->assign("list", $recordinfo);
+
         return $this->fetch('recordinfo');
 
 

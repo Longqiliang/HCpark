@@ -33,6 +33,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="mail-box-header">
+            {notempty name="$product_id"}
             <form method="get" action="" class="pull-right mail-search">
                 <div class="input-group">
                     <input type="hidden" value="{$product_id}" name ='id' >
@@ -42,12 +43,12 @@
                     </div>
 
                 </div>
-            </form>
+            </form>{/notempty}
             <h2>兑换记录管理</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
                 <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delrecord')}" data-original-title="移动到回收站"
-                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                        data-toggle="tooltip" data-placement="top" target-form="id"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
             </div>
@@ -74,7 +75,7 @@
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr>
-                    <td> <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}"></td>
+                    <td> <input type="checkbox" class="i-checks id" name="id[]" value="{$vo.id}"></td>
                     <td>{$vo.id}</td>
                     <td>{$vo.title}</td>
                     <td>{$vo.name}</td>
@@ -128,7 +129,7 @@
             radioClass: 'iradio_square-green',
         });
         $(".check-all").on("ifChanged",function(){
-            $("tbody").find(".ids").iCheck("toggle");
+            $("tbody").find(".id").iCheck("toggle");
         });
     });
 

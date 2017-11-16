@@ -13,7 +13,6 @@ use think\Model;
 class News extends Model
 {
     protected $insert = [
-        'status' => 1,
         'create_time' => NOW_TIME,
         'update_time' => NOW_TIME,
         'create_user' => UID,
