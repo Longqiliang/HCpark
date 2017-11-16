@@ -1,0 +1,358 @@
+{extend name="public/common"}
+{block name="style"}
+<title>我的服务</title>
+<link rel="stylesheet" href="/index/css/personal/service.css">
+<style>
+    body{
+        background: #F5F5F5;
+    }
+    .no-list{
+        width:100%;
+        display: block;
+        margin:0 auto;
+    }
+    .notice .list{
+        background: #fff;
+    }
+
+    /***mask***/
+    .my-mask{
+        position: fixed;
+        top:0;
+        right:0;
+        bottom: 0;
+        left:0;
+        z-index: 999;
+    }
+    .my-mask-back{
+        position: absolute;
+        top:0;
+        right:0;
+        bottom: 0;
+        left:0;
+        z-index: 996;
+        background-color: rgba(0,0,0,0.3);
+    }
+    .my-mask-content{
+        width:79.2vw;
+        background-color: #f9f9f9;
+        position: absolute;
+        top:50%;
+        left:50%;
+        -webkit-transform: translate(-50%,-60%);
+        -moz-transform: translate(-50%,-60%);
+        -ms-transform: translate(-50%,-60%);
+        -o-transform: translate(-50%,-60%);
+        transform: translate(-50%,-60%);
+        transform: translate(-50%,-60%);
+        z-index: 999;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .my-mask-content>h3{
+        padding:1.7rem 0;
+        margin:0;
+        text-align: center;
+        color: #333;
+        font-size:1.8rem;
+    }
+    .my-phone-list>li{
+        width:53vw;
+        margin:0 auto;
+        padding-bottom: 2rem;
+        color: #333;
+        font-size: 1.5rem;
+    }
+    .my-radio+span{
+        position: relative;
+        line-height: 1.5rem;
+        padding-left: 3rem;
+    }
+    .my-radio+span>b{
+        content: '';
+        display: flex;
+        box-sizing: border-box;
+        height:1.5rem;
+        width:1.5rem;
+        border-radius: 50%;
+        border:1px solid #979797;
+        position: absolute;
+        left:0;
+        justify-content: center;
+        align-items: center;
+    }
+    .my-radio+span>b:before{
+        content: '';
+        display: inline-block;
+        box-sizing: border-box;
+        height:1rem;
+        width:1rem;
+        border-radius: 50%;
+        border:1px solid #979797;
+    }
+    .my-radio:checked+span>b{
+        border-color: #1F85EB;
+    }
+    .my-radio:checked+span>b:before{
+        border:none;
+        background-color: #1F85EB;
+    }
+    .my-btn-group{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top:1px solid #dcdcdc;
+    }
+    .my-btn-group>li{
+        height:4.8rem;
+        line-height: 4.8rem;
+        font-size: 1.8rem;
+        color: #1F85EB;
+        text-align: center;
+        width:50%;
+        box-sizing: border-box;
+    }
+    .my-btn-group>li>a{
+        display: block;
+        height:100%;
+        width:100%;
+        color: #1F85EB;
+    }
+    .my-btn-group>li:not(:last-child){
+        border-right: 1px solid #dcdcdc;
+    }
+
+</style>
+<!--<link rel="stylesheet" href="/index/css/common/tip.css">-->
+{/block}
+{block name="body"}
+<!--<div class="banners">-->
+<!--<img src="/index/images/policy/banner.jpeg" alt="banner">-->
+<!--</div>-->
+<!--tab-->
+<div id="app">
+    <div class="header">
+        <div class="tabs clear">
+            <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">服务权限设置</span></div>
+            <!--<span class="line"></span>-->
+            <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >企业权限设置</span></div>
+        </div>
+
+    </div>
+    <!--切换列表-->
+    <div class="content">
+        <!--服务权限-->
+        <div class="notices" v-if="active==0">
+            <div class="notice">
+                <a class="list" v-for="(p,index) in person" @click="showMask(index)" >
+                    <div class="state">
+                        <span>{{p.name}}</span>
+                    </div>
+                    <div class="state">
+                        <span><span v-if="p.water_status!=0">饮水服务</span> <span v-if="p.fee_status!=0">费用缴纳</span><span class="noPower" v-else>暂无权限</span></span>
+                    </div>
+
+                </a>
+                <img src="/index/images/service/card/icon-default.jpg" v-if="person.length===0" class="no-list">
+            </div>
+            <!--遮罩-->
+            <div class="my-mask" v-show="isShowMask">
+                <div class="my-mask-back" @click="showMask()"></div>
+                <div class="my-mask-content">
+                    <h3>设置权限</h3>
+                    <ul class="my-phone-list">
+                        <li>
+                            <label for="water" @click="chanceAuthority(1)">
+                                <input type="checkbox" id="water" class="my-radio" value="1" :checked="fee_status !== 0" hidden>
+                                <span><b></b>饮水服务</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label for="fee" @click="chanceAuthority(2)">
+                                <input type="checkbox" id="fee" class="my-radio" value="1"  :checked="water_status !== 0" hidden>
+                                <span><b></b>费用缴纳</span>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul class="my-btn-group">
+                        <li @click="showMask()">取消</li>
+                        <li @click="serviceSubmit()">确定</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--企业权限-->
+        <div class="notices" v-if="active==1">
+            <div class="notice enterprise">
+                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+            </div>
+        </div>
+    </div>
+    <!--加载更多-->
+    <!--<div class="tip"></div>-->
+    <!--<div class="loading hidden">-->
+    <!--<div class="typing_loader"></div>-->
+    <!--</div>-->
+</div>
+{/block}
+{block name="script"}
+<!--<script src="/index/js/reset.js"></script>-->
+<script>
+    //    时间戳转字符串过滤器
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    y=newTime.getFullYear();
+            if(dt<10){
+                dt='0'+dt;
+            }
+            if(m<10){
+                m='0'+m;
+            }
+            return y+'-'+m+'-'+dt
+        }
+    });
+    var app=new Vue({
+        el:'#app',
+        data:{
+            active:0,
+            isSubmit:false,
+            //服务权限设置
+            person:{$userlist},
+            isShowMask:false,
+            checkedIndex:'',
+            fee_status:0,
+            water_status:0
+        },
+        created(){
+            this.person[0].fee_status=1;
+            this.person[1].fee_status=1;
+            this.person[1].water_status=1;
+            var c =  parseInt(window.location.href.split("companymanage/c/")[1]);
+            var co = this.getCookie("type");
+            if(co == 11 || co == 12){
+                c = co - 11;
+            };
+            this.active=c;
+            this.isOut();
+        },
+        methods:{
+            //更改权限 type === 1 ? 饮水 : 缴费
+            chanceAuthority(type){
+                var _this = this;
+                if(type===1){
+                    _this.fee_status == 0 ? _this.fee_status=1 : 0
+                }else{
+                    _this.water_status == 0 ? _this.water_status=1 : 0
+                }
+            },
+            showMask(index){
+                var _this = this;
+                if(index !== undefined){
+                    _this.checkedIndex = index;
+                    _this.fee_status = _this.person[index].fee_status;
+                    _this.water_status = _this.person[index].water_status;
+                }
+                this.isShowMask=!this.isShowMask
+            },
+            serviceSubmit(){
+                var _this = this;
+                if(_this.isSubmit){
+                    swal({
+                        title: '',
+                        text: '提交中···',
+                        type:'info',
+                        confirmButtonColor: "#59B7F3",
+                        confirmButtonText: "确定"
+                    });
+                    return ;
+                }
+                _this.isSubmit = true;
+                var data = {
+                    type:1,
+                    fee_status:_this.fee_status,
+                    water_status:_this.water_status,
+                    userid:_this.person[_this.checkedIndex].userid
+                };
+                _this.$http.post("/index/personal/companyManage",data).then(function (res) {
+                    _this.isSubmit = false;
+                    if(res.data.code===1){
+                        swal({
+                            title: '',
+                            text: '权限设置成功！',
+                            type:'success',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        },function () {
+                            _this.person[_this.checkedIndex].fee_status = _this.fee_status;
+                            _this.person[_this.checkedIndex].water_status = _this.water_status;
+
+                        });
+                    }
+                    
+                },function (res) {
+                    _this.isSubmit = false;
+                    swal({
+                        title: '',
+                        text: '请求失败，请重试！',
+                        type:'error',
+                        confirmButtonColor: "#59B7F3",
+                        confirmButtonText: "确定"
+                    });
+                })
+
+            },
+            jumpTo(url){
+                //ios返回莫名返回两级+安卓莫名返回需要按两次解决
+                window.location.replace(url);
+            },
+            tabChange(key){
+                this.active=key;
+                this.setCookie("type",key+11);
+            },
+            //退出清理tab缓存
+            isOut(){
+                var the=this;
+                the.pushHistory();
+                setTimeout(function(){
+                    window.addEventListener("popstate", function(e) {
+                        the.delCookie("type");
+                        window.history.go(-1);
+                    }, false);
+                },200)
+            },
+            pushHistory(){
+                var sta = {
+                    title: "title"
+                };
+                if( window.history.state === null ){
+                    window.history.pushState( sta, "title" );
+                }
+            },
+            setCookie( name, value ){
+                var Days = 30;
+                var exp = new Date();
+                exp.setTime( exp.getTime() + Days * 24 * 60 * 60 * 1000 );
+                document.cookie = name + "=" + value + ";expires=" + exp.toGMTString();
+            },
+            getCookie( name ){
+                var arr, reg = new RegExp( "(^| )" + name + "=([^;]*)(;|$)" );
+                if( arr = document.cookie.match( reg ) )
+                    return arr[ 2 ];
+                else
+                    return null;
+            },
+            delCookie( name ){
+                var exp = new Date();
+                exp.setTime( exp.getTime() - 1 );
+                var cval = getCookie( name );
+                if( cval != null )
+                    document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+            }
+        },
+    })
+</script>
+{/block}

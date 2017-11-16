@@ -172,6 +172,9 @@ body{
 .property{
     padding-top: 50px;
 }
+.property{
+    padding-top:0;
+}
 /*列表修改*/
 .notice{
     position: relative;
@@ -224,4 +227,7 @@ body{
     text-overflow: ellipsis;
     white-space: nowrap;
     margin-right: 10px;
+}
+.notice .noPower{
+    color: #999;
 }
