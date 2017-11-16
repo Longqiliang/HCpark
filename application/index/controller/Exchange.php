@@ -78,6 +78,10 @@ class Exchange extends Base
             //查询并锁表（product）
             $res = $product->getLockProduct($data['product_id']);
             $sum = $data['num'] * $res['price'];
+            if($data['num']<0){
+              return $this->error("数量不能为负");
+
+            }
             if ($userinfo['score'] < $sum) {
                 $product->rollback();
                 return $this->error('积分不足');
