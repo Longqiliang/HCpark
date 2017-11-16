@@ -83,7 +83,7 @@
             <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg">
         </form>
     </div>
-    <p class="prompt-message">保洁价格：780元/月    实际价格以具体协商为主</p>
+    <p class="prompt-message">保洁价格：<span v-if="subData.park_id==3">780元/月    </span>实际价格以具体协商为主</p>
     <!--<p class="prompt-message">咨询电话：{{subData.propretyMobile}}</p>-->
     <div class="card-more">
         <button class="btn btn-warning btn-warning-outlined btn-sm" @click="goHistory"><i class="icon icon-record"></i>预约记录</button>
@@ -96,7 +96,7 @@
     <div class="my-mask" :class="{'my-show':isShow}">
         <div class="my-mask-back" @click="showMask()"></div>
         <div class="my-mask-content">
-            <h3>拨打电话</h3>
+            <h3>{{tels.length>0?'拨打电话':'暂无电话'}}</h3>
             <ul class="my-phone-list">
                 <li v-for="(tel,index) in tels">
                     <label :for="'tel'+index" @click="changeTelIndex(index)">
@@ -107,7 +107,7 @@
             </ul>
             <ul class="my-btn-group">
                 <li @click="showMask()">取消</li>
-                <li><a :href="'tel:'+tels[telIndex]">确定</a></li>
+                <li v-if="tels.length"><a :href="'tel:'+tels[telIndex]">确定</a></li>
             </ul>
         </div>
     </div>
@@ -180,7 +180,10 @@
             });
             _this.addressOne=_this.subData.build_block?_this.subData.build_block:'';
             _this.addressTwo=_this.subData.office?_this.subData.office:'';
-            this.tels=this.subData.propretyMobile.split('/');
+            if(this.subData.propretyMobile){
+                this.tels=this.subData.propretyMobile.split('/');
+
+            }
         },
         computed:{
             dateStatus:function () {
@@ -197,7 +200,9 @@
                 this.telIndex=index
             },
             showMask(){
-                document.getElementsByClassName('my-radio')[0].checked='checked';
+                if(this.tels.length){
+                    document.getElementsByClassName('my-radio')[0].checked='checked';
+                }
                 this.isShow=!this.isShow
             },
             checkAddress:function () {
