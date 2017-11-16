@@ -377,7 +377,7 @@ class Personal extends Base
                 return $this->error('修改失败', '', WechatUser::getError());
             }
         }
-        $userlist = Db::query("select userid,fee_status,water_status from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
+        $userlist = Db::query("select userid,name,mobile,fee_status,water_status from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
         $this->assign('userlist', json_encode($userlist));
         return $this->fetch();
     }
