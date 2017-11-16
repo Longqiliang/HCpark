@@ -396,17 +396,15 @@ class Personal extends Base
     {
         if (IS_POST) {
             $data = input('');
-            $news = DB::query("select * from tb_news where id =?", [$data['id']]);
-
             //通过
             if ($data['type'] == 1) {
-                $news['status'] = 1;
+                $status=1;
             } //不通过
             elseif ($data['type'] == 2) {
-                $news['status'] = 2;
+                $status =2;
             }
-            $re = $news->save();
-            if ($re) {
+            $news = DB::execute("update  tb_news   set status=? where id =?", [$status,$data['id'],]);
+            if ($news) {
                 return $this->success('成功');
             } else {
                 return $this->error('失败');
