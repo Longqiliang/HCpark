@@ -71,6 +71,9 @@ class Exchange extends Base
         $userid = session('userId');
         if (IS_POST) {
             $data = input('');
+            if($data['num']<0){
+                return $this->error("数量不能为负");
+            }
             //开启事务
             $product->startTrans();
             $userinfo = $user->where('userid', $userid)->find();  //  获取总积分
@@ -78,10 +81,6 @@ class Exchange extends Base
             //查询并锁表（product）
             $res = $product->getLockProduct($data['product_id']);
             $sum = $data['num'] * $res['price'];
-            if($data['num']<0){
-              return $this->error("数量不能为负");
-
-            }
             if ($userinfo['score'] < $sum) {
                 $product->rollback();
                 return $this->error('积分不足');

@@ -47,7 +47,7 @@
             <form class="form-horizontal" method="post">
                 <div class="mail-body">
                     <div class="form-group"><label class="col-sm-2 control-label">商品名称:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="消息的标题" name="title"
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="商品的名称" name="title"
                                                       value='{$info.title}'></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
@@ -55,32 +55,34 @@
                             <input id="input-file" type="file" class="file">
                             <sapn>
                                 {empty name="info.front_cover"}图片预览{else/}
-                                    <img class="front_cover_img"  id="front_cover"  name="front_cover"  src="{info.front_cover}"/>
+                                    <img class="front_cover_img"  id="front_cover"  name="front_cover"  src='{$info.front_cover}'/>
                                 {/empty}
                             </sapn>
                         </div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">商品总数:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="新闻的出处" name="num"
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="商品总数" name="num"
                                                       value='{$info.num}'></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">商品剩余:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="新闻的出处" name="left"
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="商品剩余" name="left"
                                                       value='{$info.left}'></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">商品单价:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="新闻的出处" name="price"
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="商品单价" name="price"
                                                       value='{$info.price}'></div>
                     </div>
 
-
-                    <div class="mail-text h-200">
-                        <div class="summernote">{$info.content}</div>
+                    <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
+                        <div class="summernote col-sm-10">{$info.content}</div>
                         <div class="clearfix"></div>
                     </div>
                     <div class="mail-body text-right tooltip-demo">
 
-                        <button class="btn btn-primary submit-btn post-put" type="button" target-form="form-horizontal" >新增</button>
+                        <button url="{:Url('add')}" class="btn btn-primary ajax-post" target-form="form-horizontal"
+                                data-toggle="tooltip" data-placement="top" data-edit="content">
+                            保存
+                        </button>
                         <a class="btn btn-default" href="javascript:window.history.go(-1);">返回</a>
                         <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
                         <!--target-form="form-horizontal" data-edit="content">-->
