@@ -27,7 +27,7 @@ class Shop extends Admin
             'park_id'=>$park_id
         );
         if(!empty($search)){
-            $map['search']=$search;
+            $map['search']=['like','%'.$search.'%'];
         }
         $ProductModel = new ExchangeProduct();
         $list = $ProductModel->where($map)->order('id desc')->paginate(12);
@@ -46,16 +46,17 @@ class Shop extends Admin
     {
         if (IS_POST) {
             $data = input('');
+            $productModel = new ExchangeProduct();
             $data['create_user'] = $_SESSION['think']['user_auth']['id'];
             if (empty($data['id'])) {
                 unset($data['id']);
+                $info = $productModel->save($data);
+
+            }else{
+                $info = $productModel->save($data,['id'=>$data['id']]);
             }
-            $data['create_time'] = time();
-            $data['left'] = $data['num'];
-            $productModel = new ExchangeProduct();
-            $info = $productModel->save($data);
             if ($info) {
-                return $this->success("新增成功", Url('Shop/index'));
+                return $this->success("保存成功", Url('Shop/index'));
             } else {
                 return $this->error($productModel->getError());
             }
@@ -63,22 +64,38 @@ class Shop extends Admin
             $a = array('1'=>'a','2'=>'b','3'=>'c','4'=>'d','5'=>'e','6'=>'f','7'=>'g','8'=>'h','9'=>'i','10'=>'j','11'=>'k','12'=>'l','13'=>'m','14'=>'n','15'=>'o');
             $front_pic = array_rand($a,1);
             $this->assign('front_pic',$front_pic);
-            $this->assign('msg', '');
-            return $this->fetch('goodedit');
+            $id = input('id');
+            $msg = ExchangeProduct::get($id);
+
+            $this->assign('info', $msg);
+
+            return $this->fetch();
         }
     }
     /*兑换记录*/
     public function recordinfo()
     {
         $id = input('id');
-        $recordlist = ExchangeRecord::where(array('product_id' => $id, 'status' => array('neq', -1)))->order('status asc')->paginate(12);
+        $search = input('search');
+        $map=[
+            'product_id' => $id,
+            'status' => array('neq', -1)
+        ];
+        if(!empty($search)){
+            $map['commodity_code']=['like','%'.$search.'%'];
+        }
+        $recordlist = ExchangeRecord::where($map)->order('status asc')->paginate(12);
         int_to_string($recordlist, array('status' => array(0 => "等待兑换", 1 => "兑换完成")));
         foreach ($recordlist as $child) {
             $child['title'] = isset($child->productinfo->title) ? $child->productinfo->title : "";
-            $child['nickname'] = isset($child->user->name) ? $child->user->name : "";
+            $child['name'] = isset($child->user->name) ? $child->user->name : "";
+            $child['phone'] = isset($child->user->mobile) ? $child->user->mobile : "";
         }
+        //echo ExchangeRecord::getLastSql();
+        $this->assign('product_id',$id);
         $this->assign("list", $recordlist);
-        echo json_encode($recordlist);
+       $this->assign('search',$search);
+
         return $this->fetch();
     }
 
@@ -92,7 +109,7 @@ class Shop extends Admin
         $recordinfo = ExchangeRecord::where('id', $id)->update($data);
         if ($recordinfo) {
 
-            return $this->success('兑换成功');
+            return $this->success('兑换成功','',ExchangeRecord::getLastSql());
         } else {
             return $this->error('兑换失败');
         }
@@ -118,43 +135,6 @@ class Shop extends Admin
 
     }
 
-    /**
-     * 商品修改
-     */
-    public function goodedit()
-    {
-        if (IS_POST) {
-            $data = input('post.');
-            $productModel = new ExchangeProduct();
-            $info = $productModel->validate('product')->save($data, ['id' => input('id')]);
-            if ($info) {
-                return $this->success("修改成功", Url("Shop/index"));
-            } else {
-                return $this->get_update_error_msg($productModel->getError());
-            }
-        } else {
-            $id = input('id');
-            $msg = ExchangeProduct::get($id);
-
-            $this->assign('info', $msg);
-            return $this->fetch();
-        }
-    }
-
-    /**
-     * 删除功能
-     */
-    public function del()
-    {
-        $id = input('id');
-        $data['status'] = '-1';
-        $info = ExchangeProduct::where('id', $id)->update($data);
-        if ($info) {
-            return $this->success("删除成功");
-        } else {
-            return $this->error("删除失败");
-        }
-    }
 
     public function user()
     {

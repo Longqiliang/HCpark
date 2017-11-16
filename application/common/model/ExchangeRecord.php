@@ -15,7 +15,7 @@ class ExchangeRecord extends Model
 {
  public  function  user(){
 
-     return $this->hasOne('WechatUser','userid','create_user');
+     return $this->hasOne('WechatUser','userid','userid');
 
  }
 

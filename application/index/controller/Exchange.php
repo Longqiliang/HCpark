@@ -110,7 +110,7 @@ class Exchange extends Base
                     $re = $userinfo->save();
                     if ($re) {
                         $product->commit();
-                        $map=['commodity_code'=>$info['commodity_code'],'left'=>$res['left']];
+                        $map=['commodity_code'=>$info['commodity_code'],'left'=>$res['left']-$data['num']];
                         return $this->success('成功','',$map);
                     } else {
                         $product->rollback();

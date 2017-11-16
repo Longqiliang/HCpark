@@ -75,7 +75,7 @@
                     <td>{$vo.price}</td>
                     <td>{$vo.status_text}</td>
                     <td>
-                        <a class="btn-sm btn-success"  href="{:Url('Shop/goodedit?id='.$vo['id'])}">修改</a>
+                        <a class="btn-sm btn-success"  href="{:Url('Shop/add?id='.$vo['id'])}">修改</a>
                         <a  class="btn-sm btn-defralut" href="{:Url('Shop/recordinfo?id='.$vo['id'])}">查看兑换记录</a>
                         <a  class="btn-sm btn-danger" href="{:Url('Shop/del?id='.$vo['id'])}" class="confirm ajax-del">删除</a>
                     </td>
