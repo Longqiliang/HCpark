@@ -43,10 +43,10 @@ class Personal extends Base
         $user_id = session("userId");
         $user = new  WechatUser();
         $userinfo = $user->checkUserExist($user_id);
-        $company_check=$userinfo['manage']==1?'yes':'no';
-        $news_check=$userinfo['tagid']==1?'yes':'no';
-        $userinfo['company_check']=$company_check;
-        $userinfo['news_check']=$news_check;
+        $company_check = $userinfo['manage'] == 1 ? 'yes' : 'no';
+        $news_check = $userinfo['tagid'] == 1 ? 'yes' : 'no';
+        $userinfo['company_check'] = $company_check;
+        $userinfo['news_check'] = $news_check;
         $this->assign("party_branch", $userinfo['party_branch']);
         $this->assign("userinfo", $userinfo);
         return $this->fetch();
@@ -369,25 +369,55 @@ class Personal extends Base
     public function companyManage()
     {
         $userid = session('userId');
-        if(IS_POST){
-           $data=input('');
-           $re = WechatUser::save($data,['userid'=>$data['userid']]);
-           if($re){
-               return $this->success('修改成功','',$re);
-           }else{
-               return $this->error('修改失败','',WechatUser::getError());
-           }
+        if (IS_POST) {
+            $data = input('');
+            $re = WechatUser::save($data, ['userid' => $data['userid']]);
+            if ($re) {
+                return $this->success('修改成功', '', $re);
+            } else {
+                return $this->error('修改失败', '', WechatUser::getError());
+            }
         }
         $userlist = Db::query("select userid,fee_status,water_status from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
         $this->assign('user_id', json_encode($userlist));
         return $this->fetch();
     }
-   /* 我的审核（用于审核新闻的推送功能）*/
-    public  function  myCheck(){
+
+    /* 我的审核（用于审核新闻的推送功能）*/
+    public function myCheck()
+    {
         $news = DB::query("select * from tb_news where status =0  and type<=3");
-        $this->assign('news',$news);
+        $this->assign('news', json_encode($news));
         return $this->fetch();
+
     }
+
+    public function newsCheck()
+    {
+        if (IS_POST) {
+            $data = input('');
+            $news = DB::query("select * from tb_news where id =?", [$data['id']]);
+
+            //通过
+            if ($data['type'] == 1) {
+                $news['status'] = 1;
+            } //不通过
+            elseif ($data['type'] == 2) {
+                $news['status'] = 2;
+            }
+            $re = $news->save();
+            if ($re) {
+                return $this->success('成功');
+            } else {
+                return $this->error('失败');
+            }
+        } else {
+            $id = input('id');
+            $news = DB::query("select * from tb_news where id =?  and type<=3", [$id]);
+            return $this->fetch();
+        }
+    }
+
 
     /*我的服务*/
     public function service()
@@ -1041,15 +1071,14 @@ class Personal extends Base
     }
 
 
-
-
     //推荐关注
     public function recommend()
     {
         return $this->fetch();
     }
 
-    public function version(){
+    public function version()
+    {
         return $this->fetch();
     }
 
