@@ -1,0 +1,97 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>我的审核</title>
+<link rel="stylesheet" href="/index/css/personal/collection.css">
+<style>
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="content ">
+    <div class="notices">
+        <div class="notice notify">
+            <a :href="'/index/personal/newsCheck/id/'+item.id" class="list clear" v-for="item in message">
+                <div class="list-right">
+                    <div class="title ">{{item.title}}</div>
+                    <div class="clear time">
+                        <span class="fl source">{{item.source}}</span>
+                        <span class="fl ">{{item.create_time*1000 | timeToString}}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    </div>
+    <div v-if="!message.length" class="content">
+        <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    y=newTime.getFullYear();
+            if(dt<10){
+                dt='0'+dt;
+            }
+            if(m<10){
+                m='0'+m;
+            }
+            return y+'-'+m+'-'+dt
+        }
+    });
+    var app=new Vue({
+        el:'#app',
+        data:{
+            message:{$news},
+            loading:false,
+            canLoad:true
+        },
+        created(){
+            if(this.message.length<6){
+                this.canLoad=false
+            }
+        },
+        methods:{
+            loadMore(){
+                var _this=this;
+                if(_this.loading || !_this.canLoad){
+                    return
+                }
+                return;
+                _this.loading = true;
+                _this.$http.post('/index/personal/messageMore',{num:_this.message.length}).then(function (res) {
+                    if(res.data.code!=0){
+                        var data=JSON.parse(res.data.data);
+                        if(data.length<6){
+                            _this.canLoad=false;
+                        }
+                        for(var i=0;i<data.length;i++){
+                            _this.message.push(data[i])
+                        }
+                    }else{
+                        _this.canLoad=false;
+                    }
+                    _this.loading = false;
+                },function (res) {
+                    _this.loading = false;
+                })
+            },
+            //'\n'转li标签结构
+            nToLi(str){
+                if (!str) { return ''}
+                var html='<li>';
+                html+=str.split('\n').join('</li><li>');
+                return html += '</li>'
+            },
+        }
+    })
+</script>
+{/block}

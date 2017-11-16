@@ -78,6 +78,9 @@ section{
     line-height: 1.5;
     word-wrap:break-word;
 }
+section.checking{
+    padding-bottom: 10rem;
+}
 section img{
     width: 100%;
 }
@@ -230,6 +233,18 @@ section img{
     max-width: 100%;
     margin: 0 auto;
 }
-
+footer.news_footer{
+    width:100%;
+    position: fixed;
+    bottom:0;
+    left:0;
+}
+/*按钮样式*/
+.my-btn-box{width:100%;padding:3rem 4vw;display:-webkit-flex;display:flex;position: relative;box-sizing: border-box;background-color: #fff}
+.my-btn-box>.my-btn-default:not(:last-child){margin-right:1rem}
+.my-btn-default{display:block;width:100%;margin:0 auto;font-size:1.5rem;text-align:center;line-height:4rem;height:4rem;border-radius:5px;border:1px solid #f1f1f1;outline:none}
+.my-btn-success{border:none;color:#fff;background:#59B7F3}
+.my-btn-error{border:none;color:#fff;background:#FF7176}
+.my-btn-warning{border:none;color:#fff;background:#FFAB51}
 
 

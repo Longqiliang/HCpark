@@ -1,0 +1,111 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
+<style>
+
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <header class="header">
+        <h2>{{info.title}}</h2>
+        <div class=" my-news-header">
+            <div>
+                <span>{{info.create_time*1000 | timeToString}}</span>
+                <span>{{info.source}}</span>
+            </div>
+        </div>
+    </header>
+    <section class="checking" v-html="info.content"></section>
+    <footer class="news_footer">
+        <div class="my-btn-box">
+            <button class="my-btn-default my-btn-warning" @click="toCheck(false)">审核不通过</button>
+            <button class="my-btn-default my-btn-success" @click="toCheck(true)">审核通过</button>
+        </div>
+    </footer>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            var newTime = new Date(time);
+            var m = newTime.getMonth()+1,
+                    dt=newTime.getDate(),
+                    y=newTime.getFullYear();
+            if(dt<10){
+                dt='0'+dt;
+            }
+            if(m<10){
+                m='0'+m;
+            }
+            return y+'-'+m+'-'+dt
+        }
+    });
+    var app = new Vue({
+        el: '#app',
+        data:{
+            info:{$info},
+        },
+        methods:{
+            toCheck(isPass){
+                var _this = this;
+                var data = {
+                    id:_this.info.id,
+                };
+                if(isPass){
+                    data.type = 1;
+                    _this.mySwal('','确定通过审核？',data)
+                }else{
+                    data.type = 2
+                    _this.mySwal('','确定不通过审核？',data)
+                }
+            },
+            mySwal(title,text,data){
+                var _this = this;
+                swal({
+                    title: title,
+                    text: text,
+                    showCancelButton: true,
+                    confirmButtonColor: "#59B7F3",
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                },
+                function(isConfirm){
+                    if(!isConfirm){return}
+                    _this.$http.post("/index/personal/newsCheck",data).then(function (res) {
+                        if(res.data.code==1){
+                            swal({
+                                title: '',
+                                text: '审核成功！',
+                                type:'success',
+                                confirmButtonColor: "#59B7F3",
+                                confirmButtonText: "确定"
+                            })
+                        }else{
+                            swal({
+                                title: '',
+                                text: res.data.msg,
+                                type:'error',
+                                confirmButtonColor: "#59B7F3",
+                                confirmButtonText: "确定"
+                            })
+                        }
+                    },function (res) {
+                        swal({
+                            title: '',
+                            text: '请求失败，请重试！',
+                            type:'error',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        })
+                    })
+                });
+            }
+        }
+    })
+</script>
+{/block}
