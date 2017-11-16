@@ -414,6 +414,7 @@ class Personal extends Base
         } else {
             $id = input('id');
             $news = DB::query("select * from tb_news where id =?  and type<=3", [$id]);
+            $this->assign('info',json_encode($news));
             return $this->fetch();
         }
     }
