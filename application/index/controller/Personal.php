@@ -379,7 +379,7 @@ class Personal extends Base
             }
         }
         $userlist = Db::query("select userid,fee_status,water_status from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
-        $this->assign('user_id', json_encode($userlist));
+        $this->assign('user_id', json_encode($userlist[0]));
         return $this->fetch();
     }
 
