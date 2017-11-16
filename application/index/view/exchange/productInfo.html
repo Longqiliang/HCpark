@@ -122,9 +122,9 @@
             isSubmit:false,
             showMask:false,
             subData:{
-                name:'',
-                remark:'',
-                phone:'',
+//                name:'',
+//                remark:'',
+//                phone:'',
                 product_id:'',
                 num:''
             },
@@ -133,20 +133,33 @@
         methods: {
             inputChangeNumber(){
                 var _this=this;
-                if(_this.buyNumber > _this.baseData.left){
+                if(isNaN(_this.buyNumber) || _this.buyNumber<0){
                     this.$toast({
-                        message: '商品剩余不足',
-                        position: 'middle',
+                        message: '数量超出范围~',
+                        position: 'bottom',
                         duration: 2000
                     });
-                    _this.buyNumber = _this.baseData.left
+                    setTimeout(function () {
+                        _this.buyNumber = 0
+                    },500)
+                }else if(_this.buyNumber > _this.baseData.left){
+                    this.$toast({
+                        message: '数量超出范围~',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    setTimeout(function () {
+                        _this.buyNumber = _this.baseData.left
+                    },500)
                 }else if(_this.buyNumber*_this.baseData.price > _this.baseData.score){
                     this.$toast({
-                        message: '您的积分不足',
-                        position: 'middle',
+                        message: '您的积分不足~',
+                        position: 'bottom',
                         duration: 2000
                     });
-                    _this.buyNumber = parseInt(_this.baseData.score/_this.baseData.price)
+                    setTimeout(function () {
+                        _this.buyNumber = parseInt(_this.baseData.score/_this.baseData.price)
+                    },500)
                 }
             },
             clickChangeNumber(toggle){
@@ -156,7 +169,8 @@
                         _this.buyNumber = parseInt(_this.buyNumber) + 1;
                         _this.inputChangeNumber();
                     }else{
-                        _this.buyNumber = 1
+                        _this.buyNumber = 1;
+                        _this.inputChangeNumber();
                     }
                 }else{
                     if(_this.buyNumber){
@@ -195,7 +209,18 @@
                             return;
                         }
 //                        发起请求
-                        _this.goBuy()
+                        swal({
+                            title: "提示",
+                            text: "是否确认兑换",
+                            confirmButtonColor: "#FFA81D",
+                            confirmButtonText: "确定",
+                            showCancelButton: true,
+                            cancelButtonText: "取消",
+                        },function(isConfirm){
+                            if(isConfirm){
+                            _this.goBuy()
+                            }
+                        })
                     }else{
                         _this.$toast({
                             message: '您的积分不足',
@@ -209,21 +234,6 @@
             },
             goBuy(){
                 var _this = this;
-//                if(!_this.subData.name){
-//                    this.$toast({
-//                        message: '请输入您的姓名',
-//                        position: 'middle',
-//                        duration: 2000
-//                    });
-//                    return;
-//                }else if(!_this.subData.phone){
-//                    this.$toast({
-//                        message: '请输入您的电话',
-//                        position: 'middle',
-//                        duration: 2000
-//                    });
-//                    return;
-//                }
                 _this.subData.product_id = _this.baseData.id;
                 _this.subData.num = _this.buyNumber;
                 _this.$http.post("{:Url('Exchange/productInfo')}",_this.subData).then(function (response) {

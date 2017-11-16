@@ -1,6 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>积分商城</title>
 <link rel="stylesheet" href="/index/css/exchange/index.css">
 <style>
 
@@ -11,7 +12,7 @@
 <div id="app">
     <div class="banner">
         <div class="score">
-            <span>1/2</span>
+            <span>{{baseData.score}}</span>
         </div>
         <div class="record" @click="jumpTo(2)">兑换记录</div>
     </div>
