@@ -33,6 +33,7 @@ use think\Exception;
 use think\Session;
 use wechat\TPWechat;
 use think\Loader;
+use think\log;
 
 
 class Personal extends Base
@@ -41,11 +42,13 @@ class Personal extends Base
     {
         $user_id = session("userId");
         $user = new  WechatUser();
-        $partyinfo = $user->where(['userid' => $user_id])->find();
         $userinfo = $user->checkUserExist($user_id);
-        $this->assign("party_branch", $partyinfo['party_branch']);
+        $company_check=$userinfo['is_manage']==1?'yes':'no';
+        $news_check=$userinfo['tagid']==1?'yes':'no';
+        $userinfo['company_check']=$company_check;
+        $userinfo['news_check']=$news_check;
+        $this->assign("party_branch", $userinfo['party_branch']);
         $this->assign("userinfo", $userinfo);
-
         return $this->fetch();
     }
 
@@ -84,16 +87,16 @@ class Personal extends Base
         $car_card = "";
         //从车卡中取身份证号和车牌号
         $car = CarparkService::where(['user_id' => $user_id, 'park_id' => $info['park_id']])->order("create_time desc")->select();
-        if(!empty($info['car_card'])){
-            $car_card=$info['car_card'];
-        }else{
+        if (!empty($info['car_card'])) {
+            $car_card = $info['car_card'];
+        } else {
             if ($car) {
                 $car_card = $car[0]["car_card"];
             }
         }
-        if(!empty($info['people_card'])){
-            $people_card=$info['people_card'];
-        }else{
+        if (!empty($info['people_card'])) {
+            $people_card = $info['people_card'];
+        } else {
             if ($car) {
                 $people_card = $car[0]["people_card"];
             }
@@ -105,8 +108,8 @@ class Personal extends Base
 
         if (empty($office)) {
             if ($water) {
-                 $water= explode("幢",$water[0]['address']);
-                $office=$water[1];
+                $water = explode("幢", $water[0]['address']);
+                $office = $water[1];
             }
         }
 
@@ -114,21 +117,20 @@ class Personal extends Base
         $departmentXK = WechatDepartment::where('parentid', 4)->select();
         //滨江人工智能产业园所有企业
         $departmentBj = WechatDepartment::where('parentid', 92)->select();
-
         $park_xk = ['park_id' => 3, 'park_name' => '希垦科技园', 'departmentlist' => array()];
         $park_bj = ['park_id' => 80, 'park_name' => '人工智能产业园', 'departmentlist' => array()];
-        $xk = $this->departmentData( $departmentXK ,$park_xk);
-        $bj=  $this->departmentData( $departmentBj ,$park_bj);
-        $departmentlist=array();
+        $xk = $this->departmentData($departmentXK, $park_xk);
+        $bj = $this->departmentData($departmentBj, $park_bj);
+        $departmentlist = array();
         if ($info['park_id'] == 3) {
             $info['park_name'] = "希垦科技园区";
-            array_push($departmentlist,$xk);
-            array_push($departmentlist,$bj);
+            array_push($departmentlist, $xk);
+            array_push($departmentlist, $bj);
 
         } else {
             $info['park_name'] = "人工智能产业园区";
-            array_push($departmentlist,$bj);
-            array_push($departmentlist,$xk);
+            array_push($departmentlist, $bj);
+            array_push($departmentlist, $xk);
         };
         $data = [
             'name' => $info['name'],
@@ -157,13 +159,8 @@ class Personal extends Base
     }
 
     //
-    public function departmentData($department,$data)
+    public function departmentData($department, $data)
     {
-
-
-
-
-
         foreach ($department as $key => $value) {
             $list = array();
             if (isset($value->room)) {
@@ -177,13 +174,9 @@ class Personal extends Base
                 'roomlist' => $list
             ];
             array_push($data['departmentlist'], $map);
-
         }
-
-
         return $data;
     }
-
 
     /*个人收藏*/
     public function collection()
@@ -205,7 +198,6 @@ class Personal extends Base
             $list2[$k]['views'] = $v->News->views;
             $list2[$k]['source'] = $v->News->source;
         }
-
         $list3 = CollectModel::where(['user_id' => $user_id, 'type' => 3])
             ->order('create_time desc')
             ->limit(6)->select();
@@ -222,12 +214,10 @@ class Personal extends Base
             $list4[$k]['views'] = $v->News->views;
             $list4[$k]['source'] = $v->News->source;
         }
-
         $this->assign('list1', $list1);
         $this->assign('list2', $list2);
         $this->assign('list3', $list3);
         $this->assign('list4', $list4);
-
         return $this->fetch();
 
     }
@@ -374,6 +364,39 @@ class Personal extends Base
 
 
     }
+
+    /*企业管理*/
+    public function companyManage()
+    {
+        $userid = session('userId');
+        if(IS_POST){
+           $data=input('');
+           $re = WechatUser::save($data,['userid'=>$data['userid']]);
+           if($re){
+               return $this->success('修改成功','',$re);
+           }else{
+               return $this->error('修改失败','',WechatUser::getError());
+           }
+        }
+        $userlist = Db::query("select userid,fee_status,water_status from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
+        $this->assign('user_id', json_encode($userlist));
+        return $this->fetch();
+    }
+   /* 我的审核（用于审核新闻的推送功能）*/
+    public  function  myCheck(){
+
+
+        $news = DB::query("select * from tb_news where status =0  and type<=3");
+       $this->assign('news',$news);
+       return $this->fetch();
+
+
+
+
+
+    }
+
+
 
 
     /*我的服务*/
@@ -975,7 +998,7 @@ class Personal extends Base
         $people_card = input('people_card');
         $car_card = input('car_card');
         $name = input('user_name');
-        $gender =input('gender');
+        $gender = input('gender');
 
 
         //echo $userId;
@@ -992,25 +1015,25 @@ class Personal extends Base
         $data = [
             'userid' => $userId,
             'department' => [$department],
-            ];
-        $map=[
+        ];
+        $map = [
             'department' => $department,
             'park_id' => $park_id,
             'company_address' => $room
         ];
-        if(!empty($people_card)){
-            $map['people_card']=$people_card;
+        if (!empty($people_card)) {
+            $map['people_card'] = $people_card;
         }
-        if(!empty($car_card)){
-            $map['car_card']=$car_card;
+        if (!empty($car_card)) {
+            $map['car_card'] = $car_card;
         }
-        if(!empty($name)){
-            $map['name']=$name;
-            $data['name']=$name;
+        if (!empty($name)) {
+            $map['name'] = $name;
+            $data['name'] = $name;
         }
-        if(!empty($gender)){
-            $map['gender']=$gender;
-            $data['gender']=$gender;
+        if (!empty($gender)) {
+            $map['gender'] = $gender;
+            $data['gender'] = $gender;
         }
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
@@ -1028,29 +1051,7 @@ class Personal extends Base
     }
 
 
-     //test
-    public function test()
-    {
-        Loader::import('wechat\TPWechat', EXTEND_PATH);
-        $wechat = new TPWechat(config('party'));
-        Db::startTrans();
-        try {
-            $re = $wechat->getDepartment();
-            $res = $wechat->getServerIp();
-            if ($res == false || $re == false) {
-                throw new Exception($wechat->Message() . "111");
-            }
-            Db::commit();
-        } catch (Exception $ex) {
-            Db::rollback();
-            Log::error("msg:" . $ex->getMessage());
-            return json_encode(['code' => 0, 'data' => "test"]);
-        };
-        //$res = $wechat->getDepartment();
-        //$res = $wechat->getServerIp();
-        return json_encode($re);
 
-    }
 
     //推荐关注
     public function recommend()

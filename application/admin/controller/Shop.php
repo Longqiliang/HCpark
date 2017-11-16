@@ -119,13 +119,12 @@ class Shop extends Admin
     /*删除兑换记录*/
     public function delrecord()
     {
-        $id = input('id');
+        $id = (array)input('id/a');
 
         $data = [
             'status' => -1
-
         ];
-        $recordinfo = ExchangeRecord::where('id', $id)->update($data);
+        $recordinfo = ExchangeRecord::where(['id'=>array('in',$id)])->update($data);
         if ($recordinfo) {
 
             return $this->success('删除成功');
@@ -135,15 +134,26 @@ class Shop extends Admin
 
     }
 
-
+    /**
+     * 删除商品功能
+     */
+    public function del(){
+        $id = (array)input('id/a');
+        $data['status'] = '-1';
+        $info = ExchangeProduct::where(['id'=>array('in',$id)])->update($data);
+        if($info) {
+            return $this->success("删除成功");
+        }else{
+            return $this->error("删除失败");
+        }
+    }
     public function user()
     {
         $UserProfile = new  WechatUser();
-        $Record = new ExchangeRecord();
         $userlist = $UserProfile->paginate(12);
 
             int_to_string($userlist, array
-            ('status' => array(0 => '禁用', 1 => '启用')));
+            ('status' => array(1 => '启用', 2 => '禁用')));
 
             $this->assign("list", $userlist);
 

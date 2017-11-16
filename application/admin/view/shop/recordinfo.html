@@ -46,11 +46,10 @@
             <h2>兑换记录管理</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteGroup')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('delrecord')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
-                <a data-toggle="modal" class="btn btn-sm btn-primary" href="{:Url('Shop/add')}">添加商品</a>
             </div>
         </div>
 
@@ -75,7 +74,7 @@
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr>
-                    <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                    <td> <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}"></td>
                     <td>{$vo.id}</td>
                     <td>{$vo.title}</td>
                     <td>{$vo.name}</td>
@@ -85,14 +84,23 @@
                     <td>{$vo.left_score}</td>
                     <td>{$vo.commodity_code}</td>
                     <td>{$vo.create_time|time_format='Y-m-d H:i'}</td>
-                    <td>{$vo.status_text}</td>
+                    <td>
+                        {eq name="vo.status" value="0"}
+                        <span >等待兑换</span>
+                        {/eq}
+                        {eq name="vo.status" value="1"}
+                        <span class="txt-success">兑换成功</span>
+                        {/eq}
+
+
+                    </td>
                     <td>
                         {eq name="vo.status" value="0"}
 
                         <a class="btn-sm btn-success" onclick="exchange({$vo.id})">确认兑换</a>
-                        {else/}确认兑换
+                        {else/}<span class="btn-default2">确认兑换</span>
                         {/eq}
-                        <a href="{:Url('Shop/delrecord?id='.$vo['id'])}" class="confirm ajax-del">删除</a>
+                        <a href="{:Url('Shop/delrecord?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-danger">删除</a>
                     </td>
                 </tr>
                 {/volist}
@@ -143,9 +151,9 @@
             success: function (data) {
                 if (data.code == 1) {
                     updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
-                    /*setTimeout(function () {
+                    setTimeout(function () {
                         location.href = data.url;
-                    }, 3000);*/
+                    }, 3000);
                 } else {
                     updateAlert(data.msg, 'error');
                 }

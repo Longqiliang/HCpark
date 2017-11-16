@@ -44,7 +44,7 @@
             <h2>商品管理</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('deleteGroup')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l  confirm ajax-del " url="{:Url('del')}" data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -68,7 +68,7 @@
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr>
-                    <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                    <td> <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}"></td>
                     <td>{$vo.title|msubstr=0,20}</td>
                     <td>{$vo.left}</td>
                     <td>{$vo.num}</td>
@@ -77,7 +77,7 @@
                     <td>
                         <a class="btn-sm btn-success"  href="{:Url('Shop/add?id='.$vo['id'])}">修改</a>
                         <a  class="btn-sm btn-defralut" href="{:Url('Shop/recordinfo?id='.$vo['id'])}">查看兑换记录</a>
-                        <a  class="btn-sm btn-danger" href="{:Url('Shop/del?id='.$vo['id'])}" class="confirm ajax-del">删除</a>
+                        <a   href="{:Url('Shop/del?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-danger">删除</a>
                     </td>
                 </tr>
                 {/volist}
