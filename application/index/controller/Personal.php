@@ -17,6 +17,7 @@ use app\index\model\WechatDepartment;
 use app\index\model\PersonalMessage;
 use app\index\model\CompanyService;
 use app\index\model\CompanyApplication;
+use function PHPSTORM_META\type;
 use think\Db;
 use app\index\model\FeePayment;
 use app\index\model\PropertyServer;
@@ -370,14 +371,25 @@ class Personal extends Base
         $userid = session('userId');
         if (IS_POST) {
             $data = input('');
-            $re = WechatUser::save($data, ['userid' => $data['userid']]);
-            if ($re) {
-                return $this->success('修改成功', '', $re);
-            } else {
-                return $this->error('修改失败', '', WechatUser::getError());
+            //改权限
+            if ($data['type'] == 1) {
+                unset($data['type']);
+                $re = WechatUser::save($data, ['userid' => $data['userid']]);
+                if ($re) {
+                    return $this->success('修改成功', '', $re);
+                } else {
+                    return $this->error('修改失败', '', WechatUser::getError());
+                }
+            } elseif ($data['type'] == 2) {
+                $re = DB::execute("update  tb_park_company   set company_code=? where department =?", [$data['company_code'], $data['department']]);
+                if ($re) {
+                    return $this->success('修改成功', '', $re);
+                } else {
+                    return $this->error('修改失败', '', DB::getError());
+                }
             }
         }
-        $userlist = Db::query("select userid,name,mobile,fee_status,water_status from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
+        $userlist = Db::query("select userid,name,mobile,fee_status,water_status,department from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
         $this->assign('userlist', json_encode($userlist));
         return $this->fetch();
     }
@@ -397,12 +409,12 @@ class Personal extends Base
             $data = input('');
             //通过
             if ($data['type'] == 1) {
-                $status=1;
+                $status = 1;
             } //不通过
             elseif ($data['type'] == 2) {
-                $status =2;
+                $status = 2;
             }
-            $news = DB::execute("update  tb_news   set status=? where id =?", [$status,$data['id'],]);
+            $news = DB::execute("update  tb_news   set status=? where id =?", [$status, $data['id'],]);
             if ($news) {
                 return $this->success('成功');
             } else {
@@ -411,7 +423,7 @@ class Personal extends Base
         } else {
             $id = input('id');
             $news = DB::query("select * from tb_news where id =?  and type<=3", [$id]);
-            $this->assign('info',json_encode($news[0]));
+            $this->assign('info', json_encode($news[0]));
             return $this->fetch();
         }
     }
