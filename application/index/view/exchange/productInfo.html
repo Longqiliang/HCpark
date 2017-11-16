@@ -239,9 +239,9 @@
                 _this.$http.post("{:Url('Exchange/productInfo')}",_this.subData).then(function (response) {
                     console.log(response)
                     if(response.data.code === 1){
-                        _this.commodity_code = response.data.data;
+                        _this.commodity_code = response.data.data.commodity_code;
+                        _this.baseData.left -= response.data.data.left;
                         _this.baseData.score -= _this.buyNumber * _this.baseData.price;
-                        _this.baseData.left -= _this.buyNumber;
                         _this.buyNumber = 0;
                         swal({
                             title: "",
@@ -256,6 +256,8 @@
                             _this.showMask = true;
                         })
                     }else{
+                        _this.buyNumber = 0;
+                        _this.baseData.left -= response.data.data.left;
                         swal({
                             title: "",
                             text: response.data.msg,
