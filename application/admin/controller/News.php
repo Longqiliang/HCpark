@@ -136,7 +136,7 @@ class News extends Admin
                 $result = $news->validate(true)->save($_POST);
                 $inputid = Db::name('news')->getLastInsID();
                 //添加新闻时推送给审核人
-
+                $this-> sendCheck($inputid);
 
             }
 
@@ -220,11 +220,10 @@ class News extends Admin
         foreach ($user as $value){
             $touser .='|'.$value;
         }
-
         $message = [
             "title" => "新闻审核通知",
-            "description" => "操作员：  "."\n您有新的新闻/通知/好文需要审核，点击查看详情",
-            "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/8/can_check/no/type/2/create_time/' . $data['create_time']
+            "description" => "操作员".session('user_auth')['username']."\n您有新的新闻/通知/好文需要审核，点击查看详情",
+            "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/personal/newsCheck/id/' . $id
         ];
 
         $res = $service->sendPersonalMessage($message,$touser);

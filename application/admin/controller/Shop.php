@@ -158,7 +158,7 @@ class Shop extends Admin
         $userlist = $UserProfile->where(['mobile'=>['like','%'.$search.'%']])->whereOr(['name'=>['like','%'.$search.'%']])->paginate(12);
 
             int_to_string($userlist, array
-            ('status' => array(1 => '启用', 2 => '禁用')));
+            ('status' => array(0=>'未关注', 1 => '启用', 2 => '已取消关注')));
 
             $this->assign("list", $userlist);
             $this->assign('search',$search );

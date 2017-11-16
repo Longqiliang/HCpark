@@ -403,6 +403,7 @@ class Personal extends Base
 
     }
 
+    //新闻审核详情页
     public function newsCheck()
     {
         if (IS_POST) {
