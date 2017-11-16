@@ -83,12 +83,12 @@ class Exchange extends Base
             $sum = $data['num'] * $res['price'];
             if ($userinfo['score'] < $sum) {
                 $product->rollback();
-                return $this->error('积分不足');
+                return $this->error('积分不足','',$product['left']);
             }
             if ($res->left < $data['num']) {
                 //事务回滚
                 $product->rollback();
-                return $this->error('商品数量不足');
+                return $this->error('商品数量不足','',$product['left']);
             }
             $temp = $res->left - $data['num'];
             //更新那一行表数据（left=left-num）
@@ -110,18 +110,19 @@ class Exchange extends Base
                     $re = $userinfo->save();
                     if ($re) {
                         $product->commit();
-                        return $this->success('成功','',$info['commodity_code']);
+                        $map=['commodity_code'=>$info['commodity_code'],'left'=>$product['left']];
+                        return $this->success('成功','',$map);
                     } else {
                         $product->rollback();
-                        return $this->error("更新用户剩余积分错误");
+                        return $this->error("更新用户剩余积分错误",'',$product['left']);
                     }
                 } else {
                     $product->rollback();
-                    return $this->error("更新兑换记录表失败");
+                    return $this->error("更新兑换记录表失败",'',$product['left']);
                 }
             } else {
                 $product->rollback();
-                return $this->error("更新商品数量失败");
+                return $this->error("更新商品数量失败",'',$product['left']);
             }
 
         } else {
