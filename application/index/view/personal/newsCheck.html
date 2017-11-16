@@ -49,6 +49,7 @@
         el: '#app',
         data:{
             info:{$info},
+            isSubmit:false
         },
         methods:{
             toCheck(isPass){
@@ -56,6 +57,16 @@
                 var data = {
                     id:_this.info.id,
                 };
+                if(_this.isSubmit){
+                    swal({
+                        title: '',
+                        text: '正在请求中···',
+                        type:'warning',
+                        confirmButtonColor: "#59B7F3",
+                        confirmButtonText: "确定",
+                    })
+                    return
+                }
                 if(isPass){
                     data.type = 1;
                     _this.mySwal('','确定通过审核？',data)
@@ -70,13 +81,16 @@
                     title: title,
                     text: text,
                     showCancelButton: true,
+                    type:'info',
                     confirmButtonColor: "#59B7F3",
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                 },
                 function(isConfirm){
                     if(!isConfirm){return}
+                    _this.isSubmit = true;
                     _this.$http.post("/index/personal/newsCheck",data).then(function (res) {
+                        _this.isSubmit = false;
                         if(res.data.code==1){
                             swal({
                                 title: '',
@@ -84,6 +98,8 @@
                                 type:'success',
                                 confirmButtonColor: "#59B7F3",
                                 confirmButtonText: "确定"
+                            },function (isConfirm) {
+                                window.location.replace('/index/personal/myCheck')
                             })
                         }else{
                             swal({
@@ -95,6 +111,7 @@
                             })
                         }
                     },function (res) {
+                        _this.isSubmit = true;
                         swal({
                             title: '',
                             text: '请求失败，请重试！',

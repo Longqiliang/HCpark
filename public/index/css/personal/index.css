@@ -250,6 +250,12 @@ ul.list li:after{
 .icon-recommend{
     background-image: url(/index/images/personal/icon-recommend.png);
 }
+.icon-version{
+    background-image: url(/index/images/personal/icon-version.png);
+}
+.icon-check{
+    background-image: url(/index/images/personal/icon-check.png);
+}
 .ft-right{
     float: right;
     color: #999;
