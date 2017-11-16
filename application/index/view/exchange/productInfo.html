@@ -192,7 +192,7 @@
 //                    商品是否剩余
                     if(_this.baseData.left == 0){
                         _this.$toast({
-                        message: '该商品已被兑换完',
+                        message: '该宝贝已被兑换完',
                         position: 'bottom',
                         duration: 2000
                         });
@@ -241,8 +241,8 @@
                     if(response.data.code === 1){
                         _this.commodity_code = response.data.data;
                         _this.baseData.score -= _this.buyNumber * _this.baseData.price;
-                        _this.buyNumber = 0;
                         _this.baseData.left -= _this.buyNumber;
+                        _this.buyNumber = 0;
                         swal({
                             title: "",
                             text: "兑换成功，请凭兑换码到物业兑换商品",
