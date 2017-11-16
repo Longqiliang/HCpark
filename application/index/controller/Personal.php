@@ -105,7 +105,6 @@ class Personal extends Base
         $office = !empty($info['company_address']) ? $info['company_address'] : "";
         //从送水地点中取 办公地址
         $water = WaterService::where(['userid' => $user_id, 'park_id' => $info['park_id']])->order("create_time desc")->select();
-
         if (empty($office)) {
             if ($water) {
                 $water = explode("幢", $water[0]['address']);
@@ -379,7 +378,7 @@ class Personal extends Base
             }
         }
         $userlist = Db::query("select userid,fee_status,water_status from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
-        $this->assign('user_id', json_encode($userlist[0]));
+        $this->assign('userlist', json_encode($userlist));
         return $this->fetch();
     }
 
