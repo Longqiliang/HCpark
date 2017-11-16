@@ -43,7 +43,7 @@ class Personal extends Base
         $user_id = session("userId");
         $user = new  WechatUser();
         $userinfo = $user->checkUserExist($user_id);
-        $company_check=$userinfo['is_manage']==1?'yes':'no';
+        $company_check=$userinfo['manage']==1?'yes':'no';
         $news_check=$userinfo['tagid']==1?'yes':'no';
         $userinfo['company_check']=$company_check;
         $userinfo['news_check']=$news_check;
@@ -384,20 +384,10 @@ class Personal extends Base
     }
    /* 我的审核（用于审核新闻的推送功能）*/
     public  function  myCheck(){
-
-
         $news = DB::query("select * from tb_news where status =0  and type<=3");
-       $this->assign('news',$news);
-       return $this->fetch();
-
-
-
-
-
+        $this->assign('news',$news);
+        return $this->fetch();
     }
-
-
-
 
     /*我的服务*/
     public function service()
