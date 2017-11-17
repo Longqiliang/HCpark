@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style>
+
+    .modal-dialog {
+        margin: 200px auto;
+    }
+
+    .mail-box .mail-ontact {
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+
+    .mail-box .mail-subject {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+
+    .mail-subject-div {
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-box .mail-main {
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-date {
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+
+    @media only screen and (max-width: 550px) {
+        .mail-date {
+            display: none;
+        }
+    }
+
+    .list_banner {
+        width: 80px
+    }
+
+    .list_type {
+        width: 80px
+    }
+
+
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+
+            <h2>商标查询 (未联系数量：1)</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+
+
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
+        </div>
+        <div class="mail-box">
+
+
+            <form id="form" class="form-horizontal" method="post">
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>查询信息:</label>
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>联系人:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" readonly="readonly" placeholder="联系人" class="form-control form_title" name="name" value="{$info.name}">
+
+                    </div>
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>联系方式:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" readonly=ture class="form-control form_title" name="mobile" value="{$info.mobile}">
+                    </div>
+                    <div class="col-lg-1 text-right control-label">
+                        <label>商标类型:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" readonly=ture class="form-control form_title" name="type"    value="{$info.type}">
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>中文描述:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input  readonly=ture type="text"  class="form-control form_title" name="chinese_description" value="{$info.chinese_description}">
+                    </div>
+                    <div class="col-lg-1 text-right control-label">
+                        <label>英文描述:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input  readonly=ture type="text"  class="form-control form_title"  name="english_description" value="{$info.english_description}">
+                    </div>
+                    <div class="col-lg-1 text-right control-label">
+                        <label>商标描述:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input  readonly=ture type="text"  class="form-control form_title"   value="{$info.trademark_description}">
+                    </div>
+
+
+
+
+                </div>
+
+
+                <div class="form-group">
+
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>数字描述:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input  readonly=ture type="text" class="form-control form_title"  value="{$info.numeric_description}">
+                    </div>
+
+
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>查询日期:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input  readonly=ture type="text"  class="form-control form_title"  value="{$info.create_time}">
+                    </div>
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>回复日期:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input  readonly=ture type="text"  class="form-control form_title"  value="{$info.end_time}">
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>状态:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input  readonly=ture type="text" class="form-control form_title"  value="{$info.status_text}">
+                    </div>
+
+                </div>
+
+
+
+                <br>
+                <br>
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>上传图片:</label>
+
+                    </div>
+                    <br>
+                    {notempty   name="$info.submit_img" }
+                    <div class="col-lg-5">
+                        <div  class="imggroup">
+                            {volist name="$info.submit_img" id="vo"}
+                            <a href="{$vo}" class="front_cover">
+                                <img src="{$vo}" class="img-auto front_cover_img" alt="">
+                            </a>
+                            {/volist}
+                        </div>
+                    </div>
+                    {/notempty}
+                </div>
+                <br>
+                <br>
+                {eq name="$info.status"  value="1"}
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>回复图片:</label>
+
+                    </div>
+                    <br>
+                    {notempty   name="$info.back_img" }
+                    <div class="col-lg-5">
+                        <div  class="imggroup">
+                            <a href="{$info.back_img}" class="front_cover">
+                                <img src="{$info.back_img}" class="img-auto front_cover_img" alt="">
+                            </a>
+                        </div>
+                    </div>{/notempty}
+                </div>
+                {/eq}
+
+
+                <br><br>
+
+
+
+
+                {if condition="$info.status eq  0"}
+                <div class="form-group">
+                    <div class="col-lg-11 col-lg-offset-1 text-left">
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$info.id}"    class="btn-sm btn-primary" style="color:#fff">回复</a>
+                    </div>
+                </div>
+                {/if}
+
+                <input type="hidden" name="id" value="{$info.id}">
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="{:Url('Trademark/reply')}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center"  name="dialog-title">回复</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">回复图片:</label>
+                        <div class="col-sm-10">
+                            <input id="input-file" type="file" class="file">
+                            <sapn>
+
+                                <img  width="200px" height="200px" class="front_cover_img" name="back_img"  id ="back_img" src="" />
+
+                            </sapn>
+                        </div>
+                    </div>
+                    <input type="hidden"  name="id">
+                    <input type="hidden"  name="back_img">
+                    <!-- 富文本框<div class="mail-text h-200">
+                         <div class="summernote"></div>
+                         <div class="clearfix"></div>
+                     </div>-->
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-primary " onclick="reply()"   >保存</a>
+                    <input type="hidden" name="id" value="">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged", function () {
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+
+
+
+        $('.summernote').summernote({
+            lang: 'zh-CN',
+            height: 300,
+            minHeight: 210,
+            callbacks: {
+                onImageUpload: function (files) { //the onImageUpload API
+                    img = sendFile(files[0]);
+                }
+            }
+        });
+
+        //绑定模态框展示的方法
+        $("#remark-modal").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            console.log(button);
+            var recipient = button.data('text');
+            var modal = $(this);
+            modal.find('.modal-body').html(recipient);
+
+
+        })
+    });
+
+    function reply() {
+        var back_img = $("input[name='back_img']").val();
+        var id = $("input[name='id']").val();
+        $.ajax({
+            data: {id: id, back_img: back_img},
+            type: "POST",
+            url: "{:Url('Trademark/reply')}",
+            success: function (data) {
+                if (data.code == 1) {
+                    updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
+                    setTimeout(function () {
+                        location.href = data.url;
+                    }, 2000);
+                } else {
+                    updateAlert(data.msg, 'info');
+                }
+            }
+        });
+    }
+    function sendFile(file) {
+        var data = new FormData();
+        data.append("file_data", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: "{:Url('Upload/picture')}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                var data = $.parseJSON(response);
+                $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+            }
+        });
+    }
+
+    $("#input-file").fileinput({
+
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("/admin/Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        console.log(response);
+
+        if(response.code == 1) {
+
+            $("input[name='back_img']").val(response.data);
+            console.log( $("input[name='img']").val());
+            var pic = document.getElementById("back_img");
+            pic.src=response.data;
+
+        } else {
+
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+
+
+</script>
+{/block}

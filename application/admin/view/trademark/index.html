@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>{extend name="base/common"}
+
+{block name="style"}
+<style>
+
+    .modal-dialog {
+        margin: 200px auto;
+    }
+
+    .mail-box .mail-ontact {
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+
+    .mail-box .mail-subject {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+
+    .mail-subject-div {
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-box .mail-main {
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-date {
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+
+    @media only screen and (max-width: 550px) {
+        .mail-date {
+            display: none;
+        }
+    }
+
+    .list_banner {
+        width: 80px
+    }
+
+    .list_type {
+        width: 80px
+    }
+
+
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+
+            <h2>企业服务 (未联系数量：1)</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('advisoryDel')}"
+                        data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>类型</th>
+                    <th>联系人</th>
+                    <th>联系方式</th>
+                    <th>创建时间</th>
+                    <th>回复时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                    </td>
+                    <td>第{$vo.type}类</td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.mobile}</td>
+                    <td>
+                        {empty name="$vo.create_time" }空
+                        {else／}{$vo.create_time|date='Y-m-d H:i',###}
+                        {/empty}
+                    </td>
+
+                    <td>{empty name="$vo.end_time" }空
+                        {else／}{$vo.end_time|date='Y-m-d H:i',###}
+                        {/empty}
+                    </td>
+                    {eq name="$vo.status" value="1"}
+                    <!--<td>已完成</td>-->
+                    <td class="txt-success">已回复</td>
+                    {/eq}
+                    {eq name="$vo.status" value="0"}
+                    <td>未回复</td>
+                    {/eq}
+
+                    <td>
+                        <a  href="{:Url('show','id='.$vo.id  )}" class="btn-sm btn-primary" >查看详情</a>
+                        <a class=" btn-sm btn-warning" onclick="delItem('{$vo.id}','{:Url("inquireDel")}')">删除</a>
+                    </td>
+                    <!--<td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>-->
+
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged", function () {
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+
+        //绑定模态框展示的方法
+        $("#remark-modal").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            console.log(button);
+            var recipient = button.data('text');
+            var modal = $(this);
+            modal.find('.modal-body').html(recipient);
+
+
+        })
+    });
+
+    function remark(a) {
+
+        var name = $(a).attr('data-name');
+        $("input[name='id']").val($(a).attr('data-id'));
+    }
+
+
+</script>
+{/block}

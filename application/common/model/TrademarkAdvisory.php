@@ -14,6 +14,10 @@ use think\Model;
 class TrademarkAdvisory extends  Model
 {
 
+    protected  $type =[
+        'create_time'=>'strtotimee',
+        'end_time'=>'strtotimee'
+    ];
 
 
 

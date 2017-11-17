@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>{extend name="base/common"}
+
+{block name="style"}
+<style>
+
+    .modal-dialog {
+        margin: 200px auto;
+    }
+
+    .mail-box .mail-ontact {
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+
+    .mail-box .mail-subject {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+
+    .mail-subject-div {
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-box .mail-main {
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-date {
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+
+    @media only screen and (max-width: 550px) {
+        .mail-date {
+            display: none;
+        }
+    }
+
+    .list_banner {
+        width: 80px
+    }
+
+    .list_type {
+        width: 80px
+    }
+
+
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+
+            <h2>企业服务 (未联系数量：1)</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+                <input class="i-checks check-all" type="checkbox">
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('advisoryDel')}"
+                        data-original-title="移动到回收站"
+                        data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
+                </button>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
+        </div>
+        <div class="mail-box">
+            <table class="table table-hover table-mail">
+
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>联系人</th>
+                    <th>联系方式</th>
+                    <th>咨询内容</th>
+                    <th>回复内容</th>
+                    <th>创建时间</th>
+                    <th>回复时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td class="check-mail">
+                        <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
+                    </td>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.mobile}</td>
+                    <td>{$vo.content|msubstr=0,20}</td>
+                    <td>{$vo.respond|msubstr=0,20}</td>
+
+                    <td>
+                        {empty name="$vo.create_time" }空
+                        {else／}{$vo.create_time|date='Y-m-d H:i',###}
+                        {/empty}
+                    </td>
+
+                    <td>{empty name="$vo.end_time" }空
+                        {else／}{$vo.end_time|date='Y-m-d H:i',###}
+                        {/empty}
+                    </td>
+                    {eq name="$vo.status" value="1"}
+                    <!--<td>已完成</td>-->
+                    <td class="txt-success">已回复</td>
+                    {/eq}
+                    {eq name="$vo.status" value="0"}
+                    <td>未回复</td>
+                    {/eq}
+                    {eq name="$vo.status" value="0"}
+                    <td>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="remark(this)" data-id="{$vo.id}"
+                           class="btn-sm btn-success" style="color:#fff">回复</a>
+                        <a data-toggle="modal" title="修改" href="#modal" onclick="info(this)" data-respond="{$vo.respond}"
+                         data-content="{$vo.content}"  class="btn-sm btn-primary" style="color:#fff">详情</a>
+                        <a class=" btn-sm btn-warning" onclick="delItem('{$vo.id}','{:Url(" advisoryDel")}')">删除</a>
+                    </td>
+                    {/eq}
+                    {eq name="$vo.status" value="1"}
+                    <td>
+                        <scan class="btn-default2">回复</scan>
+                        <a data-toggle="modal" title="修改" href="#modal" onclick="info(this)" data-respond="{$vo.respond}"
+                           data-content="{$vo.content}"  class="btn-sm btn-primary" style="color:#fff">详情</a>
+                        <a class=" btn-sm btn-warning" onclick="delItem('{$vo.id}','{:Url("advisoryDel")}')">删除</a>
+                    </td>
+                    <!--<td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>-->
+                    {/eq}
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="btn-group pull-right">{$list->render()}</div>
+        </div>
+    </div>
+
+
+
+
+    <div id="modal" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="form-horizontal" method="post" action="advisory">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h3 class="modal-title text-center">详情</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group"><label class="col-sm-2 control-label">咨询内容</label>
+                            <div class="col-sm-10"><textarea name="content2" class="form-control" readonly
+                                                            ></textarea></div>
+                        </div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">回复内容</label>
+                            <div class="col-sm-10"><textarea name="respond2" class="form-control" readonly
+                            ></textarea></div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12 text-center zt-flex zt-space-around">
+                                <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="advisory">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">回复</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">回复内容</label>
+                        <div class="col-sm-10"><textarea name="respond" class="form-control"
+                                                         placeholder="请填写回复内容"></textarea></div>
+                    </div>
+                    <input type="hidden" name="id" value="">
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center zt-flex zt-space-around">
+                            <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+                            <a class="btn btn-primary " onclick="reply()">保存</a>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged", function () {
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+
+        //绑定模态框展示的方法
+        $("#remark-modal").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            console.log(button);
+            var recipient = button.data('text');
+            var modal = $(this);
+            modal.find('.modal-body').html(recipient);
+
+
+        })
+    });
+
+    function info(a){
+        $("textarea[name='respond2']").val($(a).attr('data-respond'));
+        $("textarea[name='content2']").val($(a).attr('data-content'));
+    }
+
+    function remark(a) {
+
+        var name = $(a).attr('data-name');
+        $("input[name='id']").val($(a).attr('data-id'));
+    }
+    function reply() {
+        var respond = $("textarea[name='respond']").val();
+        var id = $("input[name='id']").val();
+        $.ajax({
+            data: {id: id, respond: respond},
+            type: "POST",
+            url: "{:Url('Trademark/advisory')}",
+            success: function (data) {
+                if (data.code == 1) {
+                    updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
+                    setTimeout(function () {
+                        location.href = data.url;
+                    }, 2000);
+                } else {
+                    updateAlert(data.msg, 'info');
+                }
+            }
+        });
+    }
+
+</script>
+{/block}

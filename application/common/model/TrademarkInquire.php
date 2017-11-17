@@ -11,9 +11,20 @@ namespace app\common\model;
 
 use think\Model;
 
-class TrademarkInquire extends  Model
+class TrademarkInquire extends Model
 {
+    protected $type = [
+        'create_time' => 'strtotimee',
+        'end_time' => 'strtotimee'
+    ];
 
+
+    public function user()
+    {
+
+       return  $this->hasOne('WechatUser', 'userid', 'userid');
+
+    }
 
 
 }
