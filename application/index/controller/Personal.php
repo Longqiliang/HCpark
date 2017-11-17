@@ -383,8 +383,8 @@ class Personal extends Base
                     return $this->error('修改失败', '', WechatUser::getError());
                 }
             } elseif ($data['type'] == 2) {
-                $re = DB::execute("update  tb_park_company   set company_code=? where department =?", [$data['company_code'], $data['department']]);
-                if ($re) {
+                $re = DB::execute("update  tb_park_company   set company_code=? where company_id =?", [$data['company_code'], $data['department']]);
+                if ($re||$re===0) {
                     return $this->success('修改成功', '', $re);
                 } else {
                     return $this->error('修改失败', '', DB::getError());
