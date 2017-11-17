@@ -389,10 +389,13 @@ class Personal extends Base
                     return $this->error('修改失败', '', DB::getError());
                 }
             }
+        }else{
+
+            $userlist = Db::query("select u.userid,u.name,u.mobile,u.fee_status,u.water_status,u.department,c.company_code from tb_wechat_user u ,tb_park_company c where u.department = c.company_id  and  u.department = (select department from tb_wechat_user where userid=?) ", [$userid]);
+            $this->assign('userlist', json_encode($userlist));
+
+            return $this->fetch();
         }
-        $userlist = Db::query("select userid,name,mobile,fee_status,water_status,department from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
-        $this->assign('userlist', json_encode($userlist));
-        return $this->fetch();
     }
 
     /* 我的审核（用于审核新闻的推送功能）*/
