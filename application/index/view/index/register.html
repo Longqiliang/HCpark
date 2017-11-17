@@ -64,7 +64,135 @@
     .search-mask-close:after,.search-mask-close:before{content:'';display:block;width:0;height:2rem;border-left:2px solid #fff;position:absolute;left:50%;top:50%}
     .search-mask-close:after{-webkit-transform:rotate(45deg) translate(-50%,-50%);-moz-transform:rotate(45deg) translate(-50%,-50%);-ms-transform:rotate(45deg) translate(-50%,-50%);-o-transform:rotate(45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(45deg)}
     .search-mask-close:before{-webkit-transform:rotate(-45deg) translate(-50%,-50%);-moz-transform:rotate(-45deg) translate(-50%,-50%);-ms-transform:rotate(-45deg) translate(-50%,-50%);-o-transform:rotate(-45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(-45deg)}
-
+    /***mask***/
+    .my-mask{
+        position: fixed;
+        top:0;
+        right:0;
+        bottom: 0;
+        left:0;
+        z-index: 999;
+    }
+    .my-mask-back{
+        position: absolute;
+        top:0;
+        right:0;
+        bottom: 0;
+        left:0;
+        z-index: 996;
+        background-color: rgba(0,0,0,0.3);
+    }
+    .my-mask-content{
+        width:79.2vw;
+        background-color: #f9f9f9;
+        position: absolute;
+        top:50%;
+        left:50%;
+        -webkit-transform: translate(-50%,-60%);
+        -moz-transform: translate(-50%,-60%);
+        -ms-transform: translate(-50%,-60%);
+        -o-transform: translate(-50%,-60%);
+        transform: translate(-50%,-60%);
+        transform: translate(-50%,-60%);
+        z-index: 999;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .my-mask-content>h3{
+        padding:1.7rem 0;
+        margin:0;
+        text-align: center;
+        color: #333;
+        font-size:1.8rem;
+    }
+    .my-mask-input{
+        padding:1.2rem 2rem;
+    }
+    .my-mask-input>input{
+        display: block;
+        box-sizing: border-box;
+        width:100%;
+        height:3.5rem;
+        padding:1.5rem 0.5rem;
+        border:1px solid #dcdcdc;
+        border-radius:5px;
+        text-align: center;
+        font-size: 1.4rem;
+    }
+    .my-mask-input>span{
+        display: block;
+        width:100%;
+        text-align: center;
+        color: #999;
+        line-height: 2rem;
+        font-size: 1.2rem;
+    }
+    .my-phone-list>li{
+        width:53vw;
+        margin:0 auto;
+        padding-bottom: 2rem;
+        color: #333;
+        font-size: 1.5rem;
+    }
+    .my-radio+span{
+        position: relative;
+        line-height: 1.5rem;
+        padding-left: 3rem;
+    }
+    .my-radio+span>b{
+        content: '';
+        display: flex;
+        box-sizing: border-box;
+        height:1.5rem;
+        width:1.5rem;
+        border-radius: 50%;
+        border:1px solid #979797;
+        position: absolute;
+        left:0;
+        justify-content: center;
+        align-items: center;
+    }
+    .my-radio+span>b:before{
+        content: '';
+        display: inline-block;
+        box-sizing: border-box;
+        height:1rem;
+        width:1rem;
+        border-radius: 50%;
+        border:1px solid #979797;
+    }
+    .my-radio:checked+span>b{
+        border-color: #1F85EB;
+    }
+    .my-radio:checked+span>b:before{
+        border:none;
+        background-color: #1F85EB;
+    }
+    .my-btn-group{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top:1px solid #dcdcdc;
+    }
+    .my-btn-group>li{
+        height:4.8rem;
+        line-height: 4.8rem;
+        font-size: 1.8rem;
+        color: #1F85EB;
+        text-align: center;
+        width:50%;
+        box-sizing: border-box;
+    }
+    .my-btn-group>li>a{
+        display: block;
+        height:100%;
+        width:100%;
+        color: #1F85EB;
+    }
+    .my-btn-group>li:not(:last-child){
+        border-right: 1px solid #dcdcdc;
+    }
 </style>
 <script>
 
@@ -95,7 +223,7 @@
             <span>公司：</span>
             <span :class="{color_h:!checkedCompany}">{{checkedCompany?checkedCompany.name:'请选择公司'}}</span>
         </div>
-        <div class="mui-table-park"  @click="togglePopup" v-if="this.parkInfo.park_id===80">
+        <div class="mui-table-park"  @click="togglePopup" v-if="parkInfo.park_id===80 && checkedCompany.id!==91">
             <span>房号：</span>
             <span :class="{color_h:!checkedCompany}">{{room?room:'请选择房号'}}</span>
         </div>
@@ -114,7 +242,7 @@
     </div>
     <div class="mui-table-register"><span @click="register">注册</span></div>
     <div class="search_mark" v-show="isShowMark">
-        <div class="search_bg"></div>
+        <div class="search_bg"  @click="toggleMark"></div>
         <div class="search_content">
             <div class="search_content_box">
                 <div class="search" :class="{isClick:inputStatus}" >
@@ -142,6 +270,20 @@
             <div class="search-mask-close" @click="toggleMark">
                 <span></span>
             </div>
+        </div>
+    </div>
+    <div class="my-mask" v-show="isShowCompanyMask">
+        <div class="my-mask-back" @click="showCompanyMask()"></div>
+        <div class="my-mask-content">
+            <h3>企业验证码</h3>
+            <div class="my-mask-input">
+                <input type="tel" placeholder="请输入企业验证码" v-model="company_code" maxlength="6">
+                <!--<span class="noPower">提示:验证码限6位数字</span>-->
+            </div>
+            <ul class="my-btn-group">
+                <li @click="showCompanyMask()">取消</li>
+                <li @click="companySubmit()">确定</li>
+            </ul>
         </div>
     </div>
 </div>
@@ -172,6 +314,10 @@
             inputValue:'',
             companyList:{$department},
             searchList:[],
+            //企业验证码
+            isShowCompanyMask:false,
+            company_code:'',
+            isPass:false,
 //            选折器
             room:'',
             checkedRoom:'',
@@ -187,14 +333,19 @@
         methods: {
 //            搜索
             toggleMark(){
-                this.isShowMark=!this.isShowMark;
+                var _this = this;
+                _this.isShowMark=!_this.isShowMark;
             },
             checkCompany(item){
                 console.log(item)
-                this.checkedCompany=item;
-                this.slots[0].values=item.roomlist;
-                this.room=item.roomlist[0]
-                this.toggleMark();
+                var _this = this;
+                _this.checkedCompany=item;
+                if(item.id!=78 && item.id!=91){
+                    _this.isPass = false;
+                    _this.showCompanyMask();
+                }else{
+                    _this.toggleMark()
+                }
             },
             isClick:function () {
                 this.inputStatus=true;
@@ -216,6 +367,97 @@
                         }
                     }
                 }
+            },
+            //验证码
+            showCompanyMask(){
+                var _this = this;
+                if(_this.isShowCompanyMask && !_this.isPass){
+                    _this.checkedCompany = '';
+                    _this.slots[0].values = [];
+                    _this.isShowCompanyMask = false;
+                    _this.room = '';
+                    _this.company_code = '';
+                    return
+                }
+                _this.isShowCompanyMask=!_this.isShowCompanyMask
+            },
+            companySubmit(){
+                var _this = this;
+                if(!_this.company_code){
+                    this.$toast({
+                        message: '请输入企业验证码',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return
+                }else if(isNaN(_this.company_code) || _this.company_code < 0 || _this.company_code.length < 6){
+                    this.$toast({
+                        message: '企业验证码为六位纯小数',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    setTimeout(function () {
+                        _this.company_code = ''
+                    },1000)
+                    return
+                }
+                var data = {
+                    company_code:_this.company_code,
+                    department:_this.checkedCompany.id
+                };
+                _this.postSubmit(data, '企业验证成功！',function () {
+                    _this.isPass = true;
+                    _this.slots[0].values=_this.checkedCompany.roomlist;
+                    _this.room=_this.checkedCompany.roomlist[0];
+                    _this.toggleMark();
+                    _this.showCompanyMask();
+                });
+            },
+            postSubmit(data,successText,successFun,errorFun){
+                var _this = this;
+                if(_this.isSubmit){
+                    swal({
+                        title: '',
+                        text: '提交中···',
+                        type:'info',
+                        confirmButtonColor: "#59B7F3",
+                        confirmButtonText: "确定"
+                    });
+                    return ;
+                }
+                _this.isSubmit = true;
+                _this.$http.post("/index/personal/verification",data).then(function (res) {
+                    _this.isSubmit = false;
+                    if(res.data.code===1){
+                        swal({
+                            title: '',
+                            text: successText,
+                            type:'success',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        },function () {
+                            successFun()
+                        });
+                    }else{
+                        swal({
+                            title: '',
+                            text: res.data.msg,
+                            type:'error',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        });
+                    }
+
+                },function (res) {
+                    _this.isSubmit = false;
+                    swal({
+                        title: '',
+                        text: '请求失败，请重试！',
+                        type:'error',
+                        confirmButtonColor: "#59B7F3",
+                        confirmButtonText: "确定"
+                    });
+                })
             },
 //            选折器
             togglePopup(){
