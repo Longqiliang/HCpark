@@ -1039,8 +1039,7 @@ class Personal extends Base
         $car_card = input('car_card');
         $name = input('user_name');
         $gender = input('gender');
-
-
+        $park_company = new ParkCompany();
         //echo $userId;
         $department = input('departmentId');
         $room = input('room');
@@ -1048,6 +1047,7 @@ class Personal extends Base
         if (empty($department)) {
             if ($park_id == 3) {
                 $department = 78;
+
             } elseif ($park_id == 80) {
                 $department = 91;
             }
@@ -1091,6 +1091,19 @@ class Personal extends Base
     }
 
 
+    //验证
+    public  function verification(){
+        $department = input('department');
+        $park_company = new ParkCompany();
+        $company =$park_company->where('company_id',$department)->find() ;
+        if($company['company_code']==input('company_code')){
+            $this->success("验证码成功");
+
+        }else{
+
+            $this->error("验证码失败");
+        }
+    }
     //推荐关注
     public function recommend()
     {
