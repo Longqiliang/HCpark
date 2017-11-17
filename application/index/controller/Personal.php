@@ -12,6 +12,7 @@ namespace app\index\controller;
 
 use app\index\model\CarparkService;
 use app\index\model\Collect as CollectModel;
+use app\index\model\ParkCompany;
 use app\index\model\WechatUser;
 use app\index\model\WechatDepartment;
 use app\index\model\PersonalMessage;
@@ -376,7 +377,7 @@ class Personal extends Base
             if ($data['type'] == 1) {
                 unset($data['type']);
                 $re = $user->save($data, ['userid' => $data['userid']]);
-                if ($re||$re===0) {
+                if ($re || $re === 0) {
                     return $this->success('修改成功', '', $re);
                 } else {
                     return $this->error('修改失败', '', WechatUser::getError());
@@ -389,10 +390,14 @@ class Personal extends Base
                     return $this->error('修改失败', '', DB::getError());
                 }
             }
-        }else{
+        } else {
 
-            $userlist = Db::query("select u.userid,u.name,u.mobile,u.fee_status,u.water_status,u.department,c.company_code from tb_wechat_user u ,tb_park_company c where u.department = c.company_id  and  u.department = (select department from tb_wechat_user where userid=?) ", [$userid]);
+            $userlist = Db::query("select userid,name,mobile,fee_status,water_status,department from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
+            $park_company = new ParkCompany();
+            $cpmpany = $park_company->where('company_id', $userlist[0]['department'])->find();
+            $this->assign('company_code',$cpmpany['company_code']);
             $this->assign('userlist', json_encode($userlist));
+
 
             return $this->fetch();
         }
