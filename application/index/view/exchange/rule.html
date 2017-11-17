@@ -1,0 +1,41 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    h1{
+        text-align: center;
+        font-size: 1.7rem;
+        color: #333;
+        padding: 1.2rem 0;
+    }
+    ul>li{
+        padding: 0.5rem 1.2rem;
+        font-size: 1.4rem;
+        color: #333;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <h1>积分获取规则</h1>
+    <ul>
+        <li>1.注册后获得1个积分，重复注册不会重复获得；</li>
+        <li>2.使用一次饮水服务，流程走完后获得1个积分；</li>
+        <li>3.使用一次报修服务，流程走完后获得1个积分；</li>
+        <li>4.使用一次充电柱服务，流程走完后获得1个积分；</li>
+        <li>5.使用一次室内保洁服务，流程走完后获得1个积分；</li>
+        <li>6.成功预约一次设备服务，获得1个积分；</li>
+    </ul>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {},
+        methods: {}
+    })
+</script>
+{/block}
