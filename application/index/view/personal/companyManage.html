@@ -323,6 +323,24 @@
             },
             companySubmit(){
                 var _this = this;
+                if(!_this.company_code){
+                    this.$toast({
+                        message: '请输入新的企业验证码',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return
+                }else if(isNaN(_this.company_code) || _this.company_code < 0 || _this.company_code.length < 6){
+                    this.$toast({
+                        message: '企业验证码必须为六位纯小数',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    setTimeout(function () {
+                        _this.company_code = ''
+                    },1000)
+                    return
+                }
                 var data = {
                     type:2,
                     company_code:_this.company_code,
