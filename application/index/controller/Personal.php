@@ -369,12 +369,13 @@ class Personal extends Base
     public function companyManage()
     {
         $userid = session('userId');
+        $user = new WechatUser();
         if (IS_POST) {
             $data = input('');
             //改权限
             if ($data['type'] == 1) {
                 unset($data['type']);
-                $re = WechatUser::save($data, ['userid' => $data['userid']]);
+                $re = $user->save($data, ['userid' => $data['userid']]);
                 if ($re) {
                     return $this->success('修改成功', '', $re);
                 } else {
