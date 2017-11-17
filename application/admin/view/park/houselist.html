@@ -66,6 +66,7 @@
         user-select: none;
         background: #fff;
         border: 1px solid transparent;
+        position: relative;
     }
     .item-warning {
         background-color: #f8ac59;
@@ -188,7 +189,20 @@
         min-width: 5em;
         margin-right: 3px;
     }
-
+    .layer{
+        display: none;
+        position: absolute;
+        top:35px;
+        left: 0;
+        z-index: 10;
+        width: 20vw;
+        background-color: inherit;
+    }
+    .layer-content{
+        padding:0 10px;
+        text-align: left;
+        background-color: #fff;
+    }
     @media (min-width: 768px){
         .form-inline .input-group .input-group-btn{
             width: 1%;
@@ -208,6 +222,9 @@
             width: 70px;
             display: inline-block;
             vertical-align: middle;
+        }
+        .layer{
+            width: 80vw;
         }
     }
 
@@ -271,7 +288,9 @@
                     F1
                 </div>
                 <div class="table-cell-info col-xs-11">
-                    <div class="cell-item item-primary">1</div>
+                    <div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal">1
+
+                    </div>
                     <div class="cell-item item-gray">2</div>
                     <div class="cell-item item-warning">3</div>
                     <div class="cell-item item-default">4</div>
@@ -296,10 +315,7 @@
         </div>
 
 
-        <div class="layer">
-            <div class="layer-header"></div>
-            <div class="layer-content"></div>
-        </div>
+
         <div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="room-modal" aria-label="myModalLabel">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -392,6 +408,105 @@
                 </div>
             </div>
         </div>
+        <div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="update-modal" aria-label="updateModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="updateModalLabel">203</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-inline">
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label for="updateArea">房间面积：</label>
+                                    <input type="text" class="form-control input-sm" id="updateArea">
+                                    <span>㎡</span>
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label>房间位置：</label>
+                                    <span>A幢 203</span>
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label>所属园区：</label>
+                                    <span>希垦科技园</span>
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label for="updatePrice">租赁单价：</label>
+                                    <input type="text" class="form-control input-sm" id="updatePrice">
+                                    <span>元/㎡/天</span>
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label for="updateCompany">企业名称：</label>
+                                    <input type="text" class="form-control input-sm" id="updateCompany">
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label for="updateType">企业类型：</label>
+                                    <input type="text" class="form-control input-sm" id="updateType">
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label for="updateType">房间状态：</label>
+                                    <span>空置</span>
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label for="updateType">关联房号：</label>
+                                    <span>暂无关联房号信息</span>
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="form-group">
+                                    <label class="updatePanorama">房间全景：</label>
+                                    <input type="text" class="form-control input-sm" id="updatePanorama">
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class=" file-row">
+                                    <label class="updatePicture">房间照片：</label>
+                                    <input class="input-file"  type="file" class="file" multiple id="updatePicture">
+                                </div>
+                            </div>
+                            <div class="modal-cell">
+                                <div class="upload-img-box">
+                                    <div class="upload-img">
+                                        <span class="glyphicon glyphicon-remove icon-del"></span>
+                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
+                                    </div>
+                                    <div class="upload-img">
+                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
+                                    </div>
+                                    <div class="upload-img">
+                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
+                                    </div>
+                                    <div class="upload-img">
+                                        <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2024843780,2197473370&fm=27&gp=0.jpg" alt="">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {/block}
@@ -403,11 +518,64 @@
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script>
    $(function () {
+//      el,roomName,roomArea,companyName,relevanceRoom
+       function hoverRoom(data) {
+           if(!jQuery){
+               return;
+           }
+           var defaultData = {
+               el:$('body'),
+               roomName:'',
+               roomArea:'暂无',
+               companyName:'暂无公司信息',
+               relevanceRoom:'暂无关联房号信息'
+           };
+            var newData = $.extend({},defaultData,data),
+                    badge = '';
+          if(newData.relevanceRoom && typeof (newData.relevanceRoom) == 'object'){
+                for(var i = 0,length = newData.relevanceRoom.length; i < length; I++){
+                   badge += '<span class="badge">'+newData.relevanceRoom[i]+'</span>';
+                }
+          }else{
+              badge = '暂无关联房号信息';
+          }
+           var html = '<div class="layer">'+
+                           '<div class="layer-header">'+newData.roomName+'</div>'+
+                           '<div class="layer-content">'+
+                               '<div class="layer-content-cell"><span>房间面积：</span><span>'+newData.roomArea+'㎡</span></div>'+
+                               '<div class="layer-content-cell"> <span>公司名称：</span><span>'+newData.companyName+'</span></div>'+
+                               '<div class="layer-content-cell">'+
+                                   '<span>关联房号：</span>'+badge+
+                               '</div>'+
+                           '</div>'+
+                       '</div>';
+           newData.el.append(html);
+       }
+
        $(".cell-item").hover(function () {
-           
+           var $this = $(this),
+                layer = $this.children('.layer');
+           if(!layer.length){
+               var data = {
+                   el:$this,
+                   roomName:'203'
+               };
+               hoverRoom(data);
+           }
+           $this.children('.layer').show();
+
+       },function () {
+           $(this).children('.layer').hide();
        });
        //绑定模态框展示的方法
-       $("#remark-modal").on('show.bs.modal', function (event) {
+       $("#room-modal").on('show.bs.modal', function (event) {
+           var button = $(event.relatedTarget);
+           console.log(button);
+//           var recipient = button.data('text');
+           var modal = $(this);
+//           modal.find('.modal-body').html(recipient);
+       });
+       $("#update-modal").on('show.bs.modal', function (event) {
            var button = $(event.relatedTarget);
            console.log(button);
 //           var recipient = button.data('text');
