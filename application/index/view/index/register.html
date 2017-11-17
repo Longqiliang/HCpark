@@ -337,9 +337,9 @@
                 _this.isShowMark=!_this.isShowMark;
             },
             checkCompany(item){
-                console.log(item)
                 var _this = this;
                 _this.checkedCompany=item;
+//                非游客需要企业验证
                 if(item.id!=78 && item.id!=91){
                     _this.isPass = false;
                     _this.showCompanyMask();
@@ -461,7 +461,6 @@
             },
 //            选折器
             togglePopup(){
-                console.log(this.roomVisible)
                 if(!this.roomVisible){
                         if(!this.checkedCompany){
                             swal({
@@ -553,8 +552,6 @@
                     data.department=78;
                     data.room=''
                 }
-
-                console.log(data)
                 this.$http.post(this.apiRegister,data,{emulateJSON: true})
                         .then(function(response) {
                             if(response.data.code==1){
