@@ -1,6 +1,6 @@
 {extend name="public/common"}
 {block name="style"}
-<title>我的服务</title>
+<title>权限管理</title>
 <link rel="stylesheet" href="/index/css/personal/service.css">
 <style>
     body{
@@ -55,6 +55,28 @@
         text-align: center;
         color: #333;
         font-size:1.8rem;
+    }
+    .my-mask-input{
+        padding:1.2rem 2rem;
+    }
+    .my-mask-input>input{
+        display: block;
+        box-sizing: border-box;
+        width:100%;
+        height:3.5rem;
+        padding:1.5rem 0.5rem;
+        border:1px solid #dcdcdc;
+        border-radius:5px;
+        text-align: center;
+        font-size: 1.4rem;
+    }
+    .my-mask-input>span{
+        display: block;
+        width:100%;
+        text-align: center;
+        color: #999;
+        line-height: 2rem;
+        font-size: 1.2rem;
     }
     .my-phone-list>li{
         width:53vw;
@@ -145,38 +167,37 @@
         <!--服务权限-->
         <div class="notices" v-if="active==0">
             <div class="notice">
-                <a class="list" v-for="(p,index) in person" @click="showMask(index)" >
+                <a class="list" v-for="(p,index) in person" @click="showServiceMask(index)" >
                     <div class="state">
                         <span>{{p.name}}</span>
                     </div>
                     <div class="state">
-                        <span><span v-if="p.water_status!=0">饮水服务</span> <span v-if="p.fee_status!=0">费用缴纳</span><span class="noPower" v-else>暂无权限</span></span>
+                        <span><span v-if="p.water_status!==0">饮水服务</span> <span v-if="p.fee_status!==0">费用缴纳</span><span class="noPower" v-if="p.water_status === 0 && p.fee_status===0">暂无权限</span></span>
                     </div>
-
                 </a>
                 <img src="/index/images/service/card/icon-default.jpg" v-if="person.length===0" class="no-list">
             </div>
             <!--遮罩-->
-            <div class="my-mask" v-show="isShowMask">
-                <div class="my-mask-back" @click="showMask()"></div>
+            <div class="my-mask" v-show="isShowServiceMask">
+                <div class="my-mask-back" @click="showServiceMask()"></div>
                 <div class="my-mask-content">
                     <h3>设置权限</h3>
                     <ul class="my-phone-list">
                         <li>
-                            <label for="water" @click="chanceAuthority(1)">
-                                <input type="checkbox" id="water" class="my-radio" value="1" :checked="fee_status !== 0" hidden>
+                            <label for="water">
+                                <input type="checkbox" id="water" class="my-radio" value="1" @click="chanceAuthority(2)" :checked="water_status !== 0" hidden>
                                 <span><b></b>饮水服务</span>
                             </label>
                         </li>
                         <li>
-                            <label for="fee" @click="chanceAuthority(2)">
-                                <input type="checkbox" id="fee" class="my-radio" value="1"  :checked="water_status !== 0" hidden>
+                            <label for="fee" >
+                                <input type="checkbox" id="fee" class="my-radio" value="1" @click="chanceAuthority(1)" :checked="fee_status !== 0" hidden>
                                 <span><b></b>费用缴纳</span>
                             </label>
                         </li>
                     </ul>
                     <ul class="my-btn-group">
-                        <li @click="showMask()">取消</li>
+                        <li @click="showServiceMask()">取消</li>
                         <li @click="serviceSubmit()">确定</li>
                     </ul>
                 </div>
@@ -185,7 +206,29 @@
         <!--企业权限-->
         <div class="notices" v-if="active==1">
             <div class="notice enterprise">
-                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+                <img src="/index/images/service/card/icon-default.jpg" class="no-list" v-if="0===1">
+                <a class="list" @click="showCompanyMask()">
+                    <div class="state">
+                        <span>企业验证码</span>
+                    </div>
+                    <div class="state">
+                        <span class="noPower">{{company_code_base}}</span>
+                    </div>
+                </a>
+            </div>
+            <div class="my-mask" v-show="isShowCompanyMask">
+                <div class="my-mask-back" @click="showCompanyMask()"></div>
+                <div class="my-mask-content">
+                    <h3>企业验证码设置</h3>
+                    <div class="my-mask-input">
+                        <input type="tel" placeholder="请输入新验证码" v-model="company_code" maxlength="6">
+                        <span class="noPower">提示:验证码限6位数字</span>
+                    </div>
+                    <ul class="my-btn-group">
+                        <li @click="showCompanyMask()">取消</li>
+                        <li @click="companySubmit()">确定</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -222,15 +265,16 @@
             isSubmit:false,
             //服务权限设置
             person:{$userlist},
-            isShowMask:false,
+            isShowServiceMask:false,
             checkedIndex:'',
             fee_status:0,
-            water_status:0
+            water_status:0,
+            //企业验证码
+            isShowCompanyMask:false,
+            company_code_base:{$company_code},
+            company_code:''
         },
         created(){
-            this.person[0].fee_status=1;
-            this.person[1].fee_status=1;
-            this.person[1].water_status=1;
             var c =  parseInt(window.location.href.split("companymanage/c/")[1]);
             var co = this.getCookie("type");
             if(co == 11 || co == 12){
@@ -244,21 +288,52 @@
             chanceAuthority(type){
                 var _this = this;
                 if(type===1){
-                    _this.fee_status == 0 ? _this.fee_status=1 : 0
+                    _this.fee_status = _this.fee_status == 0 ? 1 : 0;
                 }else{
-                    _this.water_status == 0 ? _this.water_status=1 : 0
+                    _this.water_status = _this.water_status == 0 ? 1 : 0;
                 }
             },
-            showMask(index){
+            showServiceMask(index){
                 var _this = this;
                 if(index !== undefined){
                     _this.checkedIndex = index;
                     _this.fee_status = _this.person[index].fee_status;
                     _this.water_status = _this.person[index].water_status;
                 }
-                this.isShowMask=!this.isShowMask
+                this.isShowServiceMask=!this.isShowServiceMask
             },
             serviceSubmit(){
+                var _this = this;
+                var data = {
+                    type:1,
+                    fee_status:_this.fee_status,
+                    water_status:_this.water_status,
+                    userid:_this.person[_this.checkedIndex].userid
+                };
+                _this.postSubmit(data,'权限设置成功！',function () {
+                    _this.person[_this.checkedIndex].fee_status = _this.fee_status;
+                    _this.person[_this.checkedIndex].water_status = _this.water_status;
+                    _this.showServiceMask();
+                })
+            },
+            //企业验证码
+            showCompanyMask(){
+                var _this = this;
+                this.isShowCompanyMask=!this.isShowCompanyMask
+            },
+            companySubmit(){
+                var _this = this;
+                var data = {
+                    type:2,
+                    company_code:_this.company_code,
+                    department:_this.person[0].department,
+                };
+                _this.postSubmit(data, '企业验证码设置成功！',function () {
+                    _this.company_code_base = _this.company_code
+                    _this.showCompanyMask();
+                });
+            },
+            postSubmit(data,successText,successFun){
                 var _this = this;
                 if(_this.isSubmit){
                     swal({
@@ -271,28 +346,28 @@
                     return ;
                 }
                 _this.isSubmit = true;
-                var data = {
-                    type:1,
-                    fee_status:_this.fee_status,
-                    water_status:_this.water_status,
-                    userid:_this.person[_this.checkedIndex].userid
-                };
                 _this.$http.post("/index/personal/companyManage",data).then(function (res) {
                     _this.isSubmit = false;
                     if(res.data.code===1){
                         swal({
                             title: '',
-                            text: '权限设置成功！',
+                            text: successText,
                             type:'success',
                             confirmButtonColor: "#59B7F3",
                             confirmButtonText: "确定"
                         },function () {
-                            _this.person[_this.checkedIndex].fee_status = _this.fee_status;
-                            _this.person[_this.checkedIndex].water_status = _this.water_status;
-
+                            successFun()
+                        });
+                    }else{
+                        swal({
+                            title: '',
+                            text: res.data.msg,
+                            type:'error',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
                         });
                     }
-                    
+
                 },function (res) {
                     _this.isSubmit = false;
                     swal({
@@ -303,7 +378,6 @@
                         confirmButtonText: "确定"
                     });
                 })
-
             },
             jumpTo(url){
                 //ios返回莫名返回两级+安卓莫名返回需要按两次解决
