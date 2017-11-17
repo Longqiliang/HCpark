@@ -68,6 +68,77 @@ class ParkRoom extends Model{
         return $newData;
     }
 
+    /**
+     * 获取园区楼盘详细信息
+     * @param $parkid
+     * @return array
+     */
+    public function getFloorInfo($parkid){
+        if ($parkid == 3){
+            $setArr = ['3' => ['A','B']];
+        }elseif($parkid == 80){
+            $setArr = [ '80' => ['A','B','C','D']];
+        }
+        $newData = [];
+        $parkRoom = new ParkRoom();
+        $parkFloor = new ParkFloor();
+        $peoplerent = new PeopleRent();
+        $park = new Park();
+        $roomArray = [];
+        foreach($setArr as $k=>$v){
+            $number = $k;
+            $parkInfo = $park->where(['id'=>$number])->find();
+            $newData[$parkInfo['name']] = [];
+            foreach($v as $k1=>$v1){
+                $element = $v1;
+                $newArr = [];
+                $floor = [] ;
+                $map = ['park_id'=>$number,'build' => $element];
+                //获取楼层信息
+                $list = $parkFloor->where($map)->distinct(true)->field('fid')->order('fid asc')->select();
+                foreach ($list as $k => $v) {
+                    $floor[$k] = $v['fid'];
+                }
+                //return ($floor);
+                //每层楼房间数目
+                foreach ($floor as $k => $v) {
+                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0 ,'park_id' => $number])->order("room asc")->select();
+                    //判断房间状态，空置，已租，已约，下架
+                    foreach ($roomList as $k1 => $v1){
+                        $roomArray[$k][$k1] = ['room' => $v1['room'],'room_id' => $v1['id'],'area'=>$v1['area']];
+                        $roomArray[$k] = array_slice($roomArray[$k],0,$k1+1);
+                        //下架状态
+                        if ($v1['manage'] == 2){
+                            $roomArray[$k][$k1]['status'] = 4 ;
+                        }else{
+                            //已租状态 显示面积，公司名称，关联房间号
+                            if($v1['company_id'] != 0){
+                                $roomArray[$k][$k1]['status'] = 3 ;
+                            }else{
+                                //空置跟已经预约的状态
+                                $peopleStatus = $peoplerent->where(['room_id'=>$v1['id']])->find();
+                                if ($peopleStatus){
+                                    $roomArray[$k][$k1]['status'] = 2 ;
+                                }else{
+                                    $roomArray[$k][$k1]['status'] = 1 ;
+                                }
+                            }
+                        }
+                    }
+                }
+                //return $roomArray;
+                foreach ($floor as $k => $v) {
+                    $newArr[$k]['floor'] = $v;
+                    if (!empty($roomArray[$k])){
+                        $newArr[$k]['rooms'] = $roomArray[$k];
+                    }
+                }
+                $newData[$parkInfo['name']][$element] = $newArr;
+            }
+        }
+
+        return $newData;
+    }
 
 
 

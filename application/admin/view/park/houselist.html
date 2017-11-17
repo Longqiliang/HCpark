@@ -223,9 +223,13 @@
         <div class="flex">
             <span class="inline-block">当前园区：</span><label for="checkPark">希恳科技园</label>
             <select name="" id="checkPark" class="form-control input-sm ">
-                <option value="">A幢</option>
-                <option value="">B幢</option>
-                <option value="">C幢</option>
+                {volist name="$floorInfo" id="vo"}
+                    {volist name="vo" id="vo1"}
+                        <option value="{$key}">{$key}幢</option>
+                    {/volist}
+                {/volist}
+                <!--<option value="B">B幢</option>
+                <option value="C">C幢</option>-->
             </select>
             <div class="add btn btn-sm btn-default" data-toggle="modal" data-target="#room-modal">
                 <span class="glyphicon glyphicon-plus"></span>
@@ -316,7 +320,7 @@
                             <div class="modal-cell">
                                 <div class="form-group">
                                     <label>所属楼层：</label>
-                                    <select name="" id="" class="input-sm form-control">
+                                    <select name="add_floor" id="" class="input-sm form-control">
                                         <option value="1">1楼</option>
                                     </select>
                                     <!--<input type="text" class="form-control">-->
@@ -326,7 +330,7 @@
                             <div class="modal-cell">
                                 <div class="form-group">
                                     <label>房间号码：</label>
-                                    <input type="text" class="form-control input-sm">
+                                    <input type="text" class="form-control input-sm" name="add_room">
                                 </div>
                             </div>
                             <div class="modal-cell">
@@ -361,13 +365,13 @@
                                 <div class="upload-img-box">
                                     <div class="upload-img">
                                         <span class="glyphicon glyphicon-remove icon-del"></span>
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
+                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="" class="img">
                                     </div>
                                     <div class="upload-img">
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
+                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="" class="img">
                                     </div>
                                     <div class="upload-img">
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
+                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="" class="img">
                                     </div>
                                     <div class="upload-img">
                                         <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2024843780,2197473370&fm=27&gp=0.jpg" alt="">
@@ -382,7 +386,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addRoom">保存</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     </div>
                 </div>
@@ -448,17 +452,27 @@
                    '<div class="table-cell-tit col-xs-1"><i class="fa fa-close table-cell-icon"></i>F'+newFloor+'</div>'+
                   '<div class="table-cell-info col-xs-11"><div class="cell-item item-default">'+newFloor+'F</div></div>'+
                 '</div>';
-                parent.before(html);
+
+           var build = $('#checkPark').select().val();
+           var park = "{$park_id}";
+           //alert(build);return ;
            if(state == '2'){
                $(".table .table-cell-icon").show();
            }
-//           $.ajax({
-//               url:'',
-//               type:'POST',
-//               success:function (e) {
-//
-//               }
-//           })
+           $.ajax({
+               data:{fid:newFloor,build:build,park_id:park},
+               type:'POST',
+               url:"{:Url('Park/addfloor')}",
+               success:function (e) {
+                   //console.log(e)
+                   if(e.code ==1){
+                       parent.before(html);
+                   }else{
+                       updateAlert(e.msg);
+                   }
+
+               }
+          })
        });
        //图片上传
        $(".input-file").fileinput({
@@ -473,6 +487,45 @@
        }).on('fileuploaded', function(event, data, previewId, index) {
             console.log(event,data,previewId,index);
        });
+       //增加房间信息
+        $('#addRoom').click(function () {
+            var park = "{$park_id}";
+            var area = $('#area').val();
+            var floor = $("[name='add_floor']").select().val();
+            var room = $("[name='add_room']").val();
+            var build = $('#house').select().val();
+            var price = $('#price').val();
+            var panorama = $("#panorama").val();
+            var imgsSrc=[];
+            var img=$('.img');
+            for(var i=0;i<img.length;i++){
+                imgsSrc.push(img[i].src);
+            };
+            $.ajax({
+                data:{floor:floor,room:room,build_block:build,panorama:panorama,area:area,price:price,img:imgsSrc},
+                type:"POST",
+                url:"{:Url('Park/addrooms')}",
+                success:function (data) {
+                    if (data.code==1){
+                        updateAlert(data.msg+" 稍后自动刷新页面～","success");
+                        setTimeout(function () {
+                            location.href = data.url;
+                        },2000);
+                    }else{
+                        updateAlert(data.msg,"info");
+                    }
+                }
+
+            })
+
+
+
+        })
+
+
+
+
+
    })
 </script>
 {/block}
