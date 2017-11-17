@@ -376,7 +376,7 @@ class Personal extends Base
             if ($data['type'] == 1) {
                 unset($data['type']);
                 $re = $user->save($data, ['userid' => $data['userid']]);
-                if ($re) {
+                if ($re||$re===0) {
                     return $this->success('修改成功', '', $re);
                 } else {
                     return $this->error('修改失败', '', WechatUser::getError());
