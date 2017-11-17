@@ -4,6 +4,11 @@
 <title>个人中心</title>
 <link rel="stylesheet" href="/index/css/common/rem.css">
 <link rel="stylesheet" href="/index/css/personal/index.css">
+<style>
+    body{
+        background-color: #f0eff5;
+    }
+</style>
 {/block}
 
 
@@ -84,7 +89,7 @@
         {eq name='userinfo.company_check' value='yes'}
         <li><a href="{:Url('Personal/companyManage?c=0')}" class="item-pull-right"><span class="icon icon-check"></span><p>权限管理</p></a></li>
         {/eq}
-        <li><a href="{:Url('Feedback/demand')}" class="item-pull-right"><span class="icon icon-feedback"></span><p>意见反馈</p></a></li>
+        <li class="break"><a href="{:Url('Feedback/demand')}" class="item-pull-right"><span class="icon icon-feedback"></span><p>意见反馈</p></a></li>
         <li><a href="{:Url('Personal/recommend')}" class="item-pull-right"><span class="icon icon-recommend"></span><p>推荐关注</p></a></li>
         <li><a href="{:Url('Personal/version')}" class="item-pull-right"><span class="icon icon-version"></span><p>版本信息</p></a></li>
     </ul>
