@@ -48,6 +48,13 @@ class Exchange extends Base
     }
 
     /**
+     * 积分规则
+     */
+    public function rule(){
+        return $this->fetch();
+    }
+
+    /**
      * 用户兑换记录详情
      */
     public function recordInfo()

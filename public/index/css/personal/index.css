@@ -219,6 +219,18 @@ ul.list li:after{
     width: 100%;
     background-color: #f1f1f1;
 }
+ul.list li.break{
+    margin-top: 10px;
+}
+ul.list li.break:before{
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 0;
+    height: 10px;
+    width: 100%;
+    background-color: #f1f1f1;
+}
 /*ul.list li:last-child:after{*/
     /*height: 0;*/
 /*}*/
@@ -255,6 +267,9 @@ ul.list li:after{
 }
 .icon-check{
     background-image: url(/index/images/personal/icon-check.png);
+}
+.icon-companyManage{
+    background-image: url(/index/images/personal/icon-companyManage.png);
 }
 .ft-right{
     float: right;
