@@ -5,25 +5,14 @@
 <link rel="stylesheet" href="/index/css/common/rem.css">
 <link rel="stylesheet" href="/index/css/personal/index.css">
 <style>
-    .head-info{
-        line-height: 36px;
-    }
-    .park-txt{
-        margin-right: 5px;
-    }
-    .content{
-        height: 100vh;
-        position: relative;
-    }
-    .list>li p{
-        font-size: 1.5rem;
-    }
-    #app .list{
-        margin:0;
-    }
+    .head-info{line-height:36px}
+    .park-txt{margin-right:5px}
+    .content{height:100vh;position:relative}
+    .list>li p{font-size:1.5rem}
+    #app .list{margin:0}
     .search_mark{position:fixed;top:0;left:0;bottom:0;right:0;z-index:10}
     .search_mark>.search_bg{position:absolute;top:0;left:0;bottom:0;right:0;z-index:15;background-color:rgba(0,0,0,.3)}
-    .search_content{position:absolute;padding-bottom:3.2vw;top:5vh;left:5vw;background:#fff;z-index:20;border-radius:5px;overflow: hidden}
+    .search_content{position:absolute;padding-bottom:3.2vw;top:5vh;left:5vw;background:#fff;z-index:20;border-radius:5px;overflow:hidden}
     .search_content_box{position:relative;width:90vw;height:70vh;overflow:scroll}
     .search{background:#f0eff5;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;width:90vw;position:fixed;top:5vh;left:5vw;z-index:999}
     .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center;overflow:hidden}
@@ -57,137 +46,26 @@
     .search-mask-close:after,.search-mask-close:before{content:'';display:block;width:0;height:2rem;border-left:2px solid #fff;position:absolute;left:50%;top:50%}
     .search-mask-close:after{-webkit-transform:rotate(45deg) translate(-50%,-50%);-moz-transform:rotate(45deg) translate(-50%,-50%);-ms-transform:rotate(45deg) translate(-50%,-50%);-o-transform:rotate(45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(45deg)}
     .search-mask-close:before{-webkit-transform:rotate(-45deg) translate(-50%,-50%);-moz-transform:rotate(-45deg) translate(-50%,-50%);-ms-transform:rotate(-45deg) translate(-50%,-50%);-o-transform:rotate(-45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(-45deg)}
-    .input-ft-right{text-align: right;float: right;color: #999;font-size: 1.5rem}
-    .btn-gray{background-color: #c3c3c3;}
-    /***mask***/
-    .my-mask{
-        position: fixed;
-        top:0;
-        right:0;
-        bottom: 0;
-        left:0;
-        z-index: 999;
-    }
-    .my-mask-back{
-        position: absolute;
-        top:0;
-        right:0;
-        bottom: 0;
-        left:0;
-        z-index: 996;
-        background-color: rgba(0,0,0,0.3);
-    }
-    .my-mask-content{
-        width:79.2vw;
-        background-color: #f9f9f9;
-        position: absolute;
-        top:50%;
-        left:50%;
-        -webkit-transform: translate(-50%,-60%);
-        -moz-transform: translate(-50%,-60%);
-        -ms-transform: translate(-50%,-60%);
-        -o-transform: translate(-50%,-60%);
-        transform: translate(-50%,-60%);
-        transform: translate(-50%,-60%);
-        z-index: 999;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    .my-mask-content>h3{
-        padding:1.7rem 0;
-        margin:0;
-        text-align: center;
-        color: #333;
-        font-size:1.8rem;
-    }
-    .my-mask-input{
-        padding:1.2rem 2rem;
-    }
-    .my-mask-input>input{
-        display: block;
-        box-sizing: border-box;
-        width:100%;
-        height:3.5rem;
-        padding:1.5rem 0.5rem;
-        border:1px solid #dcdcdc;
-        border-radius:5px;
-        text-align: center;
-        font-size: 1.4rem;
-    }
-    .my-mask-input>span{
-        display: block;
-        width:100%;
-        text-align: center;
-        color: #999;
-        line-height: 2rem;
-        font-size: 1.2rem;
-    }
-    .my-phone-list>li{
-        width:53vw;
-        margin:0 auto;
-        padding-bottom: 2rem;
-        color: #333;
-        font-size: 1.5rem;
-    }
-    .my-radio+span{
-        position: relative;
-        line-height: 1.5rem;
-        padding-left: 3rem;
-    }
-    .my-radio+span>b{
-        content: '';
-        display: flex;
-        box-sizing: border-box;
-        height:1.5rem;
-        width:1.5rem;
-        border-radius: 50%;
-        border:1px solid #979797;
-        position: absolute;
-        left:0;
-        justify-content: center;
-        align-items: center;
-    }
-    .my-radio+span>b:before{
-        content: '';
-        display: inline-block;
-        box-sizing: border-box;
-        height:1rem;
-        width:1rem;
-        border-radius: 50%;
-        border:1px solid #979797;
-    }
-    .my-radio:checked+span>b{
-        border-color: #1F85EB;
-    }
-    .my-radio:checked+span>b:before{
-        border:none;
-        background-color: #1F85EB;
-    }
-    .my-btn-group{
-        display: -webkit-flex;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-top:1px solid #dcdcdc;
-    }
-    .my-btn-group>li{
-        height:4.8rem;
-        line-height: 4.8rem;
-        font-size: 1.8rem;
-        color: #1F85EB;
-        text-align: center;
-        width:50%;
-        box-sizing: border-box;
-    }
-    .my-btn-group>li>a{
-        display: block;
-        height:100%;
-        width:100%;
-        color: #1F85EB;
-    }
-    .my-btn-group>li:not(:last-child){
-        border-right: 1px solid #dcdcdc;
-    }
+    .input-ft-right{text-align:right;float:right;color:#999;font-size:1.5rem}
+    .btn-gray{background-color:#c3c3c3}
+    .my-mask{position:fixed;top:0;right:0;bottom:0;left:0;z-index:999}
+    .my-mask-back{position:absolute;top:0;right:0;bottom:0;left:0;z-index:996;background-color:rgba(0,0,0,.3)}
+    .my-mask-content{width:79.2vw;background-color:#f9f9f9;position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%,-60%);-moz-transform:translate(-50%,-60%);-ms-transform:translate(-50%,-60%);-o-transform:translate(-50%,-60%);transform:translate(-50%,-60%);transform:translate(-50%,-60%);z-index:999;border-radius:10px;overflow:hidden}
+    .my-mask-content>h3{padding:1.7rem 0;margin:0;text-align:center;color:#333;font-size:1.8rem}
+    .my-mask-input{padding:1.2rem 2rem}
+    .my-mask-input>input{display:block;box-sizing:border-box;width:100%;height:3.5rem;padding:1.5rem .5rem;border:1px solid #dcdcdc;border-radius:5px;text-align:center;font-size:1.4rem}
+    .my-mask-input>span{display:block;width:100%;text-align:center;color:#999;line-height:2rem;font-size:1.2rem}
+    .my-phone-list>li{width:53vw;margin:0 auto;padding-bottom:2rem;color:#333;font-size:1.5rem}
+    .my-radio+span{position:relative;line-height:1.5rem;padding-left:3rem}
+    .my-radio+span>b{content:'';display:flex;box-sizing:border-box;height:1.5rem;width:1.5rem;border-radius:50%;border:1px solid #979797;position:absolute;left:0;justify-content:center;align-items:center}
+    .my-radio+span>b:before{content:'';display:inline-block;box-sizing:border-box;height:1rem;width:1rem;border-radius:50%;border:1px solid #979797}
+    .my-radio:checked+span>b{border-color:#1F85EB}
+    .my-radio:checked+span>b:before{border:none;background-color:#1F85EB}
+    .my-btn-group{display:-webkit-flex;display:flex;justify-content:center;align-items:center;border-top:1px solid #dcdcdc}
+    .my-btn-group>li{height:4.8rem;line-height:4.8rem;font-size:1.8rem;color:#1F85EB;text-align:center;width:50%;box-sizing:border-box}
+    .my-btn-group>li>a{display:block;height:100%;width:100%;color:#1F85EB}
+    .my-btn-group>li:not(:last-child){border-right:1px solid #dcdcdc}
+
 </style>
 {/block}
 
@@ -297,7 +175,6 @@
 
 {block name="script"}
 <script>
-
     var info  = {$info};
     var baseData=info.departmentlist;
     Vue.directive('focus', {
@@ -308,7 +185,7 @@
                 el.focus()
             }
         }
-    })
+    });
     var vm = new Vue({
         el:'#app',
         data:{
