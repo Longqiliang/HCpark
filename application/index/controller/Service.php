@@ -2187,6 +2187,7 @@ class Service extends Base
             $info['create_time'] = time();
             $info['userid'] = $userid;
             $info['park_id'] = $park_id;
+            $info['submit_img']=json_encode( $info['submit_img']);
             $re = $ti->save($info);
             if ($re) {
                //用户提交查询申请后，推送给园区服务人员，推送：商标查询服务提示/时间/您有一条新的商标查询服务待处理，请登录后台查看；
