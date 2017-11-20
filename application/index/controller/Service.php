@@ -12,6 +12,8 @@ use app\common\model\FeePayment;
 use app\common\model\PeopleRent;
 use  app\index\model\CompanyService;
 use app\index\model\CarparkService;
+use app\index\model\TrademarkAdvisory;
+use app\index\model\TrademarkInquire;
 use app\index\model\WaterService;
 use app\index\model\WechatUser;
 use app\index\model\CompanyApplication;
@@ -53,6 +55,13 @@ class Service extends Base
         if ($info['fee_status'] == 0) {
             $is = "no";
         }
+
+        $water = 'yes';
+        if ($info['water_status'] == 0) {
+            $water = "no";
+        }
+
+
         if ($park_id == 3) {
             $parkName = [['name' => '希垦科技园']];
         }
@@ -120,7 +129,6 @@ class Service extends Base
         $TopServices = array();
         $num = 0;
         foreach ($PropertyServices as $value) {
-
             if ($value['is_top'] == 1 && $num < 4) {
                 $num++;
                 array_push($TopServices, $value);
@@ -138,10 +146,12 @@ class Service extends Base
         $this->assign('top_service', json_encode($TopServices));
         $this->assign('talent', json_encode($Talent));
         $this->assign('is_fee', $is);
+        $this->assign('is_water', $water);
         $this->assign('parkName', json_encode($parkName));
         return $this->fetch();
 
     }
+
 
     //选择服务
     public function onCheck()
@@ -157,19 +167,19 @@ class Service extends Base
         $info = [];
         $user = $UserModel->where('userid', $userid)->find();
         $parkInfo = Park::where('id', $parkid)->find();
-        $parkroom = ParkRoom::where('company_id',$user['department'])->find();
-        $build_block = !empty($parkroom)?$parkroom['build_block']:"";
+        $parkroom = ParkRoom::where('company_id', $user['department'])->find();
+        $build_block = !empty($parkroom) ? $parkroom['build_block'] : "";
         //echo json_encode($user);
-        if(empty($user['company_address'])){
-            if(empty($parkroom)){
-                $office="";
-            }else {
-                $office= $parkroom['room'];
+        if (empty($user['company_address'])) {
+            if (empty($parkroom)) {
+                $office = "";
+            } else {
+                $office = $parkroom['room'];
             }
-        }else{
+        } else {
             //$array=explode("幢",$user['company_address']);
             //$build_block=$array[0]."幢";
-            $office=$user['company_address'];
+            $office = $user['company_address'];
         }
 
         switch ($app_id) {
@@ -183,7 +193,7 @@ class Service extends Base
                     'mobile' => $user['mobile'],
                     'propretyMobile' => $parkInfo['property_phone'],
                     'office' => $office,
-                    'build_block'=>$build_block,
+                    'build_block' => $build_block,
                 ];
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
@@ -196,7 +206,7 @@ class Service extends Base
                 $info['name'] = $user['name'];
                 $info['mobile'] = $user['mobile'];
                 $info['office'] = $office;
-                $info['build_block']=$build_block;
+                $info['build_block'] = $build_block;
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
@@ -208,7 +218,7 @@ class Service extends Base
                     'name' => $user['name'],
                     'mobile' => $user['mobile'],
                     'office' => $office,
-                    'build_block'=>$build_block,
+                    'build_block' => $build_block,
                     'propretyMobile' => $parkInfo['property_phone']
                 ];
                 $floorList = $this->commonFloor();
@@ -275,7 +285,6 @@ class Service extends Base
                 break;
             //企业招聘(人才服务)
             case 20:
-
                 $map = array(
                     'park_id' => $parkid,
                     'status' => 1,
@@ -299,6 +308,7 @@ class Service extends Base
         $this->assign('info', json_encode($info));
         return $this->fetch($path);
     }
+
 
     /*企业招聘详情页*/
     public function talentdetail()
@@ -1823,7 +1833,7 @@ class Service extends Base
     }
 
 
-     //饮水服务
+    //饮水服务
     public function waterService()
     {
         $data = input('post.');
@@ -2103,6 +2113,41 @@ class Service extends Base
         }
     }
 
+    /**
+     *
+     * 商标注册
+     */
+    public function trademark()
+    {
+        if (IS_POST) {
+            $userid=session('userId');
+            $park_id = session('park_id');
+            $ti = new TrademarkInquire();
+            $info = input('');
+            $info['status']=0;
+            $info['create_time']=time();
+            $info['userid']=$userid;
+            $info['park_id']=$park_id;
+            $re = $ti->save($info);
+            if($re){
+                return $this->success('成功');
+
+            }else{
+
+
+            }
+
+
+
+
+        } else {
+            return $this->fetch();
+        }
+
+
+    }
+
+
     /* 记录详情*/
     public function historyDetail()
     {
@@ -2137,9 +2182,9 @@ class Service extends Base
             $info['water_name'] = isset($info->watertype->water_name) ? $info->watertype->water_name : "";
             $info['format'] = isset($info->watertype->format) ? $info->watertype->format : "";
             unset($info['watertype']);
-            $info['create_time'] = !empty($info['create_time'])?date('m月d日 H:i', $info['create_time']):"";
-            $info['check_time'] = !empty($info['check_time'])?date('m月d日 H:i', $info['check_time']):"";
-            $info['end_time'] = !empty($info['end_time'])?date('m月d日 H:i', $info['end_time']):"";
+            $info['create_time'] = !empty($info['create_time']) ? date('m月d日 H:i', $info['create_time']) : "";
+            $info['check_time'] = !empty($info['check_time']) ? date('m月d日 H:i', $info['check_time']) : "";
+            $info['end_time'] = !empty($info['end_time']) ? date('m月d日 H:i', $info['end_time']) : "";
         } elseif ($appid == 4) {
             $info = PropertyServer::get($id);
             $info['image'] = json_decode($info['image']);
@@ -2889,15 +2934,15 @@ class Service extends Base
         switch ($park_id) {
             case  3 :
                 $department_id = 76;
-                $propertyDepartment=86;
+                $propertyDepartment = 86;
                 break;
             case  80 :
                 $department_id = 88;
-                $propertyDepartment=90;
+                $propertyDepartment = 90;
                 break;
             default:
                 $department_id = 76;
-                $propertyDepartment=86;
+                $propertyDepartment = 86;
                 break;
         }
         switch ($type) {
