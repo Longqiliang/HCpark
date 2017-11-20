@@ -550,6 +550,41 @@ class Park extends Admin
         }
     }
     /**
+     * 删除楼层信息
+     */
+    protected function delfloor(){
+        $parkRoom = new ParkRoom();
+        $parkFloor = new ParkFloor();
+        $parkId = session("user_auth")['park_id'] ;
+        $id = input('id');
+        $build = input('build_block');
+        $floor = input('floor');
+        $floorArr = $this->floor($parkId,$build);
+        if ($id ==1){
+            //删除一层楼的信息
+            $map = ['park_id'=>$parkId,'build_block'=>$build,'floor'=>$floor];
+            $res = $parkRoom->where($map)->update(['del'=>-1]);
+            if ($res){
+
+                return $this->success('删除成功');
+            }else{
+
+                return $this->error("删除失败");
+            }
+        }else{
+            //删除楼层
+            $map = ['park_id'=>$parkId,'build'=>$build,'fid'=>$floor];
+            $res = $parkFloor->where($map)->delete();
+            if ($res){
+
+                return $this->success('删除成功','',$floorArr);
+            }else{
+
+                return $this->error("删除失败");
+            }
+        }
+    }
+    /**
      * 添加房屋出租信息
      */
     public function addRents(){
@@ -702,7 +737,8 @@ class Park extends Admin
     }
 
     /**
-     *
+     * 获取楼层详细信息信息公共方法
+     * @return  array
      */
     public function getFloor(){
         $park_id = session('user_auth')['park_id'];
@@ -710,8 +746,17 @@ class Park extends Admin
         $data = $parkRoom->getFloorInfo($park_id);
 
         return ($data);
-
     }
+    /**
+     * 获取楼层信息
+     * @return json
+     */
+    protected function floor($park,$build){
+        $parkFloor = new ParkFloor();
+        $map = ['park_id'=>$park,'build'=>$build];
+        $list = $parkFloor->where($map)->order('fid asc')->select();
 
+        return json_encode($list);
+    }
 
 }
