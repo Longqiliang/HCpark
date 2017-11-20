@@ -60,12 +60,6 @@ class Service extends Base
         if ($info['water_status'] == 0) {
             $water = "no";
         }
-        $is_free = 'yes';
-        if ($info['is_frees'] == 0) {
-            $is_free = "no";
-        }
-
-
         if ($park_id == 3) {
             $parkName = [['name' => '希垦科技园']];
         }
@@ -151,7 +145,6 @@ class Service extends Base
         $this->assign('talent', json_encode($Talent));
         $this->assign('is_fee', $is);
         $this->assign('is_water', $water);
-        $this->assign('is_free',$is_free);
         $this->assign('parkName', json_encode($parkName));
 
         return $this->fetch();
