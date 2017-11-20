@@ -655,6 +655,7 @@ class Park extends Admin
         $parkRent = new ParkRent();
         $id = input("id");
         $parkRoom = new ParkRoom();
+        $floor = $this->getFloor();
         if (input('uid')) {
             $data = input('post.');
 
@@ -666,7 +667,7 @@ class Park extends Admin
                 if ($rents) {
                     $parkRent->where(['id' => $rents['id'], 'status' => 0])->update(['status' => -1]);
                 }
-                $this->success("修改成功");
+                $this->success("修改成功","",json_encode($floor));
             } else {
                 $this->error("修改失败");
             }
@@ -690,9 +691,10 @@ class Park extends Admin
             unset($data['uid']);
             $res = $parkRoom->validate(true)->allowField(true)->save($data);
 
+
             if ($res) {
 
-                $this->success("添加成功");
+                $this->success("添加成功",'',json_encode($floor));
             } else {
                 $this->error($parkRoom->getError());
             }
