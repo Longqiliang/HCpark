@@ -1899,6 +1899,52 @@ class Service extends Base
         return $info;
     }
 
+    //商标咨询记录
+    public function advisoryHistory()
+    {
+        $info = [];
+        $userid = session('userId');
+        $map = [
+            'status' => array('neq', -1),
+            'userid' => $userid,
+        ];
+        $list = TrademarkAdvisory::where($map)->order('create_time desc,status asc')->select();
+
+        foreach ($list as $k => $v) {
+            $info[$k] = [
+                'id' => $v['id'],
+                'type' => $v['type'],
+                'time' => date('Y-m-d', $v['create_time']),
+                'status' => $v['status']
+            ];
+        }
+
+        return $info;
+
+    }
+    //商标查询记录
+    public function inquireHistory()
+    {
+        $info = [];
+        $userid = session('userId');
+        $map = [
+            'status' => array('neq', -1),
+            'userid' => $userid,
+        ];
+        $list = TrademarkInquire::where($map)->order('id desc')->select();
+
+        foreach ($list as $k => $v) {
+            $info[$k] = [
+                'id' => $v['id'],
+                'type' => $v['type'],
+                'time' => date('Y-m-d', $v['create_time']),
+                'status' => $v['status']
+            ];
+        }
+
+        return $info;
+    }
+
 //饮水服务详情页()
     public function waterDetail()
     {
@@ -2042,7 +2088,16 @@ class Service extends Base
         } elseif ($appid == 7) {
 
             $info = $this->pillarRecord();
+        } elseif ($appid == 12) {
+            //type =1 商标查询   2 商标咨询
+            if($type==1) {
+                $info = $this->inquireHistory();
+            }elseif ($type==2){
+                $info = $this->advisoryHistory();
+            }
         }
+
+
         foreach ($info as $k => $value) {
             $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/id/' . $info[$k]['id'];
         }
@@ -2115,38 +2170,57 @@ class Service extends Base
 
     /**
      *
-     * 商标注册
+     * 商标查询
      */
     public function trademark()
     {
         if (IS_POST) {
-            $userid=session('userId');
+            $userid = session('userId');
             $park_id = session('park_id');
             $ti = new TrademarkInquire();
             $info = input('');
-            $info['status']=0;
-            $info['create_time']=time();
-            $info['userid']=$userid;
-            $info['park_id']=$park_id;
+            $info['status'] = 0;
+            $info['create_time'] = time();
+            $info['userid'] = $userid;
+            $info['park_id'] = $park_id;
             $re = $ti->save($info);
-            if($re){
+            if ($re) {
                 return $this->success('成功');
 
-            }else{
-
-
+            } else {
+                return $this->error('失败', '', $ti->getError());
             }
-
-
-
-
         } else {
             return $this->fetch();
         }
-
-
     }
 
+    /**
+     *
+     * 商标咨询
+     */
+    public function trademarkAdvisory()
+    {
+        if (IS_POST) {
+            $userid = session('userId');
+            $park_id = session('park_id');
+            $ta = new TrademarkAdvisory();
+            $info = input('');
+            $info['status'] = 0;
+            $info['create_time'] = time();
+            $info['userid'] = $userid;
+            $info['park_id'] = $park_id;
+            $re = $ta->save($info);
+            if ($re) {
+                return $this->success('成功');
+
+            } else {
+                return $this->error('失败', '', $ti->getError());
+            }
+        } else {
+            return $this->fetch();
+        }
+    }
 
     /* 记录详情*/
     public function historyDetail()
@@ -2356,13 +2430,23 @@ class Service extends Base
                         'price' => count($list) * $serviceInfo['price']
                     ];
                     break;
-
-
             }
-
-
+        } /*商标查询(type=1)/商标咨询(type=2)*/
+        else if ($appid == 12) {
+            $type = input('type');
+            if($type==1) {
+                $info = TrademarkInquire::get($id);
+                $app = CompanyApplication::Where('app_id', $appid)->find();
+                $info['name'] = $app['name'];
+                $info['submit_type'] = !empty($info['submit_type']) ? json_decode($info['submit_type']) : array();
+                $info['back_img'] = !empty($info['back_img']) ? json_decode($info['back_img']) : array();
+            }elseif ($type==2){
+                $info = TrademarkAdvisory::get($id);
+                $app = CompanyApplication::Where('app_id', $appid)->find();
+                $info['name'] = $app['name'];
+            }
         } //企业服务
-        else if (9 < $appid && $appid < 19) {
+        else if (9 < $appid && $appid < 19 && $appid != 12) {
             $info = CompanyService::get($id);
             $app = CompanyApplication::Where('app_id', $appid)->find();
             $info['name'] = $app['name'];
@@ -2490,6 +2574,8 @@ class Service extends Base
                     $res['status'] = 3;
                     $res->save();
                     if ($res) {
+                        //使用一次报修服务，流程走完后获得1个积分；
+                        WechatUser::where('userid',session('userId'))->setInc('score',1);
                         return $this->success("上传凭证成功");
                     } else {
                         return $this->error("上传凭证失败");
@@ -2563,6 +2649,9 @@ class Service extends Base
                 if ($success == 1) {
                     $result = WaterModel::where('id', 'in', $id)->update(['status' => 3, 'end_time' => time()]);
                     if ($result) {
+                        //使用一次饮水服务，流程走完后获得1个积分；
+                        $re = WechatUser::where('userid',session('userId'))->setInc('score',1);
+
                         //推送物业，运营 已送达
                         $message = [
                             "title" => "饮水服务提示",
@@ -2761,6 +2850,10 @@ class Service extends Base
                     $record['check_remark'] = $data['check_remark'];
                     $record['status'] = 1;
                     $record['electricity_id'] = $data['electricity_id'];
+                    //使用一次充电柱服务，流程走完后获得1个积分；
+                    WechatUser::where('userid',session('userId'))->setInc('score',1);
+
+
                 } else {
                     if ($record['type'] == 1) {
                         $message ['description'] = "您的新柱缴费无法通过审核";
@@ -2911,6 +3004,7 @@ class Service extends Base
                 break;
         }
     }
+
 
     /*推个人中心，推送人员选择公共方法
      *$type =1  该园区运营人员
