@@ -54,6 +54,35 @@
     .list-item .item-cell{width:50%;padding:3.46vw 0;display:flex;align-items:center}
     .list-item .item-cell:nth-of-type(2n){justify-content:flex-end;padding-right:4vw}
     .list-item .item-cell img{width:26px;height:26px;margin-right:5vw;vertical-align:middle}
+    .list-item .item-cell>span{position: relative;}
+    .list-item .item-cell>span>a{
+        width: 95px;
+        color: #EC7574;
+        font-size: 9px;
+        position: absolute;
+        bottom:-12px;
+        left:50%;
+        text-align: center;
+        -webkit-transform: translateX(-50%);
+        -moz-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        -o-transform: translateX(-50%);
+        transform: translateX(-50%);
+        display: -webkit-flex;
+        justify-content: center;
+        align-items: center;
+        font-family: '微软雅黑';
+        font-weight: 500;
+
+    }
+    .list-item .item-cell>span>a:after,.list-item .item-cell>span>a:before{
+        content: '';
+        display: block;
+        margin:0 5px;
+        width:9px;
+        height:1px;
+        background-color: #EC7574;
+    }
     .banner-list{height:16vw;background:#fff;display:flex;position:relative;top:0;left:0;z-index:1;margin:0 2.4vw;border-radius:5px;box-shadow:0 0 4px rgba(0,0,0,.1)}
     .banner-list .list-tit{padding:3.2vw;font-size:1.6rem;position:relative}
     .banner-list .list-tit:after{content:'';position:absolute;height:8vw;width:1px;right:0;background-color:#e8e8e8;top:50%;transform:translateY(-50%)}
@@ -75,23 +104,6 @@
 {/block}
 {block name="body"}
 <div id="app" class="content" >
-    <!--<div class="my-park">-->
-    <!--<span>欢迎来到企业服务！</span>-->
-    <!--<div>-->
-    <!--<span>当前：</span>-->
-    <!--<select name="" id="" v-model="nowPark" @change="parkChange" v-if="baseData.isBoss=='yes'">-->
-    <!--<option :value="item.value" v-for="(item,key) in parks" >-->
-    <!--{{item.name}}-->
-    <!--</option>-->
-    <!--</select>-->
-    <!--<select   v-else>-->
-    <!--<option >-->
-    <!--希垦科技园-->
-    <!--</option>-->
-    <!--</select>-->
-    <!--</div>-->
-
-    <!--</div>-->
     <div class="banner">
         <img src="/index/images/service/index/banner.png" >
         <div class="banner-txt-box">
@@ -142,7 +154,7 @@
             <div class="list-item">
                 <div class="item-cell" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.companyService">
                     <img :src="item.img"  alt="图标">
-                    <span>{{item.name}}</span>
+                    <span>{{item.name}}<a v-if="item.is_free">免费服务</a></span>
                 </div>
             </div>
         </div>
@@ -156,43 +168,13 @@
             </div>
         </div>
     </div>
-    <!--<div class="banner-list">-->
-    <!--<div class="list-tit">-->
-    <!--<i class="icon-policy"></i>-->
-    <!--</div>-->
-    <!--<div class="list-group" @click="jump('/index/policy/index')">-->
-    <!--<div class="swiper-container listSwiper" id="listSwiper">-->
-    <!--<div class="swiper-wrapper" v-if="news.length > 0">-->
-    <!--<div class="swiper-slide" v-for="item of news">-->
-    <!--<div class="list-item">{{item.title}}</div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div v-else>-->
-    <!--<div class="list-item">暂无信息</div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
 </div>
 
 {/block}
 {block name="script"}
 <script src="/static/swiper/swiper-3.3.1.jquery.min.js"></script>
 <script>
-    console.log({$parkName});
-//    var parkSlots =[];
-//    if('{$is_boss}' == 'yes'){
-//        parkSlots = [
-//            {name:'希垦科技园',value:0},
-//            {name:'人工智能产业园区',value:1}
-//        ];
-//    }else{
-//        parkSlots = [
-//            {name:'希垦科技园',value:0}
-//        ];
-//    }
     var parkSlots = {$parkName};
-    console.log(parkSlots);
     var app=new Vue({
         el:'#app',
         data:{
@@ -202,7 +184,8 @@
                 propertyServices:JSON.parse('{$propert}'),
                 companyService:JSON.parse('{$company}'),
                 talentService:JSON.parse('{$talent}'),
-                topService:{$top_service}
+                topService:{$top_service},
+                is_water:'{$is_water}'
             },
             tab:[
                 {type:1,name:'物业服务'},
@@ -233,7 +216,6 @@
                 }, 100);
                 window.addEventListener('scroll', this.handleScroll);
             });
-            console.log(this.baseData);
             listSwiper = new Swiper('#listSwiper',{
                 observer:true,
                 observeParents:true,
@@ -263,7 +245,6 @@
                 var _this = this;
                 _this.parkVisible = false;
                 _this.nowPark = _this.parkObj;
-                //console.log(_this.nowPark.value);
             },
             handleScroll () {
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
@@ -338,7 +319,7 @@
                 }
             },
             jumpTo(path,id){
-                if(id==1 && this.baseData.isFee=='no'){
+                if((id==1 && this.baseData.isFee=='no') || (id==3 && this.baseData.is_water=='no')){
                     window.location.href='/index/service/noPermissions';
                     return;
                 }

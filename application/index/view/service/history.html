@@ -88,6 +88,12 @@
             <span v-if="item.num">数量：{{item.num}}桶</span>
             <span v-if="item.pay">缴费金额：{{item.pay}}元</span>
         </li>
+        <li v-if="appid==12">
+            {{item}}
+            <!--<span>{{item.time}}</span>-->
+            <!--<span v-if="item.num">数量：{{item.num}}桶</span>-->
+            <!--<span v-if="item.pay">缴费金额：{{item.pay}}元</span>-->
+        </li>
     </ul>
     <p class="no-history" v-if="historyList==''">
         <img src="/index/images/service/card/icon-default.jpg" >
