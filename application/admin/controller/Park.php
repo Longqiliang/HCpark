@@ -540,6 +540,13 @@ class Park extends Admin
     public function addfloor(){
         $data = input();
         $floor = new ParkFloor();
+        $park_id = session('user_auth')['park_id'];
+        $map = ['fid'=>input('fid'),'build'=>input('build'),'park_id'=>$park_id];
+        $re = $floor->where($map)->find();
+        if ($re){
+
+            return $this->error("该信息已经存在，无法添加");
+        }
         $res = $floor->allowField(true)->save($data);
         if ($res){
 
