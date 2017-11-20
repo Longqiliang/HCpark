@@ -13,6 +13,8 @@ namespace app\index\controller;
 use app\index\model\CarparkService;
 use app\index\model\Collect as CollectModel;
 use app\index\model\ParkCompany;
+use app\index\model\TrademarkAdvisory;
+use app\index\model\TrademarkInquire;
 use app\index\model\WechatUser;
 use app\index\model\WechatDepartment;
 use app\index\model\PersonalMessage;
@@ -887,6 +889,41 @@ class Personal extends Base
                             $value['status_text'] = '已完成';
                         }
                     }
+                    //商标查询
+                    $list =TrademarkInquire::where(['status'=>['neq',-1],'park_id'=>$park_id])->select();
+                    foreach ($list as $value){
+                        if ($value['status'] == 0) {
+                            $value['status_text'] = '未联系';
+                        } else {
+                            $value['status_text'] = '已联系';
+                        }
+                     $map=[
+                         'service_name'=>'商标查询',
+                         'create_time'=>date("Y-m-d", $value['create_time']),
+                         'status_text'=> $value['status_text'],
+                         'status'=>$value['status'],
+                         'id'=>$value['id']
+                     ];
+                    array_push($company_list,$map);
+                    }
+                    //商标咨询
+                    $list =TrademarkAdvisory::where(['status'=>['neq',-1],'park_id'=>$park_id])->select();
+                    foreach ($list as $value){
+                        if ($value['status'] == 0) {
+                            $value['status_text'] = '未联系';
+                        } else {
+                            $value['status_text'] = '已联系';
+                        }
+                        $map=[
+                            'service_name'=>'商标咨询',
+                            'create_time'=>date("Y-m-d", $value['create_time']),
+                            'status_text'=> $value['status_text'],
+                            'status'=>$value['status'],
+                            'id'=>$value['id']
+                        ];
+                        array_push($company_list,$map);
+                    }
+
                 }
                 $company_list = empty($company_list) ? array() : $company_list;
                 $this->assign('company', json_encode($company_list));
@@ -920,6 +957,40 @@ class Personal extends Base
                     } else {
                         $value['status_text'] = '已完成';
                     }
+                }
+                //商标查询
+                $list2 =TrademarkInquire::where(['status'=>['neq',-1],'userid'=>$userid])->select();
+                foreach ($list2 as $value){
+                    if ($value['status'] == 0) {
+                        $value['status_text'] = '未联系';
+                    } else {
+                        $value['status_text'] = '已联系';
+                    }
+                    $map=[
+                        'service_name'=>'商标查询',
+                        'create_time'=>date("Y-m-d", $value['create_time']),
+                        'status_text'=> $value['status_text'],
+                        'status'=>$value['status'],
+                        'id'=>$value['id']
+                    ];
+                    array_push($list,$map);
+                }
+                //商标咨询
+                $list2 =TrademarkAdvisory::where(['status'=>['neq',-1],'userid'=>$userid])->select();
+                foreach ($list2 as $value){
+                    if ($value['status'] == 0) {
+                        $value['status_text'] = '未联系';
+                    } else {
+                        $value['status_text'] = '已联系';
+                    }
+                    $map=[
+                        'service_name'=>'商标咨询',
+                        'create_time'=>date("Y-m-d", $value['create_time']),
+                        'status_text'=> $value['status_text'],
+                        'status'=>$value['status'],
+                        'id'=>$value['id']
+                    ];
+                    array_push($list,$map);
                 }
                 $this->assign('company', json_encode($list));
                 break;
