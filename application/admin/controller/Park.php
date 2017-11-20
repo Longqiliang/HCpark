@@ -552,7 +552,7 @@ class Park extends Admin
     /**
      * 删除楼层信息
      */
-    protected function delfloor(){
+    public function delfloor(){
         $parkRoom = new ParkRoom();
         $parkFloor = new ParkFloor();
         $parkId = session("user_auth")['park_id'] ;
@@ -755,8 +755,12 @@ class Park extends Admin
         $parkFloor = new ParkFloor();
         $map = ['park_id'=>$park,'build'=>$build];
         $list = $parkFloor->where($map)->order('fid asc')->select();
+        $data = [];
+        foreach($list as $k=>$v){
+            $data[$k] = $v['fid'];
+        }
 
-        return json_encode($list);
+        return json_encode($data);
     }
     /**
      * 点击获取楼房信息的公共方法
