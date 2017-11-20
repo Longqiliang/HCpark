@@ -566,7 +566,6 @@ class Park extends Admin
         $id = input('id');
         $build = input('build_block');
         $floor = input('floor');
-        $floorArr = $this->floor($parkId,$build);
         if ($id ==1){
             //删除一层楼的信息
             $map = ['park_id'=>$parkId,'build_block'=>$build,'floor'=>$floor];
@@ -582,9 +581,10 @@ class Park extends Admin
             //删除楼层
             $map = ['park_id'=>$parkId,'build'=>$build,'fid'=>$floor];
             $res = $parkFloor->where($map)->delete();
+            $floorArr = $this->floor($parkId,$build);
             if ($res){
 
-                return $this->success('删除成功','',['floor'=>$floorArr]);
+                return $this->success('删除成功','',json_encode(['floor'=>$floorArr]));
             }else{
 
                 return $this->error("删除失败");
@@ -767,7 +767,7 @@ class Park extends Admin
             $data[$k] = $v['fid'];
         }
 
-        return json_encode($data);
+        return ($data);
     }
     /**
      * 点击获取楼房信息的公共方法
