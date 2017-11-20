@@ -14,8 +14,8 @@ use think\Model;
 class TrademarkInquire extends Model
 {
     protected $type = [
-        'create_time' => 'strtotimee',
-        'end_time' => 'strtotimee'
+        'create_time' => 'strtotime',
+        'end_time' => 'strtotime'
     ];
 
 

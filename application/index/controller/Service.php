@@ -1008,6 +1008,9 @@ class Service extends Base
             //推送给运营
             $reult = $this->commonSend(1, $message, '', 8);
             if ($reult) {
+                //成功预约一次设备服务，获得1个积分；
+                WechatUser::where('userid',session('userId'))->setInc('score',1);
+
                 $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
                 return $this->success('成功', "", $msg);
             } else {
@@ -1240,6 +1243,8 @@ class Service extends Base
             //推送给运营
             $reult = $this->commonSend(1, $message, '', 8);
             if ($reult) {
+                //成功预约一次设备服务，获得1个积分；
+                WechatUser::where('userid',session('userId'))->setInc('score',1);
                 return $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
@@ -1439,6 +1444,8 @@ class Service extends Base
             //推送给运营和物业
             $reult = $this->commonSend(1, $message, '', 8);
             if ($reult) {
+                //成功预约一次设备服务，获得1个积分；
+                WechatUser::where('userid',session('userId'))->setInc('score',1);
                 return $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
@@ -2185,6 +2192,14 @@ class Service extends Base
             $info['park_id'] = $park_id;
             $re = $ti->save($info);
             if ($re) {
+               //用户提交查询申请后，推送给园区服务人员，推送：商标查询服务提示/时间/您有一条新的商标查询服务待处理，请登录后台查看；
+                $message = [
+                    "title" => "商标查询服务提示",
+                    "description" => "您有一条新的商标查询服务待处理，请登录后台查看",
+                ];
+                //推送给运营
+                $reult = $this->commonSend(1, $message, "", 12);
+
                 return $this->success('成功');
 
             } else {
@@ -2212,10 +2227,17 @@ class Service extends Base
             $info['park_id'] = $park_id;
             $re = $ta->save($info);
             if ($re) {
+              //咨询提交后，推送给园区服务人员，推送：商标查询服务咨询提示/时间/您有一条商标查询服务咨询待处理，请登录后台查看；
+                $message = [
+                    "title" => "商标查询服务咨询提示",
+                    "description" => "您有一条商标查询服务咨询待处理，请登录后台查看",
+                ];
+                //推送给运营
+                $reult = $this->commonSend(1, $message, "", 12);
                 return $this->success('成功');
 
             } else {
-                return $this->error('失败', '', $ti->getError());
+                return $this->error('失败', '', $ta->getError());
             }
         } else {
             return $this->fetch();
@@ -2952,6 +2974,9 @@ class Service extends Base
                           'userid' => $record['user_id']
                       ];
                       $savemessage = $personalMessage->save($new);*/
+
+                    //取消预约一次设备服务，减得1个积分；
+                    WechatUser::where('userid',session('userId'))->setDec('score',1);
                     return $this->success("取消成功");
                 } else {
                     return $this->error("推送失败");
