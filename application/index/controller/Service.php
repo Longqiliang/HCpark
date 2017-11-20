@@ -1919,7 +1919,7 @@ class Service extends Base
         foreach ($list as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
-                'type' => $v['type'],
+                'name' => $v->user->name,
                 'time' => date('Y-m-d', $v['create_time']),
                 'status' => $v['status']
             ];
@@ -2102,10 +2102,8 @@ class Service extends Base
                 $info = $this->advisoryHistory();
             }
         }
-
-
         foreach ($info as $k => $value) {
-            $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/id/' . $info[$k]['id'];
+            $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/'.$type.'/id/' . $info[$k]['id'];
         }
         $this->assign('info', json_encode($info));
         $this->assign('appId', $appid);
