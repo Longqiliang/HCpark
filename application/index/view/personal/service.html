@@ -14,6 +14,9 @@
     .notice .list{
         background: #fff;
     }
+    .property{
+        margin-top: 50px;
+    }
 </style>
 <!--<link rel="stylesheet" href="/index/css/common/tip.css">-->
 {/block}
@@ -153,6 +156,24 @@
                     }else{
                         return false
                     }
+                }
+            },
+            companyStatus(appid,status){
+                var s = {};
+                if(appid===12){
+                    if(status === 2){
+                        s={status : false ,text : '未回复'}
+                    }else{
+                        s={status : true ,text : '已回复'}
+                    }
+                    return status===2?true:false
+                }else{
+                    if(status === 2){
+                        s={status : false ,text : '未回复'}
+                    }else{
+                        s={status : true ,text : '已回复'}
+                    }
+                    return s
                 }
             },
             tabChange(key){

@@ -3,49 +3,7 @@
 {block name="style"}
 <title>服务记录</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
-<!--<link rel="stylesheet" href="/static/viewer/viewer.min.css">-->
-<style>
-    body{padding-bottom:1rem;background-color:#f0eff5}
-    #app:before{display:table;height:0;content:''}
-    .upload-img img{max-width:100%;max-height:100%}
-    .modal-box{position:fixed;top:0;left:0;z-index:9;display:none;width:100%;height:100vh;background:rgba(0,0,0,.4)}
-    .modal-box.show{display:block!important}
-    .modal-box .modal{position:relative;margin:20vh auto 0;padding:10px 0;width:calc(100% - 36px);border-radius:10px;background:#fff}
-    .modal>p{text-align:center;font-size:17px;line-height:40px}
-    .name-mobile,.remark{padding:5px 18px}
-    .name-mobile ul li{display:flex;overflow:hidden;border-bottom:1px solid #f1f1f1;line-height:40px;justify-content:space-between}
-    .name-mobile span{display:inline-block;color:#333;font-size:1.5rem}
-    .name-mobile span:first-child{float:left;width:62px}
-    .name-mobile input{text-align:right;font-size:1.5rem}
-    .remark p{font-size:15px}
-    .remark textarea{margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);height:18vh;border:1px solid #e5e5e5;border-radius:5px}
-    .my-cancel{position:absolute;top:-50px;right:0}
-    .my-cancel>span:first-child{display:inline-block;display:-webkit-flex;width:28px;height:28px;border:1px solid #fff;border-radius:15px;-webkit-align-items:center;-webkit-justify-content:center}
-    .my-cancel i::before{width:20px;height:20px;color:#fff}
-    .my-cancel>span:last-child{position:relative;left:50%;display:inline-block;width:0;height:22px;border-right:1px solid #fff}
-    .rent-btn-box{padding:3.5rem 4.8vw;width:100%}
-    .btn{height:5rem}
-    .btn-box{padding:4vw 4.8vw;width:100%}
-    .btn{height:10.67vw;border:none;border-radius:5px;color:#fff;text-align:center;font-size:1.5rem}
-    .btn-block{width:100%}
-    .btn-green{background-color:#fcc44b;color:#fff;font-size:1.5rem}
-    .table-view-cell.group-cell{border-bottom:none}
-    .btn-primary{background-color:#7DB8F2}
-    .card{padding-bottom:1rem}
-    .card .remark{padding:10px 0 5px}
-    .card .remark>div.no_msg{color:#e5e5e5}
-    .card .remark>div{margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);min-height:18vh;border:1px solid #e5e5e5;border-radius:5px}
-    .group-cell.btn-box{margin:0}
-    .card-cell a{color:#333}
-    .my-line{
-        width:100vw;
-        height:0;
-        border-top: 1px dashed #f1f1f1;
-        position: absolute;
-        top:44px;
-        left:0;
-    }
-</style>
+<link rel="stylesheet" href="/index/css/service/historyDetail.css">
 {/block}
 
 {block name="body"}
@@ -393,36 +351,91 @@
             <button class="btn btn-block btn-green" @click="showRent">取消预约</button>
         </div>
     </div>
-    <div v-if="appid>=10 && appid<19">
-        <div class="card">
-            <div class="card-tit">{{info.name}}</div>
-            <div class="card-cell">
-                <span>公司名称</span>
-                <span>{{info.company}}</span>
+    <!--<div v-if="appid>=10 && appid<19">-->
+        <!--<div class="card">-->
+            <!--<div class="card-tit">{{info.name}}</div>-->
+            <!--<div class="card-cell">-->
+                <!--<span>公司名称</span>-->
+                <!--<span>{{info.company}}</span>-->
+            <!--</div>-->
+            <!--<div class="card-cell">-->
+                <!--<span>联系人员</span>-->
+                <!--<span>{{info.people}}</span>-->
+            <!--</div>-->
+            <!--<div class="card-cell">-->
+                <!--<span>联系方式</span>-->
+                <!--<span>{{info.mobile}}</span>-->
+            <!--</div>-->
+            <!--<div class="card-cell">-->
+                <!--<span>提交时间</span>-->
+                <!--<span>{{info.create_time}}</span>-->
+            <!--</div>-->
+            <!--<div class="card-cell">-->
+                <!--<span>审核进度</span>-->
+                <!--<span>{{status(info.status)}}</span>-->
+            <!--</div>-->
+            <!--<div class="remark">-->
+                <!--<p>备注</p>-->
+                <!--<div>{{info.remark}}</div>-->
+            <!--</div>-->
+            <!--<div class="remark" v-if="info.status!=0 && info.check_remark">-->
+                <!--<p>物业提示</p>-->
+                <!--<div>{{info.check_remark}}</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="appid === 12">
+        <div class="table-box">
+            <div class="table-title"><span>商标类别</span><span class="icon-remarks"></span></div>
+            <div class="table-row-box">
+                <div class="table-row">
+                    <span class="table-row-header">类别选择</span>
+                    <span> <span>第 {{info.type<10?0+''+info.type:info.type}} 类</span></span>
+                </div>
             </div>
-            <div class="card-cell">
-                <span>联系人员</span>
-                <span>{{info.people}}</span>
+        </div>
+        <div class="table-box">
+            <div class="table-title"><span>商标名称</span></div>
+            <div class="table-row-box">
+                <div class="table-row">
+                    <span class="table-row-header">中文描述</span>
+                    <span>{{info.chinese_description || "无"}}</span>
+                </div>
+                <div class="table-row">
+                    <span class="table-row-header">英文描述</span>
+                    <span>{{info.english_description || "无"}}</span>
+                </div>
+                <div class="table-row">
+                    <span class="table-row-header">数字描述</span>
+                    <span>{{info.numeric_description || "无"}}</span>
+                </div>
+                <div class="table-row-block">
+                    <div class="table-row-block-header">商标描述</div>
+                    <div class="textarea-box">
+                        <div>{{info.trademark_description || "无"}}</div>
+                    </div>
+                </div>
+                <div class="table-row-block">
+                    <div class="table-row-block-header">商标图片</div>
+                    <div class="card-upload">
+                        <div class="upload-img" v-for="img in info.submit_img">
+                            <img :src="img" class="img-responsive" @click="loadImg(img,info.submit_img)">
+                        </div>
+                        <div class="" v-if="!info.submit_img">无</div>
+                    </div>
+                </div>
             </div>
-            <div class="card-cell">
-                <span>联系方式</span>
-                <span>{{info.mobile}}</span>
-            </div>
-            <div class="card-cell">
-                <span>提交时间</span>
-                <span>{{info.create_time}}</span>
-            </div>
-            <div class="card-cell">
-                <span>审核进度</span>
-                <span>{{status(info.status)}}</span>
-            </div>
-            <div class="remark">
-                <p>备注</p>
-                <div>{{info.remark}}</div>
-            </div>
-            <div class="remark" v-if="info.status!=0 && info.check_remark">
-                <p>物业提示</p>
-                <div>{{info.check_remark}}</div>
+        </div>
+
+        <div class="table-box" v-if="info.back_img">
+
+            <div class="table-title"><span>查询结果</span></div>
+            <div class="table-row-box">
+                <!--<div class="table-row-block">-->
+                    <div class="card-upload consult-back-img">
+                        <img :src="info.back_img" alt="" @click="loadImg(info.back_img,[info.back_img])">
+                    </div>
+                <!--</div>-->
             </div>
         </div>
     </div>
