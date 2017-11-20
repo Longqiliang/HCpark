@@ -577,7 +577,7 @@ class Park extends Admin
             $res = $parkFloor->where($map)->delete();
             if ($res){
 
-                return $this->success('删除成功','',$floorArr);
+                return $this->success('删除成功','',['floor'=>$floorArr]);
             }else{
 
                 return $this->error("删除失败");
