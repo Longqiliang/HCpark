@@ -584,7 +584,7 @@ class Park extends Admin
             $floorArr = $this->floor($parkId,$build);
             if ($res){
 
-                return $this->success('删除成功','',['floor'=>json_encode($floorArr)]);
+                return $this->success('删除成功','',['floor'=>$floorArr]);
             }else{
 
                 return $this->error("删除失败");
