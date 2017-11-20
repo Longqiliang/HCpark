@@ -758,5 +758,49 @@ class Park extends Admin
 
         return json_encode($list);
     }
+    /**
+     * 点击获取楼房信息的公共方法
+     */
+    public function floorInfo(){
+        $parkRoom = new ParkRoom();
+        $peoplerent = new PeopleRent();
+        $park_id = session('user_auth')['park_id'];
+        $build = input('build_block');
+        $room = input("room");
+        $map = ['room'=>$room,'park_id'=>$park_id,'build_block'=>$build];
+        $info = $parkRoom->where($map)->find();
+        if ($info['manage'] == 2){
+            $info['status'] = 4 ;
+        }else{
+            //已租状态 显示面积，公司名称，关联房间号
+            if($info['company_id'] != 0){
+                $info['status'] = 3 ;
+                //关联房间号
+                $relevance = $parkRoom->where(['company_id'=>$info['company_id'],'park_id'=>$park_id])->select();
+                if ($relevance){
+                    foreach($relevance as $key=>$value){
+                        $info['relevance'][$key] = $value['room'];
+                    }
+                }
+            }else{
+                //空置跟已经预约的状态
+                $peopleStatus = $peoplerent->where(['room_id'=>$info['id']])->find();
+                if ($peopleStatus){
+                    $info['status'] = 2 ;
+                    $peopleArr = $peoplerent->where(['room_id'=>$info['id']])->select();
+                    if (!empty($peopleArr)){
+                        foreach($peopleArr as $k2=>$v2){
+                            if ($v2['status'] == 1){
+                                $info['contract'] = "未联系" ;
+                            }
+                        }
+                    }
+                }else{
+                    $info['status'] = 1 ;
+                }
+            }
+        }
 
+        return json_encode($info);
+    }
 }
