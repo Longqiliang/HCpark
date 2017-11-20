@@ -105,7 +105,7 @@ class ParkRoom extends Model{
                     $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0 ,'park_id' => $number])->order("room asc")->select();
                     //判断房间状态，空置，已租，已约，下架
                     foreach ($roomList as $k1 => $v1){
-                        $roomArray[$k][$k1] = ['room' => $v1['room'],'room_id' => $v1['id'],'area'=>$v1['area']];
+                        $roomArray[$k][$k1] = ['room' => $v1['room'],'room_id' => $v1['id'],'area'=>$v1['area'] ,'company'=>'','relevance'=> [],'contract'=>''];
                         $roomArray[$k] = array_slice($roomArray[$k],0,$k1+1);
                         //下架状态
                         if ($v1['manage'] == 2){
@@ -114,11 +114,27 @@ class ParkRoom extends Model{
                             //已租状态 显示面积，公司名称，关联房间号
                             if($v1['company_id'] != 0){
                                 $roomArray[$k][$k1]['status'] = 3 ;
+                                $roomArray[$k][$k1]['company'] = $v1['company']  ;
+                                //关联房间号
+                                $relevance = $parkRoom->where(['company_id'=>$v1['company_id'],'park_id'=>$parkid])->select();
+                                if ($relevance){
+                                    foreach($relevance as $key=>$value){
+                                        $roomArray[$k][$k1]['relevance'][$key] = $value['room'];
+                                    }
+                                }
                             }else{
                                 //空置跟已经预约的状态
                                 $peopleStatus = $peoplerent->where(['room_id'=>$v1['id']])->find();
                                 if ($peopleStatus){
                                     $roomArray[$k][$k1]['status'] = 2 ;
+                                    $peopleArr = $peoplerent->where(['room_id'=>$v1['id']])->select();
+                                    if (!empty($peopleArr)){
+                                        foreach($peopleArr as $k2=>$v2){
+                                            if ($v2['status'] == 1){
+                                                $roomArray[$k][$k1]['contract'] = "未联系" ;
+                                            }
+                                        }
+                                    }
                                 }else{
                                     $roomArray[$k][$k1]['status'] = 1 ;
                                 }
