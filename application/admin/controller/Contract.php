@@ -33,7 +33,7 @@ class Contract extends Admin {
             if (input("id")){
                 $data = input('post.');
                 foreach($data['img'] as $k=>$v){
-                    $data['img'][$k]=str_replace("https://".$_SERVER['HTTP_HOST'],"",$v);
+                    $data['img'][$k]=str_replace("http://".$_SERVER['HTTP_HOST'],"",$v);
                 }
                 if ($data['img']) {
                     foreach ($data['img'] as $k1 => $v1) {
