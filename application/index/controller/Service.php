@@ -2194,6 +2194,7 @@ class Service extends Base
                 $message = [
                     "title" => "商标查询服务提示",
                     "description" => "您有一条新的商标查询服务待处理，请登录后台查看",
+                    "url" => ''
                 ];
                 //推送给运营
                 $reult = $this->commonSend(1, $message, "", 12);
@@ -2229,7 +2230,8 @@ class Service extends Base
                 $message = [
                     "title" => "商标查询服务咨询提示",
                     "description" => "您有一条商标查询服务咨询待处理，请登录后台查看",
-                ];
+                    "url" => ''
+                    ];
                 //推送给运营
                 $reult = $this->commonSend(1, $message, "", 12);
                 return $this->success('成功');
@@ -2458,8 +2460,8 @@ class Service extends Base
                 $info = TrademarkInquire::get($id);
                 $app = CompanyApplication::Where('app_id', $appid)->find();
                 $info['name'] = $app['name'];
-                $info['submit_type'] = !empty($info['submit_type']) ? json_decode($info['submit_type']) : array();
-                $info['back_img'] = !empty($info['back_img']) ? json_decode($info['back_img']) : array();
+                $info['submit_img'] = !empty($info['submit_img']) ? json_decode($info['submit_img']) : array();
+                $info['back_img'] = !empty($info['back_img']) ? $info['back_img'] : "";
             }elseif ($type==2){
                 $info = TrademarkAdvisory::get($id);
                 $app = CompanyApplication::Where('app_id', $appid)->find();
