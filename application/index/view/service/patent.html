@@ -211,7 +211,8 @@
         <div class="table-row-box">
             <div class="table-row" @click="toggleType">
                 <span class="table-row-header">类别选择</span>
-                <span class="table-row-select"> <span>{{typeSelect.nowType.name}} </span></span>
+                <span class="table-row-select" v-if="typeSelect.nowType"> <span>{{typeSelect.nowType.name}} </span></span>
+                <span class="table-row-select" style="color: #999;" v-else>请选择类别</span>
             </div>
         </div>
         <mt-popup  position="bottom"  v-model="typeSelect.popupVisible" class="mint-popup">
@@ -537,6 +538,7 @@
                             var data = JSON.parse(res.data);
                             console.log(data);
                             _this.isSubmit = false;
+                            this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
                             if(data.code == 1){
                                 // 在获取到文件对象进行预览
                                 _this.$indicator.close();
@@ -550,6 +552,7 @@
                                 });
                             }
                         },function (res) {
+                            this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
                             _this.isSubmit = false;
                             _this.$indicator.close();
                             _this.$toast({
