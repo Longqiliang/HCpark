@@ -533,18 +533,20 @@
     <div class="modal-cell">
         <div class="form-group">
             <label for="updateCompany">企业名称：</label>
-            <input type="text" class="form-control input-sm" id="updateCompany">
+            {{ if company }}
+            <input type="text" class="form-control input-sm" id="updateCompany" value="{{company}}">
+            {{ /if }}
         </div>
     </div>
     <div class="modal-cell">
         <div class="form-group">
-            <label for="updateType">企业类型：</label>
-            <input type="text" class="form-control input-sm" id="updateType">
+            <label>企业类型：</label>
+            <!--<input type="text" class="form-control input-sm" id="updateType">-->
         </div>
     </div>
     <div class="modal-cell">
         <div class="form-group">
-            <label for="updateType">房间状态：</label>
+            <label >房间状态：</label>
             <span>
             {{ if status == 1}}
                 空置
@@ -560,7 +562,7 @@
     </div>
     <div class="modal-cell">
         <div class="form-group">
-            <label for="updateType">关联房号：</label>
+            <label>关联房号：</label>
             <span>暂无关联房号信息</span>
         </div>
     </div>
@@ -578,12 +580,14 @@
     </div>
     <div class="modal-cell">
         <div class="upload-img-box">
-            {{each }}
+            {{ if img && img.length}}
+            {{each img as item}}
             <div class="upload-img">
                 <span class="glyphicon glyphicon-remove icon-del"></span>
-                <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
+                <img src="{{item}}" >
             </div>
             {{/each}}
+            {{ /if }}
         </div>
     </div>
 </script>
@@ -679,19 +683,32 @@
            var data = {
                room_id:room_id
            };
+           modal.find(".form-inline").empty();
            $.ajax({
                data:data,
                type:'POST',
                url:"{:Url('Park/floorInfo')}",
                success:function (e) {
-                   console.log(e);
-                   var data = JSON.parse(e);
-                   var roomTpl = template("roomInfo",data);
-                   modal.find(".form-inline").empty().append(roomTpl);
                    //return;
-                   if(data.code ==1){
-                        var roomTpl = template("roomInfo",data);
-                       modal.find(".form-inline").empty().append(roomTpl);
+                   if(e.code ==1){
+                       var data = JSON.parse(e.data);
+                       console.log(data);
+                       var roomTpl = template("roomInfo",data);
+                       modal.find(".modal-title").html(data.room);
+                       modal.find(".form-inline").append(roomTpl);
+                       //图片上传
+                       $(".input-file").fileinput({
+                           showPreview: false,
+                           language: 'zh', //设置语言
+                           uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+                           allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+                           maxFileSize: 1024 * 200,
+                           maxFilesNum : 5,//上传最大的文件数量
+                       }).on("filebatchselected", function(event, files) {
+                           $(this).fileinput("upload");
+                       }).on('fileuploaded', function(event, data, previewId, index) {
+                           console.log(event,data,previewId,index);
+                       });
                    }else{
                        updateAlert(e.msg);
                    }
