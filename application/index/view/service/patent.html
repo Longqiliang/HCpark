@@ -48,7 +48,7 @@
 {block name="body"}
 <div id="app" class="content">
     <div class="table-box">
-        <div class="table-title"><span>商标类别</span><span class="icon-remarks"></span></div>
+        <div class="table-title"><span>商标类别</span><a href="/index/service/marktype" class="icon-remarks"></a></div>
         <div class="table-row-box">
             <div class="table-row" @click="toggleType">
                 <span class="table-row-header">类别选择</span>
@@ -86,9 +86,9 @@
             <div class="table-row-block">
                 <div class="table-row-block-header">商标图片</div>
                     <div class="card-upload">
-                        <div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">
+                        <div class="upload-img" v-for="(imgUrl,index) of subData.submit_img">
                             <i class="del-img" @click="delImg(index)"></i>
-                            <img :src="imgUrl" class="img-responsive">
+                            <img :src="imgUrl" class="img-responsive" @click="loadImg(imgUrl,subData.submit_img)">
                         </div>
                         <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
                             <img src="/index/images/service/card/card-camera.png" >
@@ -141,6 +141,7 @@
 {/block}
 
 {block name="script"}
+<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     //生成类别数组=、=
     for(var i=0,type = [];i<45;i++){
@@ -193,8 +194,38 @@
                     _this.typeSelect.slots[0].defaultIndex = 0;
                 }, 100);
             });
+            var test =window.location.href;
+            var data ={
+                url:test
+            };
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                wx.config({
+                    debug: false,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+            },function () {
+            });
+
         },
         methods: {
+            //            微信jssdk - 图片预览
+            loadImg(src,imglist) {
+                var urls=[];
+                var current=window.location.protocol+'//'+window.location.host+src;
+                for(var i in imglist){
+                    urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
+                }
+                console.log(current,urls)
+                wx.previewImage({
+                    current: current,
+                    urls: urls
+                });
+            },
             //提交
            consultSubmit(){
                var _this = this;

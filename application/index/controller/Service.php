@@ -1956,6 +1956,11 @@ class Service extends Base
 
         return $info;
     }
+    //商标类别
+    public function marktype(){
+
+        return $this->fetch();
+    }
 
 //饮水服务详情页()
     public function waterDetail()
