@@ -696,25 +696,25 @@ class Park extends Admin
         $parkRent = new ParkRent();
         $id = input("id");
         $parkRoom = new ParkRoom();
+        $data = input('post.');
+        if ($data['img']) {
+            foreach ($data['img'] as $k => $v) {
+                $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
+            }
+            $data['img'] = json_encode($data['img']);
+        }
         if (input('uid')) {
-            $data = input('post.');
-
             unset($data['uid']);
             $res = $parkRoom->validate(true)->where('id', input('uid'))->update($data);
             if ($res) {
-                $rents = $parkRent->where('room_id', input('uid'))->find();
 
-                if ($rents) {
-                    $parkRent->where(['id' => $rents['id'], 'status' => 0])->update(['status' => -1]);
-                }
                 $floor = $this->getFloor();
                 $this->success("修改成功", "", json_encode($floor));
             } else {
                 $this->error("修改失败");
             }
         } else {
-            $data = input('post.');
-            //return json_encode($data);
+
             $maps = [
                 'build_block' => $data['build_block'],
                 'room' => $data['room'],
@@ -731,7 +731,6 @@ class Park extends Admin
             $data['manage'] = 2;
             unset($data['uid']);
             $res = $parkRoom->validate(true)->allowField(true)->save($data);
-
 
             if ($res) {
                 $floor = $this->getFloor();
@@ -780,9 +779,15 @@ class Park extends Admin
         $parkRoom = new ParkRoom();
         $peoplerent = new PeopleRent();
         $park_id = session('user_auth')['park_id'];
+        if ($park_id ==3){
+            $parkName = "希垦科技园";
+        }elseif ($park_id ==80){
+            $parkName = "人工智能产业园";
+        }
         $roomId = input('room_id');
         $map = ['id' => $roomId];
         $info = $parkRoom->where($map)->find();
+        $info['parkName'] = $parkName;
         if ($info['manage'] == 2) {
             $info['status'] = 4;
         } else {

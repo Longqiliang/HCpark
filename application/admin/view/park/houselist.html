@@ -403,19 +403,7 @@
                             </div>
                             <div class="modal-cell">
                                 <div class="upload-img-box">
-                                    <div class="upload-img">
-                                        <span class="glyphicon glyphicon-remove icon-del"></span>
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="" class="img">
-                                    </div>
-                                    <div class="upload-img">
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="" class="img">
-                                    </div>
-                                    <div class="upload-img">
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="" class="img">
-                                    </div>
-                                    <div class="upload-img">
-                                        <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2024843780,2197473370&fm=27&gp=0.jpg" alt="">
-                                    </div>
+
 
                                 </div>
                             </div>
@@ -520,13 +508,13 @@
     <div class="modal-cell">
         <div class="form-group">
             <label>所属园区：</label>
-            <span></span>
+            <span>{{parkName}}</span>
         </div>
     </div>
     <div class="modal-cell">
         <div class="form-group">
             <label for="updatePrice">租赁单价：</label>
-            <input type="text" class="form-control input-sm" id="updatePrice">
+            <input type="text" class="form-control input-sm" id="updatePrice" value="{{price}}">
             <span>元/㎡/天</span>
         </div>
     </div>
@@ -624,13 +612,11 @@
     {{ /if }}
 </script>
 <script type="text/html" id="uploadTpl">
-    {{ if }}
-    {{each }}
+    {{ if data}}
     <div class="upload-img">
         <span class="glyphicon glyphicon-remove icon-del"></span>
-        <img src="{{}}" alt="">
+        <img src="{{data}}" alt="" class="img">
     </div>
-    {{/each}}
     {{ /if }}
 </script>
 <script>
@@ -708,6 +694,9 @@
                            $(this).fileinput("upload");
                        }).on('fileuploaded', function(event, data, previewId, index) {
                            console.log(event,data,previewId,index);
+
+
+
                        });
                    }else{
                        updateAlert(e.msg);
@@ -815,7 +804,12 @@
        }).on("filebatchselected", function(event, files) {
            $(this).fileinput("upload");
        }).on('fileuploaded', function(event, data, previewId, index) {
-            console.log(event,data,previewId,index);
+           /* console.log(event,data,previewId,index);
+            console.log(data);*/
+            var data = JSON.parse(data.response);
+            var html = template('uploadTpl',data);
+            /*console.log(html);*/
+           $('#room-modal').find('.upload-img-box').append(html);
        });
        //增加房间信息
         $('#addRoom').click(function () {
@@ -827,10 +821,11 @@
             var price = $('#price').val();
             var panorama = $("#panorama").val();
             var imgsSrc=[];
-            var img=$('.img');
+            var img= $('#room-modal').find('.img');
             for(var i=0;i<img.length;i++){
                 imgsSrc.push(img[i].src);
             };
+            console.log(imgsSrc);
             $.ajax({
                 data:{floor:floor,room:room,build_block:build,panorama:panorama,area:area,price:price,img:imgsSrc},
                 type:"POST",
