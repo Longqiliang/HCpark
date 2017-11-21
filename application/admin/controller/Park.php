@@ -533,8 +533,9 @@ class Park extends Admin
     {
         $data = input();
         $floor = new ParkFloor();
+        $build = input('build');
         $park_id = session('user_auth')['park_id'];
-        $map = ['fid' => input('fid'), 'build' => input('build'), 'park_id' => $park_id];
+        $map = ['fid' => input('fid'), 'build' => $build, 'park_id' => $park_id];
         $re = $floor->where($map)->find();
         if ($re) {
 
@@ -542,8 +543,9 @@ class Park extends Admin
         }
         $res = $floor->allowField(true)->save($data);
         if ($res) {
+            $floorArr = $this->floor($park_id, $build);
 
-            return $this->success("添加成功");
+            return $this->success("添加成功", '', ['floor' => $floorArr]);
         } else {
 
             return $this->error("添加失败");
@@ -918,9 +920,6 @@ class Park extends Admin
             return $this->error("删除失败");
         }
     }
-
-
-
 
 
 }
