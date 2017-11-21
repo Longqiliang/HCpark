@@ -811,7 +811,7 @@ class Park extends Admin
             }
         }
 
-        return json_encode($info);
+        return $this->success('','',json_encode($info));
     }
 
     /**
