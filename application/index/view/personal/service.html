@@ -14,21 +14,13 @@
     .notice .list{
         background: #fff;
     }
-    .property{
-        margin-top: 50px;
-    }
 </style>
-<!--<link rel="stylesheet" href="/index/css/common/tip.css">-->
 {/block}
 {block name="body"}
-<!--<div class="banners">-->
-    <!--<img src="/index/images/policy/banner.jpeg" alt="banner">-->
-<!--</div>-->
-<!--tab-->
 <div id="app">
     <div class="header">
         <div class="tabs clear">
-            <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">物业服务</span></div>
+            <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">{{sieving.serviceIndex===''?'物业服务':sieving.serviceList[sieving.serviceIndex].text}} <span  class="my-icon-arrow" :class="{close:!sieving.isShowSieving}" v-show="active==0"></span>  </span>  </div>
             <!--<span class="line"></span>-->
             <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >企业服务</span></div>
         </div>
@@ -39,7 +31,7 @@
         <!--物业服务-->
         <div class="notices" v-if="active==0">
             <div class="sieving-box">
-                <div class="sieving-header"><div @click="toggleSieving">{{sieving.serviceIndex===''?'全部分类':sieving.serviceList[sieving.serviceIndex].text}}</div> <span :class="{close:!sieving.isShowSieving}"></span></div>
+                <!--<div class="sieving-header"><div @click="toggleSieving"></div> <span class="my-icon-arrow" :class="{close:!sieving.isShowSieving}"></span></div>-->
                 <div class="sieving-bg" :class="{active:sieving.isShowSieving}"  @click="toggleSieving"></div>
                 <ul class="sieving-list" :class="{active:sieving.isShowSieving}">
                         <li @click="sievingChange('')" :class="{active:''===sieving.serviceIndex}">全部分类</li>
@@ -80,11 +72,6 @@
             </div>
         </div>
     </div>
-<!--加载更多-->
-<!--<div class="tip"></div>-->
-<!--<div class="loading hidden">-->
-    <!--<div class="typing_loader"></div>-->
-<!--</div>-->
 </div>
 {/block}
 {block name="script"}
@@ -114,6 +101,7 @@
             propertyShow:{$property},
             company:{$company},
             sieving:{
+                canShowSieving:true,
                 isShowSieving:false,
                 serviceList:[
                     {appid:1,text:'费用缴纳'},
@@ -179,6 +167,16 @@
             tabChange(key){
                 this.active=key;
                 this.setCookie("type",key+11);
+                if(key===0){
+                    if(this.sieving.canShowSieving){
+                        this.toggleSieving();
+                    }else{
+                        this.sieving.canShowSieving=true
+                    }
+                }else{
+                    this.sieving.isShowSieving=false;
+                    this.sieving.canShowSieving=false
+                }
             },
             sievingChange(key){
                 this.sieving.serviceIndex=key;
@@ -195,6 +193,7 @@
                 this.toggleSieving();
             },
             toggleSieving(){
+                if(this.active!==0){return}
                 this.sieving.isShowSieving = !this.sieving.isShowSieving;
             },
             //退出清理tab缓存
