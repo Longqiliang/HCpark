@@ -4,183 +4,39 @@
 <title>我要租房</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
-    .list-item .remark-box{
-        position: relative;
-    }
-    .list-item .default-bg{
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: 10;
-        top: 0;
-        left: 0;
-        background-color:rgba(0,0,0,.3);
-        font-size: 1.6rem;
-        color: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .content{
-        min-height: 100vh;
-        position: relative;
-    }
-    .my-footer{
-        padding: 1rem 0;
-        text-align: center;
-        color:#999
-    }
-    .my-footer>p{
-        text-align: center;
-        font-size: 1.5rem;
-        line-height: 80vh;
-    }
-    .my-footer>div {
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 5px;
-    }
-    .houses-list-box{
-        padding-bottom: 12.67vw;
-    }
-    .foot{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 10.67vw;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        font-size: 1.5rem;
-    }
-    .foot a{
-        color: #52CC92;
-    }
-    .foot:hover a{
-        text-decoration: underline;
-    }
-    .foot a:active{
-        background-color: transparent;
-    }
-    /*modal框*/
-    .modal-box{
-        width: 100%;
-        height: 100vh;
-        background: rgba(0,0,0,0.4);
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 9;
-        display: none;
-    }
-    .modal-box.show{
-        display: block;
-    }
-    .modal-box .modal{
-        width: calc(100% - 36px);
-        margin: 15vh auto 0;
-        background: #fff;
-        border-radius: 10px;
-        padding: 10px 0;
-        position: relative;
-    }
-    .modal>p{
-        line-height: 40px;
-        font-size: 17px;
-        text-align: center;
-    }
-    .name-mobile,.remark{
-        padding: 5px 18px;
-    }
-    .name-mobile ul li{
-        line-height: 40px;
-        border-bottom: 1px solid #f1f1f1;
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-    }
-    .name-mobile span{
-        display: inline-block;
-        font-size: 1.5rem;
-        color: #333;
-    }
-    .name-mobile span:first-child{
-        float: left;
-    }
-    .name-mobile input{
-        text-align: right;
-        font-size: 1.5rem;
-    }
-    .price .price-input-box{
-        position: relative;
-    }
-    .price .price-input-box:after{
-        content: '';
-        position: absolute;
-        width: 30px;
-        bottom: 8px;
-        left: 3px;
-        height: 1px;
-        background-color: #999;
-    }
-    .price input{
-        width: 30px;
-        text-align: center;
-        margin: 0 3px;
-    }
-    .remark p{
-        font-size: 15px;
-    }
-    .remark textarea{
-        border: 1px solid #e5e5e5;
-        height: 18vh;
-        border-radius: 5px;
-        width: calc(100% - 14px);
-        margin: 10px 7px;
-        padding: 5px 10px;
-    }
-    .cancel{
-        position: absolute;
-        top: -50px;
-        right: 0;
-    }
-    .cancel>span:first-child{
-        display: inline-block;
-        width: 28px;
-        height: 28px;
-        border-radius: 15px;
-        border: 1px solid #fff;
-        display: -webkit-flex;
-        -webkit-align-items: center;
-        -webkit-justify-content: center;
-    }
-    .cancel i::before{
-        width: 20px;
-        height: 20px;
-        color: #fff;
-    }
-    .cancel>span:last-child{
-        display: inline-block;
-        height: 22px;
-        width: 0;
-        border-right: 1px solid #fff;
-        position: relative;
-        left: 50%;
-    }
-    .icon-required{
-        display: inline-block;
-        color: red;
-       font-style: normal;
-        position: absolute;
-        left: -10px;
-        top: 0;
-    }
-    .center img{
-        margin: 0 auto;
-    }
-    .houses-list-item span.room-lg{
-        width: 81.05vw;
-    }
+    .list-item .remark-box{position:relative}
+    .list-item .default-bg{position:absolute;width:100%;height:100%;z-index:10;top:0;left:0;background-color:rgba(0,0,0,.3);font-size:1.6rem;color:#fff;display:flex;justify-content:center;align-items:center}
+    .content{min-height:100vh;position:relative}
+    .my-footer{padding:1rem 0;text-align:center;color:#999}
+    .my-footer>p{text-align:center;font-size:1.5rem;line-height:80vh}
+    .my-footer>div{display:inline-block;vertical-align:middle;margin-right:5px}
+    .houses-list-box{padding-bottom:12.67vw}
+    .foot{display:flex;justify-content:center;align-items:center;height:10.67vw;position:absolute;bottom:0;width:100%;font-size:1.5rem}
+    .foot a{color:#52CC92}
+    .foot:hover a{text-decoration:underline}
+    .foot a:active{background-color:transparent}
+    .modal-box{width:100%;height:100vh;background:rgba(0,0,0,.4);position:fixed;left:0;top:0;z-index:9;display:none}
+    .modal-box.show{display:block}
+    .modal-box .modal{width:calc(100% - 36px);margin:15vh auto 0;background:#fff;border-radius:10px;padding:10px 0;position:relative}
+    .modal>p{line-height:40px;font-size:17px;text-align:center}
+    .name-mobile,.remark{padding:5px 18px}
+    .name-mobile ul li{line-height:40px;border-bottom:1px solid #f1f1f1;position:relative;display:flex;justify-content:space-between}
+    .name-mobile span{display:inline-block;font-size:1.5rem;color:#333}
+    .name-mobile span:first-child{float:left}
+    .name-mobile input{text-align:right;font-size:1.5rem}
+    .price .price-input-box{position:relative}
+    .price .price-input-box:after{content:'';position:absolute;width:30px;bottom:8px;left:3px;height:1px;background-color:#999}
+    .price input{width:30px;text-align:center;margin:0 3px}
+    .remark p{font-size:15px}
+    .remark textarea{border:1px solid #e5e5e5;height:18vh;border-radius:5px;width:calc(100% - 14px);margin:10px 7px;padding:5px 10px}
+    .cancel{position:absolute;top:-50px;right:0}
+    .cancel>span:first-child{display:inline-block;width:28px;height:28px;border-radius:15px;border:1px solid #fff;display:-webkit-flex;-webkit-align-items:center;-webkit-justify-content:center}
+    .cancel i::before{width:20px;height:20px;color:#fff}
+    .cancel>span:last-child{display:inline-block;height:22px;width:0;border-right:1px solid #fff;position:relative;left:50%}
+    .icon-required{display:inline-block;color:red;font-style:normal;position:absolute;left:-10px;top:0}
+    .center img{margin:0 auto}
+    .houses-list-item span.room-lg{width:81.05vw}
+
 </style>
 {/block}
 
@@ -295,7 +151,6 @@
                             <span class="price-input-box"><input type="number" v-model.number="priceOne" maxlength="3"></span><span >—</span>
                             <span class="price-input-box"><input type="number" v-model.number="priceTwo" maxlength="3" ></span><span>/㎡·天</span>
                         </div>
-
                     </li>
                 </ul>
             </div>

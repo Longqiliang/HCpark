@@ -83,12 +83,11 @@
         // When the bound element is inserted into the DOM...
         update: function (el,value) {
             // Focus the element
-            console.log(value)
             if(value.value){
                 el.focus()
             }
         }
-    })
+    });
     var app= new Vue({
         el:'#app',
         data:{
@@ -106,7 +105,8 @@
 //                })
 //            },
             jumpTo(id){
-                window.location.href="/index/enterprise/info/id/"+id;
+//                window.location.href="/index/enterprise/info/id/"+id;
+                window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
             },
             isClick:function () {
                 this.inputStatus=true;
