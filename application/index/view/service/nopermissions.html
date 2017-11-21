@@ -4,19 +4,32 @@
 <title>暂无权限</title>
 <style>
     body{
-        background: #F5F5F5;
+        background: #f6f6f6;
         text-align: center;
     }
-img{
-    width:85%;
-    margin-top: 4rem;
-}
+    img{
+        width:85%;
+        margin-top: 4rem;
+    }
+    p.title{
+        font-size: 2rem;
+        color: #333;
+        font-weight: 500!important;
+        padding:1rem 0;
+    }
+    p.text{
+        font-size: 1.4rem;
+        color: #999;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
     <img src="/index/images/service/noPermissions/no-permissions.png" alt="">
+    <p class="title">暂无权限</p>
+    <p class="text" v-if="park_id===3">请与企业管理员联系开通</p>
+    <p class="text" v-if="park_id===80">请<span v-if="property_phone">致电{{property_phone}}</span>与园区管理中心联系</p>
 </div>
 {/block}
 
@@ -24,7 +37,10 @@ img{
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            park_id:{$parkid},
+            property_phone:'{$property_phone}'
+        },
         methods: {}
     })
 </script>
