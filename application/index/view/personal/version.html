@@ -3,25 +3,28 @@
 {block name="style"}
 <style>
     .grade1{
-        padding:0 1.2rem;
         font-size: 1.4rem;
         color: #333;
     }
     .grade1>li{
-        border-bottom: 1px dashed #f1f1f1;
     }
     .grade1>li>a{
+        padding:0 1.2rem;
         display: block;
         width:100%;
         line-height: 5rem;
         height:5rem;
+        border-bottom: 1px dashed #f1f1f1;
+
     }
     .grade1>li>a>span:first-child{
         margin-right: 2rem;
     }
     .grade1>li>div{
+        background-color: #F6F6F6;
         overflow: hidden;
         height:0;
+        color: #666;
         -webkit-transition: all 500ms linear;
         -moz-transition: all 500ms linear;
         -ms-transition: all 500ms linear;
@@ -54,6 +57,14 @@
         height:auto;
         padding-top: 4px;
         padding-bottom: 15px;
+        border-bottom: 1px dashed #f1f1f1;
+    }
+    #app a{
+        /*-webkit-tap-highlight-color: transparent;*/
+        -webkit-tap-highlight-color:rgba(0,0,0,0)!important;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -webkit-appearance:none;
     }
 </style>
 {/block}
