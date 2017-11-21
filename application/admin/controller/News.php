@@ -83,8 +83,6 @@ class News extends Admin
             return $this->fetch();
         }
     }
-
-
     /*新闻通告首页面(园区操作员)   */
     public function index2()
     {
@@ -136,7 +134,7 @@ class News extends Admin
                 $result = $news->validate(true)->save($_POST);
                 $inputid = Db::name('news')->getLastInsID();
                 //添加新闻时推送给审核人
-                $this-> sendCheck($inputid);
+                 $this-> sendCheck($inputid,input('type'));
 
             }
 
@@ -210,7 +208,7 @@ class News extends Admin
     }
 
 
-    public function sendCheck($id)
+    public function sendCheck($id,$type)
     {
         $user =new WechatUser();
         $service = new Service();
@@ -220,9 +218,18 @@ class News extends Admin
         foreach ($user as $value){
             $touser .='|'.$value;
         }
+        //1新闻速递、2园区通告、3好文分享
+        $type_name="未知";
+        switch ($type){
+            case 1:$type_name="新闻速递";break;
+            case 2:$type_name="园区通告";break;
+            case 3:$type_name="好文分享";break;
+        }
+
+
         $message = [
             "title" => "新闻审核通知",
-            "description" => "操作员".session('user_auth')['username']."\n您有新的新闻/通知/好文需要审核，点击查看详情",
+            "description" => "操作员".session('user_auth')['username']."\n您有新的".$type_name."需要审核，点击查看详情",
             "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/personal/newsCheck/id/' . $id
         ];
 

@@ -8,6 +8,7 @@ use think\Controller;
 use wechat\TPWechat;
 use wechat\TPQYWechat;
 use think\Loader;
+use app\common\model\ParkCompany;
 
 class Index extends Controller
 {
@@ -61,6 +62,8 @@ class Index extends Controller
                 $tableUser['status']=1;
                 $wechatUser->save(['status'=>1,'company_address'=>input('room')],['userid'=>$mobile]);
             } else {
+                //注册后获得1个积分，重复注册不会重复获得；
+                $tableUser['score']=1;
                 $wechatUser->save($tableUser);
             }
             if ($result && $result['errcode'] == 0) {
