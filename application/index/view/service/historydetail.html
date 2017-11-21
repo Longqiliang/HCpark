@@ -471,7 +471,8 @@
 
 {block name="script"}
 <!--<script src="/static/viewer/viewer.min.js"></script>-->
-<script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<!--https中引http资源 使用相对协议-->
+<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
 //    时间戳转字符串过滤器
 Vue.filter('timeToString', function(time) {

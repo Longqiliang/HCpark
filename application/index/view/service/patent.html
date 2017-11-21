@@ -4,201 +4,40 @@
 <title>商标查询</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
 <style>
-    body{
-        background-color: #F0EFF5;
-        color: #333;
-        font-size: 1.5rem;
-    }
-    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-        color: #999; opacity:1;
-    }
-    ::-moz-placeholder { /* Mozilla Firefox 19+ */
-        color: #999;opacity:1;
-    }
-    input:-ms-input-placeholder,textarea:-ms-input-placeholder{
-        color: #000;opacity:1;
-    }
-    input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
-        color: #999;opacity:1;
-    }
-    .table-row-box{
-        padding:0 4vw;
-        background-color: #fff;
-    }
-    .icon-remarks{
-        display: block;
-        margin-left: 0.6rem;
-        height: 15px;
-        width:15px;
-        background: url("/index/images/service/patent/icon-remarks.png") no-repeat center;
-        background-size: 15px 15px;
-    }
-    .table-title{
-        padding:1rem 1.5rem;
-        display: -webkit-flex;
-        display: flex;
-        align-items: center;
-        color: #999;
-    }
-    .table-row{
-        padding:1.5rem 0;
-        display: -webkit-flex;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-    }
-    .table-row:not(:last-child){
-        border-bottom: 1px solid #f1f1f1;
-    }
-    .table-row-select{
-        position: relative;
-        padding-right: 15px;
-    }
-    .table-row-select:after{
-        content: '';
-        position: absolute;
-        top: 50%;
-        right: 0;
-        -webkit-font-smoothing: antialiased;
-        height: 6px;
-        width: 6px;
-        border-width: 1px 1px 0 0;
-        border-color: #999;
-        border-style: solid;
-        -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
-        transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
-        margin-top:-2px;
-    }
-    .table-row-input{
-        font-size: 1.4rem;
-        text-align: right;
-    }
-    .table-row-block-header{
-        padding:1.5rem 0;
-    }
-    .table-row-block>textarea{
-        box-sizing: border-box;
-        width:100%;
-        height:10rem;
-        font-size: 1.4rem;
-        border:1px solid #f1f1f1;
-        padding: 7px 9px;
-    }
-
-    .card-upload{
-        /*justify-content: flex-start;*/
-        flex-wrap: wrap;
-        padding:0 0 2rem 0;
-    }
-    .upload-img,.upload-box{
-        margin-bottom: 2vw;
-    }
-    #app .card-btn-box{
-        display: flex;
-        justify-content: center;
-        margin-top: 3rem;
-        margin-bottom: 1.6rem;
-    }
-
-    /*modal框*/
-    .modal-box{
-        width: 100%;
-        height: 100vh;
-        background: rgba(0,0,0,0.4);
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 9;
-    }
-    .modal-box .modal{
-        width: calc(100% - 36px);
-        margin: 15vh auto 0;
-        background: #fff;
-        border-radius: 10px;
-        padding: 10px 0;
-        position: relative;
-    }
-    .name-mobile {
-        padding: 5px 18px;
-    }
-    .modal>p{
-        line-height: 40px;
-        font-size: 17px;
-        text-align: center;
-    }
-    .name-mobile ul li{
-        line-height: 40px;
-        border-bottom: 1px solid #f1f1f1;
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-    }
-    .name-mobile ul li.column{
-        flex-direction: column;
-    }
-    .name-mobile span{
-        display: inline-block;
-        font-size: 1.5rem;
-        color: #333;
-    }
-    .name-mobile span:first-child{
-        float: left;
-    }
-    .name-mobile input{
-        text-align: right;
-        font-size: 1.5rem;
-    }
-    .modal-textarea{
-        border: 1px solid #f1f1f1;
-        height: 18vh;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        padding: 5px 10px;
-    }
-    .modal-btn-box{
-        display: -webkit-flex;
-        display: flex;
-        justify-content: center;
-        padding:4vw 4.8vw;
-    }
-    .cancel{
-        position: absolute;
-        top: -50px;
-        right: 0;
-    }
-    .cancel>span:first-child{
-        display: inline-block;
-        width: 28px;
-        height: 28px;
-        border-radius: 15px;
-        border: 1px solid #fff;
-        display: -webkit-flex;
-        -webkit-align-items: center;
-        -webkit-justify-content: center;
-    }
-    .cancel i::before{
-        width: 20px;
-        height: 20px;
-        color: #fff;
-    }
-    .cancel>span:last-child{
-        display: inline-block;
-        height: 22px;
-        width: 0;
-        border-right: 1px solid #fff;
-        position: relative;
-        left: 50%;
-    }
-    .icon-required{
-        display: inline-block;
-        color: red;
-        font-style: normal;
-        position: absolute;
-        left: -10px;
-        top: 0;
-    }
-
+    body{background-color:#F0EFF5;color:#333;font-size:1.5rem}
+    :-moz-placeholder{color:#999;opacity:1}
+    ::-moz-placeholder{color:#999;opacity:1}
+    input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:#000;opacity:1}
+    input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:#999;opacity:1}
+    .table-row-box{padding:0 4vw;background-color:#fff}
+    .icon-remarks{display:block;margin-left:.6rem;height:15px;width:15px;background:url(/index/images/service/patent/icon-remarks.png) no-repeat center;background-size:15px 15px}
+    .table-title{padding:1rem 1.5rem;display:-webkit-flex;display:flex;align-items:center;color:#999}
+    .table-row{padding:1.5rem 0;display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;box-sizing:border-box}
+    .table-row:not(:last-child){border-bottom:1px solid #f1f1f1}
+    .table-row-select{position:relative;padding-right:15px}
+    .table-row-select:after{content:'';position:absolute;top:50%;right:0;-webkit-font-smoothing:antialiased;height:6px;width:6px;border-width:1px 1px 0 0;border-color:#999;border-style:solid;-webkit-transform:matrix(.71,.71,-.71,.71,0,0);transform:matrix(.71,.71,-.71,.71,0,0);margin-top:-2px}
+    .table-row-input{font-size:1.4rem;text-align:right}
+    .table-row-block-header{padding:1.5rem 0}
+    .table-row-block>textarea{box-sizing:border-box;width:100%;height:10rem;font-size:1.4rem;border:1px solid #f1f1f1;padding:7px 9px}
+    .card-upload{flex-wrap:wrap;padding:0 0 2rem 0}
+    .upload-box,.upload-img{margin-bottom:2vw}
+    #app .card-btn-box{display:flex;justify-content:center;margin-top:3rem;margin-bottom:1.6rem}
+    .modal-box{width:100%;height:100vh;background:rgba(0,0,0,.4);position:fixed;left:0;top:0;z-index:9}
+    .modal-box .modal{width:calc(100% - 36px);margin:15vh auto 0;background:#fff;border-radius:10px;padding:10px 0;position:relative}
+    .name-mobile{padding:5px 18px}
+    .modal>p{line-height:40px;font-size:17px;text-align:center}
+    .name-mobile ul li{line-height:40px;border-bottom:1px solid #f1f1f1;position:relative;display:flex;justify-content:space-between}
+    .name-mobile ul li.column{flex-direction:column}
+    .name-mobile span{display:inline-block;font-size:1.5rem;color:#333}
+    .name-mobile span:first-child{float:left}
+    .name-mobile input{text-align:right;font-size:1.5rem}
+    .modal-textarea{border:1px solid #f1f1f1;height:18vh;border-radius:5px;margin-bottom:10px;padding:5px 10px}
+    .modal-btn-box{display:-webkit-flex;display:flex;justify-content:center;padding:4vw 4.8vw}
+    .cancel{position:absolute;top:-50px;right:0}
+    .cancel>span:first-child{display:inline-block;width:28px;height:28px;border-radius:15px;border:1px solid #fff;display:-webkit-flex;-webkit-align-items:center;-webkit-justify-content:center}
+    .cancel i::before{width:20px;height:20px;color:#fff}
+    .cancel>span:last-child{display:inline-block;height:22px;width:0;border-right:1px solid #fff;position:relative;left:50%}
+    .icon-required{display:inline-block;color:red;font-style:normal;position:absolute;left:-10px;top:0}
 
 </style>
 {/block}
@@ -261,7 +100,7 @@
         </div>
     </div>
     <div class="card-more">
-        <button class="btn btn-warning btn-warning-outlined btn-sm" @click="window.location.href='/index/service/history/id/12'"><i class="icon icon-record"></i>查询记录</button>
+        <button class="btn btn-warning btn-warning-outlined btn-sm" @click="window.location.href='/index/service/history/id/12/type/1'"><i class="icon icon-record"></i>查询记录</button>
     </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block" @click=" consult = true ">咨询</button>
