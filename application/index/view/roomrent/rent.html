@@ -202,7 +202,7 @@
 {block name="script"}
 <script src="/static/swiper/swiper.min.js"></script>
 <script src="/static/viewer/viewer.min.js"></script>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     console.log({$info});
     var info ={$info};
@@ -264,11 +264,25 @@
             }
         },
         methods:{
-            loadImg:function (src,imglist) {
-                //this.$toast(src);
+//            loadImg:function (src,imglist) {
+//                console.log(src,imglist)
+//                //this.$toast(src);
+//                wx.previewImage({
+//                    current: src,
+//                    urls: imglist
+//                });
+//            },
+            //            微信jssdk - 图片预览
+            loadImg(src,imglist) {
+                var urls=[];
+                var current=window.location.protocol+'//'+window.location.host+src;
+                for(var i in imglist){
+                    urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
+                }
+                console.log(current,urls)
                 wx.previewImage({
-                    current: src,
-                    urls: imglist
+                    current: current,
+                    urls: urls
                 });
             },
             reBack:function () {
