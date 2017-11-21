@@ -15,8 +15,8 @@
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style>
 
-    .modal-dialog {
-        margin: 200px auto;
+    .btn-primary {
+        font-size: 16px;
     }
 
     .mail-box .mail-ontact {
@@ -82,7 +82,7 @@
     <div class="row">
         <div class="mail-box-header">
 
-            <h2>商标查询 (未联系数量：1)</h2>
+            <h2>商标查询</h2>
             <div class="mail-tools tooltip-demo m-t-md">
 
 
@@ -105,7 +105,8 @@
                         <label>联系人:</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="text" readonly="readonly" placeholder="联系人" class="form-control form_title" name="name" value="{$info.name}">
+                        <input type="text" readonly="readonly" placeholder="联系人" class="form-control form_title"
+                               name="name" value="{$info.name}">
 
                     </div>
 
@@ -113,42 +114,44 @@
                         <label>联系方式:</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="text" readonly=ture class="form-control form_title" name="mobile" value="{$info.mobile}">
+                        <input type="text" readonly=ture class="form-control form_title" name="mobile"
+                               value="{$info.mobile}">
                     </div>
                     <div class="col-lg-1 text-right control-label">
                         <label>商标类型:</label>
                     </div>
-                    <div class="col-lg-3">
-                        <input type="text" readonly=ture class="form-control form_title" name="type"    value="{$info.type}">
+                    <div class="col-lg-1">
+                        <input type="text" readonly=ture class="form-control form_title" name="type"
+                               value="{$info.type}">
                     </div>
 
                 </div>
-
 
 
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>中文描述:</label>
                     </div>
-                    <div class="col-lg-3">
-                        <input  readonly=ture type="text"  class="form-control form_title" name="chinese_description" value="{$info.chinese_description}">
+                    <div class="col-lg-9">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.chinese_description}</textarea>
                     </div>
+
+                </div>
+                <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>英文描述:</label>
                     </div>
-                    <div class="col-lg-3">
-                        <input  readonly=ture type="text"  class="form-control form_title"  name="english_description" value="{$info.english_description}">
+                    <div class="col-lg-9">
+                        <textarea readonly=ture class="form-control form_title" name="english_description">{$info.english_description}</textarea>
                     </div>
+                </div>
+                <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>商标描述:</label>
                     </div>
-                    <div class="col-lg-3">
-                        <input  readonly=ture type="text"  class="form-control form_title"   value="{$info.trademark_description}">
+                    <div class="col-lg-9">
+                        <textarea readonly=ture class="form-control form_title">{$info.trademark_description}</textarea>
                     </div>
-
-
-
-
                 </div>
 
 
@@ -158,24 +161,27 @@
                     <div class="col-lg-1 text-right control-label">
                         <label>数字描述:</label>
                     </div>
-                    <div class="col-lg-3">
-                        <input  readonly=ture type="text" class="form-control form_title"  value="{$info.numeric_description}">
+                    <div class="col-lg-9">
+                        <textarea readonly=ture type="text" class="form-control form_title"
+                                  >{$info.numeric_description}</textarea>
                     </div>
-
-
+                </div>
+                <div class="form-group">
 
                     <div class="col-lg-1 text-right control-label">
                         <label>查询日期:</label>
                     </div>
                     <div class="col-lg-3">
-                        <input  readonly=ture type="text"  class="form-control form_title"  value="{$info.create_time}">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.create_time}">
                     </div>
+                </div>
+                    <div class="form-group">
 
                     <div class="col-lg-1 text-right control-label">
                         <label>回复日期:</label>
                     </div>
                     <div class="col-lg-3">
-                        <input  readonly=ture type="text"  class="form-control form_title"  value="{$info.end_time}">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.end_time}">
                     </div>
 
                 </div>
@@ -186,11 +192,10 @@
                         <label>状态:</label>
                     </div>
                     <div class="col-lg-3">
-                        <input  readonly=ture type="text" class="form-control form_title"  value="{$info.status_text}">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.status_text}">
                     </div>
 
                 </div>
-
 
 
                 <br>
@@ -201,9 +206,9 @@
 
                     </div>
                     <br>
-                    {notempty   name="$info.submit_img" }
+                    {notempty name="$info.submit_img" }
                     <div class="col-lg-5">
-                        <div  class="imggroup">
+                        <div class="imggroup">
                             {volist name="$info.submit_img" id="vo"}
                             <a href="{$vo}" class="front_cover">
                                 <img src="{$vo}" class="img-auto front_cover_img" alt="">
@@ -215,21 +220,22 @@
                 </div>
                 <br>
                 <br>
-                {eq name="$info.status"  value="1"}
+                {eq name="$info.status" value="1"}
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>回复图片:</label>
 
                     </div>
                     <br>
-                    {notempty   name="$info.back_img" }
+                    {notempty name="$info.back_img" }
                     <div class="col-lg-5">
-                        <div  class="imggroup">
+                        <div class="imggroup">
                             <a href="{$info.back_img}" class="front_cover">
                                 <img src="{$info.back_img}" class="img-auto front_cover_img" alt="">
                             </a>
                         </div>
-                    </div>{/notempty}
+                    </div>
+                    {/notempty}
                 </div>
                 {/eq}
 
@@ -237,12 +243,11 @@
                 <br><br>
 
 
-
-
-                {if condition="$info.status eq  0"}
+                {if condition="$info.status eq 0"}
                 <div class="form-group">
                     <div class="col-lg-11 col-lg-offset-1 text-left">
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$info.id}"    class="btn-sm btn-primary" style="color:#fff">回复</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$info.id}"
+                           class="btn-sm btn-primary" style="color:#fff">回复</a>
                     </div>
                 </div>
                 {/if}
@@ -257,18 +262,14 @@
 </div>
 
 
-
-
-
-
-
 <div id="modal-form" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-horizontal" method="post" action="{:Url('Trademark/reply')}">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h3 class="modal-title text-center"  name="dialog-title">回复</h3>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center" name="dialog-title">回复</h3>
                 </div>
                 <div class="modal-body">
                     <div class="form-group"><label class="col-sm-2 control-label">回复图片:</label>
@@ -276,13 +277,14 @@
                             <input id="input-file" type="file" class="file">
                             <sapn>
 
-                                <img  width="200px" height="200px" class="front_cover_img" name="back_img"  id ="back_img" src="" />
+                                <img width="200px" height="200px" class="front_cover_img" name="back_img" id="back_img"
+                                     src=""/>
 
                             </sapn>
                         </div>
                     </div>
-                    <input type="hidden"  name="id">
-                    <input type="hidden"  name="back_img">
+                    <input type="hidden" name="id">
+                    <input type="hidden" name="back_img">
                     <!-- 富文本框<div class="mail-text h-200">
                          <div class="summernote"></div>
                          <div class="clearfix"></div>
@@ -290,15 +292,13 @@
                 </div>
 
                 <div class="modal-footer">
-                    <a class="btn btn-primary " onclick="reply()"   >保存</a>
+                    <a class="btn btn-primary " onclick="reply()">保存</a>
                     <input type="hidden" name="id" value="">
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-
 
 
 {/block}
@@ -312,6 +312,7 @@
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 <script>
+    highlight_subnav("{:Url('trademark/index')}");
     $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
@@ -320,7 +321,6 @@
         $(".check-all").on("ifChanged", function () {
             $("tbody").find(".ids").iCheck("toggle");
         });
-
 
 
         $('.summernote').summernote({
@@ -375,7 +375,7 @@
             cache: false,
             contentType: false,
             processData: false,
-            success: function(response) {
+            success: function (response) {
                 var data = $.parseJSON(response);
                 $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
             }
@@ -387,20 +387,20 @@
         showPreview: false,
         language: 'zh', //设置语言
         uploadUrl: '{:Url("/admin/Upload/picture")}', //上传的地址
-        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
         maxFileSize: 1024 * 200,
-    }).on("filebatchselected", function(event, files) {
+    }).on("filebatchselected", function (event, files) {
         $(this).fileinput("upload");
-    }).on('fileuploaded', function(event, data, previewId, index) {
+    }).on('fileuploaded', function (event, data, previewId, index) {
         var response = $.parseJSON(data.response);
         console.log(response);
 
-        if(response.code == 1) {
+        if (response.code == 1) {
 
             $("input[name='back_img']").val(response.data);
-            console.log( $("input[name='img']").val());
+            console.log($("input[name='img']").val());
             var pic = document.getElementById("back_img");
-            pic.src=response.data;
+            pic.src = response.data;
 
         } else {
 

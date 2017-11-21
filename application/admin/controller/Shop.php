@@ -46,14 +46,19 @@ class Shop extends Admin
     {
         if (IS_POST) {
             $data = input('');
+            if($data['left']>$data['num']){
+                return $this->error("剩余数量不能大于总数");
+            }
+
             $productModel = new ExchangeProduct();
             $data['create_user'] = $_SESSION['think']['user_auth']['id'];
             if (empty($data['id'])) {
                 unset($data['id']);
-                $info = $productModel->save($data);
+                $info = $productModel->validate(true)->
+                save($data);
 
             }else{
-                $info = $productModel->save($data,['id'=>$data['id']]);
+                $info = $productModel->validate(true)->save($data,['id'=>$data['id']]);
             }
             if ($info) {
                 return $this->success("保存成功", Url('Shop/index'));
