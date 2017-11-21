@@ -778,9 +778,8 @@ class Park extends Admin
         $parkRoom = new ParkRoom();
         $peoplerent = new PeopleRent();
         $park_id = session('user_auth')['park_id'];
-        $build = input('build_block');
-        $room = input("room");
-        $map = ['room' => $room, 'park_id' => $park_id, 'build_block' => $build];
+        $roomId = input('room_id');
+        $map = ['id' => $roomId];
         $info = $parkRoom->where($map)->find();
         if ($info['manage'] == 2) {
             $info['status'] = 4;
