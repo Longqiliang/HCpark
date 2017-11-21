@@ -78,7 +78,6 @@
                     <th width="200px">新闻标题</th>
                     <th  width="200px">创建时间</th>
                     <th  width="200px">是否轮播</th>
-                    <th >是否推送</th>
                     <th>
                         <select name="type" id="changeType" onchange="changeType()">
                             <option value="0" {eq name="$checkType" value="0"}selected{/eq}>所有类型</option>
@@ -105,13 +104,7 @@
                     </td>
                     <td>{$vo.create_time|strtotime|date='Y-m-d H:i',###}</td>
                     <td >{eq name="vo.is_banner" value="1"}<span>是</span>{else/}<span>否</span> {/eq}</td>
-                    <td class="list_type">
-                        {eq name="vo.is_send" value="1"}
-                        <span class="txt-success">已推送</span>
-                        {else/}
-                        <span>未推送</span>
-                        {/eq}
-                    </td>
+
                     <td class="list_type">
                         {volist name="Think.config.news_type" id="type"}
                         {eq name="$key" value="$vo.type"}{$type}{/eq}
@@ -121,7 +114,7 @@
                         {$vo.status_text}
                     </td>
 
-                    <td> <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始推送</a>
+                    <td>
                         <a href="{:Url('add','id='.$vo.id)}" class=" confirm btn-sm btn-success">编辑</a>
                         {gt name="$vo.type" value="1"}
                         <a href="{:Url('showcomment','id='.$vo.id)}" class=" confirm btn-sm btn-primary">查看评论</a>
