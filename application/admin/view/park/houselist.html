@@ -686,9 +686,12 @@
                success:function (e) {
                    console.log(e);
                    var data = JSON.parse(e);
-                   return;
+                   var roomTpl = template("roomInfo",data);
+                   modal.find(".form-inline").empty().append(roomTpl);
+                   //return;
                    if(data.code ==1){
-                        
+                        var roomTpl = template("roomInfo",data);
+                       modal.find(".form-inline").empty().append(roomTpl);
                    }else{
                        updateAlert(e.msg);
                    }
@@ -717,7 +720,7 @@
                    parentsIndex = parents.index(),
                    floor = parents.data('floor'),
                    lastIndex = parents.siblings('.table-cell').last().index(),
-                   html = '<div class="cell-item item-default">'+floor+'F</div></div>';
+                   html = '<div class="cell-item-default item-default">'+floor+'F</div></div>';
            if(parentsIndex == lastIndex + 1){
                parents.remove();
                var build = $('#checkPark').select().val();
