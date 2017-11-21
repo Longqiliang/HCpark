@@ -63,10 +63,10 @@ class Park extends Admin
                 unset($data['uid']);
                 $res = $parkRoom->validate(true)->where('id', input('uid'))->update($data);
                 if ($res) {
-                    $rents = $parkRent->where('room_id',input('uid'))->find();
+                    $rents = $parkRent->where('room_id', input('uid'))->find();
 
-                    if ($rents){
-                        $parkRent->where(['id'=>$rents['id'],'status'=>0])->update(['status'=>-1]);
+                    if ($rents) {
+                        $parkRent->where(['id' => $rents['id'], 'status' => 0])->update(['status' => -1]);
                     }
                     $this->success("修改成功");
                 } else {
@@ -98,9 +98,9 @@ class Park extends Admin
                 $res = $parkRoom->validate(true)->save($data);
                 if ($res) {
                     $lastId = $parkRoom->getLastInsID();
-                    $rents = $parkRent->where(['room_id'=>$lastId,'status'=>0])->find();
-                    if ($rents){
-                        $parkRent->where('id',$rents['id'])->update(['status'=>-1]);
+                    $rents = $parkRent->where(['room_id' => $lastId, 'status' => 0])->find();
+                    if ($rents) {
+                        $parkRent->where('id', $rents['id'])->update(['status' => -1]);
                     }
                     $this->success("添加成功");
                 } else {
@@ -117,7 +117,7 @@ class Park extends Admin
         $park = ParkModel::where('id', session("user_auth")['park_id'])->find();
         $parkName = $park['name'];
         $this->assign('parkName', $parkName);
-        $this->assign('park_id',$parkid);
+        $this->assign('park_id', $parkid);
         $this->assign("info", $companyInfo);
 
         return $this->fetch();
@@ -181,8 +181,8 @@ class Park extends Admin
             $room = ParkRoom::where('id', $v['room_id'])->find();
             $v['room_id'] = $room['room'];
             $v['build'] = $room['build_block'];
-            if(is_numeric( $v['price'])){
-                $v['price']=number_format($v['price'], 2, '.', '')."元/㎡·天";
+            if (is_numeric($v['price'])) {
+                $v['price'] = number_format($v['price'], 2, '.', '') . "元/㎡·天";
             }
 
         }
@@ -198,7 +198,7 @@ class Park extends Admin
     /*添加房屋出租信息*/
     public function addRent()
     {
-        $parkId = session("user_auth")['park_id'] ;
+        $parkId = session("user_auth")['park_id'];
         $id = input('id');
         $parkRoom = new ParkRoom();
         $parkRent = new ParkRent();
@@ -207,14 +207,14 @@ class Park extends Admin
                 $data = input('post.');
                 //return $data;
                 unset($data['floor']);
-                $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'),'park_id'=>$parkId])->find();
-                if ($rooms['company']){
+                $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'), 'park_id' => $parkId])->find();
+                if ($rooms['company']) {
 
                     $this->error(" 该房间已有企业入住，无法添加出租信息");
                 }
                 $data['room_id'] = $rooms['id'];
                 unset($data['room']);
-                if ($data['img']){
+                if ($data['img']) {
                     foreach ($data['img'] as $k => $v) {
                         $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                     }
@@ -232,7 +232,7 @@ class Park extends Admin
                         }
                     }
                     $data['imgs'] = json_encode($data['imgs']);
-                }else{
+                } else {
                     $data['imgs'] = json_encode($data['img']);
                 }
                 $data['img'] = json_encode($data['img']);
@@ -249,21 +249,21 @@ class Park extends Admin
                 $data = input('post.');
                 unset($data['id']);
                 unset($data['floor']);
-                $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'), 'del' => 0 ,'park_id' => $parkId])->find();
+                $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'), 'del' => 0, 'park_id' => $parkId])->find();
                 if (!$rooms['id']) {
                     $this->error('该楼室不存在');
-                }elseif ($rooms['company']){
+                } elseif ($rooms['company']) {
 
                     $this->error(" 该房间已有企业入住，无法添加出租信息");
                 }
-                $rents = $parkRent->where(['room_id' => $rooms['id'], 'status' => 0 ,'park_id' => $parkId])->find();
+                $rents = $parkRent->where(['room_id' => $rooms['id'], 'status' => 0, 'park_id' => $parkId])->find();
                 if ($rents['id']) {
                     $this->error('该信息已存在');
                 }
                 $data['room_id'] = $rooms['id'];
                 $data['park_id'] = session("user_auth")['park_id'];
                 unset($data['room']);
-                if ($data['img']){
+                if ($data['img']) {
                     foreach ($data['img'] as $k => $v) {
                         $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                     }
@@ -305,7 +305,7 @@ class Park extends Admin
             $parkName = $park['name'];
             $this->assign("info", $data);
             $this->assign('parkName', $parkName);
-            $this->assign('park_id',$parkId);
+            $this->assign('park_id', $parkId);
             $this->assign('img', json_decode($data['img']));
 
             return $this->fetch();
@@ -340,7 +340,7 @@ class Park extends Admin
         $parkid = session('user_auth')['park_id'];
         $park = ParkModel::where('id', session("user_auth")['park_id'])->find();
         $parkName = $park['name'];
-        $map = ['park_id' => $parkid,'status'=>array('neq',-1)];
+        $map = ['park_id' => $parkid, 'status' => array('neq', -1)];
         $list = PeopleRent::where($map)->order('id desc')->paginate();
 
         foreach ($list as $k => $v) {
@@ -351,20 +351,6 @@ class Park extends Admin
         int_to_string($list, ['status' => [1 => "未联系", 2 => "已联系"]]);
         $this->assign('list', $list);
         return $this->fetch();
-    }
-
-    /*修改联系状态*/
-    public function changeStatus()
-    {
-        $id = input('id');
-        $res = PeopleRent::where('id', $id)->update(['status' => 2]);
-        if ($res) {
-
-            $this->success("修改成功");
-        } else {
-
-            $this->error("修改失败");
-        }
     }
 
     /*删除预约信息*/
@@ -382,6 +368,7 @@ class Park extends Admin
             return $this->error('删除失败');
         }
     }
+
     /*删除预约信息*/
     public function moveToTrashs2()
     {
@@ -469,6 +456,7 @@ class Park extends Admin
             return $this->error('删除失败');
         }
     }
+
     /**/
     public function manage()
     {
@@ -487,12 +475,14 @@ class Park extends Admin
     }
 
     /*租房意向表*/
-    public function intention(){
+    public function intention()
+    {
         $park_id = session('user_auth')['park_id'];
-        $list = ParkIntention::where(['park_id'=>$park_id,'status'=>['>',-1]])->order('create_time desc')->paginate();
-        $this->assign('list',$list);
+        $list = ParkIntention::where(['park_id' => $park_id, 'status' => ['>', -1]])->order('create_time desc')->paginate();
+        $this->assign('list', $list);
         return $this->fetch();
     }
+
     /*修改租房意向状态*/
     public function changeState()
     {
@@ -526,90 +516,97 @@ class Park extends Admin
     /**
      * 楼盘表信息
      */
-    public function houselist(){
+    public function houselist()
+    {
         $park_id = session('user_auth')['park_id'];
         $floorInfo = $this->getFloor();
 
-        $this->assign("floorInfo",$floorInfo);
-        $this->assign('park_id',$park_id);
+        $this->assign("floorInfo", $floorInfo);
+        $this->assign('park_id', $park_id);
         return $this->fetch();
     }
+
     /**
      * 添加楼层
      */
-    public function addfloor(){
+    public function addfloor()
+    {
         $data = input();
         $floor = new ParkFloor();
         $park_id = session('user_auth')['park_id'];
-        $map = ['fid'=>input('fid'),'build'=>input('build'),'park_id'=>$park_id];
+        $map = ['fid' => input('fid'), 'build' => input('build'), 'park_id' => $park_id];
         $re = $floor->where($map)->find();
-        if ($re){
+        if ($re) {
 
             return $this->error("该信息已经存在，无法添加");
         }
         $res = $floor->allowField(true)->save($data);
-        if ($res){
+        if ($res) {
 
             return $this->success("添加成功");
-        }else{
+        } else {
 
             return $this->error("添加失败");
         }
     }
+
     /**
      * 删除楼层信息
      */
-    public function delfloor(){
+    public function delfloor()
+    {
         $parkRoom = new ParkRoom();
         $parkFloor = new ParkFloor();
-        $parkId = session("user_auth")['park_id'] ;
+        $parkId = session("user_auth")['park_id'];
         $id = input('id');
         $build = input('build_block');
         $floor = input('floor');
-        if ($id ==1){
+        if ($id == 1) {
             //删除一层楼的信息
-            $map = ['park_id'=>$parkId,'build_block'=>$build,'floor'=>$floor];
-            $res = $parkRoom->where($map)->update(['del'=>-1]);
-            if ($res){
+            $map = ['park_id' => $parkId, 'build_block' => $build, 'floor' => $floor];
+            $res = $parkRoom->where($map)->update(['del' => -1]);
+            if ($res) {
 
                 return $this->success('删除成功');
-            }else{
+            } else {
 
                 return $this->error("删除失败");
             }
-        }else{
+        } else {
             //删除楼层
-            $map = ['park_id'=>$parkId,'build'=>$build,'fid'=>$floor];
+            $map = ['park_id' => $parkId, 'build' => $build, 'fid' => $floor];
             $res = $parkFloor->where($map)->delete();
-            $floorArr = $this->floor($parkId,$build);
-            if ($res){
+            $floorArr = $this->floor($parkId, $build);
+            if ($res) {
 
-                return $this->success('删除成功','',['floor'=>$floorArr]);
-            }else{
+                return $this->success('删除成功', '', ['floor' => $floorArr]);
+            } else {
 
                 return $this->error("删除失败");
             }
         }
     }
+
     /**
      * 添加房屋出租信息
      */
-    public function addRents(){
-        $parkId = session("user_auth")['park_id'] ;
+    public function addRents()
+    {
+        $parkId = session("user_auth")['park_id'];
         $id = input('id');
         $parkRoom = new ParkRoom();
         $parkRent = new ParkRent();
         if (input('id')) {
             $data = input('post.');
             unset($data['floor']);
-            $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'),'park_id'=>$parkId])->find();
-            if ($rooms['company']){
+            $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'), 'park_id' => $parkId])->find();
+            if ($rooms['company']) {
 
                 $this->error(" 该房间已有企业入住，无法添加出租信息");
             }
             $data['room_id'] = $rooms['id'];
             unset($data['room']);
-            if ($data['img']){
+            if ($data['img']) {
                 foreach ($data['img'] as $k => $v) {
                     $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
@@ -626,7 +623,7 @@ class Park extends Admin
                     }
                 }
                 $data['imgs'] = json_encode($data['imgs']);
-            }else{
+            } else {
                 $data['imgs'] = json_encode($data['img']);
             }
             $data['img'] = json_encode($data['img']);
@@ -643,21 +640,21 @@ class Park extends Admin
             $data = input('post.');
             unset($data['id']);
             unset($data['floor']);
-            $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'), 'del' => 0 ,'park_id' => $parkId])->find();
+            $rooms = $parkRoom->where(['room' => input('room'), 'build_block' => input('build_block'), 'del' => 0, 'park_id' => $parkId])->find();
             if (!$rooms['id']) {
                 $this->error('该楼室不存在');
-            }elseif ($rooms['company']){
+            } elseif ($rooms['company']) {
 
                 $this->error(" 该房间已有企业入住，无法添加出租信息");
             }
-            $rents = $parkRent->where(['room_id' => $rooms['id'], 'status' => 0 ,'park_id' => $parkId])->find();
+            $rents = $parkRent->where(['room_id' => $rooms['id'], 'status' => 0, 'park_id' => $parkId])->find();
             if ($rents['id']) {
                 $this->error('该信息已存在');
             }
             $data['room_id'] = $rooms['id'];
             $data['park_id'] = session("user_auth")['park_id'];
             unset($data['room']);
-            if ($data['img']){
+            if ($data['img']) {
                 foreach ($data['img'] as $k => $v) {
                     $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
                 }
@@ -688,9 +685,9 @@ class Park extends Admin
         }
     }
 
-   /**
-    * 添加房屋信息
-    */
+    /**
+     * 添加房屋信息
+     */
     public function addrooms()
     {
         $parkid = session("user_auth")['park_id'];
@@ -709,7 +706,7 @@ class Park extends Admin
                 if ($rents) {
                     $parkRent->where(['id' => $rents['id'], 'status' => 0])->update(['status' => -1]);
                 }
-                $this->success("修改成功","",json_encode($floor));
+                $this->success("修改成功", "", json_encode($floor));
             } else {
                 $this->error("修改失败");
             }
@@ -729,14 +726,14 @@ class Park extends Admin
 
             $data['park_id'] = session("user_auth")['park_id'];
             $data['status'] = 1;
-            $data['manage'] = 2 ;
+            $data['manage'] = 2;
             unset($data['uid']);
             $res = $parkRoom->validate(true)->allowField(true)->save($data);
 
 
             if ($res) {
 
-                $this->success("添加成功",'',json_encode($floor));
+                $this->success("添加成功", '', json_encode($floor));
             } else {
                 $this->error($parkRoom->getError());
             }
@@ -747,71 +744,183 @@ class Park extends Admin
      * 获取楼层详细信息信息公共方法
      * @return  array
      */
-    public function getFloor(){
+    public function getFloor()
+    {
         $park_id = session('user_auth')['park_id'];
         $parkRoom = new ParkRoom();
         $data = $parkRoom->getFloorInfo($park_id);
 
         return ($data);
     }
+
     /**
      * 获取楼层信息
-     * @return json
+     * @return array
      */
-    protected function floor($park,$build){
+    protected function floor($park, $build)
+    {
         $parkFloor = new ParkFloor();
-        $map = ['park_id'=>$park,'build'=>$build];
+        $map = ['park_id' => $park, 'build' => $build];
         $list = $parkFloor->where($map)->order('fid asc')->select();
         $data = [];
-        foreach($list as $k=>$v){
+        foreach ($list as $k => $v) {
             $data[$k] = $v['fid'];
         }
 
         return ($data);
     }
+
     /**
-     * 点击获取楼房信息的公共方法
+     *点击获取楼房信息的公共方法
      */
-    public function floorInfo(){
+    public function floorInfo()
+    {
         $parkRoom = new ParkRoom();
         $peoplerent = new PeopleRent();
         $park_id = session('user_auth')['park_id'];
-        $build = input('build_block');
-        $room = input("room");
-        $map = ['room'=>$room,'park_id'=>$park_id,'build_block'=>$build];
+        $roomId = input('room_id');
+        $map = ['id' => $roomId];
         $info = $parkRoom->where($map)->find();
-        if ($info['manage'] == 2){
-            $info['status'] = 4 ;
-        }else{
+        if ($info['manage'] == 2) {
+            $info['status'] = 4;
+        } else {
             //已租状态 显示面积，公司名称，关联房间号
-            if($info['company_id'] != 0){
-                $info['status'] = 3 ;
+            if ($info['company_id'] != 0) {
+                $info['status'] = 3;
                 //关联房间号
-                $relevance = $parkRoom->where(['company_id'=>$info['company_id'],'park_id'=>$park_id])->select();
-                if ($relevance){
-                    foreach($relevance as $key=>$value){
+                $relevance = $parkRoom->where(['company_id' => $info['company_id'], 'park_id' => $park_id])->select();
+                if ($relevance) {
+                    foreach ($relevance as $key => $value) {
                         $info['relevance'][$key] = $value['room'];
                     }
                 }
-            }else{
+            } else {
                 //空置跟已经预约的状态
-                $peopleStatus = $peoplerent->where(['room_id'=>$info['id']])->find();
-                if ($peopleStatus){
-                    $info['status'] = 2 ;
-                    $peopleArr = $peoplerent->where(['room_id'=>$info['id']])->select();
-                    if (!empty($peopleArr)){
-                        foreach($peopleArr as $k2=>$v2){
-                            if ($v2['status'] == 1){
-                                $info['contract'] = "未联系" ;
-                            }
-                        }
+                $peopleStatus = $peoplerent->where(['room_id' => $info['id']])->find();
+                if ($peopleStatus) {
+                    $info['status'] = 2;
+                    $peopleArr = $peoplerent->where(['room_id' => $info['id']])->select();
+                    if (!empty($peopleArr)) {
+                        $info['people'] = $peopleArr;
                     }
-                }else{
-                    $info['status'] = 1 ;
+                } else {
+                    $info['status'] = 1;
                 }
             }
         }
 
         return json_encode($info);
     }
+
+    /**
+     * 上下架处理
+     */
+    public function setmanage()
+    {
+        $manage = input('manage');
+        $room = input('room');
+        $build = input('build_block');
+        $parkId = session("user_auth")['park_id'];
+        $parkRoom = new ParkRoom();
+        $map = ['build_block' => $build, 'park_id' => $parkId, 'room' => $room];
+        if ($manage == 1) {
+            $res = $parkRoom->where($map)->update(['manage' => 1]);
+            if ($res) {
+
+                return $this->success("上架成功");
+            } else {
+
+                return $this->error("上架失败");
+            }
+        } else {
+            $res = $parkRoom->where($map)->update(['manage' => 2, 'company' => null, 'company_id' => 0, 'type' => null]);
+            if ($res) {
+
+                return $this->success("下架成功");
+            } else {
+
+                return $this->error("下架失败");
+            }
+        }
+    }
+
+    /**
+     * 保存房间信息（空置->已租）
+     */
+    public function saveroom()
+    {
+        $room = input('room');
+        $build = input('build_block');
+        $parkId = session("user_auth")['park_id'];
+        $parkRoom = new ParkRoom();
+        $map = ['build_block' => $build, 'park_id' => $parkId, 'room' => $room];
+        $company = input('company');
+        $data = [
+            'company' => $company,
+            'type' => input('type'),
+        ];
+        $like = mb_substr($company, 0, 6);
+        $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
+        if ($info) {
+            $data['company_id'] = $info['id'];
+        } else {
+            $data['company_id'] = null;
+        }
+        $res = $parkRoom->where($map)->update($data);
+        if ($res) {
+
+            return $this->success("保存成功");
+        } else {
+
+            return $this->error("保存失败");
+        }
+
+    }
+
+    /**
+     * 修改联系状态
+     */
+    public function changeStatus()
+    {
+        $id = input('id');
+        $res = PeopleRent::where('id', $id)->update(['status' => 2]);
+        if ($res) {
+
+            return $this->success("修改成功");
+        } else {
+
+            return $this->error("修改失败");
+        }
+    }
+
+    /**
+     * 2已约，3已租，4下架 删除
+     */
+    public function delete()
+    {
+        $status = input('status');
+        $roomId = input('room_id');
+        $parkRoom = new ParkRoom();
+        $map = ['id' => $roomId];
+        $id = input('id');
+        if ($status == 2) {
+            $res = PeopleRent::where('id', $id)->delete();
+        } elseif ($status == 3) {
+            $res = $parkRoom->where($map)->update(['manage' => 2, 'company' => null, 'company_id' => 0, 'type' => null]);
+        } else {
+            $res = $parkRoom->where($map)->delete();
+        }
+        if ($res) {
+
+            return $this->success("删除成功");
+        } else {
+
+            return $this->error("删除失败");
+        }
+    }
+
+
+
+
+
 }
