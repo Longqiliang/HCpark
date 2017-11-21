@@ -1178,6 +1178,8 @@ class Personal extends Base
     //推荐关注
     public function recommend()
     {
+        $park_id = session('park_id');
+        $this->assign('park_id', json_encode($park_id));
         return $this->fetch();
     }
 

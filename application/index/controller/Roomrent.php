@@ -50,23 +50,23 @@ class Roomrent extends Base
 
         }
 
-        $a = array();
-        if ($data['img']) {
-            foreach ($data['img'] as $v) {
-                $v = "//" . $_SERVER['HTTP_HOST'] . $v;
-                array_push($a, $v);
-            }
-            $data['img'] = $a;
-        }
-
-        $b = array();
-        if ($data['imgs']) {
-            foreach ($data['imgs'] as $v2) {
-                $v2 = "//" . $_SERVER['HTTP_HOST'] . $v2;
-                array_push($b, $v2);
-            }
-            $data['imgs'] = $b;
-        }
+//        $a = array();
+//        if ($data['img']) {
+//            foreach ($data['img'] as $v) {
+//                $v = "//" . $_SERVER['HTTP_HOST'] . $v;
+//                array_push($a, $v);
+//            }
+//            $data['img'] = $a;
+//        }
+//
+//        $b = array();
+//        if ($data['imgs']) {
+//            foreach ($data['imgs'] as $v2) {
+//                $v2 = "//" . $_SERVER['HTTP_HOST'] . $v2;
+//                array_push($b, $v2);
+//            }
+//            $data['imgs'] = $b;
+//        }
 
         /* if ($data['img']) {
              foreach ($data['img'] as $k1 => $v1) {

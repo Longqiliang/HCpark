@@ -2,7 +2,7 @@
 {block name="style"}
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 <style>
-    .mail-hearder{
+    .mail-header{
         padding-right: 20px;
         padding-left: 20px;
         padding-bottom: 10px;
@@ -24,8 +24,8 @@
         width: auto;
         padding: 0 12px;
     }
-    .table-cell{
-        margin-bottom: 7px;
+    .table{
+        display: none;
     }
     .table-cell-tit{
         text-align: center;
@@ -49,10 +49,12 @@
         flex-wrap: nowrap;
         align-items: center;
     }
-    .cell-item{
+    .cell-item,.cell-item-default{
         flex: 1;
         height: 35px;
         margin-right: 7px; /*border-radius: 5px;*/
+        margin-bottom: 7px;
+        min-width: 3em;
         line-height: 35px;
         font-size: 14px;
         text-align: center;
@@ -101,6 +103,10 @@
     }
     .cell-item:last-child{
         margin-right: auto;
+    }
+    .cell-item:last-child .layer{
+        right: 0;
+        left: auto;
     }
     .content-tit .add{
         padding: 5px 20px;
@@ -195,13 +201,18 @@
         top:35px;
         left: 0;
         z-index: 10;
-        width: 20vw;
+        width: 100%;
+        min-width: 300px;
         background-color: inherit;
     }
     .layer-content{
         padding:0 10px;
         text-align: left;
         background-color: #fff;
+    }
+    .content-contract{
+        float: right;
+        color: red;
     }
     @media (min-width: 768px){
         .form-inline .input-group .input-group-btn{
@@ -213,6 +224,9 @@
             padding: 0;
         }
         .flex{
+            flex-wrap: wrap;
+        }
+        .table-cell-info{
             flex-wrap: wrap;
         }
         .table-cell-tit .table-cell-icon{
@@ -278,44 +292,44 @@
         </form>
     </div>
     <div class="mail-box">
-        <div class="mail-hearder">
+        <div class="mail-header">
             <button class="btn button btn-success" id="editFloor" data-state="1">编辑楼层</button>
         </div>
-        <div class="table">
-            <div class="table-cell clearfix" data-floor="1">
-                <div class="table-cell-tit col-xs-1">
-                    <i class="fa fa-close table-cell-icon"></i>
-                    F1
-                </div>
-                <div class="table-cell-info col-xs-11">
-                    <div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal">1
-
+        <div class="mail-content">
+            {volist name="$floorInfo" id="vo"}
+                {volist name="vo" id="vo1"}
+                 <div class="table" data-key="{$key}">
+                    {volist name="vo1" id="vo2"}
+                    <div class="table-cell clearfix" data-floor="{$vo2.floor}">
+                        <div class="table-cell-tit col-xs-1">
+                            <i class="fa fa-close table-cell-icon"></i>
+                            F{$vo2.floor}
+                        </div>
+                        <div class="table-cell-info col-xs-11">
+                            {empty name="vo2.rooms"}
+                                <div class="cell-item-default item-default">{$vo2.floor}F</div>
+                            {else /}
+                                {volist name="vo2.rooms" id="vo3"}
+                                {eq name="vo3.status" value="1"}<div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="2"}<div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="3"}<div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="4"}<div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}">{$vo3.room}</div>{/eq}
+                                {/volist}
+                            {/empty}
+                        </div>
                     </div>
-                    <div class="cell-item item-gray">2</div>
-                    <div class="cell-item item-warning">3</div>
-                    <div class="cell-item item-default">4</div>
-                    <div class="cell-item item-default">5</div>
+                    {/volist}
+                     <div class="clearfix">
+                         <div class="col-xs-1"></div>
+                         <div class="col-xs-11">
+                            <button class="btn btn-white btn-block addFloor">点击添加楼层</button>
+                         </div>
+                     </div>
                 </div>
-            </div>
-            <div class="table-cell clearfix " data-floor="2">
-                <div class="table-cell-tit col-xs-1">
-                    <i class="fa fa-close table-cell-icon"></i>
-                    F2
-                </div>
-                <div class="table-cell-info col-xs-11">
-                    <div class="cell-item item-default">2F</div>
-                </div>
-            </div>
-            <div class="clearfix">
-                <div class="col-xs-1"></div>
-                <div class="col-xs-11">
-                    <button class="btn btn-white btn-block" id="addFloor">点击添加楼层</button>
-                </div>
-            </div>
+                {/volist}
+            {/volist}
         </div>
-
-
-
+        <!--新建房间模态框-->
         <div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="room-modal" aria-label="myModalLabel">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -336,9 +350,15 @@
                             <div class="modal-cell">
                                 <div class="form-group">
                                     <label>所属楼层：</label>
-                                    <select name="add_floor" id="" class="input-sm form-control">
-                                        <option value="1">1楼</option>
-                                    </select>
+                                        {volist name="$floorInfo" id="vo"}
+                                        {volist name="vo" id="vo1"}
+                                        <select name="add_floor"  class="input-sm form-control add_floor" data-key="{$key}" data-floor="">
+                                        {volist name="vo1" id="vo2"}
+                                        <option value="{$vo2.floor}">{$vo2.floor}</option>
+                                        {/volist}
+                                        </select>
+                                        {/volist}
+                                        {/volist}
                                     <!--<input type="text" class="form-control">-->
                                     <span>层</span>
                                 </div>
@@ -354,7 +374,11 @@
                                     <label for="house">房间幢号：</label>
                                     <span>希垦科技园</span>
                                     <select name="" id="house" class="input-sm form-control">
-                                        <option value="1">A幢</option>
+                                        {volist name="$floorInfo" id="vo"}
+                                        {volist name="vo" id="vo1"}
+                                        <option value="{$key}">{$key}幢</option>
+                                        {/volist}
+                                        {/volist}
                                     </select>
                                 </div>
                             </div>
@@ -408,95 +432,17 @@
                 </div>
             </div>
         </div>
+        <!--修改房间模态框-->
         <div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="update-modal" aria-label="updateModalLabel">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="updateModalLabel">203</h4>
+                        <h4 class="modal-title" id="updateModalLabel"></h4>
                     </div>
                     <div class="modal-body">
                         <form class="form-inline">
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label for="updateArea">房间面积：</label>
-                                    <input type="text" class="form-control input-sm" id="updateArea">
-                                    <span>㎡</span>
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label>房间位置：</label>
-                                    <span>A幢 203</span>
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label>所属园区：</label>
-                                    <span>希垦科技园</span>
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label for="updatePrice">租赁单价：</label>
-                                    <input type="text" class="form-control input-sm" id="updatePrice">
-                                    <span>元/㎡/天</span>
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label for="updateCompany">企业名称：</label>
-                                    <input type="text" class="form-control input-sm" id="updateCompany">
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label for="updateType">企业类型：</label>
-                                    <input type="text" class="form-control input-sm" id="updateType">
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label for="updateType">房间状态：</label>
-                                    <span>空置</span>
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label for="updateType">关联房号：</label>
-                                    <span>暂无关联房号信息</span>
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="form-group">
-                                    <label class="updatePanorama">房间全景：</label>
-                                    <input type="text" class="form-control input-sm" id="updatePanorama">
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class=" file-row">
-                                    <label class="updatePicture">房间照片：</label>
-                                    <input class="input-file"  type="file" class="file" multiple id="updatePicture">
-                                </div>
-                            </div>
-                            <div class="modal-cell">
-                                <div class="upload-img-box">
-                                    <div class="upload-img">
-                                        <span class="glyphicon glyphicon-remove icon-del"></span>
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
-                                    </div>
-                                    <div class="upload-img">
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
-                                    </div>
-                                    <div class="upload-img">
-                                        <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
-                                    </div>
-                                    <div class="upload-img">
-                                        <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2024843780,2197473370&fm=27&gp=0.jpg" alt="">
-                                    </div>
 
-                                </div>
-                            </div>
                         </form>
 
                     </div>
@@ -512,74 +458,247 @@
 {/block}
 
 {block name="script"}
+<script src="/admin/js/plugins/template/template.js"></script>
 <script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
 <script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
 <script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+
+<script type="text/html" id="houseList">
+    {{each data as e}}
+    {{each e as list index}}
+    <div class="table" data-key="{{index}}">
+        {{each list as item}}
+        <div class="table-cell clearfix" data-floor="{{item.floor}}">
+            <div class="table-cell-tit col-xs-1">
+                <i class="fa fa-close table-cell-icon"></i>
+                F{{item.floor}}
+            </div>
+            <div class="table-cell-info col-xs-11">
+                {{ if item.rooms && item.rooms.length}}
+                {{ each item.rooms as info j }}
+                {{ if info.status == 1}}
+                <div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}">{{info.room}}</div>
+                {{ else if info.status == 2 }}
+                <div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}">{{info.room}}</div>
+                {{ else if info.status == 3 }}
+                <div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}">{{info.room}}</div>
+                {{ else if info.status == 4 }}
+                <div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}">{{info.room}}</div>
+                {{ /if }}
+                {{ /each }}
+                {{ else }}
+                <div class="cell-item item-default">{{item.floor}}F</div>
+                {{ /if }}
+            </div>
+        </div>
+        {{/each}}
+        <div class="clearfix">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-11">
+                <button class="btn btn-white btn-block addFloor">点击添加楼层</button>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{/each}}
+</script>
+<script type="text/html" id="roomInfo">
+    <div class="modal-cell">
+        <div class="form-group">
+            <label for="updateArea">房间面积：</label>
+            <input type="text" class="form-control input-sm" id="updateArea" value="{{area}}">
+            <span>㎡</span>
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label>房间位置：</label>
+            <span>{{build_block}}幢{{room}} </span>
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label>所属园区：</label>
+            <span></span>
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label for="updatePrice">租赁单价：</label>
+            <input type="text" class="form-control input-sm" id="updatePrice">
+            <span>元/㎡/天</span>
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label for="updateCompany">企业名称：</label>
+            <input type="text" class="form-control input-sm" id="updateCompany">
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label for="updateType">企业类型：</label>
+            <input type="text" class="form-control input-sm" id="updateType">
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label for="updateType">房间状态：</label>
+            <span>
+            {{ if status == 1}}
+                空置
+            {{ else if status == 2}}
+                已约
+            {{ else if status == 3}}
+                已租
+            {{ else if status == 4}}
+                下架
+            {{/if}}
+            </span>
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label for="updateType">关联房号：</label>
+            <span>暂无关联房号信息</span>
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label class="updatePanorama">房间全景：</label>
+            <input type="text" class="form-control input-sm" id="updatePanorama" value="{{panorama}}">
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class=" file-row">
+            <label class="updatePicture">房间照片：</label>
+            <input class="input-file"  type="file" class="file" multiple id="updatePicture">
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="upload-img-box">
+            {{each }}
+            <div class="upload-img">
+                <span class="glyphicon glyphicon-remove icon-del"></span>
+                <img src="http://f12.baidu.com/it/u=1536232571,2962168798&fm=76" alt="">
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</script>
+<script type="text/html" id="layer">
+    <div class="layer">
+        <div class="layer-header">{{roomName}}</div>
+        <div class="layer-content">
+            <div class="layer-content-cell clearfix"><span>房间面积：</span><span>{{roomArea}}㎡</span><span class="content-contract">{{contract}}</span></div>
+            <div class="layer-content-cell"><span>公司名称：</span><span>{{companyName}}</span></div>
+            <div class="layer-content-cell">
+                <span>关联房号：</span>
+                {{if relevanceRoom && relevanceRoom.length}}
+                {{each relevanceRoom as item}}
+                <span class="badge">{{item}}</span>
+                {{/each}}
+                {{ else }}
+                <span>暂无关联房号信息</span>
+                {{/if }}
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="floorTpl">
+    <div class="table-cell clearfix" data-floor="{{fid}}">
+        <div class="table-cell-tit col-xs-1"><i class="fa fa-close table-cell-icon"></i>F{{fid}}</div>
+        <div class="table-cell-info col-xs-11"><div class="cell-item item-default">{{fid}}F</div></div>
+    </div>
+</script>
+<script type="text/html" id="selectFloor">
+    {{ if floor && floor.length}}
+        {{each floor as item }}
+        <option value="{{item}}">{{item}}</option>
+        {{/each}}
+    {{ /if }}
+</script>
+<script type="text/html" id="uploadTpl">
+    {{ if }}
+    {{each }}
+    <div class="upload-img">
+        <span class="glyphicon glyphicon-remove icon-del"></span>
+        <img src="{{}}" alt="">
+    </div>
+    {{/each}}
+    {{ /if }}
+</script>
 <script>
    $(function () {
-//      el,roomName,roomArea,companyName,relevanceRoom
-       function hoverRoom(data) {
-           if(!jQuery){
-               return;
-           }
-           var defaultData = {
-               el:$('body'),
-               roomName:'',
-               roomArea:'暂无',
-               companyName:'暂无公司信息',
-               relevanceRoom:'暂无关联房号信息'
-           };
-            var newData = $.extend({},defaultData,data),
-                    badge = '';
-          if(newData.relevanceRoom && typeof (newData.relevanceRoom) == 'object'){
-                for(var i = 0,length = newData.relevanceRoom.length; i < length; I++){
-                   badge += '<span class="badge">'+newData.relevanceRoom[i]+'</span>';
-                }
-          }else{
-              badge = '暂无关联房号信息';
-          }
-           var html = '<div class="layer">'+
-                           '<div class="layer-header">'+newData.roomName+'</div>'+
-                           '<div class="layer-content">'+
-                               '<div class="layer-content-cell"><span>房间面积：</span><span>'+newData.roomArea+'㎡</span></div>'+
-                               '<div class="layer-content-cell"> <span>公司名称：</span><span>'+newData.companyName+'</span></div>'+
-                               '<div class="layer-content-cell">'+
-                                   '<span>关联房号：</span>'+badge+
-                               '</div>'+
-                           '</div>'+
-                       '</div>';
-           newData.el.append(html);
-       }
-
-       $(".cell-item").hover(function () {
+       $(".table").first().show();
+       $("#checkPark").change(function(){
+           var key  = $(this).val();
+          $(".table").hide().siblings("[data-key="+key+"]").show();
+       });
+       $(".add_floor").change(function(){
            var $this = $(this),
-                layer = $this.children('.layer');
-           if(!layer.length){
-               var data = {
-                   el:$this,
-                   roomName:'203'
-               };
-               hoverRoom(data);
+                   floor  = $this.val();
+                $this.attr('data-floor',floor);
+       });
+       $(".mail-content").on('mouseover mouseout','.cell-item',function (event) {
+           if(event.type == "mouseover"){
+               //鼠标悬浮
+               var $this = $(this),
+                       area = $this.data("area"),
+                       room = $this.data("room"),
+                       contract =  $this.data("contract"),
+                       layer = $this.children('.layer');
+               if(!layer.length){
+                   var data = {
+                       el:$this,
+                       roomName:room,
+                       roomArea:area,
+                       contract:contract
+                   };
+                   hoverRoom(data);
+               }
+               $this.children('.layer').show();
+           }else if(event.type == "mouseout"){
+               //鼠标离开
+               $(this).children('.layer').hide();
            }
-           $this.children('.layer').show();
-
-       },function () {
-           $(this).children('.layer').hide();
        });
        //绑定模态框展示的方法
        $("#room-modal").on('show.bs.modal', function (event) {
-           var button = $(event.relatedTarget);
-           console.log(button);
-//           var recipient = button.data('text');
-           var modal = $(this);
-//           modal.find('.modal-body').html(recipient);
+           var modal = $(this),
+                   build = $('#checkPark').select().val(),
+                   target = $(event.relatedTarget);
+            modal.find("#house").find("option[value="+build+"]").prop("selected",true);
+            modal.find('.add_floor').hide().siblings("[data-key="+build+"]").show();
        });
        $("#update-modal").on('show.bs.modal', function (event) {
-           var button = $(event.relatedTarget);
-           console.log(button);
-//           var recipient = button.data('text');
-           var modal = $(this);
+           var  modal = $(this),
+                   target = $(event.relatedTarget),
+                   room_id = target.data('roomid');
+           var data = {
+               room_id:room_id
+           };
+           $.ajax({
+               data:data,
+               type:'POST',
+               url:"{:Url('Park/floorInfo')}",
+               success:function (e) {
+                   console.log(e);
+                   var data = JSON.parse(e);
+                   var roomTpl = template("roomInfo",data);
+                   modal.find(".form-inline").empty().append(roomTpl);
+                   //return;
+                   if(data.code ==1){
+                        var roomTpl = template("roomInfo",data);
+                       modal.find(".form-inline").empty().append(roomTpl);
+                   }else{
+                       updateAlert(e.msg);
+                   }
+
+               }
+           });
+
 //           modal.find('.modal-body').html(recipient);
        });
        //编辑楼层
@@ -592,53 +711,79 @@
                $(this).data('state','1');
                $(".table .table-cell-icon").hide();
            }
-
        });
        //删除选定楼层信息
-       $(".table").on('click','.table-cell-tit .table-cell-icon',function (e) {
+       $(".mail-content").on('click','.table-cell-tit .table-cell-icon',function (e) {
            var $this = $(this),
                    floorInfo = $this.parent().next(),
                    parents = $this.parent().parent(),
                    parentsIndex = parents.index(),
                    floor = parents.data('floor'),
-                   lastIndex = $(".table .table-cell").last().index(),
-                   html = '<div class="cell-item item-default">'+floor+'F</div></div>';
-           if(parentsIndex == lastIndex){
+                   lastIndex = parents.siblings('.table-cell').last().index(),
+                   html = '<div class="cell-item-default item-default">'+floor+'F</div></div>';
+           if(parentsIndex == lastIndex + 1){
                parents.remove();
+               var build = $('#checkPark').select().val();
+                   var data = {
+                       id:2,
+                       build_block:build,
+                       floor:floor
+                   };
+                   //console.log(data);
+                   $.ajax({
+                       data:data,
+                       type:'POST',
+                       url:"{:Url('Park/delfloor')}",
+                       success:function (e) {
+                           if(e.code ==1){
+                               delFloor(build,e.data);
+                           }else{
+                               updateAlert(e.msg);
+                           }
+
+                       }
+                   })
            }else{
                floorInfo.empty().html(html);
            }
-           //if(){}
        });
        //添加楼层
-       $("#addFloor").click(function () {
-           var parent = $(this).parent().parent(),
-                floor = parent.prev().attr("data-floor") || 0,
-                state =  $("#editFloor").data("state"),
-                newFloor = parseInt(floor) +1,
-                html = '<div class="table-cell clearfix" data-floor="'+newFloor+'">'+
-                   '<div class="table-cell-tit col-xs-1"><i class="fa fa-close table-cell-icon"></i>F'+newFloor+'</div>'+
-                  '<div class="table-cell-info col-xs-11"><div class="cell-item item-default">'+newFloor+'F</div></div>'+
-                '</div>';
-
-           var build = $('#checkPark').select().val();
-           var park = "{$park_id}";
-           //alert(build);return ;
-           if(state == '2'){
-               $(".table .table-cell-icon").show();
+       $(".mail-content").on('click','.addFloor',function () {
+           var $this = $(this),
+                   build = $('#checkPark').select().val(),
+                    park = "{$park_id}",
+                    parent = $(this).parent().parent(),
+                    floor = parent.prev().attr("data-floor") || 0,
+                    againBuild = parent.parent().data("key"),
+                    state =  $("#editFloor").data("state"),
+                    newFloor = parseInt(floor) +1,
+                    data = {fid:newFloor,build:build,park_id:park};
+           $this.prop('disabled', true);
+            //console.log(data);
+           if(build != againBuild){
+               updateAlert('添加失败！');
+               return;
            }
            $.ajax({
-               data:{fid:newFloor,build:build,park_id:park},
+               data:data,
                type:'POST',
                url:"{:Url('Park/addfloor')}",
                success:function (e) {
-                   //console.log(e)
+                   updateAlert(e.msg,"success");
+                   $this.prop('disabled', false);
+                   console.log(e)
                    if(e.code ==1){
+                       var html = template('floorTpl',data);
                        parent.before(html);
+                       if(state == '2'){
+                           $(".table .table-cell-icon").show();
+                       }
                    }else{
-                       updateAlert(e.msg);
+                       updateAlert(e.msg,"info");
                    }
-
+               },
+               error:function (e) {
+                   $this.prop('disabled', false);
                }
           })
        });
@@ -674,11 +819,19 @@
                 type:"POST",
                 url:"{:Url('Park/addrooms')}",
                 success:function (data) {
+                    console.log(data);
                     if (data.code==1){
-                        updateAlert(data.msg+" 稍后自动刷新页面～","success");
-                        setTimeout(function () {
-                            location.href = data.url;
-                        },2000);
+                        updateAlert(data.msg,"success");
+                        var e = JSON.parse(data.data),
+                                obj = {data:e},
+                                houseTpl =template('houseList',obj);
+                        $(".mail-content").empty().append(houseTpl).find(".table[data-key="+build+"]").show();
+                        //console.log(e);
+
+//                        updateAlert(data.msg+" 稍后自动刷新页面～","success");
+//                        setTimeout(function () {
+//                            location.href = data.url;
+//                        },2000);
                     }else{
                         updateAlert(data.msg,"info");
                     }
@@ -688,11 +841,51 @@
 
 
 
-        })
+        });
 
 
+       /**
+        * 追加房屋信息
+        * @param data (Object)
+        * {el,roomName,roomArea,companyName,relevanceRoom}
+        * el（jQuery）被追加的jq对象
+        * roomName （String）房间名称
+        * companyName (String) 公司名称
+        * relevanceRoom （Array） 关联房号信息
+        */
+       function hoverRoom(data) {
+           if(!jQuery){
+               return;
+           }
+           var defaultData = {
+               el:$('body'),
+               roomName:'',
+               roomArea:'暂无',
+               companyName:'暂无公司信息',
+               contract:'',
+               relevanceRoom:[]
+           };
+           var newData = $.extend({},defaultData,data),
+                   layerTpl = template('layer',newData);
+           newData.el.append(layerTpl);
+       }
 
-
+       /**
+        *
+        * @param build
+        * @param floor
+        */
+       function  delFloor(build,floor) {
+           var modal = $("#room-modal"),
+                   selectFloorHtml = template('selectFloor',floor),
+                   selectFloor =  modal.find('.add_floor[data-key='+build+']'),
+                   floor = selectFloor.data('floor');
+           if(floor){
+               selectFloor.empty().append(selectFloorHtml).find("option[value="+floor+"]").prop("selected",true);
+           }else{
+               selectFloor.empty().append(selectFloorHtml);
+           }
+       }
 
    })
 </script>

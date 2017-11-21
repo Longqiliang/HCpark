@@ -163,14 +163,17 @@
     var app = new Vue({
         el: '#app',
         data: {
+            person_park:{$park_id},
             park:[
                 {
+                    id:80,
                     btn_text:'人工智能产业园',
                     alt:'人工智能产业园注册二维码',
                     code_index:0,
                     src:'/index/images/index/code-register-BJ.png'
                 },
                 {
+                    id:3,
                     btn_text:'希垦科技园',
                     alt:'希垦科技园注册二维码',
                     code_index:1,
@@ -181,7 +184,21 @@
             parkIndex:0,
             nextParkIndex:1
         },
+        created(){
+            //优先显示当前园区
+            for(var i=0;i<this.park.length;i++){
+                if(this.park[i].id==this.person_park){
+                    this.parkIndex=i;
+                    this.nextParkIndex=i+1
+                    if(this.nextParkIndex>=this.park.length){
+                        this.nextParkIndex=0
+                    }
+                    break;
+                }
+            }
+        },
         methods: {
+            //切换
             changeParkCode(){
                 var _this=this;
                 var len=_this.park.length;

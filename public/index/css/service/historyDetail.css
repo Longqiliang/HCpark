@@ -131,10 +131,13 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     margin: 12px 0;
 }
 .card-upload{
-    /*justify-content: flex-start;*/
+    justify-content: flex-start;
     flex-wrap: wrap;
     padding:0 0 2rem 0;
 }
+.card-upload>div:not(:nth-child(3n+0)){margin-right: 2.05vw;}
+.upload-box,.upload-img{margin-bottom:2vw}
+.upload-box,.upload-img,.upload-img img{border-radius: 1.3333333vw;overflow: hidden;}
 .upload-img,.upload-box{
     margin-bottom: 2vw;
 }

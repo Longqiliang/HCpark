@@ -359,9 +359,15 @@ class Service extends Base
         return $this->fetch();
     }
 
-
+//    暂无权限
     public function noPermissions()
     {
+        $parkid = session('park_id');
+        $park_info = Park::where('id', $parkid)->find();
+        $property_phone = $park_info['property_phone'] ? $park_info['property_phone'] : '';
+        $this->assign('parkid',$parkid);
+        $this->assign('property_phone',$property_phone);
+
         return $this->fetch();
     }
 
