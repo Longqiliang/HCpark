@@ -16,10 +16,9 @@ class Enterprise extends Base{
     public function index() {
         $park_id=session('park_id');
         $parkcompany = new ParkCompany();
-        $list = $parkcompany->where('park_id',$park_id)->select();
+        $list = $parkcompany->where(['park_id'=>$park_id,'company_id'=>['notin',[78,91]]])->select();
         $this->assign('list',json_encode($list));
         return $this->fetch();
-
     }
 
     //引导页
