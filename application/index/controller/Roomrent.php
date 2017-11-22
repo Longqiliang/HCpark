@@ -216,6 +216,13 @@ class Roomrent extends Base
          $this->assign('type', $type);*/
 
         $list1 = $this->rentlist();
+        $userid =session('userId');
+        $user = WechatUser::where('userid',$userid)->find();
+        $userinfo=[
+            'name'=>$user['name'],
+            'mobile'=>$user['mobile']
+        ];
+        $this->assign('user',json_encode($userinfo));
         //return json_encode($list1);
         //echo json_encode($list1);
         $this->assign('list', json_encode($list1));
@@ -345,13 +352,6 @@ class Roomrent extends Base
                 $this->error("提交失败");
             }
         }
-        $userid =session('userId');
-        $user = WechatUser::where('userid',$userid)->find();
-        $userinfo=[
-            'name'=>$user['name'],
-            'mobile'=>$user['mobile']
-        ];
-        $this->assign('user',json_encode($userinfo));
         return $this->fetch();
     }
 
