@@ -4,21 +4,39 @@
 <title>积分商城</title>
 <link rel="stylesheet" href="/index/css/exchange/index.css">
 <style>
-
+    .icon-remarks{
+        position: absolute;
+        right:12px;top:13px;display:block;height:15px;width:15px;
+        border:2px solid #fff;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 15px;
+        text-align: center;
+        color: #fff;
+        font-weight: bold;
+        /*background:url(/index/images/service/patent/icon-remarks.png) no-repeat center;background-size:15px 15px*/
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
     <div class="banner">
-        <div class="score">
-            <span>{{baseData.score}}</span>
-        </div>
-        <div class="record" @click="jumpTo(2)">兑换记录</div>
+        <!--<div class="score">-->
+            <!--<span>{{baseData.score}}</span>-->
+        <!--</div>-->
+        <!--<div class="record" @click="jumpTo(2)">兑换记录</div>-->
+        <a href="/index/exchange/rule" class="icon-remarks">!</a>
     </div>
-    <div class="title">
-        <span class="title_icon_fire">新品上市</span>
-    </div>
+    <ul class="tab">
+        <li><span class="score">{{baseData.score}}</span></li>
+        <li>
+            <div class="record" @click="jumpTo(2)">兑换记录</div>
+        </li>
+    </ul>
+    <!--<div class="title">-->
+        <!--<span class="title_icon_fire">新品上市</span>-->
+    <!--</div>-->
     <div class="new_lists"  id="pullrefresh">
         <div class="new_list" v-for="product in baseData.product" @click="jumpTo(1,product.id)">
             <div class="box">
