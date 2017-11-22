@@ -52,7 +52,7 @@ class Trademark extends Admin
                     'description' => "您提交的商标咨询园区已回复，点击可查看详情",
                     "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/2/id/' . $id
                 ];
-                ServiceModel::sendPersonalMessage($message,$res['useid']);
+                ServiceModel::sendPersonalMessage($message,$res['userid']);
                 return $this->success('回复成功');
             } else {
                 return $this->error('失败', '', $ta->getError());
@@ -134,7 +134,7 @@ class Trademark extends Admin
                 'description' => "您的商标查询园区已回复，点击查看详情",
                 "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/1/id/' . $id
             ];
-            ServiceModel::sendPersonalMessage($message,$res['useid']);
+            ServiceModel::sendPersonalMessage($message,$res['userid']);
 
             return $this->success('成功');
         } else {
