@@ -11,6 +11,7 @@ namespace app\admin\controller;
 use app\common\model\TrademarkInquire;
 use app\common\model\TrademarkAdvisory;
 use  app\common\behavior\Service as servicemodel;
+use wechat\TPWechat;
 //商标管理
 class Trademark extends Admin
 {
@@ -48,12 +49,19 @@ class Trademark extends Admin
             $res = $ta->where('id', $id)->update(['end_time' => time(), 'respond' => $respond, 'status' => 1]);
 
             if ($res) {
-                $message = [
-                    "title" => "商标查询服务咨询回复提示",
-                    'description' => "您提交的商标咨询园区已回复，点击可查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/2/id/' . $id
+
+                $weObj = new TPWechat(Config('personal'));
+                $data = [
+                    'touser' => $ti['userid'],
+                    'agentid' => 1000008,
+                    'msgtype' => 'text',
+                    'text' => [
+                        'content' => "商标咨询服务回复提示\n您提交的商标咨询园区已回复\n回复：".$respond
+                    ]
                 ];
-                ServiceModel::sendPersonalMessage($message,$ti['userid']);
+
+                 $weObj->sendMessage($data);
+
                 return $this->success('回复成功');
             } else {
                 return $this->error('失败', '', $ta->getError());
