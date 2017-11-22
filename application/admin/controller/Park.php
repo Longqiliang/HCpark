@@ -15,6 +15,8 @@ use app\common\model\PeopleRent;
 use app\index\model\WechatDepartment;
 use app\common\model\ParkRent;
 use app\common\model\PartyNews;
+use think\Db;
+use think\Exception;
 use think\Image;
 use app\common\model\ParkFloor;
 
@@ -869,13 +871,17 @@ class Park extends Admin
         $data = [
             'company' => $company,
             'type' => input('type'),
+            'img' => json_encode(input('img')),
+            'imgs' =>json_encode(input('imgs')),
+            'panorama' =>input('panorama'),
+            'price' => input('price'),
         ];
         $like = mb_substr($company, 0, 6);
         $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
         if ($info) {
             $data['company_id'] = $info['id'];
         } else {
-            $data['company_id'] = null;
+            $data['company_id'] = 0;
         }
         $res = $parkRoom->where($map)->update($data);
         if ($res) {
@@ -957,5 +963,25 @@ class Park extends Admin
             return ;
         }
     }
+    /**
+     *
+     */
+    public function flooredit(){
+        $parkRoom = new ParkRoom();
+        Db::startTrans();
+        try{
+            $res1 = $parkRoom->where('id',1)->find();
+            $res2 = $parkRoom->where('id',2)->find();
+            if ($res1 && $res2){
+                echo json_encode($res1);
+                Db::commit();
+            }
 
+        }catch(Exception $e){
+            Db::rollback();
+            return  $e->getMessage();
+        }
+
+
+    }
 }

@@ -18,7 +18,7 @@
 ;(function ($) {
 
   var elem, sib, that, opts, preloader, orig_pos, final_pos, busy = false,
-    nr, zindex = 90,
+    nr, zindex = 9999,
     titleh = 0,
     margin = 40,
     fx = $.extend($('<div/>')[0], {
@@ -321,8 +321,8 @@
       }
 
       setTimeout(function () {
-        $('#imgbox-wrap-' + nr).css('z-index', 90);
-        $('#imgbox-bg-' + nr).css('z-index', 90);
+        $('#imgbox-wrap-' + nr).css('z-index', 9999);
+        $('#imgbox-bg-' + nr).css('z-index', 9999);
       }, opts.speedOut);
 
       fx.prop = 1;
@@ -414,7 +414,7 @@
     $('#imgbox-bg-' + nr).stop().remove();
     $('#imgbox-wrap-' + nr).remove();
 
-    zindex = zindex > 90 ? zindex - 2 : 90;
+    zindex = zindex > 9999 ? zindex - 2 : 9999;
 
     if (opts.overlayShow) {
       $('#imgbox-overlay').unbind().stop().fadeOut('fast');
