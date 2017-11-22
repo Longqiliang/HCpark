@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/index/css/personal/service.css">
 <style>
     body{
-        background: #F5F5F5;
+        /*background: #F5F5F5;*/
     }
     .no-list{
         width:100%;
@@ -145,6 +145,45 @@
         border-right: 1px solid #dcdcdc;
     }
 
+    .lists>li{
+        box-sizing: border-box;
+        font-size: 1.4rem;
+        color: #666;
+    }
+    .lists a{
+        background-color: #fff;
+        padding-left: 4vw;
+        display: flex;
+        align-items: center;
+        height:14.4vw;
+        font-size: 1.4rem;
+        color: #333;
+        line-height: 14.4vw;
+        box-sizing: border-box;
+        justify-content: space-between;
+    }
+    .lists a img{
+        width:8vw;
+        height:8vw;
+        margin-right: 5.33vw;
+    }
+    .lists a div{
+        border-bottom: 1px solid #f1f1f1;
+        width:82.66vw;
+    }
+    .lists a .fr{
+        box-sizing: border-box;
+        /*width:13.33vw;*/
+        padding-right:5vw;
+        font-size: 1.3rem;
+        height:14.4vw;
+        text-align: right;
+        margin-right: 4vw;
+        color: #999;
+        background: url("/index/images/addressbook/right.png") right center no-repeat;
+        background-size: 1.6vw 3.2vw;
+    }
+
 </style>
 <!--<link rel="stylesheet" href="/index/css/common/tip.css">-->
 {/block}
@@ -167,14 +206,25 @@
         <!--服务权限-->
         <div class="notices" v-if="active==0">
             <div class="notice">
-                <a class="list" v-for="(p,index) in person" @click="showServiceMask(index)" >
-                    <div class="state">
-                        <span>{{p.name}}</span>
-                    </div>
-                    <div class="state">
-                        <span><span v-if="p.water_status!==0">饮水服务</span> <span v-if="p.fee_status!==0">费用缴纳</span><span class="noPower" v-if="p.water_status === 0 && p.fee_status===0">暂无权限</span></span>
-                    </div>
-                </a>
+                <ul class="lists">
+                    <li v-for="(p,index) in person" @click="showServiceMask(index)">
+                        <a>
+                            <img src="/index/images/addressbook/pb.png" alt="头像" v-if="!p.header">
+                            <img :src="p.header" alt="头像" v-if="p.header">
+                            <div class="state">
+                                <span>{{p.name}}</span>
+                                <span class="fr"><span v-if="p.water_status!==0">饮水服务</span> <span v-if="p.fee_status!==0">费用缴纳</span><span class="noPower" v-if="p.water_status === 0 && p.fee_status===0">暂无权限</span></span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!--<a class="list" v-for="(p,index) in person" @click="showServiceMask(index)" >-->
+                    <!--<div class="state">-->
+                        <!--<span>{{p.name}}</span>-->
+                    <!--</div>-->
+                    <!--<div class="state">-->
+                    <!--</div>-->
+                <!--</a>-->
                 <img src="/index/images/service/card/icon-default.jpg" v-if="person.length===0" class="no-list">
             </div>
             <!--遮罩-->

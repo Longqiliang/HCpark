@@ -60,7 +60,7 @@
                     <div class="info">
                         <div class="title">{{c.service_name}}</div>
                         <div class="time">
-                            <span>{{c.create_time*1000 | timeToString}}</span>
+                            <span>{{c.create_time | timeToString}}</span>
                         </div>
                     </div>
                     <div class="state">
@@ -79,8 +79,8 @@
 <script>
     //    时间戳转字符串过滤器
     Vue.filter('timeToString', function(time) {
-        if(time){
-            var newTime = new Date(time);
+        if(time && !isNaN(time)){
+            var newTime = new Date(time*1000);
             var m = newTime.getMonth()+1,
                     dt=newTime.getDate(),
                     y=newTime.getFullYear();
@@ -91,6 +91,8 @@
                 m='0'+m;
             }
             return y+'-'+m+'-'+dt
+        }else{
+            return time;
         }
     });
     var app=new Vue({

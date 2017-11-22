@@ -9,15 +9,35 @@
     .grade1>li{
     }
     .grade1>li>a{
+        position: relative;
         padding:0 1.2rem;
-        display: block;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
         width:100%;
         line-height: 5rem;
         height:5rem;
         border-bottom: 1px dashed #f1f1f1;
-
     }
-    .grade1>li>a>span:first-child{
+    .grade1>li>a:after {
+        content: '';
+        display: block;
+        -webkit-font-smoothing: antialiased;
+        height: 6px;
+        width: 6px;
+        border-width: 1px 1px 0 0;
+        border-color: #333333;
+        border-style: solid;
+        -webkit-transform: matrix(0.71, 0.71, 0.71, -0.71, 0, 0);
+        transform: matrix(0.71, 0.71, 0.71, -0.71, 0, 0);
+    }
+    .grade1>li>a.open:after{
+        -webkit-transform: matrix(-0.71, -0.71, -0.71, 0.71, 0, 0);
+        transform: matrix(-0.71, -0.71, -0.71, 0.71, 0, 0);
+    }
+    .grade1>li>a>span>span:first-child{
         margin-right: 2rem;
     }
     .grade1>li>div{
@@ -38,8 +58,8 @@
         display: inline-block;
         margin-bottom: 0.9rem;
     }
-    .grade2>li{
-        /*list-style: decimal;*/
+    .grade2>li:first-child{
+        margin-top: 0.9rem;
     }
     .grade3{
         padding-left: 3rem;
@@ -55,8 +75,8 @@
 
     #app .active{
         height:auto;
-        padding-top: 4px;
-        padding-bottom: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
         border-bottom: 1px dashed #f1f1f1;
     }
     #app a{
@@ -73,8 +93,8 @@
 <div id="app">
     <ul class="grade1">
         <li v-for="version in versionData">
-            <a @click="toOpen(version.number)">
-                <span>{{version.number}} </span><span>{{version.date}}</span>
+            <a @click="toOpen(version.number)" :class="{open:(openNumber===version.number)}">
+                <span><span>{{version.number}} </span><span>{{version.date}}</span></span>
             </a>
             <div :class="{active:(version.number===openNumber)}" >
             <ul class="grade2">

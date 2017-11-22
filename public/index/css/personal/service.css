@@ -101,7 +101,7 @@ body{
 }
 .sieving-list.active{
     height:auto;
-    padding:1rem 4.266666vw 1rem;
+    padding:2rem 4.266666vw 0;
 }
 .sieving-list>li{
     box-sizing: border-box;
@@ -113,7 +113,7 @@ body{
     line-height: 2.8rem;
     font-size: 1.4rem;
     color: #666;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     -webkit-tap-highlight-color:rgba(0,0,0,0)!important;
 }
 .sieving-list>li:not(:nth-child(3n+1)){
