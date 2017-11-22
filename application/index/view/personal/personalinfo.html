@@ -13,8 +13,8 @@
     .search_mark{position:fixed;top:0;left:0;bottom:0;right:0;z-index:10}
     .search_mark>.search_bg{position:absolute;top:0;left:0;bottom:0;right:0;z-index:15;background-color:rgba(0,0,0,.3)}
     .search_content{position:absolute;padding-bottom:3.2vw;top:5vh;left:5vw;background:#fff;z-index:20;border-radius:5px;overflow:hidden}
-    .search_content_box{position:relative;width:90vw;height:70vh;overflow:scroll}
-    .search{background:#f0eff5;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;width:90vw;position:fixed;top:5vh;left:5vw;z-index:999}
+    .search_content_box{position:relative;width:90vw;overflow:hidden}
+    .search{background:#f0eff5;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;width:90vw;position:absolute;z-index:999}
     .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center;overflow:hidden}
     .search>.unBtn{display:none}
     .search>.searchBox>.searchInput{display:none}
@@ -26,11 +26,17 @@
     .search.isClick .searchInput{background:#f0eff5;display:inline-block;font-size:1.4rem;height:3.2rem;flex-grow:1}
     .search.isClick>.unBtn{display:block;padding:0;box-sizing:border-box;width:3.8rem;height:2.8rem;line-height:2.8rem;border-radius:5px;border:1px solid #5d9cec;color:#5d9cec;text-align:center;font-size:1.4rem}
     .searchList{min-height:100vh;width:100%;position:absolute;top:0;left:0}
+    .company-list-box{
+        height:70vh;
+        padding:5.2rem 3.7vw .4rem 3.7vw;
+        overflow: scroll;
+        position: relative;
+    }
     .searchList.company-list{padding:0}
     .searchList.company-list>li{margin-bottom:0;border-bottom:1px solid #f1f1f1;font-size:1.4rem}
     .searchList{background-color:rgba(255,255,255,1)}
     .searchList>li:first-child{margin-top:4.8rem}
-    .company-list{box-sizing:border-box;width:100%;position:absolute;top:0;left:0;padding:5.2rem 3.7vw .4rem 3.7vw}
+    .company-list{box-sizing:border-box;width:100%;}
     .company-list>li{padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;align-items:center;background-color:#fff;font-size:1.4rem}
     .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
     .company-list .company-logo{margin-right:1.4rem}
@@ -38,7 +44,8 @@
     .company-info>li:first-child{font-size:1.6rem;font-weight:700;color:#333}
     .company-info>li:last-child{font-size:1.2rem;color:#999}
     .hidden{display:none}
-    .overflow{height:100vh;overflow:hidden}
+    .overflow{
+        display: none;}
     .color_h{color:#999}
     .my-must:before{content:'*';display:block;font-size:1.2rem;color:red;position:absolute;left:-.7rem;top:0}
     .search-mask-close{height:3.6rem;width:3.6rem;border-radius:50%;border:2px solid #fff;position:absolute;bottom:-6.6rem;left:50%;-webkit-transform:translateX(-50%);-moz-transform:translateX(-50%);-ms-transform:translateX(-50%);-o-transform:translateX(-50%);transform:translateX(-50%);z-index:101}
@@ -136,20 +143,22 @@
                     </div>
                     <div class="unBtn" @click="isCancel">取消</div>
                 </div>
-                <!--公司列表-->
-                <ul class="company-list" :class="{overflow:inputStatus}">
-                    <li v-for="item in companyList" @click="checkCompany(item)">
-                        {{item.depart_name}}
-                    </li>
-                </ul>
-                <!--搜索列表-->
-                <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
-                    <li v-for="item in searchList" @click="checkCompany(item)">
-                        <ul class="company-info">
+                <div class="company-list-box">
+                    <!--公司列表-->
+                    <ul class="company-list" :class="{overflow:inputStatus}">
+                        <li v-for="item in companyList" @click="checkCompany(item)">
                             {{item.depart_name}}
-                        </ul>
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                    <!--搜索列表-->
+                    <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
+                        <li v-for="item in searchList" @click="checkCompany(item)">
+                            <ul class="company-info">
+                                {{item.depart_name}}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="search-mask-close" @click="toggleMark">
                 <span></span>
