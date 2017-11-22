@@ -839,8 +839,9 @@ class Park extends Admin
         if ($manage == 1) {
             $res = $parkRoom->where($map)->update(['manage' => 1]);
             if ($res) {
+                $floor = $this->getFloor();
 
-                return $this->success("上架成功");
+                return $this->success("上架成功",'',json_encode($floor));
             } else {
 
                 return $this->error("上架失败");
@@ -848,8 +849,9 @@ class Park extends Admin
         } else {
             $res = $parkRoom->where($map)->update(['manage' => 2, 'company' => null, 'company_id' => 0, 'type' => null]);
             if ($res) {
+                $floor = $this->getFloor();
 
-                return $this->success("下架成功");
+                return $this->success("下架成功",'',json_encode($floor));
             } else {
 
                 return $this->error("下架失败");
@@ -869,24 +871,28 @@ class Park extends Admin
         $map = ['build_block' => $build, 'park_id' => $parkId, 'room' => $room];
         $company = input('company');
         $data = [
-            'company' => $company,
-            'type' => input('type'),
             'img' => json_encode(input('img')),
             'imgs' =>json_encode(input('imgs')),
             'panorama' =>input('panorama'),
             'price' => input('price'),
+            'area' => input('area'),
         ];
-        $like = mb_substr($company, 0, 6);
-        $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
-        if ($info) {
-            $data['company_id'] = $info['id'];
-        } else {
-            $data['company_id'] = 0;
+        if ($company){
+            $data['company'] = $company;
+            $data['type'] = input('type');
+            $like = mb_substr($company, 0, 6);
+            $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
+            if ($info) {
+                $data['company_id'] = $info['id'];
+            } else {
+                $data['company_id'] = 0;
+            }
         }
         $res = $parkRoom->where($map)->update($data);
         if ($res) {
+            $floor = $this->getFloor();
 
-            return $this->success("保存成功");
+            return $this->success("保存成功",'',json_encode($floor));
         } else {
 
             return $this->error("保存失败");
@@ -928,8 +934,9 @@ class Park extends Admin
             $res = $parkRoom->where($map)->delete();
         }
         if ($res) {
+            $floor = $this->getFloor();
 
-            return $this->success("删除成功");
+            return $this->success("删除成功",'',json_encode($floor));
         } else {
 
             return $this->error("删除失败");
