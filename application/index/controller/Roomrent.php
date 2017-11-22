@@ -12,6 +12,7 @@ use app\common\model\ParkIntention;
 use app\common\model\ParkRent;
 use app\common\model\ParkRoom;
 use app\common\model\PeopleRent;
+use app\index\model\WechatUser;
 use app\index\model\Park;
 use think\Db;
 use think\Image;
