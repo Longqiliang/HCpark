@@ -13,11 +13,17 @@ use think\Model;
 
 class ExchangeRecord extends Model
 {
- public  function  user(){
 
-     return $this->hasOne('WechatUser','userid','userid');
+    protected $type = [
+        'create_time' => 'strtotime',
+    ];
 
- }
+    public function user()
+    {
+
+        return $this->hasOne('WechatUser', 'userid', 'userid');
+
+    }
 
     public function productinfo()
     {
