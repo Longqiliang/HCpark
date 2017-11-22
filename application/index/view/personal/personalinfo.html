@@ -139,7 +139,7 @@
                 <div class="search" :class="{isClick:inputStatus}" >
                     <div class="searchBox" @click="isClick">
                         <div class="searchText"><span class="searchText_c">请在此搜索企业</span></div>
-                        <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" placeholder="请输入企业名" v-focus="inputStatus">
+                        <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" id="search_input" placeholder="请输入企业名" v-focus="inputStatus">
                     </div>
                     <div class="unBtn" @click="isCancel">取消</div>
                 </div>
@@ -320,6 +320,8 @@
                 }
             },
             checkCompany(item){
+                var input = document.getElementById("search_input");
+                input.blur();
                 this.checkedCompany=item;
                 if(item.department_id!=78 && item.department_id!=91){
                     this.isPass = false;
