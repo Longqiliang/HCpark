@@ -111,7 +111,15 @@
                         {/volist}
                     </td>
                     <td class="list_type">
-                        {$vo.status_text}
+                        {eq name="vo.status" value="0"}
+                        <span class="">未审核</span>
+                        {/eq}
+                        {eq name="vo.status" value="1"}
+                        <span class="txt-success">发布</span>
+                        {/eq}
+                        {eq name="vo.status" value="2"}
+                        <span class="txt-danger">审核失败</span>
+                        {/eq}
                     </td>
 
                     <td>

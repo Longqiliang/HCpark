@@ -26,7 +26,7 @@ class News extends Admin
     {
         $type = input('type');
         $parkid = session('user_auth')['park_id'];
-        $map = ['status' => 1, 'type' => ['<=', 3], 'park_id' => $parkid];
+        $map = ['status' => ['>=', 0], 'type' => ['<=', 3], 'park_id' => $parkid];
         if ($type) {
             $map['type'] = $type;
         }
@@ -34,15 +34,13 @@ class News extends Admin
         if ($search != '') {
             $map['title'] = ['like', '%' . $search . '%'];
         }
-        $list = NewsModel::where($map)->order('id desc')->paginate();
+        $list = NewsModel::where($map)->order('status asc ,create_time desc')->paginate();
         int_to_string($list, $map = array('status' => array(0 => '待审核', 1 => '发布', 2 => '审核不通过')));
 
         $this->assign('list', $list);
         $this->assign('checkType', $type);
-
         return $this->fetch();
     }
-
     /*新闻通告审核列表(园区管理员)   */
     public function check()
     {
@@ -88,7 +86,7 @@ class News extends Admin
     {
         $type = input('type');
         $parkid = session('user_auth')['park_id'];
-        $map = ['status' => ['>', 0], 'type' => ['<=', 3], 'park_id' => $parkid];
+        $map = ['status' => ['>=', 0], 'type' => ['<=', 3], 'park_id' => $parkid];
         if ($type) {
             $map['type'] = $type;
         }
@@ -96,7 +94,7 @@ class News extends Admin
         if ($search != '') {
             $map['title'] = ['like', '%' . $search . '%'];
         }
-        $list = NewsModel::where($map)->order('id desc')->paginate();
+        $list = NewsModel::where($map)->order('status asc ,create_time desc')->paginate();
         int_to_string($list, $map = array('status' => array(0 => '待审核', 1 => '发布', 2 => '审核不通过')));
 
         $this->assign('list', $list);
@@ -104,6 +102,16 @@ class News extends Admin
 
         return $this->fetch();
     }
+
+   public  function  checkdetail(){
+
+       $news = NewsModel::where('id', 'eq', input('id'))->find();
+       $this->assign('news', $news);
+       return $this->fetch();
+
+   }
+
+
 
     /*新闻通告，政策法规的添加及修改*/
     public function add()

@@ -66,7 +66,7 @@
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
-                <a href="{:Url('add')}" class="btn btn-white btn-sm" ><i class="fa fa-file-text-o"></i> 添加</a>
+
             </div>
         </div>
         <div class="mail-box">
@@ -117,9 +117,8 @@
                     </td>
 
                     <td>
-                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="saveData(this)"
-                           data-id='{$vo.id}'>审核</a>
-                        <a href="{:Url('add','id='.$vo.id)}" class=" confirm btn-sm btn-success">编辑</a>
+
+                        <a href="{:Url('checkdetail','id='.$vo.id)}" class=" confirm btn-sm btn-success">审核</a>
                         <a onclick="delItem({$vo.id})" class=" confirm btn-sm btn-info">删除</a>
                     </td>
 
@@ -131,33 +130,6 @@
         </div>
 
 
-        <div id="modal-form" class="modal fade" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!--<form class="form-horizontal" method="post" action="siteapprove.html">-->
-                    <div class="form-horizontal">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h3 class="modal-title text-center">发布审核</h3>
-                        </div>
-                        <div class="modal-body">
-                            <p class="text-center zt-big-padding">请进行新闻公告审核</p>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="form-group">
-                               <input type="hidden" name="id">
-                                <div class="col-sm-12 text-center zt-flex zt-space-around">
-                                    <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
-                                    <button class="btn btn-primary " onclick="newcheck(1)">通过</button>
-                                    <button class="btn btn-warning " onclick="newcheck(2)" >不通过</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>>
-                    <!--</form>-->
-                </div>
-            </div>
-        </div>
 
 
 
