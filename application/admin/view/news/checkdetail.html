@@ -8,8 +8,9 @@
     .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
     .front_cover_img {height: 40px; width: 40px; margin-top: 4px}
     .send_type_label {
-        padding-left: 12px;
-    }
+        padding-left: 12px;}
+
+
 </style>
 {/block}
 
@@ -153,8 +154,9 @@
      </div>
  </div>-->
 <input type="hidden" name="id" value="{$news.id}">
-<div class="mail-text h-200">
-    <div class="summernote">{$news.content}</div>
+
+    <div class="mail-text h-200" style="border: 2px #888888 solid;margin:0 20px 0 40px" class="col-sm-10 "   >
+    <div class="summernote" class="col-sm-10 ">{$news.content}</div>
     <div class="clearfix"></div>
 </div>
 <div class="mail-body text-right tooltip-demo">
@@ -214,6 +216,16 @@
     function ggg() {
         window.history.go(-1);
     }
+    $('.summernote').summernote({
+        lang: 'zh-CN',
+        height: 300,
+        minHeight: 210,
+        callbacks: {
+            onImageUpload: function (files) { //the onImageUpload API
+                img = sendFile(files[0]);
+            }
+        }
+    });
 
 
 </script>

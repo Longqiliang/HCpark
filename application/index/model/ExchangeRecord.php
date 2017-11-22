@@ -21,7 +21,7 @@ class ExchangeRecord extends Model
         $map = ['userid' => $uid,
             'status' => ['neq', -1]
         ];
-        $Record = $this->where($map)->select();
+        $Record = $this->where($map)->order("status asc ,create_time asc ")->select();
         foreach ($Record as $value) {
             $value['front_cover'] = isset($value->productInfo->front_cover) ? $value->productInfo->front_cover : "";
             $value['title'] = isset($value->productInfo->title) ? $value->productInfo->title : "";
