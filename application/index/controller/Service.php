@@ -2216,6 +2216,13 @@ class Service extends Base
                 return $this->error('失败', '', $ti->getError());
             }
         } else {
+            $userid =session('userId');
+            $user = WechatUser::where('userid',$userid)->find();
+            $userinfo=[
+                'name'=>$user['name'],
+                 'mobile'=>$user['mobile']
+            ];
+            $this->assign('user',json_encode($userinfo));
             return $this->fetch();
         }
     }
