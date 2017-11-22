@@ -570,7 +570,7 @@
     </div>
     <div class="modal-cell">
         <div class="upload-img-box">
-            {{ if img && img.length}}
+            {{ if img && img.length && img != 0}}
             {{each img as item}}
             <div class="upload-img">
                 <span class="glyphicon glyphicon-remove icon-del"></span>
@@ -581,6 +581,7 @@
         </div>
     </div>
     {{ else if status == 2}}
+     <h4 class="text-center">房间信息</h4>
     <div class="modal-cell">
         <div class="form-group">
             <label for="updateArea">房间面积：</label>
@@ -677,7 +678,7 @@
     </div>
     <div class="modal-cell">
         <div class="upload-img-box">
-            {{ if img && img.length}}
+            {{ if img && img.length && img != 0}}
             {{each img as item}}
             <div class="upload-img">
                 <span class="glyphicon glyphicon-remove icon-del"></span>
@@ -764,7 +765,7 @@
     </div>
     <div class="modal-cell">
         <div class="upload-img-box">
-            {{ if img && img.length}}
+            {{ if img && img.length && img != 0}}
             {{each img as item}}
             <div class="upload-img">
                 <span class="glyphicon glyphicon-remove icon-del"></span>
@@ -1142,14 +1143,14 @@
                        }else{
                            data.manage = 1;
                        }
-                       manageRoom(data);
+                       commonAjax("{:Url('Park/setmanage')}",data,hideUpdateModal,build);
                        break;
                    case 'delete':
                         var data = {
                             status:type,
                             room_id:roomId
                         };
-                       delRoomInfo(data);
+                       commonAjax("{:Url('Park/delete')}",data,hideUpdateModal,build);
                        break;
                    case 'save':
                        var area = $("#update-modal").find('#updateArea').val(),
@@ -1168,7 +1169,7 @@
                                 img:[],
                                 imgs:[]
                            };
-                       saveRoom(data,hideUpdateModal);
+                       commonAjax("{:Url('Park/saveroom')}",data,hideUpdateModal,build);
                        break;
                    default:
                        return;
@@ -1176,20 +1177,28 @@
 
            }
        });
+//       房间状态回调函数
        function hideUpdateModal(data,build) {
            $("#update-modal").modal('hide');
            updateAlert(data.msg,"success");
            var  houseTpl =template('houseList',data);
            $(".mail-content").empty().append(houseTpl).find(".table[data-key="+build+"]").show();
        }
-       function saveRoom(data,canBack) {
+      /*
+      *  房屋状态修改公共ajax
+      *  @param url (String) 请求地址
+      *  @param data (Object) 请求数据
+      *  @param callBack (Function) 回调函数
+      *  @param build (String) 修改的幢
+      * */
+       function  commonAjax(url,data,callBack,build) {
            $.ajax({
                data:data,
                type:"post",
-               url:"{:Url('Park/saveroom')}",
+               url:url,
                success:function (e) {
                    if(e.code == 1){
-                       canBack(e,data.build_block);
+                       callBack(e,build);
                    }else{
                        updateAlert(e.msg+" 稍后自动刷新页面～","info");
                        setTimeout(function () {
@@ -1205,59 +1214,6 @@
                }
            });
        }
-        function manageRoom(data) {
-            $.ajax({
-                data:data,
-                type:"post",
-                url:"{:Url('Park/setmanage')}",
-                success:function (e) {
-                    if(e.code == 1){
-                        updateAlert(e.msg+" 稍后自动刷新页面～","success");
-                        setTimeout(function () {
-                            location.reload();
-                        },2000);
-                    }else{
-                        updateAlert(e.msg+" 稍后自动刷新页面～","info");
-                        setTimeout(function () {
-                            location.reload();
-                        },2000);
-                    }
-                },
-                error:function (e) {
-                    updateAlert('网络错误',"info");
-                    setTimeout(function () {
-                        location.reload();
-                    },2000);
-                }
-            });
-        }
-        function  delRoomInfo(data) {
-            $.ajax({
-                data:data,
-                type:"post",
-                url:"{:Url('Park/delete')}",
-                success:function (e) {
-                   console.log(e);
-                    if(e.code == 1){
-//                        updateAlert(e.msg,"success");
-//                        setTimeout(function () {
-//                            location.reload();
-//                        },2000);
-                    }else{
-                        updateAlert(e.msg,"info");
-                        setTimeout(function () {
-                            location.reload();
-                        },2000);
-                    }
-                },
-                error:function (e) {
-                    updateAlert('网络错误',"info");
-                    setTimeout(function () {
-                        location.reload();
-                    },2000);
-                }
-            });
-        }
        /**
         * 追加房屋信息
         * @param data (Object)
@@ -1283,9 +1239,8 @@
                    layerTpl = template('layer',newData);
            newData.el.append(layerTpl);
        }
-
        /**
-        *
+        *  删除楼层
         * @param build
         * @param floor
         */
