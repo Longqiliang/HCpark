@@ -1,6 +1,7 @@
 {extend name="base/common"}
 {block name="style"}
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style>
     .mail-header{
         padding-right: 20px;
@@ -452,6 +453,7 @@
 <script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script src="/static/localResizeIMG/dist/lrz.bundle.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 
 <script type="text/html" id="houseList">
     {{each data as e}}
@@ -615,8 +617,10 @@
 <script type="text/html" id="uploadTpl">
     {{ if data}}
     <div class="upload-img">
-        <span class="glyphicon glyphicon-remove icon-del"></span>
-        <img src="{{data}}" alt="" class="img">
+        <span class="glyphicon glyphicon-remove icon-del "></span>
+        <a href="{{data}}" class="front_cover">
+            <img src="{{data}}" alt="" class="img">
+        </a>
     </div>
     {{ /if }}
 </script>
@@ -844,6 +848,13 @@
             var html = template('uploadTpl',data);
             /*console.log(html);*/
            $('#room-modal').find('.upload-img-box').append(html);
+           addImgBox();
+           $('.icon-del').click(function() {
+               var delNumber = $(this).parent().parent().index();
+               $(this).parent().remove();
+               homes.splice(delNumber, 1);
+               console.log(homes);
+           });
        });
        //增加房间信息
         $('#addRoom').click(function () {
@@ -933,6 +944,19 @@
            }
        }
 
+       /**
+        * 增加查看大图
+        */
+       function addImgBox() {
+           $(".front_cover").imgbox({
+               overlayShow: false,
+               hideOnContentClick: true,
+               slideshow: false,
+               theme: 'dark',
+               alignment: 'center',       // Position - may be auto OR center.
+               allowMultiple: false,
+           });
+       }
    })
 </script>
 {/block}
