@@ -345,7 +345,13 @@ class Roomrent extends Base
                 $this->error("提交失败");
             }
         }
-
+        $userid =session('userId');
+        $user = WechatUser::where('userid',$userid)->find();
+        $userinfo=[
+            'name'=>$user['name'],
+            'mobile'=>$user['mobile']
+        ];
+        $this->assign('user',json_encode($userinfo));
         return $this->fetch();
     }
 
