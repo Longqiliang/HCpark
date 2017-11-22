@@ -44,6 +44,7 @@ class Trademark extends Admin
             $id = input('id');
             $respond = input('respond');
             $ta = new TrademarkAdvisory();
+            $ti = $ta->get($id);
             $res = $ta->where('id', $id)->update(['end_time' => time(), 'respond' => $respond, 'status' => 1]);
 
             if ($res) {
@@ -52,7 +53,7 @@ class Trademark extends Admin
                     'description' => "您提交的商标咨询园区已回复，点击可查看详情",
                     "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/2/id/' . $id
                 ];
-                ServiceModel::sendPersonalMessage($message,$res['userid']);
+                ServiceModel::sendPersonalMessage($message,$ti['userid']);
                 return $this->success('回复成功');
             } else {
                 return $this->error('失败', '', $ta->getError());
@@ -126,7 +127,10 @@ class Trademark extends Admin
         $id = input('id');
         $back_img = input('back_img');
         $ti = new TrademarkInquire();
+        $ta = $ti->get($id);
         $res = $ti->where('id', $id)->update(['back_img' => $back_img, 'status' => 1, 'end_time' => time()]);
+
+
         if ($res) {
            // 商标查询服务回复提示/时间/您的商标查询园区已回复，点击查看详情；
             $message = [
@@ -134,7 +138,7 @@ class Trademark extends Admin
                 'description' => "您的商标查询园区已回复，点击查看详情",
                 "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/1/id/' . $id
             ];
-            ServiceModel::sendPersonalMessage($message,$res['userid']);
+            ServiceModel::sendPersonalMessage($message,$ta['userid']);
 
             return $this->success('成功');
         } else {
