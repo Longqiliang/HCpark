@@ -841,7 +841,7 @@
     {{ /if }}
 </script>
 <script>
-    var homes = [] ;
+
    $(function () {
        $(".table").first().show();
        $("#checkPark").change(function(){
@@ -904,18 +904,7 @@
                        var roomTpl = template("roomInfo",data);
                        modal.find(".modal-content").html(roomTpl);
                        //图片上传
-                       $(".input-file").fileinput({
-                           showPreview: false,
-                           language: 'zh', //设置语言
-                           uploadUrl: '{:Url("Upload/picture")}', //上传的地址
-                           allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
-                           maxFileSize: 1024 * 200,
-                           maxFilesNum : 5,//上传最大的文件数量
-                       }).on("filebatchselected", function(event, files) {
-                           $(this).fileinput("upload");
-                       }).on('fileuploaded', function(event, data, previewId, index) {
-                           console.log(event,data,previewId,index);
-                       });
+                       uploadPicture(modal);
                    }else{
                        updateAlert(e.msg);
                    }
@@ -1018,62 +1007,7 @@
           })
        });
        //图片上传
-       $(".input-file").fileinput({
-           showPreview: false,
-           language: 'zh', //设置语言
-           uploadUrl: '{:Url("Upload/picture")}', //上传的地址
-           allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
-           maxFileSize: 1024 * 200,
-           maxFilesNum : 5,//上传最大的文件数量
-       }).on("filebatchselected", function(event, files) {
-           if(files.length == 0){
-               return "";
-           }
-           lrz(files[0],{width:1024})
-               .then(function (rst) {
-                   //ajax 上传图片
-                   var base64Img,base64Str = [];
-                   base64Str = rst.base64.split(',',3);
-                   //console.log(base64Str);
-                   if(base64Str.length > 1){
-                       base64Img = base64Str[1];
-                   }else{
-                       base64Img = base64Str[0];
-                   }
-                   //console.log(base64Img);
-                   //return;
-                   $.ajax({
-                       data:{img:base64Img},
-                       type:"post",
-                       url:"{:Url('Park/setPic')}",
-                       success:function (data) {
-                           homes.push(data);
-                           //console.log(homes);
-                           /*addImgBox();
-                           $('.del1').click(function(){
-                               var delNumber = $(this).parent().parent().index();
-                               $(this).parent().remove();
-                               homes.splice(delNumber,1);
-                           });*/
-                       }
-                   })
-               })
-           $(this).fileinput("upload");
-       }).on('fileuploaded', function(event, data, previewId, index) {
-           /* console.log(event,data,previewId,index);
-            console.log(data);*/
-            var data = JSON.parse(data.response);
-            var html = template('uploadTpl',data);
-            /*console.log(html);*/
-           $('#room-modal').find('.upload-img-box').append(html);
-           addImgBox();
-           $('.icon-del').click(function() {
-               var delNumber = $(this).parent().parent().index();
-               $(this).parent().remove();
-               homes.splice(delNumber, 1);
-               console.log(homes);
-           });
-       });
+       uploadPicture($("#room-modal"));
        //增加房间信息
         $('#addRoom').click(function () {
             var park = "{$park_id}";
@@ -1269,6 +1203,70 @@
                allowMultiple: false
            });
        }
+       /**
+        * 上传图片
+        */
+       function uploadPicture(el) {
+           var homes = [] ;
+           $(".input-file").fileinput({
+               showPreview: false,
+               language: 'zh', //设置语言
+               uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+               allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+               maxFileSize: 1024 * 200,
+               maxFilesNum : 5,//上传最大的文件数量
+           }).on("filebatchselected", function(event, files) {
+               if(files.length == 0){
+                   return "";
+               }
+               lrz(files[0],{width:1024})
+                   .then(function (rst) {
+                       //ajax 上传图片
+                       var base64Img,base64Str = [];
+                       base64Str = rst.base64.split(',',3);
+                       //console.log(base64Str);
+                       if(base64Str.length > 1){
+                           base64Img = base64Str[1];
+                       }else{
+                           base64Img = base64Str[0];
+                       }
+                       //console.log(base64Img);
+                       //return;
+                       $.ajax({
+                           data:{img:base64Img},
+                           type:"post",
+                           url:"{:Url('Park/setPic')}",
+                           success:function (data) {
+                               homes.push(data);
+                               //console.log(homes);
+                               /*addImgBox();
+                               $('.del1').click(function(){
+                                   var delNumber = $(this).parent().parent().index();
+                                   $(this).parent().remove();
+                                   homes.splice(delNumber,1);
+                               });*/
+                           }
+                       })
+                   });
+               $(this).fileinput("upload");
+           }).on('fileuploaded', function(event, data, previewId, index) {
+               /* console.log(event,data,previewId,index);
+                console.log(data);*/
+               var data = JSON.parse(data.response);
+               var html = template('uploadTpl',data);
+               /*console.log(html);*/
+               el.find('.upload-img-box').append(html);
+               addImgBox();
+               $('.icon-del').click(function() {
+                   var delNumber = $(this).parent().parent().index();
+                   $(this).parent().remove();
+                   homes.splice(delNumber, 1);
+                   console.log(homes);
+               });
+           });
+
+       }
    })
+
 </script>
 {/block}
