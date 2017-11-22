@@ -296,3 +296,23 @@ function object_array($array){
 function hook($hook,$params=array()){
     \Think\Hook::listen($hook,$params);
 }
+
+/**
+ * 建立文件夹
+ *
+ * @param string $aimUrl
+ * @return viod
+ */
+function createDir($aimUrl) {
+    $aimUrl = str_replace('', '/', $aimUrl);
+    $aimDir = '';
+    $arr = explode('/', $aimUrl);
+    $result = true;
+    foreach ($arr as $str) {
+        $aimDir .= $str . '/';
+        if (!file_exists($aimDir)) {
+            $result = mkdir($aimDir, 0777);
+        }
+    }
+    return $result;
+}

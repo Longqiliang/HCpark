@@ -451,6 +451,7 @@
 <script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
 <script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/localResizeIMG/dist/lrz.bundle.js"></script>
 
 <script type="text/html" id="houseList">
     {{each data as e}}
@@ -620,6 +621,7 @@
     {{ /if }}
 </script>
 <script>
+    var homes = [] ;
    $(function () {
        $(".table").first().show();
        $("#checkPark").change(function(){
@@ -802,6 +804,38 @@
            maxFileSize: 1024 * 200,
            maxFilesNum : 5,//上传最大的文件数量
        }).on("filebatchselected", function(event, files) {
+           if(files.length == 0){
+               return "";
+           }
+           lrz(files[0],{width:1024})
+               .then(function (rst) {
+                   //ajax 上传图片
+                   var base64Img,base64Str = [];
+                   base64Str = rst.base64.split(',',3);
+                   //console.log(base64Str);
+                   if(base64Str.length > 1){
+                       base64Img = base64Str[1];
+                   }else{
+                       base64Img = base64Str[0];
+                   }
+                   //console.log(base64Img);
+                   //return;
+                   $.ajax({
+                       data:{img:base64Img},
+                       type:"post",
+                       url:"{:Url('Park/setPic')}",
+                       success:function (data) {
+                           homes.push(data);
+                           //console.log(homes);
+                           /*addImgBox();
+                           $('.del1').click(function(){
+                               var delNumber = $(this).parent().parent().index();
+                               $(this).parent().remove();
+                               homes.splice(delNumber,1);
+                           });*/
+                       }
+                   })
+               })
            $(this).fileinput("upload");
        }).on('fileuploaded', function(event, data, previewId, index) {
            /* console.log(event,data,previewId,index);
@@ -827,7 +861,7 @@
             };
             console.log(imgsSrc);
             $.ajax({
-                data:{floor:floor,room:room,build_block:build,panorama:panorama,area:area,price:price,img:imgsSrc},
+                data:{floor:floor,room:room,build_block:build,panorama:panorama,area:area,price:price,img:imgsSrc,imgs:homes},
                 type:"POST",
                 url:"{:Url('Park/addrooms')}",
                 success:function (data) {

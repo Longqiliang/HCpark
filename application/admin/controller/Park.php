@@ -703,6 +703,9 @@ class Park extends Admin
             }
             $data['img'] = json_encode($data['img']);
         }
+        if ($data['imgs']){
+            $data['imgs'] = json_encode($data['imgs']);
+        }
         if (input('uid')) {
             unset($data['uid']);
             $res = $parkRoom->validate(true)->where('id', input('uid'))->update($data);
@@ -925,6 +928,33 @@ class Park extends Admin
             return $this->error("删除失败");
         }
     }
+    /**
+     * 保存base64图片
+     * @param $key
+     * @param $value
+     * @param $user_id
+     * @return int
+     */
+    public function setPic()
+    {
+        $value = input('img');
+        $img = base64_decode($value);
+        $str = '/uploads/picture/'.date('Y-m-d', time());
+        $temp_path = ROOT_PATH.'/public/'.$str;
+        if (!is_dir($temp_path)) {
+            //不存在则新建
+            createDir($temp_path);
+        }
+        $str1 = "/".sha1(time().rand(10000,99999)).".png";
+        $path = $temp_path.$str1; //真实地址
+        $res = file_put_contents($path, $img);//返回的是字节数
+        if ($res) {
 
+            return $str.$str1;
+        } else {
+
+            return ;
+        }
+    }
 
 }
