@@ -791,6 +791,7 @@ class Park extends Admin
         $map = ['id' => $roomId];
         $info = $parkRoom->where($map)->find();
         $info['parkName'] = $parkName;
+        $info['company_type'] = config('company_type');
         if ($info['manage'] == 2) {
             $info['status'] = 4;
         } else {
