@@ -714,7 +714,7 @@ class Park extends Admin
             if ($res) {
 
                 $floor = $this->getFloor();
-                $this->success("修改成功", "", json_encode($floor));
+                $this->success("修改成功", "", ($floor));
             } else {
                 $this->error("修改失败");
             }
@@ -739,7 +739,7 @@ class Park extends Admin
 
             if ($res) {
                 $floor = $this->getFloor();
-                $this->success("添加成功", '', json_encode($floor));
+                $this->success("添加成功", '', ($floor));
             } else {
                 $this->error($parkRoom->getError());
             }
@@ -841,7 +841,7 @@ class Park extends Admin
             if ($res) {
                 $floor = $this->getFloor();
 
-                return $this->success("上架成功",'',json_encode($floor));
+                return $this->success("上架成功",'',($floor));
             } else {
 
                 return $this->error("上架失败");
@@ -851,7 +851,7 @@ class Park extends Admin
             if ($res) {
                 $floor = $this->getFloor();
 
-                return $this->success("下架成功",'',json_encode($floor));
+                return $this->success("下架成功",'',($floor));
             } else {
 
                 return $this->error("下架失败");
@@ -892,7 +892,7 @@ class Park extends Admin
         if ($res) {
             $floor = $this->getFloor();
 
-            return $this->success("保存成功",'',json_encode($floor));
+            return $this->success("保存成功",'',($floor));
         } else {
 
             return $this->error("保存失败");
@@ -936,7 +936,7 @@ class Park extends Admin
         if ($res) {
             $floor = $this->getFloor();
 
-            return $this->success("删除成功",'',json_encode($floor));
+            return $this->success("删除成功",'',($floor));
         } else {
 
             return $this->error("删除失败");

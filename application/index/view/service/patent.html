@@ -154,6 +154,7 @@
     var app = new Vue({
         el:'#app',
         data:{
+            baseInfo:{$info},
             isSubmit:false,
             imgSrc:{
                 imgLength:6,
@@ -188,6 +189,9 @@
         },
         created(){
             var _this = this;
+            _this.consultData.name=_this.baseInfo.name||''
+            _this.consultData.mobile=_this.baseInfo.mobile||''
+
             //            初始化选择器选项位置
             _this.$nextTick(function() {
                 setTimeout(function() {

@@ -55,8 +55,8 @@
     .list-item .item-cell:nth-of-type(2n){padding-right:4vw;justify-content:flex-end}
     .list-item .item-cell img{margin-right:5vw;width:26px;height:26px;vertical-align:middle}
     .list-item .item-cell>span{position:relative}
-    .list-item .item-cell>span>a{position:absolute;bottom:-12px;left:50%;display:-webkit-flex;width:95px;color:#EC7574;text-align:center;font-weight:500;font-size:9px;font-family:'微软雅黑';-webkit-transform:translateX(-50%);-moz-transform:translateX(-50%);-o-transform:translateX(-50%);transform:translateX(-50%);-ms-transform:translateX(-50%);justify-content:center;align-items:center}
-    .list-item .item-cell>span>a:after,.list-item .item-cell>span>a:before{display:block;margin:0 5px;width:9px;height:1px;background-color:#EC7574;content:''}
+    .list-item .item-cell>span>span{position:absolute;bottom:-12px;left:50%;display:-webkit-flex;width:95px;color:#EC7574;text-align:center;font-weight:500;font-size:9px;font-family:'微软雅黑';-webkit-transform:translateX(-50%);-moz-transform:translateX(-50%);-o-transform:translateX(-50%);transform:translateX(-50%);-ms-transform:translateX(-50%);justify-content:center;align-items:center}
+    .list-item .item-cell>span>span:after,.list-item .item-cell>span>span:before{display:block;margin:0 5px;width:9px;height:1px;background-color:#EC7574;content:''}
     .banner-list{position:relative;top:0;left:0;z-index:1;display:flex;margin:0 2.4vw;height:16vw;border-radius:5px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.1)}
     .banner-list .list-tit{position:relative;padding:3.2vw;font-size:1.6rem}
     .banner-list .list-tit:after{position:absolute;top:50%;right:0;width:1px;height:8vw;background-color:#e8e8e8;content:'';transform:translateY(-50%)}
@@ -128,7 +128,7 @@
             <div class="list-item">
                 <div class="item-cell" @click="jumpTo(item.path,item.app_id)" v-for="item in baseData.companyService">
                     <img :src="item.img"  alt="图标">
-                    <span>{{item.name}}<a v-if="item.is_free">免费服务</a></span>
+                    <span>{{item.name}}<span v-if="item.is_free">免费服务</span></span>
                 </div>
             </div>
         </div>
