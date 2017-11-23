@@ -26,7 +26,7 @@ class News extends Admin
     {
         $type = input('type');
         $parkid = session('user_auth')['park_id'];
-        $map = ['status' => ['>=', 0], 'type' => ['<=', 3], 'park_id' => $parkid];
+        $map = ['status' => 1, 'type' => ['<=', 3], 'park_id' => $parkid];
         if ($type) {
             $map['type'] = $type;
         }
@@ -65,7 +65,7 @@ class News extends Admin
         } else {
             $type = input('type');
             $parkid = session('user_auth')['park_id'];
-            $map = ['status' => ['>=', 0], 'type' => ['<=', 3], 'park_id' => $parkid];
+            $map = ['status' => ['in', [0,2]], 'type' => ['<=', 3], 'park_id' => $parkid];
             if ($type) {
                 $map['type'] = $type;
             }
