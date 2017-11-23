@@ -794,6 +794,16 @@ class Park extends Admin
         $info = $parkRoom->where($map)->find();
         $info['parkName'] = $parkName;
         $info['company_type'] = config('company_type');
+        if (empty($info['img'])){
+            $info['img'] = [];
+        }else{
+            $info['img'] = json_decode($info['img']);
+        }
+        if (empty($info['imgs'])){
+            $info['imgs'] = [];
+        }else{
+            $info['imgs'] = json_decode($info['imgs']);
+        }
         if ($info['manage'] == 2) {
             $info['status'] = 4;
         } else {
@@ -991,4 +1001,5 @@ class Park extends Admin
 
 
     }
+
 }
