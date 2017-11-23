@@ -116,10 +116,21 @@ class Personal extends Base
             }
         }
 
-        //希垦所有的企业
-        $departmentXK = WechatDepartment::where('parentid', 4)->select();
-        //滨江人工智能产业园所有企业
-        $departmentBj = WechatDepartment::where('parentid', 92)->select();
+        if($can_change=="no"){
+            //希垦所有的企业
+            $departmentXK = WechatDepartment::where(['parentid'=>['in',[4,73,74]]])->select();
+            //滨江人工智能产业园所有企业
+            $departmentBj = WechatDepartment::where(['parentid'=> ['in',[92,80]],'id'=>['neq',1]])->select();
+
+        }else {
+            //希垦所有的企业
+            $departmentXK = WechatDepartment::where('parentid',4)->select();
+            //滨江人工智能产业园所有企业
+            $departmentBj = WechatDepartment::where('parentid',92)->select();
+
+        }
+
+
         $park_xk = ['park_id' => 3, 'park_name' => '希垦科技园', 'departmentlist' => array()];
         $park_bj = ['park_id' => 80, 'park_name' => '人工智能产业园', 'departmentlist' => array()];
         $xk = $this->departmentData($departmentXK, $park_xk);
