@@ -1016,6 +1016,9 @@ class Service extends Base
                 //成功预约一次设备服务，获得1个积分；
                 WechatUser::where('userid',session('userId'))->setInc('score',1);
 
+                $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
+                //推送给自己
+                $reult = $this->commonSendText(4, $message, session('userId'), 8);
                 $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
                 return $this->success('成功', "", $msg);
             } else {
@@ -1250,6 +1253,9 @@ class Service extends Base
             if ($reult) {
                 //成功预约一次设备服务，获得1个积分；
                 WechatUser::where('userid',session('userId'))->setInc('score',1);
+                $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
+                //推送给自己
+                $reult = $this->commonSendText(4, $message, session('userId'), 8);
                 return $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
@@ -1451,6 +1457,9 @@ class Service extends Base
             if ($reult) {
                 //成功预约一次设备服务，获得1个积分；
                 WechatUser::where('userid',session('userId'))->setInc('score',1);
+                $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
+                //推送给自己
+                $reult = $this->commonSendText(4, $message, session('userId'), 8);
                 return $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
@@ -2600,7 +2609,10 @@ class Service extends Base
                     $res->save();
                     if ($res) {
                         //使用一次报修服务，流程走完后获得1个积分；
-                        WechatUser::where('userid',session('userId'))->setInc('score',1);
+                        WechatUser::where('userid',$res['user_id'])->setInc('score',1);
+                        $message = "积分服务提示\n您完成一次物业服务，积分+1！";
+                        //推送给直接
+                        $reult = $this->commonSendText(4, $message, $res['user_id'], 2);
                         return $this->success("上传凭证成功");
                     } else {
                         return $this->error("上传凭证失败");
@@ -2676,7 +2688,9 @@ class Service extends Base
                     if ($result) {
                         //使用一次饮水服务，流程走完后获得1个积分；
                         $re = WechatUser::where('userid',session('userId'))->setInc('score',1);
-
+                        $message = "积分服务提示\n您完成一次饮水服务，积分+1！";
+                        //推送给自己
+                        $reult = $this->commonSendText(4, $message, $user['userid'], 3);
                         //推送物业，运营 已送达
                         $message = [
                             "title" => "饮水服务提示",
@@ -2877,7 +2891,9 @@ class Service extends Base
                     $record['electricity_id'] = $data['electricity_id'];
                     //使用一次充电柱服务，流程走完后获得1个积分；
                     WechatUser::where('userid',session('userId'))->setInc('score',1);
-
+                    $message = "积分服务提示\n您完成一次充电柱服务，积分+1！";
+                    //推送给自己
+                    $reult = $this->commonSendText(4, $message, $record['user_id'], 7);
 
                 } else {
                     if ($record['type'] == 1) {
@@ -2980,6 +2996,9 @@ class Service extends Base
 
                     //取消预约一次设备服务，减得1个积分；
                     WechatUser::where('userid',session('userId'))->setDec('score',1);
+                    $message = "积分服务提示\n您取消一次设备服务，积分-1！";
+                    //推送给自己
+                    $reult = $this->commonSendText(4, $message, session('userId'), 8);
                     return $this->success("取消成功");
                 } else {
                     return $this->error("推送失败");
