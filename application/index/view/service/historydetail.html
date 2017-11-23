@@ -386,7 +386,7 @@
     <!--</div>-->
     <div class="appid === 12">
         <div class="table-box">
-            <div class="table-title"><span>商标类别</span><span class="icon-remarks"></span></div>
+            <div class="table-title"><span>商标类别</span><a href="/index/service/marktype" class="icon-remarks"></a></div>
             <div class="table-row-box">
                 <div class="table-row">
                     <span class="table-row-header">类别选择</span>
@@ -427,17 +427,19 @@
             </div>
         </div>
 
-        <div class="table-box" v-if="info.back_img">
-
+        <div class="table-box">
             <div class="table-title"><span>查询结果</span></div>
             <div class="table-row-box">
-                <div class="table-row-block">
-                    <div class="table-row-block-header">商标图片</div>
-                    <div class="card-upload">
-                        <div class="upload-img">
+                <div class="table-row-block"   v-if="info.back_img">
+                    <!--<div class="table-row-block-header">物业回复：</div>-->
+                    <div class="card-upload" style="padding-top: 2rem;justify-content: center">
+                        <div class="upload-img" style="margin: 0">
                             <img :src="info.back_img" class="img-responsive" @click="loadImg(info.back_img,[info.back_img])">
                         </div>
                     </div>
+                </div>
+                <div class="table-row-block" v-else>
+                    <div class="table-row-block-header">暂无查询结果</div>
                 </div>
             </div>
         </div>

@@ -55,6 +55,7 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
 .table-row-box{
     padding:0 4vw;
     background-color: #fff;
+    font-size: 1.4rem;
 }
 .icon-remarks{
     display: block;
@@ -65,11 +66,12 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     background-size: 15px 15px;
 }
 .table-title{
-    padding:1rem 1.5rem;
+    padding:1rem 4vw;
     display: -webkit-flex;
     display: flex;
     align-items: center;
     color: #999;
+    font-size: 1.5rem;
 }
 .table-row{
     padding:1.5rem 0;
@@ -115,7 +117,6 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     font-size: 1.4rem;
 }
 .table-row-block-header{
-    font-size: 1.5rem;
     padding:1.5rem 0;
 }
 .table-row-block>.textarea-box{
