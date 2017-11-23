@@ -15,6 +15,65 @@
         background: #fff;
     }
 
+
+    .enterprise-code{
+        width:  100vw;
+        height:100vw;
+        margin:0 auto;
+        box-sizing: border-box;
+        padding:5.3333333vw 4.266666vw;
+        background: url('/index/images/personal/enterprise-code-bg.png') no-repeat;
+        background-size: cover;
+    }
+    .enterprise-code>.enterprise-code-banner{
+        width:100%;
+        height:39.222222vw;
+        box-sizing: border-box;
+        padding:5.6vw 0;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        text-align: center;
+    }
+    .enterprise-code-banner>h3{
+        font-size: 2rem;
+        margin:0;
+        line-height: 1;
+        font-weight: 500;
+    }
+    .enterprise-code-banner>p{
+        font-size: 6rem;
+        font-weight: bold;
+        color: #72BDFA;
+        line-height: 1;
+    }
+    .enterprise-code-set{
+        height:50.1111111vw;
+        width:100%;
+        box-sizing: border-box;
+        padding:5.333333vw 4vw;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .enterprise-code-set>p{
+        color: #999;
+        font-size: 1.3rem;
+        line-height: 2;
+    }
+    .enterprise-code-btn{
+        height:4rem;
+        width:37.333333vw;
+        line-height: 4rem;
+        text-align: center;
+        background-color: #69B9F9;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 1.5rem;
+        margin:0 auto;
+    }
     /***mask***/
     .my-mask{
         position: fixed;
@@ -256,15 +315,17 @@
         <!--企业权限-->
         <div class="notices" v-if="active==1">
             <div class="notice enterprise">
-                <img src="/index/images/service/card/icon-default.jpg" class="no-list" v-if="0===1">
-                <a class="list" @click="showCompanyMask()">
-                    <div class="state">
-                        <span>企业验证码</span>
+                <!--<img src="/index/images/service/card/icon-default.jpg" class="no-list">-->
+                <div class="enterprise-code">
+                    <div class="enterprise-code-banner">
+                        <h3>企业验证码</h3>
+                        <p>{{company_code_base}}</p>
                     </div>
-                    <div class="state">
-                        <span class="noPower">{{company_code_base}}</span>
+                    <div class="enterprise-code-set">
+                        <p class="noPower">验证码使用提示：<br/>企业验证码用于用户加入企业时认证使用，企业管理者可根据管理需要修改验证码。</p>
+                        <div class="enterprise-code-btn" @click="showCompanyMask()">前往设置</div>
                     </div>
-                </a>
+                </div>
             </div>
             <div class="my-mask" v-show="isShowCompanyMask">
                 <div class="my-mask-back" @click="showCompanyMask()"></div>
