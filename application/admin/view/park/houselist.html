@@ -411,7 +411,7 @@
                             </div>
 
                             <div class="modal-cell">
-                                <div class="upload-img-box">
+                                <div class="upload-img-box" data-src="">
 
                                 </div>
                             </div>
@@ -569,7 +569,7 @@
         </div>
     </div>
     <div class="modal-cell">
-        <div class="upload-img-box">
+        <div class="upload-img-box" data-src="">
             {{ if img && img.length && img != 0}}
             {{each img as item}}
             <div class="upload-img">
@@ -677,7 +677,7 @@
         </div>
     </div>
     <div class="modal-cell">
-        <div class="upload-img-box">
+        <div class="upload-img-box" data-src="">
             {{ if img && img.length && img != 0}}
             {{each img as item}}
             <div class="upload-img">
@@ -764,7 +764,7 @@
         </div>
     </div>
     <div class="modal-cell">
-        <div class="upload-img-box">
+        <div class="upload-img-box" data-src="">
             {{ if img && img.length && img != 0}}
             {{each img as item}}
             <div class="upload-img">
@@ -1092,7 +1092,12 @@
                            company = $("#update-modal").find('#updateCompany').val(),
                            panorama = $("#update-modal").find('#updatePanorama').val(),
                            companyType = $("#update-modal").find('select[name="companyType"]').select().val(),
-                           data = {
+                           imgs =  $("#update-modal").find('.upload-img-box').data("src").split(','),
+                           imgArr = [];
+                           $("#update-modal .upload-img-box img").each(function (i) {
+                               imgArr.push($(this).data('src'));
+                           });
+                          var data = {
                                 room:room,
                                 build_block:build,
                                 area:area,
@@ -1100,9 +1105,10 @@
                                 company:company,
                                 type:companyType,
                                 panorama:panorama,
-                                img:[],
-                                imgs:[]
+                                img:imgArr,
+                                imgs:imgs
                            };
+                           console.log(imgArr,imgs);
                        commonAjax("{:Url('Park/saveroom')}",data,hideUpdateModal,build);
                        break;
                    default:
@@ -1142,9 +1148,9 @@
                },
                error:function (e) {
                    updateAlert('网络错误',"info");
-                   setTimeout(function () {
-                       location.reload();
-                   },2000);
+//                   setTimeout(function () {
+//                       location.reload();
+//                   },2000);
                }
            });
        }
@@ -1209,6 +1215,8 @@
        function uploadPicture(el) {
            var homes = [] ;
            $(".input-file").fileinput({
+               showUpload : false,
+               showRemove : false,
                showPreview: false,
                language: 'zh', //设置语言
                uploadUrl: '{:Url("Upload/picture")}', //上传的地址
@@ -1216,52 +1224,53 @@
                maxFileSize: 1024 * 200,
                maxFilesNum : 5,//上传最大的文件数量
            }).on("filebatchselected", function(event, files) {
-               if(files.length == 0){
-                   return "";
-               }
-               lrz(files[0],{width:1024})
-                   .then(function (rst) {
-                       //ajax 上传图片
-                       var base64Img,base64Str = [];
-                       base64Str = rst.base64.split(',',3);
-                       //console.log(base64Str);
-                       if(base64Str.length > 1){
-                           base64Img = base64Str[1];
-                       }else{
-                           base64Img = base64Str[0];
-                       }
-                       //console.log(base64Img);
-                       //return;
-                       $.ajax({
-                           data:{img:base64Img},
-                           type:"post",
-                           url:"{:Url('Park/setPic')}",
-                           success:function (data) {
-                               homes.push(data);
-                               //console.log(homes);
-                               /*addImgBox();
-                               $('.del1').click(function(){
-                                   var delNumber = $(this).parent().parent().index();
-                                   $(this).parent().remove();
-                                   homes.splice(delNumber,1);
-                               });*/
-                           }
-                       })
-                   });
                $(this).fileinput("upload");
            }).on('fileuploaded', function(event, data, previewId, index) {
                /* console.log(event,data,previewId,index);
                 console.log(data);*/
                var data = JSON.parse(data.response);
-               var html = template('uploadTpl',data);
-               /*console.log(html);*/
-               el.find('.upload-img-box').append(html);
-               addImgBox();
-               $('.icon-del').click(function() {
-                   var delNumber = $(this).parent().parent().index();
+               lrz(data.data,{width:1024})
+                       .then(function (rst) {
+                           //ajax 上传图片
+                           var base64Img,base64Str = [];
+                           base64Str = rst.base64.split(',',3);
+                           //console.log(base64Str);
+                           if(base64Str.length > 1){
+                               base64Img = base64Str[1];
+                           }else{
+                               base64Img = base64Str[0];
+                           }
+                           //console.log(base64Img);
+                           //return;
+                           $.ajax({
+                               data:{img:base64Img},
+                               type:"post",
+                               url:"{:Url('Park/setPic')}",
+                               success:function (e) {
+                                   var imgBox = el.find(".upload-img-box"),
+                                           src = imgBox.attr("data-src");
+                                   if(src){
+                                       imgBox.attr("data-src",src+","+e);
+
+                                   }else{
+                                       imgBox.attr("data-src",e);
+                                   }
+                                   var html = template('uploadTpl',data);
+                                   el.find('.upload-img-box').append(html);
+                                   addImgBox();
+                               }
+                           })
+                       });
+               var imgBox = el.find(".upload-img-box");
+               el.off('click','.icon-del');
+               el.on('click','.icon-del',function() {
+                   var delNumber = $(this).parent().parent().index(),
+                   src = imgBox.attr("data-src").split(',');
+                    src.splice(delNumber,1);
+                    var newSrc = src.join(',');
+                   imgBox.attr("data-src",newSrc);
                    $(this).parent().remove();
-                   homes.splice(delNumber, 1);
-                   console.log(homes);
+
                });
            });
 
