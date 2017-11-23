@@ -169,7 +169,7 @@
         <div class="my-mask-content">
             <h3>企业验证码</h3>
             <div class="my-mask-input">
-                <input type="tel" placeholder="请输入企业验证码" v-model="company_code" maxlength="6">
+                <input type="tel" placeholder="请输入企业验证码" v-model="company_code" maxlength="6" v-focus="isShowCompanyMask">
                 <!--<span class="noPower">提示:验证码限6位数字</span>-->
             </div>
             <ul class="my-btn-group">
