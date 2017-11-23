@@ -224,7 +224,7 @@ class News extends Admin
         $user = $user->where('tagid',1)->select();
         $touser="";
         foreach ($user as $value){
-            $touser .='|'.$value;
+            $touser .='|'.$value['userid'];
         }
         //1新闻速递、2园区通告、3好文分享
         $type_name="未知";
@@ -233,8 +233,6 @@ class News extends Admin
             case 2:$type_name="园区通告";break;
             case 3:$type_name="好文分享";break;
         }
-
-
         $message = [
             "title" => "新闻审核通知",
             "description" => "操作员".session('user_auth')['username']."\n您有新的".$type_name."需要审核，点击查看详情",
