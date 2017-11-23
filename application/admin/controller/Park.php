@@ -874,6 +874,7 @@ class Park extends Admin
      */
     public function saveroom()
     {
+        $datas = input();
         $room = input('room');
         $build = input('build_block');
         $parkId = session("user_auth")['park_id'];
@@ -881,8 +882,8 @@ class Park extends Admin
         $map = ['build_block' => $build, 'park_id' => $parkId, 'room' => $room];
         $company = input('company');
         $data = [
-            'img' => json_encode(input('img')),
-            'imgs' =>json_encode(input('imgs')),
+            'img' => json_encode($datas['img']),
+            'imgs' =>json_encode($datas['imgs']),
             'panorama' =>input('panorama'),
             'price' => input('price'),
             'area' => input('area'),
