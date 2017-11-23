@@ -92,33 +92,41 @@
                     _this.$http.post("/index/personal/newsCheck",data).then(function (res) {
                         _this.isSubmit = false;
                         if(res.data.code==1){
-                            swal({
-                                title: '',
-                                text: '审核成功！',
-                                type:'success',
-                                confirmButtonColor: "#59B7F3",
-                                confirmButtonText: "确定"
-                            },function (isConfirm) {
-                                window.location.replace('/index/personal/mycheck')
-                            })
+                            setTimeout(function () {
+                                swal({
+                                    title: '',
+                                    text: '审核成功！',
+                                    type:'success',
+                                    confirmButtonColor: "#59B7F3",
+                                    confirmButtonText: "确定"
+                                },function (isConfirm) {
+                                    window.location.replace('/index/personal/mycheck')
+                                })
+                            },100)
+
                         }else{
+                            setTimeout(function () {
+                                swal({
+                                    title: '',
+                                    text: res.data.msg,
+                                    type:'error',
+                                    confirmButtonColor: "#59B7F3",
+                                    confirmButtonText: "确定"
+                                })
+                            },100)
+                        }
+                    },function (res) {
+                        _this.isSubmit = true;
+                        setTimeout(function () {
                             swal({
                                 title: '',
-                                text: res.data.msg,
+                                text: '请求失败，请重试！',
                                 type:'error',
                                 confirmButtonColor: "#59B7F3",
                                 confirmButtonText: "确定"
                             })
-                        }
-                    },function (res) {
-                        _this.isSubmit = true;
-                        swal({
-                            title: '',
-                            text: '请求失败，请重试！',
-                            type:'error',
-                            confirmButtonColor: "#59B7F3",
-                            confirmButtonText: "确定"
-                        })
+                        },100)
+
                     })
                 });
             }
