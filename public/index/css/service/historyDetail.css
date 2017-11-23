@@ -79,6 +79,7 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     box-sizing: border-box;
 }
 .table-row>span:last-child{
+    font-size: 1.4rem;
     max-width:70vw;
 }
 .table-row:not(:last-child){
@@ -110,7 +111,11 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
 .table-row-block{
     background-color: #fff;
 }
+.table-row-header{
+    font-size: 1.4rem;
+}
 .table-row-block-header{
+    font-size: 1.5rem;
     padding:1.5rem 0;
 }
 .table-row-block>.textarea-box{
