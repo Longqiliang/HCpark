@@ -419,7 +419,7 @@ class Personal extends Base
     /* 我的审核（用于审核新闻的推送功能）*/
     public function myCheck()
     {
-        $news = DB::query("select * from tb_news where status =0  and type<=3");
+        $news = DB::query("select * from tb_news where status =0  and type<=3 order by  create_time DESC ");
         $this->assign('news', json_encode($news));
         return $this->fetch();
 
@@ -445,7 +445,7 @@ class Personal extends Base
             }
         } else {
             $id = input('id');
-            $news = DB::query("select * from tb_news where id =?  and type<=3", [$id]);
+            $news = DB::query("select * from tb_news where id =?  and type<=3  ", [$id]);
             $this->assign('info', json_encode($news[0]));
             return $this->fetch();
         }
