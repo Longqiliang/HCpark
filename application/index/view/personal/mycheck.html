@@ -11,29 +11,65 @@
     body{
         background-color: #F5F5F5;
     }
+    .header{
+        position: fixed;
+        top:0;
+        left:0;
+        width:100%;
+    }
+    .content{
+        padding-top:50px;
+    }
+    #app .tab{
+        flex: 1;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
+    <div class="header">
+        <div class="tabs clear">
+            <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">已审核</span></div>
+            <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >未审核</span></div>
+        </div>
+
+    </div>
     <div class="content">
-    <div class="notices">
-        <div class="notice notify">
-            <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in message">
-                <div class="list-right">
-                    <div class="title ">{{item.title}}</div>
-                    <div class="clear time">
-                        <span class="fl source">{{item.source}}</span>
-                        <span class="fl ">{{item.create_time*1000 | timeToString}}</span>
+        <div class="notices"  v-show="active==0">
+            <div class="notice notify">
+                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in checked" v-if="item.status!==0">
+                    <div class="list-right">
+                        <div class="title ">{{item.title}}</div>
+                        <div class="clear time">
+                            <span class="fl source">{{item.source}}</span>
+                            <span class="fl ">{{item.create_time*1000 | timeToString}}</span>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
+            <div v-if="!message.length" class="content">
+                <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
+            </div>
+        </div>
+        <div class="notices" v-show="active==1">
+            <div class="notice notify">
+                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in uncheck" v-if="item.status===0">
+                    <div class="list-right">
+                        <div class="title ">{{item.title}}</div>
+                        <div class="clear time">
+                            <span class="fl source">{{item.source}}</span>
+                            <span class="fl ">{{item.create_time*1000 | timeToString}}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div v-if="!message.length" class="content">
+                <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
+            </div>
         </div>
     </div>
-    </div>
-    <div v-if="!message.length" class="content">
-        <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
-    </div>
+
 </div>
 {/block}
 
@@ -57,14 +93,33 @@
     var app=new Vue({
         el:'#app',
         data:{
+            active:0,
             message:{$news},
+            checked:[],
+            uncheck:[],
             loading:false,
             canLoad:true
         },
         created(){
-            if(this.message.length<6){
-                this.canLoad=false
+            if(this.message){
+                for(var i=0;i<this.message.length;i++){
+                    if(this.message[i].status===0){
+                        this.uncheck.push(this.message[i])
+                    }else{
+                        this.checked.push(this.message[i])
+                    }
+                }
             }
+//            if(this.message.length<6){
+//                this.canLoad=false
+//            }
+            var c =  parseInt(window.location.href.split("mycheck/c/")[1]);
+            var co = this.getCookie("type");
+            if(co == 20 || co == 21){
+                c = co - 20;
+            };
+            this.active=c;
+            this.isOut();
         },
         methods:{
             loadMore(){
@@ -98,6 +153,49 @@
                 html+=str.split('\n').join('</li><li>');
                 return html += '</li>'
             },
+            tabChange(key){
+                this.active=key;
+                this.setCookie("type",key+20);
+            },
+            //退出清理tab缓存
+            isOut(){
+                var the=this;
+                the.pushHistory();
+                setTimeout(function(){
+                    window.addEventListener("popstate", function(e) {
+                        the.delCookie("type");
+                        window.history.go(-1);
+                    }, false);
+                },200)
+            },
+            pushHistory(){
+                var sta = {
+                    title: "title"
+                };
+                if( window.history.state === null ){
+                    window.history.pushState( sta, "title" );
+                }
+            },
+            setCookie( name, value ){
+                var Days = 30;
+                var exp = new Date();
+                exp.setTime( exp.getTime() + Days * 24 * 60 * 60 * 1000 );
+                document.cookie = name + "=" + value + ";expires=" + exp.toGMTString();
+            },
+            getCookie( name ){
+                var arr, reg = new RegExp( "(^| )" + name + "=([^;]*)(;|$)" );
+                if( arr = document.cookie.match( reg ) )
+                    return arr[ 2 ];
+                else
+                    return null;
+            },
+            delCookie( name ){
+                var exp = new Date();
+                exp.setTime( exp.getTime() - 1 );
+                var cval = getCookie( name );
+                if( cval != null )
+                    document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+            }
         }
     })
 </script>

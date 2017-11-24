@@ -3,7 +3,16 @@
 {block name="style"}
 <link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
 <style>
-
+    .my-text-success{
+        color: #59B7F3;
+        border:1px solid #59B7F3;
+        background-color: #fff;
+    }
+    .my-text-error{
+        color: #FF7176;
+        border:1px solid #FF7176;
+        background-color: #fff;
+    }
 </style>
 {/block}
 
@@ -20,9 +29,13 @@
     </header>
     <section class="checking" v-html="info.content"></section>
     <footer class="news_footer">
-        <div class="my-btn-box">
-            <button class="my-btn-default my-btn-warning" @click="toCheck(false)">审核不通过</button>
+        <div class="my-btn-box" v-if="info.status===0">
+            <button class="my-btn-default my-btn-error" @click="toCheck(false)">审核不通过</button>
             <button class="my-btn-default my-btn-success" @click="toCheck(true)">审核通过</button>
+        </div>
+        <div class="my-btn-box" v-else>
+            <button class="my-btn-default my-text-error" v-if="info.status===2">审核不通过</button>
+            <div class="my-btn-default my-text-success" v-if="info.status===1">审核通过</div>
         </div>
     </footer>
 </div>

@@ -15,6 +15,8 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    height:50px;
+
 }
 .tabs .line{
     height:3rem;
@@ -23,6 +25,7 @@ body{
 }
 .tabs .tab {
     width: 32.5vw;
+    flex:1;
     height: 100%;
     color: #333333;
     font-size: 1.5rem;
@@ -30,7 +33,9 @@ body{
     text-align: center;
 }
 .tabs .tab>span{
+    height:100%;
     display: inline-block;
+    height:50px;
     line-height: 50px;
     padding:0 5px;
     border-bottom: 2px solid transparent;
