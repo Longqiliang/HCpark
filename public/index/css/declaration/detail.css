@@ -195,23 +195,27 @@ section img{
     margin: 2.933vw 3.467vw;
 }
 .foot .input-box{
-    width: 69.33vw;
+    width: 86.66vw;
     height: 100%;
 }
 .footer-box .input-box{
-    width: 75vw;
+    width: 92.6vw;
     height: 100%;
 }
 .foot .input-box input,.footer-box .input-box input{
     height: 7.4667vw;
     width: 65.3vw;
+    box-sizing: border-box;
     background: #f2f2f2;
     border: 1px solid #e5e5e5;
     border-radius: 5px;
     padding-left: 4vw;
     outline: none;
-    margin: 1.6vw 0 2.4vw 0;
+    margin: 2.26666vw 0;
     font-size: 1.4rem;
+}
+.foot .input-box input{
+    width: 83.2vw;
 }
 .footer-box .input-box input{
     width: 100%;
@@ -239,10 +243,78 @@ footer.news_footer{
     bottom:0;
     left:0;
 }
+
+div.comment-view{
+    position: fixed;
+    top:0;
+    right:0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+}
+.comment-view>.comment-mask-mask{
+    position: relative;
+    height:100%;
+    width:100%;
+    background-color: rgba(0,0,0,.6);
+    z-index: 11;
+}
+.comment-view>.comment-view-content{
+    width:90.666666vw;
+    height: 30rem;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-70%);
+    -moz-transform: translate(-50%,-70%);
+    -ms-transform: translate(-50%,-70%);
+    -o-transform: translate(-50%,-70%);
+    transform: translate(-50%,-70%);
+    z-index: 12;
+}
+.comment-view .comment-title{
+    width: 100%;
+    height:6.4rem;
+    line-height: 6.4rem;
+    font-size: 1.7rem;
+    font-weight: 600;
+    text-align: center;
+}
+.comment-view .comment-textarea{
+    display: block;
+    box-sizing: border-box;
+    width:77.333333vw;
+    height: 14rem;
+    border-radius: 5px;
+    border:1px solid #e8e8e8;
+    padding:1rem 1.5rem;
+    font-size: 1.5rem;
+    margin:0 auto;
+}
+.comment-view .comment-btn-box{
+    width:100%;
+    padding:3rem 6.666666vw;
+    display:-webkit-flex;
+    display:flex;
+    position: relative;
+    box-sizing: border-box;
+}
+
+
+/*mint-ui*/
+.mint-indicator-wrapper,.mint-indicator-mask{z-index: 100}
 /*按钮样式*/
 .my-btn-box{width:100%;padding:3rem 4vw;display:-webkit-flex;display:flex;position: relative;box-sizing: border-box;background-color: #fff}
-.my-btn-box>.my-btn-default:not(:last-child){margin-right:1rem}
+.my-btn-default:not(:last-child){margin-right:1rem}
 .my-btn-default{display:block;width:100%;margin:0 auto;font-size:1.5rem;text-align:center;line-height:4rem;height:4rem;border-radius:5px;border:1px solid #f1f1f1;outline:none}
+.my-btn-center{
+    background-color: #C1C1C1;
+    border:none;
+    color: #fff;
+}
 .my-btn-success{border:none;color:#fff;background:#59B7F3}
 .my-btn-error{border:none;color:#fff;background:#FF7176}
 .my-btn-warning{border:none;color:#fff;background:#FFAB51}

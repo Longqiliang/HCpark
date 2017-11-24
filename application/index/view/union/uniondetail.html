@@ -51,10 +51,20 @@
         </div>
     </div>
     <div class="footer-box">
-        <div class="input-box">
-            <input type="text" placeholder="说说你的感想！" v-model="commentValue">
+        <div class="input-box" @click="toggleMask" >
+            <input type="text" placeholder="说说你的感想！" disabled="disabled">
         </div>
-        <div class="send" @click="send({$news->id},{$news->type})">发送</div>
+    </div>
+    <div class="comment-view" v-show="isShowMask">
+        <div class="comment-mask-mask" @click="toggleMask"></div>
+        <div class="comment-view-content">
+            <div class="comment-title">请输入评论内容</div>
+            <textarea class="comment-textarea" placeholder="请输入评论..." v-model="commentValue"></textarea>
+            <div class="comment-btn-box">
+                <div class="my-btn-default my-btn-center" @click="toggleMask">取消</div>
+                <div class="my-btn-default my-btn-success" @click="send({$news->id},{$news->type})">确认</div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -72,35 +82,60 @@
             commentValue:'',
             isCheck:true,
             loadOver:false,
-            loading:false
+            loading:false,
+            isShowMask:false,
+            isSubmit:false,
         },
         methods:{
+            toggleMask(){
+                var _this  =this;
+                _this.isShowMask=!_this.isShowMask;
+                _this.commentValue=''
+            },
             send:function (id,type) {
                 var _this  =this;
+                if(_this.isSubmit){
+                    _this.$toast('提交中，请勿重复操作')
+                    return;
+                }
                 if(_this.commentValue == '' || !_this.commentValue){
-                    alert('评论不能为空！')
+                    _this.$toast('评论不能为空！')
                 } else {
+                    _this.isSubmit=true
                     var data  = {
                         'targetId':id,
                         'type':type,
                         'content':_this.commentValue
                     };
-                    _this.$http.post('{:Url("Base/unionComments")}',data).then(function (res) {
+                    _this.$indicator.open({
+                        text: '提交中',
+                        spinnerType: 'triple-bounce'
+                    });
+                    _this.$http.post('{:Url("Base/addComment")}',data).then(function (res) {
+                        _this.isSubmit=false;
+                        _this.$indicator.close();
                         var data = res.data;
                         if(data.code === 1){
                             console.log(data);
-                            _this.commentValue = '';
                             _this.count +=1;
                             var extraObj = {
                                 like:0,
                                 header:''
                             };
+
                             var newData =  Object.assign(extraObj,data.data);
                             _this.documents.unshift(newData);
                             _this.loading = false;
+                            _this.toggleMask();
+                            _this.$toast('提交成功！')
+                        }else{
+                            _this.$toast('提交失败，请重新提交！')
                         }
                     },function (data) {
-                        alert("网络错误,请检查你的网络！");
+                        _this.isSubmit=false;
+                        _this.$indicator.close();
+                        _this.$toast('请求失败！')
+
                     });
                 }
             },
