@@ -420,26 +420,28 @@ class Personal extends Base
     public function myCheck()
     {
         if(IS_POST){
-            // type 1  未审核 2 已审核*/ 加载更多
+            // type 2  未审核 1 已审核*/ 加载更多
             $length = input('length');
             $type = input('type');
-            if($type==1){
-                $news = DB::query("select * from tb_news   limit ?,?    where status =0  and type<=3 order by  create_time DESC ",[$length,$length+6]);
+            if($type==2){
+                $news = DB::query("select * from tb_news       where status =0  and type<=3 order by  create_time DESC  limit ?,?",[(int)$length,(int)$length+6]);
+                $a =$news;
                 return $this->success('success','',json_encode($news));
-            }elseif ($type==2){
-
-                $news = DB::query("select * from tb_news   limit ?,?    where status >0  and type<=3 order by  create_time DESC ",[$length,$length+6]);
+            }elseif ($type==1){
+                $news = DB::query("select * from tb_news       where status >0  and type<=3 order by  create_time DESC limit ?,?",[(int)$length,(int)$length+6]);
+                $a =$news;
                 return $this->success('success','',json_encode($news));
             }
-        }
-        //未审核
-        $uncheck = DB::query("select * from tb_news where status =0  and type<=3 order by  create_time DESC  limit 6");
+        }else {
+            //未审核
+            $uncheck = DB::query("select * from tb_news where status =0  and type<=3 order by  create_time DESC  limit 6");
 
-        //已审核
-        $checked = DB::query("select * from tb_news where status >0  and type<=3 order by  create_time DESC  limit 6");
-        $this->assign('checked', json_encode($checked));
-        $this->assign('uncheck', json_encode($uncheck));
-        return $this->fetch();
+            //已审核
+            $checked = DB::query("select * from tb_news where status >0  and type<=3 order by  create_time DESC  limit 6");
+            $this->assign('checked', json_encode($checked));
+            $this->assign('uncheck', json_encode($uncheck));
+            return $this->fetch();
+        }
 
     }
 
