@@ -116,17 +116,17 @@ class Personal extends Base
             }
         }
 
-        if($can_change=="no"){
+        if ($can_change == "no") {
             //希垦所有的企业
-            $departmentXK = WechatDepartment::where(['parentid'=>['in',[4,73,74]]])->select();
+            $departmentXK = WechatDepartment::where(['parentid' => ['in', [4, 73, 74]]])->select();
             //滨江人工智能产业园所有企业
-            $departmentBj = WechatDepartment::where(['parentid'=> ['in',[92,80]],'id'=>['neq',1]])->select();
+            $departmentBj = WechatDepartment::where(['parentid' => ['in', [92, 80]], 'id' => ['neq', 1]])->select();
 
-        }else {
+        } else {
             //希垦所有的企业
-            $departmentXK = WechatDepartment::where('parentid',4)->select();
+            $departmentXK = WechatDepartment::where('parentid', 4)->select();
             //滨江人工智能产业园所有企业
-            $departmentBj = WechatDepartment::where('parentid',92)->select();
+            $departmentBj = WechatDepartment::where('parentid', 92)->select();
 
         }
 
@@ -397,7 +397,7 @@ class Personal extends Base
                 }
             } elseif ($data['type'] == 2) {
                 $re = DB::execute("update  tb_park_company   set company_code=? where company_id =?", [$data['company_code'], $data['department']]);
-                if ($re||$re===0) {
+                if ($re || $re === 0) {
                     return $this->success('修改成功', '', $re);
                 } else {
                     return $this->error('修改失败', '', DB::getError());
@@ -408,7 +408,7 @@ class Personal extends Base
             $userlist = Db::query("select userid,name,header,mobile,fee_status,water_status,department from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
             $park_company = new ParkCompany();
             $cpmpany = $park_company->where('company_id', $userlist[0]['department'])->find();
-            $this->assign('company_code',$cpmpany['company_code']);
+            $this->assign('company_code', $cpmpany['company_code']);
             $this->assign('userlist', json_encode($userlist));
 
 
@@ -419,8 +419,27 @@ class Personal extends Base
     /* 我的审核（用于审核新闻的推送功能）*/
     public function myCheck()
     {
-        $news = DB::query("select * from tb_news where status !=-1  and type<=3 order by  create_time DESC ");
-        $this->assign('news', json_encode($news));
+        if(IS_POST){
+            // type 1  未审核 2 已审核*/ 加载更多
+            $length = input('length');
+            $type = input('type');
+            if($type==1){
+                $news = DB::query("select * from tb_news   limit ?,?    where status =0  and type<=3 order by  create_time DESC ",[$length,$length+6]);
+                return $this->success('success','',json_encode($news));
+            }elseif ($type==2){
+
+                $news = DB::query("select * from tb_news   limit ?,?    where status >0  and type<=3 order by  create_time DESC ",[$length,$length+6]);
+                return $this->success('success','',json_encode($news));
+            }
+        }
+        //未审核
+        $uncheck = DB::query("select * from tb_news where status =0  and type<=3 order by  create_time DESC  limit 6");
+
+        //已审核
+        $checked = DB::query("select * from tb_news where status >0  and type<=3 order by  create_time DESC  limit 6");
+        echo json_encode($checked);
+        $this->assign('checked', json_encode($checked));
+        $this->assign('uncheck', json_encode($uncheck));
         return $this->fetch();
 
     }
@@ -901,38 +920,38 @@ class Personal extends Base
                         }
                     }
                     //商标查询
-                    $list =TrademarkInquire::where(['status'=>['neq',-1],'park_id'=>$park_id])->select();
-                    foreach ($list as $value){
+                    $list = TrademarkInquire::where(['status' => ['neq', -1], 'park_id' => $park_id])->select();
+                    foreach ($list as $value) {
                         if ($value['status'] == 0) {
                             $value['status_text'] = '未联系';
                         } else {
                             $value['status_text'] = '已联系';
                         }
-                     $map=[
-                         'service_name'=>'商标查询',
-                         'create_time'=>date("Y-m-d", $value['create_time']),
-                         'status_text'=> $value['status_text'],
-                         'status'=>$value['status'],
-                         'id'=>$value['id']
-                     ];
-                    array_push($company_list,$map);
+                        $map = [
+                            'service_name' => '商标查询',
+                            'create_time' => date("Y-m-d", $value['create_time']),
+                            'status_text' => $value['status_text'],
+                            'status' => $value['status'],
+                            'id' => $value['id']
+                        ];
+                        array_push($company_list, $map);
                     }
                     //商标咨询
-                    $list =TrademarkAdvisory::where(['status'=>['neq',-1],'park_id'=>$park_id])->select();
-                    foreach ($list as $value){
+                    $list = TrademarkAdvisory::where(['status' => ['neq', -1], 'park_id' => $park_id])->select();
+                    foreach ($list as $value) {
                         if ($value['status'] == 0) {
                             $value['status_text'] = '未联系';
                         } else {
                             $value['status_text'] = '已联系';
                         }
-                        $map=[
-                            'service_name'=>'商标咨询',
-                            'create_time'=>date("Y-m-d", $value['create_time']),
-                            'status_text'=> $value['status_text'],
-                            'status'=>$value['status'],
-                            'id'=>$value['id']
+                        $map = [
+                            'service_name' => '商标咨询',
+                            'create_time' => date("Y-m-d", $value['create_time']),
+                            'status_text' => $value['status_text'],
+                            'status' => $value['status'],
+                            'id' => $value['id']
                         ];
-                        array_push($company_list,$map);
+                        array_push($company_list, $map);
                     }
 
                 }
@@ -970,38 +989,38 @@ class Personal extends Base
                     }
                 }
                 //商标查询
-                $list2 =TrademarkInquire::where(['status'=>['neq',-1],'userid'=>$userid])->select();
-                foreach ($list2 as $value){
+                $list2 = TrademarkInquire::where(['status' => ['neq', -1], 'userid' => $userid])->select();
+                foreach ($list2 as $value) {
                     if ($value['status'] == 0) {
                         $value['status_text'] = '未联系';
                     } else {
                         $value['status_text'] = '已联系';
                     }
-                    $map=[
-                        'service_name'=>'商标查询',
-                        'create_time'=>date("Y-m-d", $value['create_time']),
-                        'status_text'=> $value['status_text'],
-                        'status'=>$value['status'],
-                        'id'=>$value['id']
+                    $map = [
+                        'service_name' => '商标查询',
+                        'create_time' => date("Y-m-d", $value['create_time']),
+                        'status_text' => $value['status_text'],
+                        'status' => $value['status'],
+                        'id' => $value['id']
                     ];
-                    array_push($list,$map);
+                    array_push($list, $map);
                 }
                 //商标咨询
-                $list2 =TrademarkAdvisory::where(['status'=>['neq',-1],'userid'=>$userid])->select();
-                foreach ($list2 as $value){
+                $list2 = TrademarkAdvisory::where(['status' => ['neq', -1], 'userid' => $userid])->select();
+                foreach ($list2 as $value) {
                     if ($value['status'] == 0) {
                         $value['status_text'] = '未联系';
                     } else {
                         $value['status_text'] = '已联系';
                     }
-                    $map=[
-                        'service_name'=>'商标咨询',
-                        'create_time'=>date("Y-m-d", $value['create_time']),
-                        'status_text'=> $value['status_text'],
-                        'status'=>$value['status'],
-                        'id'=>$value['id']
+                    $map = [
+                        'service_name' => '商标咨询',
+                        'create_time' => date("Y-m-d", $value['create_time']),
+                        'status_text' => $value['status_text'],
+                        'status' => $value['status'],
+                        'id' => $value['id']
                     ];
-                    array_push($list,$map);
+                    array_push($list, $map);
                 }
                 $this->assign('company', json_encode($list));
                 break;
@@ -1174,18 +1193,20 @@ class Personal extends Base
 
 
     //验证
-    public  function verification(){
+    public function verification()
+    {
         $department = input('department');
         $park_company = new ParkCompany();
-        $company =$park_company->where('company_id',$department)->find() ;
-        if($company['company_code']==input('company_code')){
+        $company = $park_company->where('company_id', $department)->find();
+        if ($company['company_code'] == input('company_code')) {
             $this->success("验证码成功");
 
-        }else{
+        } else {
 
             $this->error("验证码失败");
         }
     }
+
     //推荐关注
     public function recommend()
     {
