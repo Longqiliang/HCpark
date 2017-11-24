@@ -35,8 +35,10 @@
         </div>
 
     </div>
-    <div class="content">
-        <div class="notices"  v-show="active==0">
+    <div class="content"  v-infinite-scroll="loadMore"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="10">
+        <div class="notices"  v-show="active==0" >
             <div class="notice notify">
                 <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in checked" v-if="item.status!==0">
                     <div class="list-right">
@@ -48,8 +50,15 @@
                     </div>
                 </a>
             </div>
-            <div v-if="!message.length" class="content">
+            <div v-if="!checked.length" class="content">
                 <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
+            </div>
+            <div class="my-footer">
+                <span v-if="!checkedCanLoad">没有更多了</span>
+                <span v-else-if="!loading">下拉加载更多</span>
+                <div  class="my-loading" v-else>
+                    <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
+                </div>
             </div>
         </div>
         <div class="notices" v-show="active==1">
@@ -64,9 +73,17 @@
                     </div>
                 </a>
             </div>
-            <div v-if="!message.length" class="content">
+            <div v-if="!uncheck.length" class="content">
                 <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
             </div>
+            <div class="my-footer">
+            <span v-if="!uncheckCanLoad">没有更多了</span>
+            <span v-else-if="!loading">下拉加载更多</span>
+            <div  class="my-loading" v-else>
+                <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
+            </div>
+        </div>
+
         </div>
     </div>
 
@@ -94,25 +111,28 @@
         el:'#app',
         data:{
             active:0,
-            message:{$news},
-            checked:[],
-            uncheck:[],
+            checked:{$checked},
+            uncheck:{$uncheck},
             loading:false,
-            canLoad:true
+            canLoad:true,
+            checkedCanLoad:true,
+            uncheckCanLoad:true
         },
         created(){
-            if(this.message){
-                for(var i=0;i<this.message.length;i++){
-                    if(this.message[i].status===0){
-                        this.uncheck.push(this.message[i])
-                    }else{
-                        this.checked.push(this.message[i])
-                    }
-                }
-            }
-//            if(this.message.length<6){
-//                this.canLoad=false
+//            if(this.message){
+//                for(var i=0;i<this.message.length;i++){
+//                    if(this.message[i].status===0){
+//                        this.uncheck.push(this.message[i])
+//                    }else{
+//                        this.checked.push(this.message[i])
+//                    }
+//                }
 //            }
+            if(this.checked.length<6){
+                this.checkedCanLoad=false
+            }else if(this.uncheck.length<6){
+                this.uncheckCanLoad=false
+            }
             var c =  parseInt(window.location.href.split("mycheck/c/")[1]);
             var co = this.getCookie("type");
             if(co == 20 || co == 21){
@@ -123,25 +143,46 @@
         },
         methods:{
             loadMore(){
-                var _this=this;
-                if(_this.loading || !_this.canLoad){
-                    return
+                var _this=this,
+                        data={};
+                if(_this.active===0){
+                    if(_this.loading || !_this.checkedCanLoad){
+                        return
+                    }
+                    data.length = _this.checked.length;
+                    data.type = 1
+                }else{
+                    if(_this.loading || !_this.uncheckCanLoad){
+                        return
+                    }
+                    data.length = _this.checked.length;
+                    data.type = 2
                 }
-                return;
+
                 _this.loading = true;
-                _this.$http.post('/index/personal/messageMore',{num:_this.message.length}).then(function (res) {
-                    if(res.data.code!=0){
-                        var data=JSON.parse(res.data.data);
+                _this.$http.post('/index/personal/mycheck',data).then(function (res) {
+                    _this.loading = false;
+                    if(res.data.code === 1){
+                        var data = res.data.data;
                         if(data.length<6){
-                            _this.canLoad=false;
+                            if(_this.active===0){
+                                _this.checkedCanLoad=false;
+                            }else{
+                                _this.uncheckCanLoad=false;
+
+                            }
                         }
                         for(var i=0;i<data.length;i++){
                             _this.message.push(data[i])
                         }
                     }else{
-                        _this.canLoad=false;
+                        if(_this.active===0){
+                            _this.checkedCanLoad=false;
+                        }else{
+                            _this.uncheckCanLoad=false;
+
+                        }
                     }
-                    _this.loading = false;
                 },function (res) {
                     _this.loading = false;
                 })

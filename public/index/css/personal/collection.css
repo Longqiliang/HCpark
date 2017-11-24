@@ -123,3 +123,31 @@ body{
 /*.content .notices .notice .time{*/
     /*width:70vw;*/
 /*}*/
+
+
+/**加载更多**/
+
+.my-footer{
+    text-align: center;
+    color:#999
+}
+.my-footer>p{
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 80vh;
+}
+.my-footer>div{
+    display: -webkit-flex;
+    display: inline-flex;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+}
+.my-loading-text{
+    margin-left: 1rem;
+}
+.no-message{
+    width:100%;
+    display: block;
+    margin:0 auto;
+}
