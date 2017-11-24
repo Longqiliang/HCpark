@@ -419,7 +419,7 @@ class Personal extends Base
     /* 我的审核（用于审核新闻的推送功能）*/
     public function myCheck()
     {
-        $news = DB::query("select * from tb_news where status =0  and type<=3 order by  create_time DESC ");
+        $news = DB::query("select * from tb_news where status !=-1  and type<=3 order by  create_time DESC ");
         $this->assign('news', json_encode($news));
         return $this->fetch();
 
