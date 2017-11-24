@@ -128,8 +128,10 @@ body{
 /**加载更多**/
 
 .my-footer{
+    font-size: 1.2rem;
     text-align: center;
-    color:#999
+    color:#999;
+    padding:1rem 0;
 }
 .my-footer>p{
     text-align: center;

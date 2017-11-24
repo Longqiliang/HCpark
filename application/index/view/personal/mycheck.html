@@ -158,13 +158,12 @@
                     data.length = _this.checked.length;
                     data.type = 2
                 }
-
                 _this.loading = true;
                 _this.$http.post('/index/personal/mycheck',data).then(function (res) {
                     _this.loading = false;
                     if(res.data.code === 1){
-                        var data = res.data.data;
-                        if(data.length<6){
+                        var info = JSON.parse(res.data.data);
+                        if(info.length<6){
                             if(_this.active===0){
                                 _this.checkedCanLoad=false;
                             }else{
@@ -172,8 +171,14 @@
 
                             }
                         }
-                        for(var i=0;i<data.length;i++){
-                            _this.message.push(data[i])
+                        if(data.type===1){
+                            for(var i=0;i<info.length;i++){
+                                _this.checked.push(info[i])
+                            }
+                        }else{
+                            for(var i=0;i<info.length;i++){
+                                _this.uncheck.push(info[i])
+                            }
                         }
                     }else{
                         if(_this.active===0){
