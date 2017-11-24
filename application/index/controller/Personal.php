@@ -437,7 +437,6 @@ class Personal extends Base
 
         //已审核
         $checked = DB::query("select * from tb_news where status >0  and type<=3 order by  create_time DESC  limit 6");
-        echo json_encode($checked);
         $this->assign('checked', json_encode($checked));
         $this->assign('uncheck', json_encode($uncheck));
         return $this->fetch();
