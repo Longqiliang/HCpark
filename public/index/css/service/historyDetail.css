@@ -27,9 +27,12 @@ body{padding-bottom:1rem;background-color:#f0eff5}
 .card{padding-bottom:1rem}
 .card .remark{padding:10px 0 5px}
 .card .remark>div.no_msg{color:#e5e5e5}
-.card .remark>div{margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);min-height:18vh;border:1px solid #e5e5e5;border-radius:5px}
+.card .remark>div{margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);min-height:18vh;border:1px solid #e5e5e5;border-radius:5px;font-size: 1.4rem}
 .group-cell.btn-box{margin:0}
 .card-cell a{color:#333}
+.card-cell>span:last-child{
+    font-size: 1.4rem;
+}
 .my-line{
     width:100vw;
     height:0;
@@ -129,6 +132,8 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     padding: 7px 9px;
     overflow: scroll ;
 }
+.table-row-block>textarea{box-sizing:border-box;width:100%;height:10rem;font-size:1.4rem;border:1px solid #f1f1f1;padding:7px 9px}
+
 .table-row-block>.textarea-box>div{
     width:100%;
     height:auto;

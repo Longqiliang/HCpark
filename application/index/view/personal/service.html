@@ -24,7 +24,6 @@
             <!--<span class="line"></span>-->
             <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >企业服务</span></div>
         </div>
-
     </div>
     <!--切换列表-->
     <div class="content">
@@ -56,7 +55,7 @@
         <!--企业服务-->
         <div class="notices" v-if="active==1">
             <div class="notice enterprise">
-                <a class="list" v-for="c in company">
+                <a class="list" v-for="c in company" @click="jumpTo(c.url)">
                     <div class="info">
                         <div class="title">{{c.service_name}}</div>
                         <div class="time">
@@ -126,21 +125,45 @@
                 c = co - 11;
             };
             this.active=c;
+            var serviceType = this.getCookie("serviceType") || "";
+            if(c == 0 ){
+                this.sieving.canShowSieving = true;
+                if(serviceType!==""){
+                    this.sieving.serviceIndex = parseInt(serviceType);
+                    console.log(serviceType)
+                    this.propertyShow=[];
+                    if(this.sieving.serviceIndex===''){
+                        this.propertyShow=this.property;
+                    }else{
+                        for(var i=0;i<this.property.length;i++){
+                            if(this.property[i].app_id===this.sieving.serviceList[this.sieving.serviceIndex].appid){
+                                this.propertyShow.push(this.property[i]);
+                            }
+                        }
+                    }
+                }
+
+
+            }else{
+                this.sieving.canShowSieving = false;
+            }
             this.isOut();
         },
         methods:{
-            jumpTo(url){
+            jumpTo(url,appid,id){
                 //ios返回莫名返回两级+安卓莫名返回需要按两次解决
+                if(appid===12){
+                    window.location.replace('/index/service/historyDetail/appid/12/type/1/id/' + id);
+                    return ;
+                }
                 window.location.replace(url);
             },
             status(appid,status){
                 if(appid===1){
                     return status===2?true:false
                 }else if(appid===8){
-                    console.log(status,status===2?true:false)
                     return status===2?true:false
                 }else{
-                    console.log(appid,status)
                     if(status===1||status===3){
                         return true
                     }else{
@@ -183,6 +206,7 @@
             sievingChange(key){
                 this.sieving.serviceIndex=key;
                 this.propertyShow=[];
+                this.setCookie("serviceType",key);
                 if(this.sieving.serviceIndex===''){
                     this.propertyShow=this.property;
                 }else{

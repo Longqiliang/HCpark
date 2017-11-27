@@ -429,8 +429,14 @@
 
         <div class="table-box">
             <div class="table-title"><span>查询结果</span></div>
-            <div class="table-row-box">
-                <div class="table-row-block"   v-if="info.back_img">
+            <!--已回复-->
+            <div class="table-row-box" v-if="info.status != 0">
+                <div class="table-row-block" v-if="info.trademark_description">
+                    <div class="textarea-box">
+                        <div>{{info.trademark_description}}</div>
+                    </div>
+                </div>
+                <div class="table-row-block" v-if="info.back_img">
                     <!--<div class="table-row-block-header">物业回复：</div>-->
                     <div class="card-upload table-card-upload" style="padding-top: 2rem;justify-content: center">
                         <div class="upload-img" style="margin: 0">
@@ -438,13 +444,40 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-row-block" v-else>
+            </div>
+            <!--未回复（有权限回复）-->
+            <div class="table-row-box"  v-else-if="can_check == 'yes' &&  info.status==0">
+                <div class="table-row-block">
+                    <div class="table-row-block-header">商标</div>
+                    <textarea  cols="30" rows="10" placeholder="请输入查询结果..." v-model="subData.check_remark"></textarea>
+                </div>
+                <div class="card-upload">
+                    <div class="upload-img" v-for="(imgUrl,index) of payment_voucher">
+                        <i class="del-img" @click="delImg(index)"></i>
+                        <img :src="imgUrl" class="img-responsive" @click="loadImg(imgUrl,payment_voucher)">
+                    </div>
+                    <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
+                        <img src="/index/images/service/card/card-camera.png">
+                        <span class="upload-info" >上传图片</span>
+                    </div>
+                </div>
+                <form ref="myform">
+                    <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
+                </form>
+                <div class="btn-box">
+                    <button class="btn btn-block btn-green" @click="markReply">回复</button>
+                </div>
+            </div>
+            <!--未回复（无权限回复）-->
+            <div class="table-row-box" v-else>
+                <div class="table-row-block" >
                     <div class="table-row-block-header">暂无查询结果</div>
                 </div>
             </div>
+
         </div>
     </div>
-    <div class="rent-btn-box"  v-if="(appid!=1 && appid!=3 && appid!=8 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
+    <div class="rent-btn-box"  v-if="(appid!=1 && appid!=3 && appid!=8 && appid!=12 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
         <button class="btn btn-block btn-green" @click="showRent">{{(appid==6||appid==7)?'前往审核':'确认接单'}}</button>
     </div>
     <div class="modal-box"  :class="{'show':rentShow}">
@@ -556,11 +589,11 @@ var app = new Vue({
     methods:{
         //            微信jssdk - 图片预览
         loadImg(src,imglist) {
-                var urls=[];
-                var current=window.location.protocol+'//'+window.location.host+src;
-                for(var i in imglist){
-                    urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
-                }
+            var urls=[];
+            var current=window.location.protocol+'//'+window.location.host+src;
+            for(var i in imglist){
+                urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
+            }
             wx.previewImage({
                 current: current,
                 urls: urls
@@ -834,6 +867,16 @@ var app = new Vue({
             _this.subData.id=_this.info.id;
             var data = JSON.parse(JSON.stringify(_this.subData));
             _this.checkAjax(data)
+        },
+//        app_id 12 商标查询回复
+        markReply(){
+            return;
+            var _this=this;
+            if(_this.isSubmit){
+
+            }
+            _this.subData.img=_this.payment_voucher;
+            _this.$http.post('/index/service/...',_this.subData)
         },
 //        check接口 ajax
         checkAjax(subData){
