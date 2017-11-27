@@ -1937,7 +1937,8 @@ class Service extends Base
                 'id' => $v['id'],
                 'name' => $v->user->name,
                 'time' => date('Y-m-d', $v['create_time']),
-                'status' => $v['status']
+                'status' => $v['status'],
+                'trademark_type'=>2,
             ];
         }
 
@@ -1961,8 +1962,9 @@ class Service extends Base
                 'id' => $v['id'],
                 'type' => $v['type'],
                 'time' => date('Y-m-d', $v['create_time']),
-                'status' => $v['status']
-            ];
+                'status' => $v['status'],
+                'trademark_type'=>1,
+                ];
         }
 
         return $info;
