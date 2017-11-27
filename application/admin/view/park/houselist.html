@@ -243,7 +243,8 @@
     .layer{
         display: none;
         position: absolute;
-        top:40px;
+        top: 35px;
+        /*top:40px;*/
         left: 0;
         z-index: 10;
         width: 100%;
@@ -266,12 +267,16 @@
         background-position: 6px;
         background-size: 35px;
         left: 0;
+        -webkit-transform:translateY(-50%);
+        transform: translateY(-50%);
     }
     .swiper-button-next{
         background-image: url(/admin/images/prev.png);
         background-position: -15px;
         background-size: 35px;
         right: 0;
+        -webkit-transform:translateY(-50%);
+        transform: translateY(-50%);
     }
     @media (min-width: 768px){
         .form-inline .input-group .input-group-btn{
@@ -369,10 +374,10 @@
                                 <div class="cell-item-default item-default">{$vo2.floor}F</div>
                             {else /}
                                 {volist name="vo2.rooms" id="vo3"}
-                                {eq name="vo3.status" value="1"}<div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}">{$vo3.room}</div>{/eq}
-                                {eq name="vo3.status" value="2"}<div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}">{$vo3.room}</div>{/eq}
-                                {eq name="vo3.status" value="3"}<div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}">{$vo3.room}</div>{/eq}
-                                {eq name="vo3.status" value="4"}<div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="1"}<div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="2"}<div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="3"}<div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="4"}<div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}">{$vo3.room}</div>{/eq}
                                 {/volist}
                             {/empty}
                         </div>
@@ -515,13 +520,13 @@
                 {{ if item.rooms && item.rooms.length}}
                 {{ each item.rooms as info j }}
                 {{ if info.status == 1}}
-                <div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}">{{info.room}}</div>
+                <div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{ifo.relevance}}">{{info.room}}</div>
                 {{ else if info.status == 2 }}
-                <div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}">{{info.room}}</div>
+                <div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{ifo.relevance}}">{{info.room}}</div>
                 {{ else if info.status == 3 }}
-                <div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}">{{info.room}}</div>
+                <div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{ifo.relevance}}">{{info.room}}</div>
                 {{ else if info.status == 4 }}
-                <div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}">{{info.room}}</div>
+                <div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{ifo.relevance}}">{{info.room}}</div>
                 {{ /if }}
                 {{ /each }}
                 {{ else }}
@@ -605,7 +610,13 @@
     <div class="modal-cell">
         <div class="form-group">
             <label>关联房号：</label>
+            {{ if relevance && relevance.length }}
+            {{ each relevance as nub }}
+            <span>{{nub}}</span>
+            {{/each}}
+            {{ else }}
             <span>暂无关联房号信息</span>
+            {{ /if }}
         </div>
     </div>
     <div class="modal-cell">
@@ -751,8 +762,13 @@
     <div class="modal-cell">
         <div class="form-group">
             <label>关联房号：</label>
-
+            {{ if relevance && relevance.length }}
+            {{ each relevance as nub }}
+            <span>{{nub}}</span>
+            {{/each}}
+            {{ else }}
             <span>暂无关联房号信息</span>
+            {{ /if }}
         </div>
     </div>
     <div class="modal-cell">
@@ -838,7 +854,13 @@
     <div class="modal-cell">
         <div class="form-group">
             <label>关联房号：</label>
+            {{ if relevance && relevance.length }}
+            {{ each relevance as nub }}
+            <span>{{nub}}</span>
+            {{/each}}
+            {{ else }}
             <span>暂无关联房号信息</span>
+            {{ /if }}
         </div>
     </div>
     <div class="modal-cell">
@@ -896,8 +918,8 @@
             <div class="layer-content-cell"><span>公司名称：</span><span>{{companyName}}</span></div>
             <div class="layer-content-cell">
                 <span>关联房号：</span>
-                {{if relevanceRoom && relevanceRoom.length}}
-                {{each relevanceRoom as item}}
+                {{if relevance && relevance.length}}
+                {{each relevance as item}}
                 <span class="badge">{{item}}</span>
                 {{/each}}
                 {{ else }}
@@ -944,26 +966,51 @@
                 $this.attr('data-floor',floor);
        });
        $(".mail-content").on('mouseover mouseout','.cell-item',function (event) {
+           var $this = $(this),
+                   $parents = $this.parents('.table');
            if(event.type == "mouseover"){
                //鼠标悬浮
-               var $this = $(this),
-                       area = $this.data("area"),
-                       room = $this.data("room"),
-                       contract =  $this.data("contract"),
-                       layer = $this.children('.layer');
+               var area = $this.data("area"),
+                   room = $this.data("room"),
+                   contract =  $this.data("contract"),
+                   relevance = $this.data("relevance"),
+                   layer = $this.children('.layer');
                if(!layer.length){
                    var data = {
                        el:$this,
+                       parentsEl:$parents,
                        roomName:room,
                        roomArea:area,
-                       contract:contract
+                       contract:contract,
+                       relevance:relevance
                    };
                    hoverRoom(data);
                }
-               $this.children('.layer').show().animate({top: '+35px'}, "fast");
+               if(relevance && relevance.length){
+                   var newRelevance =relevance.join(',');
+                   //console.log(newRelevance);
+                   var $item =  $parents.find('.cell-item');
+                   if($item.length){
+                       $item.each(function (i) {
+                           //console.log($(this));
+                           var $relevance = $(this).data('relevance');
+                           if(typeof ($relevance) == 'object'){
+                               var nRelevance = $relevance.join(',');
+                           }
+                           if(newRelevance == nRelevance){
+                               $(this).addClass("font-bold");
+                           }
+                       })
+                   }
+               }
+               $this.children('.layer').show();
+            //animate({top: '+35px'}, "fast");
            }else if(event.type == "mouseout"){
                //鼠标离开
-               $(this).children('.layer').hide().animate({top: '+40px'}, "fast");
+              $this.children('.layer').hide();
+               $parents.find('.cell-item').each(function () {
+                   $(this).removeClass("font-bold");
+               });
            }
        });
        //绑定模态框展示的方法
@@ -1291,11 +1338,11 @@
        /**
         * 追加房屋信息
         * @param data (Object)
-        * {el,roomName,roomArea,companyName,relevanceRoom}
+        * {el,roomName,roomArea,companyName,relevance}
         * el（jQuery）被追加的jq对象
         * roomName （String）房间名称
         * companyName (String) 公司名称
-        * relevanceRoom （Array） 关联房号信息
+        * relevance （Array） 关联房号信息
         */
        function hoverRoom(data) {
            if(!jQuery){
@@ -1303,11 +1350,12 @@
            }
            var defaultData = {
                el:$('body'),
+               parentsEl:$('body'),
                roomName:'',
                roomArea:'暂无',
                companyName:'暂无公司信息',
                contract:'',
-               relevanceRoom:[]
+               relevance:[]
            };
            var newData = $.extend({},defaultData,data),
                    layerTpl = template('layer',newData);
