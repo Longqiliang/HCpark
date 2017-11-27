@@ -204,8 +204,9 @@
 <script src="/static/viewer/viewer.min.js"></script>
 <script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-    console.log({$info});
     var info ={$info};
+    var userInfo={$user};
+    console.log(userInfo)
 //    info.img =['/index/images/service/lifepay/utilities.png','/index/images/enterprise/p2.png'];
 //    info.panorama = ['/index/images/index/icon-no.png','/index/images/index/select.png'];
     var vm = new Vue({
@@ -227,6 +228,8 @@
         },
         created:function () {
             var _this = this;
+            _this.subData.mobile = userInfo.mobile || "";
+            _this.subData.name = userInfo.name ||"";
             var test =window.location.href;
             var data ={
                 url:test
