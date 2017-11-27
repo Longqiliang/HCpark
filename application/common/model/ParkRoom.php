@@ -110,7 +110,7 @@ class ParkRoom extends Model{
                     $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0 ,'park_id' => $number])->order("room asc")->select();
                     //判断房间状态，空置，已租，已约，下架
                     foreach ($roomList as $k1 => $v1){
-                        $roomArray[$k][$k1] = ['room' => $v1['room'],'room_id' => $v1['id'],'area'=>$v1['area'] ,'company'=>'','relevance'=> [],'contract'=>''];
+                        $roomArray[$k][$k1] = ['room' => $v1['room'],'room_id' => $v1['id'],'area'=>$v1['area'] ,'company'=>'','relevance'=> '' ,'contract'=>''];
                         $roomArray[$k] = array_slice($roomArray[$k],0,$k1+1);
                         //下架状态
                         if ($v1['manage'] == 2){
@@ -123,6 +123,7 @@ class ParkRoom extends Model{
                                 //关联房间号
                                 $relevance = $parkRoom->where(['company_id'=>$v1['company_id'],'park_id'=>$parkid])->select();
                                 if ($relevance){
+                                    $roomArray[$k][$k1]['relevance'] = [] ;
                                     foreach($relevance as $key=>$value){
                                         $roomArray[$k][$k1]['relevance'][$key] = $value['room'];
                                     }
