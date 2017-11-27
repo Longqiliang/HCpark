@@ -1938,7 +1938,7 @@ class Service extends Base
                 'name' => $v->user->name,
                 'time' => date('Y-m-d', $v['create_time']),
                 'status' => $v['status'],
-                'trademark_type'=>2,
+
             ];
         }
 
@@ -1963,7 +1963,6 @@ class Service extends Base
                 'type' => $v['type'],
                 'time' => date('Y-m-d', $v['create_time']),
                 'status' => $v['status'],
-                'trademark_type'=>1,
                 ];
         }
 
@@ -2495,6 +2494,7 @@ class Service extends Base
             } elseif ($type == 2) {
                 $info = TrademarkAdvisory::get($id);
                 $app = CompanyApplication::Where('app_id', $appid)->find();
+                $info['user_name']=$info['name'];
                 $info['name'] = $app['name'];
                 $info['trademark_type']=2;
             }
