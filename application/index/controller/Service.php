@@ -2490,10 +2490,13 @@ class Service extends Base
                 $info['name'] = $app['name'];
                 $info['submit_img'] = !empty($info['submit_img']) ? json_decode($info['submit_img']) : array();
                 $info['back_img'] = !empty($info['back_img']) ? json_decode($info['back_img']) : array();
+                $info['trademark_type']=1;
+
             } elseif ($type == 2) {
                 $info = TrademarkAdvisory::get($id);
                 $app = CompanyApplication::Where('app_id', $appid)->find();
                 $info['name'] = $app['name'];
+                $info['trademark_type']=2;
             }
         } //企业服务
         else if (9 < $appid && $appid < 19 && $appid != 12) {
