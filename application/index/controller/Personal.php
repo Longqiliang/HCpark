@@ -921,6 +921,9 @@ class Personal extends Base
                         }
                     }
                     //商标查询
+                    $appid=12 ;
+                    $can_check ="yes";
+
                     $list = TrademarkInquire::where(['status' => ['neq', -1], 'park_id' => $park_id])->select();
                     foreach ($list as $value) {
                         if ($value['status'] == 0) {
@@ -933,7 +936,8 @@ class Personal extends Base
                             'create_time' => date("Y-m-d", $value['create_time']),
                             'status_text' => $value['status_text'],
                             'status' => $value['status'],
-                            'id' => $value['id']
+                            'id' => $value['id'],
+                            'url' => '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/1/id/' .$value['id']
                         ];
                         array_push($company_list, $map);
                     }
@@ -950,7 +954,8 @@ class Personal extends Base
                             'create_time' => date("Y-m-d", $value['create_time']),
                             'status_text' => $value['status_text'],
                             'status' => $value['status'],
-                            'id' => $value['id']
+                            'id' => $value['id'],
+                            'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
                         ];
                         array_push($company_list, $map);
                     }
@@ -964,6 +969,8 @@ class Personal extends Base
                 $this->assign('company', '[]');
                 break;
             case 3:
+                $appid=12;
+                $can_check="no";
                 if ($userinfo['fee_status'] == 1) {
                     $allList = array_merge($list1, $allList);
                 }
@@ -1002,7 +1009,8 @@ class Personal extends Base
                         'create_time' => date("Y-m-d", $value['create_time']),
                         'status_text' => $value['status_text'],
                         'status' => $value['status'],
-                        'id' => $value['id']
+                        'id' => $value['id'],
+                        'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/1/id/' .$value['id'],
                     ];
                     array_push($list, $map);
                 }
@@ -1019,7 +1027,8 @@ class Personal extends Base
                         'create_time' => date("Y-m-d", $value['create_time']),
                         'status_text' => $value['status_text'],
                         'status' => $value['status'],
-                        'id' => $value['id']
+                        'id' => $value['id'],
+                        'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
                     ];
                     array_push($list, $map);
                 }
