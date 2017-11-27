@@ -150,13 +150,11 @@
             this.isOut();
         },
         methods:{
-            jumpTo(url,appid,id){
+            jumpTo(url){
                 //ios返回莫名返回两级+安卓莫名返回需要按两次解决
-                if(appid===12){
-                    window.location.replace('/index/service/historyDetail/appid/12/type/1/id/' + id);
-                    return ;
+                if(url){
+                    window.location.replace(url);
                 }
-                window.location.replace(url);
             },
             status(appid,status){
                 if(appid===1){

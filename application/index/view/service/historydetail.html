@@ -384,7 +384,7 @@
             <!--</div>-->
         <!--</div>-->
     <!--</div>-->
-    <div v-if="appid == 12">
+    <div v-if="appid == 12 && info.trademark_type==1">
         <div class="table-box">
             <div class="table-title"><span>商标类别</span><a href="/index/service/marktype" class="icon-remarks"></a></div>
             <div class="table-row-box">
@@ -415,7 +415,7 @@
                         <div class="upload-img" v-for="img in info.submit_img">
                             <img :src="img" class="img-responsive" @click="loadImg(img,info.submit_img)">
                         </div>
-                        <div class="" v-if="!info.submit_img">无</div>
+                        <div class="" v-if="!info.submit_img.length">无</div>
                     </div>
                 </div>
             </div>
@@ -424,25 +424,24 @@
         <div class="table-box">
             <div class="table-title"><span>查询结果</span></div>
             <!--已回复-->
-            <div class="table-row-box" v-if="info.status != 0">
-                <div class="table-row-block" v-if="info.trademark_description">
+            <div class="table-row-box" v-if="info.status != 0" style="padding-top: 2rem;">
+                <div class="table-row-block " v-if="info.reply"  style="padding:0 0  2rem">
                     <div class="textarea-box">
-                        <div>{{info.trademark_description}}</div>
+                        <div>{{info.reply}}</div>
                     </div>
                 </div>
-                <div class="table-row-block" v-if="info.back_img">
+                <div class="table-row-block" v-if="info.back_img.length">
                     <!--<div class="table-row-block-header">物业回复：</div>-->
-                    <div class="card-upload table-card-upload" style="padding-top: 2rem;justify-content: center">
-                        <div class="upload-img" style="margin: 0">
-                            <img :src="info.back_img" class="img-responsive" @click="loadImg(info.back_img,[info.back_img])">
+                    <div class="card-upload table-card-upload">
+                        <div class="upload-img" v-for="img in info.back_img">
+                            <img :src="img" class="img-responsive" @click="loadImg(img,info.back_img)">
                         </div>
                     </div>
                 </div>
             </div>
             <!--未回复（有权限回复）-->
             <div class="table-row-box"  v-else-if="can_check == 'yes' &&  info.status==0">
-                <div class="table-row-block">
-                    <div class="table-row-block-header">商标</div>
+                <div class="table-row-block" style="padding-top: 2rem">
                     <textarea  cols="30" rows="10" placeholder="请输入查询结果..." v-model="subData.check_remark"></textarea>
                 </div>
                 <div class="card-upload">
@@ -459,7 +458,7 @@
                     <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
                 </form>
                 <div style="padding: 2rem 0;">
-                    <button class="btn btn-block btn-green" @click="markQueryReply">回复</button>
+                    <button class="btn btn-block btn-green" @click="markReply(1)">回复</button>
                 </div>
             </div>
             <!--未回复（无权限回复）-->
@@ -468,7 +467,57 @@
                     <div class="table-row-block-header">暂无查询结果</div>
                 </div>
             </div>
-
+        </div>
+    </div>
+    <div v-if="appid==12 && info.trademark_type==2">
+        <div class="table-box">
+            <div class="table-title"><span>咨询信息</span></div>
+            <div class="table-row-box">
+                <div class="table-row">
+                    <span class="table-row-header">联系人员</span>
+                    <span>{{info.user_name}}</span>
+                </div>
+                <div class="table-row">
+                    <span class="table-row-header">联系电话</span>
+                    <span><a :href="'tel:'+info.mobile" style="color:#333;">{{info.mobile}}</a></span>
+                </div>
+                <div class="table-row">
+                    <span class="table-row-header">提交时间</span>
+                    <span>{{info.create_time*1000 | timeToString}}</span>
+                </div>
+                    <div class="table-row-block" style="padding: 0 0 2rem">
+                        <div class="table-row-block-header">咨询内容</div>
+                        <div class="textarea-box">
+                            <div>{{info.content || "无"}}</div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="table-box">
+            <div class="table-title"><span>园区回复</span></div>
+            <!--已回复-->
+            <div class="table-row-box" v-if="info.status != 0">
+                <div class="table-row-block table-row-block-header" v-if="info.respond">
+                    <div class="textarea-box">
+                        <div>{{info.respond}}</div>
+                    </div>
+                </div>
+            </div>
+            <!--未回复（有权限回复）-->
+            <div class="table-row-box"  v-else-if="can_check == 'yes' &&  info.status==0">
+                <div class="table-row-block table-row-block-header">
+                    <textarea  cols="30" rows="10" placeholder="请输入回复..." v-model="subData.check_remark"></textarea>
+                </div>
+                <div style="padding: 2rem 0;">
+                    <button class="btn btn-block btn-green" @click="markReply(2)">回复</button>
+                </div>
+            </div>
+            <!--未回复（无权限回复）-->
+            <div class="table-row-box" v-else>
+                <div class="table-row-block" >
+                    <div class="table-row-block-header">暂无回复</div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="rent-btn-box"  v-if="(appid!=1 && appid!=3 && appid!=8 && appid!=12 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
@@ -862,8 +911,8 @@ var app = new Vue({
             var data = JSON.parse(JSON.stringify(_this.subData));
             _this.checkAjax(data)
         },
-//        app_id 12 商标查询回复
-        markQueryReply(){
+//        app_id 12 商标回复
+        markReply(type){
             var _this=this;
             if(_this.isSubmit){
                 _this.$toast({
@@ -872,20 +921,37 @@ var app = new Vue({
                 });
                 return;
             }
-            if(!_this.subData.check_remark && !_this.payment_voucher.length  ){
-                _this.$toast({
-                    message:"请输入查询结果或上传结果图片",
-                    duration:3000
-                });
-                return ;
+//          type ：1.商标查询；2.商标咨询
+            if(type === 1){
+                if(!_this.subData.check_remark && !_this.payment_voucher.length  ){
+                    _this.$toast({
+                        message:"请输入查询结果或上传结果图片",
+                        duration:3000
+                    });
+                    return ;
+                }
+                var data={
+                    appid:_this.appid,
+                    type:1,
+                    id:_this.info.id,
+                    reply: _this.subData.check_remark,
+                    back_img: _this.payment_voucher
+                };
+            }else{
+                if(!_this.subData.check_remark){
+                    _this.$toast({
+                        message:"请输入回复内容~",
+                        duration:3000
+                    });
+                    return ;
+                };
+                var data={
+                    appid:_this.appid,
+                    type:2,
+                    id:_this.info.id,
+                    respond: _this.subData.check_remark,
+                };
             }
-            var data={
-                appid:_this.appid,
-                type:1,
-                id:_this.info.id,
-                reply: _this.subData.check_remark,
-                back_img: _this.payment_voucher
-            };
             _this.isSubmit = true;
             _this.checkAjax(data);
         },
