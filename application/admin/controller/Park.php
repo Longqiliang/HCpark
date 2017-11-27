@@ -822,7 +822,7 @@ class Park extends Admin
                 $peopleStatus = $peoplerent->where(['room_id' => $info['id']])->find();
                 if ($peopleStatus) {
                     $info['status'] = 2;
-                    $peopleArr = $peoplerent->where(['room_id' => $info['id']])->select();
+                    $peopleArr = $peoplerent->where(['room_id' => $info['id'],'status' => 1])->select();
                     if (!empty($peopleArr)) {
                         $info['people'] = $peopleArr;
                     }
