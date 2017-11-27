@@ -398,25 +398,19 @@
             <div class="table-title"><span>商标名称</span></div>
             <div class="table-row-box">
                 <div class="table-row">
-                    <span class="table-row-header">中文描述</span>
+                    <span class="table-row-header">中文</span>
                     <span>{{info.chinese_description || "无"}}</span>
                 </div>
                 <div class="table-row">
-                    <span class="table-row-header">英文描述</span>
+                    <span class="table-row-header">英文</span>
                     <span>{{info.english_description || "无"}}</span>
                 </div>
                 <div class="table-row">
-                    <span class="table-row-header">数字描述</span>
+                    <span class="table-row-header">数字</span>
                     <span>{{info.numeric_description || "无"}}</span>
                 </div>
                 <div class="table-row-block">
-                    <div class="table-row-block-header">商标描述</div>
-                    <div class="textarea-box">
-                        <div>{{info.trademark_description || "无"}}</div>
-                    </div>
-                </div>
-                <div class="table-row-block">
-                    <div class="table-row-block-header">商标图片</div>
+                    <div class="table-row-block-header">商标图形</div>
                     <div class="card-upload table-card-upload">
                         <div class="upload-img" v-for="img in info.submit_img">
                             <img :src="img" class="img-responsive" @click="loadImg(img,info.submit_img)">
@@ -464,8 +458,8 @@
                 <form ref="myform">
                     <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
                 </form>
-                <div class="btn-box">
-                    <button class="btn btn-block btn-green" @click="markReply">回复</button>
+                <div style="padding: 2rem 0;">
+                    <button class="btn btn-block btn-green" @click="markQueryReply">回复</button>
                 </div>
             </div>
             <!--未回复（无权限回复）-->
@@ -869,14 +863,29 @@ var app = new Vue({
             _this.checkAjax(data)
         },
 //        app_id 12 商标查询回复
-        markReply(){
-            return;
+        markQueryReply(){
             var _this=this;
             if(_this.isSubmit){
-
+                _this.$toast({
+                    message:"提交中",
+                    duration:1000
+                });
+                return;
             }
-            _this.subData.img=_this.payment_voucher;
-            _this.$http.post('/index/service/...',_this.subData)
+            if(!_this.subData.check_remark && !_this.payment_voucher.length  ){
+                _this.$toast({
+                    message:"请输入查询结果或上传结果图片",
+                    duration:3000
+                });
+                return ;
+            }
+            var data={
+                type:1,
+                reply: _this.subData.check_remark,
+                back_img: _this.payment_voucher
+            };
+            _this.isSubmit = true;
+            _this.checkAjax(data);
         },
 //        check接口 ajax
         checkAjax(subData){
@@ -904,8 +913,8 @@ var app = new Vue({
                         type:"error",
                         confirmButtonColor: "#fcc44b"
                     },function () {
-                        window.location.reload(true);
-                        window.location.replace(window.location.href+='/reload/true')
+//                        window.location.reload(true);
+//                        window.location.replace(window.location.href+='/reload/true')
                     });
                 }
             },function (res) {
@@ -916,7 +925,7 @@ var app = new Vue({
                     type:"error",
                     confirmButtonColor: "#fcc44b"
                 },function () {
-                    window.location.replace(window.location.href+='/reload/true');
+//                    window.location.replace(window.location.href+='/reload/true');
                 });
             })
         },

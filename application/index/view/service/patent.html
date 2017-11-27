@@ -80,10 +80,6 @@
                 <input type="tel" class="table-row-input" placeholder="请输入数字描述" v-model="subData.numeric_description">
             </div>
             <div class="table-row-block">
-                <div class="table-row-block-header">商标</div>
-                <textarea  cols="30" rows="10" placeholder="请输入相关信息..." v-model="subData.trademark_description"></textarea>
-            </div>
-            <div class="table-row-block">
                 <div class="table-row-block-header">商标图形</div>
                     <div class="card-upload">
                         <div class="upload-img" v-for="(imgUrl,index) of subData.submit_img">
@@ -127,9 +123,7 @@
                     </li>
                 </ul>
             </div>
-            <div class=" modal-btn-box">
-                <button class="btn btn-block btn-warning" @click="consultSubmit">提交</button>
-            </div>
+            <button class="btn btn-block btn-warning" @click="consultSubmit">提交</button>
             <div class="cancel" @click="consult = false">
                 <span><i class="iconfont hc-cha1"></i></span>
                 <span></span>
@@ -183,7 +177,6 @@
                 chinese_description:'',
                 english_description:'',
                 numeric_description:'',
-                trademark_description:'',
                 submit_img:[],
             },
         },
@@ -279,7 +272,7 @@
                         duration:1000
                     });
                     return ;
-                }else if(!data.numeric_description && !data.chinese_description && !data.english_description && !data.trademark_description && !data.submit_img.length){
+                }else if(!data.numeric_description && !data.chinese_description && !data.english_description && !data.submit_img.length){
                     _this.$toast({
                         message:"至少填写一项商标名称",
                         duration:1000
