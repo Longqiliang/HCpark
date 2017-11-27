@@ -158,6 +158,9 @@
     .modal-body .modal-cell{
         padding: 10px;
     }
+    .modal-body .modal-cell-tit{
+        padding-bottom: 10px;
+    }
     .modal-body .modal-cell .cell-sm{
         /*width: 70px;*/
         display: inline-block;
@@ -202,7 +205,7 @@
         border: 1px solid #e5e5e5;
         border-radius: 5px;
         padding: 10px 0;
-        margin-bottom: 20px;;
+        margin-bottom: 30px;
     }
     .info-card .card-cell{
         padding: 5px 10px;
@@ -630,7 +633,7 @@
         </div>
     </div>
     {{ else if status == 2}}
-     <h4 class="text-center">房间信息</h4>
+    <h4 class="text-center">房间信息</h4>
     <div class="modal-cell">
         <div class="form-group">
             <label for="updateArea">房间面积：</label>
@@ -662,7 +665,7 @@
             <label >房间状态：</label>
         </div>
     </div>
-    <h4 class="text-center">预约信息</h4>
+     <div class="modal-cell-tit"><h4 class="text-center">预约信息</h4></div>
      <div class="info-box">
          {{ if people && people.length}}
          <div class="swiper-container">
@@ -682,9 +685,9 @@
                              <label>备注信息：</label>
                              <span>{{ card.remark }}</span>
                          </div>
-                         <div class="card-cell center">
-                             <button type="button" class="btn btn-warning"  data-status="delete">删除</button>
-                             <button type="button" class="btn btn-primary" data-dismiss="modal">联系</button>
+                         <div class="card-cell center" data-type="{{status}}" data-id="{{card.room_id}}" data-index="{{card.id}}">
+                             <button type="button" class="btn btn-warning"  data-status="delete" >删除</button>
+                             <button type="button" class="btn btn-primary" data-dismiss="modal" data-status="change">联系</button>
                          </div>
                      </div>
                  </div>
@@ -987,7 +990,7 @@
                    //return;
                    if(e.code ==1){
                        var data = JSON.parse(e.data);
-                       console.log(data);
+                       //console.log(data);
                        var roomTpl = template("roomInfo",data);
                        modal.find(".modal-content").html(roomTpl);
 
@@ -1102,7 +1105,7 @@
                url:"{:Url('Park/addfloor')}",
                success:function (e) {
                    $this.prop('disabled', false);
-                   console.log(e)
+                   //console.log(e)
                    if(e.code ==1){
                        updateAlert(e.msg,"success");
                        var html = template('floorTpl',data);
@@ -1137,14 +1140,14 @@
             var img= $('#room-modal').find('.img');
             for(var i=0;i<img.length;i++){
                 imgsSrc.push(img[i].src);
-            };
-            console.log(imgsSrc);
+            }
+           // console.log(imgsSrc);
             $.ajax({
                 data:{floor:floor,room:room,build_block:build,panorama:panorama,area:area,price:price,img:imgsSrc,imgs:homes},
                 type:"POST",
                 url:"{:Url('Park/addrooms')}",
                 success:function (data) {
-                    console.log(data);
+                    //console.log(data);
                     if (data.code==1){
                         updateAlert(data.msg,"success");
                         var  houseTpl =template('houseList',data);
@@ -1170,8 +1173,8 @@
         });
 
        //所选房间状态修改
-       $("#update-modal").on('click','.modal-footer button',function () {
-          console.log($(this));
+       $("#update-modal").on('click','button',function () {
+          //console.log($(this));
            var $this = $(this),
                    status = $this.data('status');
            if (!status) {
@@ -1181,6 +1184,7 @@
                        type = $parent.data("type"),
                        build = $parent.data('build'),
                        room = $parent.data('room'),
+                       id = $parent.data('index'),
                        roomId = $parent.data("id");
                switch (status){
                    case 'manage':
@@ -1200,7 +1204,10 @@
                             status:type,
                             room_id:roomId
                         };
-                       commonAjax("{:Url('Park/delete')}",data,hideUpdateModal,build);
+                         if( type == '2'){
+                             data.id = id;
+                         }
+                       commonAjax("{:Url('Park/delete')}",data);
                        break;
                    case 'save':
                        var area = $("#update-modal").find('#updateArea').val(),
@@ -1224,8 +1231,14 @@
                                 img:imgArr,
                                 imgs:imgs
                            };
-                           console.log(imgArr,imgs);
+                           //console.log(imgArr,imgs);
                        commonAjax("{:Url('Park/saveroom')}",data,hideUpdateModal,build);
+                       break;
+                   case 'change':
+                         var data = {
+                             id:id
+                         };
+                       commonAjax("{:Url('Park/changeStatus')}",data);
                        break;
                    default:
                        return;
@@ -1235,8 +1248,8 @@
        });
 //       房间状态回调函数
        function hideUpdateModal(data,build) {
-           $("#update-modal").modal('hide');
            updateAlert(data.msg,"success");
+           $("#update-modal").modal('hide');
            var  houseTpl =template('houseList',data);
            $(".mail-content").empty().append(houseTpl).find(".table[data-key="+build+"]").show();
        }
@@ -1254,7 +1267,12 @@
                url:url,
                success:function (e) {
                    if(e.code == 1){
-                       callBack(e,build);
+                       if(callBack){
+                           callBack(e,build);
+                       }else{
+                           $("#update-modal").modal('hide');
+                           updateAlert(e.msg,"success");
+                       }
                    }else{
                        updateAlert(e.msg+" 稍后自动刷新页面～","info");
                        setTimeout(function () {
