@@ -36,6 +36,7 @@ use app\index\model\ServiceInformation as ServiceModel;
 use app\common\model\OperationalAuthority;
 use app\common\model\WaterType;
 use wechat\TPWechat;
+
 //企业服务
 class Service extends Base
 {
@@ -365,8 +366,8 @@ class Service extends Base
         $parkid = session('park_id');
         $park_info = Park::where('id', $parkid)->find();
         $property_phone = $park_info['property_phone'] ? $park_info['property_phone'] : '';
-        $this->assign('parkid',$parkid);
-        $this->assign('property_phone',$property_phone);
+        $this->assign('parkid', $parkid);
+        $this->assign('property_phone', $property_phone);
 
         return $this->fetch();
     }
@@ -1014,7 +1015,7 @@ class Service extends Base
             $reult = $this->commonSend(1, $message, '', 8);
             if ($reult) {
                 //成功预约一次设备服务，获得1个积分；
-                WechatUser::where('userid',session('userId'))->setInc('score',1);
+                WechatUser::where('userid', session('userId'))->setInc('score', 1);
 
                 $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
                 //推送给自己
@@ -1252,7 +1253,7 @@ class Service extends Base
             $reult = $this->commonSend(1, $message, '', 8);
             if ($reult) {
                 //成功预约一次设备服务，获得1个积分；
-                WechatUser::where('userid',session('userId'))->setInc('score',1);
+                WechatUser::where('userid', session('userId'))->setInc('score', 1);
                 $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
                 //推送给自己
                 $reult = $this->commonSendText(4, $message, session('userId'), 8);
@@ -1456,7 +1457,7 @@ class Service extends Base
             $reult = $this->commonSend(1, $message, '', 8);
             if ($reult) {
                 //成功预约一次设备服务，获得1个积分；
-                WechatUser::where('userid',session('userId'))->setInc('score',1);
+                WechatUser::where('userid', session('userId'))->setInc('score', 1);
                 $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
                 //推送给自己
                 $reult = $this->commonSendText(4, $message, session('userId'), 8);
@@ -1943,6 +1944,7 @@ class Service extends Base
         return $info;
 
     }
+
     //商标查询记录
     public function inquireHistory()
     {
@@ -1965,8 +1967,10 @@ class Service extends Base
 
         return $info;
     }
+
     //商标类别
-    public function marktype(){
+    public function marktype()
+    {
 
         return $this->fetch();
     }
@@ -2116,14 +2120,14 @@ class Service extends Base
             $info = $this->pillarRecord();
         } elseif ($appid == 12) {
             //type =1 商标查询   2 商标咨询
-            if($type==1) {
+            if ($type == 1) {
                 $info = $this->inquireHistory();
-            }elseif ($type==2){
+            } elseif ($type == 2) {
                 $info = $this->advisoryHistory();
             }
         }
         foreach ($info as $k => $value) {
-            $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/'.$type.'/id/' . $info[$k]['id'];
+            $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
         }
         $this->assign('info', json_encode($info));
         $this->assign('appId', $appid);
@@ -2207,13 +2211,17 @@ class Service extends Base
             $info['create_time'] = time();
             $info['userid'] = $userid;
             $info['park_id'] = $park_id;
-            $info['submit_img']=json_encode( $info['submit_img']);
+            $info['submit_img'] = json_encode($info['submit_img']);
             $re = $ti->save($info);
             if ($re) {
-               //用户提交查询申请后，推送给园区服务人员，推送：商标查询服务提示/时间/您有一条新的商标查询服务待处理，请登录后台查看；
-                $message = "商标查询服务提示\n您有一条新的商标查询服务待处理，请登录后台查看";
+                //用户提交查询申请后，推送给园区服务人员，推送：商标查询服务提示/时间/您有一条新的商标查询服务待处理，请登录后台查看；
+                $message = [
+                    "title" => "商标查询服务提示",
+                    "description" => "您有一条新的商标查询服务待处理，点击查看详情",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/1/id/' . $re->id,
+                ];
                 //推送给运营
-                $reult = $this->commonSendText(1, $message, "", 12);
+                $reult = $this->commonSend(1, $message, "", 12);
 
                 return $this->success('成功');
 
@@ -2242,10 +2250,15 @@ class Service extends Base
             $info['park_id'] = $park_id;
             $re = $ta->save($info);
             if ($re) {
-              //咨询提交后，推送给园区服务人员，推送：商标查询服务咨询提示/时间/您有一条商标查询服务咨询待处理，请登录后台查看；
-                $message = "商标查询服务咨询提示\n您有一条商标查询服务咨询待处理，请登录后台查看";
+                //咨询提交后，推送给园区服务人员，推送：商标查询服务咨询提示/时间/您有一条商标查询服务咨询待处理，请登录后台查看；
+                $message = [
+                    "title" => "商标查询服务咨询提示",
+                    "description" => "您有一条商标查询服务咨询待处理，点击查看详情",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/2/id/' . $re->id,
+                ];
+
                 //推送给运营
-                $reult = $this->commonSendText(1, $message, "", 12);
+                $reult = $this->commonSend(1, $message, "", 12);
                 return $this->success('成功');
 
             } else {
@@ -2468,13 +2481,13 @@ class Service extends Base
         } /*商标查询(type=1)/商标咨询(type=2)*/
         else if ($appid == 12) {
             $type = input('type');
-            if($type==1) {
+            if ($type == 1) {
                 $info = TrademarkInquire::get($id);
                 $app = CompanyApplication::Where('app_id', $appid)->find();
                 $info['name'] = $app['name'];
                 $info['submit_img'] = !empty($info['submit_img']) ? json_decode($info['submit_img']) : array();
                 $info['back_img'] = !empty($info['back_img']) ? $info['back_img'] : "";
-            }elseif ($type==2){
+            } elseif ($type == 2) {
                 $info = TrademarkAdvisory::get($id);
                 $app = CompanyApplication::Where('app_id', $appid)->find();
                 $info['name'] = $app['name'];
@@ -2535,6 +2548,8 @@ class Service extends Base
         $led = new LedRecord();
         $FunctionRoomRecord = new FunctionRoomRecord();
         $wechatUser = new WechatUser();
+        $ti = new TrademarkInquire();
+        $ta = new TrademarkAdvisory();
         $userinfo = $wechatUser->where('userid', $userid)->find();
         //$personalMessage = new PersonalMessage();
         switch ($appid) {
@@ -2609,7 +2624,7 @@ class Service extends Base
                     $res->save();
                     if ($res) {
                         //使用一次报修服务，流程走完后获得1个积分；
-                        WechatUser::where('userid',$res['user_id'])->setInc('score',1);
+                        WechatUser::where('userid', $res['user_id'])->setInc('score', 1);
                         $message = "积分服务提示\n您完成一次物业服务，积分+1！";
                         //推送给直接
                         $reult = $this->commonSendText(4, $message, $res['user_id'], 2);
@@ -2687,7 +2702,7 @@ class Service extends Base
                     $result = WaterModel::where('id', 'in', $id)->update(['status' => 3, 'end_time' => time()]);
                     if ($result) {
                         //使用一次饮水服务，流程走完后获得1个积分；
-                        $re = WechatUser::where('userid',session('userId'))->setInc('score',1);
+                        $re = WechatUser::where('userid', session('userId'))->setInc('score', 1);
                         $message = "积分服务提示\n您完成一次饮水服务，积分+1！";
                         //推送给自己
                         $reult = $this->commonSendText(4, $message, $user['userid'], 3);
@@ -2711,7 +2726,7 @@ class Service extends Base
                     ];
 
                     if ($type == 1) {
-                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark'], 'check_time' => time()]);
+                        $check_type = 1;
                         if ($userinfo['department'] == 76) {
                             $message2 = [
                                 "title" => "饮水服务提示",
@@ -2720,8 +2735,9 @@ class Service extends Base
                             ];
                             //推送给物业
                             $this->commonSend(2, $message2);
+                            $check_type = 2;
                         }
-
+                        $result = WaterModel::where('id', 'in', $id)->update(['status' => 1, 'check_remark' => $data['check_remark'], 'check_time' => time(), 'check_type' => $check_type]);
                     } else {
                         $result = WaterModel::where('id', 'in', $id)->update(['status' => 2, 'check_remark' => $data['check_remark'], 'check_time' => time()]);
                         $message['description'] = "饮水服务暂时无法提供";
@@ -2890,7 +2906,7 @@ class Service extends Base
                     $record['status'] = 1;
                     $record['electricity_id'] = $data['electricity_id'];
                     //使用一次充电柱服务，流程走完后获得1个积分；
-                    WechatUser::where('userid',session('userId'))->setInc('score',1);
+                    WechatUser::where('userid', session('userId'))->setInc('score', 1);
                     $message = "积分服务提示\n您完成一次充电柱服务，积分+1！";
                     //推送给自己
                     $reult = $this->commonSendText(4, $message, $record['user_id'], 7);
@@ -2995,7 +3011,7 @@ class Service extends Base
                       $savemessage = $personalMessage->save($new);*/
 
                     //取消预约一次设备服务，减得1个积分；
-                    WechatUser::where('userid',session('userId'))->setDec('score',1);
+                    WechatUser::where('userid', session('userId'))->setDec('score', 1);
                     $message = "积分服务提示\n您取消一次设备服务，积分-1！";
                     //推送给自己
                     $reult = $this->commonSendText(4, $message, session('userId'), 8);
@@ -3004,6 +3020,41 @@ class Service extends Base
                     return $this->error("推送失败");
                 }
                 break;
+            //商标查询（$type =1 查询  $type =2 咨询）
+            case 12:
+                //商标查询
+                if ($type == 1) {
+                    $trademarkin = $ti->get($id);
+                    $trademarkin['back_img'] = $data['back_img'];
+                    $trademarkin['reply'] = $data['reply'];
+                    $trademarkin['end_time'] = time();
+                    $trademarkin['status'] = 1;
+                    $trademarkin->save();
+            // 商标查询服务回复提示/时间/您的商标查询园区已回复，点击查看详情；
+                    $message = [
+                        "title" => "商标查询服务回复提示",
+                        'description' => "您的商标查询园区已回复，点击查看详情",
+                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/1/id/' . $id
+                    ];
+                    ServiceModel::sendPersonalMessage($message, $trademarkin['userid']);
+                } //商标咨询
+                elseif ($type == 2) {
+                    $trademarka = $ta->get($id);
+                    $trademarka['respond'] = $data['respond'];
+                    $trademarka['end_time'] = time();
+                    $trademarka['status'] = 1;
+                    $trademarka->save();
+
+                    // 商标查询服务回复提示/时间/您的商标查询园区已回复，点击查看详情；
+                    $message = [
+                        "title" => "商标咨询服务回复提示",
+                        'description' => "您的商标咨询园区已回复，点击查看详情",
+                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/2/id/' . $id
+                    ];
+                    ServiceModel::sendPersonalMessage($message, $trademarka['userid']);
+                }
+                break;
+
             //企业服务
             default:
                 $ca = $companyapplication->where('app_id', $data['appid'])->find();
@@ -3065,7 +3116,7 @@ class Service extends Base
      *   "url" => '']
      *
      *retur  true/false
-    */
+     */
     public function commonSend($type, $message, $userid = "", $appid = 0)
     {
         $wechatUser = new WechatUser();
@@ -3235,7 +3286,7 @@ class Service extends Base
                 ]
             ];
 
-            $res=   $weObj->sendMessage($data);
+            $res = $weObj->sendMessage($data);
 
 
         } else {
