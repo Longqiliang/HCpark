@@ -2101,7 +2101,6 @@ class Service extends Base
                     'url' => '/index/service/historyDetail/appid/' . $appid . '/can_check/no/id/' . $v['id']
                 ];
             }
-
         } elseif ($appid == 2) {
             $info = $this->repairRecord();
 
@@ -2125,6 +2124,8 @@ class Service extends Base
             } elseif ($type == 2) {
                 $info = $this->advisoryHistory();
             }
+
+
         }
         foreach ($info as $k => $value) {
             $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
@@ -2486,7 +2487,7 @@ class Service extends Base
                 $app = CompanyApplication::Where('app_id', $appid)->find();
                 $info['name'] = $app['name'];
                 $info['submit_img'] = !empty($info['submit_img']) ? json_decode($info['submit_img']) : array();
-                $info['back_img'] = !empty($info['back_img']) ? $info['back_img'] : "";
+                $info['back_img'] = !empty($info['back_img']) ? json_decode($info['back_img']) : array();
             } elseif ($type == 2) {
                 $info = TrademarkAdvisory::get($id);
                 $app = CompanyApplication::Where('app_id', $appid)->find();
@@ -3025,7 +3026,7 @@ class Service extends Base
                 //商标查询
                 if ($type == 1) {
                     $trademarkin = $ti->get($id);
-                    $trademarkin['back_img'] = $data['back_img'];
+                    $trademarkin['back_img'] = json_encode($data['back_img']);
                     $trademarkin['reply'] = $data['reply'];
                     $trademarkin['end_time'] = time();
                     $trademarkin['status'] = 1;
@@ -3036,7 +3037,8 @@ class Service extends Base
                         'description' => "您的商标查询园区已回复，点击查看详情",
                         "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/1/id/' . $id
                     ];
-                    ServiceModel::sendPersonalMessage($message, $trademarkin['userid']);
+                    commonService::sendPersonalMessage($message, $trademarkin['userid']);
+                    return $this->success("回复成功");
                 } //商标咨询
                 elseif ($type == 2) {
                     $trademarka = $ta->get($id);
@@ -3051,7 +3053,8 @@ class Service extends Base
                         'description' => "您的商标咨询园区已回复，点击查看详情",
                         "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/2/id/' . $id
                     ];
-                    ServiceModel::sendPersonalMessage($message, $trademarka['userid']);
+                    commonService::sendPersonalMessage($message, $trademarka['userid']);
+                    return $this->success("回复成功");
                 }
                 break;
 
