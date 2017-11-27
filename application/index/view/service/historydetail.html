@@ -156,7 +156,7 @@
                     </li>
                     <li>
                         <ul class="water-process-detail">
-                            <li>物业/运营</li>
+                            <li>{{info.check_type==1?"物业":info.check_type==2?"运营":"物业/运营"}}</li>
                             <li><span :class="{'water-font-black':info.status>=1}">2</span></li>
                             <li :class="{'water-font-black':info.status>=1}">{{info.check_time?(info.check_time):'未知'}}</li>
                             <li :class="{'water-font-black':info.status>=1}">{{info.status==2?'取消接单':'确认接单'}}</li>
@@ -880,6 +880,7 @@ var app = new Vue({
                 return ;
             }
             var data={
+                appid:_this.appid,
                 type:1,
                 reply: _this.subData.check_remark,
                 back_img: _this.payment_voucher
