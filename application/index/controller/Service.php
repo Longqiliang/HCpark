@@ -2469,7 +2469,7 @@ class Service extends Base
                         $time .= '<br>';
                     }
                     $info = [
-                        'type_text' => "led屏",
+                        'type_text' => "LED屏",
                         'payment_voucher' => $list[0]['payment_voucher'],
                         'order_time' => $time,
                         'create_user' => isset($list[0]->user->name) ? $list[0]->user->name : "",
