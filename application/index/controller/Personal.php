@@ -419,20 +419,20 @@ class Personal extends Base
     /* 我的审核（用于审核新闻的推送功能）*/
     public function myCheck()
     {
-        if(IS_POST){
+        if (IS_POST) {
             // type 2  未审核 1 已审核*/ 加载更多
             $length = input('length');
             $type = input('type');
-            if($type==2){
-                $news = DB::query("select * from tb_news       where status =0  and type<=3 order by  create_time DESC  limit ?,?",[(int)$length,(int)$length+6]);
-                $a =$news;
-                return $this->success('success','',json_encode($news));
-            }elseif ($type==1){
-                $news = DB::query("select * from tb_news       where status >0  and type<=3 order by  create_time DESC limit ?,?",[(int)$length,(int)$length+6]);
-                $a =$news;
-                return $this->success('success','',json_encode($news));
+            if ($type == 2) {
+                $news = DB::query("select * from tb_news       where status =0  and type<=3 order by  create_time DESC  limit ?,?", [(int)$length, (int)$length]);
+                $a = $news;
+                return $this->success('success', '', json_encode($news));
+            } elseif ($type == 1) {
+                $news = DB::query("select * from tb_news       where status >0  and type<=3 order by  create_time DESC limit ?,?", [(int)$length, (int)$length]);
+                $a = $news;
+                return $this->success('success', '', json_encode($news));
             }
-        }else {
+        } else {
             //未审核
             $uncheck = DB::query("select * from tb_news where status =0  and type<=3 order by  create_time DESC  limit 6");
 
