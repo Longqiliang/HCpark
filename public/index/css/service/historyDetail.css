@@ -10,7 +10,7 @@ body{padding-bottom:1rem;background-color:#f0eff5}
 .name-mobile span{display:inline-block;color:#333;font-size:1.5rem}
 .name-mobile span:first-child{float:left;width:62px}
 .name-mobile input{text-align:right;font-size:1.5rem}
-.remark p{font-size:15px}
+.remark p{font-size:1.5rem}
 .remark textarea{margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);height:18vh;border:1px solid #e5e5e5;border-radius:5px}
 .my-cancel{position:absolute;top:-50px;right:0}
 .my-cancel>span:first-child{display:inline-block;display:-webkit-flex;width:28px;height:28px;border:1px solid #fff;border-radius:15px;-webkit-align-items:center;-webkit-justify-content:center}
@@ -222,7 +222,7 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     justify-content: center;
     padding:4vw 4.8vw;
 }
-.cancel{
+#app .cancel{
     position: absolute;
     top: -50px;
     right: 0;
