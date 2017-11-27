@@ -2220,7 +2220,7 @@ class Service extends Base
                 $message = [
                     "title" => "商标查询服务提示",
                     "description" => "您有一条新的商标查询服务待处理，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/1/id/' . $re->id,
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/1/id/' . $ti->getLastInsID(),
                 ];
                 //推送给运营
                 $reult = $this->commonSend(1, $message, "", 12);
@@ -2256,7 +2256,7 @@ class Service extends Base
                 $message = [
                     "title" => "商标查询服务咨询提示",
                     "description" => "您有一条商标查询服务咨询待处理，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/2/id/' . $re->id,
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/2/id/' .$ta->getLastInsID(),
                 ];
 
                 //推送给运营
