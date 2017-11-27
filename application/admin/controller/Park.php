@@ -812,17 +812,18 @@ class Park extends Admin
                 $info['status'] = 3;
                 //关联房间号
                 $relevance = $parkRoom->where(['company_id' => $info['company_id'], 'park_id' => $park_id])->select();
-                if ($relevance) {
+                if (!empty($relevance)) {
                     foreach ($relevance as $key => $value) {
-                        $info['relevance'][$key] = $value['room'];
+                       $array[$key] = $value['room'];
                     }
+                    $info['relevance'] = $array ;
                 }
             } else {
                 //空置跟已经预约的状态
                 $peopleStatus = $peoplerent->where(['room_id' => $info['id']])->find();
                 if ($peopleStatus) {
                     $info['status'] = 2;
-                    $peopleArr = $peoplerent->where(['room_id' => $info['id'],'status' => 1])->select();
+                    $peopleArr = $peoplerent->where(['room_id' => $info['id'],'status'])->select();
                     if (!empty($peopleArr)) {
                         $info['people'] = $peopleArr;
                     }
