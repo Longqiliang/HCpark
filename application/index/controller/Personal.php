@@ -905,7 +905,7 @@ class Personal extends Base
                         ->alias('s')
                         ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
                         ->join('__WECHAT_USER__ b', 's.user_id=b.userid')
-                        ->field('a.name as service_name,s.status,s.create_time')
+                        ->field('a.name as service_name,s.status,s.create_time,a.app_id')
                         ->where('s.status', 'neq', -1)
                         ->where('b.park_id', 'eq', $park_id)
                         ->order('create_time desc')
@@ -936,6 +936,7 @@ class Personal extends Base
                             'create_time' => date("Y-m-d", $value['create_time']),
                             'status_text' => $value['status_text'],
                             'status' => $value['status'],
+                            'app_id'=>$appid,
                             'id' => $value['id'],
                             'url' => '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/1/id/' .$value['id']
                         ];
@@ -954,6 +955,7 @@ class Personal extends Base
                             'create_time' => date("Y-m-d", $value['create_time']),
                             'status_text' => $value['status_text'],
                             'status' => $value['status'],
+                            'app_id'=>$appid,
                             'id' => $value['id'],
                             'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
                         ];
@@ -981,7 +983,7 @@ class Personal extends Base
                 $list = Db::table('tb_company_service')
                     ->alias('s')
                     ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
-                    ->field('a.name as service_name,s.status,s.create_time')
+                    ->field('a.name as service_name,s.status,s.create_time,s.app_id')
                     ->where('s.user_id', 'eq', $userid)
                     ->where('s.status', 'neq', -1)
                     ->order('create_time desc')
@@ -1009,6 +1011,7 @@ class Personal extends Base
                         'create_time' => date("Y-m-d", $value['create_time']),
                         'status_text' => $value['status_text'],
                         'status' => $value['status'],
+                        'app_id'=>$appid,
                         'id' => $value['id'],
                         'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/1/id/' .$value['id'],
                     ];
@@ -1026,6 +1029,7 @@ class Personal extends Base
                         'service_name' => '商标咨询',
                         'create_time' => date("Y-m-d", $value['create_time']),
                         'status_text' => $value['status_text'],
+                        'app_id'=>$appid,
                         'status' => $value['status'],
                         'id' => $value['id'],
                         'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
