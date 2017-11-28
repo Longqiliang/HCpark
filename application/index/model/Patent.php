@@ -10,6 +10,7 @@ namespace app\index\model;
 
 
 use think\Model;
+use app\index\controller\Service;
 
 //专利
 class Patent extends Model
@@ -105,6 +106,98 @@ class Patent extends Model
         $info['id_card'] = json_decode($info['id_card']);
         $info['app_name'] = $app['name'];
         return $info;
+    }
+
+    //审核 or 修改   type（1. 审核成功 2.审核失败 3。修改）
+    public function check($type, $id, $data)
+    {
+        $pantent = $this->get($id);
+        switch ($type) {
+            case 1:
+                $pantent['status'] = 1;
+                $pantent['end_time'] = time();
+                $res = $pantent->save();
+                if ($res) {
+                    $this->sendMessage($type, $id);
+                    return true;
+
+                } else {
+                    return false;
+                }
+                break;
+            case 2:
+                $pantent['status'] = 2;
+                $pantent['end_time'] = time();
+                $pantent['reply'] = $data['reply'];
+                $res = $pantent->save();
+                if ($res) {
+
+                    $this->sendMessage($type, $id);
+                    return true;
+
+                } else {
+                    return false;
+                }
+                break;
+            case 3:
+                isset($data['id']);
+                $re = $this->_checkData($data['type'], $data);
+                if ($re == false) {
+                    return false;
+                }
+                $data['create_time']=time();
+                $data['end_time']="";
+                $res = $this->where('id', $id)->update($data);
+                if ($res == 0 || $res) {
+                    $this->sendMessage($type, $id);
+
+                    return true;
+
+                } else {
+                    return false;
+                }
+                break;
+        }
+    }
+
+
+    //审核三种情况的推送（1。审核成功推用户  2。审核失败推用户  3。修改成功推运营     ）
+    public function sendMessage($type, $id)
+    {
+        $pantent = $this->get($id);
+        $service = new Service();
+        switch ($type) {
+            case 1:
+                $message = [
+                    "title" => "专利申请提示",
+                    "description" => "您的发明专利申请园区已确认，请您携带相关材料前往希垦科技园A幢2楼园区知识产权服务中心办理，点击查看详情",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/'.$pantent['type'].'/id/'.$pantent['id']
+                ];
+             //审核成功推用户
+             $service->commonSend(4,$message,$pantent['create_user'],21);
+
+                break;
+            case 2:
+                $message = [
+                    "title" => "专利申请提示",
+                    "description" => "您的发明专利申请园区审核失败，请您核对信息后重新提交，点击查看详情",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/'.$pantent['type'].'/id/'.$pantent['id']
+                ];
+                //审核失败推用户
+                $service->commonSend(4,$message,$pantent['create_user'],21);
+                break;
+            case 3:
+                $message = [
+                    "title" => "专利申请提示",
+                    "description" => "您的发明专利申请园区审核失败，请您核对信息后重新提交，点击查看详情",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/'.$pantent['type'].'/id/'.$pantent['id']
+                ];
+                //审核失败推用户
+                $service->commonSend(4,$message,$pantent['create_user'],21);
+                break;
+        }
+
+
     }
 
 

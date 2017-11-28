@@ -938,7 +938,7 @@ class Personal extends Base
                             'status' => $value['status'],
                             'app_id'=>$appid,
                             'id' => $value['id'],
-                            'url' => '/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/1/id/' .$value['id']
+                            'url' => '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/1/id/' .$value['id']
                         ];
                         array_push($company_list, $map);
                     }
@@ -957,7 +957,7 @@ class Personal extends Base
                             'status' => $value['status'],
                             'app_id'=>$appid,
                             'id' => $value['id'],
-                            'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
+                            'url'=>'/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
                         ];
                         array_push($company_list, $map);
                     }
@@ -1013,7 +1013,7 @@ class Personal extends Base
                         'status' => $value['status'],
                         'app_id'=>$appid,
                         'id' => $value['id'],
-                        'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/1/id/' .$value['id'],
+                        'url'=>'/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/1/id/' .$value['id'],
                     ];
                     array_push($list, $map);
                 }
@@ -1032,7 +1032,7 @@ class Personal extends Base
                         'app_id'=>$appid,
                         'status' => $value['status'],
                         'id' => $value['id'],
-                        'url'=>'/index/service/historyDetail/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
+                        'url'=>'/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
                     ];
                     array_push($list, $map);
                 }

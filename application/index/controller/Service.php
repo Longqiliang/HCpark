@@ -37,6 +37,7 @@ use app\common\model\OperationalAuthority;
 use app\common\model\WaterType;
 use wechat\TPWechat;
 use app\index\model\Patent;
+
 //企业服务
 class Service extends Base
 {
@@ -1963,56 +1964,50 @@ class Service extends Base
                 'type' => $v['type'],
                 'time' => date('Y-m-d', $v['create_time']),
                 'status' => $v['status'],
-                ];
+            ];
         }
 
         return $info;
     }
 
-   //专利申请 app_id=21
-    public  function  patent(){
-        if(IS_POST){
-            $data= input('');
+    //专利申请 app_id=21
+    public function patent()
+    {
+        if (IS_POST) {
+            $data = input('');
             $patent = new Patent();
-            $result =$patent->_checkData(input('type'),$data);
-            if($result==false){
+            $result = $patent->_checkData(input('type'), $data);
+            if ($result == false) {
                 return $this->error('接口调用失败，参数缺失');
             }
-            if(count($data['id_card'])!=2){
+            if (count($data['id_card']) != 2) {
                 return $this->error('接口调用失败，身份证图片未传齐');
             }
-            $data['id_card']= json_encode($data['id_card']);
-            if(count($data['product_img'])!=7){
+            $data['id_card'] = json_encode($data['id_card']);
+            if (count($data['product_img']) != 7) {
                 return $this->error('接口调用失败，设计图片未上传齐');
             }
-            $data['product_img']= json_encode($data['product_img']);
-            $data['create_user']=session('userId');
-            $data['park_id']=session('park_id');
+            $data['product_img'] = json_encode($data['product_img']);
+            $data['create_user'] = session('userId');
+            $data['park_id'] = session('park_id');
             $res = $patent->save($data);
-            if($res){
-               //专利申请提示11月28日您有一条新的专利申请服务待处理，点击查看详情
+            if ($res) {
+                //专利申请提示11月28日您有一条新的专利申请服务待处理，点击查看详情
                 $message = [
                     "title" => "专利申请提示",
                     "description" => "您有一条新的专利申请服务待处理，点击查看详情",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/21/can_check/no/id/' .$patent ->getLastInsID()
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/21/can_check/no/id/' . $patent->getLastInsID()
                 ];
                 //推送给物业
                 $reult = $this->commonSend(1, $message, '', 21);
                 return $this->success('提交成分');
-            }else{
+            } else {
                 return $this->error('提交失败');
             }
-        }else{
+        } else {
             return $this->fetch();
         }
     }
-
-
-
-
-
-
-
 
 
     //商标类别
@@ -2175,19 +2170,18 @@ class Service extends Base
             }
 
 
-        }elseif ($appid==21){
+        } elseif ($appid == 21) {
             $patent = new Patent();
-            $info=$patent->patentHistory();
+            $info = $patent->patentHistory();
         }
         //物业服务（记录详情页跳转地址为historyDetail）
-        if($company_type==0&&!empty($company_type)){
+        if ($company_type == 0 && !empty($company_type)) {
             foreach ($info as $k => $value) {
                 $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
             }
 
-        }
-        //企业服务（记录详情页跳转地址为historyDetailCompany）
-        elseif ($company_type==1){
+        } //企业服务（记录详情页跳转地址为historyDetailCompany）
+        elseif ($company_type == 1) {
             foreach ($info as $k => $value) {
                 $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
             }
@@ -2319,7 +2313,7 @@ class Service extends Base
                 $message = [
                     "title" => "商标查询服务咨询提示",
                     "description" => "您有一条商标查询服务咨询待处理，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/2/id/' .$ta->getLastInsID(),
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/2/id/' . $ta->getLastInsID(),
                 ];
 
                 //推送给运营
@@ -2335,38 +2329,37 @@ class Service extends Base
     }
 
 
-
-   /* 企业服务的历史记录详情页*/
-    public  function  historyDetailCompany(){
+    /* 企业服务的历史记录详情页*/
+    public function historyDetailCompany()
+    {
         $id = input('id');
         $appid = input('appid');
         $can_check = empty(input('can_check')) ? "no" : input('can_check');
         /*商标查询(type=1)/商标咨询(type=2)*/
-         if ($appid == 12) {
+        if ($appid == 12) {
             $type = input('type');
             if ($type == 1) {
-               $ti= new TrademarkInquire();
-                $info =$ti->InquireHistoryDetail($id,$appid);
+                $ti = new TrademarkInquire();
+                $info = $ti->InquireHistoryDetail($id, $appid);
             } elseif ($type == 2) {
-                $ta= new TrademarkAdvisory();
-                $info =$ta->AdvisoryHistoryDetail($id,$appid);
+                $ta = new TrademarkAdvisory();
+                $info = $ta->AdvisoryHistoryDetail($id, $appid);
             }
-        }
-        //专利查询
-        elseif ($appid == 21){
-        $patent = new Patent();
-        $info =$patent->patentHistoryDetail($id,$appid);
-        }
-        //企业服务
-         else if (9 < $appid && $appid < 19 && $appid != 12) {
-           $companyservice = new CompanyService();
-           $info = $companyservice->historyDetail($id,$appid);
+        } //专利查询
+        elseif ($appid == 21) {
+            $patent = new Patent();
+            $info = $patent->patentHistoryDetail($id, $appid);
+        } //企业服务
+        else if (9 < $appid && $appid < 19 && $appid != 12) {
+            $companyservice = new CompanyService();
+            $info = $companyservice->historyDetail($id, $appid);
         }
         //echo json_encode($info);
         $this->assign('can_check', $can_check);
         $this->assign('type', json_encode($appid));
         $this->assign('info', json_encode($info));
         $this->assign('park_id', session('park_id'));
+
         return $this->fetch("history_detail_company");
     }
 
@@ -2588,14 +2581,14 @@ class Service extends Base
                 $info['name'] = $app['name'];
                 $info['submit_img'] = !empty($info['submit_img']) ? json_decode($info['submit_img']) : array();
                 $info['back_img'] = !empty($info['back_img']) ? json_decode($info['back_img']) : array();
-                $info['trademark_type']=1;
+                $info['trademark_type'] = 1;
 
             } elseif ($type == 2) {
                 $info = TrademarkAdvisory::get($id);
                 $app = CompanyApplication::Where('app_id', $appid)->find();
-                $info['user_name']=$info['name'];
+                $info['user_name'] = $info['name'];
                 $info['name'] = $app['name'];
-                $info['trademark_type']=2;
+                $info['trademark_type'] = 2;
             }
         } //企业服务
         else if (9 < $appid && $appid < 19 && $appid != 12) {
@@ -3135,7 +3128,7 @@ class Service extends Base
                     $trademarkin['end_time'] = time();
                     $trademarkin['status'] = 1;
                     $trademarkin->save();
-            // 商标查询服务回复提示/时间/您的商标查询园区已回复，点击查看详情；
+                    // 商标查询服务回复提示/时间/您的商标查询园区已回复，点击查看详情；
                     $message = [
                         "title" => "商标查询服务回复提示",
                         'description' => "您的商标查询园区已回复，点击查看详情",
@@ -3161,7 +3154,19 @@ class Service extends Base
                     return $this->success("回复成功");
                 }
                 break;
-
+            //专利申请
+            case 21:
+                $patent = new  Patent();
+                $res = $patent->check($type, $id, $data);
+                if ($res) {
+                    if($type==3){
+                        return $this->success("修改成功");
+                    }
+                    return $this->success("审核成功");
+                } else {
+                    return $this->error("操作失败");
+                }
+                break;
             //企业服务
             default:
                 $ca = $companyapplication->where('app_id', $data['appid'])->find();
