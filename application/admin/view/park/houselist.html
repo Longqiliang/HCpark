@@ -90,6 +90,10 @@
         background-color: #e6e6e6;
         border-color: #e6e6e6
     }
+    .item-gray.hover{
+        background-color: #e6e6e6;
+        border-color: #e6e6e6
+    }
     .item-primary{
         background-color: #1ab394;
         border-color: #1ab394;
@@ -105,15 +109,15 @@
     .item-default:hover{
         border-color: #d2d2d2;
     }
-    .layer.show{
-        top: 50px;
-    }
     .cell-item:last-child{
         margin-right: auto;
     }
     .cell-item:last-child .layer{
         right: 0;
         left: auto;
+    }
+    .cell-item:first-child .layer{
+       right: auto;
     }
     .content-tit .add{
         padding: 5px 20px;
@@ -241,13 +245,14 @@
         margin-right: 3px;
     }
     .layer{
+        font-weight: normal;
         display: none;
         position: absolute;
         top: 35px;
         /*top:40px;*/
         left: 0;
         z-index: 10;
-        width: 100%;
+        /*width: 100%;*/
         min-width: 300px;
         background-color: inherit;
         -webkit-transition: all 1s;
@@ -257,6 +262,9 @@
         padding:0 10px;
         text-align: left;
         background-color: #fff;
+    }
+    .layer.show{
+        top: 50px;
     }
     .content-contract{
         float: right;
@@ -374,10 +382,10 @@
                                 <div class="cell-item-default item-default">{$vo2.floor}F</div>
                             {else /}
                                 {volist name="vo2.rooms" id="vo3"}
-                                {eq name="vo3.status" value="1"}<div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}">{$vo3.room}</div>{/eq}
-                                {eq name="vo3.status" value="2"}<div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}">{$vo3.room}</div>{/eq}
-                                {eq name="vo3.status" value="3"}<div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}">{$vo3.room}</div>{/eq}
-                                {eq name="vo3.status" value="4"}<div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="1"}<div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}" data-company="{$vo3.company}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="2"}<div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}" data-company="{$vo3.company}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="3"}<div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}" data-company="{$vo3.company}">{$vo3.room}</div>{/eq}
+                                {eq name="vo3.status" value="4"}<div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{$vo3.area}" data-room="{$vo3.room}" data-contract="{$vo3.contract}" data-roomid="{$vo3.room_id}" data-relevance="{$vo3.relevance}" data-company="{$vo3.company}">{$vo3.room}</div>{/eq}
                                 {/volist}
                             {/empty}
                         </div>
@@ -520,13 +528,13 @@
                 {{ if item.rooms && item.rooms.length}}
                 {{ each item.rooms as info j }}
                 {{ if info.status == 1}}
-                <div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{ifo.relevance}}">{{info.room}}</div>
+                <div class="cell-item item-primary" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{info.relevance}}" data-company="{{info.company}}">{{info.room}}</div>
                 {{ else if info.status == 2 }}
-                <div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{ifo.relevance}}">{{info.room}}</div>
+                <div class="cell-item item-warning" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{info.relevance}}" data-company="{{info.company}}">{{info.room}}</div>
                 {{ else if info.status == 3 }}
-                <div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{ifo.relevance}}">{{info.room}}</div>
+                <div class="cell-item item-gray" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{info.relevance}}" data-company="{{info.company}}">{{info.room}}</div>
                 {{ else if info.status == 4 }}
-                <div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{ifo.relevance}}">{{info.room}}</div>
+                <div class="cell-item item-default" data-toggle="modal" data-target="#update-modal" data-area="{{info.area}}" data-room="{{info.room}}" data-contract="{{info.contract}}" data-roomid="{{info.room_id}}" data-relevance="{{info.relevance}}" data-company="{{info.company}}">{{info.room}}</div>
                 {{ /if }}
                 {{ /each }}
                 {{ else }}
@@ -973,6 +981,7 @@
                var area = $this.data("area"),
                    room = $this.data("room"),
                    contract =  $this.data("contract"),
+                   company = $this.data("company"),
                    relevance = $this.data("relevance"),
                    layer = $this.children('.layer');
                if(!layer.length){
@@ -981,6 +990,7 @@
                        parentsEl:$parents,
                        roomName:room,
                        roomArea:area,
+                       companyName:company,
                        contract:contract,
                        relevance:relevance
                    };
@@ -998,7 +1008,7 @@
                                var nRelevance = $relevance.join(',');
                            }
                            if(newRelevance == nRelevance){
-                               $(this).addClass("font-bold");
+                               $(this).addClass("font-bold hover");
                            }
                        })
                    }
@@ -1009,7 +1019,7 @@
                //鼠标离开
               $this.children('.layer').hide();
                $parents.find('.cell-item').each(function () {
-                   $(this).removeClass("font-bold");
+                   $(this).removeClass("font-bold hover");
                });
            }
        });
@@ -1184,19 +1194,20 @@
             var price = $('#price').val();
             var panorama = $("#panorama").val();
             var imgsSrc=[];
-            var img= $('#room-modal').find('.img');
-            for(var i=0;i<img.length;i++){
-                imgsSrc.push(img[i].src);
-            }
-           // console.log(imgsSrc);
+            var $img= $('#room-modal').find('.img');
+            var img = $("#room-modal").find('.upload-img-box').data("src").split(',');
+            $img.each(function (i) {
+                imgsSrc.push($(this).attr('src'));
+            });
             $.ajax({
-                data:{floor:floor,room:room,build_block:build,panorama:panorama,area:area,price:price,img:imgsSrc,imgs:homes},
+                data:{floor:floor,room:room,build_block:build,panorama:panorama,area:area,price:price,img:imgsSrc,imgs:img},
                 type:"POST",
                 url:"{:Url('Park/addrooms')}",
                 success:function (data) {
                     //console.log(data);
                     if (data.code==1){
                         updateAlert(data.msg,"success");
+                        console.log(data);
                         var  houseTpl =template('houseList',data);
                         $(".mail-content").empty().append(houseTpl).find(".table[data-key="+build+"]").show();
                         //console.log(e);
@@ -1265,7 +1276,7 @@
                            imgs =  $("#update-modal").find('.upload-img-box').data("src").split(','),
                            imgArr = [];
                            $("#update-modal .upload-img-box img").each(function (i) {
-                               imgArr.push($(this).data('src'));
+                               imgArr.push($(this).attr('src'));
                            });
                           var data = {
                                 room:room,
@@ -1357,8 +1368,11 @@
                contract:'',
                relevance:[]
            };
-           var newData = $.extend({},defaultData,data),
-                   layerTpl = template('layer',newData);
+           var newData = $.extend({},defaultData,data);
+           if(newData.companyName == ''){
+               newData.companyName = '暂无公司信息';
+           }
+           var layerTpl = template('layer',newData);
            newData.el.append(layerTpl);
        }
        /**
@@ -1395,7 +1409,6 @@
         * 上传图片
         */
        function uploadPicture(el) {
-           var homes = [] ;
            $(".input-file").fileinput({
                showUpload : false,
                showRemove : false,
