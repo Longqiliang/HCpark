@@ -13,14 +13,18 @@ use think\Model;
 class PeopleRent extends Model
 {
 
-  public function  roominfo(){
+    public function roominfo()
+    {
+        return $this->hasOne('ParkRent', 'id', 'rent_id');
+    }
 
-
-      return $this->hasOne('ParkRent','id','rent_id');
-
-
-  }
-
+    public static function getNumforUndone()
+    {
+        $parkid = session('user_auth')['park_id'];
+        $map = ['park_id' => $parkid, 'status' => 1];
+        $num = PeopleRent::where($map)->count();
+        return $num;
+    }
 
 
 }

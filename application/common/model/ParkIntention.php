@@ -12,6 +12,10 @@ use think\Model;
 
 class ParkIntention extends Model
 {
-
-
+    public static function getNumforUndone()
+    {
+        $park_id = session('user_auth')['park_id'];
+        $num = ParkIntention::where(['park_id' => $park_id, 'status' => 0])->count();
+        return $num;
+    }
 }

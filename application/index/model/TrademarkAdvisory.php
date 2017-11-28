@@ -10,7 +10,7 @@ namespace app\index\model;
 
 
 use think\Model;
-
+use app\index\model\CompanyApplication;
 class TrademarkAdvisory extends  Model
 {
 
@@ -20,5 +20,13 @@ class TrademarkAdvisory extends  Model
         'end_time'=>'strtotime'
     ];
 
+    public  function  AdvisoryHistoryDetail($id,$appid){
+        $info = $this->get($id);
+        $app = CompanyApplication::Where('app_id', $appid)->find();
+        $info['user_name']=$info['name'];
+        $info['app_name'] = $app['name'];
+        $info['trademark_type']=2;
 
+        return $info;
+    }
 }

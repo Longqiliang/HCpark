@@ -9,6 +9,7 @@
 namespace app\common\model;
 
 
+use think\Db;
 use think\Model;
 
 class CommunicateUser extends  Model
@@ -23,4 +24,22 @@ class CommunicateUser extends  Model
         return $this->hasOne('CommunicateGroup','id','group_id');
 
     }
+
+    public static  function  getNumforUndone(){
+        $parkid = session('user_auth')['park_id'];
+        $num = Db::table('tb_communicate_group')
+            ->alias('g')
+            ->join('tb_communicate_user u', 'g.id=u.group_id')
+            ->where('u.status',1)
+            ->where('g.status',1)
+            ->where('g.park_id',$parkid)
+            ->count();
+        $a = Db::getLastSql();
+        return $num;
+    }
+
+
+
+
+
 }

@@ -19,4 +19,13 @@ class ElectricityService extends  Model
         return $this->hasOne('WechatUser','userid','user_id');
     }
 
+    public static function getNumforUndone()
+    {
+        $parkid = session('user_auth')['park_id'];
+        $num = ElectricityService::where(['status' => 0, 'park_id' => $parkid])->count();
+        return $num;
+
+    }
+
+
 }

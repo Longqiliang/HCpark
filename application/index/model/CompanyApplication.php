@@ -14,6 +14,12 @@ use think\Model;
 class CompanyApplication extends  Model
 {
 
+  public  function getCompanyType($appid){
+      $companyapp = $this->where('app_id',$appid)->find();
+      return $companyapp['type'];
+  }
+
+
 
 
 

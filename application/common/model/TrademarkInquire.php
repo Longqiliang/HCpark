@@ -22,8 +22,20 @@ class TrademarkInquire extends Model
     public function user()
     {
 
-       return  $this->hasOne('WechatUser', 'userid', 'userid');
+        return $this->hasOne('WechatUser', 'userid', 'userid');
 
+    }
+
+    /**
+     * 未完成的数量
+     */
+    public  static  function getNumforUndone()
+    {
+        $parkid = session('user_auth')['park_id'];
+        $map['status'] = 0;
+        $map['park_id'] = $parkid;
+        $count = TrademarkInquire::where($map)->count();
+        return $count;
     }
 
 

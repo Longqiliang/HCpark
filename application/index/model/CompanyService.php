@@ -10,13 +10,25 @@ namespace app\index\model;
 
 
 use think\Model;
+use app\index\model\CompanyApplication;
 
 class CompanyService extends Model
 {
 
-    public  function  user(){
+    public function user()
+    {
 
-        return $this->hasOne('WechatUser','userid','user_id');
+        return $this->hasOne('WechatUser', 'userid', 'user_id');
 
     }
+
+    public function historyDetail($id, $app_id)
+    {
+
+        $info = $this->get($id);
+        $app = CompanyApplication::Where('app_id', $app_id)->find();
+        $info['app_name'] = $app['name'];
+        return $info;
+    }
+
 }

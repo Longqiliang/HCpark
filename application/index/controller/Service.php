@@ -36,7 +36,7 @@ use app\index\model\ServiceInformation as ServiceModel;
 use app\common\model\OperationalAuthority;
 use app\common\model\WaterType;
 use wechat\TPWechat;
-
+use app\index\model\Patent;
 //企业服务
 class Service extends Base
 {
@@ -1969,6 +1969,52 @@ class Service extends Base
         return $info;
     }
 
+   //专利申请 app_id=21
+    public  function  patent(){
+        if(IS_POST){
+            $data= input('');
+            $patent = new Patent();
+            $result =$patent->_checkData(input('type'),$data);
+            if($result==false){
+                return $this->error('接口调用失败，参数缺失');
+            }
+            if(count($data['id_card'])!=2){
+                return $this->error('接口调用失败，身份证图片未传齐');
+            }
+            $data['id_card']= json_encode($data['id_card']);
+            if(count($data['product_img'])!=7){
+                return $this->error('接口调用失败，设计图片未上传齐');
+            }
+            $data['product_img']= json_encode($data['product_img']);
+            $data['create_user']=session('userId');
+            $data['park_id']=session('park_id');
+            $res = $patent->save($data);
+            if($res){
+               //专利申请提示11月28日您有一条新的专利申请服务待处理，点击查看详情
+                $message = [
+                    "title" => "专利申请提示",
+                    "description" => "您有一条新的专利申请服务待处理，点击查看详情",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/21/can_check/no/id/' .$patent ->getLastInsID()
+                ];
+                //推送给物业
+                $reult = $this->commonSend(1, $message, '', 21);
+                return $this->success('提交成分');
+            }else{
+                return $this->error('提交失败');
+            }
+        }else{
+            return $this->fetch();
+        }
+    }
+
+
+
+
+
+
+
+
+
     //商标类别
     public function marktype()
     {
@@ -2082,8 +2128,11 @@ class Service extends Base
         $info = [];
         $appid = input('id');
         $type = input('type');
-        if ($appid == 1) {
+        $companyapp = new CompanyApplication();
+        $company_type = $companyapp->getCompanyType($appid);
 
+
+        if ($appid == 1) {
             $userid = session("userId");
             $userinfo = WechatUser::where(['userid' => $userid])->find();
             $departmentId = $userinfo['department'];
@@ -2104,7 +2153,6 @@ class Service extends Base
             }
         } elseif ($appid == 2) {
             $info = $this->repairRecord();
-
 
         } elseif ($appid == 3) {
 
@@ -2127,10 +2175,25 @@ class Service extends Base
             }
 
 
+        }elseif ($appid==21){
+            $patent = new Patent();
+            $info=$patent->patentHistory();
         }
-        foreach ($info as $k => $value) {
-            $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
+        //物业服务（记录详情页跳转地址为historyDetail）
+        if($company_type==0&&!empty($company_type)){
+            foreach ($info as $k => $value) {
+                $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
+            }
+
         }
+        //企业服务（记录详情页跳转地址为historyDetailCompany）
+        elseif ($company_type==1){
+            foreach ($info as $k => $value) {
+                $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
+            }
+        }
+
+
         $this->assign('info', json_encode($info));
         $this->assign('appId', $appid);
 
@@ -2271,7 +2334,49 @@ class Service extends Base
         }
     }
 
-    /* 记录详情*/
+
+
+   /* 企业服务的历史记录详情页*/
+    public  function  historyDetailCompany(){
+        $id = input('id');
+        $appid = input('appid');
+        $can_check = empty(input('can_check')) ? "no" : input('can_check');
+        /*商标查询(type=1)/商标咨询(type=2)*/
+         if ($appid == 12) {
+            $type = input('type');
+            if ($type == 1) {
+               $ti= new TrademarkInquire();
+                $info =$ti->InquireHistoryDetail($id,$appid);
+            } elseif ($type == 2) {
+                $ta= new TrademarkAdvisory();
+                $info =$ta->AdvisoryHistoryDetail($id,$appid);
+            }
+        }
+        //专利查询
+        elseif ($appid == 21){
+        $patent = new Patent();
+        $info =$patent->patentHistoryDetail($id,$appid);
+        }
+        //企业服务
+         else if (9 < $appid && $appid < 19 && $appid != 12) {
+           $companyservice = new CompanyService();
+           $info = $companyservice->historyDetail($id,$appid);
+        }
+        //echo json_encode($info);
+        $this->assign('can_check', $can_check);
+        $this->assign('type', json_encode($appid));
+        $this->assign('info', json_encode($info));
+        $this->assign('park_id', session('park_id'));
+        return $this->fetch();
+
+
+
+
+
+
+    }
+
+    /* 记录详情 物业服务*/
     public function historyDetail()
     {
         $id = input('id');
