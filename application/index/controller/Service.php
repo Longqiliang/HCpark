@@ -2367,13 +2367,7 @@ class Service extends Base
         $this->assign('type', json_encode($appid));
         $this->assign('info', json_encode($info));
         $this->assign('park_id', session('park_id'));
-        return $this->fetch();
-
-
-
-
-
-
+        return $this->fetch("history_detail_company");
     }
 
     /* 记录详情 物业服务*/
