@@ -50,7 +50,8 @@ class Exchange extends Base
     /**
      * 积分规则
      */
-    public function rule(){
+    public function rule()
+    {
         return $this->fetch();
     }
 
@@ -78,7 +79,7 @@ class Exchange extends Base
         $userid = session('userId');
         if (IS_POST) {
             $data = input('');
-            if($data['num']<0){
+            if ($data['num'] < 0) {
                 return $this->error("数量不能为负");
             }
             //开启事务
@@ -90,12 +91,12 @@ class Exchange extends Base
             $sum = $data['num'] * $res['price'];
             if ($userinfo['score'] < $sum) {
                 $product->rollback();
-                return $this->error('积分不足','',$res['left']);
+                return $this->error('积分不足', '', $res['left']);
             }
             if ($res->left < $data['num']) {
                 //事务回滚
                 $product->rollback();
-                return $this->error('商品数量不足','',$res['left']);
+                return $this->error('商品数量不足', '', $res['left']);
             }
             $temp = $res->left - $data['num'];
             //更新那一行表数据（left=left-num）
@@ -110,6 +111,7 @@ class Exchange extends Base
                 $info['need_score'] = $sum;
                 $info['left_score'] = $userinfo['score'] - $sum;
                 $info['commodity_code'] = $this->random();
+                $info['park_id'] = session('park_id');
                 $flag = $record->save($info);
                 //购买成功后
                 if ($flag) {
@@ -117,33 +119,33 @@ class Exchange extends Base
                     $re = $userinfo->save();
                     if ($re) {
                         $product->commit();
-                        $map=['commodity_code'=>$info['commodity_code'],'left'=>$res['left']-$data['num']];
-                        return $this->success('成功','',$map);
+                        $map = ['commodity_code' => $info['commodity_code'], 'left' => $res['left'] - $data['num']];
+                        return $this->success('成功', '', $map);
                     } else {
                         $product->rollback();
-                        return $this->error("更新用户剩余积分错误",'',$res['left']);
+                        return $this->error("更新用户剩余积分错误", '', $res['left']);
                     }
                 } else {
                     $product->rollback();
-                    return $this->error("更新兑换记录表失败",'',$res['left']);
+                    return $this->error("更新兑换记录表失败", '', $res['left']);
                 }
             } else {
                 $product->rollback();
-                return $this->error("更新商品数量失败",'',$res['left']);
+                return $this->error("更新商品数量失败", '', $res['left']);
             }
 
         } else {
             $product_id = input('product_id');
             $re = $product->getPoductInfoById($product_id);
             $userinfo = $user->where('userid', $userid)->find();  //  获取总积分
-            $data=['id'=>$re['id'],
-                   'title'=>$re['title'],
-                   'front_cover'=>$re['front_cover'],
-                   'content' =>$re['content'],
-                   'num'=>$re['num'],
-                   'price'=>$re['price'],
-                   'score'=>$userinfo['score'],
-                   'left'=>$re['left'],
+            $data = ['id' => $re['id'],
+                'title' => $re['title'],
+                'front_cover' => $re['front_cover'],
+                'content' => $re['content'],
+                'num' => $re['num'],
+                'price' => $re['price'],
+                'score' => $userinfo['score'],
+                'left' => $re['left'],
             ];
             $this->assign('info', json_encode($data));
             return $this->fetch();
