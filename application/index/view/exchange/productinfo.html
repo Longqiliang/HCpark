@@ -7,58 +7,36 @@
     header.header{background:#2a2c33;color:#fff}
     .header h1{color:#fff;font-size:18px}
     .header a{color:#fff}
-    .clearfix:before{display:table;content:''}
-    .clearfix:after{display:table;content:'';clear:both}
     body{padding-bottom:10px}
     .top{width:100%;display:block;height:50vw}
-    .top1{padding-left:12px}
-    .top1>p{font-size:16px;color:#333;margin-top:10px;line-height:22px}
-    .top1>span{font-size:14px;color:#666;float:left;line-height:34px}
-    .top1>a{padding-left:20px;height:34px;background:url(/index/images/exchange/icon_score_yellow.png) no-repeat left center;background-size:15px 15px;float:right;line-height:34px;color:#ffc51e;font-size:18px;margin-right:12px}
+    .top1{padding:0 1.2rem;min-height:5.5rem;display:-webkit-flex;display:flex;justify-content:space-between;align-items:center}
+    .top1>div{height:100%;display:-webkit-flex;display:flex;justify-content:space-around;flex-direction:column}
+    .top1>div>p{font-size:16px;color:#333}
+    .top1>div>span{font-size:14px;color:#666}
+    /*.top1>a{padding-left:20px;height:34px;background:url(/index/images/exchange/icon_score_yellow.png) no-repeat left center;background-size:15px 15px;float:right;line-height:34px;color:#ffc51e;font-size:18px}*/
+    .top1>a{color: #FF816E;font-size: 1.8rem;}
     .title1{font-size:15px;color:#333;height:35px;line-height:35px;padding-left:12px;background-size:5px 15px;border-top:1px solid #f5f5f5}
-    .main{padding-top:10px;padding-bottom:15px;padding-left:12px;padding-right:12px}
+    .main{padding:1rem 1.2rem 5.5rem}
     .main>p{color:#666;font-size:14px}
     .fixed_btn{position:fixed;height:5.5rem;bottom:0;left:0;width:100%;padding-left:3.12vw;display:flex;justify-content:space-between;align-items:center;background:#fff;box-shadow:0 -2px 3px rgba(0,0,0,.1)}
     .fixed_btn>div{-ms-word-wrap:normal;word-wrap:normal}
-    .numbox{border:0;background:#fff;height:100%;width:26vw;display: flex;justify-content: space-around;align-items: center}
-    .numbox>.btn{height:3rem;width:3rem;font-size:1.8rem;border:1px solid #f3f3f3;border-radius:5px;background: #f1f1f1;color:#999;outline:none;}
-    .numbox>.numbox-input{flex-grow:1;width: 3rem;font-size: 1.5rem;text-align: center;}
+    .numbox{border:0;background:#fff;height:100%;width:26vw;display:flex;justify-content:space-around;align-items:center}
+    .numbox>.btn{height:3rem;width:3rem;font-size:1.8rem;border:1px solid #f3f3f3;border-radius:5px;background:#f1f1f1;color:#999;outline:0}
+    .numbox>.numbox-input{flex-grow:1;width:3rem;font-size:1.5rem;text-align:center}
     .fixed_btn>div:first-child{font-size:1.6rem}
-    .fixed_btn .go_buy{width:100px;height:100%;border:0;border-radius:0;color:#fff;font-size:1.6rem;  background: -webkit-linear-gradient(left, #F8D600 , #F19300); /* Safari 5.1 - 6.0 */
-        background: -o-linear-gradient(right, #F8D600 , #F19300); /* Opera 11.1 - 12.0 */
-        background: -moz-linear-gradient(right, #F8D600 , #F19300); /* Firefox 3.6 - 15 */
-        background: linear-gradient(to right, #F8D600  , #F19300); /* 标准的语法（必须放在最后） */}
-    .fixed_btn .sum{color:#fe8c07;font-size:1.3rem}
-    .self_msg{
-        position: fixed;
-        top:0;
-        right:0;
-        bottom:0;
-        left: 0;
-        background: rgba(0,0,0,.4);
-        z-index: 100;
-    }
+    .fixed_btn .go_buy{width:100px;height:100%;border:0;border-radius:0;color:#fff;font-size:1.6rem;background:-webkit-linear-gradient(left,#FF905F ,#FC726F);background:-o-linear-gradient(right,#FF905F ,#FC726F);background:-moz-linear-gradient(right,#FF905F ,#FC726F);background:linear-gradient(to right,#FF905F ,#FC726F)}
+    .fixed_btn .sum{color:#FF816E;font-size:1.3rem}
+    .self_msg{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,.4);z-index:100}
     .self_msg>.msg_box{padding:4.8vw 3.75vw;width:82vw;height:auto;position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);transform:translate(-50%,-50%);border-radius:10px;background:#fff}
     .msg_box>.msg_banner>img{width:50%}
     .msg_box>.msg_title>img{width:60%}
-    .msg_box>.msg_banner,.msg_box>.msg_title{text-align:center;margin-bottom:2rem;font-size: 1.6rem}
-    .msg_box>.msg_content{
-        text-align: center;
-        font-size: 2.8rem;
-        font-weight: bold;
-        color: #FFA81D;
-    }
-    .msg_box>input{height:30px;
-        width:100%;font-size:1.4rem;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;border:1px solid #e5e5e5;margin:2.66vw 0;padding:5px 10px}
-    .msg_box>.self_remark{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;border:1px solid #e5e5e5;margin:2.66vw 0;padding:5px 10px;height:20vw;width:100%;font-size: 1.4rem}
-    .msg_box>span{font-size:1.4rem;display: block}
+    .msg_box>.msg_banner,.msg_box>.msg_title{text-align:center;margin-bottom:2rem;font-size:1.6rem}
+    .msg_box>.msg_content{text-align:center;font-size:2.8rem;font-weight:700;color:#FF816E}
+    .msg_box>input{height:30px;width:100%;font-size:1.4rem;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;border:1px solid #e5e5e5;margin:2.66vw 0;padding:5px 10px}
+    .msg_box>.self_remark{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;border:1px solid #e5e5e5;margin:2.66vw 0;padding:5px 10px;height:20vw;width:100%;font-size:1.4rem}
+    .msg_box>span{font-size:1.4rem;display:block}
     .msg_box>span>b{color:red}
-    .msg_box>.msg_up{width:100%;background:#FFA81D;border:0;margin-top:1rem;color:#fff;
-        -webkit-border-radius:5px;
-        -moz-border-radius:5px;
-        border-radius:5px;
-        height:4rem;
-    font-size: 1.4rem}
+    .msg_box>.msg_up{width:100%;background:#FFA81D;border:0;margin-top:1rem;color:#fff;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;height:4rem;font-size:1.4rem}
     .self_msg .close_btn{height:8vw;width:8vw;background:url(/index/images/exchange/closebtn.png) no-repeat;background-size:cover;text-align:center;position:absolute;top:0;right:0;-webkit-transform:translate(35%,-35%);-moz-transform:translate(35%,-35%);-ms-transform:translate(35%,-35%);-o-transform:translate(35%,-35%);transform:translate(35%,-35%)}
     .mui-backdrop{background:rgba(0,0,0,.6)}
     .fixed_btn .not_enough{background:#D8D8D8;color:#858585}
@@ -67,11 +45,13 @@
 
 {block name="body"}
 <div id="app">
-    <img :src="baseData.front_cover" class="top" alt="">
+    <img :src="baseData.product_img" class="top" alt="">
     <div class="top1 clearfix">
-    <p>{{baseData.title}}</p>
-    <span>剩余 {{baseData.left}}</span>
-    <a>{{baseData.price}}</a>
+        <div>
+            <p>{{baseData.title}}</p>
+            <span>剩余 {{baseData.left}}</span>
+        </div>
+    <a>积分：{{baseData.price}}</a>
     </div>
     <div class="title1">宝贝详情</div>
     <div class="main" v-html="baseData.content">
@@ -80,15 +60,6 @@
     <div class="self_msg" v-show="showMask">
         <div class="msg_box">
             <div style="" class="close_btn" @click="toggleMask"></div>
-            <!--<div class="msg_title"><img src="/index/images/exchange/mtitle.png" style="" alt=""></div>-->
-            <!--<div class="msg_banner"><img src="/index/images/exchange/mbanner.png" style="" alt=""></div>-->
-            <!--<span><b>*&nbsp;</b>姓名：</span>-->
-            <!--<input type="text" class="self_name" placeholder="请输入姓名" v-model="subData.name">-->
-            <!--<span><b>*&nbsp;</b>电话：</span>-->
-            <!--<input type="text" class="self_tel" placeholder="请输入电话" v-model="subData.phone">-->
-            <!--<span><b>&nbsp;</b>备注：</span>-->
-            <!--<textarea type="text" class="self_remark" placeholder="请输入备注" v-model="subData.remark"></textarea>-->
-            <!--<button class="msg_up" @click="goBuy">提交</button>-->
             <div class="msg_title">兑换码</div>
             <div class="msg_content">{{commodity_code}}</div>
         </div>
@@ -212,7 +183,7 @@
                         swal({
                             title: "提示",
                             text: "是否确认兑换",
-                            confirmButtonColor: "#FFA81D",
+                            confirmButtonColor: "#FF816E",
                             confirmButtonText: "确定",
                             showCancelButton: true,
                             cancelButtonText: "取消",
@@ -247,7 +218,7 @@
                                 title: "",
                                 text: "兑换成功，请凭兑换码到物业兑换商品",
                                 type: "success",
-                                confirmButtonColor: "#FFA81D",
+                                confirmButtonColor: "#FF816E",
                                 confirmButtonText: "确定"
                             },function(isConfirm){
 //                            if(isConfirm){
@@ -263,7 +234,7 @@
                             title: "",
                             text: response.data.msg,
                             type: "error",
-                            confirmButtonColor: "#FFA81D",
+                            confirmButtonColor: "#FF816E",
                             confirmButtonText: "确定"
                         });
                     }
