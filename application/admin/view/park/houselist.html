@@ -1107,33 +1107,47 @@
                    floorInfo = $this.parent().next(),
                    parents = $this.parent().parent(),
                    parentsIndex = parents.index(),
+                   build = $('#checkPark').select().val(),
                    floor = parents.data('floor'),
                    lastIndex = parents.siblings('.table-cell').last().index(),
                    html = '<div class="cell-item-default item-default">'+floor+'F</div></div>';
            if(parentsIndex == lastIndex + 1){
-               parents.remove();
-               var build = $('#checkPark').select().val();
                    var data = {
                        id:2,
                        build_block:build,
                        floor:floor
                    };
-                   //console.log(data);
+               //console.log(data);
+//               return;
                    $.ajax({
                        data:data,
                        type:'POST',
                        url:"{:Url('Park/delfloor')}",
                        success:function (e) {
+                           updateAlert(e.msg);
                            if(e.code ==1){
+                               parents.remove();
                                delFloor(build,e.data);
-                           }else{
-                               updateAlert(e.msg);
                            }
-
                        }
                    })
            }else{
-               floorInfo.empty().html(html);
+               var data = {
+                   id:1,
+                   build_block:build,
+                   floor:floor
+               };
+               $.ajax({
+                   data:data,
+                   type:'POST',
+                   url:"{:Url('Park/delfloor')}",
+                   success:function (e) {
+                       updateAlert(e.msg);
+                       if(e.code ==1){
+                           floorInfo.empty().html(html);
+                       }
+                   }
+               })
            }
        });
        //添加楼层
