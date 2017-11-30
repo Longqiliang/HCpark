@@ -22,7 +22,8 @@
         "topthink/think-image": "*",
         "topthink/think-captcha": "*",
         "overtrue/wechat": "~3.1",
-        "phpoffice/phpexcel": "dev-master"
+        "phpoffice/phpexcel": "dev-master",
+        "phpoffice/phpword": "v0.13.*"
 
     },
     "extra": {

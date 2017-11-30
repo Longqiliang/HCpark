@@ -8,6 +8,7 @@
 
 namespace app\index\controller;
 
+use app\index\model\ExchangePoint;
 use app\index\model\WechatUser;
 use app\index\model\ExchangeProduct;
 use app\index\model\ExchangeRecord;
@@ -42,7 +43,26 @@ class Exchange extends Base
 
         $userid = session('userId');
         $record = new ExchangeRecord();
+        $point = new ExchangePoint();
+        $list1 = $point->getPointHistorybyUserid();
         $list = $record->getRecordList($userid);
+        //type 1 积分增加 2 积分减少
+        foreach ($list as $key =>$value){
+            $info[$key]['title']=$value['title'];
+            $info[$key]['create_time']=$value['create_time'];
+            $info[$key]['score']=$value['need_score'];
+            $info[$key]['type']=$value['type'];
+        }
+        foreach ($list1 as $value){
+         $map=[
+             'title'
+
+         ];
+
+        }
+
+        echo json_encode($list);
+        echo json_encode($list1);
         $this->assign('list', json_encode($list));
         return $this->fetch();
     }
@@ -140,7 +160,7 @@ class Exchange extends Base
             $userinfo = $user->where('userid', $userid)->find();  //  获取总积分
             $data = ['id' => $re['id'],
                 'title' => $re['title'],
-                'front_cover' => $re['front_cover'],
+                'product_img' => $re['product_img'],
                 'content' => $re['content'],
                 'num' => $re['num'],
                 'price' => $re['price'],

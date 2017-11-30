@@ -152,7 +152,7 @@ class Company extends Admin
         $type = input('type');
         $list = ParkProduct::where(['company_id'=>$id,'status'=>0,'type'=>$type])
                             ->order('create_time desc')
-                            ->paginate();
+                            ->paginate(12,false,['query' => request()->param()]);
         $this->assign('list',$list);
         $this->assign('type',$type);
         $this->assign('companyId',$id);

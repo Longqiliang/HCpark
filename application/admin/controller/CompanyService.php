@@ -27,7 +27,7 @@ class CompanyService extends Admin
             ->field('a.name,s.id,s.company,s.people,s.mobile,s.remark,s.status,s.create_time')
             ->where($map)
             ->where('c.park_id',$parkid)
-            ->paginate();
+            ->paginate(12,false,['query' => request()->param()]);
         $map['s.status']=0;
         $list2 = Db::table('tb_company_service')
             ->alias('s')

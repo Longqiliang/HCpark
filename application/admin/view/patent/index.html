@@ -12,60 +12,6 @@
 {block name="style"}
 <style>
 
-    .modal-dialog {
-        margin: 200px auto;
-    }
-
-    .mail-box .mail-ontact {
-        width: 150px;
-        min-width: 150px;
-        overflow: hidden;
-    }
-
-    .mail-box .mail-subject {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 124px !important;
-        min-width: 124px;
-    }
-
-    .mail-subject-div {
-        width: 100px;
-        max-width: 100px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .mail-box .mail-main {
-        width: calc(100% - 460px);
-        position: absolute;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .mail-date {
-        width: 160px;
-        min-width: 160px;
-        overflow: hidden;
-    }
-
-    @media only screen and (max-width: 550px) {
-        .mail-date {
-            display: none;
-        }
-    }
-
-    .list_banner {
-        width: 80px
-    }
-
-    .list_type {
-        width: 80px
-    }
-
 
 </style>
 {/block}
@@ -79,10 +25,10 @@
     <div class="row">
         <div class="mail-box-header">
 
-            <h2>企业服务 (未联系数量：{$count})</h2>
+            <h2> 专利申请(未审核数量：{$count})</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('inquireDel')}"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('del')}"
                         data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
@@ -96,10 +42,13 @@
                 <tr>
                     <th></th>
                     <th>类型</th>
+                    <th>发明名称</th>
+                    <th>发明人</th>
+                    <th>提交人</th>
                     <th>联系人</th>
                     <th>联系方式</th>
                     <th>创建时间</th>
-                    <th>回复时间</th>
+                    <th>审核时间</th>
                     <th>状态</th>
                     <th>操作</th>
                 </tr>
@@ -111,9 +60,12 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks ids" name="ids[]" value="{$vo.id}">
                     </td>
-                    <td>第{$vo.type}类</td>
-                    <td>{$vo.name}</td>
-                    <td>{$vo.mobile}</td>
+                    <td>{$vo.type_text}</td>
+                    <td>{$vo.patent_name}</td>
+                    <td>{$vo.inventor}</td>
+                    <td>{$vo.applicant}</td>
+                    <td>{$vo.contact}</td>
+                    <td>{$vo.contact_number}</td>
                     <td>
                         {empty name="$vo.create_time" }空
                         {else／}{$vo.create_time|date='Y-m-d H:i',###}
@@ -124,17 +76,29 @@
                         {else／}{$vo.end_time|date='Y-m-d H:i',###}
                         {/empty}
                     </td>
-                    {eq name="$vo.status" value="1"}
-                    <!--<td>已完成</td>-->
-                    <td class="txt-success">已回复</td>
-                    {/eq}
                     {eq name="$vo.status" value="0"}
-                    <td>未回复</td>
+                    <td >未审核</td>
                     {/eq}
+                    {eq name="$vo.status" value="1"}
+                   <td class="txt-success">审核成功</td>
+                    {/eq}
+                    {eq name="$vo.status" value="2"}
 
+                    <td class="txt-danger">审核失败</td>
+                    {/eq}
                     <td>
                         <a  href="{:Url('show','id='.$vo.id  )}" class="btn-sm btn-primary" >查看详情</a>
-                        <a class=" btn-sm btn-warning" onclick="delItem('{$vo.id}','{:Url("inquireDel")}')">删除</a>
+
+                        {eq name="$vo.status" value="1"}
+                        <a class="btn-sm btn-success"    href="{:Url('out','id='.$vo.id)}"  >导出</a>
+                        {/eq}
+                        {neq name="$vo.status" value="1"}
+                        <a class="btn-default2">导出</a>
+                        {/neq}
+                        <a class=" btn-sm btn-warning" onclick="delItem('{$vo.id}','{:Url("del")}')">删除</a>
+
+
+
                     </td>
                     <!--<td><button class="btn btn-sm btn-primary ">&nbsp;&nbsp;√ &nbsp;&nbsp;</button></td>-->
 
@@ -146,12 +110,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
 
 {/block}
 
@@ -174,17 +132,35 @@
             var recipient = button.data('text');
             var modal = $(this);
             modal.find('.modal-body').html(recipient);
-
-
         })
     });
-
     function remark(a) {
 
         var name = $(a).attr('data-name');
         $("input[name='id']").val($(a).attr('data-id'));
     }
 
+
+
+    function  out(id){
+        $.ajax({
+            data: {id:id},
+            type: "POST",
+            url: "{:Url('Patent/out')}",
+            success: function (data) {
+                if (data.code == 1) {
+                    updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
+                   console.log(data);
+                    //window.location.href="/static/template/企业专利申请基本信息确认表.docx";
+                   /* setTimeout(function () {
+                        location.href = data.url;
+                    }, 3000);*/
+                } else {
+                    updateAlert(data.msg, 'error');
+                }
+            }
+        });
+    }
 
 </script>
 {/block}

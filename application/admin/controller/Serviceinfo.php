@@ -22,7 +22,7 @@ class Serviceinfo extends Admin
         if ($search != '') {
             $map['title'] = ['like','%'.$search.'%'];
         }
-        $list = ServiceModel::where($map)->order('create_time  desc')->paginate();
+        $list = ServiceModel::where($map)->order('create_time  desc')->paginate(12,false,['query' => request()->param()]);
 
         $this->assign('list',$list);
         return $this->fetch();
@@ -68,7 +68,7 @@ class Serviceinfo extends Admin
             $message= [
                 'title' => $info['title'],
                 'description' => $des,
-                'url' => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/infoDetail/id/' . input('id'),
+                'url' => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/infoDetail/id/' . input('id'),
                 'picurl' => empty($info['front_cover'])?'http://' . $_SERVER['HTTP_HOST'] .'/index/images/news/news.jpg':'http://'.$_SERVER['HTTP_HOST'] .$info['front_cover']
             ];
 

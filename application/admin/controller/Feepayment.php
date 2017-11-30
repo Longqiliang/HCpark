@@ -27,7 +27,7 @@ class Feepayment extends Admin
             $map['name'] = ['like', "%$search%"];
         }
 
-        $companyList = ParkCompany::where($map)->order('id  asc')->paginate();
+        $companyList = ParkCompany::where($map)->order('id  asc')->paginate(12,false,['query' => request()->param()]);
 
         /// dump($companyList);
         $this->assign('list', $companyList);
@@ -191,7 +191,7 @@ class Feepayment extends Admin
         $id = input('id');
         $totalNumber = WechatUser::where(['department'=>$id,'fee_status'=>1])->select();
         $company = ParkCompany::get($id);
-        $list = $feepayment->where(['company_id' => $id,'status' => ['>',-1]])->order('id desc')->paginate();
+        $list = $feepayment->where(['company_id' => $id,'status' => ['>',-1]])->order('id desc')->paginate(12,false,['query' => request()->param()]);
         int_to_string($list, ['type' => [1 => "水电费", 2 => "物业费", 3 => "房租费", 4 => "公耗费"],
             'status' => [-1 => "删除", 0 => "未缴费", 1 => "审核中", 2 => "审核成功",3=>"审核失败"]]);
         foreach($list as $k=>$v){
@@ -210,7 +210,7 @@ class Feepayment extends Admin
     public function manageuser()
     {
         $id = input('id');
-        $list = WechatUser::where(['department'=> $id,'status'=>1])->order('id asc')->paginate();
+        $list = WechatUser::where(['department'=> $id,'status'=>1])->order('id asc')->paginate(12,false,['query' => request()->param()]);
 
         $this->assign('list', $list);
         return $this->fetch();

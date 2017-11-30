@@ -31,7 +31,7 @@ class Operational extends Admin
             $department = 88;
         }
 
-        $list = $wechatUser->where(['department' => $department, 'park_id' => $park_id, 'status' => 1])->paginate();
+        $list = $wechatUser->where(['department' => $department, 'park_id' => $park_id, 'status' => 1])->paginate(12,false,['query' => request()->param()]);
         $Operational = $OperationalAuthority->select();
         $user = array();
         $dele = array();

@@ -33,7 +33,7 @@ class ExchangeRecord extends Model
     public function getRecordInfo($id)
     {
         $Record = $this->where('id', $id)->find();
-        $Record['front_cover'] = isset($Record->productInfo->front_cover) ? $Record->productInfo->front_cover : "";
+        $Record['product_img'] = isset($Record->productInfo->product_img) ? $Record->productInfo->product_img : "";
         $Record['title'] = isset($Record->productInfo->title) ? $Record->productInfo->title : "";
         return $Record;
 

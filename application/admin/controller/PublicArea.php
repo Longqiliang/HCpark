@@ -27,7 +27,7 @@ class PublicArea extends Admin
             $map = [
                 'abstract' => array('like', '%' . $search . '%'),
             ];
-            $data = $AdvertisingService->where($map)->order('id asc')->paginate();
+            $data = $AdvertisingService->where($map)->order('id asc')->paginate(12,false,['query' => request()->param()]);
             foreach ($data as $value) {
                 $value['park_id'] = isset($value->findPark->name) ? $value->findPark->name : "";
 
@@ -38,7 +38,7 @@ class PublicArea extends Admin
             ));
         } else {
             $map['park_id'] = $park_id;
-            $data = $AdvertisingService->where($map)->order('id asc')->paginate();
+            $data = $AdvertisingService->where($map)->order('id asc')->paginate(12,false,['query' => request()->param()]);
             foreach ($data as $value) {
                 $value['park_id'] = isset($value->findPark->name) ? $value->findPark->name : "";
 

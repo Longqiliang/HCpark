@@ -60,6 +60,19 @@
                             </sapn>
                         </div>
                     </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">产品图片:</label>
+                        <div class="col-sm-10">
+                            <input id="input-file2" type="file" class="file">
+                            <sapn>
+                                {empty name="info.product_img"}图片预览{else/}
+                                <img class="front_cover_img"  id="product_img"  name="product_img"  src='{$info.product_img}'/>
+                                {/empty}
+                            </sapn>
+                        </div>
+                    </div>
+
+
                     <div class="form-group"><label class="col-sm-2 control-label">商品总数:</label>
                         <div class="col-sm-10"><input type="text" class="form-control" placeholder="商品总数" name="num"
                                                       value='{$info.num}'></div>
@@ -94,6 +107,7 @@
                     <input type="hidden" name="content" class="to_hiden" value="">
                     <input type="hidden" name="id" value="{$info.id}">
                     <input type="hidden" name="front_cover" value="{$info.front_cover}">
+                    <input type="hidden" name="product_img" value="{$info.product_img}">
                 </div>
             </form>
         </div>
@@ -193,6 +207,26 @@
         }
     });
 
+
+
+    $("#input-file2").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function (event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if (response.code == 1) {
+            $("input[name='product_img']").val(response.data);
+            var pic = document.getElementById("product_img");
+            pic.src=response.data;
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
 
 
 

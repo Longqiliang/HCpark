@@ -34,7 +34,7 @@ class News extends Admin
         if ($search != '') {
             $map['title'] = ['like', '%' . $search . '%'];
         }
-        $list = NewsModel::where($map)->order('status asc ,create_time desc')->paginate();
+        $list = NewsModel::where($map)->order('status asc ,create_time desc')->paginate(12,false,['query' => request()->param()]);
         int_to_string($list, $map = array('status' => array(0 => '待审核', 1 => '发布', 2 => '审核不通过')));
 
         $this->assign('list', $list);
@@ -73,7 +73,7 @@ class News extends Admin
             if ($search != '') {
                 $map['title'] = ['like', '%' . $search . '%'];
             }
-            $list = NewsModel::where($map)->order('status asc,id desc')->paginate();
+            $list = NewsModel::where($map)->order('status asc,id desc')->paginate(12,false,['query' => request()->param()]);
             int_to_string($list, $map = array('status' => array(0 => '待审核', 1 => '审核成功', 2 => '审核不通过')));
             $this->assign('list', $list);
             $this->assign('checkType', $type);
@@ -94,7 +94,7 @@ class News extends Admin
         if ($search != '') {
             $map['title'] = ['like', '%' . $search . '%'];
         }
-        $list = NewsModel::where($map)->order('status asc ,create_time desc')->paginate();
+        $list = NewsModel::where($map)->order('status asc ,create_time desc')->paginate(12,false,['query' => request()->param()]);
         int_to_string($list, $map = array('status' => array(0 => '待审核', 1 => '发布', 2 => '审核不通过')));
 
         $this->assign('list', $list);
@@ -345,7 +345,7 @@ class News extends Admin
         if ($search != '') {
             $map['title'] = ['like', '%' . $search . '%'];
         }
-        $list = NewsModel::where($map)->order('id desc')->paginate();
+        $list = NewsModel::where($map)->order('id desc')->paginate(12,false,['query' => request()->param()]);
         $this->assign('list', $list);
 
         return $this->fetch();
@@ -363,7 +363,7 @@ class News extends Admin
             'target_id' => input('id'),
             'status' => array('neq', -1),
         ];
-        $comments = Comment::where($map)->order('id desc')->paginate();
+        $comments = Comment::where($map)->order('id desc')->paginate(12,false,['query' => request()->param()]);
         foreach ($comments as $value) {
             $userinfo = WechatUser::where('userid', $value['user_id'])->field('header,avatar')->find();
         }

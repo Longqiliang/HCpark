@@ -145,8 +145,8 @@ class Patent extends Model
                 if ($re == false) {
                     return false;
                 }
-                $data['create_time']=time();
-                $data['end_time']="";
+                $data['create_time'] = time();
+                $data['end_time'] = "";
                 $res = $this->where('id', $id)->update($data);
                 if ($res == 0 || $res) {
                     $this->sendMessage($type, $id);
@@ -171,29 +171,36 @@ class Patent extends Model
                 $message = [
                     "title" => "专利申请提示",
                     "description" => "您的发明专利申请园区已确认，请您携带相关材料前往希垦科技园A幢2楼园区知识产权服务中心办理，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/'.$pantent['type'].'/id/'.$pantent['id']
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/' . $pantent['type'] . '/id/' . $pantent['id']
                 ];
-             //审核成功推用户
-             $service->commonSend(4,$message,$pantent['create_user'],21);
+                //审核成功推用户
+                $service->commonSend(4, $message, $pantent['create_user'], 21);
 
                 break;
             case 2:
                 $message = [
                     "title" => "专利申请提示",
-                    "description" => "您的发明专利申请园区审核失败，请您核对信息后重新提交，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/'.$pantent['type'].'/id/'.$pantent['id']
+                    "description" => "您的发明专利申请园区审核失败，请您核对信息后重新提交，",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/' . $pantent['type'] . '/id/' . $pantent['id']
                 ];
+                //点击查看详情
+                if(!empty($pantent['reply'])){
+                    $message['description'] = $message['description']."备注：".$pantent['reply']."点击查看详情";
+                }
+
                 //审核失败推用户
-                $service->commonSend(4,$message,$pantent['create_user'],21);
+                $service->commonSend(4, $message, $pantent['create_user'], 21);
                 break;
             case 3:
+
+
                 $message = [
                     "title" => "专利申请提示",
-                    "description" => "您的发明专利申请园区审核失败，请您核对信息后重新提交，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/'.$pantent['type'].'/id/'.$pantent['id']
+                    "description" => "您有一条新的专利申请服务待处理，点击查看详情",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] .'/index/service/historyDetail/appid/21/can_check/no/id/' . $pantent['id']
                 ];
-                //审核失败推用户
-                $service->commonSend(4,$message,$pantent['create_user'],21);
+                //推送给运营
+                $service->commonSend(1, $message, '', 21);
                 break;
         }
 

@@ -22,7 +22,7 @@ class Recruitment extends Admin
         if ($search != '') {
             $map['position'] = ['like','%'.$search.'%'];
         }
-        $list = EnterpriseModel::where($map)->order('create_time  desc')->paginate();
+        $list = EnterpriseModel::where($map)->order('create_time  desc')->paginate(12,false,['query' => request()->param()]);
 
         $this->assign('list',$list);
         return $this->fetch();

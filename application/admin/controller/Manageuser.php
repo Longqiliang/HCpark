@@ -20,7 +20,7 @@ public  function  index(){
     if (!empty($search)) {
         $map['name'] = ['like', "%$search%"];
     }
-    $companyList = ParkCompany::where($map)->order('id  asc')->paginate();
+    $companyList = ParkCompany::where($map)->order('id  asc')->paginate(12,false,['query' => request()->param()]);
 
     /// dump($companyList);
     $this->assign('list', $companyList);

@@ -82,7 +82,7 @@
     <div class="row">
         <div class="mail-box-header">
 
-            <h2>商标查询</h2>
+            <h2>专利申请</h2>
             <div class="mail-tools tooltip-demo m-t-md">
 
 
@@ -95,116 +95,127 @@
             <form id="form" class="form-horizontal" method="post">
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
-                        <label>查询信息:</label>
+                        <label>申请信息:</label>
                     </div>
                 </div>
                 <br>
 
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
+                        <label>专利名称:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="text" readonly="readonly" placeholder="联系人" class="form-control form_title"
+                               name="name" value="{$info.patent_name}">
+
+                    </div>
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label> 专利类型:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="text" readonly=ture class="form-control form_title" name="mobile"
+                               value="{$info.type_text}">
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>发明人:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="text" readonly=ture class="form-control form_title" name="type"
+                               value="{$info.inventor}">
+                    </div>
+
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>申请人:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="text" readonly=ture class="form-control form_title" name="type"
+                               value="{$info.applicant}">
+                    </div>
+
+
+                    <div class="col-lg-1 text-right control-label">
                         <label>联系人:</label>
                     </div>
-                    <div class="col-lg-3">
-                        <input type="text" readonly="readonly" placeholder="联系人" class="form-control form_title"
-                               name="name" value="{$info.name}">
-
-                    </div>
-
-                    <div class="col-lg-1 text-right control-label">
-                        <label>联系方式:</label>
-                    </div>
-                    <div class="col-lg-3">
-                        <input type="text" readonly=ture class="form-control form_title" name="mobile"
-                               value="{$info.mobile}">
-                    </div>
-                    <div class="col-lg-1 text-right control-label">
-                        <label>商标类型:</label>
-                    </div>
-                    <div class="col-lg-1">
+                    <div class="col-lg-2">
                         <input type="text" readonly=ture class="form-control form_title" name="type"
-                               value="{$info.type}">
+                               value="{$info.contact}">
                     </div>
+
 
                 </div>
 
-
-                <div class="form-group">
-                    <div class="col-lg-1 text-right control-label">
-                        <label>中文:</label>
-                    </div>
-                    <div class="col-lg-9">
-                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.chinese_description}</textarea>
-                    </div>
-
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-1 text-right control-label">
-                        <label>英文:</label>
-                    </div>
-                    <div class="col-lg-9">
-                        <textarea readonly=ture class="form-control form_title" name="english_description">{$info.english_description}</textarea>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-
-
-                    <div class="col-lg-1 text-right control-label">
-                        <label>数字:</label>
-                    </div>
-                    <div class="col-lg-9">
-                        <textarea readonly=ture type="text" class="form-control form_title"
-                                  >{$info.numeric_description}</textarea>
-                    </div>
-                </div>
                 <div class="form-group">
 
                     <div class="col-lg-1 text-right control-label">
                         <label>查询日期:</label>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <input readonly=ture type="text" class="form-control form_title" value="{$info.create_time}">
                     </div>
-                </div>
-                    <div class="form-group">
+
 
                     <div class="col-lg-1 text-right control-label">
-                        <label>回复日期:</label>
+                        <label>审核日期:</label>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <input readonly=ture type="text" class="form-control form_title" value="{$info.end_time}">
                     </div>
 
-                </div>
-
-
-                <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>状态:</label>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <input readonly=ture type="text" class="form-control form_title" value="{$info.status_text}">
                     </div>
 
                 </div>
 
+                <div class="form-group">
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>联系方式:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" readonly=ture class="form-control form_title" name="type"
+                               value="{$info.contact_number}">
+                    </div>
+
+                </div>
+                <div class="form-group">
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>联系地址:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <textarea readonly=ture type="text" class="form-control form_title"
+                        >{$info.contact_address}</textarea>
+                    </div>
+
+                </div>
+
 
                 <br>
                 <br>
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
-                        <label>上传图片:</label>
+                        <label>身份证图片:</label>
 
                     </div>
                     <br>
-                    {notempty name="$info.submit_img" }
+                    {notempty name="$info.id_card" }
                     <div class="col-lg-5">
                         <div class="imggroup">
-                            {volist name="$info.submit_img" id="vo"}
-                            <a href="{$vo}" class="front_cover">
-                                <img  width="200px" height="200px"  src="{$vo}" class="img-auto front_cover_img" alt="">
-                            </a>
+                            {volist name="$info.id_card" id="vo"}
+
+                                <img width="200px" height="200px" src="{$vo}" class="img-auto front_cover_img" alt="">
                             {/volist}
                         </div>
                     </div>
@@ -212,22 +223,56 @@
                 </div>
                 <br>
                 <br>
-                {eq name="$info.status" value="1"}
+
+                {if condition="$info.type eq 3"}
+                <div class="form-group">
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>简要说明:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <textarea readonly=ture type="text" class="form-control form_title"
+                        >{$info.explanation}</textarea>
+                    </div>
+
+
+                </div>
+
+
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
-                        <label>回复图片:</label>
+                        <label>产品图片:</label>
 
                     </div>
                     <br>
-                    {notempty name="$info.back_img" }
-                    <div class="col-lg-5">
+                    {notempty name="$info.product_img" }
+
                         <div class="imggroup">
-                            <a href="{$info.back_img}" class="front_cover">
-                                <img   width="200px" height="200px"  src="{$info.back_img}" class="img-auto front_cover_img" alt="">
-                            </a>
+                            {volist name="$info.product_img" id="vo" key='k'}
+                            <div class="col-lg-3">
+                            <img width="200px" height="200px" src="{$vo}" class="img-auto front_cover_img" alt="">
+
+                            ({$info.img_text[$k-1]})
+                            </div>
+                                {/volist}
                         </div>
-                    </div>
+
                     {/notempty}
+
+                </div>
+                {/if}
+
+
+
+
+                {eq name="$info.status" value="2"}
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>回复:</label>
+
+                    </div>
+                    <br>
+                    <textarea readonly=ture class="form-control form_title" name="reply">{$info.reply}</textarea>
                 </div>
                 {/eq}
 
@@ -238,8 +283,8 @@
                 {if condition="$info.status eq 0"}
                 <div class="form-group">
                     <div class="col-lg-11 col-lg-offset-1 text-left">
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$info.id}"
-                           class="btn-sm btn-primary" style="color:#fff">回复</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="check(this)" data-id="{$info.id}"
+                           class="btn-sm btn-primary" style="color:#fff">审核</a>
                     </div>
                 </div>
                 {/if}
@@ -257,26 +302,20 @@
 <div id="modal-form" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="form-horizontal" method="post" action="{:Url('Trademark/reply')}">
+            <form class="form-horizontal" method="post" action="{:Url('patent/check')}">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span
                             aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h3 class="modal-title text-center" name="dialog-title">回复</h3>
+                    <h3 class="modal-title text-center" name="dialog-title">审核</h3>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">回复图片:</label>
-                        <div class="col-sm-10">
-                            <input id="input-file" type="file" class="file">
-                            <sapn>
 
-                                <img width="200px" height="200px" class="front_cover_img" name="back_img" id="back_img"
-                                     src=""/>
+                            <div class="form-group"><label class="col-sm-2 control-label">回复内容</label>
+                                <div class="col-sm-10"><textarea name="reply" class="form-control"
+                                                                 placeholder="审核不通过必填"></textarea></div>
+                            </div>
 
-                            </sapn>
-                        </div>
-                    </div>
                     <input type="hidden" name="id">
-                    <input type="hidden" name="back_img">
                     <!-- 富文本框<div class="mail-text h-200">
                          <div class="summernote"></div>
                          <div class="clearfix"></div>
@@ -284,7 +323,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <a class="btn btn-primary " onclick="reply()">保存</a>
+                    <a class="btn btn-primary " onclick="check(1)">通过</a>
+                    <a class="btn btn-primary " onclick="check(2)">不通过</a>
                     <input type="hidden" name="id" value="">
                 </div>
             </form>
@@ -315,16 +355,6 @@
         });
 
 
-        $('.summernote').summernote({
-            lang: 'zh-CN',
-            height: 300,
-            minHeight: 210,
-            callbacks: {
-                onImageUpload: function (files) { //the onImageUpload API
-                    img = sendFile(files[0]);
-                }
-            }
-        });
 
         //绑定模态框展示的方法
         $("#remark-modal").on('show.bs.modal', function (event) {
@@ -338,13 +368,13 @@
         })
     });
 
-    function reply() {
-        var back_img = $("input[name='back_img']").val();
+    function check(type) {
+        var reply = $("textarea[name='reply']").val();
         var id = $("input[name='id']").val();
         $.ajax({
-            data: {id: id, back_img: back_img},
+            data: {id: id, reply: reply,type:type},
             type: "POST",
-            url: "{:Url('Trademark/reply')}",
+            url: "{:Url('Patent/show')}",
             success: function (data) {
                 if (data.code == 1) {
                     updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
@@ -357,57 +387,10 @@
             }
         });
     }
-    function sendFile(file) {
-        var data = new FormData();
-        data.append("file_data", file);
-        $.ajax({
-            data: data,
-            type: "POST",
-            url: "{:Url('Upload/picture')}",
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                var data = $.parseJSON(response);
-                $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
-            }
-        });
-    }
 
-    $("#input-file").fileinput({
 
-        showPreview: false,
-        language: 'zh', //设置语言
-        uploadUrl: '{:Url("/admin/Upload/picture")}', //上传的地址
-        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
-        maxFileSize: 1024 * 200,
-    }).on("filebatchselected", function (event, files) {
-        $(this).fileinput("upload");
-    }).on('fileuploaded', function (event, data, previewId, index) {
-        var response = $.parseJSON(data.response);
-        console.log(response);
 
-        if (response.code == 1) {
 
-            $("input[name='back_img']").val(response.data);
-            console.log($("input[name='img']").val());
-            var pic = document.getElementById("back_img");
-            pic.src = response.data;
-
-        } else {
-
-            updateAlert(response.msg, 'warning');
-        }
-    });
-
-    $(".front_cover").imgbox({
-        overlayShow: false,
-        hideOnContentClick: true,
-        slideshow: false,
-        theme: 'dark',
-        alignment: 'center',       // Position - may be auto OR center.
-        allowMultiple: false,
-    });
 
 
 </script>
