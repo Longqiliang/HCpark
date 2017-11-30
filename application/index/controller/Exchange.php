@@ -51,18 +51,18 @@ class Exchange extends Base
             $info[$key]['title']=$value['title'];
             $info[$key]['create_time']=$value['create_time'];
             $info[$key]['score']=$value['need_score'];
-            $info[$key]['type']=$value['type'];
+            $info[$key]['type']=2;
         }
-        foreach ($list1 as $value){
+       /* foreach ($list1 as $value){
          $map=[
-             'title'
+             'title'=
 
          ];
 
-        }
+        }*/
 
-        echo json_encode($list);
-        echo json_encode($list1);
+        //echo json_encode($list);
+        //echo json_encode($list1);
         $this->assign('list', json_encode($list));
         return $this->fetch();
     }
