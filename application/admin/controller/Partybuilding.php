@@ -34,7 +34,7 @@ class Partybuilding extends Admin{
                 $result = $partyBuilding->validate(true)->save($_POST, ['id'=>input('id')]);
                 if ($result){
 
-                    return $this->success("修改成功！");
+                    return $this->success("修改成功！",'Partybuilding/index');
                 }else{
 
                     return $this->error("修改失败");
@@ -47,7 +47,7 @@ class Partybuilding extends Admin{
                 $result =  $partyBuilding->validate(true)->save($_POST);
                 if ($result){
 
-                    return $this->success("添加成功！");
+                    return $this->success("添加成功！",url('Partybuilding/index'));
                 }else{
 
                     return $this->error($partyBuilding->getError());
