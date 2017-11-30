@@ -1264,8 +1264,11 @@
                         };
                          if( type == '2'){
                              data.id = id;
+                             commonAjax("{:Url('Park/delete')}",data);
+                         }else{
+                             commonAjax("{:Url('Park/delete')}",data,hideUpdateModal,build);
                          }
-                       commonAjax("{:Url('Park/delete')}",data);
+
                        break;
                    case 'save':
                        var area = $("#update-modal").find('#updateArea').val(),
