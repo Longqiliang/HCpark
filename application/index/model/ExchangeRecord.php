@@ -14,6 +14,13 @@ use app\index\model\ExchangeProduct;
 
 class ExchangeRecord extends Model
 {
+    protected  $type =[
+        'create_time'=>'strtotime'
+
+
+    ];
+
+
 
     //查询该用户兑换过的积分记
     public function getRecordList($uid)

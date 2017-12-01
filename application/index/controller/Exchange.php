@@ -48,24 +48,25 @@ class Exchange extends Base
         $list = $record->getRecordList($userid);
         //type 1 积分减少 2 积分增加
         foreach ($list as $key =>$value){
+            $info[$key]['id']=$value['id'];
             $info[$key]['title']=$value['title'];
-            $info[$key]['create_time']=$value['create_time'];
+            $info[$key]['create_time']=date('Y-m-d',$value['create_time']);
             $info[$key]['score']=$value['need_score'];
             $info[$key]['type']=1;
         }
         foreach ($list1 as $value){
          $map=[
              'title'=>$value['content'],
-             'create_time'=>$value['create_time'],
+             'create_time'=>date('Y-m-d',$value['create_time']),
              'score'=>$value['score'],
              'type'=>2,
          ];
-        array_push($list ,$map);
+        array_push($info ,$map);
         }
 
         //echo json_encode($list);
         //echo json_encode($list1);
-        $this->assign('list', json_encode($list));
+        $this->assign('list', json_encode($info));
         return $this->fetch();
     }
 
