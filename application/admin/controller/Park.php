@@ -695,17 +695,16 @@ class Park extends Admin
     public function addrooms()
     {
         $parkid = session("user_auth")['park_id'];
-        $parkRent = new ParkRent();
         $id = input("id");
         $parkRoom = new ParkRoom();
         $data = input('post.');
-        if ($data['img']) {
+        if (!empty($data['img'])) {
             foreach ($data['img'] as $k => $v) {
                 $data['img'][$k] = str_replace("http://" . $_SERVER['HTTP_HOST'], "", $v);
             }
             $data['img'] = json_encode($data['img']);
         }
-        if ($data['imgs']){
+        if (!empty($data['imgs'])){
             $data['imgs'] = json_encode($data['imgs']);
         }
         if (input('uid')) {
@@ -724,6 +723,7 @@ class Park extends Admin
                 'build_block' => $data['build_block'],
                 'room' => $data['room'],
                 'park_id' => $parkid,
+                'del' => 0
             ];
             $roomId = ParkRoom::where($maps)->find();
             if ($roomId) {
@@ -982,6 +982,33 @@ class Park extends Admin
             return ;
         }
     }
+
+    /**
+     * 已约->已租
+     */
+    public function save(){
+        $parkRoom = new ParkRoom();
+        $data = input('post.');
+        $company = input('company');
+        $like = mb_substr($company, 0, 6);
+        $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
+        if ($info) {
+            $data['company_id'] = $info['id'];
+        } else {
+            $data['company_id'] = 0;
+        }
+        $map = ['id' => $data['id']];
+        $res = $parkRoom->where($map)->update($data);
+        if ($res) {
+            $floor = $this->getFloor();
+
+            return $this->success("保存成功",'',($floor));
+        } else {
+
+            return $this->error("保存失败");
+        }
+
+    }
     /**
      *
      */
@@ -998,10 +1025,12 @@ class Park extends Admin
 
         }catch(Exception $e){
             Db::rollback();
+
             return  $e->getMessage();
         }
 
-
     }
+
+
 
 }
