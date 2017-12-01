@@ -862,7 +862,7 @@ class Park extends Admin
             if ($res) {
                 $floor = $this->getFloor();
 
-                return $this->success("下架成功",'',($floor));
+                return $this->success("下架成功",'',$floor);
             } else {
 
                 return $this->error("下架失败");
