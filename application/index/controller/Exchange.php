@@ -53,13 +53,15 @@ class Exchange extends Base
             $info[$key]['score']=$value['need_score'];
             $info[$key]['type']=2;
         }
-       /* foreach ($list1 as $value){
+        foreach ($list1 as $value){
          $map=[
-             'title'=
-
+             'title'=>$value['content'],
+             'create_time'=>$value['create_time'],
+             'score'=>$value['score'],
+             'type'=>1,
          ];
-
-        }*/
+        array_push($list ,$map);
+        }
 
         //echo json_encode($list);
         //echo json_encode($list1);
