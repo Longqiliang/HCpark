@@ -28,6 +28,7 @@
     }
     .table{
         display: none;
+        padding: 0 15px;
     }
     .table-cell-tit{
         text-align: center;
@@ -37,13 +38,27 @@
         line-height: 35px;
         position: relative;
     }
+    .table-cell-tit.col-xs-1{
+        padding-right: 0;
+        padding-left: 0;
+    }
+    .table-cell-tit.col-xs-11{
+        padding-left: 0;
+    }
     .table-cell-tit .table-cell-icon{
         display: none;
         cursor: pointer;
         position: absolute;
-        top: 0;
-        left: 5px;
+        top: 50%;
+        left: 15px;
         line-height: 35px;
+        background-image: url(/admin/images/icon-del.png);
+        background-repeat:no-repeat;
+        background-size: 100%;
+        -webkit-transform: translateY(50%);
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
     }
     .table-cell-info{
         display: -webkit-flex;
@@ -112,12 +127,26 @@
     .cell-item:last-child{
         margin-right: auto;
     }
+
     .cell-item:last-child .layer{
-        right: 0;
         left: auto;
+        right: 0;
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+    .cell-item:last-child .layer:before{
+        left: auto;
+        right: 10%;
     }
     .cell-item:first-child .layer{
-       right: auto;
+        left: 0;
+        right: auto;
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+    .cell-item:first-child .layer:before{
+        left: 10%;
+        right: auto;
     }
     .content-tit .add{
         padding: 5px 20px;
@@ -249,19 +278,47 @@
         display: none;
         position: absolute;
         top: 35px;
-        /*top:40px;*/
-        left: 0;
+        left: 50%;
+        right: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
         z-index: 10;
-        /*width: 100%;*/
+        margin-top: 10px;
         min-width: 300px;
-        background-color: inherit;
         -webkit-transition: all 1s;
         transition: all 1s;
+        border-radius: 5px;
+        box-shadow:0 0 10px rgba(0,0,0,.4);
+        background-color: #fff;
+        padding: 1px;
+    }
+    .layer:before{
+        position: absolute;
+        left: 50%;
+        content: "";
+        top: -6px;
+        height: 12px;
+        width: 12px;
+        background-color: #fff;
+        border-width: 1px 0 0 1px;
+        border-color: #d0cece;
+        border-style: solid;
+        -webkit-transform:translateX(-50%) rotate(45deg) ;
+        transform:translateX(-50%) rotate(45deg) ;
+        opacity: 1;
+        transition: all 0.4s ease;
+        z-index: 11;
+    }
+    .layer-header{
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
     }
     .layer-content{
         padding:0 10px;
         text-align: left;
         background-color: #fff;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
     }
     .layer.show{
         top: 50px;
@@ -285,6 +342,24 @@
         right: 0;
         -webkit-transform:translateY(-50%);
         transform: translateY(-50%);
+    }
+    .required{
+        position: relative;
+    }
+    .required:before{
+        display: block;
+        content: '*';
+        color: red;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    @media (max-width: 1650px){
+        .table-cell-tit{
+            text-align: right;
+        }
     }
     @media (min-width: 768px){
         .form-inline .input-group .input-group-btn{
@@ -374,7 +449,7 @@
                     {volist name="vo1" id="vo2"}
                     <div class="table-cell clearfix" data-floor="{$vo2.floor}">
                         <div class="table-cell-tit col-xs-1">
-                            <i class="fa fa-close table-cell-icon"></i>
+                            <i class=" table-cell-icon"></i>
                             F{$vo2.floor}
                         </div>
                         <div class="table-cell-info col-xs-11">
@@ -411,15 +486,15 @@
                     </div>
                     <div class="modal-body">
                         <form class="form-inline">
-                            <div class="modal-cell">
+                            <div class="modal-cell required">
                                 <div class="form-group">
                                     <label for="area">房间面积：</label>
-                                    <input type="text" class="form-control input-sm" id="area">
+                                    <input type="number" class="form-control input-sm" id="area" >
                                     <span>㎡</span>
                                 </div>
                             </div>
 
-                            <div class="modal-cell">
+                            <div class="modal-cell required">
                                 <div class="form-group">
                                     <label>所属楼层：</label>
                                         {volist name="$floorInfo" id="vo"}
@@ -435,13 +510,13 @@
                                     <span>层</span>
                                 </div>
                             </div>
-                            <div class="modal-cell">
+                            <div class="modal-cell required">
                                 <div class="form-group">
                                     <label>房间号码：</label>
-                                    <input type="text" class="form-control input-sm" name="add_room">
+                                    <input type="number" class="form-control input-sm" name="add_room">
                                 </div>
                             </div>
-                            <div class="modal-cell">
+                            <div class="modal-cell required">
                                 <div class="form-group">
                                     <label for="house">房间幢号：</label>
                                     <span>希垦科技园</span>
@@ -454,10 +529,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="modal-cell">
+                            <div class="modal-cell required">
                                 <div class="form-group">
                                     <label for="price">租赁单价：</label>
-                                    <input type="text" class="form-control input-sm" id="price">
+                                    <input type="number" class="form-control input-sm" id="price">
                                     <span>元/㎡/天</span>
                                 </div>
                             </div>
@@ -486,7 +561,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addRoom">保存</button>
+                        <button type="button" class="btn btn-primary"  id="addRoom">保存</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     </div>
                 </div>
@@ -538,7 +613,7 @@
                 {{ /if }}
                 {{ /each }}
                 {{ else }}
-                <div class="cell-item item-default">{{item.floor}}F</div>
+                <div class="cell-item-default item-default">{{item.floor}}F</div>
                 {{ /if }}
             </div>
         </div>
@@ -564,7 +639,7 @@
     <div class="modal-cell">
         <div class="form-group">
             <label for="updateArea">房间面积：</label>
-            <input type="text" class="form-control input-sm" id="updateArea" value="{{area}}">
+            <input type="number" class="form-control input-sm" id="updateArea" value="{{area}}">
             <span>㎡</span>
         </div>
     </div>
@@ -583,7 +658,7 @@
     <div class="modal-cell">
         <div class="form-group">
             <label for="updatePrice">租赁单价：</label>
-            <input type="text" class="form-control input-sm" id="updatePrice" value="{{price}}">
+            <input type="number" class="form-control input-sm" id="updatePrice" value="{{price}}">
             <span>元/㎡/天</span>
         </div>
     </div>
@@ -597,7 +672,7 @@
         <div class="form-group">
             <label>企业类型：</label>
             {{ if company_type && company_type.length}}
-            <select name="companyType">
+            <select name="companyType" class="input-sm form-control">
                 {{ each company_type as type i }}
                 {{ if type == i}}
                 <option value="{{i}}" selected>{{type}}</option>
@@ -681,11 +756,34 @@
     </div>
     <div class="modal-cell">
         <div class="form-group">
+            <label >企业名称：</label>
+            <input type="text" class="form-control input-sm" placeholder="请填写企业名称" id="addCompany">
+            <span class="text-danger hidden">* 企业名称不能为空</span>
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
+            <label >企业类型：</label>
+            {{ if company_type && company_type.length}}
+            <select name="companyType" class="form-control input-sm">
+                {{ each company_type as type i }}
+                {{ if type == i}}
+                <option value="{{i}}" selected>{{type}}</option>
+                {{ else }}
+                <option value="{{i}}">{{type}}</option>
+                {{ /if }}
+                {{/each}}
+            </select>
+            {{ /if }}
+        </div>
+    </div>
+    <div class="modal-cell">
+        <div class="form-group">
             <label >房间状态：</label>
         </div>
     </div>
      <div class="modal-cell-tit"><h4 class="text-center">预约信息</h4></div>
-     <div class="info-box">
+     <div class="info-box" data-length="{{people.length}}">
          {{ if people && people.length}}
          <div class="swiper-container">
              <div class="swiper-wrapper">
@@ -704,7 +802,7 @@
                              <label>备注信息：</label>
                              <span>{{ card.remark }}</span>
                          </div>
-                         <div class="card-cell center" data-type="{{status}}" data-id="{{card.room_id}}" data-index="{{card.id}}">
+                         <div class="card-cell center" data-type="{{status}}" data-id="{{card.room_id}}" data-index="{{card.id}}" data-build="{{build_block}}">
                              <button type="button" class="btn btn-warning"  data-status="delete" >删除</button>
                              <button type="button" class="btn btn-primary" data-dismiss="modal" data-status="change">联系</button>
                          </div>
@@ -806,7 +904,7 @@
     <div class="modal-cell">
         <div class="form-group">
             <label for="updateArea">房间面积：</label>
-            <input type="text" class="form-control input-sm" id="updateArea" value="{{area}}">
+            <input type="number" class="form-control input-sm" id="updateArea" value="{{area}}">
             <span>㎡</span>
         </div>
     </div>
@@ -825,7 +923,7 @@
     <div class="modal-cell">
         <div class="form-group">
             <label for="updatePrice">租赁单价：</label>
-            <input type="text" class="form-control input-sm" id="updatePrice" value="{{price}}">
+            <input type="number" class="form-control input-sm" id="updatePrice" value="{{price}}">
             <span>元/㎡/天</span>
         </div>
     </div>
@@ -839,7 +937,7 @@
         <div class="form-group">
             <label>企业类型：</label>
             {{ if company_type && company_type.length}}
-            <select name="companyType">
+            <select name="companyType"  class="form-control input-sm">
                 {{ each company_type as type i }}
                 {{ if type == i}}
                 <option value="{{i}}" selected>{{type}}</option>
@@ -904,6 +1002,7 @@
     <button type="button" class="btn btn-primary"  data-status="save">保存</button>
     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
     {{ else if status == 2}}
+    <button type="button" class="btn btn-primary" data-status="addCompany">添加企业</button>
     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
     {{ else if status == 3}}
     <button type="button" class="btn btn-warning"  data-status="delete">删除</button>
@@ -939,7 +1038,7 @@
 </script>
 <script type="text/html" id="floorTpl">
     <div class="table-cell clearfix" data-floor="{{fid}}">
-        <div class="table-cell-tit col-xs-1"><i class="fa fa-close table-cell-icon"></i>F{{fid}}</div>
+        <div class="table-cell-tit col-xs-1"><i class="table-cell-icon"></i>F{{fid}}</div>
         <div class="table-cell-info col-xs-11"><div class="cell-item item-default">{{fid}}F</div></div>
     </div>
 </script>
@@ -1053,6 +1152,7 @@
 
                        var swiper = new Swiper('.swiper-container', {
                            slidesPerView: 2,
+                           slidesPerGroup : 2,
                            spaceBetween: 30,
                            prevButton:'.swiper-button-prev',
                            nextButton:'.swiper-button-next',
@@ -1112,42 +1212,65 @@
                    lastIndex = parents.siblings('.table-cell').last().index(),
                    html = '<div class="cell-item-default item-default">'+floor+'F</div></div>';
            if(parentsIndex == lastIndex + 1){
-                   var data = {
-                       id:2,
-                       build_block:build,
-                       floor:floor
-                   };
-               //console.log(data);
-//               return;
-                   $.ajax({
-                       data:data,
-                       type:'POST',
-                       url:"{:Url('Park/delfloor')}",
-                       success:function (e) {
-                           updateAlert(e.msg);
-                           if(e.code ==1){
-                               parents.remove();
-                               delFloor(build,e.data);
+               swal({
+                   title:'',
+                   text: "确认删除该楼层信息？",
+                   type: "warning",
+                   showCancelButton: true,
+                   confirmButtonColor: "#DD6B55",
+                   confirmButtonText: "删除",
+                   cancelButtonText: "取消"
+               },function (isConfirm) {
+                   if(isConfirm){
+                       var data = {
+                           id:2,
+                           build_block:build,
+                           floor:floor
+                       };
+                       $.ajax({
+                           data:data,
+                           type:'POST',
+                           url:"{:Url('Park/delfloor')}",
+                           success:function (e) {
+                               updateAlert(e.msg);
+                               if(e.code ==1){
+                                   parents.remove();
+                                   delFloor(build,e.data);
+                               }
                            }
-                       }
-                   })
-           }else{
-               var data = {
-                   id:1,
-                   build_block:build,
-                   floor:floor
-               };
-               $.ajax({
-                   data:data,
-                   type:'POST',
-                   url:"{:Url('Park/delfloor')}",
-                   success:function (e) {
-                       updateAlert(e.msg);
-                       if(e.code ==1){
-                           floorInfo.empty().html(html);
-                       }
+                       })
                    }
-               })
+
+               });
+           }else{
+               swal({
+                   title:'',
+                   text: "确认删除该楼层全部房间信息？",
+                   type: "warning",
+                   showCancelButton: true,
+                   confirmButtonColor: "#DD6B55",
+                   confirmButtonText: "删除",
+                   cancelButtonText: "取消"
+               },function (isConfirm) {
+                   if(isConfirm) {
+                       var data = {
+                           id:1,
+                           build_block:build,
+                           floor:floor
+                       };
+                       $.ajax({
+                           data:data,
+                           type:'POST',
+                           url:"{:Url('Park/delfloor')}",
+                           success:function (e) {
+                               updateAlert(e.msg);
+                               if(e.code ==1){
+                                   floorInfo.empty().html(html);
+                               }
+                           }
+                       })
+                   }
+               });
            }
        });
        //添加楼层
@@ -1210,6 +1333,18 @@
             var imgsSrc=[];
             var $img= $('#room-modal').find('.img');
             var img = $("#room-modal").find('.upload-img-box').data("src").split(',');
+            if(!area){
+                updateAlert('房间面积不能为空！','error');
+                return;
+            }
+            if(!room){
+                updateAlert('房间号码不能为空！','error');
+                return;
+            }
+            if(!price){
+                updateAlert('租赁单价不能为空！','error');
+                return;
+            }
             $img.each(function (i) {
                 imgsSrc.push($(this).attr('src'));
             });
@@ -1220,11 +1355,11 @@
                 success:function (data) {
                     //console.log(data);
                     if (data.code==1){
+                        resetModal();
                         updateAlert(data.msg,"success");
-                        console.log(data);
+                        //console.log(data);
                         var  houseTpl =template('houseList',data);
                         $(".mail-content").empty().append(houseTpl).find(".table[data-key="+build+"]").show();
-                        //console.log(e);
 
 //                        updateAlert(data.msg+" 稍后自动刷新页面～","success");
 //                        setTimeout(function () {
@@ -1239,9 +1374,6 @@
                 }
 
             })
-
-
-
         });
 
        //所选房间状态修改
@@ -1271,6 +1403,38 @@
                        }
                        commonAjax("{:Url('Park/setmanage')}",data,hideUpdateModal,build);
                        break;
+                   case 'addCompany':
+                        var $company = $('#update-modal').find('#addCompany'),
+                            $companyType  = $("#update-modal").find('select[name="companyType"]'),
+                            company = $company.val(),
+                             companyType = $companyType.select().val(),
+                             length = $("#update-modal").find('.info-box').data('length');
+                        if(!company){
+                            $company.focus();
+                            $company.next().removeClass('hidden');
+                            return;
+                        }
+
+                       swal({
+                           title:'',
+                           text: '当前房间尚有（'+length+'）条未联系的预约信息，是否确认现在添加企业信息',
+                           type: "warning",
+                           showCancelButton: true,
+                           confirmButtonColor: "#1c84c6",
+                           confirmButtonText: "确定",
+                           cancelButtonText: "取消"
+                       },function (isConfirm) {
+                           if(isConfirm){
+                               var data = {
+                                    id:roomId,
+                                   company:company,
+                                   type:companyType
+                               };
+                               commonAjax("{:Url('Park/save')}",data,hideUpdateModal,build);
+                           }
+
+                       });
+                       break;
                    case 'delete':
                         var data = {
                             status:type,
@@ -1278,7 +1442,7 @@
                         };
                          if( type == '2'){
                              data.id = id;
-                             commonAjax("{:Url('Park/delete')}",data);
+                             commonAjax("{:Url('Park/delete')}",data,hideUpdateModal,build);
                          }else{
                              commonAjax("{:Url('Park/delete')}",data,hideUpdateModal,build);
                          }
@@ -1321,6 +1485,21 @@
 
            }
        });
+       $('#update-modal').on('change','#addCompany',function () {
+           var $this = $(this);
+           if($this.val() && $this.val() != ''){
+               if(!($this.next().hasClass('hidden'))){
+                   $this.next().addClass('hidden');
+               }
+           }
+       });
+       function resetModal(){
+            $("#room-modal").modal('hide');
+            $("form.form-inline")[0].reset();
+           $("#room-modal").find('.upload-img-box').empty().attr('data-src','');
+       }
+
+
 //       房间状态回调函数
        function hideUpdateModal(data,build) {
            updateAlert(data.msg,"success");
@@ -1341,6 +1520,7 @@
                type:"post",
                url:url,
                success:function (e) {
+                   console.log(e);
                    if(e.code == 1){
                        if(callBack){
                            callBack(e,build);

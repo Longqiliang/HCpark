@@ -948,7 +948,7 @@ class Park extends Admin
         if ($res) {
             $floor = $this->getFloor();
 
-            return $this->success("删除成功",'',($floor));
+            return $this->success("删除成功",'',$floor);
         } else {
 
             return $this->error("删除失败");
@@ -995,7 +995,8 @@ class Park extends Admin
         if ($info) {
             $data['company_id'] = $info['id'];
         } else {
-            $data['company_id'] = 0;
+
+            return $this->error("该企业未在企业通讯录中！");
         }
         $map = ['id' => $data['id']];
         $res = $parkRoom->where($map)->update($data);
