@@ -46,8 +46,8 @@
     td:last-child{
         text-align: left;
     }
-    .txt-success{
-        color: #69B9F9;
+    .txt-pass{
+        color:#f0ad4e;
     }
 </style>
 {/block}
@@ -159,7 +159,7 @@
                 <td>{$vo.create_time|date='Y-m-d H:i',###}</td>
 
                     {eq name="$vo.status" value="1"}
-                    <td><span class="txt-success">审核通过</span></td>
+                    <td><span class="txt-pass">审核通过</span></td>
                     {/eq}
                     {eq name="$vo.status" value="0"}
                     <td><span class="">进行中</span></td>
