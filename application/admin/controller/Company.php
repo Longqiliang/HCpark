@@ -18,7 +18,7 @@ class Company extends Admin
 
 
         $company_type=input('company_type')==null?-1:input('company_type');
-        echo  $company_type;
+        //echo  $company_type;
         //dump($type);
        // echo $type[0];
         $search = input('search');
