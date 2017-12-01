@@ -46,19 +46,19 @@ class Exchange extends Base
         $point = new ExchangePoint();
         $list1 = $point->getPointHistorybyUserid();
         $list = $record->getRecordList($userid);
-        //type 1 积分增加 2 积分减少
+        //type 1 积分减少 2 积分增加
         foreach ($list as $key =>$value){
             $info[$key]['title']=$value['title'];
             $info[$key]['create_time']=$value['create_time'];
             $info[$key]['score']=$value['need_score'];
-            $info[$key]['type']=2;
+            $info[$key]['type']=1;
         }
         foreach ($list1 as $value){
          $map=[
              'title'=>$value['content'],
              'create_time'=>$value['create_time'],
              'score'=>$value['score'],
-             'type'=>1,
+             'type'=>2,
          ];
         array_push($list ,$map);
         }
