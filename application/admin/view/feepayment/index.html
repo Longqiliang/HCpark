@@ -119,11 +119,11 @@
             $("tbody").find(".ids").iCheck("toggle");
         });
         var p=GetQueryString('page');
-        console.log(p);
-        var href = $(".feerecode").attr('href');
-        console.log(href)
-        href =resetHref(href,p);
-        $(".feerecode").attr('href',href);
+        $(".feerecode").click(function () {
+            var href = $(this).attr('href');
+            href =resetHref(href,p);
+            $(".feerecode").attr('href',href);
+        });
     });
     function  resetHref(href,p) {
         href = href + '?p='+p;
