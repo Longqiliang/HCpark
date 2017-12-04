@@ -51,7 +51,7 @@
             <p>{{baseData.title}}</p>
             <span>剩余 {{baseData.left}}</span>
         </div>
-    <a>积分：{{baseData.price}}</a>
+    <a>{{baseData.price}}积分</a>
     </div>
     <div class="title1">宝贝详情</div>
     <div class="main" v-html="baseData.content">
@@ -84,7 +84,6 @@
 
 {block name="script"}
 <script>
-    console.log({$info})
     var app = new Vue({
         el: '#app',
         data: {
