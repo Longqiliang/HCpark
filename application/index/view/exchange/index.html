@@ -30,26 +30,12 @@
             </li>
         </ul>
     </div>
-    <!--<div class="new_lists"  id="pullrefresh" v-if="true">-->
-        <!--<div class="new_list" v-for="product in baseData.product" @click="jumpTo(1,product.id)">-->
-            <!--<div class="box">-->
-                <!--<span class="nomore" v-if="product.left==0"></span>-->
-                <!--<div class="new_img" :style="{'background': 'url('+product.front_cover+') 50% 50% no-repeat','background-size': 'cover'}"></div>-->
-                <!--<div class="new_title">{{product.title}}</div>-->
-                <!--<div class="new_msg">-->
-                    <!--<span class="new_over">剩余{{product.left}}</span>-->
-                    <!--<span class="new_score has" :class="{hasnot:(product.left==0)}">{{product.price}}</span>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
 </div>
 {/block}
 
 {block name="script"}
 <script>
     var info= {$score};
-    console.log(info)
     var app = new Vue({
         el: '#app',
         data: {

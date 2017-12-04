@@ -111,7 +111,7 @@
         </li>
         <li>
             <span>支付时间</span>
-            <p class="pay_time">{{baseData.create_time}}</p>
+            <p class="pay_time">{{baseData.create_time | timeToString}}</p>
         </li>
         <!--<li>-->
             <!--<span>姓名</span>-->
@@ -130,7 +130,32 @@
 {/block}
 
 {block name="script"}
+
 <script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            if(!isNaN(time)){
+                if(String(time).length<13){
+                    time = time*1000
+                    console.log(time)
+                }
+                var newTime = new Date(time);
+                var m = newTime.getMonth()+1,
+                        dt=newTime.getDate(),
+                        y=newTime.getFullYear();
+                if(dt<10){
+                    dt='0'+dt;
+                }
+                if(m<10){
+                    m='0'+m;
+                }
+                return y+'-'+m+'-'+dt
+            }else{
+                return time
+            }
+
+        }
+    });
     var app = new Vue({
         el: '#app',
         data: {
