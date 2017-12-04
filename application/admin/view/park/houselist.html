@@ -388,7 +388,10 @@
             width: 80vw;
         }
     }
-
+    .content-float{
+        float: left;
+        line-height: 34px;
+    }
 </style>
 {/block}
 {block name="page-header"}
@@ -1008,6 +1011,7 @@
     <button type="button" class="btn btn-warning"  data-status="delete">删除</button>
     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
     {{ else if status == 4}}
+    <span class="content-float">提示：点击保存修改房间信息</span>
     <button type="button" class="btn btn-success"  data-status="manage">上架</button>
     <button type="button" class="btn btn-warning"  data-status="delete">删除</button>
     <button type="button" class="btn btn-primary"  data-status="save">保存</button>
