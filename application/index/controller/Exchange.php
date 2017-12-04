@@ -47,6 +47,7 @@ class Exchange extends Base
         $list1 = $point->getPointHistorybyUserid();
         $list = $record->getRecordList($userid);
         //type 1 积分减少 2 积分增加
+        $info=array();
         foreach ($list as $key =>$value){
             $info[$key]['id']=$value['id'];
             $info[$key]['title']=$value['title'];
