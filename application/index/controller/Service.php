@@ -1814,7 +1814,9 @@ class Service extends Base
                 'name' => $types[$v['type']],
                 'time' => date('Y-m-d', $v['create_time']),
                 'status' => $v['status'],
-            ];
+                "url" => '/index/service/historyDetail/appid/2/can_check/yes/id/' . $v['id']
+
+                ];
         }
         return $info;
     }
@@ -2126,8 +2128,6 @@ class Service extends Base
         $type = input('type');
         $companyapp = new CompanyApplication();
         $company_type = $companyapp->getCompanyType($appid);
-
-
         if ($appid == 1) {
             $userid = session("userId");
             $userinfo = WechatUser::where(['userid' => $userid])->find();
