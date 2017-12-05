@@ -637,6 +637,7 @@ class Service extends Base
             $res[$k]['status'] = $val['status'];
             $res[$k]['id'] = $val['id'];
             $res[$k]['company'] = $val['company'];
+            $res[$k]['url']= '/index/service/historyDetail/appid/7/can_check/yes/id/' . $val['id'];
         }
         return $res;
     }
@@ -878,6 +879,7 @@ class Service extends Base
             $v['name'] = $v['type'] == 1 ? '新卡办理' : "旧卡续费";
             $v['pay'] = $v['money'];
             $v['time'] = date('Y-m-d', $v['create_time']);
+            $v['url'] = '/index/service/historyDetail/appid/6/can_check/yes/id/' . $v['id'];
         }
         return $list;
     }
@@ -1833,7 +1835,8 @@ class Service extends Base
                 'type' => "保洁服务",
                 'time' => date("Y-m-d", $v['clear_time']),
                 'name' => $v['address'],
-                'status' => $v['status']
+                'status' => $v['status'],
+                 "url" => '/index/service/historyDetail/appid/4/can_check/yes/id/' . $v['id']
             ];
         }
         return $info;
