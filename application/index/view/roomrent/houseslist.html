@@ -29,10 +29,10 @@
     .price input{width:30px;text-align:center;margin:0 3px}
     .remark p{font-size:15px}
     .remark textarea{border:1px solid #e5e5e5;height:18vh;border-radius:5px;width:calc(100% - 14px);margin:10px 7px;padding:5px 10px}
-    .cancel{position:absolute;top:-50px;right:0}
-    .cancel>span:first-child{display:inline-block;width:28px;height:28px;border-radius:15px;border:1px solid #fff;display:-webkit-flex;-webkit-align-items:center;-webkit-justify-content:center}
-    .cancel i::before{width:20px;height:20px;color:#fff}
-    .cancel>span:last-child{display:inline-block;height:22px;width:0;border-right:1px solid #fff;position:relative;left:50%}
+    .my-cancel{position:absolute;top:-50px;right:0}
+    .my-cancel>span:first-child{display:inline-block;width:28px;height:28px;border-radius:15px;border:1px solid #fff;display:-webkit-flex;-webkit-align-items:center;-webkit-justify-content:center}
+    .my-cancel i::before{width:20px;height:20px;color:#fff}
+    .my-cancel>span:last-child{display:inline-block;height:22px;width:0;border-right:1px solid #fff;position:relative;left:50%}
     .icon-required{display:inline-block;color:red;font-style:normal;position:absolute;left:-10px;top:0}
     .center img{margin:0 auto}
     .houses-list-item span.room-lg{width:81.05vw}
@@ -157,7 +157,7 @@
             <div class="btn-box">
                 <button class="btn btn-block btn-green" @click="subIntention">提交</button>
             </div>
-            <div class="cancel" @click="hideModel">
+            <div class="my-cancel" @click="hideModel">
                 <span><i class="iconfont hc-cha1"></i></span>
                 <span></span>
             </div>

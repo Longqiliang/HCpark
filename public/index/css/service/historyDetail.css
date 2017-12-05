@@ -222,33 +222,14 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     justify-content: center;
     padding:4vw 4.8vw;
 }
-#app .cancel{
-    position: absolute;
-    top: -50px;
-    right: 0;
-}
-.cancel>span:first-child{
-    display: inline-block;
-    width: 28px;
-    height: 28px;
-    border-radius: 15px;
-    border: 1px solid #fff;
-    display: -webkit-flex;
-    -webkit-align-items: center;
-    -webkit-justify-content: center;
-}
-.cancel i::before{
-    width: 20px;
-    height: 20px;
-    color: #fff;
-}
-.cancel>span:last-child{
-    display: inline-block;
-    width: 0;
-    border-right: 1px solid #fff;
-    position: relative;
-    left: 50%;
-}
+
+/*.cancel>span:last-child{*/
+    /*display: inline-block;*/
+    /*width: 0;*/
+    /*border-right: 1px solid #fff;*/
+    /*position: relative;*/
+    /*left: 50%;*/
+/*}*/
 .icon-required{
     display: inline-block;
     color: red;
