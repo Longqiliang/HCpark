@@ -1915,7 +1915,8 @@ class Service extends Base
                 'name' => $v['name'],
                 'time' => date('Y-m-d', $v['create_time']),
                 'num' => $v['number'],
-                'status' => $v['status']
+                'status' => $v['status'],
+                  "url" => '/index/service/historyDetail/appid/3/can_check/yes/id/' . $v['id']
             ];
         }
 
