@@ -405,9 +405,18 @@ class Personal extends Base
             }
         } else {
 
-            $userlist = Db::query("select userid,name,header,mobile,fee_status,water_status,department from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
+            $userlist = Db::query("select userid,name,header,avatar,mobile,fee_status,water_status,department from tb_wechat_user  where department = (select department from tb_wechat_user where userid=?) ", [$userid]);
             $park_company = new ParkCompany();
+            foreach ($userlist as $key =>$value ){
+               if(empty($value['header'])){
+                if(!empty($value['avatar'])){
+                   $userlist[$key]['header']=$value['avatar'];
+               }
+               }
+            }
+
             $cpmpany = $park_company->where('company_id', $userlist[0]['department'])->find();
+
             $this->assign('company_code', $cpmpany['company_code']);
             $this->assign('userlist', json_encode($userlist));
 
