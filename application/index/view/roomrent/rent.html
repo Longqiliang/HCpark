@@ -86,12 +86,12 @@
         margin: 10px 7px;
         padding: 5px 10px;
     }
-    .cancel{
+    .my-cancel{
         position: absolute;
         top: -50px;
         right: 0;
     }
-    .cancel>span:first-child{
+    .my-cancel>span:first-child{
         display: inline-block;
         width: 28px;
         height: 28px;
@@ -101,12 +101,12 @@
         -webkit-align-items: center;
         -webkit-justify-content: center;
     }
-    .cancel i::before{
+    .my-cancel i::before{
         width: 20px;
         height: 20px;
         color: #fff;
     }
-    .cancel>span:last-child{
+    .my-cancel>span:last-child{
         display: inline-block;
         height: 22px;
         width: 0;
@@ -190,7 +190,7 @@
             <div class="btn-box">
                 <button class="btn btn-block btn-green" @click="subRent">提交申请</button>
             </div>
-            <div class="cancel" @click="hideRent">
+            <div class="my-cancel" @click="hideRent">
                 <span><i class="iconfont hc-cha1"></i></span>
                 <span></span>
             </div>
