@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style>
+    .btn-primary {
+        font-size: 16px;
+    }
+
+    .mail-box .mail-ontact {
+        width: 150px;
+        min-width: 150px;
+        overflow: hidden;
+    }
+
+    .mail-box .mail-subject {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 124px !important;
+        min-width: 124px;
+    }
+
+    .mail-subject-div {
+        width: 100px;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-box .mail-main {
+        width: calc(100% - 460px);
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mail-date {
+        width: 160px;
+        min-width: 160px;
+        overflow: hidden;
+    }
+
+    @media only screen and (max-width: 550px) {
+        .mail-date {
+            display: none;
+        }
+    }
+
+    .list_banner {
+        width: 80px
+    }
+
+    .list_type {
+        width: 80px
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+
+            <h2> {if condition="$type eq 1"}
+                  艺术作品
+                {elseif condition="$type eq 2"  }
+                软著登记
+                {elseif condition="$type eq 3"  }
+                软著撰写
+                {/if}</h2>
+            <div class="mail-tools tooltip-demo m-t-md">
+
+                <div class=" pull-right tooltip-demo">
+                    <a href="javascript:ggg()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                            class="fa fa-times"></i> 关闭</a>
+                </div>
+                <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
+            </div>
+        </div>
+        <div class="mail-box">
+            <form id="form" class="form-horizontal" method="post">
+                <input type="hidden" name="type" value={$type}>
+                <input type="hidden" name="id" value={$info.id}>
+            {if condition="$type eq 1"}
+            艺术作品
+                <div class="form-group">
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>作品名称:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.art_name}">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>作品描述:</label>
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.works_description}</textarea>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>独创性描述:</label>
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.originality_description}</textarea>
+
+                    </div>
+                </div>
+
+                <br>
+                <br>
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>上传图片:</label>
+
+                    </div>
+                    <br>
+                    {notempty name="$info.proudct_img" }
+                    <div class="col-lg-5">
+                        <div class="imggroup">
+                            {volist name="$info.proudct_img" id="vo"}
+                            <a href="{$vo}" class="front_cover">
+                                <img  width="200px" height="200px"  src="{$vo}" class="img-auto front_cover_img" alt="">
+                            </a>
+                            {/volist}
+                        </div>
+                    </div>
+                    {/notempty}
+                </div>
+                <br>
+                <br>
+
+
+                {elseif condition="$type eq 2"  }
+            软著登记
+                <div class="form-group">
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>软件名称:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.software_name}">
+                    </div>
+                    <div class="col-lg-1 text-right control-label">
+                        <label>硬件名称:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.hardware_name}">
+                    </div>
+
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>软件环境:</label>
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.software_environment}</textarea>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>主要功能和技术特点:</label>
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.main_function}</textarea>
+
+                    </div>
+                </div>
+
+
+
+                {elseif condition="$type eq 3"  }
+            软著撰写
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>创作意图:</label>
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.create_purpose}</textarea>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>创作过程:</label>
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.create_process}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>作品描述:</label>
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.description_work}</textarea>
+                    </div>
+
+                </div>
+                <input type="hidden" name="id" value={$info.id}>
+
+
+                {/if}
+
+                <div class="form-group">
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>创建日期:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.create_time}">
+                    </div>
+                    <div class="col-lg-1 text-right control-label">
+                        <label>审核日期:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.end_time}">
+                    </div>
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>联系人:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.contact_staff}">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>联系电话:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.contact_staff}">
+                    </div>
+
+                    <div class="col-lg-1 text-right control-label">
+                        <label>状态:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input readonly=ture type="text" class="form-control form_title" value="{$info.status}">
+                    </div>
+
+                </div>
+
+
+            {if condition="$info.status eq 2"}
+            审核失败
+            <br>
+            <br>
+            <div class="form-group">
+                <div class="col-lg-1 text-right control-label">
+                    <label>园区回复:</label>
+
+                </div>
+                <div class="col-lg-10">
+                    <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.reply}</textarea>
+                </div>
+
+                <br>
+
+            </div>
+
+            {elseif condition="$info.status eq 0" }
+
+            <br>
+
+            <br>
+            <div class="form-group">
+                <div class="col-lg-11 col-lg-offset-1 text-left">
+                    <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$info.id}"
+                       class="btn-sm btn-primary" style="color:#fff">审核</a>
+                </div>
+            </div>
+            {elseif condition="$info.status eq 1" }
+            审核成功
+
+            {/if}
+
+
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="{:Url('Copyright/check')}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center" name="dialog-title">审核</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">园区回复:</label>
+                        <div class="col-sm-10">
+                            <textarea name="reply" class="form-control"
+                                      placeholder="审核不通过必填"></textarea>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-primary " onclick="check(1)">通过</a>
+                    <a class="btn btn-danger " onclick="check(2)">不通过</a>
+                    <input type="hidden" name="id" value="">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    highlight_subnav("{:Url('trademark/index')}");
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        $(".check-all").on("ifChanged", function () {
+            $("tbody").find(".ids").iCheck("toggle");
+        });
+
+
+        $('.summernote').summernote({
+            lang: 'zh-CN',
+            height: 300,
+            minHeight: 210,
+            callbacks: {
+                onImageUpload: function (files) { //the onImageUpload API
+                    img = sendFile(files[0]);
+                }
+            }
+        });
+
+        //绑定模态框展示的方法
+        $("#remark-modal").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            console.log(button);
+            var recipient = button.data('text');
+            var modal = $(this);
+            modal.find('.modal-body').html(recipient);
+
+
+        })
+    });
+
+    function check(pass) {
+        var reply = $("textarea[name='reply']").val();
+        var id = $("input[name='id']").val();
+        var type =$("input[name='type']").val();
+        console.log('re'+reply+'  id'+id+'   type'+type)
+        $.ajax({
+            data: {id: id, reply:reply,pass:pass,type:type},
+            type: "POST",
+            url: "{:Url('Copyright/check')}",
+            success: function (data) {
+                if (data.code == 1) {
+                    updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
+                    setTimeout(function () {
+                        location.href = data.url;
+                    }, 2000);
+                } else {
+                    updateAlert(data.msg, 'info');
+                }
+            }
+        });
+    }
+    function sendFile(file) {
+        var data = new FormData();
+        data.append("file_data", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: "{:Url('Upload/picture')}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                var data = $.parseJSON(response);
+                $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+            }
+        });
+    }
+
+    $("#input-file").fileinput({
+
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("/admin/Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function (event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        console.log(response);
+
+        if (response.code == 1) {
+
+            $("input[name='back_img']").val(response.data);
+            console.log($("input[name='img']").val());
+            var pic = document.getElementById("back_img");
+            pic.src = response.data;
+
+        } else {
+
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+
+    function ggg() {
+        window.history.go(-1);
+    }
+</script>
+{/block}

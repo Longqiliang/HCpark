@@ -37,6 +37,9 @@ use app\common\model\OperationalAuthority;
 use app\common\model\WaterType;
 use wechat\TPWechat;
 use app\index\model\Patent;
+use app\index\model\CopyrightArt;
+use app\index\model\CopyrightSoft;
+use app\index\model\CopyrightSoftwrite;
 
 //企业服务
 class Service extends Base
@@ -637,7 +640,7 @@ class Service extends Base
             $res[$k]['status'] = $val['status'];
             $res[$k]['id'] = $val['id'];
             $res[$k]['company'] = $val['company'];
-            $res[$k]['url']= '/index/service/historyDetail/appid/7/can_check/yes/id/' . $val['id'];
+            $res[$k]['url'] = '/index/service/historyDetail/appid/7/can_check/yes/id/' . $val['id'];
         }
         return $res;
     }
@@ -1818,7 +1821,7 @@ class Service extends Base
                 'status' => $v['status'],
                 "url" => '/index/service/historyDetail/appid/2/can_check/yes/id/' . $v['id']
 
-                ];
+            ];
         }
         return $info;
     }
@@ -1836,7 +1839,7 @@ class Service extends Base
                 'time' => date("Y-m-d", $v['clear_time']),
                 'name' => $v['address'],
                 'status' => $v['status'],
-                 "url" => '/index/service/historyDetail/appid/4/can_check/yes/id/' . $v['id']
+                "url" => '/index/service/historyDetail/appid/4/can_check/yes/id/' . $v['id']
             ];
         }
         return $info;
@@ -1921,7 +1924,7 @@ class Service extends Base
                 'time' => date('Y-m-d', $v['create_time']),
                 'num' => $v['number'],
                 'status' => $v['status'],
-                  "url" => '/index/service/historyDetail/appid/3/can_check/yes/id/' . $v['id']
+                "url" => '/index/service/historyDetail/appid/3/can_check/yes/id/' . $v['id']
             ];
         }
 
@@ -1990,10 +1993,12 @@ class Service extends Base
                 return $this->error('接口调用失败，身份证图片未传齐');
             }
             $data['id_card'] = json_encode($data['id_card']);
-            if (count($data['product_img']) != 7) {
-                return $this->error('接口调用失败，设计图片未上传齐');
+            if (isset($data['product_img'])) {
+                if (count($data['product_img']) != 7 && $data['type'] == 3) {
+                    return $this->error('接口调用失败，设计图片未上传齐');
+                }
+                $data['product_img'] = json_encode($data['product_img']);
             }
-            $data['product_img'] = json_encode($data['product_img']);
             $data['create_user'] = session('userId');
             $data['park_id'] = session('park_id');
             $res = $patent->save($data);
@@ -2023,6 +2028,51 @@ class Service extends Base
         return $this->fetch();
     }
 
+
+    //专利申请 app_id=22
+    public function copyRight()
+    {
+        if (IS_POST) {
+            $data = input('');
+            if ($data['type'] == 1) {
+                //艺术作品
+                $copy = new CopyrightArt();
+                $data['proudct_img'] = json_encode($data['proudct_img']);
+
+            } elseif ($data['type'] == 2) {
+                //软件著作
+                $copy = new CopyrightSoft();
+
+            } elseif ($data['type'] == 3) {
+                //软件撰写
+                $copy = new CopyrightSoftwrite();
+            }
+            $result = $copy->_checkData($data);
+            if ($result == false) {
+                return $this->error('接口调用失败，参数缺失');
+            }
+            $data['userid'] = session('userId');
+            $data['park_id'] = session('park_id');
+            $res = $copy->save($data);
+            if ($res) {
+                //专利申请提示11月28日您有一条新的专利申请服务待处理，点击查看详情
+                $message = [
+                    "title" => "版权申请提示",
+                    "description" => "您有一条新的版权申请服务待处理，点击查看详情",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/22/can_check/yes/type/' . $data
+                        ['type'] . '/id/' . $copy->getLastInsID()
+                ];
+                //推送给运营
+                $reult = $this->commonSend(1, $message, '', 21);
+                return $this->success('提交成分');
+            } else {
+                return $this->error('提交失败');
+            }
+        } else {
+            return $this->fetch();
+        }
+    }
+
 //饮水服务详情页()
     public function waterDetail()
     {
@@ -2050,7 +2100,7 @@ class Service extends Base
 
     }*/
 
-//费用缴纳
+    //费用缴纳
     public function feedetail()
     {
         $type = input('t');
@@ -2092,8 +2142,6 @@ class Service extends Base
             $info1['payment_voucher'] = isset($info1['payment_voucher']) ? unserialize($info1["payment_voucher"]) : "";
             $this->assign('image', json_encode($property));
             $this->assign('info', json_encode([$info, $info1]));
-
-
         } else {
             $info = FeePayment::where($map)->order('id desc')->find();
             $image = [];
@@ -2117,9 +2165,7 @@ class Service extends Base
 
             $this->assign('image', json_encode($image));
             $this->assign('info', json_encode([$info]));
-
         }
-
         return $this->fetch();
     }
 
@@ -2175,8 +2221,22 @@ class Service extends Base
 
 
         } elseif ($appid == 21) {
+            //专利申请
             $patent = new Patent();
             $info = $patent->patentHistory();
+        } elseif ($appid == 22) {
+            //版权申请
+            if ($type == 1) {
+                //美术作品
+                $copy = new CopyrightArt();
+            } elseif ($type == 2) {
+                //软著登记
+                $copy = new CopyrightSoft();
+            } elseif ($type == 3) {
+                //软著撰写
+                $copy = new CopyrightSoftwrite();
+            }
+            $info = $copy->copyHistory();
         }
         //物业服务（记录详情页跳转地址为historyDetail）
         if ($company_type == 0 && !empty($company_type)) {
@@ -2190,11 +2250,8 @@ class Service extends Base
                 $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
             }
         }
-
-
         $this->assign('info', json_encode($info));
         $this->assign('appId', $appid);
-
         return $this->fetch();
     }
 
@@ -2353,6 +2410,21 @@ class Service extends Base
         elseif ($appid == 21) {
             $patent = new Patent();
             $info = $patent->patentHistoryDetail($id, $appid);
+        } //版权申请($type (1 艺术作品 ，2 软著登记 ，3软著撰写))
+        elseif ($appid == 22) {
+            $type = input('type');
+            switch ($type) {
+                case 1:
+                    $copy = new CopyrightArt();
+                    break;
+                case 2:
+                    $copy = new CopyrightSoft();
+                    break;
+                case 3:
+                    $copy = new CopyrightSoftwrite();
+                    break;
+            }
+            $info = $copy->copyHistoryDetail($id, $appid);
         } //企业服务
         else if (9 < $appid && $appid < 19 && $appid != 12) {
             $companyservice = new CompanyService();
@@ -2939,7 +3011,6 @@ class Service extends Base
                     //新卡
                     if ($record['type'] == 1) {
                         $message ['description'] = "您的新卡缴费已经完成，请2小时后前往领取";
-
                     } // 旧卡
                     else {
                         $message ['description'] = "您的旧卡续费已经完成";
@@ -2951,7 +3022,6 @@ class Service extends Base
                     //新卡
                     if ($record['type'] == 1) {
                         $message ['description'] = "您的新卡缴费无法通过审核";
-
                     } // 旧卡
                     else {
                         $message ['description'] = "您的旧卡续费无法通过审核";
@@ -3163,10 +3233,27 @@ class Service extends Base
                 $patent = new  Patent();
                 $res = $patent->check($type, $id, $data);
                 if ($res) {
-                    if($type==3){
+                    if ($type == 3) {
                         return $this->success("修改成功");
                     }
                     return $this->success("审核成功");
+                } else {
+                    return $this->error("操作失败");
+                }
+                break;
+            //版权申请(type_check:(1 艺术作品 2软著登记 3 软著撰写)  type (1. 通过 ， 2 不通过)   )
+            case 22:
+                $type_check = $data['type_check'];
+                if ($type_check == 1) {
+                    $copy = new CopyrightArt();
+                } elseif ($type_check == 2) {
+                    $copy = new CopyrightSoft();
+                } elseif ($type_check == 3) {
+                    $copy = new CopyrightSoftwrite();
+                }
+                $result = $copy->check($type, $id, $data);
+                if ($result) {
+                    return $this->success('审核成功');
                 } else {
                     return $this->error("操作失败");
                 }
@@ -3265,7 +3352,6 @@ class Service extends Base
                         }
                     }
                 }
-
                 break;
             //物业
             case 2 :
@@ -3295,21 +3381,18 @@ class Service extends Base
             case 4:
                 $useridlist = $userid;
                 break;
-
         }
         if (!empty($useridlist)) {
             $res = commonService::sendPersonalMessage($message, $useridlist);
         } else {
             return true;
         }
-
         if ($res['errcode'] == 0) {
             return true;
         } else {
 
             return false;
         }
-
     }
 
 

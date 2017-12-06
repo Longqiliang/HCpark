@@ -111,11 +111,11 @@ function think_decrypt($data, $key = ''){
  * asc正向排序 desc逆向排序 nat自然排序
  * @return array
  */
-function list_sort_by($list,$field, $sortby='asc') {
+function list_sort_by(&$list,$field, $sortby='asc') {
     if(is_array($list)){
         $refer = $resultSet = array();
         foreach ($list as $i => $data)
-            $refer[$i] = &$data[$field];
+            $refer[$i] =  $data[$field];
         switch ($sortby) {
             case 'asc': // 正向排序
                 asort($refer);
