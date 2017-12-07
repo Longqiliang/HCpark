@@ -324,7 +324,7 @@
                     this.showCompanyMask();
                 }else{
                     this.nowCompany = item;
-                    this.toggleMark()
+//                    this.toggleMark()
                 }
                 this.isChanged = true;
             },
@@ -388,6 +388,7 @@
                 };
                 _this.postSubmit(data, '企业验证成功！',function () {
                     _this.isPass = true;
+                    _this.company_code = ''
                     _this.roomSlots[0].values = _this.checkedCompany.roomlist;
                     _this.nowRoom = _this.checkedCompany.roomlist[0];
                     _this.nowCompany = _this.checkedCompany;

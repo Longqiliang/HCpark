@@ -237,8 +237,6 @@
                 if(item.id!=78 && item.id!=91){
                     _this.isPass = false;
                     _this.showCompanyMask();
-                }else{
-                    _this.toggleMark()
                 }
             },
             isClick:function () {
@@ -300,6 +298,7 @@
                     department:_this.checkedCompany.id
                 };
                 _this.postSubmit(data, '企业验证成功！',function () {
+                    _this.company_code = ''
                     _this.isPass = true;
                     _this.slots[0].values=_this.checkedCompany.roomlist;
                     _this.room=_this.checkedCompany.roomlist[0];
