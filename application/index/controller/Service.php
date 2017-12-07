@@ -40,6 +40,7 @@ use app\index\model\Patent;
 use app\index\model\CopyrightArt;
 use app\index\model\CopyrightSoft;
 use app\index\model\CopyrightSoftwrite;
+use app\index\model\ExchangePoint;
 
 //企业服务
 class Service extends Base
@@ -1020,12 +1021,6 @@ class Service extends Base
             //推送给运营
             $reult = $this->commonSend(1, $message, '', 8);
             if ($reult) {
-                //成功预约一次设备服务，获得1个积分；
-                WechatUser::where('userid', session('userId'))->setInc('score', 1);
-
-                $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
-                //推送给自己
-                $reult = $this->commonSendText(4, $message, session('userId'), 8);
                 $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待";
                 return $this->success('成功', "", $msg);
             } else {
@@ -1259,10 +1254,26 @@ class Service extends Base
             $reult = $this->commonSend(1, $message, '', 8);
             if ($reult) {
                 //成功预约一次设备服务，获得1个积分；
-                WechatUser::where('userid', session('userId'))->setInc('score', 1);
-                $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
+                WechatUser::where('userid', session('userId'))->setInc('score', 3);
+                $message = "积分服务提示\n成功预约一次设备服务，积分+3！";
+
+                //并记录
+                $point = new  ExchangePoint();
+                $map = [
+                    'userid' => session('userId'),
+                    'content' => '设备服务（二楼会议室）',
+                    'score' => 3,
+                    'create_time' => time(),
+                    'park_id' => session('park_id'),
+                    'status' => 0,
+                    'type' => 1
+
+                ];
+                $point->save($map);
+
+
                 //推送给自己
-                $reult = $this->commonSendText(4, $message, session('userId'), 8);
+                $this->commonSendText(4, $message, session('userId'), 8);
                 return $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
@@ -1465,6 +1476,22 @@ class Service extends Base
                 //成功预约一次设备服务，获得1个积分；
                 WechatUser::where('userid', session('userId'))->setInc('score', 1);
                 $message = "积分服务提示\n成功预约一次设备服务，积分+1！";
+
+                //并记录
+                $point = new  ExchangePoint();
+                $map = [
+                    'userid' => session('userId'),
+                    'content' => '设备服务（LED屏）',
+                    'score' => 1,
+                    'create_time' => time(),
+                    'park_id' => session('park_id'),
+                    'status' => 0,
+                    'type' => 1
+
+                ];
+                $point->save($map);
+
+
                 //推送给自己
                 $reult = $this->commonSendText(4, $message, session('userId'), 8);
                 return $this->success('成功', "", $msg);
@@ -2797,11 +2824,11 @@ class Service extends Base
                     $res['status'] = 3;
                     $res->save();
                     if ($res) {
-                        //使用一次报修服务，流程走完后获得1个积分；
-                        WechatUser::where('userid', $res['user_id'])->setInc('score', 1);
-                        $message = "积分服务提示\n您完成一次物业服务，积分+1！";
-                        //推送给直接
-                        $reult = $this->commonSendText(4, $message, $res['user_id'], 2);
+                        /* //使用一次报修服务，流程走完后获得1个积分；
+                         WechatUser::where('userid', $res['user_id'])->setInc('score', 1);
+                         $message = "积分服务提示\n您完成一次物业服务，积分+1！";
+                         //推送给直接
+                         $reult = $this->commonSendText(4, $message, $res['user_id'], 2);*/
                         return $this->success("上传凭证成功");
                     } else {
                         return $this->error("上传凭证失败");
@@ -2878,6 +2905,20 @@ class Service extends Base
                         //使用一次饮水服务，流程走完后获得1个积分；
                         $re = WechatUser::where('userid', session('userId'))->setInc('score', 1);
                         $message = "积分服务提示\n您完成一次饮水服务，积分+1！";
+                        //并记录
+                        $point = new  ExchangePoint();
+                        $map = [
+                            'userid' => session('userId'),
+                            'content' => '饮水服务',
+                            'score' => 1,
+                            'create_time' => time(),
+                            'park_id' => session('park_id'),
+                            'status' => 0,
+                            'type' => 1
+
+                        ];
+                        $point->save($map);
+
                         //推送给自己
                         $reult = $this->commonSendText(4, $message, $user['userid'], 3);
                         //推送物业，运营 已送达
@@ -3015,6 +3056,30 @@ class Service extends Base
                     else {
                         $message ['description'] = "您的旧卡续费已经完成";
                     }
+                    if ($record['aging'] == 6) {
+                        $score = 1;
+                    } else {
+                        $score = 2;
+                    }
+
+                    //使用一次车卡，流程走完后获得1个积分；
+                    WechatUser::where('userid', session('userId'))->setInc('score', $score);
+                    $message = "积分服务提示\n您完成一次充电柱服务，积分+" . $score . "！";
+                    //并记录
+                    $point = new  ExchangePoint();
+                    $map = [
+                        'userid' => session('userId'),
+                        'content' => '车卡服务(' . $record['aging'] . ')',
+                        'score' => $score,
+                        'create_time' => time(),
+                        'park_id' => session('park_id'),
+                        'status' => 0,
+                        'type' => 1
+
+                    ];
+                    $point->save($map);
+                    //推送给自己
+                    $this->commonSendText(4, $message, session('userId'), 8);
                 } //审核不过
                 else {
                     $record['status'] = 2;
@@ -3077,9 +3142,30 @@ class Service extends Base
                     $record['check_remark'] = $data['check_remark'];
                     $record['status'] = 1;
                     $record['electricity_id'] = $data['electricity_id'];
+                    if ($record['aging'] == 6) {
+                        $score = 1;
+                    } else {
+                        $score = 2;
+                    }
+
                     //使用一次充电柱服务，流程走完后获得1个积分；
-                    WechatUser::where('userid', session('userId'))->setInc('score', 1);
-                    $message = "积分服务提示\n您完成一次充电柱服务，积分+1！";
+                    WechatUser::where('userid', session('userId'))->setInc('score', $score);
+                    $message = "积分服务提示\n您完成一次充电柱服务，积分+" . $score . "！";
+                    //并记录
+                    $point = new  ExchangePoint();
+                    $map = [
+                        'userid' => session('userId'),
+                        'content' => '充电柱服务(' . $record['aging'] . ')',
+                        'score' => $score,
+                        'create_time' => time(),
+                        'park_id' => session('park_id'),
+                        'status' => 0,
+                        'type' => 1
+
+                    ];
+                    $point->save($map);
+
+
                     //推送给自己
                     $reult = $this->commonSendText(4, $message, $record['user_id'], 7);
 

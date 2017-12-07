@@ -24,6 +24,36 @@ class CopyrightSoft extends  Model
         'create_time'=>'strotrtime',
         'end_time'=>'strotrtime'
     ];
+
+
+
+
+    //该园区所有艺术记录
+    public function getCoypright($type)
+    {
+        $user = session('userId');
+        $parkid = session('park_id');
+        if ($type == 1) {
+            $map = [
+                'userid' => $user,
+                'status' => array('neq', -1),
+            ];
+        } else {
+            $map = [
+                'park_id' => $parkid,
+                'status' => array('neq', -1),
+            ];
+        }
+        $list = $this->where($map)->field('id,status,create_time,end_time,contact_staff,contact_number,2 as type ')->select();
+        int_to_string($list,$map=array('type'=>array(1=>'艺术作品',2=>'软著登记',3=>'软著撰写'),'status'=>array(0=>'审核中',1=>'审核成功',2=>'审核失败')));
+        return $list;
+
+
+    }
+
+
+
+
 //当前用户的所有艺术
     public  function  copyHistory(){
 

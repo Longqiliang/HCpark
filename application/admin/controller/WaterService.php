@@ -126,7 +126,7 @@ class WaterService extends Admin
         $id = input('id');
         $uid = input('uid');
         $remark = input('check_remark');
-        $result = WaterModel::where('id', 'in', $id)->update(['status' => $uid, 'check_remark' => $remark]);
+        $result = WaterModel::where('id', 'in', $id)->update(['status' => $uid, 'check_remark' => $remark,'check_time'=>time(),'check_type'=>2]);
         $data = WaterModel::get($id);
         $userId = $data['userid'];
         if ($result) {

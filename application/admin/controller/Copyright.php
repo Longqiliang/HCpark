@@ -12,6 +12,8 @@ use app\common\model\CopyrightArt;
 use app\common\model\CopyrightSoft;
 use app\common\model\CopyrightSoftwrite;
 use app\common\behavior\MyPaginate;
+
+
 class Copyright extends Admin
 {
     //版权三个页面
@@ -28,7 +30,7 @@ class Copyright extends Admin
         $num1 = $copyart->getNumforUndone();
         $list = array_merge($copyartlist, $copysoftlist,$copysoftwritelist);
         int_to_string($list,$map=array('type'=>array(1=>'艺术作品',2=>'软著登记',3=>'软著撰写')));
-        $list = list_sort_by($list,'create_time','desc');
+        $list =  list_sort_by($list,'create_time','desc');
         $list = list_sort_by($list,'status','asc');
         $list = $paginate->paginate2($list,12,false,['query' => request()->param()]);
         $this->assign('count',$num1+$num2+$num3);

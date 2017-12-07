@@ -13,6 +13,7 @@ namespace app\index\controller;
 use app\index\model\CarparkService;
 use app\index\model\Collect as CollectModel;
 use app\index\model\ParkCompany;
+use app\index\model\Patent;
 use app\index\model\TrademarkAdvisory;
 use app\index\model\TrademarkInquire;
 use app\index\model\WechatUser;
@@ -38,7 +39,9 @@ use think\Session;
 use wechat\TPWechat;
 use think\Loader;
 use think\log;
-
+use app\index\model\CopyrightSoftwrite;
+use app\index\model\CopyrightSoft;
+use app\index\model\CopyrightArt;
 
 class Personal extends Base
 {
@@ -488,7 +491,7 @@ class Personal extends Base
         $park_id = session('park_id');
         $userinfo = WechatUser::where(['userid' => $userid])->find();
         $service = new \app\common\behavior\Service();
-        //$type :1 运营 2 物业 3 普通企业
+        //$type :1 运营 2 物业 3 普通企业（当前用户身份权限）
         $type = 3;
         if ($park_id == 3) {
             $userPower = 76;
@@ -501,9 +504,7 @@ class Personal extends Base
             $type = 2;
         }
         $appids = empty($userinfo->Operational->appids) ? array() : json_decode($userinfo->Operational->appids);
-
         //费用缴纳
-
         $departmentId = $userinfo['department'];
         $map = ['company_id' => $departmentId, 'status' => ['neq', -1]];
         $list1 = array();
@@ -537,7 +538,6 @@ class Personal extends Base
             }
             $list1[$k]['app_id'] = $appid;
         };
-
         //物业报修
         $types = [1 => '物业报修（空调报修）', 2 => "物业报修（电梯报修）", 3 => "物业报修（其他报修）"];
 
@@ -909,7 +909,9 @@ class Personal extends Base
                     $allList = array_merge($data1, $data2, $data3, $allList);
                 }
                 if (in_array(10, $appids)) {
-                    //企业服务
+
+
+                    //企业服务（园区）
                     $company_list = Db::table('tb_company_service')
                         ->alias('s')
                         ->join('__COMPANY_APPLICATION__ a', 's.app_id=a.app_id')
@@ -929,7 +931,9 @@ class Personal extends Base
                             $value['status_text'] = '已完成';
                         }
                     }
-                    //商标查询
+
+
+                    //商标查询（园区）
                     $appid=12 ;
                     $can_check ="yes";
 
@@ -951,7 +955,9 @@ class Personal extends Base
                         ];
                         array_push($company_list, $map);
                     }
-                    //商标咨询
+
+
+                    //商标咨询（园区）
                     $list = TrademarkAdvisory::where(['status' => ['neq', -1], 'park_id' => $park_id])->select();
                     foreach ($list as $value) {
                         if ($value['status'] == 0) {
@@ -967,6 +973,48 @@ class Personal extends Base
                             'app_id'=>$appid,
                             'id' => $value['id'],
                             'url'=>'/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/2/id/' .$value['id'],
+                        ];
+                        array_push($company_list, $map);
+                    }
+
+
+                    //专利申请（园区）
+                    $appid=21;
+                    $can_check ="yes";
+                    $list = Patent::where(['status' => ['neq', -1], 'park_id' => $park_id])->select();
+                    int_to_string($list,$map=array('type'=>array(1=>'发明型专利',2=>'实用型专利',3=>'外观设计'),'status'=>array(0=>'审核中',1=>'审核成功',2=>'审核失败')));
+                    foreach ($list as $value) {
+                        $map = [
+                            'service_name' => $value['type_text'],
+                            'create_time' => date("Y-m-d", $value['create_time']),
+                            'status_text' => $value['status_text'],
+                            'status' => $value['status'],
+                            'app_id'=>$appid,
+                            'id' => $value['id'],
+                            'url'=>'/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$value['type'].'/id/' .$value['id'],
+                        ];
+                        array_push($company_list, $map);
+                    }
+
+                    //版权登记（园区）
+                    $appid=22;
+                    $can_check ="yes";
+                    $copysoftwrite = new CopyrightSoftwrite();
+                    $copyart = new CopyrightArt();
+                    $copysoft = new CopyrightSoft();
+                    $copyartlist = $copyart->getCoypright(2);
+                    $copysoftwritelist = $copysoftwrite->getCoypright(2);
+                    $copysoftlist = $copysoft->getCoypright(2);
+                    $list = array_merge($copyartlist, $copysoftlist,$copysoftwritelist);
+                    foreach ($list as $value) {
+                        $map = [
+                            'service_name' => $value['type_text'],
+                            'create_time' => date("Y-m-d", $value['create_time']),
+                            'status_text' => $value['status_text'],
+                            'status' => $value['status'],
+                            'app_id'=>$appid,
+                            'id' => $value['id'],
+                            'url'=>'/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$value['type'].'/id/' .$value['id'],
                         ];
                         array_push($company_list, $map);
                     }
@@ -1007,7 +1055,7 @@ class Personal extends Base
                         $value['status_text'] = '已完成';
                     }
                 }
-                //商标查询
+                //商标查询（用户）
                 $list2 = TrademarkInquire::where(['status' => ['neq', -1], 'userid' => $userid])->select();
                 foreach ($list2 as $value) {
                     if ($value['status'] == 0) {
@@ -1026,7 +1074,7 @@ class Personal extends Base
                     ];
                     array_push($list, $map);
                 }
-                //商标咨询
+                //商标咨询（用户）
                 $list2 = TrademarkAdvisory::where(['status' => ['neq', -1], 'userid' => $userid])->select();
                 foreach ($list2 as $value) {
                     if ($value['status'] == 0) {
@@ -1045,6 +1093,51 @@ class Personal extends Base
                     ];
                     array_push($list, $map);
                 }
+                //专利申请（用户）
+                $appid=21;
+                $can_check ="yes";
+                $list2 = Patent::where(['status' => ['neq', -1], 'create_user' => $userid])->select();
+                int_to_string($list2,$map=array('type'=>array(1=>'发明专利',2=>'实用型专利',3=>'外观设计'),'status'=>array(0=>'审核中',1=>'审核成功',2=>'审核失败')));
+                foreach ($list2 as $value) {
+                    $map = [
+                        'service_name' => isset($value['type_text'])?$value['type_text']:"",
+                        'create_time' => date("Y-m-d", $value['create_time']),
+                        'status_text' => isset($value['status_text'])?$value['status_text']:"",
+                        'status' => $value['status'],
+                        'app_id'=>$appid,
+                        'id' => $value['id'],
+                        'url'=>'/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$value['type'].'/id/' .$value['id'],
+                    ];
+                    array_push($list, $map);
+                }
+
+
+                //版权登记(用户)
+                $appid=22;
+                $can_check ="yes";
+                $copysoftwrite = new CopyrightSoftwrite();
+                $copyart = new CopyrightArt();
+                $copysoft = new CopyrightSoft();
+                $copyartlist = $copyart->getCoypright(1);
+                $copysoftwritelist = $copysoftwrite->getCoypright(1);
+                $copysoftlist = $copysoft->getCoypright(1);
+                $list2 = array_merge($copyartlist, $copysoftlist,$copysoftwritelist);
+                foreach ($list2 as $value) {
+                    $map = [
+                        'service_name' => $value['type_text'],
+                        'create_time' => date("Y-m-d", $value['create_time']),
+                        'status_text' => $value['status_text'],
+                        'status' => $value['status'],
+                        'app_id'=>$appid,
+                        'id' => $value['id'],
+                        'url'=>'/index/service/historyDetailCompany/appid/' . $appid . '/can_check/' . $can_check . '/type/'.$value['type'].'/id/' .$value['id'],
+                    ];
+                    array_push($list, $map);
+                }
+
+                $list = list_sort_by($list,'create_time','desc');
+                $list = list_sort_by($list,'status','asc');
+
                 $this->assign('company', json_encode($list));
                 break;
         }
