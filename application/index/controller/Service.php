@@ -704,6 +704,16 @@ class Service extends Base
 
         } elseif ($park_id == 80) {
 
+            $info = FeePayment::where(['status'=>1,'company_id'=>$userinfo['department']])->order('create_time desc')->find();
+           if(count($info)>0){
+               $data['department']=$info['department'];
+               $data['mobile']=$info['mobile'];
+               $data['taxpayer_number'] = $info['taxpayer_number'];
+               $data['contact_address'] = $info['contact_address'];
+               $data['bank'] = $info['bank'];
+               $data['account_opening'] = $info['account_opening'];
+           }
+
             $imgs = "/index/images/service/payment-code-binjiang.png";
 
         }
@@ -2203,9 +2213,6 @@ class Service extends Base
             $userinfo = WechatUser::where(['userid' => $userid])->find();
             $departmentId = $userinfo['department'];
             $map = ['company_id' => $departmentId, 'type' => $type];
-            if ($type == 2 || $type == 4) {
-                $map['type'] = ['in', [2, 4]];
-            }
             $list = FeePayment::where($map)->order('id desc')->select();
             foreach ($list as $k => $v) {
                 $info[$k] = [
@@ -2239,8 +2246,6 @@ class Service extends Base
             } elseif ($type == 2) {
                 $info = $this->advisoryHistory();
             }
-
-
         } elseif ($appid == 21) {
             //专利申请
             $patent = new Patent();
