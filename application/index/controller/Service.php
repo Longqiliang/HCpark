@@ -676,6 +676,8 @@ class Service extends Base
     //凭证提交公共方法
     public function payment()
     {
+        $user_id = session('userId');
+        $userinfo = WechatUser::where('userid',$user_id)->find();
         $data = input('');
         $park_id = session('park_id');
         $cp = new CompanyApplication();
@@ -690,7 +692,12 @@ class Service extends Base
         $data['payment_alipay'] = $CA['has_alipay'] == 1 ? $park['payment_alipay'] : "";
         //缴费支付宝账号
         $data['payment_bank'] = $CA['has_bank'] == 1 ? $park['payment_bank'] : "";
-
+        //用户联系方式
+        $data['mobile']=$userinfo['mobile'];
+        //用户公司名称
+        $data['department'] = isset($userinfo->departmentName->name)?$userinfo->departmentName->name:"";
+        //开不开票
+        $data['invoicing']=$park_id ==80?"yes":"no";
         if ($park_id == 3) {
 
             $imgs = "/index/images/service/payment-code-xiken.png";
@@ -2153,22 +2160,8 @@ class Service extends Base
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
             $info['appid'] = $appid;
             $info['title'] = '物业费';
-            $info1 = FeePayment::where($map1)->order('id desc')->find();
-            if ($info1) {
-                FeePayment::where('id', $info1['id'])->update(['onclick' => 1, 'onclick_time' => time()]);
-                array_push($property, "http://" . $_SERVER['HTTP_HOST'] . $info1['images']);
-                $member = $info1['number'];
-                $memberArr = explode('|', $member);
-                if (!in_array($userid, $memberArr)) {
-                    $member = $member . $userid . "|";
-                    FeePayment::where('id', $info1['id'])->update(['number' => $member]);
-                }
-            }
-            $info1['appid'] = $appid;
-            $info1['title'] = '公耗费';
-            $info1['payment_voucher'] = isset($info1['payment_voucher']) ? unserialize($info1["payment_voucher"]) : "";
             $this->assign('image', json_encode($property));
-            $this->assign('info', json_encode([$info, $info1]));
+            $this->assign('info', json_encode($info));
         } else {
             $info = FeePayment::where($map)->order('id desc')->find();
             $image = [];
@@ -2186,6 +2179,8 @@ class Service extends Base
                 $info['title'] = '水电费';
             } else if ($type == 3) {
                 $info['title'] = '房租费';
+            }else if ($type == 4) {
+                $info['title'] = '功耗费';
             }
             $info['appid'] = $appid;
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
