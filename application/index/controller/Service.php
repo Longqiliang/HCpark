@@ -2145,7 +2145,6 @@ class Service extends Base
         $departmentId = $userinfo['department'];
         $map = ['company_id' => $departmentId, 'type' => $type];
         if ($type == 2) {
-            $map1 = ['company_id' => $departmentId, 'type' => 4];
             $info = FeePayment::where($map)->order('id desc')->find();
             if ($info) {
                 FeePayment::where('id', $info['id'])->update(['onclick' => 1, 'onclick_time' => time()]);
@@ -2285,14 +2284,18 @@ class Service extends Base
             $feePayment = new FeePayment();
             //$personalMessage = new PersonalMessage();
             $id = input('id');
-            $ids = explode('-', $id);
             $appid = input('app_id');
             $data = input('post.');
             $datas["payment_voucher"] = serialize($data["payment_voucher"]);
-            $datas['status'] = 1;
-            foreach ($ids as $k => $v) {
-                $res2 = $feePayment->where('id', $v)->find();
-                $res = $feePayment->where('id', $v)->update($datas);
+            $datas['invoice_type'] = (int)$data['invoice']['invoice_type'];
+            $datas['taxpayer_number'] = $data['invoice']['taxpayer_number'];
+            $datas['contact_address'] = $data['invoice']['contact_address'];
+            $datas['bank'] = $data['invoice']['bank'];
+            $datas['account_opening'] = $data['invoice']['account_opening'];
+            $datas['mobile'] = $data['invoice']['mobile'];
+            $datas['department'] = $data['invoice']['department'];
+                $res2 = $feePayment->where('id', $id)->find();
+                $res = $feePayment->where('id', $id)->update($datas);
                 //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
                 switch ($res2['type']) {
                     case 1:
@@ -2328,7 +2331,7 @@ class Service extends Base
                     ];
                     $savemessage = $personalMessage->save($new);*/
                 }
-            }
+
             $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
             return $this->success('成功', "", $msg);
         } else {
