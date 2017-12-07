@@ -75,7 +75,7 @@
 <div class="content" id="app">
     <ul class="list default-list">
         <li>
-            <a href="javascript:;" :class="{'item-pull-right':showBtn}" id="checkImg" @click="upImg">
+            <a :class="{'item-pull-right':showBtn}" id="checkImg" @click="upImg">
                 <p class="head-info">
                     头像
                     <span class="ft-right" v-if="!info.header">
@@ -91,14 +91,14 @@
     <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg">
     <ul class="list default-list">
         <li><a href="javascript:;"><p>姓名 <input type="text" class="input-ft-right" v-model="personName" @input="()=>isChanged=true" placeholder="请输入姓名" :readonly="!showBtn"> </p></a></li>
-        <li @click="toggleGender"><a href="javascript:;" :class="{'item-pull-right':showBtn}"><p>性别 <span class="ft-right park-txt">{{gender.now}}</span></p></a></li>
+        <li @click="toggleGender"><a :class="{'item-pull-right':showBtn}"><p>性别 <span class="ft-right park-txt">{{gender.now}}</span></p></a></li>
         <li><a href="javascript:;"><p>电话 <span class="ft-right">{{info.mobile}}</span></p></a></li>
-        <li><a href="javascript:;" ><p>身份证号 <input type="text" class="input-ft-right" v-model="idNumber" @input="()=>isChanged=true"  placeholder="请输入身份证号码" :readonly="!showBtn"></p></a></li>
-        <li><a href="javascript:;" ><p>车牌号 <input type="text" class="input-ft-right" v-model="plateNumber" @input="()=>isChanged=true"  placeholder="请输入车牌号码" :readonly="!showBtn"></p></a></li>
-        <li><a href="javascript:;" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.park_name"></span></p></a></li>
-        <li @click="toggleMark"><a href="javascript:;" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>公司 <span class="ft-right">{{nowCompany.depart_name}}</span></p></a></li>
-        <li v-if="nowCompany.department_id!=78 && nowCompany.department_id!=91"><a href="javascript:;" @click="togglePopup" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>办公地点 <span class="ft-right">{{nowRoom}}</span></p></a></li>
-        <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup" >
+        <li><a ><p>身份证号 <input type="text" class="input-ft-right" v-model="idNumber" @input="()=>isChanged=true"  placeholder="请输入身份证号码" :readonly="!showBtn"></p></a></li>
+        <li><a ><p>车牌号 <input type="text" class="input-ft-right" v-model="plateNumber" @input="()=>isChanged=true"  placeholder="请输入车牌号码" :readonly="!showBtn"></p></a></li>
+        <li><a :class="{'item-pull-right':(showBtn && info.can_change==='yes')}" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.park_name"></span></p></a></li>
+        <li @click="toggleMark"><a :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>公司 <span class="ft-right">{{nowCompany.depart_name}}</span></p></a></li>
+        <li v-if="nowCompany.department_id!=78 && nowCompany.department_id!=91"><a @click="togglePopup" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>办公地点 <span class="ft-right">{{nowRoom}}</span></p></a></li>
+        <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup">
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="togglePopup">取消</span>
                 <span class="mint-datetime-action mint-datetime-confirm" @click="selectRoom">确定</span>
