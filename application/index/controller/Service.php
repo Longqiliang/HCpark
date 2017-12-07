@@ -2186,7 +2186,7 @@ class Service extends Base
             $info['payment_voucher'] = isset($info['payment_voucher']) ? unserialize($info["payment_voucher"]) : "";
 
             $this->assign('image', json_encode($image));
-            $this->assign('info', json_encode([$info]));
+            $this->assign('info', json_encode($info));
         }
         return $this->fetch();
     }
