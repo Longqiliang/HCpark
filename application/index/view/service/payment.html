@@ -49,6 +49,49 @@
         -o-transform: translate(-50%,-50%);
         transform: translate(-50%,-50%);
     }
+    /*开票信息*/
+    /*.invoice-card{*/
+        /*padding: 4vw 2.66vw 2vw;*/
+    /*}*/
+    .invoice-cell{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        min-height: 50px;
+    }
+    .invoice-cell>label{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .invoice-cell .my-radio{
+        display: -webkit-flex;
+        display: flex;
+        width:15px;
+        height:15px;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        border-radius:50%;
+        border:1px solid #979797;
+        margin-right:1rem;
+    }
+    .invoice-cell .my-radio>b{
+        display: block;
+        height:9px;
+        width:9px;
+        border-radius:50%;
+        border:1px solid #979797;
+    }
+    .invoice-cell>label>input:checked+span{
+        border-color: #fcc44b;
+    }
+    .invoice-cell>label>input:checked+span>b{
+        border:none;
+        background-color: #fcc44b;
+    }
 </style>
 {/block}
 
@@ -98,6 +141,52 @@
             <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
         </form>
     </div>
+    <div class="card invoice-card" v-if="subData.invoicing=='yes' && subData.app_id==1">
+        <div class="card-tit">开票信息</div>
+        <div class="invoice-cell">
+            <label for="invoice_no">
+                <input type="radio" id="invoice_no" value="0" name="invoice" v-model="invoice.invoice_type">
+                <span class="my-radio"><b></b></span>
+                不开发票
+            </label>
+            <label for="invoice_common">
+                <input type="radio" id="invoice_common" value="1" name="invoice" v-model="invoice.invoice_type">
+                <span class="my-radio"><b></b></span>
+                普通发票
+            </label>
+            <label for="invoice_added_tax">
+                <input type="radio" id="invoice_added_tax" value="2" name="invoice" v-model="invoice.invoice_type">
+                <span class="my-radio"><b></b></span>
+                增值税发票
+            </label>
+        </div>
+        <div v-if="invoice.invoice_type !== '0'">
+            <div class="card-cell">
+                <span>企业名称</span>
+                <input type="text" placeholder="请输入企业名称" v-model="invoice.department">
+            </div>
+            <div class="card-cell">
+                <span>纳税人识别号</span>
+                <input type="text" placeholder="请输入纳税人识别号" v-model="invoice.taxpayer_number">
+            </div>
+            <div class="card-cell">
+                <span>联系地址</span>
+                <input type="text" placeholder="请输入联系地址" v-model="invoice.contact_address">
+            </div>
+            <div class="card-cell">
+                <span>联系方式</span>
+                <input type="text" placeholder="请输入联系方式" v-model="invoice.mobile">
+            </div>
+            <div class="card-cell">
+                <span>开户银行</span>
+                <input type="text" placeholder="请输入开户银行" v-model="invoice.bank">
+            </div>
+            <div class="card-cell">
+                <span>开户账号</span>
+                <input type="text" placeholder="请输入开户账号" v-model="invoice.account_opening">
+            </div>
+        </div>
+    </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="subBtn">提交</button>
     </div>
@@ -122,7 +211,16 @@
                 dataUrl:[],
                 imgName:[]
             },
-            showCode:false
+            showCode:false,
+            invoice:{
+                invoice_type:'0',
+                department:'',
+                taxpayer_number:'',
+                contact_address:'',
+                mobile:'',
+                bank:'',
+                account_opening:''
+            }
         },
         methods: {
             toggleCode(){
@@ -230,17 +328,49 @@
                     }
                 }
             },
+            myToast(msg){
+                var _this = this;
+                _this.$toast({
+                    message: msg,
+                    position: 'bottom',
+                    duration: 2000
+                });
+            },
             subBtn: function () {
                 var _this = this;
-                console.log(_this.isSubmit)
+                console.log(_this.isSubmit);
                 if(!_this.isSubmit){
                     return;
-                }                console.log(_this.isSubmit)
+                }
+                if(_this.subData.invoicing == 'yes' && _this.subData.app_id == 1 && _this.invoice.invoice_type !== '0'){
+                    var invoice = _this.invoice;
+                    if(invoice.department === ''){
+                        _this.myToast('请填写企业名称~');
+                        return;
+                    }else if(invoice.taxpayer_number === ''){
+                        _this.myToast('请填写纳税人识别号~');
+                        return;
+                    }else if(invoice.contact_address === ''){
+                        _this.myToast('请填写联系地址~');
+                        return;
+                    }else if(invoice.mobile === ''){
+                        _this.myToast('请填写联系方式~');
+                        return;
+                    }else if(invoice.bank === ''){
+                        _this.myToast('请填写开户银行~');
+                        return;
+                    }else if(invoice.account_opening === ''){
+                        _this.myToast('请填写开户账号~');
+                        return;
+                    }else{
+                        _this.subData.invoice = invoice;
+                    }
+                }
 
                 _this.isSubmit = false;
                 _this.subData.payment_voucher = _this.payment_voucher;
+
                 var subData = JSON.parse(JSON.stringify(_this.subData));
-                console.log(subData);
                 var type = subData.type;
                 if(type){
                     console.log(subData)
@@ -257,6 +387,7 @@
                                 text:msg,
                                 html:true,
                                 type:"success",
+                                confirmButtonText: "确定",
                                 confirmButtonColor: "#fcc44b"
                             },function () {
                                 window.location.href = "/index/service/index";
@@ -266,6 +397,7 @@
                                 title:"提交失败!",
                                 text:"请重新提交！",
                                 type:"error",
+                                confirmButtonText: "确定",
                                 confirmButtonColor: "#fcc44b"
                             },function () {
                                 window.location.href = "/index/service/index";
@@ -277,6 +409,7 @@
                             title:"提交失败!",
                             text:'请重新提交！',
                             type:"error",
+                            confirmButtonText: "确定",
                             confirmButtonColor: "#fcc44b"
                         },function () {
                             window.location.href = "/index/service/index";

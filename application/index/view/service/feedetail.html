@@ -29,19 +29,19 @@
 
 {block name="body"}
 <div id="app">
-    <div class="card" v-for="item of info">
-        <div class="card-tit">{{item.title}}</div>
+    <div class="card">
+        <div class="card-tit">{{info.title}}</div>
         <div class="card-cell">
             <span>企业名称</span>
-            <span>{{item.name}}</span>
+            <span>{{info.name}}</span>
         </div>
         <div class="card-cell">
             <span>到期时间</span>
-            <span>{{item.expiration_time}}</span>
+            <span>{{info.expiration_time}}</span>
         </div>
         <div class="card-cell">
             <span>应缴费用</span>
-            <span>{{item.fee}}元</span>
+            <span>{{info.fee}}元</span>
         </div>
     </div>
     <div class="card">
@@ -58,7 +58,6 @@
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="orderBtn">下一步</button>
     </div>
-
 </div>
 {/block}
 {block name="script"}
@@ -85,6 +84,8 @@
                 _this.title= "房租费";
             }else if(_this.type==2){
                 _this.title= "物业费";
+            }else if(_this.type==4){
+                _this.title= "公耗费";
             }
             document.title=_this.title;
             _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
@@ -109,7 +110,7 @@
                 if(r!=null)return  r[2]; return null;
             },
             goHistory(){
-                window.location.href='/index/service/history/type/'+this.type+"/id/"+this.info[0].appid;
+                window.location.href='/index/service/history/type/'+this.type+"/id/"+this.info.appid;
             },
 //            微信jssdk - 图片预览
             loadImg:function (src,imglist) {
@@ -127,16 +128,14 @@
             orderBtn: function () {
                 if(this.type== 2){
                     var arr = [];
-                    for(var item in this.info){
-                        if(this.info[item].id){
-                            arr.push(this.info[item].id);
-                        }
-                    }
-                    var id = arr.join('-');
-                    window.location.href='/index/service/payment?type=feeinfo'+'&app_id='+this.info[0].appid+'&id='+id;
+//                    if(this.info.id){
+//                        arr.push(this.info.id);
+//                    }
+//                    var id = arr.join('-');
+                    window.location.href='/index/service/payment?type=feeinfo'+'&app_id='+this.info.appid+'&id='+this.info.id;
                     return;
                 }
-                window.location.href='/index/service/payment?type=feeinfo'+'&app_id='+this.info[0].appid+'&id='+this.info[0].id;
+                window.location.href='/index/service/payment?type=feeinfo'+'&app_id='+this.info.appid+'&id='+this.info.id;
 
 //                this.$http.post("/index/service/waterService",data).then(function (res) {
 //                    _this.isSubmit = true;
