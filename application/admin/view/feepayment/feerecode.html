@@ -4,55 +4,68 @@
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
 <style>
-    .mail-box .mail-ontact{
+    .mail-box .mail-ontact {
         width: 150px;
         min-width: 150px;
         overflow: hidden;
     }
-    .mail-box .mail-subject{
+
+    .mail-box .mail-subject {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         width: 124px !important;
         min-width: 124px;
     }
-    .mail-subject-div{
+
+    .mail-subject-div {
         width: 100px;
         max-width: 100px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .mail-box .mail-main{
+
+    .mail-box .mail-main {
         width: calc(100% - 460px);
         position: absolute;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .mail-date{
+
+    .mail-date {
         width: 160px;
         min-width: 160px;
         overflow: hidden;
     }
-    @media only screen and (max-width: 550px){
-        .mail-date{
+
+    @media only screen and (max-width: 550px) {
+        .mail-date {
             display: none;
         }
     }
-    .list_banner {width: 80px}
-    .list_type {width: 80px}
 
-    .fade{
+    .list_banner {
+        width: 80px
+    }
+
+    .list_type {
+        width: 80px
+    }
+
+    .fade {
         height: 1000px;
     }
-    th:not(:first-child),td:not(:first-child){
+
+    th:not(:first-child), td:not(:first-child) {
         text-align: center;
     }
-    .imgs{
+
+    .imgs {
         margin-top: 20px;
         max-width: 540px;
-        max-height:400px;
+        max-height: 400px;
     }
 </style>
 {/block}
@@ -66,12 +79,14 @@
     <div class="row">
         <div class="mail-box-header">
             <div class=" pull-right tooltip-demo">
-                <a href="{:Url('index')}?page={$p}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                <a href="{:Url('index')}?page={$p}" class="btn btn-white btn-sm" data-toggle="tooltip"
+                   data-placement="top"><i class="fa fa-times"></i> 关闭</a>
             </div>
             <h2>{$company.name}</h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}" data-original-title="移动到回收站"
+                <button class="btn btn-white btn-sm m-l ajax-post" url="{:Url('moveToTrash')}"
+                        data-original-title="移动到回收站"
                         data-toggle="tooltip" data-placement="top" target-form="ids"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -87,6 +102,7 @@
                     <th style="width:10%">到期时间</th>
                     <th>推送人数</th>
                     <th>点击人数</th>
+                    <th>发票种类</th>
                     <th style="width:15%">状态</th>
                     <th style="width:30%">操作</th>
                 </tr>
@@ -113,25 +129,48 @@
                         {$vo.number}
                     </td>
                     <td>
+                        {$vo.invoice_type}
+
+                    </td>
+
+                    <td>
 
                         <span>{$vo.status_text}</span>
 
                     </td>
                     <td>
-                        {lt name="$vo.status" value="2"}
-                        <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
-                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal" onclick="setImg('{$vo.id}','{$vo.images}')">收费单据</a>
-                        <a href="javascript:void(0)" class="btn-sm btn-success" onclick="push('{$vo.id}')">推送</a>
-                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form1" onclick="changestates('{$vo.id}')">审核</a>
-                        <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
-                        {else/}
-                        <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')" class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
-                        <a  class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal"  onclick="setImg('{$vo.id}','{$vo.images}')">收费单据</a>
-                        <span class="btn-default2">推送</span>
-                        <span class="btn-default2" >审核</span>
-                        <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url("moveToTrash")}')">删除</a>
+                        {if condition= "$vo.status > 0 "}
 
+                        {if condition="$vo.invoice_type == 0" }
+                        <span class="btn-default2">发票信息</span>
+                        {else/}
+                        <a data-toggle="modal" href="#invoice-form" onclick="invoice(this)" class="btn-sm btn-success"
+                           data-invoice-type="{$vo.invoice_type}"  data-taxpayer-number="{$vo.taxpayer_number}"
+                           data-contact-address="{$vo.contact_address}"  data-bank="{$vo.bank}"
+                           data-account-opening="{$vo.account_opening}"  data-mobile="{$vo.mobile}"  data-department="{$vo.department}"
+                           style="color: #fff;">发票信息</a>
+                        {/if}
+                        {else/} <span class="btn-default2">发票信息</span>{/if}
+
+                        {lt name="$vo.status" value="2"}
+                        <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')"
+                           class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
+                        <a class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal"
+                           onclick="setImg('{$vo.id}','{$vo.images}')">收费单据</a>
+                        <a href="javascript:void(0)" class="btn-sm btn-success" onclick="push('{$vo.id}')">推送</a>
+                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form1"
+                           onclick="changestates('{$vo.id}')">审核</a>
+                        <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url(" moveToTrash")}')">删除</a>
+                        {else/}
+                        <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')"
+                           class="btn-sm btn-success" style="color: #fff;">查看凭证</a>
+                        <a class="btn-sm btn-success" data-toggle="modal" data-target="#remark-modal"
+                           onclick="setImg('{$vo.id}','{$vo.images}')">收费单据</a>
+                        <span class="btn-default2">推送</span>
+                        <span class="btn-default2">审核</span>
+                        <a class="btn-sm btn-info" style="color: #fff" onclick="delItem('{$vo.id}','{:Url(" moveToTrash")}')">删除</a>
                         {/lt}
+
 
                     </td>
 
@@ -143,18 +182,74 @@
         </div>
     </div>
 </div>
+
+<div id="invoice-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="update">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">发票信息查看</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">发票种类:</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly  placeholder="服务时间" class="form-control" required="" name="invoice_type">
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">纳税人识别号:</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly placeholder="服务时间" class="form-control" required="" name="taxpayer_number">
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">联系地址:</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly placeholder="服务时间" class="form-control" required="" name="contact_address">
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">开户银行:</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly placeholder="服务时间" class="form-control" required="" name="bank">
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">开户账号:</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly placeholder="服务时间" class="form-control" required="" name="account_opening">
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">联系方式:</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly placeholder="服务时间" class="form-control" required="" name="mobile">
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">单位:</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly placeholder="服务时间" class="form-control" required="" name="department">
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div id="modal-form1" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-horizontal" method="post" action="update">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h3 class="modal-title text-center">审核</h3>
                 </div>
                 <div class="modal-body">
                     <p class="text-center zt-big-padding">是否通过审核？</p>
                     <!--<div class="form-group"><label class="col-sm-2 control-label">备注</label>-->
-                        <!--<div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>-->
+                    <!--<div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>-->
                     <!--</div>-->
                     <div class="form-group">
                         <div class="col-sm-12 zt-flex zt-space-around">
@@ -172,8 +267,9 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="modal-title text-center"  name="dialog-title">查看凭证</h3>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h3 class="modal-title text-center" name="dialog-title">查看凭证</h3>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -191,8 +287,9 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="modal-title text-center"  name="dialog-title">查看凭证</h3>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h3 class="modal-title text-center" name="dialog-title">查看凭证</h3>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -205,7 +302,7 @@
         </div>
     </div>
 </div>
-<div class="modal"  tabindex="-1" role="dialog" aria-hidden="true" id="remark-modal" aria-label="myModalLabel">
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" id="remark-modal" aria-label="myModalLabel">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -235,28 +332,45 @@
 <script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
-        $(".check-all").on("ifChanged",function(){
+        $(".check-all").on("ifChanged", function () {
             $("tbody").find(".ids").iCheck("toggle");
         });
     });
+    function  invoice(a) {
+        $("input[name='invoice_type']").val($(a).attr('data-invoice-type'));
+        $("input[name='taxpayer_number']").val($(a).attr('data-taxpayer-number'));
+        $("input[name='contact_address']").val($(a).attr('data-contact-address'));
+        $("input[name='bank']").val($(a).attr('data-bank'));
+        $("input[name='account_opening']").val($(a).attr('data-account-opening'));
+        $("input[name='mobile']").val($(a).attr('data-mobile'));
+        $("input[name='department']").val($(a).attr('data-department'));
+
+    }
+    
+    
+    
+    
+    
+    
+    
     function changeState(uid) {
         $.ajax({
-            data:{id:$("input[name='is_id']").val(),uid:uid},
-            type:"post",
-            url:"{:Url('Feepayment/changeState')}",
-            success:function (data) {
-                if (data.code==1){
-                    updateAlert(data.msg,"success");
+            data: {id: $("input[name='is_id']").val(), uid: uid},
+            type: "post",
+            url: "{:Url('Feepayment/changeState')}",
+            success: function (data) {
+                if (data.code == 1) {
+                    updateAlert(data.msg, "success");
                     setTimeout(function () {
-                        location.href=data.url;
-                    },2000);
-                }else{
-                    updateAlert(data.msg,"info");
+                        location.href = data.url;
+                    }, 2000);
+                } else {
+                    updateAlert(data.msg, "info");
                 }
             }
         });
@@ -268,12 +382,12 @@
     }
     function showImage(id) {
         $.ajax({
-            data:{id:id},
-            url:"{:Url('showImage')}",
-            type:"post",
-            success:function(data){
+            data: {id: id},
+            url: "{:Url('showImage')}",
+            type: "post",
+            success: function (data) {
                 $("#showImg").empty();
-               $("#showImg").append(data);
+                $("#showImg").append(data);
             }
         })
 
@@ -282,10 +396,10 @@
     //推送
     function push(id) {
         $.ajax({
-            data:{id:id},
-            url:"{:Url('pushUser')}",
-            type:"post",
-            success:function(data){
+            data: {id: id},
+            url: "{:Url('pushUser')}",
+            type: "post",
+            success: function (data) {
 
             }
         });
@@ -296,28 +410,28 @@
         console.log(button);
         var recipient = button.data('text');
         var modal = $(this);
-        var html = "<input type='hidden' id="+recipient+">";
+        var html = "<input type='hidden' id=" + recipient + ">";
         //var html = "<img src="+recipient+" alt='' class='imgs'>";
         //modal.find('.modal-body').html(html);
     })
-     $(".file").fileinput({
-       showPreview: false,
-       language: 'zh', //设置语言
-       uploadUrl: '{:Url("Upload/picture")}', //上传的地址
-       allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
-       maxFileSize: 1024 * 200,
-   }).on("filebatchselected", function(event, files) {
-       $(this).fileinput("upload");
-   }).on('fileuploaded', function(event, data, previewId, index) {
-       var response = $.parseJSON(data.response);
-       if(response.code == 1) {
-           $("#set_img").attr('src',response.data);
-           $("input[name='front_cover']").val(response.data);
-           //$(".img1").attr('src',response.data);
-       } else {
-           updateAlert(response.msg, 'warning');
-       }
-   });
+    $(".file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function (event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if (response.code == 1) {
+            $("#set_img").attr('src', response.data);
+            $("input[name='front_cover']").val(response.data);
+            //$(".img1").attr('src',response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
     $(".front_cover").imgbox({
         overlayShow: false,
         hideOnContentClick: true,
@@ -326,31 +440,31 @@
         alignment: 'center',       // Position - may be auto OR center.
         allowMultiple: false,
     });
-    function setImg(id,img) {
+    function setImg(id, img) {
         $("input[name='set_id']").val(id);
-        $("#set_img").attr('src',img);
+        $("#set_img").attr('src', img);
         $("input[name='front_cover']").val(img);
     }
     function pushImg() {
         var id = $("input[name='set_id']").val();
         var image = $("input[name='front_cover']").val();
         $.ajax({
-            data:{id:id,images:image},
-            url:"{:Url('pushImg')}",
-            type:"post",
-            success:function (data) {
-                if(data.code ==1 ){
-                    updateAlert(data.msg+" 稍后页面自动刷新～",'success');
+            data: {id: id, images: image},
+            url: "{:Url('pushImg')}",
+            type: "post",
+            success: function (data) {
+                if (data.code == 1) {
+                    updateAlert(data.msg + " 稍后页面自动刷新～", 'success');
                     setTimeout(function () {
                         location.href = data.url;
-                    },2000);
+                    }, 2000);
 
-                }else {
-                    updateAlert(data.msg,'info')
+                } else {
+                    updateAlert(data.msg, 'info')
                 }
             }
         });
     }
-   highlight_subnav("{:Url('feepayment/index')}");
+    highlight_subnav("{:Url('feepayment/index')}");
 </script>
 {/block}
