@@ -52,6 +52,37 @@
                 </div>
             </div>
         </div>
+        <div class="card" v-if="info.invoice_type!=0">
+            <div class="card-tit">开票信息</div>
+            <div class="card-cell">
+                <span>企业名称</span>
+                <span>{{info.name}}</span>
+            </div>
+            <div class="card-cell">
+                <span>纳税人识别号</span>
+                <span>{{info.taxpayer_number}}</span>
+            </div>
+            <div class="card-cell">
+                <span>开票类型</span>
+                <span>{{info.invoice_type==1?'普通发票':'增值税发票'}}</span>
+            </div>
+            <div class="card-cell">
+                <span>联系地址</span>
+                <span>{{info.contact_address}}</span>
+            </div>
+            <div class="card-cell">
+                <span>联系方式</span>
+                <a :href="'tel:'+info.mobile">{{info.mobile}}</a>
+            </div>
+            <div class="card-cell">
+                <span>开户银行</span>
+                <span>{{info.bank}}</span>
+            </div>
+            <div class="card-cell">
+                <span>开户账号</span>
+                <span>{{info.account_opening}}</span>
+            </div>
+        </div>
     </div>
     <div v-if="appid==2">
         <div class="card">
