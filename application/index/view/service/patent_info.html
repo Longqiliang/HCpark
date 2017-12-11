@@ -1,0 +1,307 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>专利申请</title>
+<style>
+    #app{
+        width:100%;
+        background: url("/index/images/service/patent/index-banner.png") left top no-repeat;
+        -webkit-background-size:100vw 50.133333vw;
+        background-size:100vw 50.133333vw;
+        min-height: 50.133333vw;
+    }
+    /*banner*/
+    .banner{
+        width:100%;
+        box-sizing: border-box;
+        /*height:50.133333vw;*/
+        padding:8vw 10.4vw;
+        position: relative;
+        text-align: center;
+        color: #fff;
+    }
+    .banner>.icon-remarks{
+        position: absolute;
+        display: block;
+        /*width:6.8rem;*/
+        height:2.6rem;
+        line-height: 2.6rem;
+        padding:0 0.3rem 0 0.9rem;
+        font-size: 1.4rem;
+        color: #333;
+        background-color: rgba(255,255,255,.7);
+        border-top-left-radius: 4.8rem;
+        border-bottom-left-radius: 4.8rem;
+        right:0;
+        top:0.7rem;
+        text-align: center;
+    }
+    .banner>.banner-title{
+        font-size: 1.6rem;
+    }
+    .banner>h2{
+        font-size:3.5rem;
+        line-height: 4.9rem;
+        font-weight:500;
+        padding:0;
+        margin:0;
+    }
+    /*patent-type*/
+    .patent-type{
+        width:100%;
+        padding-bottom:1.2rem;
+    }
+    .type-list{
+        margin:0 auto;
+        width:90.666666vw;
+    }
+    .type-list>li{
+        box-sizing: border-box;
+        width:100%;
+        /*height: 12rem;*/
+        padding:2rem  5.3vw;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0.3rem;
+        box-shadow: 0 1px 10px 0 rgba(0,0,0,.1);
+        background-color: #fff;
+        margin-bottom: 1.2rem;
+    }
+    .type-list>li>img{
+        width:73px;
+        height:83px;
+        margin: 0 5px;
+        flex:none;
+    }
+    .type-title{
+        height:100%;
+        width:14.4rem;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        flex-direction:column;
+        /*align-items: flex-end;*/
+    }
+    .type-title>b{
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    #app .img-right>.type-title{
+        text-align: right;
+    }
+    .type-title>span{
+        color: #999;
+        font-size: 1.2rem;
+    }
+
+    .modal-box{
+        width:100vw;
+        height:100vh;
+        background: rgba(0,0,0,0.4);
+        position: fixed;
+        top:0;
+        left:0;
+        z-index: 10;
+    }
+    .overflow-hidden{
+        height:100vh;
+        overflow: hidden;
+    }
+    .modal-content{
+        position: absolute;
+        top:50%;
+        left: 50%;
+        width: 80vw;
+        /*height:109vw;*/
+        -webkit-transform: translate(-50%,-50%);
+        -moz-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        -o-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+    }
+    .modal-content>img{
+        width:100%;
+        position: relative;
+        z-index:15;
+    }
+    .modal-content>.modal-content-mid{
+        box-sizing: border-box;
+        /*height:74.133333vw;*/
+        /*width:100%;*/
+        padding-top:13.333333vw;
+        margin-top:-13.333333vw;
+        background-color: #fff;
+        border-bottom-left-radius: 2.666666vw;
+        border-bottom-right-radius: 2.666666vw;
+        border-bottom:1px solid #fff
+    }
+    .modal-content>.modal-content-mid>.modal-title{
+        text-align: center;
+        font-size: 1.6rem;
+        font-weight: bold;
+        padding:4vw;
+    }
+    .patent-need{
+        box-sizing: border-box;
+        width:100%;
+        display: -webkit-flex;
+        display: flex;
+        /*align-items: center;*/
+        justify-content: space-around;
+        /*flex-wrap: wrap;*/
+        /*padding:0 5.3vw;*/
+    }
+    .patent-need>li{
+        box-sizing: border-box;
+        display: -webkit-flex;
+        display: flex;
+        /*justify-content: space-around;*/
+        /*align-items: center;*/
+        flex-direction: column;
+    }
+    .patent-need>li>div{
+        box-sizing: border-box;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 1.5rem;
+        margin-bottom: 5.3vw;
+    }
+    .patent-need>li>div:before{
+        display: block;
+        content: '';
+        width:4px;
+        height:4px;
+        border-radius: 50%;
+        background-color: #69B9F9;
+        margin-right:5px;
+    }
+    .modal-content .modal-btn{
+        width:14rem;
+        height:3.2rem;
+        line-height: 3.2rem;
+        font-size: 1.5rem;
+        text-align: center;
+        color: #fff;
+        border-radius:3px;
+        margin:0.5rem auto 2rem;
+    }
+    .modal-content .modal-btn.invent{
+        background-color: rgba(105,185,249,1);
+        box-shadow: 0 2px 4px 0 rgba(105,185,249,1);
+    }
+    .modal-content .modal-btn.practical{
+        background-color: rgba(252,196,75,1);
+        box-shadow: 0 2px 4px 0 rgba(252,196,75,1);
+    }
+    .modal-content .modal-btn.exterior{
+        background-color:rgba(145,143,230,1);
+        box-shadow: 0 2px 4px 0 rgba(145,143,230,1);
+    }
+    .modal-close{
+        margin:4rem auto 0;
+        width: 2.8rem;
+        height: 2.8rem;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+        color: #fff;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="banner">
+        <a href="#" class="icon-remarks">申请记录</a>
+        <h2>专利申请</h2>
+        <div class="banner-title">便捷／安心／申请无忧</div>
+        <!--<div class="record" @click="jumpTo()"> <span class="icon-record"></span></div>-->
+    </div>
+    <div class="patent-type">
+        <ul class="type-list">
+            <li @click="toggleModal(0)">
+                <div class="type-title">
+                    <b>发明专利</b>
+                    <span>对产品、方法及其结合<br>提出新的技术方案</span>
+                </div>
+                <img src="/index/images/service/patent/list-invent.png" class="type-ticket" alt="">
+            </li>
+            <li class="img-right"  @click="toggleModal(1)">
+                <img src="/index/images/service/patent/list-practical.png" class="type-ticket" alt="">
+                <div class="type-title">
+                    <b>实用新型</b>
+                    <span>保护产品形状、构造等微创<br>性3-6个月授权十年保质期</span>
+                </div>
+            </li>
+            <li  @click="toggleModal(2)">
+                <div class="type-title">
+                    <b>外观设计</b>
+                    <span>保护产品形状、图案或与其<br>色彩结合所作出的新设计</span>
+                </div>
+                <img src="/index/images/service/patent/list-exterior.png" class="type-ticket" alt="">
+            </li>
+        </ul>
+    </div>
+    <div class="modal-box" v-show="isShow">
+        <div class="modal-content">
+            <img :src="type[typeIndex].banner">
+            <div class="modal-content-mid">
+                <div class="modal-title">需要提供以下信息</div>
+                <ul class="patent-need">
+                    <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===0">{{item}}</div></li>
+                    <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===1">{{item}}</div></li>
+                    <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===2">{{item}}</div></li>
+                </ul>
+                <div class="modal-btn" :class="{invent:typeIndex===0,practical:typeIndex===1,exterior:typeIndex===2}">前往申请</div>
+            </div>
+            <div class="modal-close" @click="toggleModal('')"><i class="iconfont hc-cha1"></i></div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            type:[
+                {
+                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','技术交底书'],
+                    banner:'/index/images/service/patent/banner-invent.png'
+                },
+                {
+                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','技术交底书'],
+                    banner:'/index/images/service/patent/banner-practical.png'
+                },
+                {
+                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','简单说明','产品图'],
+                    banner:'/index/images/service/patent/banner-exterior.png'
+                }
+            ],
+            isShow:false,
+            typeIndex:0
+        },
+        methods: {
+            jumpTo(){
+
+            },
+            toggleModal(typeIndex){
+                var _this=this;
+                if(typeIndex!==''){
+                    _this.typeIndex = typeIndex;
+                }
+                _this.isShow = !_this.isShow
+
+            }
+        }
+    })
+</script>
+{/block}

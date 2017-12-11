@@ -2047,9 +2047,14 @@ class Service extends Base
         return $info;
     }
 
-    //专利申请 app_id=21
     public function patent()
     {
+        return $this->beforeActionList;
+    }
+    //专利申请 app_id=21
+    public function patentInfo()
+    {
+
         if (IS_POST) {
             $data = input('');
             $patent = new Patent();
@@ -2084,7 +2089,9 @@ class Service extends Base
                 return $this->error('提交失败');
             }
         } else {
-            return $this->fetch();
+            $data = input('');
+            $this->assign('info',$data);
+            return $this->fetch('patent_info');
         }
     }
 
