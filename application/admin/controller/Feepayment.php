@@ -186,6 +186,7 @@ class Feepayment extends Admin
     public function feeRecode()
     {
         $feepayment = new FeePaymentModel();
+        $park_id = session('user_auth')['park_id'];
         $infos = input('p');
         //return dump($infos);
         $id = input('id');
@@ -202,7 +203,7 @@ class Feepayment extends Admin
         $this->assign('p',$infos);
         $this->assign('company', $company);
         $this->assign('list', $list);
-
+        $this->assign('park_id', $park_id);
         return $this->fetch();
     }
 

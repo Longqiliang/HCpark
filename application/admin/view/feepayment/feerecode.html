@@ -102,7 +102,9 @@
                     <th style="width:10%">到期时间</th>
                     <th>推送人数</th>
                     <th>点击人数</th>
+                    {if condition="$park_id eq 80"}
                     <th>发票种类</th>
+                    {/if}
                     <th style="width:15%">状态</th>
                     <th style="width:30%">操作</th>
                 </tr>
@@ -128,19 +130,27 @@
                     <td>
                         {$vo.number}
                     </td>
+                    {if condition="$park_id eq 80"}
                     <td>
-                        {$vo.invoice_type}
+                        {if condition="$vo.invoice_type eq 0"}
+                         不开发票
+                        {elseif  condition="$vo.invoice_type eq 1" }
+                         普通发票
+                        {elseif  condition="$vo.invoice_type eq 2" }
+                        增值税发票
+                        {/if}
 
                     </td>
-
+                   {/if}
                     <td>
 
                         <span>{$vo.status_text}</span>
 
                     </td>
                     <td>
-                        {if condition= "$vo.status > 0 "}
 
+                        {if condition="$park_id eq 80"}
+                        {if condition= "$vo.status > 0 "}
                         {if condition="$vo.invoice_type == 0" }
                         <span class="btn-default2">发票信息</span>
                         {else/}
@@ -150,7 +160,7 @@
                            data-account-opening="{$vo.account_opening}"  data-mobile="{$vo.mobile}"  data-department="{$vo.department}"
                            style="color: #fff;">发票信息</a>
                         {/if}
-                        {else/} <span class="btn-default2">发票信息</span>{/if}
+                        {else/} <span class="btn-default2">发票信息</span>{/if}{/if}
 
                         {lt name="$vo.status" value="2"}
                         <a data-toggle="modal" href="#modal-form" onclick="showImage('{$vo.id}')"
