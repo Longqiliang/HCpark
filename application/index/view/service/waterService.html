@@ -104,17 +104,17 @@
             <label for="tel">联系电话</label>
             <input type="text" placeholder="请输入联系电话" id="tel" v-model="defaultData.mobile">
         </div>
-        <div v-if="true">
+        <div v-if="info.park_id==80">
             <div class="card-cell">
                 <span>支付宝账号</span>
                 <div class="pay-num">
-                    <span>{{'11111111'}}</span>
+                    <span>{{info.payment_alipay}}</span>
                     <img src="/index/images/service/icon-paycode.png" alt="" class="pay-code" @click="toggleCode">
                 </div>
             </div>
             <div class="card-cell">
                 <span>账号名称</span>
-                <span>{{'22222222'}}</span>
+                <span>{{info.ailpay_user}}</span>
             </div>
         </div>
     </div>
@@ -125,7 +125,7 @@
         <button class="btn btn-block btn-warning" @click="orderBtn">确定预约</button>
     </div>
     <div class="modal-box" v-if="showCode" @click="toggleCode">
-        <img :src="'/index/images/service/payment-code-binjiang.png'" alt="支付二维码">
+        <img :src="info.code" alt="支付二维码">
     </div>
 </div>
 {/block}
