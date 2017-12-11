@@ -215,6 +215,23 @@ class Service extends Base
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
+
+                $cp = new CompanyApplication();
+                $Park = new Park();
+                $park = $Park->where('id', $parkid)->find();
+                $CA = $cp->where('app_id', $app_id)->find();
+                //支付宝用户
+                $info['ailpay_user'] = $CA['has_alipay'] == 1 ? $park['ailpay_user'] : "";
+                //缴费支付宝账号
+                $info['payment_alipay'] = $CA['has_alipay'] == 1 ? $park['payment_alipay'] : "";
+                if ($parkid == 3) {
+                    $imgs = "/index/images/service/payment-code-xiken.png";
+                } elseif ($parkid == 80) {
+                    $imgs = "/index/images/service/payment-code-binjiang.png";
+                }
+                $info['code'] = $imgs;
+
+
                 //$info['app_id'] = $app_id;
                 break;
             //室内保洁
