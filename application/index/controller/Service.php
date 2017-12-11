@@ -2328,6 +2328,7 @@ class Service extends Base
             $datas['account_opening'] = $data['invoice']['account_opening'];
             $datas['mobile'] = $data['invoice']['mobile'];
             $datas['department'] = $data['invoice']['department'];
+            $datas['status'] = 1;
             $res2 = $feePayment->where('id', $id)->find();
             $res = $feePayment->where('id', $id)->update($datas);
             //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
@@ -2397,7 +2398,7 @@ class Service extends Base
                 $message = [
                     "title" => "商标查询服务提示",
                     "description" => "您有一条新的商标查询服务待处理，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/1/id/' . $ti->getLastInsID(),
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/12/can_check/yes/type/1/id/' . $ti->getLastInsID(),
                 ];
                 //推送给运营
                 $reult = $this->commonSend(1, $message, "", 12);
@@ -3347,7 +3348,7 @@ class Service extends Base
                     $message = [
                         "title" => "商标查询服务回复提示",
                         'description' => "您的商标查询园区已回复，点击查看详情",
-                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/1/id/' . $id
+                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/12/can_check/no/type/1/id/' . $id
                     ];
                     commonService::sendPersonalMessage($message, $trademarkin['userid']);
                     return $this->success("回复成功");
@@ -3363,7 +3364,7 @@ class Service extends Base
                     $message = [
                         "title" => "商标咨询服务回复提示",
                         'description' => "您的商标咨询园区已回复，点击查看详情",
-                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/2/id/' . $id
+                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/12/can_check/no/type/2/id/' . $id
                     ];
                     commonService::sendPersonalMessage($message, $trademarka['userid']);
                     return $this->success("回复成功");

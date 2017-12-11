@@ -21,7 +21,7 @@ class ExchangePoint extends Model
     {
         $park_id = session('park_id');
         $userid = session('userId');
-        $history = $this->where(['userid' => $userid, 'park_id' => $park_id, 'status' => ['neq', -1]])->select();
+        $history = $this->where(['userid' => $userid, 'park_id' => $park_id, 'status' => ['neq', -1]])->order('create_time desc')->select();
         return $history;
     }
 

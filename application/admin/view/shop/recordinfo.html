@@ -87,10 +87,10 @@
                     <td>{$vo.create_time|time_format='Y-m-d H:i'}</td>
                     <td>
                         {eq name="vo.status" value="0"}
-                        <span >等待兑换</span>
+                        <span >未兑换</span>
                         {/eq}
                         {eq name="vo.status" value="1"}
-                        <span class="txt-success">兑换成功</span>
+                        <span class="txt-success">已核销</span>
                         {/eq}
 
 

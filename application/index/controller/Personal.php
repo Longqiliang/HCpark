@@ -909,7 +909,8 @@ class Personal extends Base
 
     /*企业服务 type 1 运营身份  2 物业身份  3 用户本身 */
     public function getCompany($type)
-    {   $park_id = session('park_id');
+    {
+        $park_id = session('park_id');
         $userid = session('userId');
         switch ($type) {
             case 1:
@@ -958,18 +959,19 @@ class Personal extends Base
                         $value['status_text'] = '已完成';
                     }
                 }
-               return $list;
+                return $list;
                 break;
         }
     }
 
     //商标查询type 1 运营身份  2 物业身份  3 用户本身
-    public  function  getTrademarkInquire($type){
+    public function getTrademarkInquire($type)
+    {
         $park_id = session('park_id');
         $userid = session('userId');
         $appid = 12;
         $can_check = "yes";
-        $list=array();
+        $list = array();
         switch ($type) {
             case 1:
                 $list = TrademarkInquire::where(['status' => ['neq', -1], 'park_id' => $park_id])->select();
@@ -1018,13 +1020,15 @@ class Personal extends Base
                 break;
         }
     }
+
     //商标咨询type 1 运营身份  2 物业身份  3 用户本身
-    public  function  getTrademarkAdvisory($type){
+    public function getTrademarkAdvisory($type)
+    {
         $park_id = session('park_id');
         $userid = session('userId');
         $appid = 12;
         $can_check = "yes";
-        $list=array();
+        $list = array();
         switch ($type) {
             case 1:
                 $list = TrademarkAdvisory::where(['status' => ['neq', -1], 'park_id' => $park_id])->select();
@@ -1074,13 +1078,15 @@ class Personal extends Base
                 break;
         }
     }
+
     //专利申请
-    public  function  getPatent($type){
+    public function getPatent($type)
+    {
         $park_id = session('park_id');
         $userid = session('userId');
         $appid = 21;
         $can_check = "yes";
-        $list=array();
+        $list = array();
         switch ($type) {
             case 1:
                 $list = Patent::where(['status' => ['neq', -1], 'park_id' => $park_id])->select();
@@ -1121,13 +1127,15 @@ class Personal extends Base
                 break;
         }
     }
-    public  function  getCopyRight($type){
+
+    public function getCopyRight($type)
+    {
         $appid = 22;
         $can_check = "yes";
         $copysoftwrite = new CopyrightSoftwrite();
         $copyart = new CopyrightArt();
         $copysoft = new CopyrightSoft();
-        $list=array();
+        $list = array();
         switch ($type) {
             case 1:
                 $copyartlist = $copyart->getCoypright(2);
@@ -1172,6 +1180,7 @@ class Personal extends Base
                 break;
         }
     }
+
     /*我的服务*/
     public function service()
     {
@@ -1243,7 +1252,7 @@ class Personal extends Base
                     //版权登记（园区）
                     $copy = $this->getCopyRight($type);
                 }
-                $company_list=array_merge($Patent,$TrademarkAdvisory,$TrademarkInquire,$copy,$company_list);
+                $company_list = array_merge($Patent, $TrademarkAdvisory, $TrademarkInquire, $copy, $company_list);
                 $company_list = empty($company_list) ? array() : $company_list;
                 $this->assign('company', json_encode($company_list));
                 break;
@@ -1263,7 +1272,7 @@ class Personal extends Base
                 //版权登记(用户)
                 $copy = $this->getCopyRight($type);
                 //全部合并（企业服务）
-                $company_list=array_merge($Patent,$TrademarkAdvisory,$TrademarkInquire,$copy,$company_list);
+                $company_list = array_merge($Patent, $TrademarkAdvisory, $TrademarkInquire, $copy, $company_list);
                 //(物业服务)
                 if ($userinfo['fee_status'] == 1) {
                     $allList = array_merge($list1, $allList);
@@ -1405,10 +1414,14 @@ class Personal extends Base
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
-
+        $map['manage'] = 0;
+        $map['water_status'] = 0;
+        $map['fee_status']=0;
         $result = $user->where(['userid' => $userId])->update($map);
         $res = $wechat->updateUser($data);
         if ($res) {
+
+
             Session::set('park_id', $park_id);
             $this->success("修改成功", '', session('park_id'));
         } else {
@@ -1416,6 +1429,7 @@ class Personal extends Base
             $this->error("修改失败");
         }
     }
+
     //验证
     public function verification()
     {
@@ -1430,6 +1444,7 @@ class Personal extends Base
             $this->error("验证码失败");
         }
     }
+
     //推荐关注
     public function recommend()
     {
@@ -1437,6 +1452,7 @@ class Personal extends Base
         $this->assign('park_id', json_encode($park_id));
         return $this->fetch();
     }
+
     public function version()
     {
         return $this->fetch();
