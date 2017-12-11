@@ -10,13 +10,16 @@
     .font-gray{
         color: #999;
     }
-
+    .cell-address{
+        font-size: 1.5rem;
+    }
     .pay-num{
         display: -webkit-flex;
         display: flex;
         align-items: center;
     }
     .pay-num>span{
+        font-size: 1.5rem;
         -webkit-touch-callout:inherit;
         -webkit-user-select:text;
         -khtml-user-select:text;
@@ -25,6 +28,9 @@
         user-select:text;
         -o-user-select:text;
         margin-right: 0.5rem;
+    }
+    .pay-name{
+        font-size: 1.5rem;
     }
     .pay-code{
         width:1.6rem;
@@ -104,18 +110,20 @@
             <label for="tel">联系电话</label>
             <input type="text" placeholder="请输入联系电话" id="tel" v-model="defaultData.mobile">
         </div>
-        <div v-if="info.park_id==80">
-            <div class="card-cell">
-                <span>支付宝账号</span>
-                <div class="pay-num">
-                    <span>{{info.payment_alipay}}</span>
-                    <img src="/index/images/service/icon-paycode.png" alt="" class="pay-code" @click="toggleCode">
-                </div>
+
+    </div>
+    <div class="card"  v-if="info.park_id==80">
+        <div class="card-tit">缴费信息</div>
+        <div class="card-cell">
+            <span>支付宝账号</span>
+            <div class="pay-num">
+                <span>{{info.payment_alipay}}</span>
+                <img src="/index/images/service/icon-paycode.png" alt="" class="pay-code" @click="toggleCode">
             </div>
-            <div class="card-cell">
-                <span>账号名称</span>
-                <span>{{info.ailpay_user}}</span>
-            </div>
+        </div>
+        <div class="card-cell">
+            <span>账号名称</span>
+            <span class="pay-name">{{info.ailpay_user}}</span>
         </div>
     </div>
     <div class="card-more">
