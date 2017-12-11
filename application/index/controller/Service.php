@@ -677,7 +677,7 @@ class Service extends Base
     public function payment()
     {
         $user_id = session('userId');
-        $userinfo = WechatUser::where('userid',$user_id)->find();
+        $userinfo = WechatUser::where('userid', $user_id)->find();
         $data = input('');
         $park_id = session('park_id');
         $cp = new CompanyApplication();
@@ -692,27 +692,36 @@ class Service extends Base
         $data['payment_alipay'] = $CA['has_alipay'] == 1 ? $park['payment_alipay'] : "";
         //缴费支付宝账号
         $data['payment_bank'] = $CA['has_bank'] == 1 ? $park['payment_bank'] : "";
+
+
+        $data['invoice']=array();
         //用户联系方式
-        $data['mobile']=$userinfo['mobile'];
+        $data['invoice']['mobile'] = $userinfo['mobile'];
         //用户公司名称
-        $data['department'] = isset($userinfo->departmentName->name)?$userinfo->departmentName->name:"";
+        $data['invoice']['department'] = isset($userinfo->departmentName->name) ? $userinfo->departmentName->name : "";
+       //发票其他信息
+        $data['invoice']['taxpayer_number'] = "";
+        $data['invoice']['contact_address'] = "";
+        $data['invoice']['bank'] = "";
+        $data['invoice']['account_opening'] = "";
+
         //开不开票
-        $data['invoicing']=$park_id ==80?"yes":"no";
+        $data['invoicing'] = $park_id == 80 ? "yes" : "no";
         if ($park_id == 3) {
 
             $imgs = "/index/images/service/payment-code-xiken.png";
 
         } elseif ($park_id == 80) {
 
-            $info = FeePayment::where(['status'=>1,'company_id'=>$userinfo['department']])->order('create_time desc')->find();
-           if(count($info)>0){
-               $data['department']=$info['department'];
-               $data['mobile']=$info['mobile'];
-               $data['taxpayer_number'] = $info['taxpayer_number'];
-               $data['contact_address'] = $info['contact_address'];
-               $data['bank'] = $info['bank'];
-               $data['account_opening'] = $info['account_opening'];
-           }
+            $info = FeePayment::where(['status' => 1, 'company_id' => $userinfo['department']])->order('create_time desc')->find();
+            if (count($info) > 0) {
+                $data['invoice']['department'] = $info['department'];
+                $data['invoice']['mobile'] = $info['mobile'];
+                $data['invoice']['taxpayer_number'] = $info['taxpayer_number'];
+                $data['invoice']['contact_address'] = $info['contact_address'];
+                $data['invoice']['bank'] = $info['bank'];
+                $data['invoice']['account_opening'] = $info['account_opening'];
+            }
 
             $imgs = "/index/images/service/payment-code-binjiang.png";
 
@@ -1278,12 +1287,12 @@ class Service extends Base
                 $point = new  ExchangePoint();
                 $map = [
                     'userid' => session('userId'),
-                    'content' => '设备服务（二楼会议室）',
+                    'content' => '多功能厅租赁',
                     'score' => 3,
                     'create_time' => time(),
                     'park_id' => session('park_id'),
                     'status' => 0,
-                    'type' => 1
+                    'type' => 2
 
                 ];
                 $point->save($map);
@@ -1320,13 +1329,11 @@ class Service extends Base
             $value->save();
         }
         /* **************************************/
-
         //明天的时间
         $Today = mktime(8, 0, 0, date('m'), date('d') + 1, date('Y'));
         $map = [
             'create_user' => $user_id,
             'status' => 1,
-
         ];
         //用户约成功的
         $all_check2 = array();
@@ -1498,12 +1505,12 @@ class Service extends Base
                 $point = new  ExchangePoint();
                 $map = [
                     'userid' => session('userId'),
-                    'content' => '设备服务（LED屏）',
+                    'content' => 'LED屏租赁',
                     'score' => 1,
                     'create_time' => time(),
                     'park_id' => session('park_id'),
                     'status' => 0,
-                    'type' => 1
+                    'type' => 2
 
                 ];
                 $point->save($map);
@@ -1863,7 +1870,7 @@ class Service extends Base
                 'name' => $types[$v['type']],
                 'time' => date('Y-m-d', $v['create_time']),
                 'status' => $v['status'],
-                "url" => '/index/service/historyDetail/appid/2/can_check/yes/id/' . $v['id']
+                "url" => '/index/service/historyDetail/appid/2/can_check/no/id/' . $v['id']
 
             ];
         }
@@ -1968,7 +1975,7 @@ class Service extends Base
                 'time' => date('Y-m-d', $v['create_time']),
                 'num' => $v['number'],
                 'status' => $v['status'],
-                "url" => '/index/service/historyDetail/appid/3/can_check/yes/id/' . $v['id']
+                "url" => '/index/service/historyDetail/appid/3/can_check/no/id/' . $v['id']
             ];
         }
 
@@ -2188,7 +2195,7 @@ class Service extends Base
                 $info['title'] = '水电费';
             } else if ($type == 3) {
                 $info['title'] = '房租费';
-            }else if ($type == 4) {
+            } else if ($type == 4) {
                 $info['title'] = '功耗费';
             }
             $info['appid'] = $appid;
@@ -2265,9 +2272,14 @@ class Service extends Base
             $info = $copy->copyHistory();
         }
         //物业服务（记录详情页跳转地址为historyDetail）
-        if ($company_type == 0 && !empty($company_type)) {
+        if ($company_type == 0) {
             foreach ($info as $k => $value) {
-                $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
+                if (empty($type)) {
+                    $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/id/' . $info[$k]['id'];
+                } else {
+
+                    $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
+                }
             }
 
         } //企业服务（记录详情页跳转地址为historyDetailCompany）
@@ -2299,43 +2311,43 @@ class Service extends Base
             $datas['account_opening'] = $data['invoice']['account_opening'];
             $datas['mobile'] = $data['invoice']['mobile'];
             $datas['department'] = $data['invoice']['department'];
-                $res2 = $feePayment->where('id', $id)->find();
-                $res = $feePayment->where('id', $id)->update($datas);
-                //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
-                switch ($res2['type']) {
-                    case 1:
-                        $res2['type_text'] = "水电费";
-                        break;
-                    case 2:
-                        $res2['type_text'] = "物业费";
-                        break;
-                    case 3:
-                        $res2['type_text'] = "房租费";
-                        break;
-                    case 4:
-                        $res2['type_text'] = "公耗费";
-                        break;
-                }
-                if ($res2) {
-                    $message = [
-                        "title" => $res2['type_text'] . "缴纳确认提示",
-                        "description" => $res2['name'] . "企业\n" . $res2['type_text'] . "\n到期时间：" . $res2['expiration_time'] . "\n应缴费用：" . $res2['fee'] . "元",
-                        "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $id
-                    ];
-                    //推送给运营
-                    $reult = $this->commonSend(1, $message, "", $appid);
-                    /*$new = [
-                        "title" => $message['title'],
-                        "message" => $message['description'],
-                        'type' => 2,
-                        'park_id' => session('park_id'),
-                        'app_id' => $data['app_id'],
-                        'sid' => $id,
-                        'create_time' => time(),
-                        'status' => 0
-                    ];
-                    $savemessage = $personalMessage->save($new);*/
-                }
+            $res2 = $feePayment->where('id', $id)->find();
+            $res = $feePayment->where('id', $id)->update($datas);
+            //费用类型：1为水电费，2为物业费，3位为房租费，4位公耗费
+            switch ($res2['type']) {
+                case 1:
+                    $res2['type_text'] = "水电费";
+                    break;
+                case 2:
+                    $res2['type_text'] = "物业费";
+                    break;
+                case 3:
+                    $res2['type_text'] = "房租费";
+                    break;
+                case 4:
+                    $res2['type_text'] = "公耗费";
+                    break;
+            }
+            if ($res2) {
+                $message = [
+                    "title" => $res2['type_text'] . "缴纳确认提示",
+                    "description" => $res2['name'] . "企业\n" . $res2['type_text'] . "\n到期时间：" . $res2['expiration_time'] . "\n应缴费用：" . $res2['fee'] . "元",
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $id
+                ];
+                //推送给运营
+                $reult = $this->commonSend(1, $message, "", $appid);
+                /*$new = [
+                    "title" => $message['title'],
+                    "message" => $message['description'],
+                    'type' => 2,
+                    'park_id' => session('park_id'),
+                    'app_id' => $data['app_id'],
+                    'sid' => $id,
+                    'create_time' => time(),
+                    'status' => 0
+                ];
+                $savemessage = $personalMessage->save($new);*/
+            }
 
             $msg = "您的缴费信息正在核对中;核对完成后，将在个人中心中予以反馈;请耐心等待，确认成功后;发票将由园区工作人员在15个工作日之内送达企业";
             return $this->success('成功', "", $msg);
@@ -2917,7 +2929,7 @@ class Service extends Base
                             'create_time' => time(),
                             'park_id' => session('park_id'),
                             'status' => 0,
-                            'type' => 1
+                            'type' => 2
 
                         ];
                         $point->save($map);
@@ -3077,7 +3089,7 @@ class Service extends Base
                         'create_time' => time(),
                         'park_id' => session('park_id'),
                         'status' => 0,
-                        'type' => 1
+                        'type' => 2
 
                     ];
                     $point->save($map);
@@ -3163,7 +3175,7 @@ class Service extends Base
                         'create_time' => time(),
                         'park_id' => session('park_id'),
                         'status' => 0,
-                        'type' => 1
+                        'type' => 2
 
                     ];
                     $point->save($map);
@@ -3270,12 +3282,35 @@ class Service extends Base
                           'userid' => $record['user_id']
                       ];
                       $savemessage = $personalMessage->save($new);*/
+                    //只有2／二楼多功能厅，3／led屏 预约有积分增加 所以取消预约后要减去
+                    if($type ==2 &&$type ==3) {
+                        if($type==2){
+                            $score = 3;
 
-                    //取消预约一次设备服务，减得1个积分；
-                    WechatUser::where('userid', session('userId'))->setDec('score', 1);
-                    $message = "积分服务提示\n您取消一次设备服务，积分-1！";
-                    //推送给自己
-                    $reult = $this->commonSendText(4, $message, session('userId'), 8);
+                        }else{
+                            $score=1;
+                        }
+
+                        //取消预约一次设备服务，减得1个积分；
+                        WechatUser::where('userid', session('userId'))->setDec('score',  $score);
+                        $message = "积分服务提示\n您取消一次设备服务，积分-1！";
+                        //并记录
+                        $point = new  ExchangePoint();
+                        $map = [
+                            'userid' => session('userId'),
+                            'content' => '设备服务（取消）',
+                            'score' =>  $score,
+                            'create_time' => time(),
+                            'park_id' => session('park_id'),
+                            'status' => 0,
+                            'type' => 1
+
+                        ];
+                        $point->save($map);
+                        //推送给自己
+                        $reult = $this->commonSendText(4, $message, session('userId'), 8);
+                    }
+
                     return $this->success("取消成功");
                 } else {
                     return $this->error("推送失败");
