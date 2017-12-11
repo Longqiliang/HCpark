@@ -344,12 +344,11 @@
             },
             subBtn: function () {
                 var _this = this;
-                console.log(_this.isSubmit);
+                var invoice = _this.invoice;
                 if(!_this.isSubmit){
                     return;
                 }
                 if(_this.subData.invoicing == 'yes' && _this.subData.app_id == 1 && _this.invoice.invoice_type !== '0'){
-                    var invoice = _this.invoice;
                     if(invoice.department === ''){
                         _this.myToast('请填写企业名称~');
                         return;
@@ -368,20 +367,15 @@
                     }else if(invoice.account_opening === ''){
                         _this.myToast('请填写开户账号~');
                         return;
-                    }else{
-                        _this.subData.invoice = invoice;
                     }
                 }
-
-                _this.isSubmit = false;
+                _this.subData.invoice = invoice;
                 _this.subData.payment_voucher = _this.payment_voucher;
-
+                _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 var type = subData.type;
                 if(type){
-                    console.log(subData)
                     this.$http.post(type,subData).then(function (res) {
-                        console.log(res.data);
                         _this.isSubmit = true;
                         var data = res.data;
                         if(data.code == 1){

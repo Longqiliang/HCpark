@@ -18,9 +18,8 @@
     <!--tab-->
     <div class="tabs clear">
         <div class="tab"><span>新闻动态</span></div>
-        <div class="tab"><span>园区通告</span></div>
+        <div class="tab"><span>政策通告</span></div>
         <div class="tab"><span>好文分享</span></div>
-        <div class="tab"><span>政策法规</span></div>
     </div>
     <!--切换列表-->
     <div class="content">
@@ -49,7 +48,7 @@
                 {/empty}
             </div>
         </div>
-        <!--园区通告-->
+        <!--政策通告-->
         <div class="notices hidden">
             <div class="notice notify">
                 {volist name="list2" id="vo2"}
@@ -93,30 +92,6 @@
                 </a>
                 {/volist}
                 {empty name='list3'}
-                <img src="/index/images/service/card/icon-default.jpg" class="no-list">
-                {/empty}
-            </div>
-        </div>
-        <!--政策法规-->
-        <div class="notices hidden">
-            <div class="notice policy">
-                {volist name="list4" id="vo4"}
-                <a href="{:Url('Policy/detail?id='.$vo4['target_id'])}" class="list clear">
-                    <div class="list-right">
-                        <div class="title ">{$vo4.title}</div>
-                        <div class="clear time">
-                            <span class="fl source">{$vo4.source}</span>
-                            <span class="fl ">{$vo4.create_time}</span>
-                            {gt name="$vo4.views" value="999"}
-                            <span class="fr readed">999+</span>
-                            {else/}
-                            <span class="fr readed">{$vo4.views}</span>
-                            {/gt}
-                        </div>
-                    </div>
-                </a>
-                {/volist}
-                {empty name='list4'}
                 <img src="/index/images/service/card/icon-default.jpg" class="no-list">
                 {/empty}
             </div>
