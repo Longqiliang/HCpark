@@ -2518,8 +2518,14 @@ class Service extends Base
                 'id' => $infos['id'],
                 'status' => $infos['status'],
                 'fee' => $infos['fee'],
-                'type' => $infos['type']
-
+                'type' => $infos['type'],
+                'invoice_type'=>$infos['invoice_type'],
+                'taxpayer_number'=>$infos['taxpayer_number'],
+                'contact_address'=>$infos['contact_address'],
+                'bank'=>$infos['bank'],
+                'account_opening'=>$infos['account_opening'],
+                'mobile'=>$infos['mobile'],
+                'department'=>$infos['department']
             ];
         } //物业维护 $types = [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"];
         else if ($appid == 2) {
