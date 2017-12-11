@@ -111,9 +111,7 @@ class Service extends Base
                     array_push($CompanyService, $value);
                 }
             }
-
         }
-
         //人才服务
         $talentService = $app->where('type', 2)->order('id asc')->select();
         $Talent = array();
@@ -127,7 +125,6 @@ class Service extends Base
                     array_push($Talent, $value);
                 }
             }
-
         }
         //置顶服务
         $TopServices = array();
@@ -142,7 +139,6 @@ class Service extends Base
         /*}*/
         //政策法规轮播
         $policy = NewsModel::where(['park_id' => $park_id, 'type' => ['in', [4, 5]]])->field('id,title')->order('id  desc')->limit(4)->select();
-
         $this->assign('policy', json_encode($policy));
         $this->assign('is_boss', $is_boss);
         $this->assign('propert', json_encode($PropertyServices));
@@ -152,12 +148,8 @@ class Service extends Base
         $this->assign('is_fee', $is);
         $this->assign('is_water', $water);
         $this->assign('parkName', json_encode($parkName));
-
         return $this->fetch();
-
     }
-
-
     //选择服务
     public function onCheck()
     {
@@ -186,11 +178,9 @@ class Service extends Base
             //$build_block=$array[0]."幢";
             $office = $user['company_address'];
         }
-
         switch ($app_id) {
             case 1:
                 break;
-
             //物业报修
             case 2:
                 $info = [
@@ -215,7 +205,6 @@ class Service extends Base
                 $info['company'] = isset($user->departmentName->name) ? $user->departmentName->name : "";
                 $floorList = $this->commonFloor();
                 $this->assign('floorlist', json_encode($floorList));
-
                 $cp = new CompanyApplication();
                 $Park = new Park();
                 $park = $Park->where('id', $parkid)->find();
@@ -230,8 +219,6 @@ class Service extends Base
                     $imgs = "/index/images/service/payment-code-binjiang.png";
                 }
                 $info['code'] = $imgs;
-
-
                 //$info['app_id'] = $app_id;
                 break;
             //室内保洁
@@ -739,9 +726,7 @@ class Service extends Base
                 $data['invoice']['bank'] = $info['bank'];
                 $data['invoice']['account_opening'] = $info['account_opening'];
             }
-
             $imgs = "/index/images/service/payment-code-binjiang.png";
-
         }
         $data['code'] = $imgs;
 
@@ -2441,7 +2426,7 @@ class Service extends Base
                 $message = [
                     "title" => "商标查询服务咨询提示",
                     "description" => "您有一条商标查询服务咨询待处理，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/yes/type/2/id/' . $ta->getLastInsID(),
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/12/can_check/yes/type/2/id/' . $ta->getLastInsID(),
                 ];
 
                 //推送给运营
