@@ -141,12 +141,16 @@ class News extends Admin
                 unset($_POST['id']);
                 $result = $news->validate(true)->save($_POST);
                 $inputid = Db::name('news')->getLastInsID();
-                //添加新闻时推送给审核人
-                 $this-> sendCheck($inputid,input('type'));
+
+
+
 
             }
 
             if ($result) {
+
+                //添加新闻时推送给审核人
+                $this-> sendCheck($inputid,input('type'));
                 /*// 新闻列表限制banner只有3个
                 if($_POST['type'] == 1){
                     $newsMap = [
