@@ -2046,10 +2046,10 @@ class Service extends Base
 
         return $info;
     }
-
+    //专利申请首页 app_id=21
     public function patent()
     {
-        return $this->beforeActionList;
+        return $this->fetch();
     }
     //专利申请 app_id=21
     public function patentInfo()
