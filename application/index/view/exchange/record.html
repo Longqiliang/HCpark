@@ -84,7 +84,6 @@
             if(!isNaN(time)){
                 if(String(time).length<13){
                     time = time*1000
-                    console.log(time)
                 }
                 var newTime = new Date(time);
                 var m = newTime.getMonth()+1,
@@ -104,7 +103,6 @@
         }
     });
     var info={$list};
-    console.log(info)
     var app = new Vue({
         el: '#app',
         data: {
@@ -128,11 +126,16 @@
                 if(this.sieving.index === ''){
                     this.sieving.sieved = this.baseData;
                 }else{
-                    for(var i=0;i<this.baseData.length;i++){
-                        if(this.baseData[i].type===this.sieving.list[this.sieving.index].type){
-                            this.sieving.sieved.push(this.baseData[i]);
+                    for(var i = 0 ,exchanged = [],unexchange = [];i<this.baseData.length;i++){
+                        if(this.baseData[i].type === this.sieving.list[this.sieving.index].type){
+                            if(this.baseData[i].status==0){
+                                unexchange.push(this.baseData[i]);
+                            }else{
+                                exchanged.push(this.baseData[i]);
+                            }
                         }
                     }
+                    this.sieving.sieved = unexchange.concat(exchanged);
                 }
             }else{
                 this.sieving.sieved = this.baseData;
@@ -151,16 +154,20 @@
                     if(this.sieving.index===''){
                         this.sieving.sieved = this.baseData;
                     }else{
-                        for(var i=0;i<this.baseData.length;i++){
-                            if(this.baseData[i].type===this.sieving.list[this.sieving.index].type){
-                                this.sieving.sieved.push(this.baseData[i]);
+                        for(var i = 0 ,exchanged = [],unexchange = [];i<this.baseData.length;i++){
+                            if(this.baseData[i].type === this.sieving.list[this.sieving.index].type){
+                                if(this.baseData[i].status==0){
+                                    unexchange.push(this.baseData[i]);
+                                }else{
+                                    exchanged.push(this.baseData[i]);
+                                }
                             }
                         }
+                        this.sieving.sieved = unexchange.concat(exchanged);
                     }
                 this.toggleSieving();
             },
             toggleSieving(){
-                console.log(1111)
                 this.sieving.isShow = !this.sieving.isShow;
             },
         }
