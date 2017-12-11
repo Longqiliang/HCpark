@@ -1441,7 +1441,7 @@ class Personal extends Base
 
         } else {
 
-            $this->error("验证码失败");
+            $this->error("验证码错误");
         }
     }
 
