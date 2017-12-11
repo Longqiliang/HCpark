@@ -1437,11 +1437,11 @@ class Personal extends Base
         $park_company = new ParkCompany();
         $company = $park_company->where('company_id', $department)->find();
         if ($company['company_code'] == input('company_code')) {
-            $this->success("验证码成功");
+            $this->success("验证码成功！");
 
         } else {
 
-            $this->error("验证码错误");
+            $this->error("验证码错误！");
         }
     }
 
