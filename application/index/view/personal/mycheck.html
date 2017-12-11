@@ -55,7 +55,7 @@
             </div>
             <div class="my-footer">
                 <span v-if="!checkedCanLoad">没有更多了</span>
-                <span v-else-if="!loading">下拉加载更多</span>
+                <span v-else-if="!loading">上拉加载更多</span>
                 <div  class="my-loading" v-else>
                     <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
                 </div>
@@ -78,7 +78,7 @@
             </div>
             <div class="my-footer">
             <span v-if="!uncheckCanLoad">没有更多了</span>
-            <span v-else-if="!loading">下拉加载更多</span>
+            <span v-else-if="!loading">上拉加载更多</span>
             <div  class="my-loading" v-else>
                 <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
             </div>
