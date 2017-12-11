@@ -386,7 +386,7 @@
                     company_code:_this.company_code,
                     department:_this.checkedCompany.department_id
                 };
-                _this.postSubmit(data, '企业验证成功！',function () {
+                _this.postSubmit(data,1, '企业验证成功！',function () {
                     _this.isPass = true;
                     _this.company_code = ''
                     _this.roomSlots[0].values = _this.checkedCompany.roomlist;
@@ -396,15 +396,13 @@
                     _this.showCompanyMask();
                 });
             },
-            postSubmit(data,successText,successFun,errorFun){
+            postSubmit(data,needSuccess,successText,successFun,errorFun){
                 var _this = this;
                 if(_this.isSubmit){
-                    swal({
-                        title: '',
-                        text: '提交中···',
-                        type:'info',
-                        confirmButtonColor: "#59B7F3",
-                        confirmButtonText: "确定"
+                    _this.$toast({
+                        message: '提交中···',
+                        position: 'bottom',
+                        duration: 2000
                     });
                     return ;
                 }
@@ -412,15 +410,25 @@
                 _this.$http.post("/index/personal/verification",data).then(function (res) {
                     _this.isSubmit = false;
                     if(res.data.code===1){
-                        swal({
-                            title: '',
-                            text: successText,
-                            type:'success',
-                            confirmButtonColor: "#59B7F3",
-                            confirmButtonText: "确定"
-                        },function () {
+                        if(needSuccess===1){
+                            _this.$toast({
+                                message: successText,
+                                position: 'bottom',
+                                duration: 2000
+                            });
                             successFun()
-                        });
+                        }else{
+                            swal({
+                                title: '',
+                                text: successText,
+                                type:'success',
+                                confirmButtonColor: "#59B7F3",
+                                confirmButtonText: "确定"
+                            },function () {
+                                successFun()
+                            });
+                        }
+
                     }else{
                         swal({
                             title: '',
