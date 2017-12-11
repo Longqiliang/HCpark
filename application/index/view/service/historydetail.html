@@ -384,7 +384,7 @@
     </div>
 
     <div class="rent-btn-box"  v-if="(appid!=1 && appid!=3 && appid!=8 && appid!=12 && can_check=='yes' && info.status==0) || ( appid ==1 && can_check=='yes' && info.status==1 )">
-        <button class="btn btn-block btn-green" @click="showRent">{{(appid==6||appid==7)?'前往审核':'确认接单'}}</button>
+        <button class="btn btn-block btn-green" @click="showRent">{{(appid==1||appid==6||appid==7)?'前往审核':'确认接单'}}</button>
     </div>
     <div class="modal-box"  :class="{'show':rentShow}">
         <div class="modal">
