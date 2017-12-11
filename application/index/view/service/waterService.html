@@ -10,6 +10,49 @@
     .font-gray{
         color: #999;
     }
+
+    .pay-num{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+    }
+    .pay-num>span{
+        -webkit-touch-callout:inherit;
+        -webkit-user-select:text;
+        -khtml-user-select:text;
+        -moz-user-select:text;
+        -ms-user-select:text;
+        user-select:text;
+        -o-user-select:text;
+        margin-right: 0.5rem;
+    }
+    .pay-code{
+        width:1.6rem;
+        height:1.6rem;
+    }
+    .modal-box{
+        width:100vw;
+        height:100vh;
+        background: rgba(0,0,0,0.5);
+        position: fixed;
+        top:0;
+        left:0;
+    }
+    .overflow-hidden{
+        height:100vh;
+        overflow: hidden;
+    }
+    .modal-box>img{
+        position: absolute;
+        top:50%;
+        left: 50%;
+        max-width: 80vw;
+        -webkit-transform: translate(-50%,-50%);
+        -moz-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        -o-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+    }
 </style>
 {/block}
 
@@ -61,12 +104,28 @@
             <label for="tel">联系电话</label>
             <input type="text" placeholder="请输入联系电话" id="tel" v-model="defaultData.mobile">
         </div>
+        <div v-if="true">
+            <div class="card-cell">
+                <span>支付宝账号</span>
+                <div class="pay-num">
+                    <span>{{'11111111'}}</span>
+                    <img src="/index/images/service/icon-paycode.png" alt="" class="pay-code" @click="toggleCode">
+                </div>
+            </div>
+            <div class="card-cell">
+                <span>账号名称</span>
+                <span>{{'22222222'}}</span>
+            </div>
+        </div>
     </div>
     <div class="card-more">
         <button class="btn btn-warning btn-warning-outlined btn-sm" @click="goHistory"><i class="icon icon-record"></i>送水记录</button>
     </div>
     <div class="card-btn-box payment-btn">
         <button class="btn btn-block btn-warning" @click="orderBtn">确定预约</button>
+    </div>
+    <div class="modal-box" v-if="showCode" @click="toggleCode">
+        <img :src="'/index/images/service/payment-code-binjiang.png'" alt="支付二维码">
     </div>
 </div>
 {/block}
@@ -127,7 +186,9 @@
                 name:JSON.parse('{$info}').name,
                 mobile:JSON.parse('{$info}').mobile
             },
-            isSubmit:true
+            isSubmit:true,
+            showCode:false,
+
         },
         created(){
             var _this=this;
@@ -144,6 +205,9 @@
             });
         },
         methods: {
+            toggleCode(){
+                this.showCode=!this.showCode;
+            },
             goHistory(){
                 window.location.href='/index/service/history/id/'+this.defaultData.appid;
             },

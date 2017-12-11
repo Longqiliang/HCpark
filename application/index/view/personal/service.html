@@ -73,7 +73,7 @@
                         <span class="ing" v-else>未回复</span>
                     </div>
                 </a>
-                <img src="/index/images/service/card/icon-default.jpg" v-if="company.length===0" class="no-list">
+                <img src="/index/images/service/card/icon-default.jpg" v-if="companyShow.length===0" class="no-list">
             </div>
         </div>
     </div>
@@ -129,6 +129,8 @@
                 isShowSieving:false,
                 serviceList:[
                     {appid:12,text:'商标查询'},
+                    {appid:21,text:'专利申请'},
+                    {appid:22,text:'版权登记'},
                     {appid:'other',text:'其他服务'}
                 ],
                 serviceIndex:''
@@ -170,7 +172,7 @@
                         this.companyShow=this.property;
                     }else if(this.companySieving.serviceList[this.companySieving.serviceIndex].appid==='other'){
                         for(var i=0;i<this.company.length;i++){
-                            if(this.company[i].app_id!==12){
+                            if(this.company[i].app_id!==12 && this.company[i].app_id!==20 && this.company[i].app_id!==22){
                                 this.companyShow.push(this.company[i]);
                             }
                         }
@@ -269,7 +271,7 @@
                         this.companyShow=this.company;
                     }else if(this.companySieving.serviceList[this.companySieving.serviceIndex].appid==='other'){
                         for(var i=0;i<this.company.length;i++){
-                            if(this.company[i].app_id!==12){
+                            if(this.company[i].app_id!==12 && this.company[i].app_id!==22 && this.company[i].app_id!==21){
                                 this.companyShow.push(this.company[i]);
                             }
                         }

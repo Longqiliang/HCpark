@@ -167,7 +167,7 @@
             </div>
             <div class="card-cell">
                 <span>纳税人识别号</span>
-                <input type="text" placeholder="请输入纳税人识别号" v-model="invoice.taxpayer_number">
+                <input type="tel" placeholder="请输入纳税人识别号" v-model="invoice.taxpayer_number">
             </div>
             <div class="card-cell">
                 <span>联系地址</span>
@@ -175,7 +175,7 @@
             </div>
             <div class="card-cell">
                 <span>联系方式</span>
-                <input type="text" placeholder="请输入联系方式" v-model="invoice.mobile">
+                <input type="tel" placeholder="请输入联系方式" v-model="invoice.mobile">
             </div>
             <div class="card-cell">
                 <span>开户银行</span>
@@ -183,7 +183,7 @@
             </div>
             <div class="card-cell">
                 <span>开户账号</span>
-                <input type="text" placeholder="请输入开户账号" v-model="invoice.account_opening">
+                <input type="tel" placeholder="请输入开户账号" v-model="invoice.account_opening">
             </div>
         </div>
     </div>
@@ -221,6 +221,12 @@
                 bank:'',
                 account_opening:''
             }
+        },
+        created(){
+            console.log(this.invoice)
+
+            Object.assign(this.invoice,this.subData.invoice);
+            console.log(this.invoice)
         },
         methods: {
             toggleCode(){
