@@ -2315,7 +2315,12 @@ class Service extends Base
         } //企业服务（记录详情页跳转地址为historyDetailCompany）
         elseif ($company_type == 1) {
             foreach ($info as $k => $value) {
-                $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
+                if (empty($type)) {
+                    $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/id/' . $info[$k]['id'];
+                }else{
+                    $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
+                }
+
             }
         }
         $this->assign('info', json_encode($info));
