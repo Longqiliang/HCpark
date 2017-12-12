@@ -630,9 +630,11 @@ class Service extends Base
     {
         $service = new ElectricityService;
         $user_id = session('userId');
+        $park_id = session('park_id');
         $map = [
             'user_id' => $user_id,
-            'status' => array('neq', -1)
+            'status' => array('neq', -1),
+            'park_id' => $park_id
         ];
         $list = $service->where($map)->order('create_time desc')->select();
 
@@ -901,10 +903,12 @@ class Service extends Base
     public function carRecord()
     {
         $user = session('userId');
+        $park_id = session('park_id');
         $service = new CarparkService();
         $map = [
             'status' => array('neq', -1),
-            'user_id' => $user
+            'user_id' => $user,
+            'park_id'=>$park_id
         ];
         $list = $service->where($map)->field('id,type,money,status,create_time')->order('create_time desc')->select();
         foreach ($list as $v) {
@@ -927,7 +931,7 @@ class Service extends Base
         $nowtime = time() - 600;
         $map = [
             'status' => 1,
-            'create_time' => array('lt', $nowtime)
+            'create_time' => array('lt', $nowtime),
         ];
 
         $out_date = $adRecord->where($map)->select();
@@ -1864,8 +1868,9 @@ class Service extends Base
     {
         $info = [];
         $userId = session("userId");
+        $park_id = session('park_id');
         $types = [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"];
-        $list = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0], 'user_id' => $userId])->order('id desc')->paginate();
+        $list = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0], 'user_id' => $userId,'park_id'=>$park_id])->order('id desc')->paginate();
         foreach ($list as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
@@ -1884,7 +1889,8 @@ class Service extends Base
     {
         $info = [];
         $userId = session("userId");
-        $list = PropertyServer::where(['type' => 4, 'status' => ['>=', 0], 'user_id' => $userId])->order('clear_time desc')->paginate();
+        $park_id =session('park_id');
+        $list = PropertyServer::where(['type' => 4, 'status' => ['>=', 0], 'user_id' => $userId,'park_id'=>$park_id])->order('clear_time desc')->paginate();
         foreach ($list as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
@@ -1964,9 +1970,11 @@ class Service extends Base
     {
         $info = [];
         $userid = session('userId');
+        $park_id= session('park_id');
         $map = [
             'status' => array('neq', -1),
             'userid' => $userid,
+            'park_id' =>$park_id
         ];
         $list = WaterModel::where($map)->order('id desc')->paginate();
 
@@ -1989,9 +1997,12 @@ class Service extends Base
     {
         $info = [];
         $userid = session('userId');
+        $park_id =  session('park_id');
         $map = [
             'status' => array('neq', -1),
             'userid' => $userid,
+            '$park_id'=>$park_id
+
         ];
         $list = TrademarkAdvisory::where($map)->order('create_time desc,status asc')->select();
 
@@ -2014,9 +2025,11 @@ class Service extends Base
     {
         $info = [];
         $userid = session('userId');
+        $park_id = session('park_id');
         $map = [
             'status' => array('neq', -1),
             'userid' => $userid,
+             'park_id' =>$park_id
         ];
         $list = TrademarkInquire::where($map)->order('id desc')->select();
 
