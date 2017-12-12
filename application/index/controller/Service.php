@@ -150,6 +150,7 @@ class Service extends Base
         $this->assign('parkName', json_encode($parkName));
         return $this->fetch();
     }
+
     //选择服务
     public function onCheck()
     {
@@ -700,12 +701,12 @@ class Service extends Base
         $data['payment_bank'] = $CA['has_bank'] == 1 ? $park['payment_bank'] : "";
 
 
-        $data['invoice']=array();
+        $data['invoice'] = array();
         //用户联系方式
         $data['invoice']['mobile'] = $userinfo['mobile'];
         //用户公司名称
         $data['invoice']['department'] = isset($userinfo->departmentName->name) ? $userinfo->departmentName->name : "";
-       //发票其他信息
+        //发票其他信息
         $data['invoice']['taxpayer_number'] = "";
         $data['invoice']['contact_address'] = "";
         $data['invoice']['bank'] = "";
@@ -908,7 +909,7 @@ class Service extends Base
         $map = [
             'status' => array('neq', -1),
             'user_id' => $user,
-            'park_id'=>$park_id
+            'park_id' => $park_id
         ];
         $list = $service->where($map)->field('id,type,money,status,create_time')->order('create_time desc')->select();
         foreach ($list as $v) {
@@ -1870,7 +1871,7 @@ class Service extends Base
         $userId = session("userId");
         $park_id = session('park_id');
         $types = [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"];
-        $list = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0], 'user_id' => $userId,'park_id'=>$park_id])->order('id desc')->paginate();
+        $list = PropertyServer::where(['type' => ['<', 4], 'status' => ['>=', 0], 'user_id' => $userId, 'park_id' => $park_id])->order('id desc')->paginate();
         foreach ($list as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
@@ -1889,8 +1890,8 @@ class Service extends Base
     {
         $info = [];
         $userId = session("userId");
-        $park_id =session('park_id');
-        $list = PropertyServer::where(['type' => 4, 'status' => ['>=', 0], 'user_id' => $userId,'park_id'=>$park_id])->order('clear_time desc')->paginate();
+        $park_id = session('park_id');
+        $list = PropertyServer::where(['type' => 4, 'status' => ['>=', 0], 'user_id' => $userId, 'park_id' => $park_id])->order('clear_time desc')->paginate();
         foreach ($list as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
@@ -1970,11 +1971,11 @@ class Service extends Base
     {
         $info = [];
         $userid = session('userId');
-        $park_id= session('park_id');
+        $park_id = session('park_id');
         $map = [
             'status' => array('neq', -1),
             'userid' => $userid,
-            'park_id' =>$park_id
+            'park_id' => $park_id
         ];
         $list = WaterModel::where($map)->order('id desc')->paginate();
 
@@ -1997,11 +1998,11 @@ class Service extends Base
     {
         $info = [];
         $userid = session('userId');
-        $park_id =  session('park_id');
+        $park_id = session('park_id');
         $map = [
             'status' => array('neq', -1),
             'userid' => $userid,
-            '$park_id'=>$park_id
+            '$park_id' => $park_id
 
         ];
         $list = TrademarkAdvisory::where($map)->order('create_time desc,status asc')->select();
@@ -2029,7 +2030,7 @@ class Service extends Base
         $map = [
             'status' => array('neq', -1),
             'userid' => $userid,
-             'park_id' =>$park_id
+            'park_id' => $park_id
         ];
         $list = TrademarkInquire::where($map)->order('id desc')->select();
 
@@ -2044,19 +2045,21 @@ class Service extends Base
 
         return $info;
     }
+
     //专利申请首页 app_id=21
     public function patent()
     {
         return $this->fetch();
     }
+
     public function technicalDocument()
     {
         return $this->fetch('technical_document');
     }
+
     //专利申请 app_id=21
     public function patentInfo()
     {
-
         if (IS_POST) {
             $data = input('');
             $patent = new Patent();
@@ -2092,7 +2095,13 @@ class Service extends Base
             }
         } else {
             $data = input('');
-            $this->assign('info',json_encode($data));
+            if (isset($data['id'])) {
+                $data2 = Patent::get($data['id']);
+                $this->assign('info', json_encode($data2));
+            }else{
+                $this->assign('info', json_encode($data));
+            }
+
             return $this->fetch('patent_info');
         }
     }
@@ -2235,7 +2244,8 @@ class Service extends Base
 
     /*记录*/
     public function history()
-    {   $path='history';
+    {
+        $path = 'history';
         $info = [];
         $appid = input('id');
         $type = input('type');
@@ -2273,7 +2283,7 @@ class Service extends Base
 
             $info = $this->pillarRecord();
         } elseif ($appid == 12) {
-            $path='history_company';
+            $path = 'history_company';
 
             //type =1 商标查询   2 商标咨询
             if ($type == 1) {
@@ -2282,12 +2292,12 @@ class Service extends Base
                 $info = $this->advisoryHistory();
             }
         } elseif ($appid == 21) {
-            $path='history_company';
+            $path = 'history_company';
             //专利申请
             $patent = new Patent();
             $info = $patent->patentHistory();
         } elseif ($appid == 22) {
-            $path='history_company';
+            $path = 'history_company';
             //版权申请
             if ($type == 1) {
                 //美术作品
@@ -2317,7 +2327,7 @@ class Service extends Base
             foreach ($info as $k => $value) {
                 if (empty($type)) {
                     $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/id/' . $info[$k]['id'];
-                }else{
+                } else {
                     $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
                 }
 
@@ -2543,13 +2553,13 @@ class Service extends Base
                 'status' => $infos['status'],
                 'fee' => $infos['fee'],
                 'type' => $infos['type'],
-                'invoice_type'=>$infos['invoice_type'],
-                'taxpayer_number'=>$infos['taxpayer_number'],
-                'contact_address'=>$infos['contact_address'],
-                'bank'=>$infos['bank'],
-                'account_opening'=>$infos['account_opening'],
-                'mobile'=>$infos['mobile'],
-                'department'=>$infos['department']
+                'invoice_type' => $infos['invoice_type'],
+                'taxpayer_number' => $infos['taxpayer_number'],
+                'contact_address' => $infos['contact_address'],
+                'bank' => $infos['bank'],
+                'account_opening' => $infos['account_opening'],
+                'mobile' => $infos['mobile'],
+                'department' => $infos['department']
             ];
         } //物业维护 $types = [1 => '空调报修', 2 => "电梯报修", 3 => "其他报修"];
         else if ($appid == 2) {
@@ -3331,23 +3341,23 @@ class Service extends Base
                       ];
                       $savemessage = $personalMessage->save($new);*/
                     //只有2／二楼多功能厅，3／led屏 预约有积分增加 所以取消预约后要减去
-                    if($type ==2 &&$type ==3) {
-                        if($type==2){
+                    if ($type == 2 && $type == 3) {
+                        if ($type == 2) {
                             $score = 3;
 
-                        }else{
-                            $score=1;
+                        } else {
+                            $score = 1;
                         }
 
                         //取消预约一次设备服务，减得1个积分；
-                        WechatUser::where('userid', session('userId'))->setDec('score',  $score);
+                        WechatUser::where('userid', session('userId'))->setDec('score', $score);
                         $message = "积分服务提示\n您取消一次设备服务，积分-1！";
                         //并记录
                         $point = new  ExchangePoint();
                         $map = [
                             'userid' => session('userId'),
                             'content' => '设备服务（取消）',
-                            'score' =>  $score,
+                            'score' => $score,
                             'create_time' => time(),
                             'park_id' => session('park_id'),
                             'status' => 0,
