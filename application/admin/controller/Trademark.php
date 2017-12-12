@@ -136,7 +136,7 @@ class Trademark extends Admin
         $back_img = input('back_img');
         $ti = new TrademarkInquire();
         $ta = $ti->get($id);
-        $res = $ti->where('id', $id)->update(['back_img' => $back_img, 'status' => 1, 'end_time' => time()]);
+        $res = $ti->where('id', $id)->update(['back_img' => [$back_img], 'status' => 1, 'end_time' => time()]);
 
 
         if ($res) {
