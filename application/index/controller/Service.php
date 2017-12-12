@@ -2049,6 +2049,10 @@ class Service extends Base
     {
         return $this->fetch();
     }
+    public function technicalDocument()
+    {
+        return $this->fetch('technical_document');
+    }
     //专利申请 app_id=21
     public function patentInfo()
     {
@@ -2088,7 +2092,7 @@ class Service extends Base
             }
         } else {
             $data = input('');
-            $this->assign('info',$data);
+            $this->assign('info',json_encode($data));
             return $this->fetch('patent_info');
         }
     }
@@ -2313,6 +2317,12 @@ class Service extends Base
         $this->assign('info', json_encode($info));
         $this->assign('appId', $appid);
         return $this->fetch();
+    }
+
+    /**企业服务记录列表**/
+    public function historyCompany()
+    {
+        return $this->fetch('history_company');
     }
 
     /*付款*/
