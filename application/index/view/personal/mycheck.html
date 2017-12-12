@@ -53,7 +53,7 @@
             <div v-if="!checked.length" class="content">
                 <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
             </div>
-            <div class="my-footer">
+            <div class="my-footer"  v-if="checked.length">
                 <span v-if="!checkedCanLoad">没有更多了</span>
                 <span v-else-if="!loading">上拉加载更多</span>
                 <div  class="my-loading" v-else>
@@ -76,13 +76,13 @@
             <div v-if="!uncheck.length" class="content">
                 <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
             </div>
-            <div class="my-footer">
-            <span v-if="!uncheckCanLoad">没有更多了</span>
-            <span v-else-if="!loading">上拉加载更多</span>
-            <div  class="my-loading" v-else>
-                <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
+            <div class="my-footer"  v-if="uncheck.length">
+                <span v-if="!uncheckCanLoad">没有更多了</span>
+                <span v-else-if="!loading">上拉加载更多</span>
+                <div  class="my-loading" v-else>
+                    <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
+                </div>
             </div>
-        </div>
 
         </div>
     </div>
