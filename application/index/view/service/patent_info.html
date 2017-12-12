@@ -1,0 +1,512 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>商标查询</title>
+<!--<link rel="stylesheet" href="/index/css/service/detail.css">-->
+<style>
+    .group-cell.btn-box{
+        margin-bottom: 4vw;
+    }
+    .group-btn{
+        width: 46.7%;
+    }
+    .btn{
+        display: block;
+        border-radius: 5px;
+        text-align: center;
+        border: none;
+        line-height: 40px;
+        font-size: 1.5rem;
+    }
+    .btn-block{
+        width: 100%;
+        background-color: #fff;
+        color: #fcc44b;
+    }
+    .btn.btn-sm{
+        line-height: 29px;
+    }
+    .btn-warning{
+        background-color: #fcc44b;
+        color: #fff;
+    }
+    .btn-primary{
+        background-color: #69b9f9;
+        color: #fff;
+    }
+    .btn-purple{
+        background-color: #918FE6;
+        color: #fff;
+    }
+    .btn-warning.btn-warning-outlined{
+        /*border: 1px solid #fcc44b;*/
+        background-color: transparent;
+        color: #fcc44b;
+    }
+    .btn-primary.btn-primary-outlined{
+        /*border: 1px solid #fcc44b;*/
+        background-color: transparent;
+        color: #69b9f9;
+    }
+    .btn-purple.btn-purple-outlined{
+        border: 1px solid #918FE6;
+        background-color: #fff;
+        color: #918FE6;
+    }
+
+    body {
+        background-color: #f0eff5;
+        color: #333;
+        font-size: 1.4rem
+    }
+
+    :-moz-placeholder,::-moz-placeholder {
+        color: #999;
+        opacity: 1
+    }
+
+    input:-ms-input-placeholder,textarea:-ms-input-placeholder {
+        color: #000;
+        opacity: 1
+    }
+
+    input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {
+        color: #999;
+        opacity: 1
+    }
+
+    .table-row-box {
+        margin-bottom: 1rem;
+        padding: 0 4vw;
+        background-color: #fff
+    }
+    .table-row,.table-title {
+        display: flex;
+        align-items: center
+    }
+
+    .table-row {
+        box-sizing: border-box;
+        padding: 1.5rem 0;
+        justify-content: space-between
+    }
+
+    .table-row:not(:last-child) {
+        border-bottom: 1px solid #f1f1f1
+    }
+    .table-row-header{
+        font-size: 1.5rem;
+    }
+    .table-row-input {
+        text-align: right;
+        font-size: 1.4rem
+    }
+
+    .table-row-block-header {
+        font-size: 1.5rem;
+        padding: 1.5rem 0
+    }
+
+    .table-row-block>textarea {
+        box-sizing: border-box;
+        padding: 7px 9px;
+        width: 100%;
+        height: 10rem;
+        border: 1px solid #f1f1f1;
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .img-box {
+        display: flex;
+        box-sizing: border-box;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width:100%;
+    }
+    .img-box>div{
+        box-sizing: border-box;
+        width:26.6666vw;
+    }
+    .img-box>div>div{
+        box-sizing: border-box;
+        width:100%;
+        height:26.6666vw;
+        border:1px solid rgba(232,232,232,1);
+    }
+    .img-box.id-card-box{
+        flex-wrap: nowrap;
+        padding-bottom: 1.5rem;
+    }
+    .img-box.id-card-box>div{
+        width:42.6666vw;
+    }
+    .img-box .upload-img>img{
+        width:100%;
+        height:100%;
+    }
+    .img-box .upload-box,.img-box .upload-img{
+        position: relative;
+    }
+    .img-box .upload-box>img{
+        width:5.4rem;
+        height:5.4rem;
+        position: absolute;
+        top:50%;
+        left:50%;
+        -webkit-transform: translate(-50%,-50%);
+        -moz-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        -o-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+    }
+    .img-box .upload-img>.del-img{
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 24px;
+        height: 24px;
+        background: url("/index/images/service/patent/icon-del.png")0 0 no-repeat;
+        background-size: cover;
+    }
+    .img-box>div>.img-title{
+        text-align: center;
+        padding:1.5rem 0;
+        font-size: 1.4rem;
+        color: #666;
+    }
+    #app .card-btn-box {
+        display: flex;
+        justify-content: center;
+        padding:60px 4vw 1.6rem
+    }
+    .item-arrow-right{
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #999;
+        font-size: 1.4rem;
+    }
+    .item-arrow-right:after {
+        content: '';
+        -webkit-font-smoothing: antialiased;
+        height: 6px;
+        width: 6px;
+        margin-left: 4px;
+        border-width: 1px 1px 0 0;
+        border-color: #666;
+        border-style: solid;
+        -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+        transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+    }
+</style>
+{/block}
+
+
+{block name="body"}
+<div id="app" class="content">
+    <div class="table-box">
+        <div class="table-row-box">
+            <div class="table-row">
+                <span class="table-row-header">专利名称</span>
+                <input type="text" class="table-row-input" placeholder="请输入专利名称" v-model="subData.patent_name">
+            </div>
+        </div>
+        <div class="table-row-box">
+            <div class="table-row">
+                <span class="table-row-header">发明人</span>
+                <input type="text" class="table-row-input" placeholder="请输入发明人" v-model="subData.inventor">
+            </div>
+            <div class="table-row">
+                <span class="table-row-header">申请人</span>
+                <input type="text" class="table-row-input" autocapitalize="on" placeholder="请输入申请人" v-model="subData.applicant">
+            </div>
+            <div class="table-row">
+                <span class="table-row-header">联系人</span>
+                <input type="tel" class="table-row-input" placeholder="请输入联系人" v-model="subData.contact">
+            </div>
+            <div class="table-row">
+                <span class="table-row-header">联系地址</span>
+                <input type="tel" class="table-row-input" placeholder="请输入联系地址" v-model="subData.contact_address">
+            </div>
+            <div class="table-row">
+                <span class="table-row-header">联系电话</span>
+                <input type="tel" class="table-row-input" placeholder="请输入联系电话" v-model="subData.contact_number">
+            </div>
+            <div class="table-row" v-if="baseInfo.type!=3">
+                <span class="table-row-header">技术交底书</span>
+                <span class="item-arrow-right" @click="jumpToPaper">查看详细内容</span>
+            </div>
+        </div>
+        <div class="table-row-box">
+            <div class="table-row-block">
+                <div class="table-row-block-header">发明人身份证（正反面）</div>
+                <div class="img-box id-card-box">
+                    <div  v-for="(img,key) in subData.id_card">
+                        <div class="upload-img" v-if="img!=''" :key="'upload-img'+key">
+                            <img :src="img" alt="">
+                            <i class="del-img" @click="delImg('id_card',key)"></i>
+                        </div>
+                        <div class="upload-box" @click="imgUpload('id_card',key)" :key="'upload-box'+key" v-else>
+                            <img src="/index/images/service/patent/icon-add.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form ref="myform" hidden>
+            <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/jpeg" @change="handleFileChange(nowImgArr,nowImgIndex)" ref="upimg" >
+        </form>
+        <div  v-if="baseInfo.type==3">
+            <div class="table-row-box">
+                <div class="table-row-block">
+                    <div class="table-row-block-header">产品图</div>
+                    <div class="img-box product_img_box">
+                        <div  v-for="(img,key) in subData.product_img">
+                            <div class="upload-img" v-if="img"  :key="'upload-img'+key">
+                                <img :src="img" alt="">
+                                <i class="del-img" @click="delImg('product_img',key)"></i>
+                            </div>
+                            <div class="upload-box" @click="imgUpload('product_img',key)"  :key="'upload-box'+key" v-else>
+                                <img src="/index/images/service/patent/icon-add.png" alt="">
+                            </div>
+                            <p class="img-title">{{productImgName[key]}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-row-box">
+                <div class="table-row-block-header">简单说明</div>
+                <div class="table-row-block">
+                    <textarea name="" id="" cols="30" rows="10" placeholder="输入50-100字的简单文字说明"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-btn-box">
+        <button class="btn btn-block btn-warning" @click="querySubmit">提交</button>
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            baseInfo:{$info},
+            isSubmit:false,
+            productImgName:['俯视图','仰视图 ','立体图 ','主视图 ','后视图 ','左视图','右视图'],
+            subData:{
+                type:'',
+                patent_name:'',
+                inventor:'',
+                applicant:'',
+                contact:'',
+                contact_address:'',
+                contact_number:'',
+                id_card:['',''],
+                explanation:'',
+                product_img:['','','','','','','']
+            },
+            nowImgArr:'',
+            nowImgIndex:''
+        },
+        created(){
+            var _this = this;
+            var test =window.location.href;
+            var data ={
+                url:test
+            };
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                wx.config({
+                    debug: false,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+            },function () {
+
+            });
+            Object.assign(_this.subData,_this.baseInfo);
+//            获取本地储存
+            var sessionVal = sessionStorage.getItem('patentInfo');
+            if(sessionVal){
+                Object.assign(_this.subData,JSON.parse(sessionVal));
+                sessionStorage.clear('patentInfo');
+            }
+        },
+        methods: {
+            //            微信jssdk - 图片预览
+            loadImg(src,imglist) {
+                var urls=[];
+                var current=window.location.protocol+'//'+window.location.host+src;
+                for(var i in imglist){
+                    urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
+                }
+                console.log(current,urls)
+                wx.previewImage({
+                    current: current,
+                    urls: urls
+                });
+            },
+            //提交
+            querySubmit(){
+                var _this = this;
+                var data = _this.subData;
+                if(_this.isSubmit){
+                    _this.$toast({
+                        message:"提交中",
+                        duration:1000
+                    });
+                    return ;
+                };
+                if(!_this.typeSelect.nowType){
+                    _this.$toast({
+                        message:"请选择类别",
+                        duration:1000
+                    });
+                    return ;
+                }else if(!data.numeric_description && !data.chinese_description && !data.english_description && !data.submit_img.length){
+                    _this.$toast({
+                        message:"至少填写一项商标名称",
+                        duration:1000
+                    });
+                    return ;
+                }
+                _this.subData.type = _this.typeSelect.nowType.key;
+                _this.postSubmit("/index/service/trademark",data,'提交成功',function () {
+                    window.location.href='/index/service/index'
+                },function () {})
+            },
+            postSubmit(api,data,successText,successFun,errorFun){
+                var _this = this;
+                _this.$indicator.open({
+                    text: '提交中',
+                    spinnerType: 'triple-bounce'
+                });
+                _this.isSubmit = true;
+                _this.$http.post(api,data).then(function (res) {
+                    _this.isSubmit = false;
+                    _this.$indicator.close();
+                    if(res.data.code===1){
+                        swal({
+                            title: '',
+                            text: successText,
+                            type:'success',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        },function () {
+                            successFun()
+                        });
+                    }else{
+                        swal({
+                            title: '',
+                            text: res.data.msg,
+                            type:'error',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        },function () {
+                            errorFun()
+                        });
+                    }
+
+                },function (res) {
+                    _this.isSubmit = false;
+                    _this.$indicator.close();
+                    swal({
+                        title: '',
+                        text: '请求失败，请重试！',
+                        type:'error',
+                        confirmButtonColor: "#59B7F3",
+                        confirmButtonText: "确定"
+                    });
+                })
+            },
+
+            //图片上传 + 删除
+            delImg: function (arrName,e) {
+                var _this = this,
+                     copeArr = JSON.parse(JSON.stringify(_this.subData));
+                this.subData[arrName][e]='';
+                //                强更新vue数据
+                _this.subData = Object.assign(copeArr,_this.subData);
+                this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
+            },
+            imgUpload:function (arrName,index) {
+                var _this = this;
+                var upImg = _this.$refs.upimg;
+                _this.nowImgArr = arrName;
+                _this.nowImgIndex = index;
+                upImg.click();
+            },
+            handleFileChange:function () {
+                var _this = this;
+                var copeArr = JSON.parse(JSON.stringify(_this.subData));
+                console.log(_this.nowImgArr,_this.nowImgIndex);
+                var upImg = _this.$refs.upimg;
+                var img = upImg.files[0];
+                if(img){
+                    var newSize = (img.size/1024).toFixed(2);
+                    if(newSize <= 10240){
+                        _this.$indicator.open({
+                            text: '图片上传中',
+                            spinnerType: 'triple-bounce'
+                        });
+                        _this.isSubmit = true;
+                        var formData = new FormData();
+                        formData.append("picture",img);
+                        _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
+                            _this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
+                            var data = JSON.parse(res.data);
+                            _this.isSubmit = false;
+                            this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
+                            if(data.code == 1){
+                                // 在获取到文件对象进行预览
+                                _this.$indicator.close();
+                                console.log(copeArr);
+                                _this.subData[_this.nowImgArr][_this.nowImgIndex] = data.data.path; //保存上传后图片路径
+                                console.log(_this.subData);
+                                _this.subData = Object.assign(copeArr,_this.subData)
+//                                Vue.set( _this.subData, _this.nowImgArr, _this.subData[_this.nowImgArr] )
+                            }else{
+                                _this.$indicator.close();
+                                _this.$toast({
+                                    message:"上传失败，请重新上传！",
+                                    duration:1000
+                                });
+                            }
+                        },function (res) {
+                            _this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
+                            _this.isSubmit = false;
+                            _this.$indicator.close();
+                            _this.$toast({
+                                message:"上传失败，请重新上传！",
+                                duration:1000
+                            });
+                        });
+                    }else{
+                        _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
+                    }
+                }
+            },
+            jumpToPaper(){
+                var _this=this;
+                sessionStorage.setItem("patentInfo",JSON.stringify(_this.subData));
+//                window.location.href=''
+                console.log(sessionStorage.getItem('patentInfo'))
+            }
+        }
+    })
+
+
+</script>
+
+{/block}

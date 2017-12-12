@@ -96,7 +96,16 @@
         color: #999;
         font-size: 1.2rem;
     }
-
+    .patent-ps{
+        text-align: center;
+        color: #999;
+        font-size: 1.5rem;
+        line-height: 1.5;
+    }
+    .patent-ps>a{
+        color: #2F56DF;
+        font-size: 1.4rem;
+    }
     .modal-box{
         width:100vw;
         height:100vh;
@@ -248,6 +257,7 @@
                 <img src="/index/images/service/patent/list-exterior.png" class="type-ticket" alt="">
             </li>
         </ul>
+        <p class="patent-ps"><span>如有疑问请致电园区知识产权服务中心</span><br><a> 88888888</a></p>
     </div>
     <div class="modal-box" v-show="isShow">
         <div class="modal-content">
@@ -259,7 +269,7 @@
                     <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===1">{{item}}</div></li>
                     <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===2">{{item}}</div></li>
                 </ul>
-                <div class="modal-btn" :class="{invent:typeIndex===0,practical:typeIndex===1,exterior:typeIndex===2}">前往申请</div>
+                <div class="modal-btn" :class="{invent:typeIndex===0,practical:typeIndex===1,exterior:typeIndex===2}" @click="jumpTo">前往申请</div>
             </div>
             <div class="modal-close" @click="toggleModal('')"><i class="iconfont hc-cha1"></i></div>
         </div>
@@ -291,7 +301,8 @@
         },
         methods: {
             jumpTo(){
-
+                var _this=this;
+                window.location.href='/index/service/patentInfo/type/'+(_this.typeIndex+1);
             },
             toggleModal(typeIndex){
                 var _this=this;
