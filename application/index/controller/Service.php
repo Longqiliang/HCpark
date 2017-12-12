@@ -634,7 +634,7 @@ class Service extends Base
         $map = [
             'user_id' => $user_id,
             'status' => array('neq', -1),
-            'park_id' => $park_id
+            'park_id' => $p
         ];
         $list = $service->where($map)->order('create_time desc')->select();
 
@@ -2231,7 +2231,7 @@ class Service extends Base
 
     /*记录*/
     public function history()
-    {
+    {   $path='history';
         $info = [];
         $appid = input('id');
         $type = input('type');
@@ -2269,6 +2269,8 @@ class Service extends Base
 
             $info = $this->pillarRecord();
         } elseif ($appid == 12) {
+            $path='history_company';
+
             //type =1 商标查询   2 商标咨询
             if ($type == 1) {
                 $info = $this->inquireHistory();
@@ -2276,10 +2278,12 @@ class Service extends Base
                 $info = $this->advisoryHistory();
             }
         } elseif ($appid == 21) {
+            $path='history_company';
             //专利申请
             $patent = new Patent();
             $info = $patent->patentHistory();
         } elseif ($appid == 22) {
+            $path='history_company';
             //版权申请
             if ($type == 1) {
                 //美术作品
@@ -2312,7 +2316,7 @@ class Service extends Base
         }
         $this->assign('info', json_encode($info));
         $this->assign('appId', $appid);
-        return $this->fetch();
+        return $this->fetch($path);
     }
 
     /*付款*/
