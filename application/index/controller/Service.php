@@ -2316,7 +2316,7 @@ class Service extends Base
         elseif ($company_type == 1) {
             foreach ($info as $k => $value) {
                 if (empty($type)) {
-                    $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/id/' . $info[$k]['id'];
+                    $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/id/' . $info[$k]['id'];
                 }else{
                     $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
                 }
