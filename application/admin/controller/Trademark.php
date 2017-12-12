@@ -144,7 +144,7 @@ class Trademark extends Admin
             $message = [
                 "title" => "商标查询服务回复提示",
                 'description' => "您的商标查询园区已回复，点击查看详情",
-                "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/1/id/' . $id
+                "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/12/can_check/no/type/1/id/' . $id
             ];
             ServiceModel::sendPersonalMessage($message,$ta['userid']);
 
