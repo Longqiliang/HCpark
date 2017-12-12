@@ -1,15 +1,28 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>缴费记录</title>
+<title>服务记录</title>
 <style>
-    ul{padding:1.2rem;border-bottom:1px solid #f1f1f1}
-    ul>li{display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;color:#333}
-    ul>li:first-child{font-size:1.6rem;margin-bottom:.5rem}
-    ul>li:last-child{font-size:1.4rem;color:#000}
+    /*body{background-color: #f6f6f6}*/
+    ul.trademark-list{padding:1.2rem;border-bottom:1px solid #f1f1f1;background-color: #fff}
+    ul.trademark-list>li{display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;color:#333}
+    ul.trademark-list>li:first-child{font-size:1.6rem;margin-bottom:.5rem}
+    ul.trademark-list>li:last-child{font-size:1.4rem;color:#000}
+
+    .patent-list{padding:1rem}
+    .patent-list>li{display:-webkit-flex;display:flex;box-sizing:border-box;margin-bottom:1rem;padding:1.5rem 2rem 1.5rem 1.5rem;width:100%;border-radius:.5rem;background-color:#fff;justify-content:space-between;align-items:center}
+    .patent-list>li>.state-icon{width:50px;height:41px;background:url() no-repeat center;background-size:cover;flex:none}
+    .patent-list>li>.state-icon.state-icon-pass{background-image:url(/index/images/service/patent/auditing-pass.png)}
+    .patent-list>li>.state-icon.state-icon-ing{background-image:url(/index/images/service/patent/auditing-ing.png)}
+    .patent-list>li>.state-icon.state-icon-refuse{background-image:url(/index/images/service/patent/auditing-refuse.png)}
+    .patent-title{box-sizing:border-box;padding-right:1rem;width:14.4rem;height:100%;flex:1}
+    .patent-title>div{overflow:hidden;margin-bottom:.5rem;width:100%;text-overflow:ellipsis;white-space:nowrap;font-size:1.6rem}
+    .patent-title>span{color:#999;font-size:1.2rem}
+
     .unPay{color:#f97878}
     .auditing{color:#fcc44b}
     .payed{color:#52cc92}
+
     .no-history{position:absolute;width:100%;height:100%;background-color:#f6f6f6;color:#999;font-size:1.6rem;text-align:center}
     .no-history img{width:95%;margin:40% auto 0}
 </style>
@@ -17,55 +30,30 @@
 
 {block name="body"}
 <div id="app">
-    <ul v-for="item in historyList" @click="jumpTo(item.url)">
-        <li v-if="appid==1">
-            <!-- -1为删除 ，0为未缴费，1为审核中，2为审核成功，3为审核失败-->
-            <span>{{item.name}}</span>
-            <span class="unPay" v-if="item.status==-1">已删除</span>
-            <span class="unPay" v-if="item.status==0">未缴费</span>
-            <span class="auditing" v-if="item.status==1">审核中</span>
-            <span class="payed" v-if="item.status==2">审核成功</span>
-            <span class="unPay" v-if="item.status==3">审核失败</span>
-        </li>
-        <li v-if="appid==2">
-            <span>{{item.name}}</span>
-            <span class="unPay" v-if="item.status==-1">已删除</span>
-            <span class="auditing" v-if="item.status==0">审核中</span>
-            <span class="payed" v-if="item.status==1">确认接单</span>
-            <span class="unPay" v-if="item.status==2">取消订单</span>
-            <span class="payed" v-if="item.status==3">完成服务</span>
-        </li>
-        <li v-if="appid==3">
-            <span>{{item.name}}</span>
-            <span class="unPay" v-if="item.status==-1">已删除</span>
-            <span class="auditing" v-if="item.status==0">提交预约</span>
-            <span class="payed" v-if="item.status==1">确认接单</span>
-            <span class="payed" v-if="item.status==2">取消订单</span>
-            <span class="payed" v-if="item.status==3">已送达</span>
-        </li>
-        <li v-if="appid!=1 && appid!=2 &&　appid!=3 && appid!=12">
-            <span>{{item.name}}</span>
-            <span class="unPay" v-if="item.status==-1">已删除</span>
-            <span class="auditing" v-if="item.status==0">审核中</span>
-            <span class="payed" v-if="item.status==1">审核成功</span>
-            <span class="unPay" v-if="item.status==2">审核失败</span>
-        </li>
-        <li v-if="appid==12">
-            <span>商标查询</span>
-            <span class="auditing" v-if="item.status===0">未回复</span>
-            <span class="payed" v-if="item.status===1">已回复</span>
-            <!--<span>{{item.time}}</span>-->
-            <!--<span v-if="item.num">数量：{{item.num}}桶</span>-->
-            <!--<span v-if="item.pay">缴费金额：{{item.pay}}元</span>-->
-        </li>
-        <li>
-            <span>{{item.time}}</span>
-            <span v-if="item.num">数量：{{item.num}}桶</span>
-            <span v-if="item.pay">缴费金额：{{item.pay}}元</span>
-        </li>
-
-    </ul>
-    <p class="no-history" v-if="historyList==''">
+    <div  v-if="appid==12">
+        <ul class="trademark-list" v-for="item in historyList" @click="jumpTo(item.url)">
+            <li >
+                <span>商标查询</span>
+                <span class="auditing" v-if="item.status===0">未回复</span>
+                <span class="payed" v-if="item.status===1">已回复</span>
+            </li>
+            <li>
+                <span>{{item.time}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="appid==21">
+        <ul class="patent-list">
+            <li v-for="item in historyList" @click="jumpTo(item.url)">
+                <div class="patent-title">
+                    <div>{{item.type==1?'发明专利':item.type==2?'实用新型':'外观设计'}}：{{item.name}}</div>
+                    <span>{{item.time}}</span>
+                </div>
+               <div class="state-icon" :class="{'state-icon-ing':item.status==0,'state-icon-pass':item.status==1,'state-icon-refuse':item.status==2}"></div>
+            </li>
+        </ul>
+    </div>
+    <p class="no-history" v-if="!historyList.length">
         <img src="/index/images/service/card/icon-default.jpg" >
     </p>
 </div>
@@ -76,42 +64,22 @@
     var app = new Vue({
         el:'#app',
         mounted(){
-            console.log(JSON.parse('{$info}'));
-            if({$info}){
-                document.title=this.baseData.title;
-            }
+            document.title=this.baseData.title
         },
         data:{
-            historyList:JSON.parse('{$info}'),
-            appid:{$appId}
+            appid:{$appId},
+            historyList:{$info}
         },
         computed:{
             baseData:function () {
                 var info={};
                 switch (this.appid){
-                    case 1:
-                        info.title='缴费记录';
-                        break;
-                    case 2:
-                        info.title='报修记录';
-                        break;
-                    case 3:
-                        info.title='送水记录';
-                        break;
-                    case 4:
-                        info.title='保洁记录';
-                        break;
-                    case 6:
-                        info.title='车卡办理记录';
-                        break;
-                    case 7:
-                        info.title='电柱办理记录';
-                        break;
-                    case 8:
-                        info.title='设备服务记录';
-                        break;
                     case 12:
                         info.title='商标查询记录';
+                        break;
+                    case 21:
+                        info.title='专利申请记录';
+                        document.body.style.background = "#F0EFF5";
                         break;
                 }
                 return info;
@@ -119,11 +87,7 @@
         },
         methods:{
             jumpTo(url){
-                if(this.appid===12){
-                    window.location.href=url;
-                }else{
-                    window.location.href=url;
-                }
+                window.location.href=url;
             }
         }
 })

@@ -87,6 +87,9 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     font-size: 1.4rem;
     max-width:70vw;
 }
+.table-row>span:last-child>a{
+    color: #333;
+}
 .table-row:not(:last-child){
     border-bottom: 1px solid #f1f1f1;
 }
@@ -138,6 +141,7 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
 .table-row-block>.textarea-box>div{
     width:100%;
     height:auto;
+    word-break:break-all;
 }
 .consult-back-img>img{
     max-width: 100%;
@@ -222,6 +226,106 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     justify-content: center;
     padding:4vw 4.8vw;
 }
+
+
+/*专利申请*/
+
+#patent .table-row-box {
+    margin-bottom: 1rem;
+    padding: 0 4vw;
+    background-color: #fff
+}
+#patent .table-row,.table-title {
+    display: flex;
+    align-items: center
+}
+
+#patent .table-row {
+    box-sizing: border-box;
+    padding: 1.5rem 0;
+    justify-content: space-between
+}
+
+#patent .table-row:not(:last-child) {
+    border-bottom: 1px solid #f1f1f1
+}
+#patent .table-row-header{
+    font-size: 1.5rem;
+}
+#patent .table-row-input {
+    text-align: right;
+    font-size: 1.4rem
+}
+
+#patent .table-row-block-header {
+    font-size: 1.5rem;
+    padding: 1.5rem 0
+}
+
+#patent .img-box {
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width:100%;
+}
+#patent .img-box>div{
+    box-sizing: border-box;
+    width:26.6666vw;
+}
+#patent .img-box>div>div{
+    box-sizing: border-box;
+    width:100%;
+    height:26.6666vw;
+    border:1px solid rgba(232,232,232,1);
+}
+#patent .img-box.id-card-box{
+    flex-wrap: nowrap;
+    padding-bottom: 1.5rem;
+}
+#patent .img-box.id-card-box>div{
+    width:42.6666vw;
+}
+#patent .img-box .upload-img>img{
+    border-radius:0;
+    width:100%;
+    height:100%;
+}
+#patent .img-box .upload-box,#patent .img-box .upload-img{
+    position: relative;
+    border-radius:0;
+}
+#patent .img-box .upload-box>img{
+    width:5.4rem;
+    height:5.4rem;
+    position: absolute;
+    top:50%;
+    left:50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+#patent .img-box .upload-img>.del-img{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background: url("/index/images/service/patent/icon-del.png")0 0 no-repeat;
+    background-size: cover;
+}
+#patent .img-box>div>.img-title{
+    text-align: center;
+    padding:1.5rem 0;
+    font-size: 1.4rem;
+    color: #666;
+}
+
+
+
 
 /*.cancel>span:last-child{*/
     /*display: inline-block;*/
