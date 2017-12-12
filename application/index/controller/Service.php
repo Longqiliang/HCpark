@@ -2097,6 +2097,9 @@ class Service extends Base
             $data = input('');
             if (isset($data['id'])) {
                 $data2 = Patent::get($data['id']);
+                $data2['id_card']=json_decode($data2['id_card']);
+                $data2['product_img']=json_decode($data2['product_img']);
+
                 $this->assign('info', json_encode($data2));
             }else{
                 $this->assign('info', json_encode($data));
