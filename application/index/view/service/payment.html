@@ -145,17 +145,17 @@
         <div class="card-tit">开票信息</div>
         <div class="invoice-cell">
             <label for="invoice_no">
-                <input type="radio" id="invoice_no" value="0" name="invoice" v-model="invoice.invoice_type">
+                <input type="radio" id="invoice_no" value="0" name="invoice" hidden v-model="invoice.invoice_type">
                 <span class="my-radio"><b></b></span>
                 不开发票
             </label>
             <label for="invoice_common">
-                <input type="radio" id="invoice_common" value="1" name="invoice" v-model="invoice.invoice_type">
+                <input type="radio" id="invoice_common" value="1" name="invoice" hidden v-model="invoice.invoice_type">
                 <span class="my-radio"><b></b></span>
                 普通发票
             </label>
             <label for="invoice_added_tax">
-                <input type="radio" id="invoice_added_tax" value="2" name="invoice" v-model="invoice.invoice_type">
+                <input type="radio" id="invoice_added_tax" value="2" name="invoice" hidden v-model="invoice.invoice_type">
                 <span class="my-radio"><b></b></span>
                 增值税发票
             </label>
