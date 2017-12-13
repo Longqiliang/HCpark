@@ -112,7 +112,8 @@
                     setTimeout(function () {
                         _this.buyNumber = 0
                     },500)
-                }else if(_this.buyNumber > _this.baseData.left){
+                }
+                if(_this.buyNumber > _this.baseData.left){
                     this.$toast({
                         message: '数量超出范围~',
                         position: 'bottom',
@@ -121,7 +122,8 @@
                     setTimeout(function () {
                         _this.buyNumber = _this.baseData.left
                     },500)
-                }else if(_this.buyNumber*_this.baseData.price > _this.baseData.score){
+                }
+                if(_this.buyNumber*_this.baseData.price > _this.baseData.score){
                     this.$toast({
                         message: '您的积分不足~',
                         position: 'bottom',

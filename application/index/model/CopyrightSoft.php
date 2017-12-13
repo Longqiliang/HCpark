@@ -56,12 +56,13 @@ class CopyrightSoft extends  Model
 
 //当前用户的所有艺术
     public  function  copyHistory(){
-
+        $park_id =session('park_id');
         $userid = session('userId');
         $map=[
             'userid'=>$userid,
             'status'=>array('neq',-1),
-        ];
+            'park_id'=>$park_id
+            ];
         $list =$this->where($map)->field('id,status,create_time,end_time,contact_staff,contact_number,2 as type ')->select();
 
         return $list;

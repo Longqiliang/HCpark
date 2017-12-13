@@ -141,12 +141,16 @@ class News extends Admin
                 unset($_POST['id']);
                 $result = $news->validate(true)->save($_POST);
                 $inputid = Db::name('news')->getLastInsID();
-                //添加新闻时推送给审核人
-                 $this-> sendCheck($inputid,input('type'));
+
+
+
 
             }
 
             if ($result) {
+
+                //添加新闻时推送给审核人
+                $this-> sendCheck($inputid,input('type'));
                 /*// 新闻列表限制banner只有3个
                 if($_POST['type'] == 1){
                     $newsMap = [
@@ -218,10 +222,11 @@ class News extends Admin
 
     public function sendCheck($id,$type)
     {
+        $parkid = session('user_auth')['park_id'];
         $user =new WechatUser();
         $service = new Service();
         //招商人员
-        $user = $user->where('tagid',1)->select();
+        $user = $user->where(['tagid'=>1,'park_id'=>$parkid])->select();
         $touser="";
         foreach ($user as $value){
             $touser .='|'.$value['userid'];
@@ -229,8 +234,8 @@ class News extends Admin
         //1新闻速递、2园区通告、3好文分享
         $type_name="未知";
         switch ($type){
-            case 1:$type_name="新闻速递";break;
-            case 2:$type_name="园区通告";break;
+            case 1:$type_name="新闻动态";break;
+            case 2:$type_name="政策通告";break;
             case 3:$type_name="好文分享";break;
         }
         $message = [

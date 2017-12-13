@@ -186,6 +186,7 @@ class Feepayment extends Admin
     public function feeRecode()
     {
         $feepayment = new FeePaymentModel();
+        $park_id = session('user_auth')['park_id'];
         $infos = input('p');
         //return dump($infos);
         $id = input('id');
@@ -193,7 +194,7 @@ class Feepayment extends Admin
         $company = ParkCompany::get($id);
         $list = $feepayment->where(['company_id' => $id,'status' => ['>',-1]])->order('id desc')->paginate(12,false,['query' => request()->param()]);
         int_to_string($list, ['type' => [1 => "水电费", 2 => "物业费", 3 => "房租费", 4 => "公耗费"],
-            'status' => [-1 => "删除", 0 => "未缴费", 1 => "审核中", 2 => "审核成功",3=>"审核失败"]]);
+            'status' => [-1 => "删除", 0 => "未缴费", 1 => "审核中", 2 => "审核成功",3=>"审核失败"],'invoice_type'=>[0=>"不开发票",1=>"普通发票",2=>"增值税发票"]]);
         foreach($list as $k=>$v){
             $list[$k]['number'] = count(explode('|',$v['number']))-1;
             $list[$k]['totalNumber'] = count($totalNumber);
@@ -202,7 +203,7 @@ class Feepayment extends Admin
         $this->assign('p',$infos);
         $this->assign('company', $company);
         $this->assign('list', $list);
-
+        $this->assign('park_id', $park_id);
         return $this->fetch();
     }
 

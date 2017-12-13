@@ -8,7 +8,9 @@ use think\Controller;
 use wechat\TPWechat;
 use wechat\TPQYWechat;
 use think\Loader;
+use app\index\model\ExchangePoint;
 use app\common\model\ParkCompany;
+use  app\common\behavior\Service;
 
 class Index extends Controller
 {
@@ -17,10 +19,8 @@ class Index extends Controller
     /** 测试专用 页面地址列表 **/
     public function index()
     {
-
         return $this->fetch();
     }
-
     /**
      * 注册入口，登记用户手机号码等资料（注册到居民组）
      * @return mixed
@@ -59,12 +59,27 @@ class Index extends Controller
             unset($tableUser['userid']);
             $is_user = $wechatUser->where('userid', $mobile)->find();
             if ($is_user) {
-                $tableUser['status']=1;
-                $wechatUser->save(['status'=>1,'company_address'=>input('room')],['userid'=>$mobile]);
+                $tableUser['status'] = 1;
+                $wechatUser->save(['status' => 1, 'company_address' => input('room')], ['userid' => $mobile]);
             } else {
                 //注册后获得1个积分，重复注册不会重复获得；
-                $tableUser['score']=1;
+                $tableUser['score'] = 2;
                 $wechatUser->save($tableUser);
+                //并记录
+                $point = new  ExchangePoint();
+                $server = new  Service();
+                $park_id = $server->findParkid($department);
+                $map = [
+                    'userid' => $mobile,
+                    'content' => '注册登录',
+                    'score' => 2,
+                    'create_time' => time(),
+                    'park_id' => $park_id,
+                    'status'=>0,
+                    'type'=>2
+                ];
+                $point->save($map);
+
             }
             if ($result && $result['errcode'] == 0) {
                 // 跳转到微信插件二维码

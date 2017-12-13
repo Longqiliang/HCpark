@@ -62,9 +62,11 @@ class CopyrightArt extends Model
     {
 
         $userid = session('userId');
+        $park_id =session('park_id');
         $map = [
             'userid' => $userid,
             'status' => array('neq', -1),
+            'park_id'=>$park_id
         ];
         $list = $this->where($map)->field('id,status,create_time,end_time,contact_staff,contact_number,1 as type ')->select();
         return $list;

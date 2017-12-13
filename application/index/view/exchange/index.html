@@ -18,7 +18,7 @@
     </div>
     <div class="goods-box">
         <ul class="goods-list">
-            <li  v-for="product in baseData.product" @click="jumpTo(1,product.id)">
+            <li  v-for="product in baseData.product">
                 <div class="goods-list-left">
                     <img :src="product.front_cover" class="goods-ticket" alt="">
                     <div class="goods-rest">
@@ -26,7 +26,8 @@
                         <span class="">剩余{{product.left}}份</span>
                     </div>
                 </div>
-                <div class="goods-score"><span>{{product.price}}积分</span><i class="icon-arr-right"></i></div>
+                <!--product.price-->
+                <div class="goods-exchange" :class="{'can-exchange' : product.price <= baseData.score && product.left > 0}"  @click="jumpTo(1,product.id,product.price,product.left)">立即兑换</div>
             </li>
         </ul>
     </div>
@@ -42,9 +43,11 @@
             baseData:{$score}
         },
         methods: {
-            jumpTo(urlID,id){
+            jumpTo(urlID,id,price,left){
                 if(urlID===1){
-                    window.location.href="/index/exchange/productinfo/product_id/" + id
+                    if(price <= this.baseData.score && left > 0){
+                        window.location.href="/index/exchange/productinfo/product_id/" + id
+                    }
                 }else{
                     window.location.href="/index/exchange/record/"
                 }

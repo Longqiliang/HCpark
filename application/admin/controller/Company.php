@@ -139,7 +139,7 @@ class Company extends Admin
         $res=ParkCompany::where(['id'=>$id])->update($_POST);
         if ($res){
 
-            return $this->success("修改成功");
+            return $this->success("修改成功",'company/index');
         }else{
 
             return $this->error("修改失败");

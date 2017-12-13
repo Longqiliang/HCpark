@@ -1,445 +1,318 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>商标查询</title>
-<link rel="stylesheet" href="/index/css/service/detail.css">
+<title>专利申请</title>
 <style>
-    body{background-color:#F0EFF5;color:#333;font-size:1.5rem}
-    :-moz-placeholder{color:#999;opacity:1}
-    ::-moz-placeholder{color:#999;opacity:1}
-    input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:#000;opacity:1}
-    input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:#999;opacity:1}
-    .table-row-box{padding:0 4vw;background-color:#fff}
-    .icon-remarks{display:block;margin-left:.6rem;height:15px;width:15px;background:url(/index/images/service/patent/icon-remarks.png) no-repeat center;background-size:15px 15px}
-    .table-title{padding:1rem 1.5rem;display:-webkit-flex;display:flex;align-items:center;color:#999}
-    .table-row{padding:1.5rem 0;display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;box-sizing:border-box}
-    .table-row:not(:last-child){border-bottom:1px solid #f1f1f1}
-    .table-row-select{position:relative;padding-right:15px}
-    .table-row-select:after{content:'';position:absolute;top:50%;right:0;-webkit-font-smoothing:antialiased;height:6px;width:6px;border-width:1px 1px 0 0;border-color:#999;border-style:solid;-webkit-transform:matrix(.71,.71,-.71,.71,0,0);transform:matrix(.71,.71,-.71,.71,0,0);margin-top:-2px}
-    .table-row-input{font-size:1.4rem;text-align:right}
-    .table-row-block-header{padding:1.5rem 0}
-    .table-row-block>textarea{box-sizing:border-box;width:100%;height:10rem;font-size:1.4rem;border:1px solid #f1f1f1;padding:7px 9px}
-    .card-upload{flex-wrap:wrap;justify-content:flex-start;padding:0 0 2rem 0}
-    .card-upload>div:not(:nth-child(3n+0)){margin-right: 2.05vw;}
-    .upload-box,.upload-img{margin-bottom:2vw}
-    .upload-box,.upload-img,.upload-img img{border-radius: 1.3333333vw;overflow: hidden;}
-    #app .card-btn-box{display:flex;justify-content:center;margin-top:3rem;margin-bottom:1.6rem}
-    .modal-box{width:100%;height:100vh;background:rgba(0,0,0,.4);position:fixed;left:0;top:0;z-index:9}
-    .modal-box .modal{width:calc(100% - 36px);margin:15vh auto 0;background:#fff;border-radius:10px;padding:10px 0;position:relative}
-    .name-mobile{padding:5px 18px}
-    .modal>p{line-height:40px;font-size:17px;text-align:center}
-    .name-mobile ul li{line-height:40px;border-bottom:1px solid #f1f1f1;position:relative;display:flex;justify-content:space-between}
-    .name-mobile ul li.column{flex-direction:column}
-    .name-mobile span{display:inline-block;font-size:1.5rem;color:#333}
-    .name-mobile span:first-child{float:left}
-    .name-mobile input{text-align:right;font-size:1.5rem}
-    .modal-textarea{border:1px solid #f1f1f1;height:18vh;border-radius:5px;margin-bottom:10px;padding:5px 10px;font-size: 1.4rem}
-    .modal-btn-box{display:-webkit-flex;display:flex;justify-content:center;padding:4vw 4.8vw}
-    .cancel{position:absolute;top:-50px;right:0}
-    .cancel>span:first-child{display:inline-block;width:28px;height:28px;border-radius:15px;border:1px solid #fff;display:-webkit-flex;-webkit-align-items:center;-webkit-justify-content:center}
-    .cancel i::before{width:20px;height:20px;color:#fff}
-    .cancel>span:last-child{display:inline-block;height:22px;width:0;border-right:1px solid #fff;position:relative;left:50%}
-    .icon-required{display:inline-block;color:red;font-style:normal;position:absolute;left:-10px;top:0}
-
+    #app{
+        width:100%;
+        background: url("/index/images/service/patent/index-banner.png") left top no-repeat;
+        -webkit-background-size:100vw 50.133333vw;
+        background-size:100vw 50.133333vw;
+        min-height: 50.133333vw;
+    }
+    /*banner*/
+    .banner{
+        width:100%;
+        box-sizing: border-box;
+        /*height:50.133333vw;*/
+        padding:8vw 10.4vw;
+        position: relative;
+        text-align: center;
+        color: #fff;
+    }
+    .banner>.icon-remarks{
+        position: absolute;
+        display: block;
+        /*width:6.8rem;*/
+        height:2.6rem;
+        line-height: 2.6rem;
+        padding:0 0.3rem 0 0.9rem;
+        font-size: 1.4rem;
+        color: #333;
+        background-color: rgba(255,255,255,.7);
+        border-top-left-radius: 4.8rem;
+        border-bottom-left-radius: 4.8rem;
+        right:0;
+        top:0.7rem;
+        text-align: center;
+    }
+    .banner>.banner-title{
+        font-size: 1.6rem;
+    }
+    .banner>h2{
+        font-size:3.5rem;
+        line-height: 4.9rem;
+        font-weight:500;
+        padding:0;
+        margin:0;
+    }
+    /*patent-type*/
+    .patent-type{
+        width:100%;
+        padding-bottom:1.2rem;
+    }
+    .type-list{
+        margin:0 auto;
+        width:90.666666vw;
+    }
+    .type-list>li{
+        box-sizing: border-box;
+        width:100%;
+        /*height: 12rem;*/
+        padding:2rem  5.3vw;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0.3rem;
+        box-shadow: 0 1px 10px 0 rgba(0,0,0,.1);
+        background-color: #fff;
+        margin-bottom: 1.2rem;
+    }
+    .type-list>li>img{
+        width:73px;
+        height:83px;
+        margin: 0 5px;
+        flex:none;
+    }
+    .type-title{
+        height:100%;
+        width:14.4rem;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        flex-direction:column;
+        /*align-items: flex-end;*/
+    }
+    .type-title>b{
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    #app .img-right>.type-title{
+        text-align: right;
+    }
+    .type-title>span{
+        color: #999;
+        font-size: 1.2rem;
+    }
+    .patent-ps{
+        text-align: center;
+        color: #999;
+        font-size: 1.5rem;
+        line-height: 1.5;
+    }
+    .patent-ps>a{
+        color: #2F56DF;
+        font-size: 1.4rem;
+    }
+    .modal-box{
+        width:100vw;
+        height:100vh;
+        background: rgba(0,0,0,0.4);
+        position: fixed;
+        top:0;
+        left:0;
+        z-index: 10;
+    }
+    .overflow-hidden{
+        height:100vh;
+        overflow: hidden;
+    }
+    .modal-content{
+        position: absolute;
+        top:50%;
+        left: 50%;
+        width: 80vw;
+        /*height:109vw;*/
+        -webkit-transform: translate(-50%,-50%);
+        -moz-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        -o-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+    }
+    .modal-content>img{
+        width:100%;
+        position: relative;
+        z-index:15;
+    }
+    .modal-content>.modal-content-mid{
+        box-sizing: border-box;
+        /*height:74.133333vw;*/
+        /*width:100%;*/
+        padding-top:13.333333vw;
+        margin-top:-13.333333vw;
+        background-color: #fff;
+        border-bottom-left-radius: 2.666666vw;
+        border-bottom-right-radius: 2.666666vw;
+        border-bottom:1px solid #fff
+    }
+    .modal-content>.modal-content-mid>.modal-title{
+        text-align: center;
+        font-size: 1.6rem;
+        font-weight: bold;
+        padding:4vw;
+    }
+    .patent-need{
+        box-sizing: border-box;
+        width:100%;
+        display: -webkit-flex;
+        display: flex;
+        /*align-items: center;*/
+        justify-content: space-around;
+        /*flex-wrap: wrap;*/
+        /*padding:0 5.3vw;*/
+    }
+    .patent-need>li{
+        box-sizing: border-box;
+        display: -webkit-flex;
+        display: flex;
+        /*justify-content: space-around;*/
+        /*align-items: center;*/
+        flex-direction: column;
+    }
+    .patent-need>li>div{
+        box-sizing: border-box;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 1.5rem;
+        margin-bottom: 5.3vw;
+    }
+    .patent-need>li>div:before{
+        display: block;
+        content: '';
+        width:4px;
+        height:4px;
+        border-radius: 50%;
+        background-color: #69B9F9;
+        margin-right:5px;
+    }
+    .modal-content .modal-btn{
+        width:14rem;
+        height:3.2rem;
+        line-height: 3.2rem;
+        font-size: 1.5rem;
+        text-align: center;
+        color: #fff;
+        border-radius:3px;
+        margin:0.5rem auto 2rem;
+    }
+    .modal-content .modal-btn.invent{
+        background-color: rgba(105,185,249,1);
+        box-shadow: 0 2px 4px 0 rgba(105,185,249,1);
+    }
+    .modal-content .modal-btn.practical{
+        background-color: rgba(252,196,75,1);
+        box-shadow: 0 2px 4px 0 rgba(252,196,75,1);
+    }
+    .modal-content .modal-btn.exterior{
+        background-color:rgba(145,143,230,1);
+        box-shadow: 0 2px 4px 0 rgba(145,143,230,1);
+    }
+    .modal-close{
+        margin:4rem auto 0;
+        width: 2.8rem;
+        height: 2.8rem;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+        color: #fff;
+    }
 </style>
 {/block}
 
-
 {block name="body"}
-<div id="app" class="content">
-    <div class="table-box">
-        <div class="table-title"><span>商标类别</span><a href="/index/service/marktype" class="icon-remarks"></a></div>
-        <div class="table-row-box">
-            <div class="table-row" @click="toggleType">
-                <span class="table-row-header">类别选择</span>
-                <span class="table-row-select" v-if="typeSelect.nowType"> <span>{{typeSelect.nowType.name}} </span></span>
-                <span class="table-row-select" style="color: #999;" v-else>请选择类别</span>
-            </div>
-        </div>
-        <mt-popup  position="bottom"  v-model="typeSelect.popupVisible" class="mint-popup">
-            <div class="picker-toolbar">
-                <span class="mint-datetime-action mint-datetime-cancel" @click="toggleType">取消</span>
-                <span class="mint-datetime-action mint-datetime-confirm" @click="selectType">确定</span>
-            </div>
-            <mt-picker :slots="typeSelect.slots" value-key="name" @change="onTypeChange" ></mt-picker>
-        </mt-popup>
+<div id="app">
+    <div class="banner">
+        <a href="/index/service/history/id/21" class="icon-remarks">申请记录</a>
+        <h2>专利申请</h2>
+        <div class="banner-title">便捷／安心／申请无忧</div>
+        <!--<div class="record" @click="jumpTo()"> <span class="icon-record"></span></div>-->
     </div>
-    <div class="table-box">
-        <div class="table-title"><span>商标名称（至少填写一项）</span></div>
-        <div class="table-row-box">
-            <div class="table-row">
-                <span class="table-row-header">中文</span>
-                <input type="text" class="table-row-input" placeholder="请输入中文描述" v-model="subData.chinese_description">
-            </div>
-            <div class="table-row">
-                <span class="table-row-header">英文</span>
-                <input type="text" class="table-row-input" autocapitalize="on" placeholder="请输入英文描述" v-model="subData.english_description">
-            </div>
-            <div class="table-row">
-                <span class="table-row-header">数字</span>
-                <input type="tel" class="table-row-input" placeholder="请输入数字描述" v-model="subData.numeric_description">
-            </div>
-            <div class="table-row-block">
-                <div class="table-row-block-header">商标图形</div>
-                    <div class="card-upload">
-                        <div class="upload-img" v-for="(imgUrl,index) of subData.submit_img">
-                            <i class="del-img" @click="delImg(index)"></i>
-                            <img :src="imgUrl" class="img-responsive" @click="loadImg(imgUrl,subData.submit_img)">
-                        </div>
-                        <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
-                            <img src="/index/images/service/card/card-camera.png" >
-                            <span class="upload-info" >上传图片</span>
-                        </div>
-                    </div>
-                    <form ref="myform">
-                        <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
-                    </form>
+    <div class="patent-type">
+        <ul class="type-list">
+            <li @click="toggleModal(0)">
+                <div class="type-title">
+                    <b>发明专利</b>
+                    <span>对产品、方法及其结合<br>提出新的技术方案</span>
                 </div>
-        </div>
+                <img src="/index/images/service/patent/list-invent.png" class="type-ticket" alt="">
+            </li>
+            <li class="img-right"  @click="toggleModal(1)">
+                <img src="/index/images/service/patent/list-practical.png" class="type-ticket" alt="">
+                <div class="type-title">
+                    <b>实用新型</b>
+                    <span>保护产品形状、构造等微创<br>性3-6个月授权十年保质期</span>
+                </div>
+            </li>
+            <li  @click="toggleModal(2)">
+                <div class="type-title">
+                    <b>外观设计</b>
+                    <span>保护产品形状、图案或与其<br>色彩结合所作出的新设计</span>
+                </div>
+                <img src="/index/images/service/patent/list-exterior.png" class="type-ticket" alt="">
+            </li>
+        </ul>
+        <p class="patent-ps"><span>如有疑问请致电园区知识产权服务中心</span><br><a> 88888888</a></p>
     </div>
-    <div class="card-more">
-        <button class="btn btn-warning btn-warning-outlined btn-sm" @click="window.location.href='/index/service/history/id/12/type/1'"><i class="icon icon-record"></i>查询记录</button>
-    </div>
-    <div class="card-btn-box payment-btn">
-        <button class="btn btn-block" @click=" consult = true ">咨询</button>
-        <button class="btn btn-block btn-warning" @click="querySubmit">提交</button>
-    </div>
-    <div class="modal-box" v-show="consult">
-        <div class="modal">
-            <p>商标咨询</p>
-            <div class="name-mobile">
-                <ul>
-                    <li>
-                        <span><i class="icon-required">*</i>联系人员</span>
-                        <input type="text" id="name" placeholder="请输入联系人员" v-model="consultData.name">
-                    </li>
-                    <li>
-                        <span><i class="icon-required">*</i>联系电话</span>
-                        <input type="tel" id="mobile" placeholder="请输入联系电话" v-model.number="consultData.mobile">
-                    </li>
-                    <li class="column">
-                        <span><i class="icon-required">*</i>咨询内容</span>
-                        <textarea cols="30" rows="10" class="modal-textarea" placeholder="请输入咨询内容..." v-model="consultData.content"></textarea>
-                    </li>
+    <div class="modal-box" v-show="isShow">
+        <div class="modal-content">
+            <img :src="type[typeIndex].banner">
+            <div class="modal-content-mid">
+                <div class="modal-title">需要提供以下信息</div>
+                <ul class="patent-need">
+                    <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===0">{{item}}</div></li>
+                    <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===1">{{item}}</div></li>
+                    <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===2">{{item}}</div></li>
                 </ul>
+                <div class="modal-btn" :class="{invent:typeIndex===0,practical:typeIndex===1,exterior:typeIndex===2}" @click="jumpTo">前往申请</div>
             </div>
-            <div class=" modal-btn-box">
-                <button class="btn btn-block btn-warning" @click="consultSubmit">提交</button>
-            </div>
-            <div class="cancel" @click="consult = false">
-                <span><i class="iconfont hc-cha1"></i></span>
-                <span></span>
-            </div>
+            <div class="modal-close" @click="toggleModal('')"><i class="iconfont hc-cha1"></i></div>
         </div>
     </div>
 </div>
-
 {/block}
 
 {block name="script"}
-<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-    //生成类别数组=、=
-    for(var i=0,type = [];i<45;i++){
-        var a={
-            name:"第 "+(i+1<10?0+''+(i+1):i+1)+" 类",
-            key:i+1
-        }
-        type.push(a)
-    }
     var app = new Vue({
-        el:'#app',
-        data:{
-            baseInfo:{$info},
-            isSubmit:false,
-            imgSrc:{
-                imgLength:6,
-                dataUrl:[],
-                imgName:[]
-            },
-            typeSelect:{
-                slots: [
-                    {
-                        defaultIndex:1,
-                        values: type
-                    }
-                ],
-                nowType:'',
-                onChangeType:'',
-                popupVisible:false
-            },
-            consult:false,
-            consultData:{
-                name:'',
-                mobile:'',
-                content:''
-            },
-            subData:{
-                type:'',
-                chinese_description:'',
-                english_description:'',
-                numeric_description:'',
-                submit_img:[],
-            },
-        },
-        created(){
-            var _this = this;
-            _this.consultData.name=_this.baseInfo.name||''
-            _this.consultData.mobile=_this.baseInfo.mobile||''
-
-            //            初始化选择器选项位置
-            _this.$nextTick(function() {
-                setTimeout(function() {
-                    _this.typeSelect.slots[0].defaultIndex = 0;
-                }, 100);
-            });
-            var test =window.location.href;
-            var data ={
-                url:test
-            };
-            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
-                var data = JSON.parse(res.data);
-                wx.config({
-                    debug: false,
-                    appId: data.appid,
-                    timestamp:data.timestamp ,
-                    nonceStr: data.noncestr,
-                    signature: data.signature,
-                    jsApiList: ['previewImage']
-                });
-            },function () {
-            });
-
+        el: '#app',
+        data: {
+            type:[
+                {
+                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','技术交底书'],
+                    banner:'/index/images/service/patent/banner-invent.png'
+                },
+                {
+                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','技术交底书'],
+                    banner:'/index/images/service/patent/banner-practical.png'
+                },
+                {
+                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','简单说明','产品图'],
+                    banner:'/index/images/service/patent/banner-exterior.png'
+                }
+            ],
+            isShow:false,
+            typeIndex:0
         },
         methods: {
-            //            微信jssdk - 图片预览
-            loadImg(src,imglist) {
-                var urls=[];
-                var current=window.location.protocol+'//'+window.location.host+src;
-                for(var i in imglist){
-                    urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
+            jumpTo(){
+                var _this=this;
+                window.location.href='/index/service/patentInfo/type/'+(_this.typeIndex+1);
+            },
+            toggleModal(typeIndex){
+                var _this=this;
+                if(typeIndex!==''){
+                    _this.typeIndex = typeIndex;
                 }
-                console.log(current,urls)
-                wx.previewImage({
-                    current: current,
-                    urls: urls
-                });
-            },
-            //提交
-           consultSubmit(){
-               var _this = this;
-               if(_this.isSubmit){
-                   _this.$toast({
-                       message:"提交中",
-                       duration:1000
-                   });
-                   return ;
-               };
-               if(!_this.consultData.name){
-                   _this.$toast({
-                       message:"请输入联系人员",
-                       duration:1000
-                   });
-                   return ;
-               }else if(!_this.consultData.mobile){
-                   _this.$toast({
-                       message:"请输入联系电话",
-                       duration:1000
-                   });
-                   return ;
-               }else if(!_this.consultData.content){
-                   _this.$toast({
-                       message:"请输入咨询内容",
-                       duration:1000
-                   });
-                   return ;
-               };
-               _this.postSubmit("/index/service/trademarkAdvisory",_this.consultData,'提交成功',function () {
-                   window.location.href='/index/service/index'
-               },function () {})
-            },
-            querySubmit(){
-                var _this = this;
-                var data = _this.subData;
-                if(_this.isSubmit){
-                    _this.$toast({
-                        message:"提交中",
-                        duration:1000
-                    });
-                    return ;
-                };
-                if(!_this.typeSelect.nowType){
-                    _this.$toast({
-                        message:"请选择类别",
-                        duration:1000
-                    });
-                    return ;
-                }else if(!data.numeric_description && !data.chinese_description && !data.english_description && !data.submit_img.length){
-                    _this.$toast({
-                        message:"至少填写一项商标名称",
-                        duration:1000
-                    });
-                    return ;
-                }
-                _this.subData.type = _this.typeSelect.nowType.key;
-                _this.postSubmit("/index/service/trademark",data,'提交成功',function () {
-                    window.location.href='/index/service/index'
-                },function () {})
-            },
-            postSubmit(api,data,successText,successFun,errorFun){
-                var _this = this;
-                _this.$indicator.open({
-                    text: '提交中',
-                    spinnerType: 'triple-bounce'
-                });
-                _this.isSubmit = true;
-                _this.$http.post(api,data).then(function (res) {
-                    _this.isSubmit = false;
-                    _this.$indicator.close();
-                    if(res.data.code===1){
-                        swal({
-                            title: '',
-                            text: successText,
-                            type:'success',
-                            confirmButtonColor: "#59B7F3",
-                            confirmButtonText: "确定"
-                        },function () {
-                            successFun()
-                        });
-                    }else{
-                        swal({
-                            title: '',
-                            text: res.data.msg,
-                            type:'error',
-                            confirmButtonColor: "#59B7F3",
-                            confirmButtonText: "确定"
-                        },function () {
-                            errorFun()
-                        });
-                    }
+                _this.isShow = !_this.isShow
 
-                },function (res) {
-                    _this.isSubmit = false;
-                    _this.$indicator.close();
-                    swal({
-                        title: '',
-                        text: '请求失败，请重试！',
-                        type:'error',
-                        confirmButtonColor: "#59B7F3",
-                        confirmButtonText: "确定"
-                    });
-                })
-            },
-            //类型选折器
-            toggleType(){
-                var _this = this;
-                _this.typeSelect.popupVisible = !_this.typeSelect.popupVisible;
-            },
-            selectType(){
-                var _this = this;
-                if(_this.typeSelect.nowType != _this.typeSelect.onChangeType){
-                    _this.typeSelect.nowType = _this.typeSelect.onChangeType;
-
-                }
-                _this.toggleType();
-            },
-            onTypeChange(p,v){
-                var _this = this;
-                if(v[0]){
-                    _this.typeSelect.onChangeType = v[0];
-                }
-            },
-            //图片上传 + 删除
-            delImg: function (e) {
-                this.imgSrc.dataUrl.splice(e,1);
-                this.subData.submit_img.splice(e,1);
-                this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
-            },
-            imgPreview (file,path,name) {
-                var self = this;
-                if(self.imgSrc.dataUrl.length >= self.imgSrc.imgLength){
-                    return;
-                }
-                // 是否支持FileReader
-                if (!file || !window.FileReader){
-                    if(path){
-                        self.imgSrc.dataUrl.push(path) ;
-                    }
-                    return;
-                }
-
-                if (/^image/.test(file.type)) {
-                    // 创建一个reader
-                    var reader = new FileReader();
-                    // 将图片将转成 base64 格式
-                    reader.readAsDataURL(file);
-                    // 读取成功后的回调
-                    reader.onloadend = function () {
-                        self.imgSrc.dataUrl.push(this.result) ; //64格式图片数组
-                        if(name && path){
-                            var imgObj = {
-                                name:name,
-                                path:path,
-                                base:this.result
-                            };
-                            self.imgSrc.imgName.push(imgObj);
-                        }
-                    }
-                }
-            },
-            imgUpload:function () {
-                var upImg = this.$refs.upimg;
-                upImg.click();
-            },
-            handleFileChange:function (e) {
-                var _this = this;
-                var upImg = _this.$refs.upimg;
-                var img = upImg.files[0];
-                if(img){
-                    var newSize = (img.size/1024).toFixed(2);
-                    if(newSize <= 10240){
-                        _this.$indicator.open({
-                            text: '图片上传中',
-                            spinnerType: 'triple-bounce'
-                        });
-                        _this.isSubmit = true;
-                        var formData = new FormData();
-                        formData.append("picture",img);
-                        _this.$http.post("{:Url('File/uploadPicture')}",formData).then(function (res) {
-                            var data = JSON.parse(res.data);
-                            console.log(data);
-                            _this.isSubmit = false;
-                            this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
-                            if(data.code == 1){
-                                // 在获取到文件对象进行预览
-                                _this.$indicator.close();
-                                _this.subData.submit_img.push(data.data.path); //上传后图片路径
-                                _this.imgPreview(img,data.data.path,name);
-                            }else{
-                                _this.$indicator.close();
-                                _this.$toast({
-                                    message:"上传失败，请重新上传！",
-                                    duration:1000
-                                });
-                            }
-                        },function (res) {
-                            this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
-                            _this.isSubmit = false;
-                            _this.$indicator.close();
-                            _this.$toast({
-                                message:"上传失败，请重新上传！",
-                                duration:1000
-                            });
-                        });
-                    }else{
-                        _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
-                    }
-                }
-            },
+            }
         }
     })
-
-
 </script>
-
 {/block}

@@ -33,13 +33,13 @@ class Patent extends Model
             return false;
         } else {
             // 发明专利 实用新型
-            if (isset($data['patent_name']) ||
-                isset($data['inventor']) ||
-                isset($data['applicant']) ||
-                isset($data['contact']) ||
-                isset($data['contact_address']) ||
-                isset($data['contact_number']) ||
-                isset($data['id_card'])
+            if (!isset($data['patent_name']) ||
+                !isset($data['inventor']) ||
+                !isset($data['applicant']) ||
+                !isset($data['contact']) ||
+                !isset($data['contact_address']) ||
+                !isset($data['contact_number']) ||
+                !isset($data['id_card'])
             ) {
                 return false;
             }
@@ -55,8 +55,8 @@ class Patent extends Model
             }
             //外观设计
             if ($type == 3) {
-                if (isset($data['explanation']) ||
-                    isset($data['product_img'])
+                if (!isset($data['explanation']) ||
+                    !isset($data['product_img'])
 
                 ) {
                     return false;

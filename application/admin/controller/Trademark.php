@@ -118,6 +118,7 @@ class Trademark extends Admin
         $info['name'] = isset($info->user->name) ? $info->user->name : "";
         $info['mobile'] = isset($info->user->mobile) ? $info->user->mobile : "";
         $info['submit_img'] = json_decode($info['submit_img']);
+        $info['back_img'] = json_decode($info['back_img'])[0];
         if ($info['status'] == 1) {
             $info['status_text'] = "已联系";
         } else {
@@ -134,17 +135,16 @@ class Trademark extends Admin
     {
         $id = input('id');
         $back_img = input('back_img');
+
         $ti = new TrademarkInquire();
         $ta = $ti->get($id);
-        $res = $ti->where('id', $id)->update(['back_img' => $back_img, 'status' => 1, 'end_time' => time()]);
-
-
+        $res = $ti->where('id', $id)->update(['back_img' => json_encode([$back_img]), 'status' => 1, 'end_time' => time()]);
         if ($res) {
            // 商标查询服务回复提示/时间/您的商标查询园区已回复，点击查看详情；
             $message = [
                 "title" => "商标查询服务回复提示",
                 'description' => "您的商标查询园区已回复，点击查看详情",
-                "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/12/can_check/no/type/1/id/' . $id
+                "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/12/can_check/no/type/1/id/' . $id
             ];
             ServiceModel::sendPersonalMessage($message,$ta['userid']);
 

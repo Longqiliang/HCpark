@@ -92,6 +92,9 @@
                         <span>{$vo.name}</span>
                     </td>
                     <td>
+                        <a data-toggle="modal" href="#company-code" onclick="companyCode(this)" class="btn-sm btn-success"
+                           data-company-id="{$vo.company_id}"  data-company-code="{$vo.company_code}"
+                           style="color: #fff;">企业验证码</a>
                         <a  href="{:Url('manageUser','id='.$vo.id)}" class="btn-sm btn-primary" style="color:#fff">查看权限</a>
                     </td>
 
@@ -103,6 +106,41 @@
         </div>
     </div>
 </div>
+
+
+
+
+<div id="company-code" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="updateCompanyCode">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">企业验证码编辑</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"><label class="col-sm-3 control-label">企业验证码:</label>
+                        <div class="col-sm-9">
+                            <input type="number"  oninput="if(value.length>6)value=value.slice(0,6)"  placeholder="请填写企业验证码" class="form-control" required="" name="company_code">
+                            <input type="hidden"     class="form-control" required="" name="company_id">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary ajax-post" type="submit" target-form="form-horizontal">保存</button>
+                    <input type="hidden" name="id" value="">
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
 {/block}
 
 {block name="script"}
@@ -133,6 +171,12 @@
         var r = window.location.search.substr(1).match(reg);
         if(r!=null)return  unescape(r[2]); return null;
     }
-
+  function companyCode(a) {
+      $("input[name='company_code']").val($(a).attr('data-company-code'));
+      $("input[name='company_id']").val($(a).attr('data-company-id'))
+  }
+    
+    
+    
 </script>
 {/block}

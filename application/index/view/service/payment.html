@@ -145,17 +145,17 @@
         <div class="card-tit">开票信息</div>
         <div class="invoice-cell">
             <label for="invoice_no">
-                <input type="radio" id="invoice_no" value="0" name="invoice" v-model="invoice.invoice_type">
+                <input type="radio" id="invoice_no" value="0" name="invoice" hidden v-model="invoice.invoice_type">
                 <span class="my-radio"><b></b></span>
                 不开发票
             </label>
             <label for="invoice_common">
-                <input type="radio" id="invoice_common" value="1" name="invoice" v-model="invoice.invoice_type">
+                <input type="radio" id="invoice_common" value="1" name="invoice" hidden v-model="invoice.invoice_type">
                 <span class="my-radio"><b></b></span>
                 普通发票
             </label>
             <label for="invoice_added_tax">
-                <input type="radio" id="invoice_added_tax" value="2" name="invoice" v-model="invoice.invoice_type">
+                <input type="radio" id="invoice_added_tax" value="2" name="invoice" hidden v-model="invoice.invoice_type">
                 <span class="my-radio"><b></b></span>
                 增值税发票
             </label>
@@ -175,7 +175,7 @@
             </div>
             <div class="card-cell">
                 <span>联系方式</span>
-                <input type="text" placeholder="请输入联系方式" v-model="invoice.mobile">
+                <input type="tel" placeholder="请输入联系方式" v-model="invoice.mobile">
             </div>
             <div class="card-cell">
                 <span>开户银行</span>
@@ -183,7 +183,7 @@
             </div>
             <div class="card-cell">
                 <span>开户账号</span>
-                <input type="text" placeholder="请输入开户账号" v-model="invoice.account_opening">
+                <input type="tel" placeholder="请输入开户账号" v-model="invoice.account_opening">
             </div>
         </div>
     </div>
@@ -221,6 +221,12 @@
                 bank:'',
                 account_opening:''
             }
+        },
+        created(){
+            console.log(this.invoice)
+
+            Object.assign(this.invoice,this.subData.invoice);
+            console.log(this.invoice)
         },
         methods: {
             toggleCode(){
@@ -338,12 +344,11 @@
             },
             subBtn: function () {
                 var _this = this;
-                console.log(_this.isSubmit);
+                var invoice = _this.invoice;
                 if(!_this.isSubmit){
                     return;
                 }
                 if(_this.subData.invoicing == 'yes' && _this.subData.app_id == 1 && _this.invoice.invoice_type !== '0'){
-                    var invoice = _this.invoice;
                     if(invoice.department === ''){
                         _this.myToast('请填写企业名称~');
                         return;
@@ -362,20 +367,15 @@
                     }else if(invoice.account_opening === ''){
                         _this.myToast('请填写开户账号~');
                         return;
-                    }else{
-                        _this.subData.invoice = invoice;
                     }
                 }
-
-                _this.isSubmit = false;
+                _this.subData.invoice = invoice;
                 _this.subData.payment_voucher = _this.payment_voucher;
-
+                _this.isSubmit = false;
                 var subData = JSON.parse(JSON.stringify(_this.subData));
                 var type = subData.type;
                 if(type){
-                    console.log(subData)
                     this.$http.post(type,subData).then(function (res) {
-                        console.log(res.data);
                         _this.isSubmit = true;
                         var data = res.data;
                         if(data.code == 1){

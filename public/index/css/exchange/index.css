@@ -131,17 +131,21 @@ header.header{
     color: #999;
     font-size: 1.4rem;
 }
-.goods-score{
-    width:20vw;
-    color: #FF816E;
-    font-size: 1.5rem;
+.goods-exchange{
+    width:7rem;
+    height:2.2rem;
+    color: #e2e2e2;
+    border:1px solid #e2e2e2;
+    border-radius:5.1rem;
+    font-size: 1.4rem;
     display: -webkit-flex ;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
 }
-.goods-score>span{
-    margin-right: 1.333333vw;
+.goods-exchange.can-exchange{
+    color: #FF816E;
+    border-color: #FF816E;
 }
 .icon-arr-right{
     display: inline-block;

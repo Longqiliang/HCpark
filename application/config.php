@@ -97,9 +97,9 @@ return [
     /* 企业配置
         *  同步通讯录
         */
-    'login_url' => 'http://xk.0519ztnet.com/index/wechat/login',
+    'login_url' => 'https://xk.0519ztnet.com/index/wechat/login',
     'party' => array(
-        'login' => 'http://xk.0519ztnet.com/index/wechat/login',
+        'login' => 'https://xk.0519ztnet.com/index/wechat/login',
 //        'token' => 'RMRUYhgJh7C',
 //        'encodingaeskey' => 'XO7KtGSIpsnGPR24x3UmfTnLXSmEfogGhmRqUkoefNj',
         'appid' => 'ww68db00a56b949cff',
@@ -191,8 +191,6 @@ return [
         'agentid' => 1000008
 
     ],
-
-
     'weixinpay' => [
         'appid' => 'ww61224724ee102fbc', // 微信支付appid
         'mchid' => '1486387062', // 微信支付mchid 商户收款账号

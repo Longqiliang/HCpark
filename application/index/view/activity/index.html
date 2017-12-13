@@ -1,0 +1,37 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    .active-item{
+        height:50.1333333vw;
+        width:100vw;
+        position: relative;
+        background: url("") no-repeat center;
+        background-size: 100% auto;
+
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam atque deleniti dicta illo impedit, itaque, mollitia neque possimus praesentium, quam sequi similique tempore vitae. Quae qui sapiente totam vitae voluptatem!
+    <div class="active-item" :style="'background-image: url('+ '/index/images/cbd.jpg' +')'">
+        <div class="my-icon"><span>HOT</span></div>
+        <div class="active-info">
+            <div class="active-title"></div>
+            <div class="active-time"></div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {},
+        methods: {}
+    })
+</script>
+{/block}

@@ -23,14 +23,14 @@
     .sieving-list>li.active{border-color:#FF816E;color:#FF816E}
     .content-box{position:relative}
     .list-box{padding:5rem 1.2rem 0 1.2rem;background-color:#fff}
-    ul.list{height:4.5rem;padding:1.2rem 0;border-bottom:1px solid #f1f1f1;display:-webkit-flex;display:flex;justify-content:space-between;align-items:center}
-    ul.list>li{display:-webkit-flex;display:flex;flex-direction:column;justify-content:space-between;color:#333}
-    ul.list>li:first-child{flex:1;height:100%;font-size:1.4rem}
-    ul.list>li:last-child{width:5rem;font-size:1.8rem;color:#000;text-align:right}
-    ul.list>li:first-child>span:first-child{text-overflow:-o-ellipsis-lastline;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    ul.list{font-size:1.4rem;color:#333;height:100%;padding:1.2rem 0;border-bottom:1px solid #f1f1f1;display:-webkit-flex;display:flex;justify-content:space-between;flex-direction: column}
+    ul.list>li{display:-webkit-flex;display:flex;justify-content:space-between;}
+    ul.list>li:first-child{margin-bottom: 0.8rem}
+    ul.list>li:first-child>span:first-child{flex:1;text-overflow:-o-ellipsis-lastline;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    /*ul.list>li:first-child>span:last-child{width:5rem;}*/
+    .payed{color:#999999}
     .unPay{color:#FF816E}
     .auditing{color:#fcc44b}
-    .payed{color:#52cc92}
     .no-history{position:absolute;width:100%;height:100%;background-color:#f6f6f6;color:#999;font-size:1.6rem;text-align:center}
     .no-history img{width:95%;margin:40% auto 0}
 
@@ -63,10 +63,11 @@
                 <ul v-for="item in sieving.sieved " @click="jumpTo(item.type,item.id)" class="list">
                     <li>
                         <span>{{item.title}}</span>
-                        <span>{{item.create_time | timeToString}}</span>
+                        <span class="payed" :class = "{unPay : item.status == '0'}" v-if="item.status !== undefined">{{item.status=='0'?'未兑换':'已核销'}}</span>
                     </li>
                     <li>
-                        <span class="unPay">{{item.type===1?'-':'+'}}{{item.score}}</span>
+                        <span>{{item.create_time | timeToString}}</span>
+                        <span>{{item.type===1?'-':'+'}}{{item.score}}</span>
                     </li>
                 </ul>
             </div>
@@ -83,7 +84,6 @@
             if(!isNaN(time)){
                 if(String(time).length<13){
                     time = time*1000
-                    console.log(time)
                 }
                 var newTime = new Date(time);
                 var m = newTime.getMonth()+1,
@@ -103,7 +103,6 @@
         }
     });
     var info={$list};
-    console.log(info)
     var app = new Vue({
         el: '#app',
         data: {
@@ -127,11 +126,16 @@
                 if(this.sieving.index === ''){
                     this.sieving.sieved = this.baseData;
                 }else{
-                    for(var i=0;i<this.baseData.length;i++){
-                        if(this.baseData[i].type===this.sieving.list[this.sieving.index].type){
-                            this.sieving.sieved.push(this.baseData[i]);
+                    for(var i = 0 ,exchanged = [],unexchange = [];i<this.baseData.length;i++){
+                        if(this.baseData[i].type === this.sieving.list[this.sieving.index].type){
+                            if(this.baseData[i].status==0){
+                                unexchange.push(this.baseData[i]);
+                            }else{
+                                exchanged.push(this.baseData[i]);
+                            }
                         }
                     }
+                    this.sieving.sieved = unexchange.concat(exchanged);
                 }
             }else{
                 this.sieving.sieved = this.baseData;
@@ -150,16 +154,20 @@
                     if(this.sieving.index===''){
                         this.sieving.sieved = this.baseData;
                     }else{
-                        for(var i=0;i<this.baseData.length;i++){
-                            if(this.baseData[i].type===this.sieving.list[this.sieving.index].type){
-                                this.sieving.sieved.push(this.baseData[i]);
+                        for(var i = 0 ,exchanged = [],unexchange = [];i<this.baseData.length;i++){
+                            if(this.baseData[i].type === this.sieving.list[this.sieving.index].type){
+                                if(this.baseData[i].status==0){
+                                    unexchange.push(this.baseData[i]);
+                                }else{
+                                    exchanged.push(this.baseData[i]);
+                                }
                             }
                         }
+                        this.sieving.sieved = unexchange.concat(exchanged);
                     }
                 this.toggleSieving();
             },
             toggleSieving(){
-                console.log(1111)
                 this.sieving.isShow = !this.sieving.isShow;
             },
         }

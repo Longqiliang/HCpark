@@ -54,19 +54,22 @@ class Exchange extends Base
             $info[$key]['create_time']=date('Y-m-d',$value['create_time']);
             $info[$key]['score']=$value['need_score'];
             $info[$key]['type']=1;
+            $info[$key]['status']=$value['status'];
         }
         foreach ($list1 as $value){
          $map=[
              'title'=>$value['content'],
              'create_time'=>date('Y-m-d',$value['create_time']),
              'score'=>$value['score'],
-             'type'=>2,
+             'type'=>$value['type'],
          ];
         array_push($info ,$map);
         }
 
+        $info = list_sort_by($info,'create_time','desc');
+
         //echo json_encode($list);
-        //echo json_encode($list1);
+        //echo json_encode($info);
         $this->assign('list', json_encode($info));
         return $this->fetch();
     }

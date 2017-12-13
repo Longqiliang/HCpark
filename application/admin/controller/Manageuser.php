@@ -29,6 +29,20 @@ public  function  index(){
 
 }
 
+  //修改企业验证码
+  public  function  updateCompanyCode(){
+    $data =input('');
+    $parkcompany = new ParkCompany();
+    $result = $parkcompany->where('company_id',$data['company_id'])->update(['company_code'=>$data['company_code']]);
+    if($result||$result==0){
+        return $this->success('成功');
+    }else{
+        return $this->error('失败');
+    }
+  }
+
+
+
     /*权限管理*/
     public function manageuser()
     {

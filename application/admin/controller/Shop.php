@@ -90,7 +90,7 @@ class Shop extends Admin
             $map['commodity_code']=['like','%'.$search.'%'];
         }
         $recordlist = ExchangeRecord::where($map)->order('status asc')->paginate(12);
-        int_to_string($recordlist, array('status' => array(0 => "等待兑换", 1 => "兑换完成")));
+        int_to_string($recordlist, array('status' => array(0 => "未兑换", 1 => "已核销")));
         foreach ($recordlist as $child) {
             $child['title'] = isset($child->productinfo->title) ? $child->productinfo->title : "";
             $child['name'] = isset($child->user->name) ? $child->user->name : "";
@@ -154,14 +154,18 @@ class Shop extends Admin
     }
     public function user()
     {
-        $search = input('search');
-        if(!empty($serrch)){
 
+        $search = input('search');
+        $park_id = session('user_auth')['park_id'];
+        $UserProfile = new  WechatUser();
+        if(!empty($search)){
+
+            $userlist = $UserProfile->where(['mobile|name'=>['like','%'.$search.'%']])->where('park_id',$park_id)->paginate(12,false,['query' => request()->param()]);
+        }else{
+            $userlist = $UserProfile->where('park_id',$park_id)->paginate(12,false,['query' => request()->param()]);
 
         }
-        $UserProfile = new  WechatUser();
-        $userlist = $UserProfile->where(['mobile'=>['like','%'.$search.'%']])->whereOr(['name'=>['like','%'.$search.'%']])->paginate(12);
-
+            //echo $UserProfile->getLastSql();
             int_to_string($userlist, array
             ('status' => array(0=>'未关注', 1 => '启用', 2 => '已取消关注')));
 
