@@ -252,7 +252,7 @@
             pass(id);
         });
     function pass(id) {
-        $(".button").find('li').on('click',function () {
+        $(".button").find('li').off('click').on('click',function () {
             var index = $(this).index(),
                 type;
             if(index === 0){
@@ -260,7 +260,6 @@
             }else{
                 type = 1;
             }
-            console.log(id);
             $.ajax({
                 type:'post',
                 url:'{:Url("Communication/myCheck")}',
