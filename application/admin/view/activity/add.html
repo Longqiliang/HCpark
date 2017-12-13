@@ -1,0 +1,298 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style type="text/css">
+    .note-editor.note-frame {
+        border-radius: 0;
+        border: 0;
+        margin-bottom: 0;
+    }
+
+    .front_cover_img {
+        height: 40px;
+        width: 40px;
+        margin-top: 4px
+    }
+
+    .send_type_label {
+        padding-left: 12px;
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <div class="pull-right tooltip-demo">
+                <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
+                <!--target-form="form-horizontal" data-edit="content">-->
+                <!--<i class="fa fa-pencil"></i> 保存草稿-->
+                <!--</button>-->
+                <a href="javascript:ggg()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                        class="fa fa-times"></i> 关闭</a>
+            </div>
+            <h2>
+                活动添加
+            </h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizontal" method="post">
+                <div class="mail-body">
+                    <div class="form-group"><label class="col-sm-2 control-label">活动名称:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="活动的名称" name="name"
+                                                      value='{$info.name}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
+                        <div class="col-sm-10">
+                            <input id="input-file" type="file" class="file">
+                            <sapn>
+                                {empty name="info.front_cover"}图片预览{else/}
+                                    <img class="front_cover_img"  id="front_cover"  name="front_cover"  src='{$info.front_cover}'/>
+                                {/empty}
+                            </sapn>
+                        </div>
+                    </div>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">最大参与人数:</label>
+                        <div class="col-sm-10"><input type="number" class="form-control" placeholder="若不限则不用填" name="activity_number"
+                                                      value='{$info.activity_number}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">活动地址:</label>
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="活动地址" name="activity_address"
+                                                      value='{$info.activity_address}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">开始时间:</label>
+                        <div class="col-sm-10"><input type="date" class="form-control" placeholder="活动开始时间" name="start_time"
+                                                      value='{$info.start_time}'></div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">结束时间:</label>
+                        <div class="col-sm-10"><input type="date" class="form-control" placeholder="活动结束时间" name="end_time"
+                                                      value='{$info.end_time}'></div>
+                    </div>
+
+                    <div class="form-group">
+                    <label class="col-sm-2 control-label">活动介绍:</label>
+                    <br>
+                    <br>
+                    <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
+                        <div class="summernote col-sm-7">{$info.activity_description}</div>
+                        <div class="clearfix"></div>
+                    </div>
+                    </div>
+
+
+                    <div class="form-group">
+                    <label class="col-sm-2 control-label">报名须知:</label>
+                   <br>
+                   <br>
+                    <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
+                        <div class="summernote col-sm-7">{$info.registration_required}</div>
+                        <div class="clearfix"></div>
+                    </div>
+                    </div>
+
+
+
+                    <div class="mail-body text-right tooltip-demo">
+
+                        <button url="{:Url('add')}" class="btn btn-primary ajax-post" target-form="form-horizontal"
+                                data-toggle="tooltip" data-placement="top" data-edit="content">
+                            保存
+                        </button>
+                        <a class="btn btn-default" href="javascript:window.history.go(-1);">返回</a>
+                        <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
+                        <!--target-form="form-horizontal" data-edit="content">-->
+                        <!--<i class="fa fa-pencil"></i> 保存草稿-->
+                        <!--</button>-->
+                        <!--<a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>-->
+                    </div>
+                    <div class="clearfix"></div>
+                    <input type="hidden" name="registration_required" class="to_hiden" value="">
+                    <input type="hidden" name="activity_description" class="to_hiden" value="">
+                    <input type="hidden" name="id" value="{$info.id}">
+                    <input type="hidden" name="front_cover" value="{$info.front_cover}">
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/summernote/summernote.min.js"></script>
+<script src="/static/summernote/lang/summernote-zh-CN.js"></script>
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('.summernote').summernote({
+            lang: 'zh-CN',
+            height: 300,
+            minHeight: 210,
+            callbacks: {
+                onImageUpload: function (files) { //the onImageUpload API
+                    img = sendFile(files[0]);
+                }
+            }
+        });
+
+        function sendFile(file) {
+            var data = new FormData();
+            data.append("file_data", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "{:Url('Upload/picture')}",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    var data = $.parseJSON(response);
+                    $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+                }
+            });
+        }
+
+        console.log($(this).val())
+        $('.send_type').on('ifChecked', function (event) {
+            switch ($(this).val()) {
+                case '0' :
+                    $("#send_target").empty();
+                    $("#send_target").append("<option value='0'>所有人</option>");
+                    break;
+                case '1':
+                    $.ajax({
+                        type: "get",
+                        url: "{:Url('getDepartment')}",
+                        success: function (response) {
+                            $("#send_target").empty();
+                            $.each(response.department, function (i, item) {
+                                $("#send_target").append("<option value='" + item.id + "'>" + item.name + "</option>");
+                            });
+                        }
+                    });
+                    break;
+                case '2':
+                    $.ajax({
+                        type: "get",
+                        url: "{:Url('getTag')}",
+                        success: function (response) {
+                            $("#send_target").empty();
+                            $.each(response.taglist, function (i, item) {
+                                $("#send_target").append("<option value='" + item.tagid + "'>" + item.tagname + "</option>");
+                            });
+                        }
+                    });
+                    break;
+            }
+        });
+    });
+
+    $("#input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function (event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if (response.code == 1) {
+            $("input[name='front_cover']").val(response.data);
+            var pic = document.getElementById("front_cover");
+            pic.src=response.data;
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+
+
+
+
+
+
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+
+    //把content内容赋给隐藏表单
+
+    $('.btn-primary').click(function () {
+        $('.to_hiden').attr('value', $('.panel-body').text());
+    })
+
+
+    function ggg() {
+        window.history.go(-1);
+    }
+
+    //新增
+    $(".post-put").off('click').on("click",function(){
+        var it=$(this);
+        var data = {
+            id:$("input[name='id']").val(),
+            front_cover:$("input[name='front_cover']").val(),
+            title:$("input[name='title']").val(),
+            content:ue.getContent(),
+            num:$("input[name='num']").val(),
+            price:$("input[name='price']").val(),
+            left:$("input[name='left']").val(),
+            status:0,
+        };
+        $.ajax({
+            type:"post",
+            url:$("#form").attr("action"),
+            data:data,
+            success:function(data){
+                if(data.code == 1){
+                    if (data.url) {
+                        updateAlert(data.msg + ' 页面即将自动跳转~','success');
+                    }else{
+                        updateAlert(data.msg ,'success');
+                    }
+                    it.prop('disabled','true');
+                    it.prev().prop('disabled','true');
+                    setTimeout(function(){
+                        if (data.url) {
+                            location.href=data.url;
+                        } else {
+                            location.reload();
+                        }
+                        it.removeAttr('disabled');
+                        it.prev().removeAttr('disabled')
+                    },2000);
+                } else {
+                    updateAlert(data.msg, 'error');
+                    it.attr('disabled','true');
+                    it.prev().prop('disabled','true');
+                    setTimeout(function(){
+                        it.removeAttr('disabled');
+                        it.prev().removeAttr('disabled')
+                    },2000);
+                }
+            }
+        });
+        return false;
+    });
+    highlight_subnav("{:Url('Shop/index')}");
+</script>
+{/block}
