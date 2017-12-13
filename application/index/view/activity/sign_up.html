@@ -1,14 +1,60 @@
 {extend name="public/common"}
 
 {block name="style"}
+<title>我要报名</title>
+<link rel="stylesheet" href="/index/css/activity/index.css">
 <style>
-
+    .table-box{
+        padding-bottom: 3rem;
+    }
+    .sign-up-box{
+        /*padding-bottom: 4vw;*/
+    }
+    #app .textarea-box{
+        color: #666;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <div id="app">
-
+    <div class="active-item sign-up" :style="'background-image: url('+ baseInfo.front_cover +')'" >
+        <div class="my-icon-flag my-icon-hot" v-if="baseInfo.status == 2" ><span>HOT</span></div>
+        <div class="my-icon-flag " v-if="baseInfo.status == 1" ><span>预</span></div>
+        <div class="active-info"></div>
+    </div>
+    <div class="sign-up-box">
+        <div class="active-title"><span v-html="titleWarp(baseInfo.title)"></span></div>
+        <div class="sign-up-info">
+            <div class="table-box">
+                <div class="table-row-box">
+                    <div class="table-row">
+                        <span class="table-row-header">姓名</span>
+                        <input type="text" class="table-row-input" placeholder="请输入姓名" v-model="subData.name">
+                    </div>
+                    <div class="table-row">
+                        <span class="table-row-header">电话</span>
+                        <input type="text" class="table-row-input" placeholder="请输入电话" v-model="subData.mobile">
+                    </div>
+                    <div class="table-row">
+                        <span class="table-row-header">企业</span>
+                        <input type="text" class="table-row-input" placeholder="请输入企业" v-model="subData.department">
+                    </div>
+                    <div class="table-row-block">
+                        <div class="table-row-block-header">备注信息</div>
+                            <textarea name="" id="" cols="30" rows="10" placeholder="请输入备注信息..." v-model="subData.remark"></textarea>
+                    </div>
+                    <div class="table-row-block">
+                        <div class="table-row-block-header">报名须知</div>
+                        <div class="textarea-box" v-html="baseInfo.registration_required"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-box">
+                <div class="btn btn-block btn-success" @click="ajaxPost">提交</div>
+            </div>
+        </div>
+    </div>
 </div>
 {/block}
 
@@ -16,8 +62,102 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
-        methods: {}
+        data: {
+            baseInfo:{$user},
+            subData:{
+                id:'',
+                name:'',
+                mobile:'',
+                department:'',
+                remark:''
+            }
+        },
+        created(){
+            Object.assign(this.subData,this.baseInfo);
+        },
+        methods: {
+            ajaxPost(){
+                var _this = this;
+                if(_this.subData.name===''){
+                    _this.$toast({
+                        message: '请输入姓名~',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }else if(!_this.subData.mobile){
+                    _this.$toast({
+                        message: '请输入电话~',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }else if(!_this.subData.department){
+                    _this.$toast({
+                        message: '请输入企业~',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }
+                if(_this.isSubmit){
+                    _this.$toast({
+                        message: '提交中···',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }
+                _this.isSubmit = true;
+                _this.$http.post('/index/activity/signUp',_this.subData).then(function (res) {
+                    _this.isSubmit = false;
+                    if(res.data.code===1){
+                        swal({
+                            title: '',
+                            text: '报名成功！',
+                            type:'success',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        },function () {
+
+                        });
+                    }else{
+                        swal({
+                            title: '',
+                            text: res.data.msg,
+                            type:'error',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        },function () {
+                        });
+                    }
+                },function (res) {
+                    _this.isSubmit = false;
+                    swal({
+                        title: '',
+                        text: '提交失败，请重试！',
+                        type:'error',
+                        confirmButtonColor: "#59B7F3",
+                        confirmButtonText: "确定"
+                    },function () {
+
+                    });
+                })
+            },
+            titleWarp(title){
+                var title = title;
+                if(title){
+                    title  =  title.split('');
+                    var len = title.length;
+                    if(len>12){
+                        title[Math.floor(len/2)] += '<br/>';
+                        console.log()
+                    }
+                    title = title.join('')
+                }
+                return title;
+            }
+        }
     })
 </script>
 {/block}

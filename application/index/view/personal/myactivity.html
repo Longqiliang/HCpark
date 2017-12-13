@@ -1,0 +1,70 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>我的活动</title>
+<link rel="stylesheet" href="/index/css/activity/index.css">
+<style></style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="active-item" :style="'background-image: url('+ '/index/images/cbd.jpg' +')'" @click="jumpTo">
+        <div class="active-info">
+            <div class="active-title"><span>智慧园区企业交流峰会智慧园区企业交流峰会</span></div>
+            <div class="active-time">开始时间：2017.12.23</div>
+        </div>
+    </div>
+    <div class="active-item" :style="'background-image: url('+ '/index/images/service/noPermissions/no-permissions.png' +')'">
+        <div class="active-info">
+            <div class="active-title"><span>智慧园区企业交流峰会</span></div>
+            <div class="active-time">开始时间：2017.12.23</div>
+        </div>
+    </div>
+    <div class="active-item" :style="'background-image: url('+ '/index/images/talentservice/icon-people.png ' +')'">
+        <div class="my-icon-fillet"><span>活动已结束</span></div>
+        <div class="active-info">
+            <div class="active-title"><span>智慧园区企业交流峰会</span></div>
+            <div class="active-time">开始时间：2017.12.23</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            if(!isNaN(time)){
+                if(String(time).length<13){
+                    time = time*1000
+                }
+                var newTime = new Date(time);
+                var m = newTime.getMonth()+1,
+                        dt=newTime.getDate(),
+                        y=newTime.getFullYear();
+                if(dt<10){
+                    dt='0'+dt;
+                }
+                if(m<10){
+                    m='0'+m;
+                }
+                return y+'.'+m+'.'+dt
+            }else{
+                return time
+            }
+
+        }
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            baseInfo:''
+        },
+        methods: {
+            jumpTo(){
+                window.location.href = '/index/activity/detail'
+            }
+        }
+    })
+</script>
+{/block}

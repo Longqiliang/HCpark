@@ -1,0 +1,130 @@
+{extend name="public/common"}
+
+{block name="style"}
+<link rel="stylesheet" href="/index/css/activity/index.css">
+<title>活动详情</title>
+<style>
+    .active-item{
+        margin: 0;
+    }
+    .btn-end{
+        background-color: #ddd;
+        color: #fff;
+    }
+    .btn-joined{
+        box-sizing: border-box;
+        background-color: #fff;
+        color: #69B9F9;
+        border:1px solid #69B9F9;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <!--<div class="active-item" :style="'background-image: url('+ '/index/images/cbd.jpg' +')'" >-->
+        <!--<div class="my-icon-flag my-icon-hot"><span>HOT</span></div>-->
+        <!--<div class="active-info">-->
+            <!--<div class="active-detail-title"><span v-html="titleWarp('希垦科技园区企业技术经验探讨会')"></span></div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="active-item" :style="'background-image: url('+ baseInfo.front_cover +')'" @click="jumpTo(baseInfo.id)">
+        <div class="my-icon-flag my-icon-hot" v-if="state(baseInfo.status,baseInfo.end_time) == 'hot'" ><span>HOT</span></div>
+        <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.end_time) == 'end'"><span>活动已结束</span></div>
+        <div class="my-icon-flag "  v-if="state(baseInfo.status,baseInfo.end_time) == 'un'" ><span>预</span></div>
+        <div class="active-info">
+            <div class="active-detail-title"><span v-html="titleWarp(baseInfo.name)"></span></div>
+        </div>
+    </div>
+    <div class="table-box">
+        <div class="table-row-box table-show-box">
+            <div class="table-row">
+                <span class="table-row-header">开始时间：{{baseInfo.start_time | timeToString}}</span>
+            </div>
+            <div class="table-row">
+                <span class="table-row-header">活动地点：{{baseInfo.activity_address}}</span>
+            </div>
+            <div class="table-row">
+                <span class="table-row-header">活动人数：{{baseInfo.activity_number}}</span>
+            </div>
+            <div class="table-row-block-header">活动介绍：</div>
+            <div class="table-row-block" style="padding-bottom: 2rem">
+                <div class="textarea-box" v-html="baseInfo.activity_description">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-box">
+        <div class="btn btn-block btn-end" v-if="baseInfo.time*1000 < Date.parse(new Date())" >已结束</div>
+        <div class="btn btn-block btn-joined" v-else-if="baseInfo.is_sign === 'yes'">已报名</div>
+        <div class="btn btn-block btn-success" @click="jumpTo(baseInfo.id)" v-else>我要报名</div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            if(!isNaN(time)){
+                if(String(time).length<13){
+                    time = time*1000
+                }
+                var newTime = new Date(time);
+                var m = newTime.getMonth()+1,
+                        dt=newTime.getDate(),
+                        y=newTime.getFullYear();
+                if(dt<10){
+                    dt='0'+dt;
+                }
+                if(m<10){
+                    m='0'+m;
+                }
+                return y+'.'+m+'.'+dt
+            }else{
+                return time
+            }
+
+        }
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            baseInfo:{$info}
+        },
+        methods: {
+            state(status ,time){
+                if(status && time){
+                    if(time*1000 > Date.parse(new Date())){
+                        if(status == 1){
+                            return 'un'
+                        }else if(status == 2){
+                            return 'hot'
+                        }
+                    }else{
+                        return 'end'
+                    }
+                }else{
+                    return false
+                }
+            },
+            jumpTo(id){
+                window.location.href = '/index/activity/signUp/id/'+id
+            },
+            titleWarp(title){
+                var title = title;
+                if(title){
+                    title  =  title.split('');
+                    var len = title.length;
+                    if(len>12){
+                        title[Math.floor(len/2)] += '<br/>';
+                        console.log()
+                    }
+                    title = title.join('')
+                }
+                return title;
+            },
+        }
+    })
+</script>
+{/block}

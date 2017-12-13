@@ -1,0 +1,186 @@
+.active-item{
+    height:50.1333333vw;
+    width:100vw;
+    position: relative;
+    background: url("") no-repeat center;
+    background-size: 100% auto;
+    margin-bottom: 15px;
+}
+.active-item.sign-up{
+    position: absolute;
+    z-index: -1;
+}
+.my-icon-flag{
+    position: absolute;
+    top:0;
+    left:2.6666667vw;
+    width:2.8rem;
+    height:1.8rem;
+    line-height: 1.8rem;
+    text-align: center;
+    color: #fff;
+    background-color: #FCC44B;
+    font-size: 1.4rem;
+}
+.my-icon-flag>span{
+    position: relative;
+    z-index: 10;
+    bottom:-0.3rem;
+}
+.my-icon-flag:after,.my-icon-flag:before{
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -0.8rem;
+    left: 0;
+    width: 0;
+    height: 0;
+}
+.my-icon-flag:after{
+    border-top: 0.8rem solid  #FCC44B;
+    border-right: 2.8rem solid transparent;
+}
+.my-icon-flag:before{
+    border-top: 0.8rem solid  #FCC44B;
+    border-left: 2.8rem solid transparent;
+}
+.my-icon-flag.my-icon-hot{
+    background-color: #F97878;
+    font-size: 1.2rem;
+}
+.my-icon-flag.my-icon-hot:after{
+    border-top: 0.8rem solid  #F97878;
+}
+.my-icon-flag.my-icon-hot:before{
+    border-top: 0.8rem solid  #F97878;
+}
+.my-icon-fillet{
+    position: absolute;
+    top:2.6666667vw;
+    left:0;
+    text-align: center;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    background-color: rgba(0,0,0,.4);
+    color: #fff;
+    line-height: 2rem;
+    padding:0 0.6rem;
+}
+.active-item .active-info{
+    box-sizing: border-box;
+    width:100%;
+    height:100%;
+    background-color: rgba(0,0,0,.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    color: #fff;
+}
+.active-item .active-title>span{
+    display: block;
+    font-size: 2rem;
+    max-width: 80vw;
+    border-bottom: 2px solid rgba(255,255,255,.4);
+    padding:0.8rem 0.5rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1;
+}
+.active-item .active-detail-title>span{
+    font-size: 2.5rem;
+    text-align: center;
+}
+.active-item .active-time{
+    line-height: 1;
+    font-size: 1.3rem;
+    padding:0.8rem 0;
+}
+
+
+.table-row-box{
+    padding:0 4vw;
+    background-color: #fff;
+    font-size: 1.4rem;
+}
+.table-title{
+    padding:1rem 4vw;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    color: #999;
+    font-size: 1.4rem;
+}
+.table-show-box>.table-row{
+    justify-content: flex-start;
+}
+.table-row{
+    padding:1.2rem 0;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+.table-row:not(:last-child){
+    border-bottom: 1px solid #f1f1f1;
+}
+.table-row-input{
+    font-size: 1.4rem;
+    text-align: right;
+}
+.table-row-block{
+    background-color: #fff;
+}
+.table-row-header{
+    font-size: 1.5rem;
+}
+.table-row-block-header{
+    font-size: 1.5rem;
+    padding:1.2rem 0;
+}
+.table-row-block>textarea{box-sizing:border-box;width:100%;height:10rem;font-size:1.4rem;border:1px solid #f1f1f1;padding:7px 9px}
+
+.table-row-block>.textarea-box{
+    box-sizing: border-box;
+    width:100%;
+    font-size: 1.4rem;
+    padding: 0 0.8rem;
+    color: #333;
+    word-break:break-all;
+    line-height: 1.5;
+}
+
+/*报名*/
+.sign-up-box{
+    padding:0 4vw;
+    position: relative;
+}
+.sign-up-box>.active-title>span{
+    display: block;
+    max-width: 80vw;
+    padding:9.333333vw 0;
+    line-height: 1.5;
+    text-align: center;
+    font-size: 2.5rem;
+    color: #fff;
+    margin:0 auto;
+}
+.sign-up-info{
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,.1);
+    background-color: #fff;
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+}
+
+.btn-box{box-sizing:border-box;padding:4vw 4.8vw;width:100%}
+.btn{height:4rem;line-height:4rem;border:none;border-radius:5px;color:#fff;text-align:center;font-size:1.5rem}
+.btn-block{width:100%}
+.btn-warning{background-color:#fcc44b;color:#fff;font-size:1.5rem}
+.btn-success{background-color:#69B9F9;color:#fff;font-size:1.5rem}
+.table-view-cell.group-cell{border-bottom:none}
+.btn-primary{background-color:#7DB8F2}

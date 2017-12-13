@@ -1,37 +1,91 @@
 {extend name="public/common"}
 
 {block name="style"}
-<style>
-    .active-item{
-        height:50.1333333vw;
-        width:100vw;
-        position: relative;
-        background: url("") no-repeat center;
-        background-size: 100% auto;
-
-    }
-</style>
+<link rel="stylesheet" href="/index/css/activity/index.css">
+<title>园区活动</title>
+<style></style>
 {/block}
 
 {block name="body"}
+<!-- -1 删除   0.禁用   1 预报名中 2启动.-->
 <div id="app">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam atque deleniti dicta illo impedit, itaque, mollitia neque possimus praesentium, quam sequi similique tempore vitae. Quae qui sapiente totam vitae voluptatem!
-    <div class="active-item" :style="'background-image: url('+ '/index/images/cbd.jpg' +')'">
-        <div class="my-icon"><span>HOT</span></div>
+    <div class="active-item" :style="'background-image: url('+ item.front_cover +')'" @click="jumpTo(item.id)" v-for="item in baseInfo">
+        <div class="my-icon-flag my-icon-hot" v-if="state(item.status,item.end_time) == 'hot'" ><span>HOT</span></div>
+        <div class="my-icon-fillet" v-if="state(item.status,item.end_time) == 'end'"><span>活动已结束</span></div>
+        <div class="my-icon-flag "  v-if="state(item.status,item.end_time) == 'un'" ><span>预</span></div>
         <div class="active-info">
-            <div class="active-title"></div>
-            <div class="active-time"></div>
+            <div class="active-title"><span>{{item.name}}</span></div>
+            <div class="active-time">开始时间：{{item.start_time | timeToString}}</div>
         </div>
     </div>
+    <!--<div class="active-item" :style="'background-image: url('+ '/index/images/service/noPermissions/no-permissions.png' +')'">-->
+        <!--<div class="my-icon-flag "><span>预</span></div>-->
+        <!--<div class="active-info">-->
+            <!--<div class="active-title"><span>智慧园区企业交流峰会</span></div>-->
+            <!--<div class="active-time">开始时间：2017.12.23</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="active-item" :style="'background-image: url('+ '/index/images/talentservice/icon-people.png ' +')'">-->
+        <!--<div class="my-icon-fillet"><span>活动已结束</span></div>-->
+        <!--<div class="active-info">-->
+            <!--<div class="active-title"><span>智慧园区企业交流峰会</span></div>-->
+            <!--<div class="active-time">开始时间：2017.12.23</div>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
 {/block}
 
 {block name="script"}
 <script>
+    Vue.filter('timeToString', function(time) {
+        if(time){
+            if(!isNaN(time)){
+                if(String(time).length<13){
+                    time = time*1000
+                }
+                var newTime = new Date(time);
+                var m = newTime.getMonth()+1,
+                        dt=newTime.getDate(),
+                        y=newTime.getFullYear();
+                if(dt<10){
+                    dt='0'+dt;
+                }
+                if(m<10){
+                    m='0'+m;
+                }
+                return y+'.'+m+'.'+dt
+            }else{
+                return time
+            }
+
+        }
+    });
     var app = new Vue({
         el: '#app',
-        data: {},
-        methods: {}
+        data: {
+            baseInfo:{$list},
+            isSubmit:false,
+        },
+        methods: {
+            state(status ,time){
+                if(status && time){
+                    if(time*1000 > Date.parse(new Date())){
+                        if(status == 1){
+                            return 'un'
+                        }else if(status == 2){
+                            return 'hot'
+                        }
+                    }else{
+                        return 'end'
+                    }
+                }else{
+                    return false
+                }
+            },
+            jumpTo(id){
+                window.location.href = '/index/activity/detail/id/'+id
+            }
+        }
     })
 </script>
 {/block}

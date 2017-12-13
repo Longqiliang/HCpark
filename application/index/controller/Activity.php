@@ -53,13 +53,18 @@ class Activity extends Base
         }else{
          $userid =  session('userId');
          $user = WechatUser::where('userid',$userid)->find();
+            $info = ActivityModel::get($data['id']);
          $map=[
              'name'=>$user['name'],
              'department'=>isset($user->departmentName->name)?$user->departmentName->name:"",
              'mobile'=>$user['mobile'],
-             'activity_id'=>$data['id']
+             'activity_id'=>$data['id'],
+             'title'=>$info['name'],
+             'front_cover'=>$info['front_cover'],
+             'registration_required'=>$info['registration_required'],
+             'status'=>$info['status']
          ];
-         $this->assign('user',$map);
+         $this->assign('user',json_encode($map));
 
         }
 
