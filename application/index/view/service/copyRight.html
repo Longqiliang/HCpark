@@ -228,8 +228,8 @@
 {block name="body"}
 <div id="app">
     <div class="banner">
-        <a href="/index/service/history/id/21" class="icon-remarks">申请记录</a>
-        <h2>专利申请</h2>
+        <a href="/index/service/history/id/21" class="icon-remarks">登记记录</a>
+        <h2>版权登记</h2>
         <div class="banner-title">便捷／安心／申请无忧</div>
         <!--<div class="record" @click="jumpTo()"> <span class="icon-record"></span></div>-->
     </div>
@@ -237,24 +237,24 @@
         <ul class="type-list">
             <li @click="toggleModal(0)">
                 <div class="type-title">
-                    <b>发明专利</b>
+                    <b>软著登记</b>
                     <span>对产品、方法及其结合<br>提出新的技术方案</span>
                 </div>
-                <img src="/index/images/service/patent/list-invent.png" class="type-ticket" alt="">
+                <img src="/index/images/service/copyRight/type-register.png" class="type-ticket" alt="">
             </li>
             <li class="img-right"  @click="toggleModal(1)">
-                <img src="/index/images/service/patent/list-practical.png" class="type-ticket" alt="">
+                <img src="/index/images/service/copyRight/type-art.png" class="type-ticket" alt="">
                 <div class="type-title">
-                    <b>实用新型</b>
+                    <b>美术作品登记</b>
                     <span>保护产品形状、构造等微创<br>性3-6个月授权十年保质期</span>
                 </div>
             </li>
             <li  @click="toggleModal(2)">
                 <div class="type-title">
-                    <b>外观设计</b>
+                    <b>软著撰写</b>
                     <span>保护产品形状、图案或与其<br>色彩结合所作出的新设计</span>
                 </div>
-                <img src="/index/images/service/patent/list-exterior.png" class="type-ticket" alt="">
+                <img src="/index/images/service/copyRight/type-compose.png" class="type-ticket" alt="">
             </li>
         </ul>
         <p class="patent-ps"><span>如有疑问请致电园区知识产权服务中心</span><br><a> 88888888</a></p>
@@ -284,15 +284,15 @@
         data: {
             type:[
                 {
-                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','技术交底书'],
+                    need:['软件名称','硬件名称','软件环境','主要功能','技术特点','联系人员','联系电话'],
                     banner:'/index/images/service/patent/banner-invent.png'
                 },
                 {
-                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','技术交底书'],
+                    need:['作品名称','作品描述','独创性描述','产品图','联系人员','联系电话'],
                     banner:'/index/images/service/patent/banner-practical.png'
                 },
                 {
-                    need:['专利名称','发明人','申请人','联系人','联系地址','联系电话','身份证','简单说明','产品图'],
+                    need:['创作意图','创作过程','作品描述','联系人员','联系电话'],
                     banner:'/index/images/service/patent/banner-exterior.png'
                 }
             ],
@@ -302,7 +302,7 @@
         methods: {
             jumpTo(){
                 var _this=this;
-                window.location.href='/index/service/patentInfo/type/'+(_this.typeIndex+1);
+                window.location.href='/index/service/copyRightInfo/type/'+(_this.typeIndex+1);
             },
             toggleModal(typeIndex){
                 var _this=this;

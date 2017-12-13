@@ -2117,9 +2117,14 @@ class Service extends Base
         return $this->fetch();
     }
 
-
-    //专利申请 app_id=22
+    //版权申请 app_id=22
     public function copyRight()
+    {
+        return $this->fetch();
+    }
+
+    //版权申请 app_id=22
+    public function copyRightInfo()
     {
         if (IS_POST) {
             $data = input('');
@@ -2158,7 +2163,7 @@ class Service extends Base
                 return $this->error('提交失败');
             }
         } else {
-            return $this->fetch();
+            return $this->fetch('copy_right_info');
         }
     }
 
