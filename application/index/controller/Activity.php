@@ -15,7 +15,7 @@ class Activity extends Base
     public function index()
     {
 
-        $this->fetch();
+        return  $this->fetch();
     }
 
     //活动报名详情页
@@ -23,7 +23,7 @@ class Activity extends Base
     {
 
 
-        $this->fetch();
+       return  $this->fetch();
     }
 
     //报名
