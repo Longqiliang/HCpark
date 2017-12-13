@@ -27,7 +27,7 @@ class Activity extends Base
     //活动报名详情页
     public function detail()
     {
-        $data = input('id');
+        $data = input('');
         $info =ActivityModel::get($data['id']);
         $this->assign('info',json_encode($info));
         return $this->fetch();
