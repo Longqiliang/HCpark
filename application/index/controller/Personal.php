@@ -43,6 +43,10 @@ use app\index\model\CopyrightSoftwrite;
 use app\index\model\CopyrightSoft;
 use app\index\model\CopyrightArt;
 use app\common\behavior\Service;
+use app\index\model\ActivityComment;
+use app\index\model\Activity;
+
+
 
 class Personal extends Base
 {
@@ -1296,6 +1300,27 @@ class Personal extends Base
         $this->assign('property', json_encode($allList));
         return $this->fetch();
     }
+
+    //我的活动
+    public  function  myActivity(){
+     $userid = session('userId');
+     $park_id = session('park_id');
+     $comment = new ActivityComment();
+     $activity = new Activity();
+     $CommentList = $comment->where(['userid'=>$userid,'status'=>['neq',-1],'park_id'=>$park_id])->select();
+     foreach ($CommentList as $value){
+        $activityinfo['activity'] =  isset($value->activity)?$value->activity:"";
+     }
+     $this->assign('list',json_encode($CommentList));
+
+    return $this->fetch();
+
+    }
+
+
+
+
+
 
     /*我的收藏下拉刷新*/
     public function listmore()

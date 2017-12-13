@@ -38,7 +38,8 @@ class Activity extends Base
     {   $data = input('');
         if(IS_POST){
             $activity  =  new ActivityModel();
-
+            $park_id = session('park_id');
+            $data['park_id']=$park_id;
             $data = $activity->save($data);
             if($data){
                 return $this->success('报名成功');

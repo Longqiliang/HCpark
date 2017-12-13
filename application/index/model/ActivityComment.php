@@ -18,4 +18,14 @@ class ActivityComment extends  Model
 
 ];
 
+public  function  activity(){
+
+
+    return $this->hasOne('Activity','id','activity_id');
+
+}
+
+
+
+
 }
