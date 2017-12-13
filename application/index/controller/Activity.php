@@ -15,7 +15,6 @@ class Activity extends Base
     public function index()
     {
 
-
         $this->fetch();
     }
 
@@ -32,7 +31,7 @@ class Activity extends Base
     {
 
 
-        return $this->fetch();
+        return $this->fetch('sign_up');
     }
 
 
