@@ -29,6 +29,9 @@ class Activity extends Base
     {
         $data = input('');
         $info =ActivityModel::get($data['id']);
+        $info = ActivityComment::where(['activity_id'=>$data['id'],'userid'=>session('userId'),status=>[in,[0,1]]])->select();
+        $is_sgin=count($info)>0?"yes":"no";
+        $info['is_sign']=$is_sgin;
         $this->assign('info',json_encode($info));
         return $this->fetch();
     }
@@ -47,8 +50,6 @@ class Activity extends Base
             }else{
                 return $this->error("保存失败");
             }
-
-
         }else{
          $userid =  session('userId');
          $user = WechatUser::where('userid',$userid)->find();

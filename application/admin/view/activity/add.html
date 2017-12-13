@@ -55,55 +55,59 @@
                             <input id="input-file" type="file" class="file">
                             <sapn>
                                 {empty name="info.front_cover"}图片预览{else/}
-                                    <img class="front_cover_img"  id="front_cover"  name="front_cover"  src='{$info.front_cover}'/>
+                                <img class="front_cover_img" id="front_cover" name="front_cover"
+                                     src='{$info.front_cover}'/>
                                 {/empty}
                             </sapn>
                         </div>
                     </div>
 
                     <div class="form-group"><label class="col-sm-2 control-label">最大参与人数:</label>
-                        <div class="col-sm-10"><input type="number" class="form-control" placeholder="若不限则不用填" name="activity_number"
+                        <div class="col-sm-10"><input type="number" class="form-control" placeholder="若不限则不用填"
+                                                      name="activity_number"
                                                       value='{$info.activity_number}'></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">活动地址:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="活动地址" name="activity_address"
+                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="活动地址"
+                                                      name="activity_address"
                                                       value='{$info.activity_address}'></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">开始时间:</label>
-                        <div class="col-sm-10"><input type="date" class="form-control" placeholder="活动开始时间" name="start_time"
+                        <div class="col-sm-10"><input type="date" class="form-control" placeholder="活动开始时间"
+                                                      name="start_time"
                                                       value='{$info.start_time}'></div>
                     </div>
                     <div class="form-group"><label class="col-sm-2 control-label">结束时间:</label>
-                        <div class="col-sm-10"><input type="date" class="form-control" placeholder="活动结束时间" name="end_time"
-                                                      value='{$info.end_time}'></div>
+                        <div class="col-sm-10"><input type="date" class="form-control" placeholder="活动结束时间"
+                                                      name="end_time"
+                                                      value="{$info.end_time}"></div>
                     </div>
 
                     <div class="form-group">
-                    <label class="col-sm-2 control-label">活动介绍:</label>
-                    <br>
-                    <br>
-                    <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
-                        <div class="summernote col-sm-7">{$info.activity_description}</div>
-                        <div class="clearfix"></div>
+                        <label class="col-sm-2 control-label">活动介绍:</label>
+                        <br>
+                        <br>
+                        <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
+                            <div class="summernote col-sm-7">{$info.activity_description}</div>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
-                    </div>
-
 
                     <div class="form-group">
-                    <label class="col-sm-2 control-label">报名须知:</label>
-                   <br>
-                   <br>
-                    <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
-                        <div class="summernote col-sm-7">{$info.registration_required}</div>
-                        <div class="clearfix"></div>
+                        <label class="col-sm-2 control-label">报名须知:</label>
+                        <br>
+                        <br>
+                        <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
+                            <div class="summernote col-sm-7">{$info.registration_required}</div>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
-                    </div>
-
 
 
                     <div class="mail-body text-right tooltip-demo">
-
-                        <button url="{:Url('add')}" class="btn btn-primary ajax-post" target-form="form-horizontal"
+                        <!---->
+                        <button url="{:Url('add')}" class="btn btn-primary addval ajax-post"
+                                target-form="form-horizontal"
                                 data-toggle="tooltip" data-placement="top" data-edit="content">
                             保存
                         </button>
@@ -114,12 +118,11 @@
                         <!--</button>-->
                         <!--<a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>-->
                     </div>
-                    <div class="clearfix"></div>
-                    <input type="hidden" name="registration_required" class="to_hiden" value="">
-                    <input type="hidden" name="activity_description" class="to_hiden" value="">
+                    <input type="hidden" name="registration_required" class="registration_required" value="">
+                    <input type="hidden" name="activity_description" class="activity_description" value="">
                     <input type="hidden" name="id" value="{$info.id}">
                     <input type="hidden" name="front_cover" value="{$info.front_cover}">
-
+                    <div class="clearfix"></div>
                 </div>
             </form>
         </div>
@@ -213,17 +216,11 @@
         if (response.code == 1) {
             $("input[name='front_cover']").val(response.data);
             var pic = document.getElementById("front_cover");
-            pic.src=response.data;
+            pic.src = response.data;
         } else {
             updateAlert(response.msg, 'warning');
         }
     });
-
-
-
-
-
-
 
     $(".front_cover").imgbox({
         overlayShow: false,
@@ -236,63 +233,21 @@
 
     //把content内容赋给隐藏表单
 
-    $('.btn-primary').click(function () {
-        $('.to_hiden').attr('value', $('.panel-body').text());
-    })
+    //    $('.btn-primary').click(function () {
+    //        $('.registration_required').val();
+    //        $('.activity_description').val( );
+    //
+    //    })
 
 
     function ggg() {
         window.history.go(-1);
     }
-
-    //新增
-    $(".post-put").off('click').on("click",function(){
-        var it=$(this);
-        var data = {
-            id:$("input[name='id']").val(),
-            front_cover:$("input[name='front_cover']").val(),
-            title:$("input[name='title']").val(),
-            content:ue.getContent(),
-            num:$("input[name='num']").val(),
-            price:$("input[name='price']").val(),
-            left:$("input[name='left']").val(),
-            status:0,
-        };
-        $.ajax({
-            type:"post",
-            url:$("#form").attr("action"),
-            data:data,
-            success:function(data){
-                if(data.code == 1){
-                    if (data.url) {
-                        updateAlert(data.msg + ' 页面即将自动跳转~','success');
-                    }else{
-                        updateAlert(data.msg ,'success');
-                    }
-                    it.prop('disabled','true');
-                    it.prev().prop('disabled','true');
-                    setTimeout(function(){
-                        if (data.url) {
-                            location.href=data.url;
-                        } else {
-                            location.reload();
-                        }
-                        it.removeAttr('disabled');
-                        it.prev().removeAttr('disabled')
-                    },2000);
-                } else {
-                    updateAlert(data.msg, 'error');
-                    it.attr('disabled','true');
-                    it.prev().prop('disabled','true');
-                    setTimeout(function(){
-                        it.removeAttr('disabled');
-                        it.prev().removeAttr('disabled')
-                    },2000);
-                }
-            }
-        });
-        return false;
-    });
+    $(".addval").on('click', function () {
+            $('.activity_description').val($('.panel-body').eq(0).text());
+            $('.registration_required').val($('.panel-body').eq(1).text());
+        }
+    )
     highlight_subnav("{:Url('Shop/index')}");
 </script>
 {/block}

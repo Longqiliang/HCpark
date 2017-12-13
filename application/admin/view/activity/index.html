@@ -48,7 +48,7 @@
                         data-toggle="tooltip" data-placement="top" target-form="id"><i class="fa fa-trash-o"></i>
                 </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
-                <a data-toggle="modal" class="btn btn-sm btn-primary" href="{:Url('Shop/add')}">添加活动</a>
+                <a data-toggle="modal" class="btn btn-sm btn-primary" href="{:Url('Activity/add')}">添加活动</a>
             </div>
         </div>
 
@@ -97,7 +97,7 @@
                         </td>
                     <td>{$vo.status_text}</td>
                     <td>
-                        <a class="btn-sm btn-success"  href="{:Url('Activity/add?id='.$vo['id'])}">推送</a>
+                        <a class="btn-sm btn-success"  href="{:Url('Activity/send?id='.$vo['id'])}">推送</a>
                         <a class="btn-sm btn-success"  href="{:Url('Activity/add?id='.$vo['id'])}">修改</a>
                         <a  class="btn-sm btn-primary" href="{:Url('Activity/recordinfo?id='.$vo['id'])}">查看报名情况</a>
                         <a   href="{:Url('Activity/del?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-danger">删除</a>
@@ -142,5 +142,6 @@
             }
         }
     });
+    highlight_subnav("{:Url('Activity/index')}");
 </script>
 {/block}
