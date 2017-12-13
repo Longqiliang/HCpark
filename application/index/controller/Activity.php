@@ -40,8 +40,11 @@ class Activity extends Base
     public function signUp()
     {   $data = input('');
         if(IS_POST){
-            $activity  =  new ActivityModel();
+            $activity  =  new ActivityComment();
             $park_id = session('park_id');
+            $user_id =session('userId');
+            $data['userid']=$user_id;
+            unset($data['id']);
             $data['park_id']=$park_id;
             $data = $activity->save($data);
             if($data){

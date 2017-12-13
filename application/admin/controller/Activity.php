@@ -49,7 +49,6 @@ class Activity extends Admin
             $activity = new ActivityModel();
             $park_id = session('user_auth')['park_id'];
             $data['start_time'] = strtotime($data['start_time']);
-            $data['end_time'] = strtotime($data['end_time']);
             $data['park_id'] = $park_id;
             if (empty($data['id'])) {
                 unset($data['id']);
@@ -71,7 +70,6 @@ class Activity extends Admin
             $msg = ActivityModel::get($id);
            if($msg) {
                $msg['start_time'] = date('Y-m-d', $msg['start_time']);
-               $msg['end_time'] = date('Y-m-d', $msg['end_time']);
            }
             $this->assign('info', $msg);
             return $this->fetch();
@@ -135,25 +133,37 @@ class Activity extends Admin
     //导出
     public function outexcel()
     {
-        $parkid = session("user_auth")['park_id'];
-        $map['s.status'] = ['neq', -1];
-        $list = Db::table('tb_water_service')
-            ->alias('s')
-            ->join('__WATER_TYPE__ t', 't.id=s.water_id')
-            ->field('s.id,s.userid,s.name,s.mobile,s.address,s.number,s.create_time,s.status,s.check_remark,s.price totalprice,t.water_name,t.format ,t.price ,s.price totalprice' )
-            ->where('s.park_id', 'eq', $parkid)
-            ->where($map)
-            ->order('create_time desc')
-            ->select();
-        int_to_string($list, $map = array('status' => array(0 => '提交预约', 1 => '确认接单',2=>"取消接单",3=>"确认送达")));
+        $data = input('');
+        $list = ActivityComment::where(['activity_id'=>$data['id'],'status'=>1])->select();
+        foreach ($list as $value){
+            $value['activity_name']=isset($value->activity->name)?$value->activity->name:"";
+            $value['start_time']=isset($value->activity->start_time)?$value->activity->start_time:"";
+        }
         $excel = new PHPExcel();
-        $letter = array('A', 'B', 'C', 'D', 'E', 'F', 'F', 'G', 'H', 'I');
+        $letter = array('A', 'B', 'C', 'D', 'E', 'F', 'F', 'G');
         $celltitle = [
-            '联系人', '送水地址', '送水桶数', '送水种类', '送水规格', '送水单格','送水总价', '联系电话', '创建时间', '状态'
+            '用户编号', '用户姓名', '联系电话', '所属公司（选填）', '备注信息', '报名时间','活动名称', '活动时间'
         ];
         foreach ($list as $key => $value) {
-            $cellData[$key] = [$value['name'], $value['address'], $value['number'], $value['water_name'], $value['format'], $value['price'],$value['totalprice']  , $value['mobile'], date('Y-m-d H:i:s',$value['create_time']), $value['status_text']];
+            $cellData[$key] = [$value['userid'], $value['name'], $value['mobile'], $value['department'], $value['remark'], $value['create_time'],$value['activity_name']  ,date('Y-m-d',$value['start_time'])];
         }
+
+        $excel->getActiveSheet()->getRowDimension(1)->setRowHeight(30);
+        $excel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+        $excel->getActiveSheet()->getColumnDimension('D')->setWidth(35);
+        $excel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+        $excel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+        $excel->getActiveSheet()->getColumnDimension('G')->setWidth(16);
+        $excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+        $excel->getActiveSheet()->getRowDimension(1)->setRowHeight(35);
+        $excel->getActiveSheet()->getRowDimension(2)->setRowHeight(22);
+        $excel->getActiveSheet()->getRowDimension(3)->setRowHeight(20);
+        //设置字体样式
+        $excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setName('黑体');
+        $excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setSize(20);
+        $excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
+        $excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
         for ($i = 0; $i < count($celltitle); $i++) {
             $excel->getActiveSheet()->setCellValue("$letter[$i]1", "$celltitle[$i]");
         }
@@ -176,7 +186,7 @@ class Activity extends Admin
         header("Content-Type:application/vnd.ms-execl");
         header("Content-Type:application/octet-stream");
         header("Content-Type:application/download");
-        header('Content-Disposition:attachment;filename="饮水记录表.xls"');
+        header('Content-Disposition:attachment;filename="活动报名导出表格.xls"');
         header("Content-Transfer-Encoding:binary");
         $write->save('php://output');
 

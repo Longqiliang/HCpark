@@ -11,7 +11,13 @@ namespace app\common\model;
 
 use think\Model;
 
-class ActivityComment extends  Model
+class ActivityComment extends Model
 {
+
+    public function activity()
+    {
+        return $this->hasOne('activity', 'id', 'activity_id');
+    }
+
 
 }

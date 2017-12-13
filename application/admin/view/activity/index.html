@@ -59,7 +59,6 @@
                     <th></th>
                     <th>活动名</th>
                     <th>开始时间</th>
-                    <th>结束时间 </th>
                     <th>活动限数</th>
                     <th>活动地点</th>
                     <th>是否推送</th>
@@ -73,13 +72,10 @@
                     <td class="check-mail"> <input type="checkbox" class="i-checks id" name="id[]" value="{$vo.id}"></td>
                     <td>{$vo.name}</td>
                     <td>{empty name="$vo.start_time" }空
-                        {else／}{$vo.start_time|date='Y-m-d H:i',###}
+                        {else／}{$vo.start_time|date='Y-m-d',###}
                         {/empty}
                     </td>
 
-                    <td>{empty name="$vo.end_time" }空
-                        {else／}{$vo.end_time|date='Y-m-d H:i',###}
-                        {/empty}</td>
                     <td>
                         {if condition="$vo.activity_number eq null"}
                         不限
@@ -98,6 +94,8 @@
                     <td>{$vo.status_text}</td>
                     <td>
                         <a class="btn-sm btn-success"  href="{:Url('Activity/send?id='.$vo['id'])}">推送</a>
+                        <a class="btn-sm btn-success"    href="{:Url('outexcel','id='.$vo.id)}"  >导出</a>
+
                         <a class="btn-sm btn-success"  href="{:Url('Activity/add?id='.$vo['id'])}">修改</a>
                         <a  class="btn-sm btn-primary" href="{:Url('Activity/recordinfo?id='.$vo['id'])}">查看报名情况</a>
                         <a   href="{:Url('Activity/del?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-danger">删除</a>
