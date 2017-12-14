@@ -348,3 +348,52 @@ function createDir($aimUrl) {
     }
     return $result;
 }
+
+/**
+ * 正确信息返回
+ *
+ * @param $data
+ * @return \think\response\Json
+ */
+function sendSuccessmessage($data) {
+    $data['success'] = true;
+    return json($data, 200);
+}
+/**
+ * 错误信息返回
+ *
+ * @param $msg
+ * @param $code
+ * @return \think\response\Json
+ */
+function sendErrorMessage($msg, $code)
+{
+    $data['error_msg'] = $msg;
+    $data['error_code'] = $code;
+    if ($code == '30001') {
+        return json($data, 401);
+    } else {
+        return json($data, 200);
+    }
+}
+
+/**
+ * 压缩图片
+ *
+ * @param $file
+ * @param $path
+ */
+function reduce_pic($file, $path)
+{
+    $percent = 0.1;  //图片压缩比
+    list($width, $height) = getimagesize($file); //获取原图尺寸
+//缩放尺寸
+    $newwidth = $width * $percent;
+    $newheight = $height * $percent;
+    $src_im = @imagecreatefromjpeg($file);
+    $dst_im = imagecreatetruecolor($newwidth, $newheight);
+    imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+    imagepng($dst_im, $path); //输出压缩后的图片
+    imagedestroy($dst_im);
+    imagedestroy($src_im);
+}

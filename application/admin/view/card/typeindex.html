@@ -1,0 +1,91 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style>
+    .shadow{width: 100%;height: 100%;position: absolute;left: 0;top: 0;background: rgba(0,0,0,0.4);z-index: 88;}
+</style>
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>标签管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                标签管理
+            </li>
+            <li class="active">
+                <strong><a href="{:Url('Card/typeIndex')}">标签列表</a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>标签列表</h5>
+                    <div class="ibox-tools">
+                        <a data-toggle="modal" class="btn btn-sm btn-primary" href="{:Url('Card/typeAdd')}">添加标签</a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input class="i-checks check-all" type="checkbox"></th>
+                                <th>标签</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="vo"}
+                            <tr>
+                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                <td>{$vo.interest}</td>
+                                <td>{$vo.create_time}</td>
+                                <td>
+                                    <a href="{:Url('Card/typeEdit?id='.$vo['id'])}">修改</a>
+                                    <a href="{:Url('Card/typeDel?id='.$vo['id'])}" class="confirm ajax-del">删除</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="page">{$list->render();}</div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<iframe id="iframe" src="" style="height: 80%;width: 392px;z-index: 99;position: absolute;top: 10%;border: 0;left: 32%;background: #fff;display: none;" scrolling="auto" seamless></iframe>
+<div class="shadow" style="display: none"></div>
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+
+</script>
+{/block}
