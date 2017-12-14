@@ -441,7 +441,7 @@ class Personal extends Base
             $length = input('length');
             $type = input('type');
             $news_type = input('news_type');
-            if(empty($news_type)) {
+            if(!empty($news_type)) {
                 if ($type == 2) {
                     $news = DB::query("select * from tb_news  where status =0  and type=? order by  create_time DESC  limit ?,?", [$news_type,(int)$length, 6]);
                     $a = $news;
