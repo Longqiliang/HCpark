@@ -32,6 +32,9 @@ class Activity extends Base
         $comment = ActivityComment::where(['activity_id'=>$data['id'],'userid'=>session('userId'),'status'=>['in',[0,1]]])->select();
         $is_sgin=count($comment)>0?"yes":"no";
         $info['is_sign']=$is_sgin;
+
+        $count = ActivityComment::where(['activity_id'=>$data['id'],'status'=>['in',[1]]])->count();
+        $this->assign('count',$count);
         $this->assign('info',json_encode($info));
         return $this->fetch();
     }
