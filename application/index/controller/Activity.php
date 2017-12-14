@@ -28,7 +28,7 @@ class Activity extends Base
     public function detail()
     {
         $data = input('');
-        $info =ActivityModel::get($data['id']);
+        $info =ActivityModel::where('id',$data['id'])->find();
         $comment = ActivityComment::where(['activity_id'=>$data['id'],'userid'=>session('userId'),'status'=>['in',[0,1]]])->select();
         $is_sgin=count($comment)>0?"yes":"no";
         $info['is_sign']=$is_sgin;
@@ -43,7 +43,7 @@ class Activity extends Base
     public function signUp()
     {   $data = input('');
         if(IS_POST){
-            $activity = new Activity();
+            $activity = new ActivityModel();
             $Comment  =  new ActivityComment();
             $activityInfo = $activity->where('id',$data['activity_id'])->find();
             //活动不处于 开始报名 状态

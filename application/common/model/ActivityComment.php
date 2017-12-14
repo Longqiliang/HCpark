@@ -13,7 +13,10 @@ use think\Model;
 
 class ActivityComment extends Model
 {
+    protected $type = [
 
+        'create_time' => 'strtotime'
+    ];
     public function activity()
     {
         return $this->hasOne('activity', 'id', 'activity_id');

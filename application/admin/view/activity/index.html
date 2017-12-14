@@ -53,9 +53,9 @@
                 <thead>
                 <tr>
 
-                    <th>活动名</th>
+                    <th>活动名称</th>
                     <th>开始时间</th>
-                    <th>活动限数</th>
+                    <th>活动人数</th>
                     <th>活动地点</th>
                     <th>是否推送</th>
                     <th>状态</th>
@@ -80,10 +80,10 @@
                     <td>{$vo.activity_address}</td>
                     <td>
                         {eq name="$vo.is_send" value="0"}
-                        否
+                        未推送
                         {/eq}
                         {eq name="$vo.is_send" value="1"}
-                        <scan class="txt-success" >是</scan>
+                        <scan class="txt-success">已推送</scan>
                         {/eq}
                         </td>
                     <td>{$vo.status_text}</td>
