@@ -132,7 +132,7 @@ class Index extends Controller
     public function recommend()
     {
         $data= input('');
-        $this->assign('park_id', json_encode($data['park_id']));
+        $this->assign('park_id', $data['park_id']);
         return $this->fetch();
     }
 
