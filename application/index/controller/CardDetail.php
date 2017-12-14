@@ -61,9 +61,9 @@ class CardDetail extends Base
             $result['like_status'] = 0;
         }
         unset($result['getUserHeader']);
-        $result['comment_list'] = $this->commentList();
+        $result['comment_list'] = json_encode($this->commentList());
 
-        $this->assign('list',json_encode($result));
+        $this->assign('list',$result);
         //return json_encode($result);
 
         return $this->fetch();
@@ -79,11 +79,12 @@ class CardDetail extends Base
         $map = ["aid" => $aid, 'status' => 1];
         $list = Comments::where($map)->order("id desc")->limit($len, 6)->select();
         foreach ($list as $k => $v) {
-            $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:0;
+            $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
+            $list[$k]['create_time'] = date('Y-m-d',$v['create_time']);
             unset($list[$k]['getUserHeader']);
         }
-
+//
         return $list;
     }
     /**
@@ -132,10 +133,10 @@ class CardDetail extends Base
             $res = Db::name('like')->where(['id' => $like['id']])->update(['status' => 0, "create_time" => time()]);
             if ($res) {
 
-                return $this->success("点赞成功");
+                return $this->success("取消点赞成功");
             } else {
 
-                return $this->error("点赞失败");
+                return $this->error("取消点赞失败");
             }
         } else {
 
@@ -157,11 +158,13 @@ class CardDetail extends Base
         $aid = input("id");
         $uid = session("userId");
         $content = input('content');
-        $data = ['aid' => $aid, 'uid' => $uid, 'content' => $content, 'status' => 1];
-        $res = Db::name('comments')->insert($data);
+        $data = ['aid' => $aid, 'uid' => $uid, 'content' => $content, 'status' => 1, 'create_time' => time(), 'update_time' => time()];
+        $res = Comments::create($data);
         if ($res) {
-
-            return $this->success("评论成功");
+            $res['name'] = isset($res->getUserHeader->name) ? $res->getUserHeader->name : "";
+            $res['header'] = isset($res->getUserHeader->avatar) ? $res->getUserHeader->avatar : "";
+            $res['create_time'] = date('Y-m-d',$res['create_time']);
+            return $this->success("评论成功","",$res);
         } else {
 
             return $this->error("评论失败");

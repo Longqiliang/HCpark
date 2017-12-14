@@ -97,6 +97,7 @@ class File extends Base
                 //判断当日的文件夹是否存在,不存在就创建
                 $root_path = Config::get('download_upload');
                 $pic_path = $root_path['rootPath'].date("Y-m-d").'/';
+                $save_name = "/uploads/download/".date("Y-m-d").'/'.$image_name;
                 !file_exists($pic_path) && mkdir($pic_path, 0777);
                 //保存图片的路径
                 $image_file = $pic_path.$image_name;
@@ -104,7 +105,7 @@ class File extends Base
                 if (file_put_contents($image_file, base64_decode(str_replace($result[1], '', $base64_image)))){
                     $data['code']=1;
                     $data['imageName']=$image_name;
-                    $data['url']="./uploads/download/{$image_name}";
+                    $data['url']=$save_name;
                     $data['msg']='保存成功！';
                 }else{
                     $data['code']=0;

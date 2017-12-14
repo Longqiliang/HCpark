@@ -82,6 +82,61 @@
         object-fit: cover;
         border-radius: 5px;
     }
+    .type-box{
+        border-bottom: 1px solid #f8f8f8;
+    }
+    .type-box>p{
+        color: #333;
+        font-size: 15px;
+        padding: 15px 0 15px 15px;
+    }
+    .type-box>ul{
+        overflow: hidden;
+        padding-left: 15px;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    .type-box>ul li{
+        display: inline-block;
+        margin-bottom: 15px;
+        line-height: 30px;
+        text-align: center;
+        background: #f8f8f8;
+        float: left;
+        margin-right: 15px;
+        padding: 0 5px;
+        letter-spacing: 1px;
+        font-size: 13px;
+    }
+    .type-box .color_0,.type-box .color_4,.type-box .color_8{
+        color: #69B9F9;
+    }
+    .type-box .color_1,.type-box .color_5,.type-box .color_9{
+        color: #fcc44b;
+    }
+    .type-box .color_2,.type-box .color_6{
+        color: #918FE6;
+    }
+    .type-box .color_3,.type-box .color_7{
+        color: #F97878;
+    }
+    .type-box .color_0.active,.type-box .color_4.active,.type-box .color_8.active{
+        background: #69B9F9;
+        color: #fff;
+    }
+    .type-box .color_1.active,.type-box .color_5.active,.type-box .color_9.active{
+        background: #fcc44b;
+        color: #fff;
+    }
+    .type-box .color_2.active,.type-box .color_6.active{
+        background: #918FE6;
+        color: #fff;
+    }
+    .type-box .color_3.active,.type-box .color_7.active{
+        background: #F97878;
+        color: #fff;
+    }
     .foot{
         width: calc(100% - 36px);
         line-height: 40px;
@@ -120,6 +175,12 @@
     <form ref="myform">
         <input type="file" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" style="display: none;">
     </form>
+    <div class="type-box">
+        <p>标签</p>
+        <ul>
+            <li v-for="(value,index) of types" :class="'color_'+index" @click="chooseType($event,value.id)">#{{value.interest}}#</li>
+        </ul>
+    </div>
     <div class="foot" @click="sendPost">
         发布帖子
     </div>
@@ -129,7 +190,7 @@
 {block name="script"}
 <script src="/index/js/exif.js"></script>
 <script>
-    var id = {$group_id};
+
     var vm = new Vue({
         el:"#app",
         data:{
@@ -139,9 +200,12 @@
                 dataUrl:[],
                 imgName:[]
             },
+            types:{$cardType},
             content:'',
-            isSubmit:true
+            isSubmit:true,
+            chosenType:[]
         },
+
         methods: {
             delImg: function (e) {
                 this.imgSrc.dataUrl.splice(e,1);
@@ -210,9 +274,9 @@
                                     data:{'imgdata':url},
                                     success:function (data) {
                                         if(data.code == 1){
-                                        _this.$indicator.close();
-                                        _this.img.push(data.url); //上传后图片路径
-                                        _this.imgPreview(img,data.url);
+                                            _this.$indicator.close();
+                                            _this.img.push(data.url); //上传后图片路径
+                                            _this.imgPreview(img,data.url);
                                         }
                                     }
                                 })
@@ -303,6 +367,21 @@
                 }
                 return new Blob([u8arr], {type:mime});
             },
+            chooseType:function (event,id) {
+                var _this = this;
+                if(_this.chosenType.indexOf(id+"") == -1){
+                    if(_this.chosenType.length == 2){
+                        _this.$toast('最多选择两个标签~');
+                        return false;
+                    }
+                    _this.chosenType.push(id+"");
+                    event.target.classList.add('active');
+                }else{
+                    var typeIndex = _this.chosenType.indexOf(id);
+                    _this.chosenType.splice(typeIndex,1);
+                    event.target.classList.remove('active');
+                }
+            },
             sendPost:function () {
                 var _this= this,
                     content = _this.content;
@@ -310,16 +389,16 @@
                     _this.$toast('请说些什么吧！');
                 }else{
                     var data = {
+                        'type':JSON.stringify(_this.chosenType),
                         'title':'',
                         'content':content,
-                        'img':JSON.stringify(_this.img),
-                        'group_id':id
+                        'img':JSON.stringify(_this.img)
                     };
                     if(!(_this.isSubmit)){
                         return;
                     }
                     _this.isSubmit = false;
-                    _this.$http.post('{:Url("Communication/writePost")}',data).then(function (res) {
+                    _this.$http.post('{:Url("Card/setCard")}',data).then(function (res) {
                         var data = res.data;
                         if(data.code == 1){
                             _this.isSubmit = false;
@@ -334,27 +413,6 @@
                     },function () {
                         _this.isSubmit = true;
                     })
-//                    $.ajax({
-//                        type:'post',
-//                        url:'{:Url("Communication/writePost")}',
-//                        data:data,
-//                        async:false,
-//                        success:function (data) {
-//                            _this.isSubmit = true;
-//                            if(data.code == 1){
-//                                _this.$toast({
-//                                    message:"发帖成功，跳回首页！",
-//                                    duration:1000
-//                                });
-//                                setTimeout(function () {
-//                                    window.location.href = '/index/Communication/postslist/group_id/'+id;
-//                                },1500);
-//                            }
-//                        },
-//                        error:function () {
-//                            _this.isSubmit = true;
-//                        }
-//                    })
                 }
             }
         }
