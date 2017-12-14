@@ -58,7 +58,12 @@
                     <th>活动人数</th>
                     <th>活动地点</th>
                     <th>是否推送</th>
-                    <th>状态</th>
+                    <th> <select name="type" id="changeType" onchange="changeType()">
+                        <option value="-1" {eq name="$checkType" value=""}selected{/eq}>状态</option>
+                        <option value="0" {eq name="$checkType" value="0"}selected{/eq}>活动取消</option>
+                        <option value="1" {eq name="$checkType" value="1"}selected{/eq}>预报名</option>
+                        <option value="2" {eq name="$checkType" value="2"}selected{/eq}>开始报名</option>
+                    </select></th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -176,7 +181,11 @@
             }
         }
     });
+    function changeType(){
+        var types = $('#changeType').val();
+        location.href = "{:Url('Activity/index')}?type="+types+"";
 
+    }
     //增加模态框后的修改；
     function changestates(id) {
         $("input[name='id']").val(id);

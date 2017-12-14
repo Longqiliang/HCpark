@@ -21,11 +21,19 @@ class Activity extends Admin
     {
         $park_id = session('user_auth')['park_id'];
         $search= input('search');
-
+        $type = input('type')==null?-1:input('type');
         $map = array(
             'status' => array('gt',-1),
-            'park_id'=>$park_id
+            'park_id'=>$park_id,
+
         );
+
+        if($type!=-1) {
+            if ($type || $type == 0) {
+                $map['status'] = $type;
+            }
+        }
+
         if(!empty($search)){
             $map['name']=['like','%'.$search.'%'];
         }
@@ -35,6 +43,7 @@ class Activity extends Admin
             'status' => array(0 => "活动取消",1=>'预报名',2=>'开始报名'),
         ));
 
+        $this->assign('checkType', $type);
         $this->assign('list', $list);
         $this->assign('search', $search);
         return $this->fetch();
@@ -52,11 +61,15 @@ class Activity extends Admin
 
             $data['start_time'] = strtotime($data['start_time']);
             if(empty($data['name'])){
-                return  $this->error('活动名字必填');
+                return  $this->error('活动名字未填');
+            }
+            if(empty($data['activity_address'])){
+                return  $this->error('活动地点未填');
             }
             if($data['start_time']==0){
               return  $this->error('开始时间未填');
             }
+
             $data['park_id'] = $park_id;
             if (empty($data['id'])) {
                 unset($data['id']);

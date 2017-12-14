@@ -46,54 +46,49 @@
         <div class="mail-box">
             <form class="form-horizontal" method="post">
                 <div class="mail-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">活动名称:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="活动的名称" name="name"
+                    <div class="form-group"><label class="col-sm-1 control-label">活动名称:</label>
+                        <div class="col-sm-3"><input type="text" class="form-control" placeholder="活动的名称" name="name"
                                                       value='{$info.name}'></div>
+
+                        <label class="col-sm-1 control-label">活动人数:</label>
+                        <div class="col-sm-2"><input type="number" class="form-control" placeholder="若不限则不用填"
+                                                     name="activity_number"
+                                                     value='{$info.activity_number}'></div>
+                        <label class="col-sm-1 control-label">活动地址:</label>
+                        <div class="col-sm-3"><input type="text" class="form-control" placeholder="活动地址"
+                                                     name="activity_address"
+                                                     value='{$info.activity_address}'></div>
+
+
                     </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">封面图片:</label>
-                        <div class="col-sm-10">
-                            <input id="input-file" type="file" class="file">
-                            <sapn>
-                                {empty name="info.front_cover"}图片预览{else/}
-                                <img class="front_cover_img" id="front_cover" name="front_cover"
-                                     src='{$info.front_cover}'/>
-                                {/empty}
-                            </sapn>
-                        </div>
-                    </div>
-
-                    <div class="form-group"><label class="col-sm-2 control-label">最大参与人数:</label>
-                        <div class="col-sm-10"><input type="number" class="form-control" placeholder="若不限则不用填"
-                                                      name="activity_number"
-                                                      value='{$info.activity_number}'></div>
-                    </div>
-                    <div class="form-group"><label class="col-sm-2 control-label">活动地址:</label>
-                        <div class="col-sm-10"><input type="text" class="form-control" placeholder="活动地址"
-                                                      name="activity_address"
-                                                      value='{$info.activity_address}'></div>
-                    </div>
-
-
-
-
-                   <!-- <div class="form-group"><label class="col-sm-2 control-label">状态</label>
+                    <!-- <div class="form-group"><label class="col-sm-2 control-label">状态</label>
                         <div class="col-sm-10"><select class="form-control m-b" name="status">
                             <option value="1" {eq name="$info.status" value="1"}selected {/eq} >预报名</option>
                             <option value="2" {eq name="$info.status" value="2"}selected {/eq}>开始报名</option>
                         </select></div>
                     </div>-->
-
-
-
-
-                    <div class="form-group"><label class="col-sm-2 control-label">开始时间:</label>
-                        <div class="col-sm-10"><input type="date" class="form-control" placeholder="活动开始时间"
+                    <div class="form-group"><label class="col-sm-1 control-label">开始时间:</label>
+                        <div class="col-sm-3"><input type="date" class="form-control" placeholder="活动开始时间"
                                                       name="start_time" min="{$time}"
                                                       value='{$info.start_time}'></div>
                     </div>
+                    <div class="form-group"><label class="col-sm-1 control-label">封面图片:</label>
+                        <div class="col-sm-3">
+                            <input id="input-file" type="file" class="file">
+                            <sapn>
+                                {empty name="info.front_cover"}
+                                <img  id="front_cover" name="front_cover"
+                                     style="max-height: 200px;max-width: 200px"  />
+                                {else/}
+                                <img   name="front_cover"
+                                     style="max-height: 200px;max-width: 200px" src="{$vo.front_cover}"  />
+                                {/empty}
+                            </sapn>
+                        </div>
+                    </div>
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">活动介绍:</label>
+                        <label class="col-sm-1 control-label">活动介绍:</label>
                         <br>
                         <br>
                         <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
@@ -103,7 +98,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">报名须知:</label>
+                        <label class="col-sm-1 control-label">报名须知:</label>
                         <br>
                         <br>
                         <div class="mail-text h-200" style="border: 2px #888888 solid;" class="col-sm-10 ">
