@@ -47,6 +47,7 @@ use app\index\model\ActivityComment;
 use app\index\model\Activity;
 
 
+
 class Personal extends Base
 {
     public function index()
@@ -440,27 +441,28 @@ class Personal extends Base
             $length = input('length');
             $type = input('type');
             $news_type = input('news_type');
-            if (isset($news_type)) {
+            if(isset($news_type)) {
                 if ($type == 2) {
-                    $news = DB::query("select * from tb_news  where status =0  and type=? order by  create_time DESC  limit ?,?", [$news_type, (int)$length, 6]);
+                    $news = DB::query("select * from tb_news  where status =0  and type=? order by  create_time DESC  limit ?,?", [$news_type,(int)$length, 6]);
                     $a = $news;
                     return $this->success('success', '', json_encode($news));
                 } elseif ($type == 1) {
-                    $news = DB::query("select * from tb_news  where status >0  and type=? order by  create_time DESC limit ?,?", [$news_type, (int)$length, 6]);
-                    $a = $news;
-                    return $this->success('success', '', json_encode($news));
-                }
-            } else {
-                if ($type == 2) {
-                    $news = DB::query("select * from tb_news  where status =0  and type<=3 order by  create_time DESC  limit ?,?", [(int)$length, 6]);
-                    $a = $news;
-                    return $this->success('success', '', json_encode($news));
-                } elseif ($type == 1) {
-                    $news = DB::query("select * from tb_news  where status >0  and type<=3 order by  create_time DESC limit ?,?", [(int)$length, 6]);
+                    $news = DB::query("select * from tb_news  where status >0  and type=? order by  create_time DESC limit ?,?", [$news_type,(int)$length, 6]);
                     $a = $news;
                     return $this->success('success', '', json_encode($news));
                 }
             }
+              else{
+                  if ($type == 2) {
+                      $news = DB::query("select * from tb_news  where status =0  and type<=3 order by  create_time DESC  limit ?,?", [(int)$length, 6]);
+                      $a = $news;
+                      return $this->success('success', '', json_encode($news));
+                  } elseif ($type == 1) {
+                      $news = DB::query("select * from tb_news  where status >0  and type<=3 order by  create_time DESC limit ?,?", [(int)$length, 6]);
+                      $a = $news;
+                      return $this->success('success', '', json_encode($news));
+                  }
+              }
         } else {
             //未审核
             $uncheck = DB::query("select * from tb_news where status =0  and type<=3 order by  create_time DESC  limit 6");
@@ -1314,21 +1316,24 @@ class Personal extends Base
     }
 
     //我的活动
-    public function myActivity()
-    {
-        $userid = session('userId');
-        $park_id = session('park_id');
-        $comment = new ActivityComment();
-        $activity = new Activity();
-        $CommentList = $comment->where(['userid' => $userid, 'status' => ['neq', -1], 'park_id' => $park_id])->select();
-        foreach ($CommentList as $value) {
-            $activityinfo['activity'] = isset($value->activity) ? $value->activity : "";
-        }
-        $this->assign('list', json_encode($CommentList));
+    public  function  myActivity(){
+     $userid = session('userId');
+     $park_id = session('park_id');
+     $comment = new ActivityComment();
+     $activity = new Activity();
+     $CommentList = $comment->where(['userid'=>$userid,'status'=>['neq',-1],'park_id'=>$park_id])->select();
+     foreach ($CommentList as $value){
+        $activityinfo['activity'] =  isset($value->activity)?$value->activity:"";
+     }
+     $this->assign('list',json_encode($CommentList));
 
-        return $this->fetch();
+    return $this->fetch();
 
     }
+
+
+
+
 
 
     /*我的收藏下拉刷新*/
@@ -1450,7 +1455,7 @@ class Personal extends Base
         $user = new WechatUser();
         $map['manage'] = 0;
         $map['water_status'] = 0;
-        $map['fee_status'] = 0;
+        $map['fee_status']=0;
         $result = $user->where(['userid' => $userId])->update($map);
         $res = $wechat->updateUser($data);
         if ($res) {
