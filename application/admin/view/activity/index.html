@@ -104,7 +104,7 @@
 
                         {if condition="$vo.status ==2"}
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">取消活动</a>
-                        {elseif condition="$vo.status ==1"} <a href="{:Url('change','type=2&&id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">取消活动</a>
+                        {elseif condition="$vo.status ==1"}   <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">取消活动</a>
                         {else/} <a class="btn-default2">取消活动</a>
                         {/if}
 
