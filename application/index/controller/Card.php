@@ -96,13 +96,10 @@ class Card extends Base
             $uid = session("userId");
             $result = array();
             $result['front_cover'] = "";
-            $result['data'] = "";
-            if (!empty($data['list_img'])) {
-                $result = $this->_setListImg($data['list_img']);
-            }
+            $img = input('img',"");
             //第四步 新增记录
             $card_model = new CardModel();
-            $res1 = $card_model->addNewCard($uid, $data['type'], $data['title'], $data['content'], $result['front_cover'], $result['data']);
+            $res1 = $card_model->addNewCard($uid, $data['type'], $data['title'], $data['content'],'',$img);
             //第五步 返回结果
             if ($res1) {
 
