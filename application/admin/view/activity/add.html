@@ -11,6 +11,10 @@
         margin-bottom: 0;
     }
 
+    .h-200{
+        margin-left: 9%;
+
+    }
     .front_cover_img {
         height: 40px;
         width: 40px;
@@ -76,13 +80,9 @@
                         <div class="col-sm-3">
                             <input id="input-file" type="file" class="file">
                             <sapn>
-                                {empty name="info.front_cover"}
-                                <img  id="front_cover" name="front_cover"
-                                     style="max-height: 200px;max-width: 200px"  />
-                                {else/}
-                                <img   name="front_cover"
-                                     style="max-height: 200px;max-width: 200px" src="{$vo.front_cover}"  />
-                                {/empty}
+                                <img  class="front_cover_img"  name="front_cover" id="front_cover"
+                                     style="max-height: 200px; max-width: 200px" src="{$info.front_cover}"  />
+
                             </sapn>
                         </div>
                     </div>
@@ -169,6 +169,14 @@
                 success: function (response) {
                     var data = $.parseJSON(response);
                     $(".summernote").summernote('insertImage', data.data, 'image name'); // the insertImage API
+                    if (response.code == 1) {
+                        $("input[name='front_cover']").val(response.data);
+                        var pic = document.getElementById("front_cover");
+                        pic.src=response.data;
+                    } else {
+                        updateAlert(response.msg, 'warning');
+                    }
+
                 }
             });
         }
@@ -221,7 +229,10 @@
         if (response.code == 1) {
             $("input[name='front_cover']").val(response.data);
             var pic = document.getElementById("front_cover");
+//            var pic2 = document.getElementById("front_cover2");
             pic.src = response.data;
+//            pic2.src = response.data;
+
         } else {
             updateAlert(response.msg, 'warning');
         }
@@ -253,6 +264,6 @@
             $('.registration_required').val($('.panel-body').eq(1).text());
         }
     )
-    highlight_subnav("{:Url('Shop/index')}");
+    highlight_subnav("{:Url('Activity/index')}");
 </script>
 {/block}
