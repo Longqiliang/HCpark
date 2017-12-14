@@ -70,7 +70,7 @@
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr>
-                    <td>{$vo.name}</td>
+                    <td>{$vo.name|msubstr=0,8,'utf-8',true}</td>
                     <td>{empty name="$vo.start_time" }空
                         {else／}{$vo.start_time|date='Y-m-d',###}
                         {/empty}
@@ -82,7 +82,7 @@
                         {else/}
                         {$vo.activity_number}
                         {/if}
-                    <td>{$vo.activity_address}</td>
+                    <td>{$vo.activity_address|msubstr=0,10,'utf-8',true}</td>
                     <td>
                         {eq name="$vo.is_send" value="0"}
                         未推送
