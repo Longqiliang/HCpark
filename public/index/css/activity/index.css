@@ -4,7 +4,7 @@
     position: relative;
     background: url("") no-repeat center;
     background-size: 100% auto;
-    margin-bottom: 15px;
+    border-bottom: 15px solid #fff;
 }
 .active-item.sign-up{
     position: absolute;

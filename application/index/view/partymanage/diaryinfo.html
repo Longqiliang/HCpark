@@ -4,153 +4,43 @@
 <title>工作日志</title>
 <link rel="stylesheet" href="/static/viewer/viewer.min.css">
 <style>
-    #app{
-        padding-bottom: 2rem;
-    }
-    .my-box{
-        padding:0 1.2rem;
-        font-size: 1.5rem;
-    }
-    .month{width:100%;height:5.5rem;background:#f8f7fc}
-    .month ul{margin:0;padding:0;display:flex;height:100%;justify-content:space-around;align-items:center}
-    .month ul>li{line-height:5.5rem;vertical-align:middle}
-    .year-month{color:#333;font-size:1.8rem}
-    .month .arrow{padding:0 3rem;color:#666}
-    .month ul li{color:#333;font-size:20px;text-transform:uppercase;letter-spacing:3px}
-    .weekdays{margin:0;padding:10px 0;background-color:#f8f7fc;display:flex;flex-wrap:wrap;color:#333;font-size:1.5rem;justify-content:space-around}
-    .weekdays li{display:inline-block;width:13.6%;text-align:center}
-    .days{padding-bottom:10px;background:#f8f7fc;margin:0;display:flex;flex-wrap:wrap}
-    .days li{ position:relative;list-style-type:none;display:inline-flex;justify-content:center;align-items:center;width:14.2857143vw;height:13.2857143vw;text-align:center;font-size:1.5rem;color:#000}
-    .days li .active{padding:6px 10px;border-radius:50%;background:#00B8EC;color:#fff}
-    .days li.other-month{color:#dcdcdc}
-    .days li>span{display:block;height:3.4rem;width:3.4rem;line-height:3.4rem;border-radius:100%}
-    .isBespeak span{color:#999;background-color:#e8e8e8}
-    .isChecked{
-        position: absolute;
-        top:5px;
-        right:5px;
-        display: block;
-        background: #69B9F9;
-        border-radius: 5px;
-        width:5px;
-        height:5px;
-    }
-    .my-baseInfo{
-        display: -webkit-flex;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding:1.2rem 0;
-        border-bottom: 1px solid #f1f1f1;
-    }
-    .my-baseInfo>li:first-child{
-        width:55%;
-    }
-    .my-baseInfo>li:last-child{
-        width:45%;
-    }
-    .my-title{
-        padding:1.2rem 0;
-    }
-    input{
-        /*border:1px solid #f1f1f1;*/
-        /*padding:3px;*/
-        /*border-radius: 3px;*/
-        font-size: 1.5rem;
-    }
-    textarea{
-        box-sizing: border-box;
-        padding:1rem;
-        border-radius: 5px;
-        border:1px solid #f1f1f1;
-        font-size: 1.5rem;
-        line-height: 1.5;
-        width:100%;
-    }
-    /**图片**/
-    .card-upload{
-        display: flex;
-        align-items: center;
-        /*padding: 1rem 0;*/
-    }
-    .card-upload>div:not(:last-child){
-        margin-right: 1rem;
-    }
-    .card-area .group-area{
-        margin:5vw 0 0 0;
-        width: 100%;
-        height: 21.3vw;
-    }
-    .card-more{
-        display: flex;
-        justify-content: center;
-        margin: 4vw 0;
-    }
-    .card-more button{
-        min-width: 26.7vw;
-        border-radius: 15px;
-    }
-    .upload-img{
-        border:1px solid #e8e8e8;
-        border-radius: 5px;
-        width: 20vw;
-        height: 20vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-    }
-    .upload-img img{
-        border-radius: 5px;
-    }
-    .upload-img .del-img{
-        position: absolute;
-        right: -1px;
-        top: -1px;
-        width: 20%;
-        height: 20%;
-        border-top-right-radius: 5px;
-        background: url("/index/images/service/card/icon-del.png")0 0 no-repeat;
-        background-size: cover;
-    }
-    .upload-box{
-        border:2px dashed #e8e8e8;
-        border-radius: 5px;
-        width: 20vw;
-        height: 20vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .upload-box>.iconfont{
-        font-size: 4rem;
-        color: #e8e8e8;
-    }
-    .img-responsive{
-        width: 100%;
-        height: 100%;
-        vertical-align: middle;
-        display: block;
-    }
-    .hide{
-        display: none!important;
-    }
-    .toSubmit{
-        display: block;
-        border:none;
-        outline: none;
-        width:93.6vw;
-        height:4rem;
-        border-radius: 5px;
-        line-height: 4rem;
-        text-align: center;
-        font-size: 1.8rem;
-        color: #ffffff;
-        margin: 0 auto;
-        margin-top: 4rem;
-        background: #69B9F9;
-        margin-bottom: 2rem;
-    }
+    #app{padding-bottom:2rem;}
+    .my-box{padding:0 1.2rem;font-size:1.5rem;}
+    .month{width:100%;height:5.5rem;background:#f8f7fc;}
+    .month ul{display:flex;margin:0;padding:0;height:100%;justify-content:space-around;align-items:center;}
+    .month ul>li{vertical-align:middle;line-height:5.5rem;}
+    .year-month{color:#333;font-size:1.8rem;}
+    .month .arrow{padding:0 3rem;color:#666;}
+    .month ul li{color:#333;text-transform:uppercase;letter-spacing:3px;font-size:20px;}
+    .weekdays{display:flex;margin:0;padding:10px 0;background-color:#f8f7fc;color:#333;font-size:1.5rem;flex-wrap:wrap;justify-content:space-around;}
+    .weekdays li{display:inline-block;width:13.6%;text-align:center;}
+    .days{display:flex;margin:0;padding-bottom:10px;background:#f8f7fc;flex-wrap:wrap;}
+    .days li{position:relative;display:inline-flex;width:14.2857143vw;height:13.2857143vw;color:#000;list-style-type:none;text-align:center;font-size:1.5rem;justify-content:center;align-items:center;}
+    .days li .active{padding:6px 10px;border-radius:50%;background:#00B8EC;color:#fff;}
+    .days li.other-month{color:#dcdcdc;}
+    .days li>span{display:block;width:3.4rem;height:3.4rem;border-radius:100%;line-height:3.4rem;}
+    .isBespeak span{background-color:#e8e8e8;color:#999;}
+    .isChecked{position:absolute;top:5px;right:5px;display:block;width:5px;height:5px;border-radius:5px;background:#69B9F9;}
+    .my-baseInfo{display:-webkit-flex;display:flex;padding:1.2rem 0;border-bottom:1px solid #f1f1f1;justify-content:space-between;align-items:center;}
+    .my-baseInfo>li:first-child{width:55%;}
+    .my-baseInfo>li:last-child{width:45%;}
+    .my-title{padding:1.2rem 0;}
+    input{font-size:1.5rem;}
+    textarea{box-sizing:border-box;padding:1rem;width:100%;border:1px solid #f1f1f1;border-radius:5px;font-size:1.5rem;line-height:1.5;}
+    .card-upload{display:flex;align-items:center;}
+    .card-upload>div:not(:last-child){margin-right:1rem;}
+    .card-area .group-area{margin:5vw 0 0 0;width:100%;height:21.3vw;}
+    .card-more{display:flex;margin:4vw 0;justify-content:center;}
+    .card-more button{min-width:26.7vw;border-radius:15px;}
+    .upload-img{position:relative;display:flex;width:20vw;height:20vw;border:1px solid #e8e8e8;border-radius:5px;justify-content:center;align-items:center;}
+    .upload-img img{border-radius:5px;}
+    .upload-img .del-img{position:absolute;top:-1px;right:-1px;width:20%;height:20%;border-top-right-radius:5px;background:url(/index/images/service/card/icon-del.png) 0 0 no-repeat;background-size:cover;}
+    .upload-box{display:flex;width:20vw;height:20vw;border:2px dashed #e8e8e8;border-radius:5px;align-items:center;justify-content:center;}
+    .upload-box>.iconfont{color:#e8e8e8;font-size:4rem;}
+    .img-responsive{display:block;width:100%;height:100%;vertical-align:middle;}
+    .hide{display:none!important;}
+    .toSubmit{display:block;margin:0 auto;margin-top:4rem;margin-bottom:2rem;width:93.6vw;height:4rem;outline:0;border:none;border-radius:5px;background:#69B9F9;color:#fff;text-align:center;font-size:1.8rem;line-height:4rem;}
+
 </style>
 {/block}
 
@@ -195,35 +85,38 @@
                 <span>{{ date | timeToString}}</span>
             </li>
         </ul>
-        <div class="my-title">工作日志内容</div>
-        <textarea id="" cols="30" rows="10" :placeholder="isWrite==true?'请输入工作日志内容':'暂无日志内容'" v-model="baseInfo.content" v-bind:readonly="!isWrite"></textarea>
-        <div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img.length">图片</span></div>
-        <div class="imgBox">
-            <div class="card-upload" v-if="isWrite">
-                <div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">
-                    <i class="del-img" @click="delImg(index)"></i>
-                    <img :src="imgUrl" class="img-responsive">
-                </div>
-                <div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">
-                    <i class="iconfont hc-jia"></i>
-                </div>
-            </div>
-            <div class="card-upload" v-if="!isWrite" id="img">
-                <div class="upload-img" v-for="(item,key) in baseInfo.img">
-                    <img :src="item" class="img-responsive" >
-                </div>
-            </div>
-            <form ref="myform">
-                <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >
-            </form>
-        </div>
+        <div class="my-title">今日工作</div>
+        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入今日工作内容':'暂无日志内容'" v-model="baseInfo.content" :readonly="isWrite"></textarea>
+        <div class="my-title">明日安排</div>
+        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入明日安排内容':'暂无日志内容'" v-model="baseInfo.content" :readonly="!isWrite"></textarea>
+        <div class="my-title">问题反馈</div>
+        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入反馈内容':'暂无日志内容'" v-model="baseInfo.content" :readonly="!isWrite"></textarea>
+        <!--<div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img.length">图片</span></div>-->
+        <!--<div class="imgBox">-->
+            <!--<div class="card-upload" v-if="isWrite">-->
+                <!--<div class="upload-img" v-for="(imgUrl,index) of imgSrc.dataUrl">-->
+                    <!--<i class="del-img" @click="delImg(index)"></i>-->
+                    <!--<img :src="imgUrl" class="img-responsive">-->
+                <!--</div>-->
+                <!--<div class="upload-box" @click="imgUpload" v-if="imgSrc.dataUrl.length < imgSrc.imgLength">-->
+                    <!--<i class="iconfont hc-jia"></i>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card-upload" v-if="!isWrite" id="img">-->
+                <!--<div class="upload-img" v-for="(item,key) in baseInfo.img">-->
+                    <!--<img :src="item" class="img-responsive" >-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<form ref="myform">-->
+                <!--<input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg" @change="handleFileChange" ref="upimg" >-->
+            <!--</form>-->
+        <!--</div>-->
     </div>
     <button class="toSubmit" @click="toSubmit" v-if="isWrite">添加</button>
 </div>
 {/block}
 
 {block name="script"}
-<script src="/static/viewer/viewer.min.js"></script>
 <script>
     Vue.filter('timeToString', function(time) {
         if(time){
@@ -290,10 +183,8 @@
 
         },
         mounted(){
-            this.createView();
         },
         updated(){
-            this.createView();
         },
         methods:{
             canWrite(){
@@ -307,18 +198,7 @@
                     the.isWrite=true;
                 }
             },
-            createView(key){
-                var the=this;
-                if(the.baseInfo.img.length){
-                    var el = document.getElementsByClassName('upload-img');
-                    for(var i=0;i<el.length;i++){
-                        var viewer = new Viewer(el[i],{
-                            toolbar:false,
-                            title:false,
-                        });
-                    }
-                }
-            },
+
             toShow(){
                     this.isShow=!this.isShow
             },
@@ -412,7 +292,6 @@
                     this.baseInfo.img=data.img ? data.img : [];
                     console.log(this.baseInfo)
                     this.canWrite();
-//                    this.createView();
                 },function (res) {
                     this.$toast('请求失败，请退出页面重试')
                     this.isSubmit=false;
@@ -451,8 +330,8 @@
                 if(the.isSubmit){
                     the.$toast('提交中，请稍等')
                     return
-                }else if(!the.baseInfo.content){
-                    the.$toast('请填写日志内容')
+                }else if(!the.baseInfo.content && !the.baseInfo.content && !the.baseInfo.content){
+                    the.$toast('请至少填写一项内容')
                     return
                 }
                 the.$indicator.open({
@@ -478,7 +357,7 @@
                             confirmButtonColor: "#69B9F9"
                         },function () {
                            the.isWrite=false;
-                            the.baseInfo.img=the.imgList;
+//                            the.baseInfo.img=the.imgList;
                             the.imgList=[];
                             the.imgSrc={
                                 imgLength:4,
@@ -486,7 +365,6 @@
                                 imgName:[]
                             };
                             the.checkedList.push(the.baseInfo.create_time);
-                            the.createView();
                             if(the.nowDateIndex){
                                 the.days[the.nowDateIndex].isChecked=true;
                             }else{

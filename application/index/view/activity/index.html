@@ -3,7 +3,22 @@
 {block name="style"}
 <link rel="stylesheet" href="/index/css/activity/index.css">
 <title>园区活动</title>
-<style></style>
+<style>
+    body{
+        background-color: #f5f5f5;
+    }
+    .content {
+        padding-top: 50px;
+    }
+    .content>img {
+        width: 100%;
+        margin-top: 5rem;
+    }
+    .no-message {
+        display: block;
+        margin: 0 auto;
+    }
+</style>
 {/block}
 
 {block name="body"}
@@ -17,6 +32,9 @@
             <div class="active-title"><span>{{item.name}}</span></div>
             <div class="active-time">开始时间：{{item.start_time?item.start_time:'未定' | timeToString}}</div>
         </div>
+    </div>
+    <div v-if="!baseInfo.length" class="content">
+        <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
     </div>
 </div>
 {/block}

@@ -55,6 +55,19 @@
     .notice>a{
         background-color: #fff;
     }
+    .list-right{
+        width: 100%;
+
+    }
+    .notice .list{
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .notice .list .title{
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
+    }
 </style>
 {/block}
 
@@ -78,7 +91,7 @@
                 </ul>
             </div>
             <div class="notice notify">
-                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in checked.list" v-if="item.status!==0">
+                <a :href="'/index/personal/newscheck/id/'+item.id" class="list" v-for="item in uncheck.list">
                     <div class="list-right">
                         <div class="title ">{{item.title}}</div>
                         <div class="clear time">
@@ -88,7 +101,7 @@
                     </div>
                 </a>
             </div>
-            <div v-if="!uncheck.list.length" class="content">
+            <div v-if="!uncheck.list.length  && !loading" class="content">
                 <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
             </div>
             <div class="my-footer"  v-if="uncheck.list.length">
@@ -108,7 +121,7 @@
                 </ul>
             </div>
             <div class="notice notify">
-                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in checked" v-if="item.status===0">
+                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in checked.list">
                     <div class="list-right">
                         <div class="title ">{{item.title}}</div>
                         <div class="clear time">
@@ -118,7 +131,7 @@
                     </div>
                 </a>
             </div>
-            <div v-if="!checked.list.length" class="content">
+            <div v-if="!checked.list.length  && !loading" class="content">
                 <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
             </div>
             <div class="my-footer"  v-if="checked.list.length">
@@ -164,11 +177,10 @@
                 canShow:true,
                 isShow:false,
                 type:[
-                    {news_type:1,text:'新闻通告'},
+                    {news_type:1,text:'新闻速递'},
                     {news_type:2,text:'政策通告'},
                     {news_type:3,text:'好文分享'},
                 ],
-                will_index:'',
                 index:''
             },
             checked:{
@@ -176,11 +188,10 @@
                 canShow:false,
                 isShow:false,
                 type:[
-                    {news_type:1,text:'新闻通告'},
+                    {news_type:1,text:'新闻速递'},
                     {news_type:2,text:'政策通告'},
                     {news_type:3,text:'好文分享'},
                 ],
-                will_index:'',
                 index:''
             },
         },
@@ -191,7 +202,7 @@
             var c =  parseInt(window.location.href.split("mycheck/c/")[1]);
             var myCheckActive = window.sessionStorage.getItem('myCheckActive');
             if(myCheckActive){
-                this.active=myCheckActive;
+                this.active=parseInt(myCheckActive);
             }else{
                 this.active=c;
             }
@@ -200,18 +211,18 @@
                 if(this.active == 0){
                     this.uncheck.index = parseInt(news_type);
                     this.uncheck.isShow=false;
-                    this.uncheck.canShow=true;
-                    this.checked.isShow=false;
-                    this.checked.canShow=false
-                }else{
-                    this.checked.index = parseInt(news_type);
-                    this.uncheck.isShow=false;
                     this.uncheck.canShow=false;
                     this.checked.isShow=false;
                     this.checked.canShow=true
+                }else{
+                    this.checked.index = parseInt(news_type);
+                    this.uncheck.isShow=false;
+                    this.uncheck.canShow=true;
+                    this.checked.isShow=false;
+                    this.checked.canShow=false
                 }
             }
-            this.loadMore()
+            this.getInfo('created')
         },
         methods:{
             loadMore1(){
@@ -222,20 +233,18 @@
                         _this = this;
                 if(_this.active===0){
                     now = _this.uncheck;
-                    _this.uncheckCanLoad = true;
                 }else{
                     now = _this.checked;
-                    _this.checkedCanLoad = true;
                 }
                 if(now.index === key){
-                    console.log(now.index,key)
                     return
                 }else{
                     console.log('loadMore1')
                     now.index = key;
                     now.list = [];
                     sessionStorage.setItem("news_type", key);
-                    _this.loadMore();
+
+                    _this.getInfo('sievingChange');
                     _this.toggleSieving();
                 }
             },
@@ -258,7 +267,7 @@
                         return
                     }
                     data.length = _this.uncheck.list.length;
-                    data.type = 1;
+                    data.type = 2;
                     if(_this.uncheck.index!==''){
                         data.news_type = _this.uncheck.type[_this.uncheck.index].news_type;
                     }else{
@@ -266,31 +275,38 @@
                     }
                 }else{
                     if(_this.loading || !_this.checkedCanLoad){
-                        console.log(2)
                         return
                     }
                     data.length = _this.checked.list.length;
-                    data.type = 2;
+                    data.type = 1;
                     if(_this.checked.index!==''){
                         data.news_type = _this.checked.type[_this.checked.index].news_type;
                     }else{
                         data.news_type = ''
                     }
                 }
-                console.log(data)
                 _this.loading = true;
                 _this.$http.post('/index/personal/mycheck',data).then(function (res) {
                     _this.loading = false;
                     if(res.data.code === 1){
                         var info = JSON.parse(res.data.data);
                         console.log(info)
-                          if(data.type===1){
-                              _this.uncheck.list=info;
-                          }else{
-                              _this.checked.list = info;
-                          }
+                        if(data.type==2){
+                            var copeInfo = JSON.parse(JSON.stringify(_this.uncheck));
+                            for(var i=0;i<info.length;i++){
+                                _this.uncheck.list.push(info[i]);
+                            }
+                            //                强更新vue数据
+                            _this.uncheck = Object.assign(copeInfo,_this.uncheck);
+                        }else{
+                            var copeInfo = JSON.parse(JSON.stringify(_this.checked));
+                            for(var i=0;i<info.length;i++){
+                                _this.checked.list.push(info[i]);
+                            }
+                            _this.checked = Object.assign(copeInfo,_this.checked);
+                        }
                         if(info.length<6){
-                            if(data.type===1){
+                            if(data.type===2){
                                 _this.uncheckCanLoad=false;
                             }else{
                                 _this.checkedCanLoad=false;
@@ -309,6 +325,74 @@
                     _this.loading = false;
                 })
             },
+            getInfo(){
+                var _this=this,
+                        data={};
+                if(_this.active===0){
+                    data.length = _this.uncheck.list.length;
+                    data.type = 2;
+                    if(_this.uncheck.index!==''){
+                        data.news_type = _this.uncheck.type[_this.uncheck.index].news_type;
+                    }else{
+                        data.news_type = ''
+                    }
+                }else{
+                    data.length = _this.checked.list.length;
+                    data.type = 1;
+                    if(_this.checked.index!==''){
+                        data.news_type = _this.checked.type[_this.checked.index].news_type;
+                    }else{
+                        data.news_type = ''
+                    }
+                }
+                _this.loading = true;
+                _this.$indicator.open({
+                    text: '加载中',
+                    spinnerType: 'triple-bounce'
+                });
+                _this.$http.post('/index/personal/mycheck',data).then(function (res) {
+                    _this.$indicator.close();
+                    _this.loading = false;
+                    if(res.data.code === 1){
+                        var info = JSON.parse(res.data.data);
+                        if(data.type===2){
+                            var copeInfo = JSON.parse(JSON.stringify(_this.uncheck));
+                            for(var i=0;i<info.length;i++){
+                                _this.uncheck.list.push(info[i]);
+                            }
+                            //                强更新vue数据
+                            _this.uncheck = Object.assign(copeInfo,_this.uncheck);
+                        }else{
+                            var copeInfo = JSON.parse(JSON.stringify(_this.checked));
+                            for(var i=0;i<info.length;i++){
+                                _this.checked.list.push(info[i]);
+                            }
+                            _this.checked = Object.assign(copeInfo,_this.checked);
+                        }
+                        if(info.length<6){
+                            if(data.type===2){
+                                _this.uncheckCanLoad=false;
+                            }else{
+                                _this.checkedCanLoad=false;
+                            }
+                        }
+
+                    }else{
+                        if(data.type===2){
+                            _this.uncheckCanLoad=false;
+                        }else{
+                            _this.checkedCanLoad=false;
+                        }
+                    }
+                },function (res) {
+                    _this.$toast({
+                        message:"请求错误",
+                        duration:1000
+                    });
+                    _this.$indicator.close()
+                    _this.loading = false;
+                })
+            },
             //'\n'转li标签结构
             nToLi(str){
                 if (!str) { return ''}
@@ -318,7 +402,20 @@
             },
             tabChange(key){
                 var _this = this;
+//                if(_this.active == key){
+//                    return
+//                }
+                if(_this.loading){
+                    _this.$toast({
+                        message:"请求中，请勿操作",
+                        duration:1000,
+                        position:'bottom'
+                    });
+                    return ;
+                }
                 _this.active=key;
+
+
                 window.sessionStorage.setItem('myCheckActive',_this.active);
                 if(key===0){
 //                    能否显示筛选列表 能则显示 不能则改为能
@@ -328,7 +425,7 @@
                         this.uncheck.canShow=true;
                         sessionStorage.setItem("news_type", this.uncheck.index);
                         if(! _this.uncheck.list.length){
-                            _this.loadMore();
+                            _this.getInfo('tabchange');
                         }
                     }
 //                    关闭筛选列表
@@ -341,7 +438,7 @@
                         this.checked.canShow=true;
                         sessionStorage.setItem("news_type", this.checked.index);
                         if(! _this.checked.list.length){
-                            _this.loadMore();
+                            _this.getInfo('tabchange');
                         }
                     }
                     this.uncheck.isShow=false;
