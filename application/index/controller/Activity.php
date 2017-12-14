@@ -34,6 +34,7 @@ class Activity extends Base
         $info['is_sign']=$is_sgin;
 
         $count = ActivityComment::where(['activity_id'=>$data['id'],'status'=>['in',[1]]])->count();
+
         $this->assign('count',$count);
         $this->assign('info',json_encode($info));
         return $this->fetch();
@@ -69,7 +70,7 @@ class Activity extends Base
         }else{
          $userid =  session('userId');
          $user = WechatUser::where('userid',$userid)->find();
-            $info = ActivityModel::get($data['id']);
+            $info = ActivityModel::where('id',$data['id'])->find();
          $map=[
              'name'=>$user['name'],
              'department'=>isset($user->departmentName->name)?$user->departmentName->name:"",
