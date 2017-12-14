@@ -89,14 +89,9 @@
                     <td>{$vo.status_text}</td>
                     <td>
                         <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始推送</a>
-                        <a class="btn-sm btn-success"    href="{:Url('outexcel','id='.$vo.id)}"  >导出</a>
-
                         <a class="btn-sm btn-success"  href="{:Url('Activity/add?id='.$vo['id'])}">修改</a>
                         <a  class="btn-sm btn-primary" href="{:Url('Activity/recordinfo?id='.$vo['id'])}">查看报名情况</a>
-                       {if condition="$vo.status <2"}
-                        <a   href="{:Url('Activity/del?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-danger">删除</a>
-                        {else/} <a class="btn-default2">删除</a>
-                        {/if}
+                        <a class="btn-sm btn-success"    href="{:Url('outexcel','id='.$vo.id)}"  >导出</a>
                         {if condition="$vo.status == 1"}
                         <a href="{:Url('change','type=1&&id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始活动</a>
                         {else/} <a class="btn-default2">开始活动</a>
@@ -105,12 +100,15 @@
                         {if condition="$vo.status ==2"}
                         <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">取消活动</a>
                         {elseif condition="$vo.status ==1"} <a href="{:Url('change','type=2&&id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">取消活动</a>
-
-
                         {else/} <a class="btn-default2">取消活动</a>
-
                         {/if}
 
+
+
+                       {if condition="$vo.status <2"}
+                        <a   href="{:Url('Activity/del?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-danger">删除</a>
+                        {else/} <a class="btn-default2">删除</a>
+                        {/if}
 
 
                     </td>
