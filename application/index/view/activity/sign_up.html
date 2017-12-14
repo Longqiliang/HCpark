@@ -65,15 +65,20 @@
         data: {
             baseInfo:{$user},
             subData:{
-                id:'',
                 name:'',
                 mobile:'',
                 department:'',
-                remark:''
+                remark:'',
+                activity_id:''
             }
         },
         created(){
-            Object.assign(this.subData,this.baseInfo);
+            var _this = this;
+            _this.subData.name = this.baseInfo.name || '';
+            _this.subData.mobile = this.baseInfo.mobile || '';
+            _this.subData.department = this.baseInfo.department || '';
+            _this.subData.remark = this.baseInfo.remark || '';
+            _this.subData.activity_id = this.baseInfo.activity_id;
         },
         methods: {
             ajaxPost(){
@@ -119,7 +124,7 @@
                             confirmButtonColor: "#59B7F3",
                             confirmButtonText: "确定"
                         },function () {
-
+                            window.location.href='/index/activity/index'
                         });
                     }else{
                         swal({
@@ -129,6 +134,7 @@
                             confirmButtonColor: "#59B7F3",
                             confirmButtonText: "确定"
                         },function () {
+
                         });
                     }
                 },function (res) {

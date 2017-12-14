@@ -29,9 +29,9 @@
         <!--</div>-->
     <!--</div>-->
     <div class="active-item" :style="'background-image: url('+ baseInfo.front_cover +')'" @click="jumpTo(baseInfo.id)">
-        <div class="my-icon-flag my-icon-hot" v-if="state(baseInfo.status,baseInfo.end_time) == 'hot'" ><span>HOT</span></div>
-        <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.end_time) == 'end'"><span>活动已结束</span></div>
-        <div class="my-icon-flag "  v-if="state(baseInfo.status,baseInfo.end_time) == 'un'" ><span>预</span></div>
+        <div class="my-icon-flag my-icon-hot" v-if="state(baseInfo.status,baseInfo.start_time) == 'hot'" ><span>HOT</span></div>
+        <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'end'"><span>活动已结束</span></div>
+        <div class="my-icon-flag "  v-if="state(baseInfo.status,baseInfo.start_time) == 'un'" ><span>预</span></div>
         <div class="active-info">
             <div class="active-detail-title"><span v-html="titleWarp(baseInfo.name)"></span></div>
         </div>
@@ -55,7 +55,7 @@
         </div>
     </div>
     <div class="btn-box">
-        <div class="btn btn-block btn-end" v-if="baseInfo.time*1000 < Date.parse(new Date())" >已结束</div>
+        <div class="btn btn-block btn-end" v-if="baseInfo.start_time*1000 < Date.parse(new Date())" >已结束</div>
         <div class="btn btn-block btn-joined" v-else-if="baseInfo.is_sign === 'yes'">已报名</div>
         <div class="btn btn-block btn-success" @click="jumpTo(baseInfo.id)" v-else>我要报名</div>
     </div>

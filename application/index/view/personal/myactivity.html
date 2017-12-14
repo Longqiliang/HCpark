@@ -1,30 +1,21 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>我的活动</title>
 <link rel="stylesheet" href="/index/css/activity/index.css">
+<title>我的活动</title>
 <style></style>
 {/block}
 
 {block name="body"}
+<!-- -1 删除   0.禁用   1 预报名中 2启动.-->
 <div id="app">
-    <div class="active-item" :style="'background-image: url('+ '/index/images/cbd.jpg' +')'" @click="jumpTo">
+    <div class="active-item" :style="'background-image: url('+ item.activity.front_cover +')'" @click="jumpTo(item.activity.id)" v-for="item in baseInfo">
+        <div class="my-icon-flag my-icon-hot" v-if="state(item.status,item.activity.start_time) == 'hot'" ><span>HOT</span></div>
+        <div class="my-icon-fillet" v-if="state(item.activity.status,item.activity.start_time) == 'end'"><span>活动已结束</span></div>
+        <div class="my-icon-flag "  v-if="state(item.activity.status,item.activity.start_time) == 'un'" ><span>预</span></div>
         <div class="active-info">
-            <div class="active-title"><span>智慧园区企业交流峰会智慧园区企业交流峰会</span></div>
-            <div class="active-time">开始时间：2017.12.23</div>
-        </div>
-    </div>
-    <div class="active-item" :style="'background-image: url('+ '/index/images/service/noPermissions/no-permissions.png' +')'">
-        <div class="active-info">
-            <div class="active-title"><span>智慧园区企业交流峰会</span></div>
-            <div class="active-time">开始时间：2017.12.23</div>
-        </div>
-    </div>
-    <div class="active-item" :style="'background-image: url('+ '/index/images/talentservice/icon-people.png ' +')'">
-        <div class="my-icon-fillet"><span>活动已结束</span></div>
-        <div class="active-info">
-            <div class="active-title"><span>智慧园区企业交流峰会</span></div>
-            <div class="active-time">开始时间：2017.12.23</div>
+            <div class="active-title"><span>{{item.activity.name}}</span></div>
+            <div class="active-time">开始时间：{{item.activity.start_time | timeToString}}</div>
         </div>
     </div>
 </div>
@@ -58,11 +49,27 @@
     var app = new Vue({
         el: '#app',
         data: {
-            baseInfo:''
+            baseInfo:{$list},
+            isSubmit:false,
         },
         methods: {
-            jumpTo(){
-                window.location.href = '/index/activity/detail'
+            state(status ,time){
+                if(status && time){
+                    if(time*1000 > Date.parse(new Date())){
+                        if(status == 1){
+                            return 'un'
+                        }else if(status == 2){
+                            return 'hot'
+                        }
+                    }else{
+                        return 'end'
+                    }
+                }else{
+                    return false
+                }
+            },
+            jumpTo(id){
+                window.location.href = '/index/activity/detail/id/'+id
             }
         }
     })
