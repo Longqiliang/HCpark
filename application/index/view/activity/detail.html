@@ -56,8 +56,8 @@
         </div>
     </div>
     <div class="btn-box">
-        <div class="btn btn-block btn-end" v-else-if="baseInfo.status == 0" >活动已取消</div>
-        <div class="btn btn-block btn-end" v-if="baseInfo.start_time*1000 < Date.parse(new Date())" >活动已结束</div>
+        <div class="btn btn-block btn-end" v-if="baseInfo.status == 0" >活动已取消</div>
+        <div class="btn btn-block btn-end" v-else-if="baseInfo.start_time*1000 < Date.parse(new Date())" >活动已结束</div>
         <div class="btn btn-block btn-joined" v-else-if="baseInfo.is_sign === 'yes'">已报名</div>
         <div class="btn btn-block btn-end" v-else-if="baseInfo.status == 1" >活动暂未开始</div>
         <div class="btn btn-block btn-end" v-else-if="baseInfo.activity_number && count == baseInfo.activity_number " >人数已满</div>
