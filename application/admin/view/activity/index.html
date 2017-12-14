@@ -43,10 +43,6 @@
             </form>
             <h2>活动管理</h2>
             <div class="mail-tools tooltip-demo m-t-md">
-                <input class="i-checks check-all" type="checkbox">
-                <button class="btn btn-white btn-sm m-l ajax-post " url="{:Url('del')}" data-original-title="移动到回收站"
-                        data-toggle="tooltip" data-placement="top" target-form="id"><i class="fa fa-trash-o"></i>
-                </button>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
                 <a data-toggle="modal" class="btn btn-sm btn-primary" href="{:Url('Activity/add')}">添加活动</a>
             </div>
@@ -56,7 +52,7 @@
             <table class="table table-hover table-mail">
                 <thead>
                 <tr>
-                    <th></th>
+
                     <th>活动名</th>
                     <th>开始时间</th>
                     <th>活动限数</th>
@@ -69,7 +65,6 @@
                 <tbody>
                 {volist name="list" id="vo"}
                 <tr>
-                    <td class="check-mail"> <input type="checkbox" class="i-checks id" name="id[]" value="{$vo.id}"></td>
                     <td>{$vo.name}</td>
                     <td>{empty name="$vo.start_time" }空
                         {else／}{$vo.start_time|date='Y-m-d',###}
@@ -84,21 +79,40 @@
                         {/if}
                     <td>{$vo.activity_address}</td>
                     <td>
-                        {eq name="$vo.is_share" value="0"}
+                        {eq name="$vo.is_send" value="0"}
                         否
                         {/eq}
-                        {eq name="$vo.is_share" value="1"}
-                        是
+                        {eq name="$vo.is_send" value="1"}
+                        <scan class="txt-success" >是</scan>
                         {/eq}
                         </td>
                     <td>{$vo.status_text}</td>
                     <td>
-                        <a class="btn-sm btn-success"  href="{:Url('Activity/send?id='.$vo['id'])}">推送</a>
+                        <a href="{:Url('send','id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始推送</a>
                         <a class="btn-sm btn-success"    href="{:Url('outexcel','id='.$vo.id)}"  >导出</a>
 
                         <a class="btn-sm btn-success"  href="{:Url('Activity/add?id='.$vo['id'])}">修改</a>
                         <a  class="btn-sm btn-primary" href="{:Url('Activity/recordinfo?id='.$vo['id'])}">查看报名情况</a>
+                       {if condition="$vo.status <2"}
                         <a   href="{:Url('Activity/del?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-danger">删除</a>
+                        {else/} <a class="btn-default2">删除</a>
+                        {/if}
+                        {if condition="$vo.status == 1"}
+                        <a href="{:Url('change','type=1&&id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">开始活动</a>
+                        {else/} <a class="btn-default2">开始活动</a>
+                        {/if}
+
+                        {if condition="$vo.status ==2"}
+                        <a class=" btn-sm btn-primary" data-toggle="modal" href="#modal-form" onclick="changestates('{$vo.id}')">取消活动</a>
+                        {elseif condition="$vo.status ==1"} <a href="{:Url('change','type=2&&id='.$vo.id)}" class="ajax-get confirm btn-sm btn-success">取消活动</a>
+
+
+                        {else/} <a class="btn-default2">取消活动</a>
+
+                        {/if}
+
+
+
                     </td>
                 </tr>
                 {/volist}
@@ -108,7 +122,32 @@
         </div>
     </div>
 </div>
-
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="update">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">取消活动</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="clear">
+                        <label class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10"><input type="text" name="reply"   class="form-control" placeholder="请填写备注信息，不允许为空"></input></div>
+                    </div>
+                </div>
+                <input name="id" type="hidden">
+                <div class="modal-footer">
+                    <div class="col-sm-12 text-center zt-flex zt-space-around">
+                        <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+                        <a class="btn btn-primary " onclick="changeStatus()">确认</a>
+                        <a class="btn btn-warning " onclick="changeStatus()">取消</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {/block}
 
 {block name="script"}
@@ -140,6 +179,37 @@
             }
         }
     });
+
+    //增加模态框后的修改；
+    function changestates(id) {
+        $("input[name='id']").val(id);
+    }
+
+    /*修改服务状态值*/
+    function changeStatus(){
+        var data={};
+            data={
+                id : $("input[name='id']").val(),
+                reply : $("input[name='reply']").val(),
+                type  : 2
+        }
+        $.ajax({
+            data:data,
+            type:"POST",
+            url:"{:Url('Activity/change')}",
+            success:function (data){
+                if(data.code==1){
+                    updateAlert(data.msg+ ' 页面即将自动跳转~','success');
+                    setTimeout(function(){
+                        location.href=data.url;
+                    },2000);
+                }else{
+                    updateAlert(data.msg,'info');
+                }
+            }
+        })
+
+    }
     highlight_subnav("{:Url('Activity/index')}");
 </script>
 {/block}

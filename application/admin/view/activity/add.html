@@ -72,6 +72,20 @@
                                                       name="activity_address"
                                                       value='{$info.activity_address}'></div>
                     </div>
+
+
+
+
+                   <!-- <div class="form-group"><label class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-10"><select class="form-control m-b" name="status">
+                            <option value="1" {eq name="$info.status" value="1"}selected {/eq} >预报名</option>
+                            <option value="2" {eq name="$info.status" value="2"}selected {/eq}>开始报名</option>
+                        </select></div>
+                    </div>-->
+
+
+
+
                     <div class="form-group"><label class="col-sm-2 control-label">开始时间:</label>
                         <div class="col-sm-10"><input type="date" class="form-control" placeholder="活动开始时间"
                                                       name="start_time"
@@ -101,11 +115,12 @@
 
                     <div class="mail-body text-right tooltip-demo">
                         <!---->
+                       {if condition="$info.status >0"}
                         <button url="{:Url('add')}" class="btn btn-primary addval ajax-post"
                                 target-form="form-horizontal"
                                 data-toggle="tooltip" data-placement="top" data-edit="content">
                             保存
-                        </button>
+                        </button>{/if}
                         <a class="btn btn-default" href="javascript:window.history.go(-1);">返回</a>
                         <!--<button url="{:Url('draft')}" class="btn btn-white btn-sm ajax-post" data-toggle="tooltip" data-placement="top"-->
                         <!--target-form="form-horizontal" data-edit="content">-->

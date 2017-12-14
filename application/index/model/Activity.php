@@ -29,7 +29,7 @@ class Activity extends Model
     public function getListbyParkid()
     {
         $park_id = session('park_id');
-        $list = $this->where(['park_id' => $park_id, 'status' => ['gt', 0]])->order('start_time asc')->select();
+        $list = $this->where(['park_id' => $park_id, 'status' => ['gt', 1]])->order('start_time asc')->select();
         $data = array();
         foreach ($list as $value){
             $map=[

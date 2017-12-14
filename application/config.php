@@ -184,6 +184,7 @@ return [
         'agentid' => 1000018
 
     ],
+
     'personal'=>[
         "AppDesc" => "个人中心",
         'appid' => 'ww68db00a56b949cff',
@@ -191,6 +192,17 @@ return [
         'agentid' => 1000008
 
     ],
+    'activity' =>[
+        "AppDesc" => "园区活动",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'ZwSU2oxHX-DCtK5dFFkvcw4xJ1PGspUAkTcbrUx58HI',
+        'agentid' => 1000021
+
+    ],
+
+
+
+
     'weixinpay' => [
         'appid' => 'ww61224724ee102fbc', // 微信支付appid
         'mchid' => '1486387062', // 微信支付mchid 商户收款账号

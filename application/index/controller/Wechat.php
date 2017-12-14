@@ -21,6 +21,10 @@ use app\common\model\PayLog as PayLogModel;
 use app\common\model\PointsLog as PointsLogModel;
 use app\index\model\PropertyServer;
 use app\index\model\WaterService;
+use app\index\model\ActivityComment;
+use  app\index\model\Activity;
+
+
 class Wechat extends Controller
 {
     public function index()
@@ -316,7 +320,30 @@ class Wechat extends Controller
 
             }
         }
+
+        //activity
+        //活动前一天给用户推送
+        $time = time()+60 * 60 * 24;
+        $activityList =Activity::where(['start_time'=>['lt',$time],'status'=>2])->select();
+        foreach ($activityList as $value){
+            $userList = isset($value->user)?$value->user:array();
+            foreach ($userList as $user){
+               if($user['status']==1) {
+                   $message = [
+                       "title" => "活动报名提示",
+                       "description" => " 您报名参加的" . $value['name'] . "于" . date('Y.m.d', $value['start_time']) . "（明天）即将开始，请按照活动要求准时参加，点击查看活动详情。",
+                       "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $value['id'],
+                   ];
+                   $reult = $this->commonSend(4, $message, $user['userid']);
+               }
+
+            }
+        }
     }
+
+
+
+
 
     public function commonSend($type, $message, $userid = "", $appid = 0)
     {

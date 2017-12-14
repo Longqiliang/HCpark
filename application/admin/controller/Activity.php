@@ -11,6 +11,7 @@ namespace app\admin\controller;
 use app\common\model\ActivityComment;
 use app\common\model\Activity as ActivityModel;
 use PHPExcel;
+use app\common\behavior\Service;
 class Activity extends Admin
 {
     /**
@@ -31,7 +32,7 @@ class Activity extends Admin
         $activity = new ActivityModel();
         $list = $activity->where($map)->order('start_time asc')->paginate(12,false,['query' => request()->param()]);
         int_to_string($list, array(
-            'status' => array(0 => "禁用",1=>'预报名',2=>'开始报名'),
+            'status' => array(0 => "活动取消",1=>'预报名',2=>'开始报名'),
         ));
 
         $this->assign('list', $list);
@@ -57,7 +58,7 @@ class Activity extends Admin
             }else{
                 $info = $activity->validate(false)->save($data,['id'=>$data['id']]);
             }
-            if ($info) {
+            if ($info||$info==0) {
                 return $this->success("保存成功", Url('Activity/index'));
             } else {
                 return $this->error($activity->getError());
@@ -191,4 +192,81 @@ class Activity extends Admin
         $write->save('php://output');
 
     }
+    //活动推送
+    public  function  send(){
+        $data = input('');
+        $activity = new ActivityModel();
+        $service = new Service();
+        $info = $activity->where('id',$data['id'])->find();
+        $des = msubstr(str_replace('&nbsp;', '', strip_tags($info['activity_description'])), 0, 36);
+        $map = [
+                    'title' => $info['name'],
+                    'description' => $des,
+                     'url'=>'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $data['id'],
+                    'picurl' => empty($data['front_cover'])
+                        ? 'https://' . $_SERVER['HTTP_HOST'] .'/index/images/news/news.jpg'
+                        : 'https://' . $_SERVER['HTTP_HOST'] . $data['front_cover']
+        ];
+        $result =$service->sendNews2(Config('activity'),$map);
+        if ($result['errcode'] == 0) {
+            ActivityModel::where('id', input('id'))->update(['is_send' => 1]);
+            return $this->success('推送成功', 'Activity/index');
+        } else {
+            return $this->error('推送失败');
+        }
+
+    }
+
+    public  function  change(){
+        $data= input('');
+        $activity = new ActivityModel();
+        //开始报名
+        if($data['type']==1){
+         $result = $activity->where('id',$data['id'])->update(['status'=>2]);
+         if($result){
+             return $this->success('开始报名成功');
+
+         }else {
+             return $this->error("开始报名失败");
+
+         }
+        }
+        //取消报名
+        elseif ($data['type']==2){
+            if(empty($data['reply'])){
+                return $this->error('取消原因未填');
+            }
+            $map=['status'=>0,
+                  'reply'=>$data['reply']
+                ];
+            $result = $activity->where('id',$data['id'])->update($map);
+
+            if($result){
+                $service = new Service();
+                $info =$activity->where('id',$data['id'])->find();
+                $userList = isset($info->user)?$info->user:array();
+               $userid = '';
+                foreach ($userList as $user) {
+                    if ($user['status'] == 1) {
+                     $userid .="|".$user['userid'];
+                    }
+                }
+                $data = [
+                    'title' => "园区活动提示",
+                    'description' => "您报名参加的" . $info['name'] . "因" . $info['reply'] . "原因取消，感谢您对园区活动的大力支持，请继续关注最新园区活动动态。",
+                    'url' => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $info['id'],
+                ];
+                $service->sendActivityMessage($data,$userid);
+                return $this->success('取消报名成功');
+
+            }else {
+                return $this->error("取消报名失败");
+
+            }
+        }
+    }
+
+
+
+
 }

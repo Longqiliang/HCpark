@@ -40,13 +40,23 @@ class Activity extends Base
     public function signUp()
     {   $data = input('');
         if(IS_POST){
-            $activity  =  new ActivityComment();
+            $activity = new Activity();
+            $Comment  =  new ActivityComment();
+            $activityInfo = $activity->where('id',$data['activity_id'])->find();
+            //活动不处于 开始报名 状态
+            if($activityInfo['status']!=2){
+                return $this->error('当前活动不可报名中');
+            }
+            //当前时间已超过活动开始时间
+            if(time()>$activityInfo['start_time']){
+                return $this->error('当前活动不可报名中');
+            }
             $park_id = session('park_id');
             $user_id =session('userId');
             $data['userid']=$user_id;
             unset($data['id']);
             $data['park_id']=$park_id;
-            $data = $activity->save($data);
+            $data = $Comment->save($data);
             if($data){
                 return $this->success('报名成功');
 
