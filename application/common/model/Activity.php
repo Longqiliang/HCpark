@@ -13,8 +13,14 @@ use think\Model;
 
 class Activity extends Model{
     protected $type = [
-        'end_time' => 'strtotime',
+
         'start_time' => 'strtotime'
+    ];
+
+    protected  $insert = [
+        'create_time' =>NOW_TIME
+
+
     ];
 
     public function user()
