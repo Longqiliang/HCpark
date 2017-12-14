@@ -128,6 +128,14 @@ class Index extends Controller
 
     }
 
+    //推荐关注
+    public function recommend()
+    {
+        $data= input('');
+        $this->assign('park_id', json_encode($data['park_id']));
+        return $this->fetch();
+    }
+
 
 //二维码
     public function registercode()

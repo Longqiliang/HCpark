@@ -315,7 +315,9 @@ function warning(opts){
 
 //删除
 function delItem(id,href) {
+
     console.log(id);
+
     if(!id || !href || id== ''|| href == ''){
         return;
     }
@@ -342,7 +344,7 @@ function delItem(id,href) {
                         confirmButtonColor: "#1ab394",
                         confirmButtonText: "确认"
                     });
-                    window.location.reload();
+                     window.location.reload();
                 }else{
                     swal({
                         title: "",
