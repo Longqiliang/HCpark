@@ -49,16 +49,22 @@ class Activity extends Admin
             $data = input('');
             $activity = new ActivityModel();
             $park_id = session('user_auth')['park_id'];
+
             $data['start_time'] = strtotime($data['start_time']);
+            if(empty($data['name'])){
+                return  $this->error('活动名字必填');
+            }
+            if($data['start_time']==0){
+              return  $this->error('开始时间未填');
+            }
             $data['park_id'] = $park_id;
             if (empty($data['id'])) {
                 unset($data['id']);
-                $info = $activity->validate(false)->
-                save($data);
+                $info = $activity->save($data);
             }else{
-                $info = $activity->validate(false)->save($data,['id'=>$data['id']]);
+                $info = $activity->save($data,['id'=>$data['id']]);
             }
-            if ($info||$info==0) {
+            if ($info) {
                 return $this->success("保存成功", Url('Activity/index'));
             } else {
                 return $this->error($activity->getError());
