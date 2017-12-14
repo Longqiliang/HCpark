@@ -271,6 +271,9 @@ ul.list li.break:before{
 .icon-companyManage{
     background-image: url(/index/images/personal/icon-companyManage.png);
 }
+.icon-activity{
+    background-image: url(/index/images/personal/icon-activity.png);
+}
 .ft-right{
     float: right;
     color: #999;

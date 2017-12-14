@@ -15,7 +15,7 @@
         <div class="my-icon-flag "  v-if="state(item.status,item.start_time) == 'un'" ><span>预</span></div>
         <div class="active-info">
             <div class="active-title"><span>{{item.name}}</span></div>
-            <div class="active-time">开始时间：{{item.start_time | timeToString}}</div>
+            <div class="active-time">开始时间：{{item.start_time?item.start_time:'未定' | timeToString}}</div>
         </div>
     </div>
 </div>
@@ -50,6 +50,30 @@
         el: '#app',
         data: {
             baseInfo:{$list},
+        },
+        created(){
+            var yu=[],
+                    hot=[],
+                    end=[],
+                    other=[],
+                    baseInfo=this.baseInfo,
+                    now=Date.parse(new Date())/1000;
+            console.log(baseInfo)
+            for(var i=0 ;i<baseInfo.length;i++){
+                if(baseInfo[i].start_time < now){
+                    end.push(baseInfo[i])
+                }else{
+                    if(baseInfo[i].status == 2){
+                        hot.push(baseInfo[i])
+                    }else if(baseInfo[i].status == 1){
+                        yu.push(baseInfo[i])
+                    }else{
+                        other.push(baseInfo[i])
+                    }
+                }
+            }
+            console.log(hot,yu,end,other)
+            this.baseInfo = hot.concat(yu.concat(end.concat(other)));
         },
         methods: {
             state(status ,time){
