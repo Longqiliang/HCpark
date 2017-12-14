@@ -16,6 +16,7 @@ use EasyWeChat\Core\Exception;
 use app\index\model\CardType;
 use think\Db;
 use think\Log;
+use app\index\model\Like;
 
 /**
  * 帖子模块
@@ -70,14 +71,20 @@ class Card extends Base
     public function getList()
     {
         $len = input('len', 0);
+        $uid = session("userId");
+        $like = new Like();
         $card_model = new CardModel();
+        $cardType = new CardType();
         $park_id = session("park_id");
         $map = ['park_id' => $park_id, 'status' => 1];
         $list = $card_model->where($map)->order("is_top desc,top_time desc,id  desc")->limit($len, 6)->select();
         foreach ($list as $k => $v) {
             $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
+            $list[$k]['type'] = json_decode($list[$k]['type']);
+            $list[$k]['type'] = $cardType->getCardTypeById( $list[$k]['type']);
             unset($list[$k]['getUserHeader']);
+            $list[$k]['like'] = $like->isLike($list[$k]['id'],$uid);
         }
         $this->assign('list',json_encode($list));
         //return json_encode($list);
