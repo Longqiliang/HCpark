@@ -19,8 +19,6 @@ class Activity extends Model{
 
     protected  $insert = [
         'create_time' =>NOW_TIME
-
-
     ];
 
     public function user()
