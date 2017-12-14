@@ -1,0 +1,128 @@
+{extend name="base/common"}
+
+{block name="style"}
+<style>
+    .shadow{width: 100%;height: 100%;position: absolute;left: 0;top: 0;background: rgba(0,0,0,0.4);z-index: 88;}
+</style>
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>帖子管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                帖子管理
+            </li>
+            <li class="active">
+                <strong><a href="{:Url('Card/cardIndex')}">列表页</a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>帖子列表</h5>
+                    <div class="ibox-tools">
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input class="i-checks check-all" type="checkbox"></th>
+                                <th>帖子标题</th>
+                                <th>标签</th>
+                                <th>用户名</th>
+                                <th>创建时间</th>
+                                <th>更新时间</th>
+                                <th>是否置顶</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="vo"}
+                            <tr>
+                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                {eq name="$vo.status" value="0"}
+                                <td>{$vo.title}</td>
+                                {else/}
+                                <td>{$vo.title}</td>
+                                {/eq}
+                                <td>{$vo.type_name}</td>
+                                <td>{$vo.username}</td>
+                                <td>{$vo.create_time|time_format='Y-m-d H:i'}</td>
+                                <td>{$vo.update_time|time_format='Y-m-d H:i'}</td>
+                                <td>{$vo.status_text}</td>
+                                <td>{eq name="$vo.is_top" value="1"}置顶{/eq}</td>
+                                <td>
+                                    {eq name="$vo.is_top" value="1"}
+                                    <a href="javascript:setTop('{$vo.id}',0)" >取消置顶</a>
+                                    {else／}
+                                    <a href="javascript:setTop('{$vo.id}',1)" >置顶</a>
+                                    {/eq}
+
+                                    <a class="confirm" href="{:Url('Card/preview?id='.$vo['id'])}">编辑</a>
+                                    <a class="confirm ajax-del" href="{:Url('Card/delete?id='.$vo['id'])}">删除</a>
+                                    <a class="confirm" href="{:Url('Card/comments?id='.$vo['id'])}">评论列表</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="page">{$list->render();}</div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<iframe id="iframe" src="" style="height: 80%;width: 392px;z-index: 99;position: absolute;top: 10%;border: 0;left: 32%;background: #fff;display: none;" scrolling="auto" seamless></iframe>
+<div class="shadow" style="display: none"></div>
+{/block}
+
+{block name="script"}
+<script src="/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+    function setTop(id,uid){
+        $.ajax({
+            type:"post",
+            url:"{:Url('Card/setTop')}",
+            data:{id:id,uid:uid},
+            success:function(msg){
+                if(msg['code'] == 1){
+                    updateAlert("置顶成功,稍后页面刷新～","success");
+                    setTimeout(function(){
+                        window.location.reload();
+                    },3000);
+                } else {
+                    warning({msg:msg['msg']});
+                    return;
+                }
+            }
+        });
+    }
+</script>
+{/block}

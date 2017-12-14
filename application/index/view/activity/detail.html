@@ -8,8 +8,8 @@
         margin: 0;
     }
     .btn-end{
-        background-color: #ddd;
-        color: #fff;
+        background-color: #E5E5E5;
+        color: #999999;
     }
     .btn-joined{
         box-sizing: border-box;
@@ -28,9 +28,10 @@
             <!--<div class="active-detail-title"><span v-html="titleWarp('希垦科技园区企业技术经验探讨会')"></span></div>-->
         <!--</div>-->
     <!--</div>-->
-    <div class="active-item" :style="'background-image: url('+ baseInfo.front_cover +')'" @click="jumpTo(baseInfo.id)">
+    <div class="active-item" :style="'background-image: url('+ baseInfo.front_cover +')'">
         <div class="my-icon-flag my-icon-hot" v-if="state(baseInfo.status,baseInfo.start_time) == 'hot'" ><span>HOT</span></div>
-        <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'end'"><span>活动已结束</span></div>
+        <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'cancel'"><span>活动已结束</span></div>
+        <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'end'"><span>活动取消</span></div>
         <div class="my-icon-flag "  v-if="state(baseInfo.status,baseInfo.start_time) == 'un'" ><span>预</span></div>
         <div class="active-info">
             <div class="active-detail-title"><span v-html="titleWarp(baseInfo.name)"></span></div>
@@ -45,7 +46,7 @@
                 <span class="table-row-header">活动地点：{{baseInfo.activity_address}}</span>
             </div>
             <div class="table-row">
-                <span class="table-row-header">活动人数：{{baseInfo.activity_number}}</span>
+                <span class="table-row-header">活动人数：{{baseInfo.activity_number ? (count+'/'+baseInfo.activity_number):'不限'}}</span>
             </div>
             <div class="table-row-block-header">活动介绍：</div>
             <div class="table-row-block" style="padding-bottom: 2rem">
@@ -55,8 +56,11 @@
         </div>
     </div>
     <div class="btn-box">
-        <div class="btn btn-block btn-end" v-if="baseInfo.start_time*1000 < Date.parse(new Date())" >已结束</div>
+        <div class="btn btn-block btn-end" v-if="baseInfo.start_time*1000 < Date.parse(new Date())" >活动已结束</div>
         <div class="btn btn-block btn-joined" v-else-if="baseInfo.is_sign === 'yes'">已报名</div>
+        <div class="btn btn-block btn-end" v-else-if="baseInfo.status == 1" >活动暂未开始</div>
+        <div class="btn btn-block btn-end" v-else-if="baseInfo.status == 0" >活动已取消</div>
+        <div class="btn btn-block btn-end" v-else-if="baseInfo.activity_number && count === baseInfo.activity_number " >人数已满</div>
         <div class="btn btn-block btn-success" @click="jumpTo(baseInfo.id)" v-else>我要报名</div>
     </div>
 </div>
@@ -90,6 +94,7 @@
     var app = new Vue({
         el: '#app',
         data: {
+            count:{$count},
             baseInfo:{$info}
         },
         methods: {
@@ -100,6 +105,8 @@
                             return 'un'
                         }else if(status == 2){
                             return 'hot'
+                        }else if(status == 0){
+                            return 'cancel'
                         }
                     }else{
                         return 'end'

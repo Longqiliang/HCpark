@@ -1,0 +1,209 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style>
+    .text-center{
+        font-size: 25px;
+    }
+    .img{
+        width: 100%;
+        height: 200px;
+        margin-bottom: 10px;
+    }
+</style>
+{/block}
+
+{block name="page-header"}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>帖子审核</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="{:Url('Card/cardIndex')}">帖子列表</a>
+            </li>
+            <li class="active">
+                <strong>预览审核</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5></h5>
+                    <div class="ibox-tools">
+                        <a href="javascript:window.history.go(-1);" class="btn btn-white btn-sm"><i class="fa fa-reply"></i> 返回</a>
+                    </div>
+                </div>
+                <div class="ibox-content all">
+                    <form id="form" class="form-horizontal" method="post">
+                        <div class="form-group card">
+                            <div class="col-lg-1 text-right control-label card-lab">
+                                <label>帖子图片:</label>
+                            </div>
+                            <div class="card-img col-lg-11">
+                           {volist name="msg.list_img" id="img"}
+                           <div class="col-lg-3">
+                               <a href="{$img}" class="front_cover">
+                               <img src="{$img}" alt="" class="img">
+                               </a>
+                           </div>
+                           {/volist}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>标题:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input type="text" class="form-control form_title" value="{$msg.title || default=''}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>标签:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input type="text" class="form-control form_title" value="{$msg.type_name || default=''}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 text-right control-label">
+                                <label>发布用户:</label>
+                            </div>
+                            <div class="col-lg-11">
+                                <input type="text" class="form-control form_title" value="{$msg.username || default=''}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-1 control-label">
+                                <label>内容:</label>
+                            </div>
+                            <div class="col-lg-11">
+
+                                <textarea name="" id="" cols="80" rows="10" readonly>
+                                    {$msg.content}
+                                </textarea>
+
+                            </div>
+                        </div>
+
+
+                        <input type="hidden" name="id" value="{$msg.id}">
+                        {eq name="$msg.status" value="0" }
+                        <div class="form-group">
+                            <div class="col-lg-11 col-lg-offset-1">
+                                <a class=" btn btn-primary" data-toggle="modal" href="#modal-form" >审核</a>
+                            </div>
+                        </div>
+                        {/eq}
+                        <div class="selblo"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="update">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title text-center">审核</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center zt-big-padding">是否通过审核？</p>
+
+                    <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10"><input type="text" name="check_remark"   class="form-control" placeholder="请填写备注信息，允许为空"></input></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center zt-flex zt-space-around">
+                            <!--<input type="button"  class="form-control"    value="确认提交" onclick="changeStatus()" style="background-color: #1ab394;color: #fff;">-->
+                            <a class="btn btn-primary " onclick="postEdd(1)">审核通过</a>
+                            <a class="btn btn-warning " onclick="postEdd(2)">审核不通过</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script>
+    $(function() {
+        //    单选按钮
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+        highlight_subnav("{:Url('Card/cardIndex')}");
+    });
+        //发布
+       function postEdd(id){
+            var it=$(this);
+            var data = {
+                id:$("input[name='id']").val(),
+                status:id,
+                remark:$("input[name='check_remark']").val(),
+            };
+            $.ajax({
+                type:"post",
+                url:"{:Url('Card/review')}",
+                data:data,
+                success:function(data){
+                    if(data.code == 1){
+                        if (data.url) {
+                            updateAlert(data.msg + ' 页面即将自动跳转~','success');
+                        }else{
+                            updateAlert(data.msg ,'success');
+                        }
+                        it.prop('disabled','true');
+                        it.prev().prop('disabled','true');
+                        setTimeout(function(){
+                            if (data.url) {
+                                location.href=data.url;
+                            } else {
+                                location.reload();
+                            }
+                            it.removeAttr('disabled');
+                            it.prev().removeAttr('disabled')
+                        },2000);
+                    } else {
+                        updateAlert(data.msg, 'error');
+                        it.attr('disabled','true');
+                        it.prev().prop('disabled','true');
+                        setTimeout(function(){
+                            it.removeAttr('disabled');
+                            it.prev().removeAttr('disabled')
+                        },2000);
+                    }
+                }
+            });
+            return false;
+        };
+    $(".front_cover").imgbox({
+        overlayShow: false,
+        hideOnContentClick: true,
+        slideshow: false,
+        theme: 'dark',
+        alignment: 'center',       // Position - may be auto OR center.
+        allowMultiple: false,
+    });
+
+</script>
+{/block}

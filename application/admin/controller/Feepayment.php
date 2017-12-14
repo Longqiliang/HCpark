@@ -242,7 +242,7 @@ class Feepayment extends Admin
             $image = unserialize($feepayment['payment_voucher']);
 
             foreach($image as $value){
-                $html .= "<div class='col-md-4'><img class='front_cover_img' src='$value' style='width: 150px;height: 200px;'></div>";
+                $html .= "<div class='col-md-4'><img class='front_cover_img' src='$value' style='width: 400px;height: 600px;margin: 0 auto;'></div>";
 
             }
         }

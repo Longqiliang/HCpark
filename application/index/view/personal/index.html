@@ -84,9 +84,9 @@
         <!--<li><a href="{:Url('Personal/message')}" class="item-pull-right"><span class="icon icon-message"></span><p>我的消息</p></a></li>-->
         <li><a href="{:Url('Personal/service?c=0')}" class="item-pull-right"><span class="icon icon-service"></span><p>我的服务</p></a></li>
         <li><a href="{:Url('Personal/collection?c=1')}" class="item-pull-right"><span class="icon icon-collect"></span><p>我的收藏</p></a></li>
-        <li><a href="{:Url('Personal/myactivity')}" class="item-pull-right"><span class="icon icon-service"></span><p>我的活动</p></a></li>
+        <li><a href="{:Url('Personal/myactivity')}" class="item-pull-right"><span class="icon icon-activity"></span><p>我的活动</p></a></li>
         {eq name='userinfo.news_check' value='yes'}
-        <li><a href="{:Url('Personal/myCheck?c=1')}" class="item-pull-right"><span class="icon icon-check"></span><p>我的审核</p></a></li>
+        <li><a href="{:Url('Personal/myCheck?c=0')}" class="item-pull-right"><span class="icon icon-check"></span><p>我的审核</p></a></li>
         {/eq}
         {eq name='userinfo.company_check' value='yes'}
         <li><a href="{:Url('Personal/companyManage?c=0')}" class="item-pull-right"><span class="icon icon-companyManage"></span><p>权限管理</p></a></li>

@@ -2,7 +2,8 @@
 
 {block name="style"}
 <title>我的审核</title>
-<link rel="stylesheet" href="/index/css/personal/collection.css">
+<!--<link rel="stylesheet" href="/index/css/personal/collection.css">-->
+<link rel="stylesheet" href="/index/css/personal/service.css">
 <style>
     .content>img{
         width:100%;
@@ -23,6 +24,37 @@
     #app .tab{
         flex: 1;
     }
+    /**加载更多**/
+
+    .my-footer{
+        font-size: 1.2rem;
+        text-align: center;
+        color:#999;
+        padding:1rem 0;
+    }
+    .my-footer>p{
+        text-align: center;
+        font-size: 1.5rem;
+        line-height: 80vh;
+    }
+    .my-footer>div{
+        display: -webkit-flex;
+        display: inline-flex;
+        vertical-align: middle;
+        justify-content: center;
+        align-items: center;
+    }
+    .my-loading-text{
+        margin-left: 1rem;
+    }
+    .no-message{
+        width:100%;
+        display: block;
+        margin:0 auto;
+    }
+    .notice>a{
+        background-color: #fff;
+    }
 </style>
 {/block}
 
@@ -30,17 +62,23 @@
 <div id="app">
     <div class="header">
         <div class="tabs clear">
-            <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >未审核</span></div>
-            <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">已审核</span></div>
+            <div class="tab tab1"  @click="tabChange(0)"><span  :class="{active:active==0}">{{uncheck.index===''?'未审核':uncheck.type[uncheck.index].text}} <span  class="my-icon-arrow" :class="{close:!uncheck.isShow}" v-show="active==0"></span>  </span>  </div>
+            <div class="tab" @click="tabChange(1)"><span :class="{active:active==1}" >{{checked.index===''?'已审核':checked.type[checked.index].text}} <span  class="my-icon-arrow" :class="{close:!checked.isShow}" v-show="active==1"></span>  </span>  </div>
         </div>
-
     </div>
     <div class="content"  v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
-        <div class="notices"  v-show="active==0" >
+        <div class="notices"  v-show="active==0">
+            <div class="sieving-box">
+                <div class="sieving-bg" :class="{active:uncheck.isShow}"  @click="toggleSieving"></div>
+                <ul class="sieving-list" :class="{active:uncheck.isShow}">
+                    <li @click="sievingChange('')" :class="{active:''===uncheck.index}">全部分类</li>
+                    <li v-for="(v,key) in uncheck.type" @click="sievingChange(key)" :class="{active:key===uncheck.index}">{{v.text}}</li>
+                </ul>
+            </div>
             <div class="notice notify">
-                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in checked" v-if="item.status!==0">
+                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in checked.list" v-if="item.status!==0">
                     <div class="list-right">
                         <div class="title ">{{item.title}}</div>
                         <div class="clear time">
@@ -50,11 +88,11 @@
                     </div>
                 </a>
             </div>
-            <div v-if="!checked.length" class="content">
+            <div v-if="!uncheck.list.length" class="content">
                 <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
             </div>
-            <div class="my-footer"  v-if="checked.length">
-                <span v-if="!checkedCanLoad">没有更多了</span>
+            <div class="my-footer"  v-if="uncheck.list.length">
+                <span v-if="!uncheckCanLoad">没有更多了</span>
                 <span v-else-if="!loading">上拉加载更多</span>
                 <div  class="my-loading" v-else>
                     <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
@@ -62,8 +100,15 @@
             </div>
         </div>
         <div class="notices" v-show="active==1">
+            <div class="sieving-box">
+                <div class="sieving-bg" :class="{active:checked.isShow}"  @click="toggleSieving"></div>
+                <ul class="sieving-list" :class="{active:checked.isShow}">
+                    <li @click="sievingChange('')" :class="{active:''===checked.index}">全部分类</li>
+                    <li v-for="(v,key) in checked.type" @click="sievingChange(key)" :class="{active:key===checked.index}">{{v.text}}</li>
+                </ul>
+            </div>
             <div class="notice notify">
-                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in uncheck" v-if="item.status===0">
+                <a :href="'/index/personal/newscheck/id/'+item.id" class="list clear" v-for="item in checked" v-if="item.status===0">
                     <div class="list-right">
                         <div class="title ">{{item.title}}</div>
                         <div class="clear time">
@@ -73,11 +118,11 @@
                     </div>
                 </a>
             </div>
-            <div v-if="!uncheck.length" class="content">
+            <div v-if="!checked.list.length" class="content">
                 <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
             </div>
-            <div class="my-footer"  v-if="uncheck.length">
-                <span v-if="!uncheckCanLoad">没有更多了</span>
+            <div class="my-footer"  v-if="checked.list.length">
+                <span v-if="!checkedCanLoad">没有更多了</span>
                 <span v-else-if="!loading">上拉加载更多</span>
                 <div  class="my-loading" v-else>
                     <mt-spinner :type="3"></mt-spinner><span class="my-loading-text">加载中...</span>
@@ -111,77 +156,149 @@
         el:'#app',
         data:{
             active:0,
-            checked:{$checked},
-            uncheck:{$uncheck},
             loading:false,
-            canLoad:true,
             checkedCanLoad:true,
-            uncheckCanLoad:true
+            uncheckCanLoad:true,
+            uncheck:{
+                list:[],
+                canShow:true,
+                isShow:false,
+                type:[
+                    {news_type:1,text:'新闻通告'},
+                    {news_type:2,text:'政策通告'},
+                    {news_type:3,text:'好文分享'},
+                ],
+                will_index:'',
+                index:''
+            },
+            checked:{
+                list:[],
+                canShow:false,
+                isShow:false,
+                type:[
+                    {news_type:1,text:'新闻通告'},
+                    {news_type:2,text:'政策通告'},
+                    {news_type:3,text:'好文分享'},
+                ],
+                will_index:'',
+                index:''
+            },
+        },
+        updata(){
+            console.log('更新中。。。')
         },
         created(){
-//            if(this.message){
-//                for(var i=0;i<this.message.length;i++){
-//                    if(this.message[i].status===0){
-//                        this.uncheck.push(this.message[i])
-//                    }else{
-//                        this.checked.push(this.message[i])
-//                    }
-//                }
-//            }
-            if(this.checked.length<6){
-                this.checkedCanLoad=false
-            }else if(this.uncheck.length<6){
-                this.uncheckCanLoad=false
-            }
             var c =  parseInt(window.location.href.split("mycheck/c/")[1]);
-            var co = this.getCookie("type");
-            if(co == 20 || co == 21){
-                c = co - 20;
-            };
-            this.active=c;
-            this.isOut();
+            var myCheckActive = window.sessionStorage.getItem('myCheckActive');
+            if(myCheckActive){
+                this.active=myCheckActive;
+            }else{
+                this.active=c;
+            }
+            var news_type = sessionStorage.getItem("news_type");
+            if(news_type){
+                if(this.active == 0){
+                    this.uncheck.index = parseInt(news_type);
+                    this.uncheck.isShow=false;
+                    this.uncheck.canShow=true;
+                    this.checked.isShow=false;
+                    this.checked.canShow=false
+                }else{
+                    this.checked.index = parseInt(news_type);
+                    this.uncheck.isShow=false;
+                    this.uncheck.canShow=false;
+                    this.checked.isShow=false;
+                    this.checked.canShow=true
+                }
+            }
+            this.loadMore()
         },
         methods:{
+            loadMore1(){
+                console.log('gundongzhong')
+            },
+            sievingChange(key){
+                var now = '',
+                        _this = this;
+                if(_this.active===0){
+                    now = _this.uncheck;
+                    _this.uncheckCanLoad = true;
+                }else{
+                    now = _this.checked;
+                    _this.checkedCanLoad = true;
+                }
+                if(now.index === key){
+                    console.log(now.index,key)
+                    return
+                }else{
+                    console.log('loadMore1')
+                    now.index = key;
+                    now.list = [];
+                    sessionStorage.setItem("news_type", key);
+                    _this.loadMore();
+                    _this.toggleSieving();
+                }
+            },
+            toggleSieving(){
+                var _this =this,
+                        now = '';
+                if(_this.active===0){
+                    now = _this.uncheck;
+                }else{
+                    now = _this.checked
+                }
+                now.isShow = !now.isShow;
+            },
             loadMore(){
                 var _this=this,
                         data={};
                 if(_this.active===0){
-                    if(_this.loading || !_this.checkedCanLoad){
-                        return
-                    }
-                    data.length = _this.checked.length;
-                    data.type = 1
-                }else{
                     if(_this.loading || !_this.uncheckCanLoad){
+                        console.log(1)
                         return
                     }
-                    data.length = _this.checked.length;
-                    data.type = 2
+                    data.length = _this.uncheck.list.length;
+                    data.type = 1;
+                    if(_this.uncheck.index!==''){
+                        data.news_type = _this.uncheck.type[_this.uncheck.index].news_type;
+                    }else{
+                        data.news_type = ''
+                    }
+                }else{
+                    if(_this.loading || !_this.checkedCanLoad){
+                        console.log(2)
+                        return
+                    }
+                    data.length = _this.checked.list.length;
+                    data.type = 2;
+                    if(_this.checked.index!==''){
+                        data.news_type = _this.checked.type[_this.checked.index].news_type;
+                    }else{
+                        data.news_type = ''
+                    }
                 }
+                console.log(data)
                 _this.loading = true;
                 _this.$http.post('/index/personal/mycheck',data).then(function (res) {
                     _this.loading = false;
                     if(res.data.code === 1){
                         var info = JSON.parse(res.data.data);
+                        console.log(info)
+                          if(data.type===1){
+                              _this.uncheck.list=info;
+                          }else{
+                              _this.checked.list = info;
+                          }
                         if(info.length<6){
-                            if(_this.active===0){
-                                _this.checkedCanLoad=false;
-                            }else{
+                            if(data.type===1){
                                 _this.uncheckCanLoad=false;
+                            }else{
+                                _this.checkedCanLoad=false;
+                            }
+                        }
 
-                            }
-                        }
-                        if(data.type===1){
-                            for(var i=0;i<info.length;i++){
-                                _this.checked.push(info[i])
-                            }
-                        }else{
-                            for(var i=0;i<info.length;i++){
-                                _this.uncheck.push(info[i])
-                            }
-                        }
                     }else{
-                        if(_this.active===0){
+                        if(data.type===1){
                             _this.checkedCanLoad=false;
                         }else{
                             _this.uncheckCanLoad=false;
@@ -200,48 +317,37 @@
                 return html += '</li>'
             },
             tabChange(key){
-                this.active=key;
-                this.setCookie("type",key+20);
-            },
-            //退出清理tab缓存
-            isOut(){
-                var the=this;
-                the.pushHistory();
-                setTimeout(function(){
-                    window.addEventListener("popstate", function(e) {
-                        the.delCookie("type");
-                        window.history.go(-1);
-                    }, false);
-                },200)
-            },
-            pushHistory(){
-                var sta = {
-                    title: "title"
-                };
-                if( window.history.state === null ){
-                    window.history.pushState( sta, "title" );
+                var _this = this;
+                _this.active=key;
+                window.sessionStorage.setItem('myCheckActive',_this.active);
+                if(key===0){
+//                    能否显示筛选列表 能则显示 不能则改为能
+                    if(this.uncheck.canShow){
+                        this.toggleSieving();
+                    }else{
+                        this.uncheck.canShow=true;
+                        sessionStorage.setItem("news_type", this.uncheck.index);
+                        if(! _this.uncheck.list.length){
+                            _this.loadMore();
+                        }
+                    }
+//                    关闭筛选列表
+                    this.checked.isShow = false;
+                    this.checked.canShow = false
+                }else{
+                    if(this.checked.canShow){
+                        this.toggleSieving();
+                    }else{
+                        this.checked.canShow=true;
+                        sessionStorage.setItem("news_type", this.checked.index);
+                        if(! _this.checked.list.length){
+                            _this.loadMore();
+                        }
+                    }
+                    this.uncheck.isShow=false;
+                    this.uncheck.canShow=false
                 }
             },
-            setCookie( name, value ){
-                var Days = 30;
-                var exp = new Date();
-                exp.setTime( exp.getTime() + Days * 24 * 60 * 60 * 1000 );
-                document.cookie = name + "=" + value + ";expires=" + exp.toGMTString();
-            },
-            getCookie( name ){
-                var arr, reg = new RegExp( "(^| )" + name + "=([^;]*)(;|$)" );
-                if( arr = document.cookie.match( reg ) )
-                    return arr[ 2 ];
-                else
-                    return null;
-            },
-            delCookie( name ){
-                var exp = new Date();
-                exp.setTime( exp.getTime() - 1 );
-                var cval = getCookie( name );
-                if( cval != null )
-                    document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
-            }
         }
     })
 </script>
