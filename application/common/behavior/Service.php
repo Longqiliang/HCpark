@@ -19,7 +19,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => 15824167420,
+            'touser' => $toUser,
             'agentid' => $config['agentid'],
             'msgtype' => 'text',
             'text' => [
@@ -30,11 +30,11 @@ class Service
         return $weObj->sendMessage($data);
     }
 
-    private static function sendNews($config, $message, $toUser)
+    private static function sendNews($config, $message, $toUser="@all")
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => 15824167420,
+            'touser' => $toUser,
             'agentid' => $config['agentid'],
             'msgtype' => 'news',
             'news' => [
@@ -57,7 +57,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => 15824167420,
+            'touser' => $toUser,
             'agentid' => $config['agentid'],
             'msgtype' => 'textcard',
             'textcard' => [
@@ -77,11 +77,14 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendUserMessage($message, $toUser = 15824167420)
+    public static function sendUserMessage($message, $toUser )
     {
         $config = config('user');
-
-        return self::sendMessage($config, $message,15824167420);
+        $is= substr_count($message['url'], 'https');
+        if($is==0){
+            $message['url']= str_replace("http","https",$message['url']);
+        }
+        return self::sendMessage($config, $message,$toUser);
     }
 
     /**
@@ -90,11 +93,14 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendNewsMessage($message, $toUser = 15824167420)
+    public static function sendNewsMessage($message, $toUser )
     {
         $config = config('news');
-
-        return self::sendMessage($config, $message, 15824167420);
+        $is= substr_count($message['url'], 'https');
+        if($is==0){
+            $message['url']= str_replace("http","https",$message['url']);
+        }
+        return self::sendMessage($config, $message, $toUser);
     }
 
     /**
@@ -109,11 +115,14 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendUserNews($message, $toUser = 15824167420)
+    public static function sendUserNews($message, $toUser )
     {
         $config = config('user');
-
-        return self::sendNews($config, $message,15824167420);
+        $is= substr_count($message['url'], 'https');
+        if($is==0){
+            $message['url']= str_replace("http","https",$message['url']);
+        }
+        return self::sendNews($config, $message,$toUser);
     }
 
     /**
@@ -128,12 +137,17 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendNewsNews($message, $toUser =15824167420)
+    public static function sendNewsNews($message, $toUser )
     {
         $config = config('news');
-
-        return self::sendNews($config, $message,15824167420);
+        $is= substr_count($message['url'], 'https');
+        if($is==0){
+            $message['url']= str_replace("http","https",$message['url']);
+        }
+        return self::sendNews($config, $message,$toUser);
     }
+
+
 
 
 
@@ -149,13 +163,40 @@ class Service
      * @param string $toUser 发送对象，如果为空则发送给全体
      * @return array|bool
      */
-    public static function sendPersonalMessage($message, $toUser = '@all')
+    public static function sendPersonalMessage($message, $toUser)
     {
         $config = config('personal');
 
-        return self::sendTextCard($config, $message,15824167420);
+        $is= substr_count($message['url'], 'https');
+        if($is==0){
+            $message['url']=  str_replace("http","https",$message['url']);
+        }
+        return self::sendTextCard($config, $message,$toUser);
     }
 
+
+    /**
+     * 园区活动发送文本卡片
+     * @param array $message 新闻数据
+     * [
+     *     'title' => $message['title'],
+     *     'description' => $message['description'],
+     *     'url' => $message['url'],
+     *
+     * ]
+     * @param string $toUser 发送对象，如果为空则发送给全体
+     * @return array|bool
+     */
+    public static function sendActivityMessage($message, $toUser)
+    {
+        $config = config('activity');
+
+        $is= substr_count($message['url'], 'https');
+        if($is==0){
+            $message['url']=  str_replace("http","https",$message['url']);
+        }
+        return self::sendTextCard($config, $message,$toUser);
+    }
 
 
     //查找园区id
@@ -172,5 +213,28 @@ class Service
             return $this->findParkid($de['parentid']);
         }
     }
+
+    static function sendNews2($config, $message, $toUser="@all")
+    {
+        $weObj = new TPWechat($config);
+        $data = [
+            'touser' => $toUser,
+            'agentid' => $config['agentid'],
+            'msgtype' => 'news',
+            'news' => [
+                'articles' => [
+                    [
+                        'title' => $message['title'],
+                        'description' => $message['description'],
+                        'url' => $message['url'],
+                        'picurl' => $message['picurl']
+                    ]
+                ]
+            ]
+        ];
+
+        return $weObj->sendMessage($data);
+    }
+
 
 }
