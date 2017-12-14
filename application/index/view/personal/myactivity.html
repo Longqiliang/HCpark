@@ -3,7 +3,19 @@
 {block name="style"}
 <link rel="stylesheet" href="/index/css/activity/index.css">
 <title>我的活动</title>
-<style></style>
+<style>
+    .content {
+        padding-top: 50px;
+    }
+    .content>img {
+        width: 100%;
+        margin-top: 5rem;
+    }
+    .no-message {
+        display: block;
+        margin: 0 auto;
+    }
+</style>
 {/block}
 
 {block name="body"}
@@ -17,6 +29,9 @@
             <div class="active-title"><span>{{item.activity.name}}</span></div>
             <div class="active-time">开始时间：{{item.activity.start_time | timeToString}}</div>
         </div>
+    </div>
+    <div v-if="!baseInfo.length" class="content">
+        <img src="/index/images/service/card/icon-default.jpg" class="no-message" >
     </div>
 </div>
 {/block}
