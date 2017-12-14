@@ -45,4 +45,18 @@ class CardType extends Model
         $map['status'] = 1;
         return $this->where($map)->select();
     }
+
+    /**
+     * 通过数组id获取名称
+     */
+    public function getCardTypeById($data){
+        foreach($data as $k => $v){
+            $type = [] ;
+            $info = $this->where(['id' => $v])->find();
+            if ($info){
+                $type[$info['id']] = $info['interest'];
+            }
+        }
+        return $type;
+    }
 }

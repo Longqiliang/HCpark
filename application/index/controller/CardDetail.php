@@ -11,6 +11,7 @@ namespace app\index\controller;
 
 
 use app\index\model\Card as CardModel;
+use app\index\model\CardType;
 use app\index\model\Picture as PictureModel;
 use app\admin\model\Comments;
 use think\Db;
@@ -33,8 +34,12 @@ class CardDetail extends Base
         $id = input("id");
         $uid = session("userId");
         $card_model = new CardModel();
+        $card_type = new CardType();
         $card_model->where(['id' => $id])->setInc('view', 1);
         $result = $card_model->where(['id' => $id])->find();
+        $result['type'] = json_decode($result['type']);
+
+        $result['type'] = $card_type->getCardTypeById($result['type']);
         if (empty($result)) {
 
             return sendErrorMessage("无法获取帖子内容", "70010");
@@ -57,9 +62,9 @@ class CardDetail extends Base
         }
         unset($result['getUserHeader']);
         $result['comment_list'] = $this->commentList();
-        //return json_encode($result);
-        $this->assign('list',json_encode($result));
 
+        $this->assign('list',json_encode($result));
+        //return json_encode($result);
 
         return $this->fetch();
     }
