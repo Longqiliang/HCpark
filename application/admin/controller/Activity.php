@@ -81,6 +81,7 @@ class Activity extends Admin
             if($msg) {
                 $msg['start_time'] = date('Y-m-d', $msg['start_time']);
             }
+            $this->assign('time',date('Y-m-d',time()));
             $this->assign('info', $msg);
             return $this->fetch();
         }
