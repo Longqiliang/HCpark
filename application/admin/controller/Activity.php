@@ -39,6 +39,11 @@ class Activity extends Admin
         }
         $activity = new ActivityModel();
         $list = $activity->where($map)->order('start_time asc')->paginate(12,false,['query' => request()->param()]);
+
+       /* foreach ($list as $value){
+            $value['name']=msubstr( $value['name'], 0, 10,'utf-8',true);
+            $value['name']=msubstr( $value['name'], 0, 10,'utf-8',true);
+        }*/
         int_to_string($list, array(
             'status' => array(0 => "活动取消",1=>'预报名',2=>'开始报名'),
         ));
@@ -226,9 +231,9 @@ class Activity extends Admin
                     'title' => $info['name'],
                     'description' => $des,
                      'url'=>'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $data['id'],
-                    'picurl' => empty($data['front_cover'])
+                    'picurl' => empty($info['front_cover'])
                         ? 'https://' . $_SERVER['HTTP_HOST'] .'/index/images/news/news.jpg'
-                        : 'https://' . $_SERVER['HTTP_HOST'] . $data['front_cover']
+                        : 'https://' . $_SERVER['HTTP_HOST'] . $info['front_cover']
         ];
         $result =$service->sendNews2(Config('activity'),$map);
         if ($result['errcode'] == 0) {
