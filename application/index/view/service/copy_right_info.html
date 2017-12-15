@@ -121,13 +121,15 @@
         display: flex;
         box-sizing: border-box;
         align-items: center;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: flex-start;
         width:100%;
     }
     .img-box>div{
         box-sizing: border-box;
         width:26.6666vw;
+    }
+    .img-box>div:not(:last-child){
+        margin-right: 4vw;
     }
     .img-box>div>div{
         box-sizing: border-box;
@@ -201,6 +203,9 @@
         -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
         transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
     }
+    .table-block-end{
+        padding-bottom: 1.5rem;
+    }
 </style>
 {/block}
 
@@ -268,15 +273,15 @@
                 </div>
                 <div class="table-row-block">
                     <div class="table-row-block-header">产品图</div>
-                    <div class="img-box product_img_box">
+                    <div class="img-box product_img_box table-block-end">
                         <div  v-for="(img,key) in art.product_img">
-                            <div class="upload-img" v-if="img">
+                            <div class="upload-img">
                                 <img :src="img" alt="" @click="loadImg(img,art.product_img)">
                                 <i class="del-img" @click="delImg"></i>
                             </div>
                         </div>
                         <div  v-if="art.product_img.length<3">
-                            <div class="upload-box" @click="imgUpload('product_img',key)">
+                            <div class="upload-box" @click="imgUpload">
                                 <img src="/index/images/service/patent/icon-add.png" alt="">
                             </div>
                         </div>
@@ -566,7 +571,8 @@
                             if(data.code == 1){
                                 // 在获取到文件对象进行预览
                                 _this.$indicator.close();
-                                console.log(copeArr);
+//                                console.log(copeArr);
+                                console.log(data.data.path)
                                 _this.art.product_img.push( data.data.path); //保存上传后图片路径
 //                                _this.subData = Object.assign(copeArr,_this.subData)
 //                                Vue.set( _this.subData, _this.nowImgArr, _this.subData[_this.nowImgArr] )
