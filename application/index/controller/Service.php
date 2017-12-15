@@ -2190,7 +2190,7 @@ class Service extends Base
                 $data2 = $copy->where('id', $data['id'])->find();
                 if ($data['type'] == 1) {
                     //艺术作品
-                    $data2['product_img'] = json_dncode($data2['product_img']);
+                    $data2['product_img'] = json_decode($data2['product_img']);
                     $data2['type']=$data['type'];
                 }
                 $this->assign('info', json_encode($data2));
