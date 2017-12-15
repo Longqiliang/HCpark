@@ -44,7 +44,6 @@
                                 <th>标签</th>
                                 <th>用户名</th>
                                 <th>创建时间</th>
-                                <th>更新时间</th>
                                 <th>是否置顶</th>
                                 <th>状态</th>
                                 <th>操作</th>
@@ -61,8 +60,7 @@
                                 {/eq}
                                 <td>{$vo.type_name}</td>
                                 <td>{$vo.username}</td>
-                                <td>{$vo.create_time|time_format='Y-m-d H:i'}</td>
-                                <td>{$vo.update_time|time_format='Y-m-d H:i'}</td>
+                                <td>{$vo.create_time}</td>
                                 <td>{$vo.status_text}</td>
                                 <td>{eq name="$vo.is_top" value="1"}置顶{/eq}</td>
                                 <td>

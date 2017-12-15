@@ -68,9 +68,10 @@ class Card extends Base
     public function myComments(){
         $uid = session("userId");
         $comment_model = new Comments();
+        $len = input("len",0);
         $card_model = new CardModel();
         $map = ['uid' => $uid];
-        $list = $comment_model->where($map)->order('create_time desc')->select();
+        $list = $comment_model->where($map)->order('create_time desc')->limit($len,6)->select();
         foreach($list as $k => $v){
             $list[$k]['user_name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';

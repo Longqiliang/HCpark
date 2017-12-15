@@ -7,7 +7,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\Card as CardModel;
-use app\admin\model\CardType;
+use app\index\model\CardType;
 use app\common\model\WechatUser;
 use app\admin\model\Comments;
 use think\Db;
@@ -39,8 +39,8 @@ class Card extends Admin
             'status' => array(0 => "待审核", 1 => "审核通过", 2 => "审核不通过"),
         ));
         foreach ($list as $value) {
-            $type = $typeModel->get($value['type']);
-            $value['type_name'] = $type['interest'];
+            $type = json_decode($value['type']);
+            $value['type_name'] = implode("#",$typeModel->getCardTypeById($type));
             $user = $userModel->where(['userid' => $value['uid']])->find();
             $value['username'] = $user['name'];
         }
@@ -60,11 +60,10 @@ class Card extends Admin
         $id = input('id');
         $msg = $cardModel->get($id);
         $msg['list_img'] = json_decode($msg['list_img']);
+        $type = json_decode($msg['type']);
+        $msg['type_name'] = implode("#",$typeModel->getCardTypeById($type));
 
-        $type = $typeModel->get($msg['type']);
-        $msg['type_name'] = $type['interest'];
-
-        $user = $userModel->get($msg['uid']);
+        $user = $userModel->where(['userid' => $msg['uid']])->find();
         $msg['username'] = $user['name'];
 
         $this->assign('msg', $msg);
