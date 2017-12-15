@@ -141,7 +141,7 @@
             </div>
         </div>
     </div>
-    <div v-if="appid==21" id="patent">
+    <div v-if="appid==21" class="patent">
         <div class="table-box">
             <div class="table-row-box">
                 <div class="table-row">
@@ -227,7 +227,7 @@
             <button class="btn btn-block btn-warning" v-if="can_check == 'no' && info.status == '2' " @click="jumpTo">前往修改</button>
         </div>
     </div>
-    <div v-if="appid==22" id="copyRight">
+    <div v-if="appid==22" id="copyRight" class="patent" >
         <div class="table-box">
             <div v-if="info.type_check==2" >
                 <div class="table-row-box">
@@ -460,7 +460,7 @@ var app = new Vue({
             if(this.appid==21){
                 window.location.href='/index/service/patentInfo/id/'+this.info.id;
             }else if(this.appid==22){
-                window.location.href='/index/service/copyRightInfo/id/'+this.info.id;
+                window.location.href='/index/service/copyRightInfo/id/'+this.info.id+'/type/'+this.info.type_check;
             }
         },
 //        模态框控制
