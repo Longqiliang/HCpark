@@ -2151,6 +2151,8 @@ class Service extends Base
             $data['userid'] = session('userId');
             $data['park_id'] = session('park_id');
             if(isset($data['id'])){
+                  $re = $copy->_checkChange($data);
+
                   $data['status']=0;
                   $data['reply']="";
                   $res = $copy->where('id',$data['id'])->allowField(true)->update($data);
@@ -2319,18 +2321,16 @@ class Service extends Base
             $info = $patent->patentHistory();
         } elseif ($appid == 22) {
             $path = 'history_company';
-            //版权申请
-            if ($type == 1) {
                 //美术作品
-                $copy = new CopyrightArt();
-            } elseif ($type == 2) {
+                $CopyrightArt = new CopyrightArt();
+                 $info1 = $CopyrightArt->copyHistory();
                 //软著登记
-                $copy = new CopyrightSoft();
-            } elseif ($type == 3) {
+                $CopyrightSoft = new CopyrightSoft();
+                $info2 = $CopyrightSoft->copyHistory();
                 //软著撰写
-                $copy = new CopyrightSoftwrite();
-            }
-            $info = $copy->copyHistory();
+                $CopyrightSoftwrite = new CopyrightSoftwrite();
+                $info3 = $CopyrightSoftwrite->copyHistory();
+                $info =array_merge($info1,$info2,$info3);
         }
         //物业服务（记录详情页跳转地址为historyDetail）
         if ($company_type == 0) {
