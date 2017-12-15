@@ -2151,8 +2151,6 @@ class Service extends Base
             $data['userid'] = session('userId');
             $data['park_id'] = session('park_id');
             if(isset($data['id'])){
-                  $re = $copy->_checkChange($data);
-
                   $data['status']=0;
                   $data['reply']="";
                   $res = $copy->where('id',$data['id'])->allowField(true)->update($data);
