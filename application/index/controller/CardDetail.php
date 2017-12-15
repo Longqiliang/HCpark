@@ -81,7 +81,7 @@ class CardDetail extends Base
         foreach ($list as $k => $v) {
             $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
-            $list[$k]['create_time'] = date('Y-m-d',$v['create_time']);
+            //$list[$k]['create_time'] = date('Y-m-d',$v['create_time']);
             unset($list[$k]['getUserHeader']);
         }
 //
@@ -98,6 +98,7 @@ class CardDetail extends Base
      */
     public function setLike()
     {
+        $card_model = new CardModel();
         $id = input("id");
         $uid = session("userId");
         $map = ['uid' => $uid, 'aid' => $id];
@@ -109,6 +110,7 @@ class CardDetail extends Base
             $res = Db::name('like')->insert($datas);
         }
         if ($res) {
+            $card_model->where(['id' => $id])->setInc('likes',1);
 
             return $this->success("点赞成功");
         } else {
@@ -125,6 +127,7 @@ class CardDetail extends Base
      */
     public function cancelLike()
     {
+        $card_model = new CardModel();
         $id = input("id");
         $uid = session("userId");
         $map = ['uid' => $uid, 'aid' => $id, "status" => 1];
@@ -132,6 +135,7 @@ class CardDetail extends Base
         if ($like) {
             $res = Db::name('like')->where(['id' => $like['id']])->update(['status' => 0, "create_time" => time()]);
             if ($res) {
+                $card_model->where(['id' => $id])->setInc('likes',-1);
 
                 return $this->success("取消点赞成功");
             } else {
@@ -155,6 +159,7 @@ class CardDetail extends Base
      */
     public function setComment()
     {
+        $card_model = new CardModel();
         $aid = input("id");
         $uid = session("userId");
         $content = input('content');
@@ -163,7 +168,8 @@ class CardDetail extends Base
         if ($res) {
             $res['name'] = isset($res->getUserHeader->name) ? $res->getUserHeader->name : "";
             $res['header'] = isset($res->getUserHeader->avatar) ? $res->getUserHeader->avatar : "";
-            $res['create_time'] = date('Y-m-d',$res['create_time']);
+            $card_model->where(['id' => $aid])->setInc('comments',1);
+
             return $this->success("评论成功","",$res);
         } else {
 

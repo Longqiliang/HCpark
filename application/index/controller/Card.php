@@ -9,6 +9,7 @@
 
 namespace app\index\controller;
 
+use app\admin\model\Comments;
 use app\admin\model\PushMessage;
 use app\index\model\Card as CardModel;
 use app\index\model\Picture;
@@ -35,13 +36,15 @@ class Card extends Base
     {
         $uid = session("userId");
         $card_model = new CardModel();
-        $map1 = ['uid' => $uid, 'status' => 1];
-        $list1 = $card_model->where($map1)->order("id desc")->limit(6)->select();
+        //$map1 = ['uid' => $uid, 'status' => 1];
+        //$list1 = $card_model->where($map1)->order("id desc")->limit(6)->select();
         $map2 = ['uid' => $uid, 'status' => 0];
         $list2 = $card_model->where($map2)->order("id desc")->limit(6)->select();
 
         //return json_encode(['check' => $list1, "uncheck" => $list2]);
-        $this->assign('list',json_encode(['check' => $list1, "uncheck" => $list2]));
+        //$this->assign('list',json_encode(['check' => $list1, "uncheck" => $list2]));
+        $this->assign('list',json_encode($list2));
+
         return $this->fetch("user/card");
 
     }
@@ -53,14 +56,32 @@ class Card extends Base
     {
         $park_id = session("park_id");
         $card_model = new CardModel();
-        $type = input('type');
+        //$type = input('type');
         $uid = session("userId");
         $len = input('len');
-        $map = ['uid' => $uid,'status' => $type,'park_id' => $park_id];
+        $map = ['uid' => $uid,'status' => 0,'park_id' => $park_id];
         $list = $card_model->where($map)->order("id desc")->limit($len,6)->select();
 
         return json_encode($list);
 
+    }
+    public function myComments(){
+        $uid = session("userId");
+        $comment_model = new Comments();
+        $card_model = new CardModel();
+        $map = ['uid' => $uid];
+        $list = $comment_model->where($map)->order('create_time desc')->select();
+        foreach($list as $k => $v){
+            $list[$k]['user_name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
+            $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
+            $article_id = $v['aid'];
+            $articleInfo = $card_model->where(['id' => $article_id])->find();
+            $list[$k]['card_content'] = $articleInfo['content'];
+            $list[$k]['card_name'] = isset($articleInfo->getUserHeader->name)?$articleInfo->getUserHeader->name:"";
+            unset($list[$k]['getUserHeader']);
+        }
+        //return json_encode($list);
+        return $this->fetch();
     }
 
     /**
@@ -76,7 +97,7 @@ class Card extends Base
         $card_model = new CardModel();
         $cardType = new CardType();
         $park_id = session("park_id");
-        $map = ['park_id' => $park_id, 'status' => 1];
+        $map = ['park_id' => $park_id, 'status' => 0];
         $list = $card_model->where($map)->order("is_top desc,top_time desc,id  desc")->limit($len, 6)->select();
         foreach ($list as $k => $v) {
             $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";

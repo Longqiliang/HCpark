@@ -16,8 +16,15 @@ class Comments extends Model
     public function user(){
         return $this->hasOne('User','id','uid');
     }
+
+    /**
+     * 关联用户
+     * @return $this
+     */
     public function getUserHeader(){
 
         return $this->hasOne("WechatUser",'userid','uid')->field('id,name,avatar,header');
     }
+
+
 }
