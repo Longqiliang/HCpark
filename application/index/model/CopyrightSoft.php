@@ -118,12 +118,12 @@ class CopyrightSoft extends  Model
         if(empty($data)){
             return false;
         }
-        if(isset($data['software_name'])||isset($data['hardware_name'])||isset($data['software_environment'])||isset($data['main_function'])||isset($data['contact_staff'])||isset($data['contact_number'])){
+        if(!isset($data['software_name'])||!isset($data['hardware_name'])||!isset($data['software_environment'])||!isset($data['main_function'])||!isset($data['contact_staff'])||!isset($data['contact_number'])){
 
             return false;
         }
 
-        if(isset($data['software_name'])||isset($data['hardware_name'])||isset($data['software_environment'])||isset($data['main_function'])||isset($data['contact_staff'])||isset($data['contact_number'])){
+        if(empty($data['software_name'])||empty($data['hardware_name'])||empty($data['software_environment'])||empty($data['main_function'])||empty($data['contact_staff'])||empty($data['contact_number'])){
 
             return false;
         }

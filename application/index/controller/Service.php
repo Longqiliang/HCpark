@@ -2129,6 +2129,7 @@ class Service extends Base
     public function copyRightInfo()
     {
         $data = input('');
+        $a =$data;
         if (IS_POST) {
             if ($data['type'] == 1) {
                 //艺术作品
@@ -2152,11 +2153,11 @@ class Service extends Base
             if(isset($data['id'])){
                   $data['status']=0;
                   $data['reply']="";
-                  $res = $copy->where('id',$data['id'])->update($data);
+                  $res = $copy->where('id',$data['id'])->allowField(true)->update($data);
 
             }else{
 
-                $res = $copy->save($data);
+                $res = $copy->allowField(true)->save($data);
             }
 
             if ($res) {

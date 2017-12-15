@@ -111,12 +111,12 @@ class CopyrightSoftwrite extends Model
         if(empty($data)){
             return false;
         }
-        if(isset($data['create_purpose'])||isset($data['create_process'])||isset($data['description_work'])||isset($data['contact_staff'])||isset($data['contact_number'])){
+        if(!isset($data['create_purpose'])||!isset($data['create_process'])||!isset($data['description_work'])||!isset($data['contact_staff'])||!isset($data['contact_number'])){
 
             return false;
         }
 
-        if(isset($data['create_purpose'])||isset($data['create_process'])||isset($data['description_work'])||isset($data['contact_staff'])||isset($data['contact_number'])){
+        if(empty($data['create_purpose'])||empty($data['create_process'])||empty($data['description_work'])||empty($data['contact_staff'])||empty($data['contact_number'])){
 
             return false;
         }
