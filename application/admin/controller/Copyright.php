@@ -55,6 +55,13 @@ class Copyright extends Admin
              $mode = new CopyrightSoftwrite();
          }
           $data = $mode->where('id',$id)->find();
+
+          switch ($data['status']){
+              case 0:$data['status_text']="未审核"; break;
+              case 1:$data['status_text']="审核成功"; break;
+              case 2:$data['status_text']="审核失败"; break;
+              case -1:$data['status_text']="删除"; break;
+          }
           $this->assign('info',$data);
           $this->assign('type',$type);
           return $this->fetch();
