@@ -281,11 +281,13 @@ class Partymanage extends Base
                     }
                 }
             } else {
+                echo json_encode($all_company);
                 foreach ($all_company as $value) {
-                    if ($value['status'] == 1 && $value->user->park_id == $park_id) {
+                    $user_park =isset($value->user->park_id)?$value->user->park_id:1;
+                    if ($value['status'] == 1 &&$user_park == $park_id) {
                         array_push($doing, $value);
 
-                    } else if ($value['status'] == 2 && $value->user->park_id == $park_id) {
+                    } else if ($value['status'] == 2 && $user_park == $park_id) {
                         array_push($finish, $value);
                     }
                 }
@@ -700,9 +702,11 @@ class Partymanage extends Base
                 $diary = [
                     'id' => $info['id'],
                     'user_name' => isset($info->user->name) ? $info->user->name : "",
-                    'img' => json_decode($info['img']),
+                   /* 'img' => json_decode($info['img']),*/
                     'user_id' => $info['user_id'],
-                    'content' => $info['content'],
+                    'work_today' => $info['work_today'],
+                    'arrange_tomorrow' => $info['arrange_tomorrow'],
+                    'feed_back' => $info['feed_back'],
                     'create_time' => $info['create_time'] * 1000];
             }
             $list = $mDiary->where('user_id', $user_id)->select();
@@ -710,7 +714,6 @@ class Partymanage extends Base
             foreach ($list as $value) {
                 array_push($time, $value['create_time'] * 1000);
             }
-
             //当前日志详情
             // echo json_encode($diary);
             $this->assign('info', json_encode($diary));
