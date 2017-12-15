@@ -1989,7 +1989,6 @@ class Service extends Base
                 "url" => '/index/service/historyDetail/appid/3/can_check/no/id/' . $v['id']
             ];
         }
-
         return $info;
     }
 
@@ -2049,6 +2048,7 @@ class Service extends Base
     //专利申请首页 app_id=21
     public function patent()
     {
+        $this->assign('park_id',session('park_id'));
         return $this->fetch();
     }
 
@@ -2120,6 +2120,7 @@ class Service extends Base
     //版权申请 app_id=22
     public function copyRight()
     {
+        $this->assign('park_id',session('park_id'));
         return $this->fetch();
     }
 
