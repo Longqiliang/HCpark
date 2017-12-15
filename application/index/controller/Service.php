@@ -2093,7 +2093,7 @@ class Service extends Base
                 $message = [
                     "title" => "专利申请提示",
                     "description" => "您有一条新的专利申请服务待处理，点击查看详情",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/21/can_check/no/id/' . $patent->getLastInsID()
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/id/' . $patent->getLastInsID()
                 ];
                 //推送给运营
                 $reult = $this->commonSend(1, $message, '', 21);
@@ -2165,7 +2165,7 @@ class Service extends Base
                 $message = [
                     "title" => "版权申请提示",
                     "description" => "您有一条新的版权申请服务待处理，点击查看详情",
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/22/can_check/yes/type/' . $data
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/22/can_check/yes/type/' . $data
                         ['type'] . '/id/' . $copy->getLastInsID()
                 ];
                 //推送给运营
@@ -2321,7 +2321,7 @@ class Service extends Base
             $path = 'history_company';
                 //美术作品
                 $CopyrightArt = new CopyrightArt();
-                 $info1 = $CopyrightArt->copyHistory();
+                $info1 = $CopyrightArt->copyHistory();
                 //软著登记
                 $CopyrightSoft = new CopyrightSoft();
                 $info2 = $CopyrightSoft->copyHistory();
@@ -2336,7 +2336,6 @@ class Service extends Base
                 if (empty($type)) {
                     $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/id/' . $info[$k]['id'];
                 } else {
-
                     $info[$k]['url'] = '/index/service/historyDetail/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
                 }
             }
@@ -2344,12 +2343,17 @@ class Service extends Base
         } //企业服务（记录详情页跳转地址为historyDetailCompany）
         elseif ($company_type == 1) {
             foreach ($info as $k => $value) {
+               //给版权的特殊url 中type
+                if($appid==22){
+                   $type =$value['type'];
+               }
+
+
                 if (empty($type)) {
                     $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/id/' . $info[$k]['id'];
                 } else {
                     $info[$k]['url'] = '/index/service/historyDetailCompany/appid/' . $appid . '/can_check/no/type/' . $type . '/id/' . $info[$k]['id'];
                 }
-
             }
         }
         $this->assign('info', json_encode($info));
