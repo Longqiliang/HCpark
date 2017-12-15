@@ -281,7 +281,7 @@ class Partymanage extends Base
                     }
                 }
             } else {
-                echo json_encode($all_company);
+                //echo json_encode($all_company);
                 foreach ($all_company as $value) {
                     $user_park =isset($value->user->park_id)?$value->user->park_id:1;
                     if ($value['status'] == 1 &&$user_park == $park_id) {
