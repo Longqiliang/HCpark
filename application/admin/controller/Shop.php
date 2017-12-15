@@ -27,7 +27,7 @@ class Shop extends Admin
             'park_id'=>$park_id
         );
         if(!empty($search)){
-            $map['search']=['like','%'.$search.'%'];
+            $map['title']=['like','%'.$search.'%'];
         }
         $ProductModel = new ExchangeProduct();
         $list = $ProductModel->where($map)->order('id desc')->paginate(12);
