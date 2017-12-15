@@ -12,6 +12,8 @@ use app\common\model\ActivityComment;
 use app\common\model\Activity as ActivityModel;
 use PHPExcel;
 use app\common\behavior\Service;
+use app\common\model\WechatUser;
+
 class Activity extends Admin
 {
     /**
@@ -20,32 +22,32 @@ class Activity extends Admin
     public function index()
     {
         $park_id = session('user_auth')['park_id'];
-        $search= input('search');
-        $type = input('type')==null?-1:input('type');
+        $search = input('search');
+        $type = input('type') == null ? -1 : input('type');
         $map = array(
-            'status' => array('gt',-1),
-            'park_id'=>$park_id,
+            'status' => array('gt', -1),
+            'park_id' => $park_id,
 
         );
 
-        if($type!=-1) {
+        if ($type != -1) {
             if ($type || $type == 0) {
                 $map['status'] = $type;
             }
         }
 
-        if(!empty($search)){
-            $map['name']=['like','%'.$search.'%'];
+        if (!empty($search)) {
+            $map['name'] = ['like', '%' . $search . '%'];
         }
         $activity = new ActivityModel();
-        $list = $activity->where($map)->order('start_time asc')->paginate(12,false,['query' => request()->param()]);
+        $list = $activity->where($map)->order('start_time asc')->paginate(12, false, ['query' => request()->param()]);
 
-       /* foreach ($list as $value){
-            $value['name']=msubstr( $value['name'], 0, 10,'utf-8',true);
-            $value['name']=msubstr( $value['name'], 0, 10,'utf-8',true);
-        }*/
+        /* foreach ($list as $value){
+             $value['name']=msubstr( $value['name'], 0, 10,'utf-8',true);
+             $value['name']=msubstr( $value['name'], 0, 10,'utf-8',true);
+         }*/
         int_to_string($list, array(
-            'status' => array(0 => "活动取消",1=>'预报名',2=>'开始报名'),
+            'status' => array(0 => "活动取消", 1 => '预报名', 2 => '开始报名'),
         ));
 
         $this->assign('checkType', $type);
@@ -65,22 +67,22 @@ class Activity extends Admin
             $park_id = session('user_auth')['park_id'];
 
             $data['start_time'] = strtotime($data['start_time']);
-            if(empty($data['name'])){
-                return  $this->error('活动名字未填');
+            if (empty($data['name'])) {
+                return $this->error('活动名字未填');
             }
-            if(empty($data['activity_address'])){
-                return  $this->error('活动地点未填');
+            if (empty($data['activity_address'])) {
+                return $this->error('活动地点未填');
             }
-            if($data['start_time']==0){
-              return  $this->error('开始时间未填');
+            if ($data['start_time'] == 0) {
+                return $this->error('开始时间未填');
             }
 
             $data['park_id'] = $park_id;
             if (empty($data['id'])) {
                 unset($data['id']);
                 $info = $activity->save($data);
-            }else{
-                $info = $activity->save($data,['id'=>$data['id']]);
+            } else {
+                $info = $activity->save($data, ['id' => $data['id']]);
             }
             if ($info) {
                 return $this->success("保存成功", Url('Activity/index'));
@@ -88,43 +90,43 @@ class Activity extends Admin
                 return $this->error($activity->getError());
             }
         } else {
-            $a = array('1'=>'a','2'=>'b','3'=>'c','4'=>'d','5'=>'e','6'=>'f','7'=>'g','8'=>'h','9'=>'i','10'=>'j','11'=>'k','12'=>'l','13'=>'m','14'=>'n','15'=>'o');
-            $front_pic = array_rand($a,1);
-            $this->assign('front_pic',$front_pic);
-            $data= input('');
-            if(!isset($data['id'])){
-                $data['id']="";
-           }
-            $msg = ActivityModel::where('id',$data['id'])->find();
-            if($msg) {
+            $a = array('1' => 'a', '2' => 'b', '3' => 'c', '4' => 'd', '5' => 'e', '6' => 'f', '7' => 'g', '8' => 'h', '9' => 'i', '10' => 'j', '11' => 'k', '12' => 'l', '13' => 'm', '14' => 'n', '15' => 'o');
+            $front_pic = array_rand($a, 1);
+            $this->assign('front_pic', $front_pic);
+            $data = input('');
+            if (!isset($data['id'])) {
+                $data['id'] = "";
+            }
+            $msg = ActivityModel::where('id', $data['id'])->find();
+            if ($msg) {
                 $msg['start_time'] = date('Y-m-d', $msg['start_time']);
             }
-            $this->assign('time',date('Y-m-d',time()));
+            $this->assign('time', date('Y-m-d', time()));
             $this->assign('info', $msg);
             return $this->fetch();
         }
     }
+
     /*报名记录*/
     public function recordinfo()
     {
         $id = input('id');
         $search = input('search');
-        $map=[
+        $map = [
             'activity_id' => $id,
-            'status'=>['neq',-1]
+            'status' => ['neq', -1]
         ];
 
-        $Commentlist = ActivityComment::where($map)->paginate(12,false,['query' => request()->param()]);
-        int_to_string($Commentlist, array('status' => array(0 => "未审核", 1 => "审核成功", 2=>"审核失败")));
+        $Commentlist = ActivityComment::where($map)->paginate(12, false, ['query' => request()->param()]);
+        int_to_string($Commentlist, array('status' => array(0 => "未审核", 1 => "审核成功", 2 => "审核失败")));
 
         //echo ExchangeRecord::getLastSql();
-        $this->assign('activity_id',$id);
+        $this->assign('activity_id', $id);
         $this->assign("list", $Commentlist);
-        $this->assign('search',$search);
+        $this->assign('search', $search);
 
         return $this->fetch();
     }
-
 
 
     /*删除报名记录*/
@@ -135,12 +137,12 @@ class Activity extends Admin
         $data = [
             'status' => -1
         ];
-        $recordinfo = ActivityComment::where(['id'=>array('in',$id)])->update($data);
+        $recordinfo = ActivityComment::where(['id' => array('in', $id)])->update($data);
         if ($recordinfo) {
 
             return $this->success('删除成功');
         } else {
-            return $this->error('删除失败','',ExchangeRecord::getLastSql());
+            return $this->error('删除失败', '', ExchangeRecord::getLastSql());
         }
 
     }
@@ -148,13 +150,14 @@ class Activity extends Admin
     /**
      * 删除商品功能
      */
-    public function del(){
+    public function del()
+    {
         $id = input('id/a');
         $data['status'] = '-1';
-        $info = ActivityModel::where(['id'=>array('in',$id)])->update($data);
-        if($info) {
+        $info = ActivityModel::where(['id' => array('in', $id)])->update($data);
+        if ($info) {
             return $this->success("删除成功");
-        }else{
+        } else {
             return $this->error("删除失败");
         }
     }
@@ -163,18 +166,18 @@ class Activity extends Admin
     public function outexcel()
     {
         $data = input('');
-        $list = ActivityComment::where(['activity_id'=>$data['id'],'status'=>1])->select();
-        foreach ($list as $value){
-            $value['activity_name']=isset($value->activity->name)?$value->activity->name:"";
-            $value['start_time']=isset($value->activity->start_time)?$value->activity->start_time:"";
+        $list = ActivityComment::where(['activity_id' => $data['id'], 'status' => 1])->select();
+        foreach ($list as $value) {
+            $value['activity_name'] = isset($value->activity->name) ? $value->activity->name : "";
+            $value['start_time'] = isset($value->activity->start_time) ? $value->activity->start_time : "";
         }
         $excel = new PHPExcel();
         $letter = array('A', 'B', 'C', 'D', 'E', 'F', 'F', 'G');
         $celltitle = [
-            '用户编号', '用户姓名', '联系电话', '所属公司（选填）', '备注信息', '报名时间','活动名称', '活动时间'
+            '用户编号', '用户姓名', '联系电话', '所属公司（选填）', '备注信息', '报名时间', '活动名称', '活动时间'
         ];
         foreach ($list as $key => $value) {
-            $cellData[$key] = [$value['userid'], $value['name'], $value['mobile'], $value['department'], $value['remark'], $value['create_time'],$value['activity_name']  ,date('Y-m-d',$value['start_time'])];
+            $cellData[$key] = [$value['userid'], $value['name'], $value['mobile'], $value['department'], $value['remark'], $value['create_time'], $value['activity_name'], date('Y-m-d', $value['start_time'])];
         }
 
         $excel->getActiveSheet()->getRowDimension(1)->setRowHeight(30);
@@ -220,22 +223,30 @@ class Activity extends Admin
         $write->save('php://output');
 
     }
+
     //活动推送
-    public  function  send(){
+    public function send()
+    {
         $data = input('');
         $activity = new ActivityModel();
         $service = new Service();
-        $info = $activity->where('id',$data['id'])->find();
+        $info = $activity->where('id', $data['id'])->find();
+
         $des = msubstr(str_replace('&nbsp;', '', strip_tags($info['activity_description'])), 0, 36);
         $map = [
-                    'title' => $info['name'],
-                    'description' => $des,
-                     'url'=>'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $data['id'],
-                    'picurl' => empty($info['front_cover'])
-                        ? 'https://' . $_SERVER['HTTP_HOST'] .'/index/images/news/news.jpg'
-                        : 'https://' . $_SERVER['HTTP_HOST'] . $info['front_cover']
+            'title' => $info['name'],
+            'description' => $des,
+            'url' => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $data['id'],
+            'picurl' => empty($info['front_cover'])
+                ? 'https://' . $_SERVER['HTTP_HOST'] . '/index/images/news/news.jpg'
+                : 'https://' . $_SERVER['HTTP_HOST'] . $info['front_cover']
         ];
-        $result =$service->sendNews2(Config('activity'),$map);
+        $user = "";
+        $userList = WechatUser::where('park_id', $info['park_id'])->select();
+        foreach ($userList as $value) {
+            $user .= "|" . $value['userid'];
+        }
+        $result = $service->sendNews2(Config('activity'), $map,$user);
         if ($result['errcode'] == 0) {
             ActivityModel::where('id', input('id'))->update(['is_send' => 1]);
             return $this->success('推送成功', 'Activity/index');
@@ -245,38 +256,38 @@ class Activity extends Admin
 
     }
 
-    public  function  change(){
-        $data= input('');
+    public function change()
+    {
+        $data = input('');
         $activity = new ActivityModel();
         //开始报名
-        if($data['type']==1){
-         $result = $activity->where('id',$data['id'])->update(['status'=>2]);
-         if($result){
-             return $this->success('开始报名成功');
+        if ($data['type'] == 1) {
+            $result = $activity->where('id', $data['id'])->update(['status' => 2]);
+            if ($result) {
+                return $this->success('开始报名成功');
 
-         }else {
-             return $this->error("开始报名失败");
+            } else {
+                return $this->error("开始报名失败");
 
-         }
-        }
-        //取消报名
-        elseif ($data['type']==2){
-            if(empty($data['reply'])){
+            }
+        } //取消报名
+        elseif ($data['type'] == 2) {
+            if (empty($data['reply'])) {
                 return $this->error('取消原因未填');
             }
-            $map=['status'=>0,
-                  'reply'=>$data['reply']
-                ];
-            $result = $activity->where('id',$data['id'])->update($map);
+            $map = ['status' => 0,
+                'reply' => $data['reply']
+            ];
+            $result = $activity->where('id', $data['id'])->update($map);
 
-            if($result){
+            if ($result) {
                 $service = new Service();
-                $info =$activity->where('id',$data['id'])->find();
-                $userList = isset($info->user)?$info->user:array();
-               $userid = '';
+                $info = $activity->where('id', $data['id'])->find();
+                $userList = isset($info->user) ? $info->user : array();
+                $userid = '';
                 foreach ($userList as $user) {
                     if ($user['status'] == 1) {
-                     $userid .="|".$user['userid'];
+                        $userid .= "|" . $user['userid'];
                     }
                 }
                 $data = [
@@ -284,17 +295,15 @@ class Activity extends Admin
                     'description' => "您报名参加的" . $info['name'] . "因" . $info['reply'] . "原因取消，感谢您对园区活动的大力支持，请继续关注最新园区活动动态。",
                     'url' => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $info['id'],
                 ];
-                $service->sendActivityMessage($data,$userid);
+                $service->sendActivityMessage($data, $userid);
                 return $this->success('取消报名成功');
 
-            }else {
+            } else {
                 return $this->error("取消报名失败");
 
             }
         }
     }
-
-
 
 
 }
