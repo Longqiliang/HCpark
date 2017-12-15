@@ -291,7 +291,7 @@
                     </div>
                     <div class="table-row-block">
                         <div class="table-row-block-header">产品图</div>
-                        <div class="img-box product_img_box">
+                        <div class="img-box product_img_box table-block-end">
                             <div  v-for="(img,key) in info.product_img">
                                 <div class="upload-img" v-if="img"  :key="'upload-img'+key">
                                     <img :src="img" alt="" @click="loadImg(img,info.product_img)">
@@ -459,6 +459,8 @@ var app = new Vue({
         jumpTo(){
             if(this.appid==21){
                 window.location.href='/index/service/patentInfo/id/'+this.info.id;
+            }else if(this.appid==22){
+                window.location.href='/index/service/copyRightInfo/id/'+this.info.id;
             }
         },
 //        模态框控制
