@@ -118,12 +118,12 @@ class CopyrightArt extends Model
         if (empty($data)) {
             return false;
         }
-        if (!isset($data['art_name']) || !isset($data['works_description']) || !isset($data['originality_description']) || !isset($data['proudct_img']) || !isset($data['contact_staff']) || !isset($data['contact_number'])) {
+        if (!isset($data['art_name']) || !isset($data['works_description']) || !isset($data['originality_description']) || !isset($data['product_img']) || !isset($data['contact_staff']) || !isset($data['contact_number'])) {
 
             return false;
         }
 
-        if (empty($data['art_name']) || empty($data['works_description']) || empty($data['originality_description']) || empty($data['proudct_img']) || empty($data['contact_staff']) || empty($data['contact_number'])) {
+        if (empty($data['art_name']) || empty($data['works_description']) || empty($data['originality_description']) || empty($data['product_img']) || empty($data['contact_staff']) || empty($data['contact_number'])) {
 
             return false;
         }
