@@ -100,7 +100,7 @@
                         {$vo.number}
                     </td>
                     <td>
-                        {$vo.remark}
+                        {$vo.remark|mb_substr=0,30}
                     </td>
                     <td>
                         <a  href="{:Url('add','id='.$vo.id)}" class="btn-sm btn-success" style="color:#fff">查看</a>
