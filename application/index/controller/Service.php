@@ -2079,7 +2079,15 @@ class Service extends Base
             }
             $data['create_user'] = session('userId');
             $data['park_id'] = session('park_id');
+
+            if (isset($data['id'])){
+                $data['status']=0;
+                $data['reply']="";
+                $res = $patent->where('id',$data['id'])->Update($data);
+
+            }else{
             $res = $patent->save($data);
+            }
             if ($res) {
                 //专利申请提示11月28日您有一条新的专利申请服务待处理，点击查看详情
                 $message = [
@@ -2087,7 +2095,7 @@ class Service extends Base
                     "description" => "您有一条新的专利申请服务待处理，点击查看详情",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/21/can_check/no/id/' . $patent->getLastInsID()
                 ];
-                //推送给物业
+                //推送给运营
                 $reult = $this->commonSend(1, $message, '', 21);
                 return $this->success('提交成分');
             } else {
