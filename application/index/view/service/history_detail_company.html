@@ -245,11 +245,11 @@
                     </div>
                     <div class="table-row">
                         <span class="table-row-header">联系人</span>
-                        <span><a :href="'tel:'+info.contact_staff"></a>{{info.contact_staff}}</span>
+                        <span>{{info.contact_staff}}</span>
                     </div>
                     <div class="table-row">
                         <span class="table-row-header">联系电话</span>
-                        <span>{{info.contact_number}}</span>
+                        <span><a :href="'tel:'+info.contact_number">{{info.contact_number}}</a></span>
                     </div>
                 </div>
                 <div class="table-row-box">

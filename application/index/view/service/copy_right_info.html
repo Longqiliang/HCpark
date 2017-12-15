@@ -389,31 +389,22 @@
                     }
                     _this.art.id = baseInfo.id;
                     _this.itemJson = JSON.stringify(_this.art);
-//                    Object.assign(_this.art,_this.baseInfo);
                 }else if(baseInfo.type == 2){
                     for(var key in _this.soft){
                         _this.soft[key] = baseInfo[key]
                     }
                     _this.soft.id = baseInfo.id;
                     _this.itemJson = JSON.stringify(_this.soft);
-//                    Object.assign(_this.soft,_this.baseInfo);
                 }else if(baseInfo.type ==3){
                     for(var key in _this.compose){
                         _this.compose[key] = baseInfo[key]
                     }
                     _this.compose.id = baseInfo.id;
                     _this.itemJson = JSON.stringify(_this.compose);
-//                    Object.assign(_this.soft,_this.baseInfo);
                 }
             }else{
                 console.log('new')
             }
-//            获取本地储存
-//            var sessionVal = sessionStorage.getItem('patentInfo');
-//            if(sessionVal){
-//                Object.assign(_this.subData,JSON.parse(sessionVal));
-//                sessionStorage.clear('patentInfo');
-//            }
         },
         methods: {
             //            微信jssdk - 图片预览
@@ -515,12 +506,9 @@
                 return true;
             },
             isSame(baseInfo,item){
-                console.log(11111111111111111111111111111111111)
                 var _this = this;
-                console.log(item)
                 if(baseInfo.id){
                     var itemJson = JSON.stringify(item);
-                    console.log(itemJson)
                     if(itemJson === _this.itemJson){
                         _this.$toast({message:"请修改后再提交", duration:1000});
                         return false;
