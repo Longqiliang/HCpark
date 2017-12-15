@@ -2174,7 +2174,7 @@ class Service extends Base
                 return $this->error('提交失败');
             }
         } else {
-            $this->assign('info',$data);
+            $this->assign('info',json_encode($data));
             return $this->fetch('copy_right_info');
         }
     }

@@ -420,9 +420,9 @@
                             return ;
                         }
                     };
-                    if(data.explanation.length<50){
+                    if(data.explanation === ''){
                         _this.$toast({
-                            message:"简单说明不得少于50字",
+                            message:"请输入简单说明",
                             duration:1000
                         });
                         return;

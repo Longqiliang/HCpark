@@ -284,17 +284,17 @@
         </div>
         <div v-if="baseInfo.type==3">
             <div class="table-row-box">
+                <div class="table-row-block-header">创作意图</div>
+                <div class="table-row-block">
+                    <textarea v-model="compose.create_purpose" name=""cols="30" rows="10" placeholder="输入50字以内创作意图"></textarea>
+                </div>
+                <div class="table-row-block-header">创作过程</div>
+                <div class="table-row-block">
+                    <textarea v-model="compose.create_process" name=""cols="30" rows="10" placeholder="输入100字以内创作过程"></textarea>
+                </div>
                 <div class="table-row-block-header">作品描述</div>
                 <div class="table-row-block">
-                    <textarea v-model="compose.explanation" name=""cols="30" rows="10" placeholder="输入作品描述"></textarea>
-                </div>
-                <div class="table-row-block-header">独创性描述</div>
-                <div class="table-row-block">
-                    <textarea v-model="compose.explanation" name=""cols="30" rows="10" placeholder="输入独创性描述"></textarea>
-                </div>
-                <div class="table-row-block-header">独创性描述</div>
-                <div class="table-row-block">
-                    <textarea v-model="compose.explanation" name=""cols="30" rows="10" placeholder="输入独创性描述"></textarea>
+                    <textarea v-model="compose.description_work" name=""cols="30" rows="10" placeholder="输入150字以内作品描述"></textarea>
                 </div>
             </div>
             <div class="table-row-box">
@@ -327,19 +327,6 @@
         data:{
             baseInfo:{$info},
             isSubmit:false,
-            productImgName:['俯视图','仰视图 ','立体图 ','主视图 ','后视图 ','左视图','右视图'],
-            subData:{
-                type:'',
-                patent_name:'',
-                inventor:'',
-                applicant:'',
-                contact:'',
-                contact_address:'',
-                contact_number:'',
-                id_card:['',''],
-                explanation:'',
-                product_img:['','','','','','','']
-            },
             soft:{
                 software_name:'',
                 hardware_name:'',
@@ -412,22 +399,58 @@
                 var _this = this;
                 if(_this.baseInfo.type == 1){
                     if(_this.soft.software_name===''){
-                        _this.$toast({
-                            message:"请填写",
-                            duration:1000
-                        });
+                        _this.$toast({message:"请填写软件名称", duration:1000});
+                        return false;
+                    }else if(_this.soft.hardware_name===''){
+                        _this.$toast({message:"请填写硬件名称", duration:1000});
+                        return false;
+                    }else if(_this.soft.software_environment===''){
+                        _this.$toast({message:"请填写软件环境", duration:1000});
+                        return false;
+                    }else if(_this.soft.contact_staff===''){
+                        _this.$toast({message:"请填写联系人", duration:1000});
+                        return false;
+                    }else if(_this.soft.contact_number===''){
+                        _this.$toast({message:"请填写联系电话", duration:1000});
+                        return false;
+                    }else if(_this.soft.main_function===''){
+                        _this.$toast({message:"请填写主要功能和技术特点", duration:1000});
                         return false;
                     }
-                }else if(_this.baseInfo == 2){
-
-                }else if(_this.baseInfo == 3){
-
                 }
+                else if(_this.baseInfo == 2){
+                    if(_this.art.art_name === ''){
+                        _this.$toast({message:"请填写作品名称", duration:1000});
+                    }else if(_this.art.contact_staff === ''){
+                        _this.$toast({message:"请填写联系人", duration:1000});
+                    }else if(_this.art.contact_number === ''){
+                        _this.$toast({message:"请填写联系电话", duration:1000});
+                    }else if(_this.art.works_description === ''){
+                        _this.$toast({message:"请填写作品描述", duration:1000});
+                    }else if(_this.art.originality_description === ''){
+                        _this.$toast({message:"请填写独创性描述", duration:1000});
+                    }else if(!_this.art.product_img.length){
+                        _this.$toast({message:"请上传产品图", duration:1000});
+                    }
+                }
+                else if(_this.baseInfo == 3){
+                    if(_this.compose.create_purpose === ''){
+                        _this.$toast({message:"请填写创作意图", duration:1000});
+                    }else if(_this.compose.create_process === ''){
+                        _this.$toast({message:"请填写创作过程", duration:1000});
+                    }else if(_this.compose.description_work === ''){
+                        _this.$toast({message:"请填写作品描述", duration:1000});
+                    }else if(_this.compose.contact_staff === ''){
+                        _this.$toast({message:"请填写联系人", duration:1000});
+                    }else if(_this.compose.contact_number === ''){
+                        _this.$toast({message:"请填写联系电话", duration:1000});
+                    }
+                }
+                return true;
             },
             //提交
             querySubmit(){
                 var _this = this;
-                var data = _this.subData;
                 if(_this.isSubmit){
                     _this.$toast({
                         message:"提交中",
@@ -435,78 +458,29 @@
                     });
                     return ;
                 };
-                if(!data.patent_name){
-                    _this.$toast({
-                        message:"请填写专利名称",
-                        duration:1000
-                    });
+                var data = _this.subData,
+                        res = _this.validate(),
+                        data = {};
+                if(!res){
                     return ;
-                }else if(!data.inventor){
-                    _this.$toast({
-                        message:"请填写发明人",
-                        duration:1000
-                    });
-                    return ;
-                }else if(!data.applicant){
-                    _this.$toast({
-                        message:"请填写申请人",
-                        duration:1000
-                    });
-                    return ;
-                }else if(!data.contact){
-                    _this.$toast({
-                        message:"请填写联系人",
-                        duration:1000
-                    });
-                    return ;
-                }else if(!data.contact_address){
-                    _this.$toast({
-                        message:"请填写联系地址",
-                        duration:1000
-                    });
-                    return ;
-                }else if(!data.contact_number){
-                    _this.$toast({
-                        message:"请填写联系电话",
-                        duration:1000
-                    });
-                    return ;
-                }else if(!data.id_card[0] || !data.id_card[1]){
-                    _this.$toast({
-                        message:"请上传发明人身份证（正反面）",
-                        duration:1000
-                    });
-                    return ;
-                }else if(data.type==3){
-                    for(var i=0;i<data.product_img.length;i++){
-                        if(data.product_img[i]===''){
-                            _this.$toast({
-                                message:"请上传产品"+_this.productImgName[i],
-                                duration:1000
-                            });
-                            return ;
-                        }
-                    };
-                    if(data.explanation.length<50){
-                        _this.$toast({
-                            message:"简单说明不得少于50字",
-                            duration:1000
-                        });
-                        return;
-                    }else  if(data.explanation.length>100){
-                        _this.$toast({
-                            message:"简单说明不得多于100字",
-                            duration:1000
-                        });
-                        return;
-                    }
                 }
                 _this.$indicator.open({
                     text: '提交中',
                     spinnerType: 'triple-bounce'
                 });
                 _this.isSubmit = true;
-                _this.$http.post('/index/service/patentInfo',data).then(function (res) {
+                if(_this.baseInfo.type == 1){
+                    data = _this.soft;
+                    data.type = 1;
+                }else if(_this.baseInfo.type == 2){
+                    data = _this.art;
+                    data.type = 2;
+                }else{
+                    data = _this.compose;
+                    data.type = 3;
+                }
+                console.log(data)
+                _this.$http.post('/index/service/copyRightInfo',data).then(function (res) {
                     _this.isSubmit = false;
                     _this.$indicator.close();
                     if(res.data.code===1){
