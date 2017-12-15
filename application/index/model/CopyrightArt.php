@@ -77,7 +77,7 @@ class CopyrightArt extends Model
     {
         if ($type == 1) {
             //审核通过
-            $info = $this->where('id', $id)->update(['status' => 1, 'end_time' => time()]);
+            $info = $this->where('id', $id)->update(['status' => 1, 'end_time' => time(),'reply'=>$data['reply']]);
             $message = [
                 "title" => "版权申请提示",
                 "description" => "您的美术作品版权申请园区已确认，请您携带相关材料前往希垦科技园A幢2楼园区知识产权服务中心办理，点击查看详情",
