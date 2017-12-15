@@ -68,7 +68,7 @@ class CopyrightArt extends Model
             'status' => array('neq', -1),
             'park_id'=>$park_id
         ];
-        $list = $this->where($map)->field('id,status,create_time,end_time,contact_staff,contact_number,1 as type ')->select();
+        $list = $this->where($map)->field('art_name as name,id,status,create_time,end_time,contact_staff,contact_number,1 as type ')->select();
         return $list;
     }
 
@@ -135,6 +135,10 @@ class CopyrightArt extends Model
 
     }
 
+
+
+
+
     //获取艺术作品详情页
     public function copyHistoryDetail($id, $appid)
     {
@@ -146,6 +150,8 @@ class CopyrightArt extends Model
         $info['type_check'] = 1;
         return $info;
     }
+
+
 
 
 }
