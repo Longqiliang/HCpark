@@ -193,8 +193,11 @@ class Communication extends Admin
     //逻辑删除评论
     public function deleteComment() {
         $ids = input('ids/a');
-
         $result = CommunicateComment::where('id', 'in', $ids)->update(['status' => -1]);
+        $list =CommunicateComment::where('id', 'in', $ids)->find();
+        foreach ($list as $value){
+            CommunicatePosts::Where('id',$value['target_id'])->setDec('comment',1);
+        }
         if($result) {
             return $this->success('删除成功');
         } elseif(!$result) {
