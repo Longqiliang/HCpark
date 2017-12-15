@@ -143,6 +143,9 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
     height:auto;
     word-break:break-all;
 }
+.table-block-end{
+    padding-bottom: 1.5rem;
+}
 .consult-back-img>img{
     max-width: 100%;
     margin: 12px 0;
@@ -230,7 +233,7 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
 
 /*专利申请*/
 
-#patent .table-row-box {
+#patent .table-row-box,#copyRight .table-row-box  {
     margin-bottom: 1rem;
     padding: 0 4vw;
     background-color: #fff

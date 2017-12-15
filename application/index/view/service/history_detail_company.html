@@ -229,41 +229,39 @@
     </div>
     <div v-if="appid==22" id="copyRight">
         <div class="table-box">
-            <div v-if="baseInfo.type==2">
+            <div v-if="info.type_check==2" >
                 <div class="table-row-box">
                     <div class="table-row">
                         <span class="table-row-header">软件名称</span>
-                        <input type="text" class="table-row-input" placeholder="请输入软件名称" v-model="soft.software_name">
+                        <span>{{info.software_name}}</span>
                     </div>
                     <div class="table-row">
                         <span class="table-row-header">硬件名称</span>
-                        <input type="text" class="table-row-input" placeholder="请输入硬件名称" v-model="soft.hardware_name">
+                        <span>{{info.hardware_name}}</span>
                     </div>
                     <div class="table-row">
                         <span class="table-row-header">软件环境</span>
-                        <input type="text" class="table-row-input" autocapitalize="on" placeholder="请输入软件环境" v-model="soft.software_environment">
+                        <span>{{info.software_environment}}</span>
                     </div>
                     <div class="table-row">
                         <span class="table-row-header">联系人</span>
-                        <input type="text" class="table-row-input" placeholder="请输入联系人" v-model="soft.contact_staff">
+                        <span><a :href="'tel:'+info.contact_staff"></a>{{info.contact_staff}}</span>
                     </div>
                     <div class="table-row">
                         <span class="table-row-header">联系电话</span>
-                        <input type="tel" class="table-row-input" placeholder="请输入联系电话" v-model="soft.contact_number">
+                        <span>{{info.contact_number}}</span>
                     </div>
-                    <!--<div class="table-row" v-if="baseInfo.type!=3">-->
-                    <!--<span class="table-row-header">技术交底书</span>-->
-                    <!--<span class="item-arrow-right" @click="jumpToPaper">查看详细内容</span>-->
-                    <!--</div>-->
                 </div>
                 <div class="table-row-box">
                     <div class="table-row-block-header">主要功能和技术特点</div>
-                    <div class="table-row-block">
-                        <textarea v-model="soft.main_function" name="" id="" cols="30" rows="10" placeholder="输入50-100字的简单文字说明"></textarea>
+                    <div class="table-row-block table-block-end">
+                        <div class="textarea-box">
+                            <div>{{info.main_function}}</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div v-if="baseInfo.type==1">
+            <div v-if="info.type_check==1">
                 <div class="table-row-box">
                     <div class="table-row">
                         <span class="table-row-header">作品名称</span>
@@ -277,7 +275,7 @@
                     </div>
                     <div class="table-row">
                         <span class="table-row-header">联系电话</span>
-                        <span>{{info.contact_number}}</span>
+                        <span><a :href="'tel:'+info.contact_number"></a>{{info.contact_number}}</span>
                     </div>
                     <div class="table-row-block-header">作品描述</div>
                     <div class="table-row-block">
@@ -303,7 +301,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="baseInfo.type==3">
+            <div v-if="info.type_check==3">
                 <div class="table-row-box">
                     <div class="table-row-block-header">创作意图</div>
                     <div class="table-row-block">
@@ -318,7 +316,7 @@
                         </div>
                     </div>
                     <div class="table-row-block-header">作品描述</div>
-                    <div class="table-row-block">
+                    <div class="table-row-block table-block-end">
                         <div class="textarea-box">
                             <div>{{info.description_work}}</div>
                         </div>
@@ -327,17 +325,32 @@
                 <div class="table-row-box">
                     <div class="table-row">
                         <span class="table-row-header">联系人</span>
-                        <span>{{info.contact}}</span>
+                        <span>{{info.contact_staff}}</span>
                     </div>
                     <div class="table-row">
                         <span class="table-row-header">联系电话</span>
-                        <span><a :href="'tel:'+info.contact_number"></a>{{info.contact_number}}</span>
+                        <span><a :href="'tel:'+info.contact_number">{{info.contact_number}}</a></span>
                     </div>
                 </div>
             </div>
-            <form ref="myform" hidden>
-                <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/jpeg" @change="handleFileChange(nowImgArr,nowImgIndex)" ref="upimg" >
-            </form>
+            <div class="table-row-box">
+                <div class="table-row">
+                    <span class="table-row-header">审核结果</span>
+                    <span>{{status(info.status)}}</span>
+                </div>
+                <div  v-if="info.reply">
+                    <div class="table-row-block-header">园区回复</div>
+                    <div class="table-row-block table-block-end">
+                        <div class="textarea-box">
+                            <div>{{info.reply}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-box">
+            <button class="btn btn-block btn-warning" v-if="can_check == 'yes' && info.status == '0' " @click="toggleModal">前往审核</button>
+            <button class="btn btn-block btn-warning" v-if="can_check == 'no' && info.status == '2' " @click="jumpTo">前往修改</button>
         </div>
     </div>
     <div class="modal-box" :class="{show:modalShow}">
@@ -348,8 +361,12 @@
                 <textarea v-model="subData.check_remark"></textarea>
             </div>
             <div class="table-view-cell group-cell btn-box" v-if="appid!=8">
-                <button class="group-btn btn-warning btn" @click="patentReply(2)">{{(appid==21)?'审核拒绝':'取消'}}</button>
-                <button class="group-btn btn-primary btn" @click="patentReply(1)">{{(appid==21)?'审核通过':'确认'}}</button>
+                <button class="group-btn btn-warning btn" @click="patentReply(2)">
+                    {{(appid==21||appid==22)?'审核拒绝':'取消'}}
+                </button>
+                <button class="group-btn btn-primary btn" @click="patentReply(1)">
+                    {{(appid==21||appid==22)?'审核通过':'确认'}}
+                </button>
             </div>
             <div class="my-cancel" @click="toggleModal">
                 <span><i class="iconfont hc-cha1"></i></span>
@@ -558,11 +575,19 @@ var app = new Vue({
                     }else if(status==2){
                         s='审核拒绝'
                     }
+                }else if(this.appid==22){
+                    if (status==0){
+                        s='审核中'
+                    }else if(status==1){
+                        s='审核通过'
+                    }else if(status==2){
+                        s='审核拒绝'
+                    }
                 }
             }
             return s
         },
-//        app_id 21 审核
+//        app_id 21 22 审核
         patentReply(type){
             var _this=this;
             if(_this.isSubmit){
@@ -585,6 +610,9 @@ var app = new Vue({
                 id:_this.info.id,
                 reply: _this.subData.check_remark,
             };
+            if(_this.appid==22){
+                data.type_check=_this.info.type_check
+            }
             _this.isSubmit = true;
             _this.checkAjax(data);
         },

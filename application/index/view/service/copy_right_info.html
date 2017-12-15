@@ -270,13 +270,13 @@
                     <div class="table-row-block-header">产品图</div>
                     <div class="img-box product_img_box">
                         <div  v-for="(img,key) in product_img">
-                            <div class="upload-img" v-if="img"  :key="'upload-img'+key">
+                            <div class="upload-img" v-if="img" >
                                 <img :src="img" alt="" @click="loadImg(img,art.product_img)">
-                                <i class="del-img" @click="delImg('product_img',key)"></i>
+                                <i class="del-img" @click="delImg"></i>
                             </div>
-                            <div class="upload-box" @click="imgUpload('product_img',key)"  :key="'upload-box'+key" v-else>
-                                <img src="/index/images/service/patent/icon-add.png" alt="">
-                            </div>
+                        </div>
+                        <div class="upload-box" @click="imgUpload('product_img',key)" v-if="art.product_img.length<3">
+                            <img src="/index/images/service/patent/icon-add.png" alt="">
                         </div>
                     </div>
                 </div>
@@ -436,10 +436,16 @@
                 else if(_this.baseInfo == 3){
                     if(_this.compose.create_purpose === ''){
                         _this.$toast({message:"请填写创作意图", duration:1000});
+                    }else if(_this.compose.create_purpose.length>50){
+                        _this.$toast({message:"创作意图不得大于50字", duration:1000});
                     }else if(_this.compose.create_process === ''){
                         _this.$toast({message:"请填写创作过程", duration:1000});
+                    }else if(_this.compose.create_process>100){
+                        _this.$toast({message:"创作过程不得大于100字", duration:1000});
                     }else if(_this.compose.description_work === ''){
                         _this.$toast({message:"请填写作品描述", duration:1000});
+                    }else if(_this.compose.description_work>150){
+                        _this.$toast({message:"作品描述不得大于150字", duration:1000});
                     }else if(_this.compose.contact_staff === ''){
                         _this.$toast({message:"请填写联系人", duration:1000});
                     }else if(_this.compose.contact_number === ''){
@@ -518,30 +524,31 @@
                 })
             },
             //图片上传 + 删除
-            delImg: function (arrName,e) {
-                var _this = this,
-                        copeArr = JSON.parse(JSON.stringify(_this.subData));
-                this.subData[arrName][e]='';
+            delImg: function (e) {
+                var _this = this;
+//                        copeArr = JSON.parse(JSON.stringify(_this.subData));
+                this.art.product_img.splice(e,1);
                 //                强更新vue数据
-                _this.subData = Object.assign(copeArr,_this.subData);
+//                _this.subData = Object.assign(copeArr,_this.subData);
                 this.$refs.myform.reset(); //表单重置，解决input onchange选重问题
             },
-            imgUpload:function (arrName,index) {
+            imgUpload:function () {
                 var _this = this;
                 var upImg = _this.$refs.upimg;
-                _this.nowImgArr = arrName;
-                _this.nowImgIndex = index;
+//                _this.nowImgArr = arrName;
+//                _this.nowImgIndex = index;
                 upImg.click();
             },
             handleFileChange:function () {
                 var _this = this;
-                var copeArr = JSON.parse(JSON.stringify(_this.subData));
-                console.log(_this.nowImgArr,_this.nowImgIndex);
+//                var copeArr = JSON.parse(JSON.stringify(_this.subData));
+//                console.log(_this.nowImgArr,_this.nowImgIndex);
                 var upImg = _this.$refs.upimg;
                 var img = upImg.files[0];
                 if(img){
                     var newSize = (img.size/1024).toFixed(2);
-                    if(newSize <= 10240){
+                    console.log(newSize)
+                    if(newSize <= 20480){
                         _this.$indicator.open({
                             text: '图片上传中',
                             spinnerType: 'triple-bounce'
@@ -558,9 +565,8 @@
                                 // 在获取到文件对象进行预览
                                 _this.$indicator.close();
                                 console.log(copeArr);
-                                _this.subData[_this.nowImgArr][_this.nowImgIndex] = data.data.path; //保存上传后图片路径
-                                console.log(_this.subData);
-                                _this.subData = Object.assign(copeArr,_this.subData)
+                                _this.art.product_img.push( data.data.path); //保存上传后图片路径
+//                                _this.subData = Object.assign(copeArr,_this.subData)
 //                                Vue.set( _this.subData, _this.nowImgArr, _this.subData[_this.nowImgArr] )
                             }else{
                                 _this.$indicator.close();
@@ -579,7 +585,7 @@
                             });
                         });
                     }else{
-                        _this.$toast("单张上传图片大小不能超过10M,请重新上传！");
+                        _this.$toast("单张上传图片大小不能超过20M,请重新上传！");
                     }
                 }
             },
