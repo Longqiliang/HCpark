@@ -78,26 +78,14 @@ class CopyrightArt extends Model
         if ($type == 1) {
             //审核通过
             $info = $this->where('id', $id)->update(['status' => 1, 'end_time' => time()]);
-
-        } else {
-            //审核不通过
-            $info = $this->where('id', $id)->update(['status' => $type, 'end_time' => time(), 'reply' => $data['reply']]);
-        }
-
-        $service = new Service();
-        $copy = $this->find($id);
-        if ($info) {
-            //推送
             $message = [
                 "title" => "版权申请提示",
                 "description" => "您的美术作品版权申请园区已确认，请您携带相关材料前往希垦科技园A幢2楼园区知识产权服务中心办理，点击查看详情",
                 "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/22/can_check/no/type/1/id/' . $id
             ];
-            //审核成功推用户
-            $service->commonSend(4, $message, $copy['userid'], 22);
-            return true;
         } else {
-
+            //审核不通过
+            $info = $this->where('id', $id)->update(['status' => $type, 'end_time' => time(), 'reply' => $data['reply']]);
             $message = [
                 "title" => "版权申请提示",
                 "description" => "您的美术作品版权申请园区审核失败，请您核对信息后重新提交，",
@@ -107,8 +95,18 @@ class CopyrightArt extends Model
             if (!empty($copy['reply'])) {
                 $message['description'] = $message['description'] . "备注：" . $copy['reply'] . "点击查看详情";
             }
-            //审核失败推用户
+        }
+
+        $service = new Service();
+        $copy = $this->find($id);
+        if ($info) {
+            //推送
+
+            //审核成功推用户
             $service->commonSend(4, $message, $copy['userid'], 22);
+            return true;
+        } else {
+
             return false;
         }
     }
