@@ -2129,14 +2129,14 @@ class Service extends Base
     public function copyRight()
     {
         $this->assign('park_id',session('park_id'));
-        return $this->fetch();
+        return $this->fetch('copyRight');
     }
 
     //版权申请 app_id=22
     public function copyRightInfo()
     {
+        $data = input('');
         if (IS_POST) {
-            $data = input('');
             if ($data['type'] == 1) {
                 //艺术作品
                 $copy = new CopyrightArt();
@@ -2172,6 +2172,7 @@ class Service extends Base
                 return $this->error('提交失败');
             }
         } else {
+            $this->assign('info',$data);
             return $this->fetch('copy_right_info');
         }
     }

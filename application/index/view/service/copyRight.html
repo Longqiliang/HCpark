@@ -238,7 +238,7 @@
             <li @click="toggleModal(0)">
                 <div class="type-title">
                     <b>软著登记</b>
-                    <span>对产品、方法及其结合<br>提出新的技术方案</span>
+                    <span>著作权也称为版权，是指作者对其作品所享有的权利。</span>
                 </div>
                 <img src="/index/images/service/copyRight/type-register.png" class="type-ticket" alt="">
             </li>
@@ -246,18 +246,18 @@
                 <img src="/index/images/service/copyRight/type-art.png" class="type-ticket" alt="">
                 <div class="type-title">
                     <b>美术作品登记</b>
-                    <span>保护产品形状、构造等微创<br>性3-6个月授权十年保质期</span>
+                    <span>以线条、色彩等方式构成的有审美意义的平面或立体艺术作品</span>
                 </div>
             </li>
             <li  @click="toggleModal(2)">
                 <div class="type-title">
                     <b>软著撰写</b>
-                    <span>保护产品形状、图案或与其<br>色彩结合所作出的新设计</span>
+                    <span>著作权在认证和享受各种扶持政策和无形财产评估中具有重要作用。</span>
                 </div>
                 <img src="/index/images/service/copyRight/type-compose.png" class="type-ticket" alt="">
             </li>
         </ul>
-        <p class="patent-ps"><span>如有疑问请致电园区知识产权服务中心</span><br><a> 88888888</a></p>
+        <p class="patent-ps"><span>如有疑问请致电园区知识产权服务中心</span><br><a href="tel:0571-56507777">0571-56507777</a></p>
     </div>
     <div class="modal-box" v-show="isShow">
         <div class="modal-content">
@@ -282,6 +282,7 @@
     var app = new Vue({
         el: '#app',
         data: {
+            park_id:{$park_id},
             type:[
                 {
                     need:['软件名称','硬件名称','软件环境','主要功能','技术特点','联系人员','联系电话'],
