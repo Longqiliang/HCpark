@@ -138,7 +138,6 @@ class Personal extends Base
 
         }
 
-
         $park_xk = ['park_id' => 3, 'park_name' => '希垦科技园', 'departmentlist' => array()];
         $park_bj = ['park_id' => 80, 'park_name' => '人工智能产业园', 'departmentlist' => array()];
         $xk = $this->departmentData($departmentXK, $park_xk);
@@ -148,7 +147,6 @@ class Personal extends Base
             $info['park_name'] = "希垦科技园区";
             array_push($departmentlist, $xk);
             array_push($departmentlist, $bj);
-
         } else {
             $info['park_name'] = "人工智能产业园区";
             array_push($departmentlist, $bj);
@@ -1484,13 +1482,7 @@ class Personal extends Base
         }
     }
 
-    //推荐关注
-    public function recommend()
-    {
-        $park_id = session('park_id');
-        $this->assign('park_id', json_encode($park_id));
-        return $this->fetch();
-    }
+
 
     public function version()
     {

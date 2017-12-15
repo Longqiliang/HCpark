@@ -2126,13 +2126,6 @@ class Service extends Base
     }
 
     //版权申请 app_id=22
-    public function copyRight()
-    {
-        $this->assign('park_id',session('park_id'));
-        return $this->fetch('copyRight');
-    }
-
-    //版权申请 app_id=22
     public function copyRightInfo()
     {
         $data = input('');
@@ -2156,7 +2149,16 @@ class Service extends Base
             }
             $data['userid'] = session('userId');
             $data['park_id'] = session('park_id');
-            $res = $copy->save($data);
+            if(isset($data['id'])){
+                  $data['status']=0;
+                  $data['reply']="";
+                  $res = $copy->where('id',$data['id'])->update($data);
+
+            }else{
+
+                $res = $copy->save($data);
+            }
+
             if ($res) {
                 //专利申请提示11月28日您有一条新的专利申请服务待处理，点击查看详情
                 $message = [
