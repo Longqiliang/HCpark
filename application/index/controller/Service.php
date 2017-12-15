@@ -2048,7 +2048,7 @@ class Service extends Base
     //专利申请首页 app_id=21
     public function patent()
     {
-        $this->assign('park_id',session('park_id'));
+        $this->assign('park_id', session('park_id'));
         return $this->fetch();
     }
 
@@ -2080,13 +2080,13 @@ class Service extends Base
             $data['create_user'] = session('userId');
             $data['park_id'] = session('park_id');
 
-            if (isset($data['id'])){
-                $data['status']=0;
-                $data['reply']="";
-                $res = $patent->where('id',$data['id'])->Update($data);
+            if (isset($data['id'])) {
+                $data['status'] = 0;
+                $data['reply'] = "";
+                $res = $patent->where('id', $data['id'])->Update($data);
 
-            }else{
-            $res = $patent->save($data);
+            } else {
+                $res = $patent->save($data);
             }
             if ($res) {
                 //专利申请提示11月28日您有一条新的专利申请服务待处理，点击查看详情
@@ -2105,11 +2105,11 @@ class Service extends Base
             $data = input('');
             if (isset($data['id'])) {
                 $data2 = Patent::get($data['id']);
-                $data2['id_card']=json_decode($data2['id_card']);
-                $data2['product_img']=json_decode($data2['product_img']);
+                $data2['id_card'] = json_decode($data2['id_card']);
+                $data2['product_img'] = json_decode($data2['product_img']);
 
                 $this->assign('info', json_encode($data2));
-            }else{
+            } else {
                 $this->assign('info', json_encode($data));
             }
 
@@ -2129,7 +2129,7 @@ class Service extends Base
     public function copyRightInfo()
     {
         $data = input('');
-        $a =$data;
+        $a = $data;
         if (IS_POST) {
             if ($data['type'] == 1) {
                 //艺术作品
@@ -2150,12 +2150,12 @@ class Service extends Base
             }
             $data['userid'] = session('userId');
             $data['park_id'] = session('park_id');
-            if(isset($data['id'])){
-                  $data['status']=0;
-                  $data['reply']="";
-                  $res = $copy->where('id',$data['id'])->allowField(true)->update($data);
+            if (isset($data['id'])) {
+                $data['status'] = 0;
+                $data['reply'] = "";
+                $res = $copy->where('id', $data['id'])->allowField(true)->update($data);
 
-            }else{
+            } else {
 
                 $res = $copy->allowField(true)->save($data);
             }
@@ -2175,11 +2175,30 @@ class Service extends Base
                 return $this->error('提交失败');
             }
         } else {
-            $this->assign('info',json_encode($data));
+            if ($data['type'] == 1) {
+                //艺术作品
+                $copy = new CopyrightArt();
+            } elseif ($data['type'] == 2) {
+                //软件著作
+                $copy = new CopyrightSoft();
+
+            } elseif ($data['type'] == 3) {
+                //软件撰写
+                $copy = new CopyrightSoftwrite();
+            }
+            if (isset($data['id'])) {
+                $data2 = $copy->where('id', $data['id'])->find();
+                if ($data['type'] == 1) {
+                    //艺术作品
+                    $data2['product_img'] = json_encode($data2['product_img']);
+                }
+                $this->assign('info', json_encode($data2));
+            } else {
+                $this->assign('info', json_encode($data));
+            }
             return $this->fetch('copy_right_info');
         }
     }
-
 //饮水服务详情页()
     public function waterDetail()
     {
@@ -2319,16 +2338,16 @@ class Service extends Base
             $info = $patent->patentHistory();
         } elseif ($appid == 22) {
             $path = 'history_company';
-                //美术作品
-                $CopyrightArt = new CopyrightArt();
-                $info1 = $CopyrightArt->copyHistory();
-                //软著登记
-                $CopyrightSoft = new CopyrightSoft();
-                $info2 = $CopyrightSoft->copyHistory();
-                //软著撰写
-                $CopyrightSoftwrite = new CopyrightSoftwrite();
-                $info3 = $CopyrightSoftwrite->copyHistory();
-                $info =array_merge($info1,$info2,$info3);
+            //美术作品
+            $CopyrightArt = new CopyrightArt();
+            $info1 = $CopyrightArt->copyHistory();
+            //软著登记
+            $CopyrightSoft = new CopyrightSoft();
+            $info2 = $CopyrightSoft->copyHistory();
+            //软著撰写
+            $CopyrightSoftwrite = new CopyrightSoftwrite();
+            $info3 = $CopyrightSoftwrite->copyHistory();
+            $info = array_merge($info1, $info2, $info3);
         }
         //物业服务（记录详情页跳转地址为historyDetail）
         if ($company_type == 0) {
@@ -2343,10 +2362,10 @@ class Service extends Base
         } //企业服务（记录详情页跳转地址为historyDetailCompany）
         elseif ($company_type == 1) {
             foreach ($info as $k => $value) {
-               //给版权的特殊url 中type
-                if($appid==22){
-                   $type =$value['type'];
-               }
+                //给版权的特殊url 中type
+                if ($appid == 22) {
+                    $type = $value['type'];
+                }
 
 
                 if (empty($type)) {
