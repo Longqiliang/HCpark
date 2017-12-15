@@ -19,7 +19,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => $toUser,
+            'touser' => 15706844655,
             'agentid' => $config['agentid'],
             'msgtype' => 'text',
             'text' => [
@@ -34,7 +34,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => $toUser,
+            'touser' => 15706844655,
             'agentid' => $config['agentid'],
             'msgtype' => 'news',
             'news' => [
@@ -57,7 +57,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => $toUser,
+            'touser' => 15706844655,
             'agentid' => $config['agentid'],
             'msgtype' => 'textcard',
             'textcard' => [
@@ -218,7 +218,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => $toUser,
+            'touser' => 15706844655,
             'agentid' => $config['agentid'],
             'msgtype' => 'news',
             'news' => [
