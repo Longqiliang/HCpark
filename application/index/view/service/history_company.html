@@ -53,6 +53,17 @@
             </li>
         </ul>
     </div>
+    <div class="appid==22">
+        <ul class="patent-list">
+            <li v-for="item in historyList" @click="jumpTo(item.url)">
+                <div class="patent-title">
+                    <div>{{item.type==2?'软著登记':item.type==1?'美术作品登记':'软著撰写'}}：{{item.name}}</div>
+                    <span>{{item.time}}</span>
+                </div>
+                <div class="state-icon" :class="{'state-icon-ing':item.status==0,'state-icon-pass':item.status==1,'state-icon-refuse':item.status==2}"></div>
+            </li>
+        </ul>
+    </div>
     <p class="no-history" v-if="!historyList.length">
         <img src="/index/images/service/card/icon-default.jpg" >
     </p>
@@ -79,6 +90,10 @@ Compose
                         break;
                     case 21:
                         info.title='专利申请记录';
+                        document.body.style.background = "#F0EFF5";
+                        break;
+                    case 21:
+                        info.title='版权登记记录';
                         document.body.style.background = "#F0EFF5";
                         break;
                 }

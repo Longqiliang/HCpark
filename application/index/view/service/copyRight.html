@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>专利申请</title>
+<title>版权登记</title>
 <style>
     #app{
         width:100%;
@@ -235,14 +235,14 @@
     </div>
     <div class="patent-type">
         <ul class="type-list">
-            <li @click="toggleModal(0)">
+            <li @click="toggleModal(1)">
                 <div class="type-title">
                     <b>软著登记</b>
                     <span>著作权也称为版权，是指作者对其作品所享有的权利。</span>
                 </div>
                 <img src="/index/images/service/copyRight/type-register.png" class="type-ticket" alt="">
             </li>
-            <li class="img-right"  @click="toggleModal(1)">
+            <li class="img-right"  @click="toggleModal(0)">
                 <img src="/index/images/service/copyRight/type-art.png" class="type-ticket" alt="">
                 <div class="type-title">
                     <b>美术作品登记</b>
@@ -269,7 +269,7 @@
                     <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===1">{{item}}</div></li>
                     <li><div  v-for="(item,key) in type[typeIndex].need" v-if="key%3===2">{{item}}</div></li>
                 </ul>
-                <div class="modal-btn" :class="{invent:typeIndex===0,practical:typeIndex===1,exterior:typeIndex===2}" @click="jumpTo">前往申请</div>
+                <div class="modal-btn" :class="{invent:typeIndex===1,practical:typeIndex===0,exterior:typeIndex===2}" @click="jumpTo">前往申请</div>
             </div>
             <div class="modal-close" @click="toggleModal('')"><i class="iconfont hc-cha1"></i></div>
         </div>
@@ -285,12 +285,12 @@
             baseInfo:{$info},
             type:[
                 {
-                    need:['软件名称','硬件名称','软件环境','主要功能','技术特点','联系人员','联系电话'],
-                    banner:'/index/images/service/patent/banner-invent.png'
-                },
-                {
                     need:['作品名称','作品描述','独创性描述','产品图','联系人员','联系电话'],
                     banner:'/index/images/service/patent/banner-practical.png'
+                },
+                {
+                    need:['软件名称','硬件名称','软件环境','主要功能','技术特点','联系人员','联系电话'],
+                    banner:'/index/images/service/patent/banner-invent.png'
                 },
                 {
                     need:['创作意图','创作过程','作品描述','联系人员','联系电话'],
