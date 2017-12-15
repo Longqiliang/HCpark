@@ -2116,8 +2116,6 @@ class Service extends Base
             return $this->fetch('patent_info');
         }
     }
-
-
     //商标类别
     public function marktype()
     {
@@ -2153,10 +2151,8 @@ class Service extends Base
             if (isset($data['id'])) {
                 $data['status'] = 0;
                 $data['reply'] = "";
-                $res = $copy->where('id', $data['id'])->allowField(true)->update($data);
-
+                $res = $copy->allowField(true)->save($data,['id',$data['id']]);
             } else {
-
                 $res = $copy->allowField(true)->save($data);
             }
 
@@ -2188,13 +2184,16 @@ class Service extends Base
             }
             if (isset($data['id'])) {
                 $data2 = $copy->where('id', $data['id'])->find();
+                $data2['type']=$data['type'];
                 if ($data['type'] == 1) {
                     //艺术作品
                     $data2['product_img'] = json_decode($data2['product_img']);
-                    $data2['type']=$data['type'];
+
                 }
+                //return json_encode($data2);
                 $this->assign('info', json_encode($data2));
             } else {
+                //return json_encode($data);
                 $this->assign('info', json_encode($data));
             }
             return $this->fetch('copy_right_info');
@@ -2209,7 +2208,6 @@ class Service extends Base
         //       echo json_encode($result);exit;
         return $this->fetch();
     }
-
     /*//电话宽带
     public function broadbandPhone()
     {
@@ -2226,7 +2224,6 @@ class Service extends Base
         }
 
     }*/
-
     //费用缴纳
     public function feedetail()
     {
