@@ -15,7 +15,7 @@ class CopyrightSoftwrite extends Model
 {
     protected  $insert =[
         'create_time'=> NOW_TIME,
-        'status'=>1,
+        'status'=>0,
     ];
     protected  $type =[
 
