@@ -2134,7 +2134,7 @@ class Service extends Base
             if ($data['type'] == 1) {
                 //艺术作品
                 $copy = new CopyrightArt();
-                $data['proudct_img'] = json_encode($data['proudct_img']);
+                $data['product_img'] = json_encode($data['product_img']);
 
             } elseif ($data['type'] == 2) {
                 //软件著作
