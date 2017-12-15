@@ -1,0 +1,104 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>企业交流</title>
+<link type="text/css" rel="stylesheet" href="/index/css/card/card.css">
+<style type="text/css">
+    .head{
+        width: 100%;
+        height: 40vw;
+        position: relative;
+    }
+    .head img{
+        width: 100%;
+        height: 100%;
+    }
+    .group-list{
+        position: relative;
+    }
+    .group-list a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
+    .post{
+        width: 48px;
+        height: 48px;
+        border-radius: 24px;
+        box-shadow: 0 3px 6px rgba(105,185,249,0.4);
+        position: fixed;
+        bottom: 8.7vh;
+        right: 20px;
+        z-index: 999;
+    }
+    .post img{
+        width: 100%;
+        height: 100%;
+    }
+    .post a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="head">
+        <img src="/index/images/card/background.png">
+    </div>
+    {volist name="list" id="vo"}
+    <div class="group-list">
+        <div class="list-head">
+            <img src="{$vo.header}">
+            <div class="time-name">
+                <p>{$vo.name}</p>
+                <p>{$vo.create_time || time_format="Y-m-d H:m"}</p>
+                {eq name="vo.is_top" value="1"}
+                <img src="/index/images/card/top.png" />
+                {/eq}
+            </div>
+        </div>
+        <div class="list-body">
+            <p>{$vo.content}</p>
+            <div class="img-box">
+                <ul>
+                    {volist name="vo.list_img" id="image"}
+                    <li>
+                        <img src="{$image}">
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+            <div class="type-box">
+                {volist name="vo.type" id="typelist"}
+                <span class="color type">#{$typelist}#</span>
+                {/volist}
+                <span class="comments">{$vo.comments}</span>
+                {eq name="vo.like" value="0"}
+                <span class="zan like">{$vo.likes}</span>
+                {else/}
+                <span class="zan_1 like">{$vo.likes}</span>
+                {/eq}
+            </div>
+        </div>
+        <a href="{:Url('CardDetail/getDetail?id='.$vo.id)}"></a>
+    </div>
+    {/volist}
+    <div class="post" id="post">
+        <img src="/index/images/communication/post.png">
+        <a href="{:Url('Card/setCard')}"></a>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+
+{/block}

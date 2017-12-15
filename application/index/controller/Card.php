@@ -83,10 +83,11 @@ class Card extends Base
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
             $list[$k]['type'] = json_decode($list[$k]['type']);
             $list[$k]['type'] = $cardType->getCardTypeById( $list[$k]['type']);
+            $list[$k]['list_img'] = !empty($v['list_img']) ? json_decode($v['list_img']) : "";
             unset($list[$k]['getUserHeader']);
             $list[$k]['like'] = $like->isLike($list[$k]['id'],$uid);
         }
-        $this->assign('list',json_encode($list));
+        $this->assign('list',$list);
         //return json_encode($list);
         return $this->fetch();
     }
@@ -103,10 +104,10 @@ class Card extends Base
             $uid = session("userId");
             $result = array();
             $result['front_cover'] = "";
-            $img = input('img',"");
+            $data['img'] = input('img',"");
             //第四步 新增记录
             $card_model = new CardModel();
-            $res1 = $card_model->addNewCard($uid, $data['type'], $data['title'], $data['content'],'',$img);
+            $res1 = $card_model->addNewCard($uid, $data['type'], $data['title'], $data['content'],'',$data['img']);
             //第五步 返回结果
             if ($res1) {
 
@@ -118,7 +119,7 @@ class Card extends Base
         }
         $cardType = new CardType();
         $cType = $cardType->getTypeList() ;
-        $this->assign('cardType',$cType);
+        $this->assign('cardType',json_encode($cType));
 
 
         return $this->fetch();

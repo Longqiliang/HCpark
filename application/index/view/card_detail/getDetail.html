@@ -1,0 +1,289 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>贴子详情</title>
+<link type="text/css" rel="stylesheet" href="/index/css/card/card.css">
+<style type="text/css">
+    .comment{
+        width: 100%;
+    }
+    .comment ul li{
+        padding: 15px 15px;
+        border-bottom: 1px solid #e8e8e8;
+    }
+    .comment .list-body p{
+        margin-left: 55px;
+        padding-top: 5px;
+    }
+    .foot{
+        width: 100%;
+        height: 50px;
+        overflow: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 99;
+        background: #fff;
+        box-shadow: 0 -2px 2px rgba(0,0,0,0.1);
+    }
+    .foot .input-box{
+        width: calc(100% - 90px);
+        float: left;
+        padding-left: 20px;
+    }
+    .foot .input-box>input{
+        width: calc(100% - 25px);
+        height: 32px;
+        margin: 8px 0;
+        background: #f2f2f2;
+        padding: 0 10px 0 15px;
+        border-radius: 5px;
+        font-size: 15px;
+    }
+    .foot .send{
+        width: 70px;
+        float: left;
+        font-size: 15px;
+        color: #333;
+        text-align: center;
+        padding: 15px 0;
+    }
+    .load-more{
+        width: 100%;
+        line-height: 40px;
+        text-align: center;
+        font-size: 14px;
+        color: #999;
+        margin-bottom: 50px;
+    }
+    .big-img{
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.75);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        display: -webkit-box;
+        -webkit-box-align: center;
+        -webkit-box-pack: center;
+        overflow: scroll;
+    }
+    .big-img img{
+        width: 100%;
+    }
+    .no-scroll{
+        overflow: hidden;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="group-list">
+        <div class="list-head">
+            <img src="{$list.header}">
+            <div class="time-name">
+                <p>{$list.name}</p>
+                <p>{$list.create_time || time_format="Y-m-d H:m"}</p>
+            </div>
+        </div>
+        <div class="list-body">
+            <p>{$list.content}</p>
+            <div class="img-box">
+                <ul>
+                    {volist name="list.list_img" id="image"}
+                    <li @click="watchBigImg('{$image}')">
+                        <img src="{$image}">
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+            <div class="type-box">
+                {volist name="list.type" id="typelist"}
+                <span class="color type">#{$typelist}#</span>
+                {/volist}
+                <span class="comments">{{commentsCount}}</span>
+                <span :class="{zan:isLike == 0,zan_1:isLike>0}" @click="like">{{likes}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="comment">
+        <ul>
+            <li v-for="list in comments">
+                <div class="list-head">
+                    <img :src="list.header">
+                    <div class="time-name">
+                        <p>{{list.name}}</p>
+                        <p>{{list.create_time}}</p>
+                    </div>
+                </div>
+                <div class="list-body">
+                    <p>{{list.content}}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="load-more" v-if="comments.length === 0">暂时啥都没有，快去评论吧！</div>
+    <div class="load-more" v-if="comments.length > 0" @click="loadMore($event)">加载更多...</div>
+    <div class="foot" ref="inputBox">
+        <div class="input-box">
+            <input type="text" placeholder="说说你的感想！" ref="inputs" @click="focus">
+        </div>
+        <div class="send" @click="send()">
+            发送
+        </div>
+    </div>
+    <div class="big-img" v-if="bigImg" @click="closeBigImg">
+        <img :src="img">
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var id = {$list.id};
+    new Vue({
+        el: '#app',
+        data:{
+            comments:{$list.comment_list},
+            img:'',
+            bigImg:false,
+            isLike:{$list.like_status},
+            likes:{$list.likes},
+            commentsCount:{$list.comments}
+        },
+        methods:{
+            send: function () {
+                var content = this.$refs.inputs,
+                    vm = this.comments,
+                    _this = this;
+                if(content.value.length > 0){
+                    _this.$indicator.open({
+                        text: '评论提交中',
+                        spinnerType: 'triple-bounce'
+                    });
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("CardDetail/setComment")}',
+                        dataType:'json',
+                        data:{'id':id,'content':content.value}
+                    }).done(function (data) {
+                        _this.$indicator.close();
+                        if(data.code == 1){
+                            _this.$toast({
+                                message:"评论成功！",
+                                duration:1000
+                            });
+                            vm.unshift(data.data);
+                            _this.commentsCount ++;
+                            $(content).val('');
+                        }else{
+                            _this.$toast({
+                                message:"评论失败！",
+                                duration:1000
+                            });
+                        }
+
+                    })
+                }else{
+                    _this.$toast({
+                        message:"评论不能为空！",
+                        duration:1000
+                    });
+                }
+
+            },
+            loadMore: function (event) {
+                var length = this.comments.length,
+                    vm = this.comments,
+                    _this = this;
+                _this.$indicator.open({
+                    text: '加载中...',
+                    spinnerType: 'triple-bounce'
+                });
+                $.ajax({
+                    type:'post',
+                    url:'{:Url("CardDetail/commentList")}',
+                    dataType:'json',
+                    data:{
+                        'len':length,
+                        'id':id
+                    }
+                }).done(function (data) {
+                    console.log(data)
+                    _this.$indicator.close();
+                    if(data.length === 0){
+                        $(event.target).text('已加载全部！')
+                    }else{
+                        $.each(data,function(index,array){
+                            vm.push(array);
+                        })
+                    }
+                });
+            },
+            like: function () {
+                var _this = this;
+                if(_this.isLike == 0){
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("CardDetail/setLike")}',
+                        data:{'id':id},
+                        success:function(data){
+                            if(data.code == 1){
+                                _this.isLike = 1;
+                                _this.likes++;
+                            }
+                        }
+                    })
+                }else{
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("CardDetail/cancelLike")}',
+                        data:{'id':id},
+                        success:function(data){
+                            if(data.code == 1){
+                                _this.isLike = 0;
+                                _this.likes--;
+                            }
+                        }
+                    })
+                }
+            },
+            watchBigImg: function (img) {
+                var _this = this;
+                if(!_this.bigImg) {
+                    _this.bigImg = true;
+                    _this.img = img;
+                    $("body").addClass('no-scroll');
+                }
+            },
+            closeBigImg: function () {
+                var _this = this;
+                if(_this.bigImg) {
+                    _this.bigImg = false;
+                    $("body").removeClass('no-scroll');
+                }
+            },
+            focus: function () {
+                var _this = this;
+                setTimeout(function () {
+                    var pannel = _this.$refs.inputBox;
+                    pannel.scrollIntoView(true);
+                },200);
+            }
+        }
+
+    })
+    //    $(function () {
+    //        var viewTop = $(window).scrollTop(),            // 可视区域顶部
+    //            viewBottom = viewTop + window.innerHeight;  // 可视区域底部
+    //        $("input").focus(function (event) {
+    //            var elementTop = $(event.target).offset().top, // $element是保存的input
+    //                elementBottom = elementTop + $(event.target).height();
+    //            $(window).scrollTop(elementBottom);
+    //        })
+    //    })
+</script>
+
+{/block}

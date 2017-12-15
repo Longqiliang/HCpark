@@ -63,7 +63,7 @@ class Card extends Model
     public function addNewCard($user_id, $type, $title, $content, $front_cover, $pic_data)
     {
         $data['uid']     = $user_id;
-        $data['type']    = json_encode($type);
+        $data['type']    = $type;
         $data['title']   = $title;
         $data['content'] = $content;
         $data['park_id'] = session("park_id");
@@ -71,7 +71,7 @@ class Card extends Model
             $data['front_cover'] = $front_cover;
         }
         if (!empty($pic_data)) {
-            $data['list_img'] = json_encode($pic_data);
+            $data['list_img'] = $pic_data;
         }
         return $this->isUpdate(false)->create($data);
     }
@@ -141,6 +141,5 @@ class Card extends Model
 
         return $this->hasOne("WechatUser",'userid','uid')->field('id,name,avatar,header');
     }
-
 
 }

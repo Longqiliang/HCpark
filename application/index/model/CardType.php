@@ -51,15 +51,14 @@ class CardType extends Model
      */
     public function getCardTypeById($data){
         $type = [] ;
-        if (is_array($data)){
+        if(is_array($data)){
             foreach($data as $k => $v){
                 $info = $this->where(['id' => $v])->find();
                 if ($info){
-                    $type[$info['id']] = $info['interest'];
+                    $type[] = $info['interest'];
                 }
             }
         }
-
 
         return $type;
     }
