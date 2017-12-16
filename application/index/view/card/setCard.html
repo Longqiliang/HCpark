@@ -398,21 +398,46 @@
                         return;
                     }
                     _this.isSubmit = false;
-                    _this.$http.post('{:Url("Card/setCard")}',data).then(function (res) {
-                        var data = res.data;
-                        if(data.code == 1){
+                    $.ajax({
+                        type:'post',
+                        url:'{:Url("Card/setCard")}',
+                        data:data,
+                        success:function (data) {
+                            if(data.code == 1){
                             _this.isSubmit = false;
                             _this.$toast({
                                 message:"发帖成功，跳回首页！",
                                 duration:1000
                             });
                             setTimeout(function () {
-                                window.location.href = '/index/Communication/postslist/group_id/'+id;
+                                window.location.href = '/index/Card/getList';
                             },1500);
+                            }
+                        },
+                        error:function () {
+                            _this.isSubmit = true;
                         }
-                    },function () {
-                        _this.isSubmit = true;
                     })
+//                    _this.$http.post('{:Url("Card/setCard")}',{
+//                        'type':JSON.stringify(_this.chosenType),
+//                        'title':'',
+//                        'content':content,
+//                        'img':JSON.stringify(_this.img)
+//                    }).then(function (res) {
+//                        var data = res.data;
+//                        if(data.code == 1){
+//                            _this.isSubmit = false;
+//                            _this.$toast({
+//                                message:"发帖成功，跳回首页！",
+//                                duration:1000
+//                            });
+//                            setTimeout(function () {
+//                                window.location.href = '/index/Communication/postslist/group_id/'+id;
+//                            },1500);
+//                        }
+//                    },function () {
+//                        _this.isSubmit = true;
+//                    })
                 }
             }
         }

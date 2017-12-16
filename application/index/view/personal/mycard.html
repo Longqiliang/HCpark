@@ -1,0 +1,298 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>我的发布</title>
+<link type="text/css" rel="stylesheet" href="/index/css/card/card.css">
+<link type="text/css" rel="stylesheet" href="/index/css/common/tip.css">
+<style type="text/css">
+    body{
+        background: #f5f5f5;
+    }
+    .header{
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        background: #fff;
+    }
+    .header ul{
+        overflow: hidden;
+        border-bottom: 1px solid #ddd;
+    }
+    .header ul li{
+        width: 50%;
+        height: 50px;
+        float: left;
+        text-align: center;
+    }
+    .header ul li>span{
+        display: inline-block;
+        font-size: 15px;
+        line-height: 48px;
+        padding: 0 10px;
+    }
+    .header ul li.active>span{
+        color: #7DB8F2;
+        border-bottom: 2px solid #7DB8F2;
+    }
+
+    .body{
+        margin-top: 51px;
+    }
+    .list>.empty{
+        width: 100%;
+        margin-top: 16vw;
+    }
+    .group-list{
+        position: relative;
+        background: #fff;
+    }
+    .group-list:last-child{
+        border-bottom: 0;
+    }
+    .group-list a{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+    .tip{
+        color: #999;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="header">
+        <ul>
+            <li class="active"><span>我的帖子</span></li>
+            <li><span>我的评论</span></li>
+        </ul>
+    </div>
+    <div class="body" id="body_1">
+        <div class="list">
+            {volist name="list" id="vo" empty="$empty"}
+            <div class="group-list">
+                <div class="list-head">
+                    <img src="{$vo.header}" />
+                    <div class="time-name">
+                        <p>{$vo.name}</p>
+                        <p>{$vo.create_time}</p>
+                        {eq name="vo.is_top" value="1"}
+                        <img src="/index/images/card/top.png" />
+                        {/eq}
+                    </div>
+                </div>
+                <div class="list-body">
+                    <p>{$vo.content}</p>
+                    <div class="img-box">
+                        <ul>
+                            {volist name="vo.list_img" id="image"}
+                            <li>
+                                <img src="{$image}">
+                            </li>
+                            {/volist}
+                        </ul>
+                    </div>
+                    <div class="type-box">
+                        {volist name="vo.type" id="typelist"}
+                        <span class="color_{$key} type">#{$typelist}#</span>
+                        {/volist}
+                        <span class="comments">{$vo.comments}</span>
+                        {eq name="vo.like" value="0"}
+                        <span class="zan like">{$vo.likes}</span>
+                        {else/}
+                        <span class="zan_1 like">{$vo.likes}</span>
+                        {/eq}
+                    </div>
+                </div>
+                <a href="{:Url('CardDetail/getDetail?id='.$vo.id)}"></a>
+            </div>
+            {/volist}
+        </div>
+    </div>
+    <div class="body" id="body_2" style="display: none;">
+        <div class="list">
+            {volist name="list2" id="vo"}
+            <div class="group-list">
+                <div class="list-head">
+                    <img src="{$vo->header}">
+                    <div class="time-name">
+                        <p>{$vo->user_name}</p>
+                        <p>{$vo->create_time}</p>
+                    </div>
+                </div>
+                <div class="list-body">
+                    <p>{$vo->content}</p>
+                    <div class="post">
+                        <div>
+                            <span>{$vo->card_name}：</span>
+                            <span>{$vo->card_content}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/volist}
+        </div>
+    </div>
+    <div class="tip"></div>
+    <div class="loading hidden">
+        <div class="typing_loader"></div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $(function () {
+        var length = $("#body_1").find('.group-list').length;
+        var scrollNow = true;
+        var array = [0,0];
+        if(length >= 6){
+            $(".tip").text('上拉加载更多');
+        }else{
+            $(".tip").text('已加载全部内容~');
+            $(window).off('scroll');
+        }
+        loadMore();
+        $(".header").find('li').on('click',function () {
+            var index = $(this).index() + 1;
+            $(this).addClass('active').siblings().removeClass('active');
+            $("#body_"+index).show().siblings('.body').hide();
+            if(array[index-1] != 1){
+                scrollNow = true;
+                $(".tip").text('上拉加载更多');
+                $(window).scrollTop(0);
+            }else{
+                $('.tip').show().text('已加载全部内容~');
+                $(window).off('scroll');
+            }
+            loadMore();
+        });
+        function loadMore() {
+            $(window).off('scroll').on('scroll',function () {
+                var index = $(".header").find('li.active').index() + 1;
+                var dh = $(document).height();
+                var end = $(window).height() + $(window).scrollTop();
+                if (dh == end && scrollNow) {
+                    var len = $("#body_"+index).find('.group-list').length;
+                    scrollNow = false;
+                    if(index == 1){
+                        $.ajax({
+                            type:'post',
+                            url:'{:Url("Card/getMoreUserCard")}',
+                            data:{'len':len},
+                            beforeSend: function(XMLHttpRequest){
+                                $('.tip').hide();
+                                $('.loading').toggleClass('hidden');
+                            },
+                            success:function (data) {
+                                if(data.code == 1){
+                                    $('.loading').toggleClass('hidden');
+                                    if(data.data.length < 6){
+                                        $('.tip').show().text('已加载全部内容~');
+                                        $(window).off('scroll');
+                                        array[index-1] = 1;
+                                    }else{
+                                        scrollNow = true;
+                                        $('.tip').show().text('上拉加载更多');
+                                    }
+                                    $.each(data.data,function (key,value) {
+                                        var html =
+                                            '<div class="group-list">'+
+                                            '<div class="list-head">'+
+                                            '<img src="'+value.header+'"/>'+
+                                            '<div class="time-name">'+
+                                            '<p>'+value.name+'</p>'+
+                                            '<p>'+value.create_time+'</p>';
+                                        if(value.is_top == 1){
+                                            html += '<img src="/index/images/card/top.png" />';
+                                        }
+                                        html +=
+                                            '</div></div>'+
+                                            '<div class="list-body">'+
+                                            '<p>'+value.content+'</p>'+
+                                            '<div class="img-box">'+
+                                            '<ul>';
+                                        $.each(value.list_img,function (key,data) {
+                                            html += '<li><img src="'+data+'"/></li>';
+                                        });
+                                        html +=
+                                            '</ul></div>'+
+                                            '<div class="type-box">';
+                                        $.each(value.type,function (key,data) {
+                                            html += '<span class="color_'+key+' type">#'+data+'#</span>';
+                                        });
+                                        html+='<span class="comments">'+value.comments+'</span>';
+                                        if(value.like == 0){
+                                            var islike = '<span class="zan like">';
+                                        }else{
+                                            var islike = '<span class="zan_1 like">';
+                                        }
+                                        html +=
+                                            islike+value.likes+'</span></div></div>'+
+                                            '<a href="/index/CardDetail/getDetail/id='+value.id+'"></a>'+
+                                            '</div>';
+                                        $("#body_1>.list").append(html);
+                                    })
+                                }
+                            }
+                        })
+                    }else{
+                        $.ajax({
+                            type:'post',
+                            url:'{:Url("Card/myComments")}',
+                            data:{'len':len},
+                            beforeSend: function(XMLHttpRequest){
+                                $('.tip').hide();
+                                $('.loading').toggleClass('hidden');
+                            },
+                            success:function (data) {
+                                if(data.code == 1){
+                                    $('.loading').toggleClass('hidden');
+                                    if(data.data.length < 6){
+                                        $('.tip').show().text('已加载全部内容~');
+                                        $(window).off('scroll');
+                                        array[index-1] = 1;
+                                    }else{
+                                        scrollNow = true;
+                                        $('.tip').show().text('上拉加载更多');
+                                    }
+                                    $.each(data.data,function (key,value) {
+                                        var html =
+                                            '<div class="group-list">'+
+                                            '<div class="list-head">'+
+                                            '<img src="'+value.header+'">'+
+                                            '<div class="time-name">'+
+                                            '<p>'+value.user_name+'</p>'+
+                                            '<p>'+value.create_time+'</p>'+
+                                            '</div>'+
+                                            '</div>'+
+                                            '<div class="list-body">'+
+                                            '<p>'+value.content+'</p>'+
+                                            '<div class="post">'+
+                                            '<div>'+
+                                            '<span>'+value.card_name+'</span>'+
+                                            '<span>'+value.card_content+'</span>'+
+                                            '</div>'+
+                                            '</div>'+
+                                            '</div>'+
+                                            '</div>';
+                                        $("#body_2>.list").append(html);
+                                    })
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }
+
+    });
+</script>
+
+{/block}

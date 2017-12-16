@@ -36,16 +36,31 @@ class Card extends Base
     {
         $uid = session("userId");
         $card_model = new CardModel();
+        $cardType = new CardType();
+        $like = new Like();
         //$map1 = ['uid' => $uid, 'status' => 1];
         //$list1 = $card_model->where($map1)->order("id desc")->limit(6)->select();
         $map2 = ['uid' => $uid, 'status' => 0];
-        $list2 = $card_model->where($map2)->order("id desc")->limit(6)->select();
+        $list = $card_model->where($map2)->order("id desc")->limit(6)->select();
 
         //return json_encode(['check' => $list1, "uncheck" => $list2]);
         //$this->assign('list',json_encode(['check' => $list1, "uncheck" => $list2]));
-        $this->assign('list',json_encode($list2));
+        foreach ($list as $k => $v) {
+            $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
+            $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
+            $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
+            $list[$k]['type'] = json_decode($list[$k]['type']);
+            $list[$k]['type'] = $cardType->getCardTypeById( $list[$k]['type']);
+            $list[$k]['list_img'] = !empty($v['list_img']) ? json_decode($v['list_img']) : "";
+            unset($list[$k]['getUserHeader']);
+            $list[$k]['like'] = $like->isLike($list[$k]['id'],$uid);
+        }
+        $list2 = $this->myComments();
+        $this->assign('empty','<img class="empty" src="/index/images/service/card/icon-default.jpg">');
+        $this->assign('list',$list);
+        $this->assign('list2',$list2);
 
-        return $this->fetch("user/card");
+        return $this->fetch("personal/mycard");
 
     }
 
@@ -56,13 +71,25 @@ class Card extends Base
     {
         $park_id = session("park_id");
         $card_model = new CardModel();
+        $cardType = new CardType();
+        $like = new Like();
         //$type = input('type');
         $uid = session("userId");
         $len = input('len');
         $map = ['uid' => $uid,'status' => 0,'park_id' => $park_id];
         $list = $card_model->where($map)->order("id desc")->limit($len,6)->select();
+        foreach ($list as $k => $v) {
+            $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
+            $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
+            $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
+            $list[$k]['type'] = json_decode($list[$k]['type']);
+            $list[$k]['type'] = $cardType->getCardTypeById( $list[$k]['type']);
+            $list[$k]['list_img'] = !empty($v['list_img']) ? json_decode($v['list_img']) : "";
+            unset($list[$k]['getUserHeader']);
+            $list[$k]['like'] = $like->isLike($list[$k]['id'],$uid);
+        }
 
-        return json_encode($list);
+        return $this->success('获取成功！','',$list);
 
     }
     public function myComments(){
@@ -74,6 +101,7 @@ class Card extends Base
         $list = $comment_model->where($map)->order('create_time desc')->limit($len,6)->select();
         foreach($list as $k => $v){
             $list[$k]['user_name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
+            $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
             $article_id = $v['aid'];
             $articleInfo = $card_model->where(['id' => $article_id])->find();
@@ -82,7 +110,11 @@ class Card extends Base
             unset($list[$k]['getUserHeader']);
         }
         //return json_encode($list);
-        return $this->fetch();
+        if (IS_POST) {
+            return $this->success('获取成功！','',$list);
+        } else {
+            return $list;
+        }
     }
 
     /**
@@ -102,6 +134,7 @@ class Card extends Base
         $list = $card_model->where($map)->order("is_top desc,top_time desc,id  desc")->limit($len, 6)->select();
         foreach ($list as $k => $v) {
             $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
+            $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
             $list[$k]['type'] = json_decode($list[$k]['type']);
             $list[$k]['type'] = $cardType->getCardTypeById( $list[$k]['type']);
@@ -109,9 +142,14 @@ class Card extends Base
             unset($list[$k]['getUserHeader']);
             $list[$k]['like'] = $like->isLike($list[$k]['id'],$uid);
         }
-        $this->assign('list',$list);
-        //return json_encode($list);
-        return $this->fetch();
+        if (IS_POST) {
+            return $this->success('获取成功！','',$list);
+        } else {
+            $this->assign('list',$list);
+            //return json_encode($list);
+            return $this->fetch();
+        }
+
     }
 
     /**
@@ -138,13 +176,14 @@ class Card extends Base
 
                 return $this->error("发帖失败");
             }
+        }else{
+            $cardType = new CardType();
+            $cType = $cardType->getTypeList() ;
+            $this->assign('cardType',json_encode($cType));
+
+
+            return $this->fetch();
         }
-        $cardType = new CardType();
-        $cType = $cardType->getTypeList() ;
-        $this->assign('cardType',json_encode($cType));
-
-
-        return $this->fetch();
     }
 
     /**

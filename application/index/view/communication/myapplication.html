@@ -46,7 +46,7 @@
         <li>
             <div>
                 <p>申请群名：{$vo->group_name}</p>
-                <p>{$vo->create_time || time_format="Y-m-d H:m"}</p>
+                <p>{$vo->create_time || time_format="Y-m-d H:i"}</p>
             </div>
             {switch name="vo->status"}
             {case value="-1"}

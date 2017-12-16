@@ -80,6 +80,9 @@
     height: 100%;
     object-fit: cover;
 }
+.list-body .type-box{
+    overflow: hidden;
+}
 .list-body .type{
     font-size: 15px;
     margin-right: 5px;
@@ -111,4 +114,11 @@
     background: url("/index/images/card/like.png") left no-repeat;
     background-size: 14px 14px;
     float: right;
+}
+.load{
+    text-align: center;
+    font-size: 13px;
+    color: #999;
+    line-height: 1;
+    margin: 10px 0;
 }
