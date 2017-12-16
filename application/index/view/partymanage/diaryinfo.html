@@ -86,11 +86,11 @@
             </li>
         </ul>
         <div class="my-title">今日工作</div>
-        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入今日工作内容':'暂无日志内容'" v-model="baseInfo.content" :readonly="isWrite"></textarea>
+        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入今日工作内容':'暂无内容'" v-model="baseInfo.work_today" :readonly="!isWrite"></textarea>
         <div class="my-title">明日安排</div>
-        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入明日安排内容':'暂无日志内容'" v-model="baseInfo.content" :readonly="!isWrite"></textarea>
+        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入明日安排内容':'暂无内容'" v-model="baseInfo.arrange_tomorrow" :readonly="!isWrite"></textarea>
         <div class="my-title">问题反馈</div>
-        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入反馈内容':'暂无日志内容'" v-model="baseInfo.content" :readonly="!isWrite"></textarea>
+        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入反馈内容':'暂无内容'" v-model="baseInfo.feed_back" :readonly="!isWrite"></textarea>
         <!--<div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img.length">图片</span></div>-->
         <!--<div class="imgBox">-->
             <!--<div class="card-upload" v-if="isWrite">-->
@@ -192,7 +192,7 @@
                 //领导不能写日志判断
                 if(the.isBoss=='yes'){
                     the.isWrite=false
-                }else if(the.baseInfo.content){
+                }else if(the.baseInfo.work_today || the.baseInfo.arrange_tomorrow || the.baseInfo.feed_back){
                     the.isWrite=false
                 }else{
                     the.isWrite=true;
@@ -265,7 +265,6 @@
                 if(!this.days[key].day){
                     return;
                 }
-                console.log(this.days[key].day)
                 if(this.isSubmit){
                     this.$toast('提交中，请稍等')
                     return
@@ -283,14 +282,14 @@
                 };
                 this.$http.post('/index/partymanage/changeDiary',data).then(function (res) {
                     var data=JSON.parse(res.data);
-                    console.log(data)
                     this.isSubmit=false;
                     this.$indicator.close();
-                    this.baseInfo.create_time=data.create_time;
                     this.date=data.create_time;
-                    this.baseInfo.content=data.content;
-                    this.baseInfo.img=data.img ? data.img : [];
-                    console.log(this.baseInfo)
+                    this.baseInfo.create_time=data.create_time;
+                    this.baseInfo.work_today=data.work_today;
+                    this.baseInfo.arrange_tomorrow=data.arrange_tomorrow;
+                    this.baseInfo.feed_back=data.feed_back;
+//                    this.baseInfo.img=data.img ? data.img : [];
                     this.canWrite();
                 },function (res) {
                     this.$toast('请求失败，请退出页面重试')
@@ -330,7 +329,7 @@
                 if(the.isSubmit){
                     the.$toast('提交中，请稍等')
                     return
-                }else if(!the.baseInfo.content && !the.baseInfo.content && !the.baseInfo.content){
+                }else if(!the.baseInfo.work_today && !the.baseInfo.arrange_tomorrow && !the.baseInfo.feed_back){
                     the.$toast('请至少填写一项内容')
                     return
                 }
@@ -341,8 +340,10 @@
 
                 the.isSubmit=true;
                 var data={
-                    img:JSON.stringify(the.imgList),
-                    content:the.baseInfo.content,
+//                    img:JSON.stringify(the.imgList),
+                    work_today:the.baseInfo.work_today,
+                    arrange_tomorrow:the.baseInfo.arrange_tomorrow,
+                    feed_back:the.baseInfo.feed_back,
                     user_id:the.baseInfo.user_id,
                     create_time:the.baseInfo.create_time
                 };

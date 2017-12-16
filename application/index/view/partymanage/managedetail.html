@@ -52,8 +52,8 @@
     }
     .group-box .group-remark{
         display: block;
-        height: 40vw;
-        border: 1px solid #e8e8e8;
+        /*height: 40vw;*/
+        /*border: 1px solid #e8e8e8;*/
         width: 100%;
         padding: 2vw;
         font-size: 1.5rem;
@@ -84,8 +84,10 @@
     </div>
     <div class="group-box">
         <div class="group-tit">备注信息</div>
-        <textarea class="group-remark" readonly="readonly" v-html="info.extra">
-        </textarea>
+        <div v-html="info.extra" class="group-remark">
+        <!--<textarea class="group-remark" readonly="readonly" v-html="">-->
+        <!--</textarea>-->
+        </div>
     </div>
 
 </div>

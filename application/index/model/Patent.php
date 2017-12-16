@@ -20,12 +20,9 @@ class Patent extends Model
         'end_time' => 'strtotime'
     ];
     protected $insert = [
-
         'create_time' => NOW_TIME,
         'status' => 0,
-
     ];
-
     //接口参数校验
     public function _checkData($type, $data)
     {
@@ -116,6 +113,7 @@ class Patent extends Model
             case 1:
                 $pantent['status'] = 1;
                 $pantent['end_time'] = time();
+                $pantent['reply'] = $data['reply'];
                 $res = $pantent->save();
                 if ($res) {
                     $this->sendMessage($type, $id);

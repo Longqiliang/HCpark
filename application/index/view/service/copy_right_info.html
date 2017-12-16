@@ -277,7 +277,7 @@
                         <div  v-for="(img,key) in art.product_img">
                             <div class="upload-img">
                                 <img :src="img" alt="" @click="loadImg(img,art.product_img)">
-                                <i class="del-img" @click="delImg"></i>
+                                <i class="del-img" @click="delImg(key)"></i>
                             </div>
                         </div>
                         <div  v-if="art.product_img.length<3">
@@ -358,15 +358,17 @@
                 contact_staff:'',
                 contact_number:'',
             },
+            itemJson:'',
             nowImgArr:'',
             nowImgIndex:''
         },
         created(){
-            var _this = this;
-            var test =window.location.href;
-            var data ={
-                url:test
-            };
+            var _this = this,
+                    test = window.location.href,
+                    data = {
+                        url:test
+                    },
+                    baseInfo = _this.baseInfo;
             _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
                 var data = JSON.parse(res.data);
                 wx.config({
@@ -380,13 +382,29 @@
             },function () {
 
             });
-//            Object.assign(_this.subData,_this.baseInfo);
-//            获取本地储存
-//            var sessionVal = sessionStorage.getItem('patentInfo');
-//            if(sessionVal){
-//                Object.assign(_this.subData,JSON.parse(sessionVal));
-//                sessionStorage.clear('patentInfo');
-//            }
+            if(baseInfo.id){
+                if(baseInfo.type == 1){
+                    for(var key in _this.art){
+                        _this.art[key] = baseInfo[key]
+                    }
+                    _this.art.id = baseInfo.id;
+                    _this.itemJson = JSON.stringify(_this.art);
+                }else if(baseInfo.type == 2){
+                    for(var key in _this.soft){
+                        _this.soft[key] = baseInfo[key]
+                    }
+                    _this.soft.id = baseInfo.id;
+                    _this.itemJson = JSON.stringify(_this.soft);
+                }else if(baseInfo.type ==3){
+                    for(var key in _this.compose){
+                        _this.compose[key] = baseInfo[key]
+                    }
+                    _this.compose.id = baseInfo.id;
+                    _this.itemJson = JSON.stringify(_this.compose);
+                }
+            }else{
+                console.log('new')
+            }
         },
         methods: {
             //            微信jssdk - 图片预览
@@ -403,63 +421,103 @@
                 });
             },
             validate(){
-                var _this = this;
-                if(_this.baseInfo.type == 2){
-                    if(_this.soft.software_name===''){
+                console.log('验证中...')
+                var _this = this,
+                        baseInfo = _this.baseInfo,
+                        item = {};
+                if(baseInfo.type == 2){
+                    item = _this.soft;
+                    if(item.software_name===''){
                         _this.$toast({message:"请填写软件名称", duration:1000});
                         return false;
-                    }else if(_this.soft.hardware_name===''){
+                    }else if(item.hardware_name===''){
                         _this.$toast({message:"请填写硬件名称", duration:1000});
                         return false;
-                    }else if(_this.soft.software_environment===''){
+                    }else if(item.software_environment===''){
                         _this.$toast({message:"请填写软件环境", duration:1000});
                         return false;
-                    }else if(_this.soft.contact_staff===''){
+                    }else if(item.contact_staff===''){
                         _this.$toast({message:"请填写联系人", duration:1000});
                         return false;
-                    }else if(_this.soft.contact_number===''){
+                    }else if(item.contact_number===''){
                         _this.$toast({message:"请填写联系电话", duration:1000});
                         return false;
-                    }else if(_this.soft.main_function===''){
+                    }else if(item.main_function===''){
                         _this.$toast({message:"请填写主要功能和技术特点", duration:1000});
                         return false;
                     }
-                }
-                else if(_this.baseInfo == 1){
-                    if(_this.art.art_name === ''){
+                    else if(!_this.isSame(baseInfo,item)){
+                        return false;
+                    }
+                }else if(baseInfo.type == 1){
+                    item = _this.art;
+                    if(item.art_name === ''){
                         _this.$toast({message:"请填写作品名称", duration:1000});
-                    }else if(_this.art.contact_staff === ''){
+                        return false;
+                    }else if(item.contact_staff === ''){
                         _this.$toast({message:"请填写联系人", duration:1000});
-                    }else if(_this.art.contact_number === ''){
+                        return false;
+                    }else if(item.contact_number === ''){
                         _this.$toast({message:"请填写联系电话", duration:1000});
-                    }else if(_this.art.works_description === ''){
+                        return false;
+                    }else if(item.works_description === ''){
                         _this.$toast({message:"请填写作品描述", duration:1000});
-                    }else if(_this.art.originality_description === ''){
+                        return false;
+                    }else if(item.originality_description === ''){
                         _this.$toast({message:"请填写独创性描述", duration:1000});
-                    }else if(!_this.art.product_img.length){
+                        return false;
+                    }else if(!item.product_img.length){
                         _this.$toast({message:"请上传产品图", duration:1000});
+                        return false;
+                    }else if(!_this.isSame(baseInfo,item)){
+                        return false;
                     }
-                }
-                else if(_this.baseInfo == 3){
-                    if(_this.compose.create_purpose === ''){
+                }else if(baseInfo.type == 3){
+                    item = _this.compose;
+                    if(item.create_purpose === ''){
                         _this.$toast({message:"请填写创作意图", duration:1000});
-                    }else if(_this.compose.create_purpose.length>50){
+                        return false;
+                    }else if(item.create_purpose.length>50){
                         _this.$toast({message:"创作意图不得大于50字", duration:1000});
-                    }else if(_this.compose.create_process === ''){
+                        return false;
+                    }else if(item.create_process === ''){
                         _this.$toast({message:"请填写创作过程", duration:1000});
-                    }else if(_this.compose.create_process>100){
+                        return false;
+                    }else if(item.create_process>100){
                         _this.$toast({message:"创作过程不得大于100字", duration:1000});
-                    }else if(_this.compose.description_work === ''){
+                        return false;
+                    }else if(item.description_work === ''){
                         _this.$toast({message:"请填写作品描述", duration:1000});
-                    }else if(_this.compose.description_work>150){
+                        return false;
+                    }else if(item.description_work>150){
                         _this.$toast({message:"作品描述不得大于150字", duration:1000});
-                    }else if(_this.compose.contact_staff === ''){
+                        return false;
+                    }else if(item.contact_staff === ''){
                         _this.$toast({message:"请填写联系人", duration:1000});
-                    }else if(_this.compose.contact_number === ''){
+                        return false;
+                    }else if(item.contact_number === ''){
                         _this.$toast({message:"请填写联系电话", duration:1000});
+                        return false;
+                    }else if(!_this.isSame(baseInfo,item)){
+                        return false;
                     }
                 }
+
                 return true;
+            },
+            isSame(baseInfo,item){
+                var _this = this;
+                if(baseInfo.id){
+                    var itemJson = JSON.stringify(item);
+                    if(itemJson === _this.itemJson){
+                        _this.$toast({message:"请修改后再提交", duration:1000});
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }else{
+                    return true;
+                }
             },
             //提交
             querySubmit(){
