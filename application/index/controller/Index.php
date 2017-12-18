@@ -128,6 +128,21 @@ class Index extends Controller
 
     }
 
+    //验证
+    public function verification()
+    {
+        $department = input('department');
+        $park_company = new ParkCompany();
+        $company = $park_company->where('company_id', $department)->find();
+        if ($company['company_code'] == input('company_code')) {
+            $this->success("验证码成功！");
+
+        } else {
+
+            $this->error("验证码错误！");
+        }
+    }
+
     //推荐关注
     public function recommend()
     {
