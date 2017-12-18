@@ -319,7 +319,7 @@
                     return ;
                 }
                 _this.isSubmit = true;
-                _this.$http.post("/index/personal/verification",data).then(function (res) {
+                _this.$http.post("/index/index/verification",data).then(function (res) {
                     _this.isSubmit = false;
                     if(res.data.code===1){
                         swal({
@@ -467,6 +467,15 @@
                                     confirmButtonText: "确定"
                                 });
                             }
+                        },function (res) {
+                            _this.isSubmit = false;
+                            swal({
+                                title: '',
+                                text: '注册失败，请重试！',
+                                type:'error',
+                                confirmButtonColor: "#59B7F3",
+                                confirmButtonText: "确定"
+                            });
                         })
             }
         }
