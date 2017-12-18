@@ -31,7 +31,7 @@
     <div class="active-item" :style="'background-image: url('+ item.activity.front_cover +')'" @click="jumpTo(item.activity.id)" v-for="item in baseInfo">
         <div class="my-icon-flag my-icon-hot" v-if="state(item.activity.status,item.activity.start_time) == 'hot'" ><span>HOT</span></div>
         <div class="my-icon-fillet" v-if="state(item.activity.status,item.activity.start_time) == 'end'"><span>活动已结束</span></div>
-        <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'end'"><span>活动取消</span></div>
+        <div class="my-icon-fillet" v-if="state(item.activity.status,item.activity.start_time) == 'cancel'"><span>活动已取消</span></div>
         <div class="my-icon-flag "  v-if="state(item.activity.status,item.activity.start_time) == 'un'" ><span>预</span></div>
         <div class="active-info">
             <div class="active-title"><span>{{item.activity.name}}</span></div>
@@ -77,21 +77,18 @@
         },
         methods: {
             state(status ,time){
-                if(status && time){
-                    if(time*1000 > Date.parse(new Date())){
+                    if(status == 0){
+                        return 'cancel'
+                    }else if(time*1000 > Date.parse(new Date())){
                         if(status == 1){
                             return 'un'
                         }else if(status == 2){
                             return 'hot'
-                        }else if(status == 0){
-                            return 'cancel'
                         }
                     }else{
                         return 'end'
                     }
-                }else{
-                    return false
-                }
+                return false
             },
             jumpTo(id){
                 window.location.href = '/index/activity/detail/id/'+id

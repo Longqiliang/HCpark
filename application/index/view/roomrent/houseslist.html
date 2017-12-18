@@ -48,7 +48,6 @@
 {block name="body"}
 <div class="content" id="app">
     <div class="header">
-
         <h2 @click="checkPark" class="header-tit">
             <span v-html="showPark"></span> <i class="allow-down"></i>
             <i class="header-icon" @click.stop="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list']"></i>
@@ -224,8 +223,20 @@
         },
         mounted:function () {
             var _this = this;
-            _this.subData.name=_this.userInfo.name||''
-            _this.subData.mobile=_this.userInfo.mobile||''
+            if(_this.userInfo.park_id == '80'){
+                _this.parkName = {
+                    index:Object.keys(list)[1],
+                    txt:Object.keys(values[1])[0]
+                };
+                _this.parkTxt = {
+                    index:Object.keys(list)[1],
+                    txt:Object.keys(values[1])[0]
+                }
+            }
+
+
+            _this.subData.name=_this.userInfo.name||'';
+            _this.subData.mobile=_this.userInfo.mobile||'';
             _this.$nextTick(function() {
                     setTimeout(function() {
                         _this.slots[0].defaultIndex = 0;
@@ -293,11 +304,11 @@
             },
             onParkChange:function (picker,values) {
                 var _this = this;
-                //console.log(values);
+//                console.log(values);
+//                console.log(picker)
                 _this.parkPicker =  picker;
                 if(values[0]){
                     picker.setSlotValues(1,Object.keys(_this.list[values[0]]));
-
                 }
                 _this.parkTxt ={
                     index:values[0],

@@ -310,7 +310,8 @@ class Roomrent extends Base
         $user = WechatUser::where('userid',$userid)->find();
         $userinfo=[
             'name'=>$user['name'],
-            'mobile'=>$user['mobile']
+            'mobile'=>$user['mobile'],
+            'park_id'=>$user['park_id'],
         ];
         $this->assign('user',json_encode($userinfo));
         $list1 = $this->rentlist();
