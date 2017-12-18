@@ -296,10 +296,10 @@ class Activity extends Admin
                     'url' => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $info['id'],
                 ];
                 $service->sendActivityMessage($data, $userid);
-                return $this->success('取消报名成功');
+                return $this->success('取消活动成功');
 
             } else {
-                return $this->error("取消报名失败");
+                return $this->error("取消活动失败");
 
             }
         }
