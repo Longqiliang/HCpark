@@ -33,8 +33,7 @@ class Contract extends Admin {
             if (input("id")){
                 $data = input('post.');
                 foreach($data['img'] as $k => $v){
-                    $startId = strpos($v,"upload");
-                    $data['img'][$k] = substr($v,$startId-1);
+                    $data['img'][$k] = substr($v,strpos($v,"upload")-1);
                 }
                 if ($data['img']) {
                     foreach ($data['img'] as $k1 => $v1) {
@@ -90,16 +89,13 @@ class Contract extends Admin {
 
                         $this->error("已存在合同信息");
                     }
-
-
-
                 }
                 if ($department){
                     $data['department_id'] = $department['id'];
                     $data['company'] = $department['name'];
                 }
                 foreach($data['img'] as $k=>$v){
-                    $data['img'][$k]=str_replace("https://".$_SERVER['HTTP_HOST'],"",$v);
+                    $data['img'][$k] = substr($v,strpos($v,"upload")-1);
                 }
                 if ($data['img']) {
                     foreach ($data['img'] as $k1 => $v1) {
