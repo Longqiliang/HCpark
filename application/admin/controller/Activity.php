@@ -232,7 +232,10 @@ class Activity extends Admin
         $service = new Service();
         $info = $activity->where('id', $data['id'])->find();
 
-        $des = msubstr(str_replace('&nbsp;', '', strip_tags($info['activity_description'])), 0, 36);
+        //$des = msubstr(str_replace('&nbsp;', '', strip_tags($info['activity_description'])), 0, 36);
+        $des ="活动时间：".date('Y-m-d',$info['start_time']);
+        $des .="\n活动地点：".$info['activity_address'];
+
         $map = [
             'title' => $info['name'],
             'description' => $des,
