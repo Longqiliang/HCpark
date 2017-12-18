@@ -223,18 +223,6 @@
         },
         mounted:function () {
             var _this = this;
-            if(_this.userInfo.park_id == '80'){
-                _this.parkName = {
-                    index:Object.keys(list)[1],
-                    txt:Object.keys(values[1])[0]
-                };
-                _this.parkTxt = {
-                    index:Object.keys(list)[1],
-                    txt:Object.keys(values[1])[0]
-                }
-            }
-
-
             _this.subData.name=_this.userInfo.name||'';
             _this.subData.mobile=_this.userInfo.mobile||'';
             _this.$nextTick(function() {
