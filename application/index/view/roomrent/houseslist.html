@@ -4,6 +4,11 @@
 <title>我要租房</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
+    .header{  background-color: #fff;  position: fixed;  top:0;  left: 0;  z-index: 100;  width:100vw;  }
+    .list{padding-top: 14.67vw;}
+    .houses-list-box{
+        padding-top: 23.47vw;
+    }
     .list-item .remark-box{position:relative}
     .list-item .default-bg{position:absolute;width:100%;height:100%;z-index:10;top:0;left:0;background-color:rgba(0,0,0,.3);font-size:1.6rem;color:#fff;display:flex;justify-content:center;align-items:center}
     .content{min-height:100vh;position:relative}
@@ -81,7 +86,7 @@
                 </span>
              </template>
              <template v-else>
-                 <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.room_id,rooms.empty)">
+                 <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.room_id || rooms.id,rooms.empty)">
                     {{rooms.room}}
                 </span>
              </template>
@@ -305,7 +310,9 @@
 //                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
             jump:function (id,empty) {
+                if(!id){ return;}
                 if(!empty){
+                    window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
                     return;
                 }
                 window.location.href = "/index/roomrent/rent?room_id="+id;
