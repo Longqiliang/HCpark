@@ -327,10 +327,22 @@ class Roomrent extends Base
      */
     public function rentlist()
     {
-        $setArr = [
-            '3' => ['A', 'B'],
-            '80' => ['A', 'B', 'C', 'D']
-        ];
+         $park_id = session('park_id');
+        if($park_id==3){
+            $setArr = [
+                '3' => ['A', 'B'],
+                '80' => ['A', 'B', 'C', 'D']
+            ];
+
+        }else{
+            $setArr = [
+                '80' => ['A', 'B', 'C', 'D'],
+                '3' => ['A', 'B']
+
+            ];
+
+        }
+
         $newData = [];
         $parkRoom = new ParkRoom();
         $park = new Park();
