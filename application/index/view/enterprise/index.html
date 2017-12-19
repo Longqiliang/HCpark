@@ -4,10 +4,19 @@
 </style>
 {block name="style"}
 <title>企业搜索</title>
+<link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
-
+    .header{  background-color: #fff;  position: fixed;  top:0;  left: 0;  z-index: 100;  width:100vw;  }
+    .list{padding-top: 14.67vw;}
+    .houses-list-box{
+        padding-top: 23.47vw;
+    }
     body{background-color:#f1f1f1}
-    .search{background:#f0eff5;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;position:relative;z-index:999}
+    .search{background:#f0eff5;
+        box-sizing: border-box;
+        width:100%;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;position:fixed;
+        top:0;
+        left:0;z-index:999}
     .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center}
     .search>.unBtn{display:none}
     .search>.searchBox>.searchInput{display:none}
@@ -18,7 +27,7 @@
     .search.isClick>.searchBox>.searchText>.searchText_c{display:none}
     .search.isClick .searchInput{background:#f0eff5;display:inline-block;font-size:1.4rem;height:3.2rem;width:61.33vw}
     .search.isClick>.unBtn{display:block;padding:0;box-sizing:border-box;width:3.8rem;height:2.8rem;line-height:2.8rem;border-radius:5px;border:1px solid #5d9cec;color:#5d9cec;text-align:center;font-size:1.4rem}
-    .searchList{min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:absolute;top:0;left:0}
+    .searchList{min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:absolute;top:0;left:0;z-index: 120}
     .searchList.company-list{padding:0}
     .searchList.company-list>li{margin-bottom:0;border-bottom:1px solid #f1f1f1}
     .searchList.bgWhite{background-color:rgba(255,255,255,1)}
@@ -33,47 +42,108 @@
     .hidden{display:none}
     .overflow{height:100vh;overflow:hidden}
 
+
+    .header-icon{
+        position: fixed;
+        top:7rem;
+        right:0;
+        z-index: 1000;
+    }
+    .header-icon.index_down{
+        z-index: 100;
+    }
 </style>
 
 {/block}
 
 {block name="body"}
 <div id="app">
-    <div class="search" :class="{isClick:inputStatus}" >
-        <div class="searchBox" @click="isClick">
-            <div class="searchText"><span class="searchText_c">请在此搜索企业</span></div>
-            <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" placeholder="请输入企业名" v-focus="inputStatus">
+    <i class="header-icon" @click="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list',inputStatus?'index_down':'' ]"></i>
+    <div  v-show="!isHouseList">
+        <div class="search" :class="{isClick:inputStatus}" >
+            <div class="searchBox" @click="isClick">
+                <div class="searchText"><span class="searchText_c">请在此搜索企业</span></div>
+                <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" placeholder="请输入企业名" v-focus="inputStatus">
+            </div>
+            <div class="unBtn" @click="isCancel">取消</div>
         </div>
-        <div class="unBtn" @click="isCancel">取消</div>
+        <!--公司列表-->
+        <ul class="company-list" :class="{overflow:inputStatus}">
+            <li v-for="item in companyList" @click="jumpTo(item.id)">
+                <div class="company-logo">
+                    <img :src="item.img" alt="logo" v-if="item.img">
+                    <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+                </div>
+                <ul class="company-info">
+                    <li>{{item.name}}</li>
+                    <li v-if="item.mobile">联系电话：{{item.mobile}}</li>
+                    <li v-else>联系电话：暂无</li>
+                </ul>
+            </li>
+        </ul>
+        <!--搜索列表-->
+        <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
+            <li v-for="item in searchList" @click="jumpTo(item.id)">
+                <div class="company-logo">
+                    <img :src="item.img" alt="logo" v-if="item.img">
+                    <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+                </div>
+                <ul class="company-info">
+                    <li>{{item.name}}</li>
+                    <li v-if="item.mobile!=null">联系电话：{{item.mobile}}</li>
+                    <li v-else>联系电话：暂无</li>
+                </ul>
+            </li>
+        </ul>
     </div>
-    <!--公司列表-->
-    <ul class="company-list" :class="{overflow:inputStatus}">
-        <li v-for="item in companyList" @click="jumpTo(item.id)">
-            <div class="company-logo">
-                <img :src="item.img" alt="logo" v-if="item.img">
-                <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+    <div class=""  v-show="isHouseList">
+        <div class="header">
+            <h2 @click="checkPark" class="header-tit">
+                <span v-html="showPark"></span> <i class="allow-down"></i>
+            </h2>
+            <div class="houses-icon-box" v-show="isHouseList">
+                <template v-if="parkName.index =='人工智能产业园'">
+                    <span class="mar-sm"><i class="houses-icon icon-rentable"></i>空置</span>
+                    <span class="mar-sm"><i class="houses-icon icon-reserve"></i>预订</span>
+                    <span class="mar-sm"><i class="houses-icon icon-renewable"></i>已租</span>
+                </template>
+                <template v-else>
+                    <span ><i class="houses-icon icon-rentable"></i>可租</span>
+                    <span ><i class="houses-icon icon-renewable"></i>已租</span>
+                    <!--<span ><i class="houses-icon icon-renewable"></i>已租</span>-->
+                </template>
+
             </div>
-            <ul class="company-info">
-                <li>{{item.name}}</li>
-                <li v-if="item.mobile">联系电话：{{item.mobile}}</li>
-                <li v-else>联系电话：暂无</li>
-            </ul>
-        </li>
-    </ul>
-    <!--搜索列表-->
-    <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
-        <li v-for="item in searchList" @click="jumpTo(item.id)">
-            <div class="company-logo">
-                <img :src="item.img" alt="logo" v-if="item.img">
-                <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+            <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelPark">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
+                </div>
+                <mt-picker :slots="slots" @change="onParkChange" ></mt-picker>
+            </mt-popup>
+        </div>
+        <div class="houses-list-box">
+            <div class="houses-list" v-for="item of showhouseList" >
+                <div class="houses-list-tit">
+                    {{item.floor}}楼
+                </div>
+                <div class="houses-list-item">
+                    <template v-if="parkName.index =='人工智能产业园' && parkName.txt =='A幢' && item.floor == '2'">
+                 <span  :class="classBar(item.rooms[0].empty)" @click="jump(item.rooms[0].room_id,item.rooms[0].empty)" class="room-lg">
+                   运营中心
+                </span>
+                    </template>
+                    <template v-else>
+                 <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.room_id || rooms.id,rooms.empty)">
+                    {{rooms.room}}
+                </span>
+                    </template>
+
+                </div>
+
             </div>
-            <ul class="company-info">
-                <li>{{item.name}}</li>
-                <li v-if="item.mobile!=null">联系电话：{{item.mobile}}</li>
-                <li v-else>联系电话：暂无</li>
-            </ul>
-        </li>
-    </ul>
+        </div>
+    </div>
 </div>
 {/block}
 
@@ -88,22 +158,147 @@
             }
         }
     });
+    var list = {$room};
+    //console.log(list);
+    var values = [];
+    for(var i in list){
+        values.push(list[i]);
+    }
     var app= new Vue({
         el:'#app',
         data:{
+            roomList:{$room},
             inputStatus:false,
             inputValue:'',
             companyList:{$list},
-            searchList:[]
+            searchList:[],
+
+            //楼盘表
+            isHouseList:false,
+            list:list,
+            popupVisible:false,
+            parkPicker:'',
+            name:Object.keys(list),
+            parkName:{
+                index:Object.keys(list)[0],
+                txt:Object.keys(values[0])[0]
+            },
+            parkTxt:{
+                index:Object.keys(list)[0],
+                txt:Object.keys(values[0])[0]
+            },
+            slots: [
+                {
+                    defaultIndex: 1,
+                    values: Object.keys(list)
+                },{
+                    defaultIndex: 1,
+                    values:Object.keys(Object.values(list)[0])
+                }
+            ],
+        },
+        created(){
+            var isHouseList = window.sessionStorage.getItem('isHouseList');
+            if(isHouseList!==null){
+                this.isHouseList = JSON.parse(isHouseList);
+                if(this.isHouseList){
+                   var parkName =  window.sessionStorage.getItem('parkName');
+                    if(parkName!==null){
+                        this.parkName = JSON.parse(parkName);
+                        window.sessionStorage.clear('parkName')
+                    }
+                }
+            }
+        },
+        mounted(){
+            var _this = this;
+            _this.$nextTick(function() {
+                setTimeout(function() {
+                    _this.slots[0].defaultIndex = 0;
+//                        _this.slots[1].defaultIndex = 0;
+                }, 100);
+            });
+        },
+        computed:{
+            showhouseList:function () {
+                var _this = this;
+                for(var obj in _this.list){
+                    for(var arr in _this.list[obj]){
+                        if(_this.parkName.index == obj && _this.parkName.txt == arr){
+                            // console.log(_this.list[obj][arr].houselist);
+                            return _this.list[obj][arr].houselist;
+                        }
+                    }
+                }
+            },
+            showrentList:function () {
+                var _this = this;
+                for(var obj in _this.list){
+                    for(var arr in _this.list[obj]){
+                        if(_this.parkName.index == obj && _this.parkName.txt == arr){
+                            //console.log(_this.list[obj][arr].rentlist);
+                            return _this.list[obj][arr].rentlist;
+                        }
+                    }
+                }
+            },
+            showPark:function () {
+                var _this = this;
+                return _this.parkName.index + _this.parkName.txt;
+            },
+            showState:function () {
+                var _this = this;
+                _this.parkName
+            }
         },
         methods:{
-//            getListInfo:function () {
-//                this.$http.get('',{params: {}}).then(function (response) {
-//                    this.companyList=this.response.data;
-//                },function (response) {
-//
-//                })
-//            },
+            classBar:function (type) {
+                if(type == '0') return '';
+                if(type == '1') return 'selectable';
+                if(type == '2') return 'reserve-able';
+            },
+            parkToggle:function () {
+                var _this = this;
+                _this.isHouseList =!_this.isHouseList;
+
+                window.sessionStorage.setItem('isHouseList',JSON.stringify(_this.isHouseList));
+            },
+            cancelPark:function () {
+                this.popupVisible = false;
+            },
+            selectPark:function () {
+                var _this = this;
+                _this.popupVisible = false;
+                _this.parkName = _this.parkTxt;
+                _this.loading = false;
+            },
+            onParkChange:function (picker,values) {
+                var _this = this;
+//                console.log(values);
+//                console.log(picker)
+                _this.parkPicker =  picker;
+                if(values[0]){
+                    picker.setSlotValues(1,Object.keys(_this.list[values[0]]));
+                }
+                _this.parkTxt ={
+                    index:values[0],
+                    txt:values[1]
+                };
+            },
+            checkPark:function () {
+                var _this =this;
+                _this.popupVisible = true;
+//                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
+            },
+            jump:function (id,empty) {
+                if(!id){ return;}
+                window.sessionStorage.setItem('parkName',JSON.stringify(this.parkName ))
+                if(!empty){
+                    window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
+                    return;
+                }
+                window.location.href = "/index/roomrent/rent?room_id="+id;
+            },
             jumpTo(id){
 //                window.location.href="/index/enterprise/info/id/"+id;
                 window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;

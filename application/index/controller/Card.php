@@ -47,7 +47,7 @@ class Card extends Base
         //$this->assign('list',json_encode(['check' => $list1, "uncheck" => $list2]));
         foreach ($list as $k => $v) {
             $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
-            $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
+            //$list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
             $list[$k]['type'] = json_decode($list[$k]['type']);
             $list[$k]['type'] = $cardType->getCardTypeById( $list[$k]['type']);
@@ -80,7 +80,7 @@ class Card extends Base
         $list = $card_model->where($map)->order("id desc")->limit($len,6)->select();
         foreach ($list as $k => $v) {
             $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
-            $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
+           // $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
             $list[$k]['type'] = json_decode($list[$k]['type']);
             $list[$k]['type'] = $cardType->getCardTypeById( $list[$k]['type']);
@@ -101,7 +101,7 @@ class Card extends Base
         $list = $comment_model->where($map)->order('create_time desc')->limit($len,6)->select();
         foreach($list as $k => $v){
             $list[$k]['user_name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
-            $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
+            //$list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
             $article_id = $v['aid'];
             $articleInfo = $card_model->where(['id' => $article_id])->find();
@@ -134,7 +134,7 @@ class Card extends Base
         $list = $card_model->where($map)->order("is_top desc,top_time desc,id  desc")->limit($len, 6)->select();
         foreach ($list as $k => $v) {
             $list[$k]['name'] = isset($v->getUserHeader->name)?$v->getUserHeader->name:"";
-            $list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
+            //$list[$k]['create_time'] = date('Y-m-d H:i', $v['create_time']);
             $list[$k]['header'] = isset($v->getUserHeader->avatar) ? $v->getUserHeader->avatar : '';
             $list[$k]['type'] = json_decode($list[$k]['type']);
             $list[$k]['type'] = $cardType->getCardTypeById( $list[$k]['type']);
