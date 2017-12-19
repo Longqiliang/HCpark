@@ -1131,6 +1131,7 @@
            var modal = $(this),
                    build = $('#checkPark').select().val(),
                    target = $(event.relatedTarget);
+           console.log(build);
             modal.find("#house").find("option[value="+build+"]").prop("selected",true);
             modal.find('.add_floor').hide().siblings("[data-key="+build+"]").show();
        });
@@ -1303,11 +1304,15 @@
                url:"{:Url('Park/addfloor')}",
                success:function (e) {
                    $this.prop('disabled', false);
-                   //console.log(e)
                    if(e.code ==1){
                        updateAlert(e.msg,"success");
-                       var html = template('floorTpl',data);
-                       parent.before(html);
+                       var floorHtml = template('floorTpl',data);
+                        var optionHtml = '';
+                       for(var i = 1; i <= newFloor; i += 1){
+                           optionHtml += '<option value="'+i+'">'+i+'</option>';
+                       }
+                       parent.before(floorHtml);
+                       $("#room-modal").find(".add_floor[data-key="+build+"]").html(optionHtml);
                        if(state == '2'){
                            $(".table .table-cell-icon").show();
                        }
