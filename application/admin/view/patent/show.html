@@ -13,6 +13,8 @@
 <link href="/static/summernote/summernote.css" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<!--图片点击放大的css-->
+<link rel="stylesheet" href="/static/viewer/viewer.min.css">
 <style>
 
     .btn-primary {
@@ -215,7 +217,7 @@
                         <div class="imggroup">
                             {volist name="$info.id_card" id="vo"}
 
-                                <img width="200px" height="200px" src="{$vo}" class="img-auto front_cover_img" alt="">
+                                <img width="200px" height="200px" src="{$vo}" class="img" alt="">
                             {/volist}
                         </div>
                     </div>
@@ -250,8 +252,7 @@
                         <div class="imggroup">
                             {volist name="$info.product_img" id="vo" key='k'}
                             <div class="col-lg-3">
-                            <img width="200px" height="200px" src="{$vo}" class="img-auto front_cover_img" alt="">
-
+                           <img width="200px" height="200px" src="{$vo}" class="img" alt="">
                             ({$info.img_text[$k-1]})
                             </div>
                                 {/volist}
@@ -343,8 +344,18 @@
 <script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<!--图片点击放大的js-->
+<script src="/static/viewer/viewer-jquery.min.js"></script>
 <script>
     highlight_subnav("{:Url('patent/index')}");
+
+
+    $('.imggroup').viewer({
+        url: 'src'
+    })
+
+
+
     $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
