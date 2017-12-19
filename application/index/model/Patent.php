@@ -73,6 +73,7 @@ class Patent extends Model
         $userid = session('userId');
         $park_id = session('park_id');
         $patent = $this->where(['create_user' => $userid, 'park_id' => $park_id])->select();
+        $info=array();
         foreach ($patent as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
