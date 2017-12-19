@@ -13,6 +13,7 @@ use app\admin\model\Comments;
 use think\Db;
 use think\Exception;
 use think\Log;
+use app\common\behavior\Service as ServiceModel;
 
 /**
  * Class Card
@@ -83,9 +84,17 @@ class Card extends Admin
         $map['update_time'] = time();
         $map['remark'] = input('remark');
         $info = $cardModel->where('id', $id)->update($map);
+        $cardInfo = $cardModel->where(['id' => $id])->find();
+        $userId = $cardInfo['uid'];
         if ($info) {
             if ($status == 2) {
                 //推送
+                $message = [
+                    "title" => "论坛帖子提示",
+                    "description" => date('m月d日', time()) . "\n帖子审核失败\n备注:" . $cardInfo['remark'],
+                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/CardDetail/getDetail/id/' . $id,
+                ];
+                ServiceModel::sendPersonalMessage($message, $userId);
             }
 
             return $this->success("审核成功", Url('Card/cardindex'));

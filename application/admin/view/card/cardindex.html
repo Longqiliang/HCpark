@@ -44,8 +44,8 @@
                                 <th>标签</th>
                                 <th>用户名</th>
                                 <th>创建时间</th>
+                               <!-- <th>状态</th>-->
                                 <th>是否置顶</th>
-                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -61,15 +61,16 @@
                                 <td>{$vo.type_name}</td>
                                 <td>{$vo.username}</td>
                                 <td>{$vo.create_time}</td>
-                                <td>{$vo.status_text}</td>
-                                <td>{eq name="$vo.is_top" value="1"}置顶{/eq}</td>
+                                <!--<td>{$vo.status_text}</td>-->
+                                <td>{eq name="$vo.is_top" value="1"}
+                                    <a href="javascripy:void(0);">置顶</a>
+                                    {/eq}</td>
                                 <td>
                                     {eq name="$vo.is_top" value="1"}
                                     <a href="javascript:setTop('{$vo.id}',0)" >取消置顶</a>
                                     {else／}
                                     <a href="javascript:setTop('{$vo.id}',1)" >置顶</a>
                                     {/eq}
-
                                     <a class="confirm" href="{:Url('Card/preview?id='.$vo['id'])}">编辑</a>
                                     <a class="confirm ajax-del" href="{:Url('Card/delete?id='.$vo['id'])}">删除</a>
                                     <a class="confirm" href="{:Url('Card/comments?id='.$vo['id'])}">评论列表</a>
