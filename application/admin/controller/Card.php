@@ -175,6 +175,7 @@ class Card extends Admin
         if (IS_POST) {
             $data = input('post.');
             $data['park_id'] = session("user_auth")['park_id'];
+            $data['create_time'] = time();
             $id = $typeModel->validate('CardType')->save($data);
             if ($id) {
 
@@ -305,7 +306,11 @@ class Card extends Admin
     public function setTop(){
         $id = input("id");
         $uid = input("uid");
-        $data = ['is_top' => $uid , "top_time" => time()];
+        if ($uid == 1){
+            $data = ['is_top' => $uid , "top_time" => time()];
+        }else{
+            $data = ['is_top' => $uid , "top_time" => 0];
+        }
         $card = new CardModel();
         $res = $card->where(['id' => $id])->update($data);
         if ($res){
