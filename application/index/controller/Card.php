@@ -164,7 +164,6 @@ class Card extends Base
             $uid = session("userId");
             $result = array();
             $result['front_cover'] = "";
-            $data['img'] = input('img',"");
             //第四步 新增记录
             $card_model = new CardModel();
             $res1 = $card_model->addNewCard($uid, $data['type'], $data['title'], $data['content'],'',$data['img']);
