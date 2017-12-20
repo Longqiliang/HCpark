@@ -18,12 +18,25 @@
         display: block;
         margin: 0 auto;
     }
+    .my-activity{
+        position: fixed;
+        top:2rem;
+        right:0;
+        font-size: 1.4rem;
+        color: #fff;
+        background-color: #F97878;
+        padding:0.5rem 0.5rem 0.5rem 1rem;
+        border-top-left-radius: 1.5rem;
+        border-bottom-left-radius: 1.5rem;
+        z-index: 100;
+    }
 </style>
 {/block}
 
 {block name="body"}
 <!-- -1 删除   0.禁用   1 预报名中 2启动.-->
 <div id="app">
+    <a href="/index/personal/myactivity" class="my-activity">我的活动</a>
     <div class="active-item" :style="'background-image: url('+ item.front_cover +')'" @click="jumpTo(item.id)" v-for="item in baseInfo">
         <div class="my-icon-flag my-icon-hot" v-if="state(item.status,item.start_time) == 'hot'" ><span>HOT</span></div>
         <div class="my-icon-fillet" v-if="state(item.status,item.start_time) == 'end'"><span>活动已结束</span></div>
