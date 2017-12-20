@@ -43,7 +43,7 @@ class Patent extends  Admin
             $data=input('');
              $res = $patent->check($data);
              if($res){
-                 return $this->success('审核成功');
+                 return $this->success('审核成功','patent/index');
 
              }else{
                  return $this->error('审核失败');
