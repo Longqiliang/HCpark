@@ -343,18 +343,21 @@
 <script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
 <script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
-<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<!--<script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>-->
 <!--图片点击放大的js-->
 <script src="/static/viewer/viewer-jquery.min.js"></script>
+<script src="/static/viewer/viewer.min.js"></script>
 <script>
     highlight_subnav("{:Url('patent/index')}");
 
 
-    $('.imggroup').viewer({
-        url: 'src'
-    })
-
-
+//    $('.mail-box').eq(0).viewer({
+//        url: 'src'
+//    })
+//    $('.imggroup').eq(1).viewer({
+//        url: 'src'
+//    })
+    var viewer = new Viewer(document.getElementsByClassName('mail-box')[0]);
 
     $(document).ready(function () {
         $('.i-checks').iCheck({
