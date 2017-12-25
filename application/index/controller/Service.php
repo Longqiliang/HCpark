@@ -3919,6 +3919,8 @@ class Service extends Base
             foreach ($list2 as $k => $v) {
                 $floor2[$k] = $v['floor'];
             }
+
+            $roomArray2=array();
             foreach ($floor2 as $k => $v) {
                 $roomList2 = $parkRoom->where(['floor' => $v, 'build_block' => "C", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
                 foreach ($roomList2 as $k1 => $v1) {
@@ -3926,6 +3928,7 @@ class Service extends Base
                     $roomArray2[$k][$k1] = $v1['room'];
                 }
             }
+            $newArr2=array();
             foreach ($floor2 as $k => $v) {
                 $newArr2[$k]['name'] = $v . "楼";
                 $newArr2[$k][$v . "楼"] = $roomArray2[$k];
@@ -3949,6 +3952,8 @@ class Service extends Base
                     $roomArray3[$k][$k1] = $v1['room'];
                 }
             }
+
+            $newArr3 =array();
             foreach ($floor3 as $k => $v) {
                 $newArr3[$k]['name'] = $v . "楼";
                 $newArr3[$k][$v . "楼"] = $roomArray3[$k];
