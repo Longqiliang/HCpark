@@ -1126,7 +1126,7 @@ class Personal extends Base
                 break;
             case 3:
                 $list2 = Patent::where([ 'create_user' => $userid])->select();
-                int_to_string($list2, $map = array('type' => array(1 => '发明专利', 2 => '实用型专利', 3 => '外观设计'), 'status' => array([-1 =>'已删除',0 => '审核中', 1 => '审核成功', 2 => '审核失败'])));
+                int_to_string($list2, $map = array('type' => array(1 => '发明专利', 2 => '实用型专利', 3 => '外观设计'), 'status' => array(-1 =>'已删除',0 => '审核中', 1 => '审核成功', 2 => '审核失败')));
                 foreach ($list2 as $value) {
                     $map = [
                         'service_name' => isset($value['type_text']) ? $value['type_text'] : "",
