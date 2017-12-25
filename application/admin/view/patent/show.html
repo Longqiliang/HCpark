@@ -106,9 +106,9 @@
                     <div class="col-lg-1 text-right control-label">
                         <label>专利名称:</label>
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-3">
                         <input type="text" readonly="readonly" placeholder="联系人" class="form-control form_title"
-                               name="name" value="{$info.patent_name}">
+                               name="name"     value="{$info.patent_name}">
 
                     </div>
 
@@ -358,7 +358,6 @@
 //        url: 'src'
 //    })
     var viewer = new Viewer(document.getElementsByClassName('mail-box')[0]);
-
     $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
@@ -367,9 +366,6 @@
         $(".check-all").on("ifChanged", function () {
             $("tbody").find(".ids").iCheck("toggle");
         });
-
-
-
         //绑定模态框展示的方法
         $("#remark-modal").on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
@@ -377,8 +373,6 @@
             var recipient = button.data('text');
             var modal = $(this);
             modal.find('.modal-body').html(recipient);
-
-
         })
     });
 
