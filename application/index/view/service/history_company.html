@@ -15,6 +15,7 @@
     .patent-list>li>.state-icon.state-icon-pass{background-image:url(/index/images/service/patent/auditing-pass.png)}
     .patent-list>li>.state-icon.state-icon-ing{background-image:url(/index/images/service/patent/auditing-ing.png)}
     .patent-list>li>.state-icon.state-icon-refuse{background-image:url(/index/images/service/patent/auditing-refuse.png)}
+    .patent-list>li>.state-icon.state-icon-del{background-image:url(/index/images/service/patent/auditing-del.png)}
     .patent-title{box-sizing:border-box;padding-right:1rem;width:14.4rem;height:100%;flex:1}
     .patent-title>div{overflow:hidden;margin-bottom:.5rem;width:100%;text-overflow:ellipsis;white-space:nowrap;font-size:1.6rem}
     .patent-title>span{color:#999;font-size:1.2rem}
@@ -49,7 +50,7 @@
                     <div>{{item.type==1?'发明专利':item.type==2?'实用新型':'外观设计'}}：{{item.name}}</div>
                     <span>{{item.time}}</span>
                 </div>
-               <div class="state-icon" :class="{'state-icon-ing':item.status==0,'state-icon-pass':item.status==1,'state-icon-refuse':item.status==2}"></div>
+               <div class="state-icon" :class="{'state-icon-del':item.status==-1,'state-icon-ing':item.status==0,'state-icon-pass':item.status==1,'state-icon-refuse':item.status==2}"></div>
             </li>
         </ul>
     </div>
@@ -60,7 +61,7 @@
                     <div>{{item.type==2?('软著登记：'+item.name):item.type==1?('美术作品登记：'+item.name):'软著撰写'}}</div>
                     <span>{{item.create_time|timeToString }}</span>
                 </div>
-                <div class="state-icon" :class="{'state-icon-ing':item.status==0,'state-icon-pass':item.status==1,'state-icon-refuse':item.status==2}"></div>
+                <div class="state-icon" :class="{'state-icon-del':item.status==-1,'state-icon-ing':item.status==0,'state-icon-pass':item.status==1,'state-icon-refuse':item.status==2}"></div>
             </li>
         </ul>
     </div>
