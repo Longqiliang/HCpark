@@ -80,16 +80,17 @@
         <div class="mail-box-header">
 
             <h2> {if condition="$type eq 1"}
-                  艺术作品
-                {elseif condition="$type eq 2"  }
+                艺术作品
+                {elseif condition="$type eq 2" }
                 软著登记
-                {elseif condition="$type eq 3"  }
+                {elseif condition="$type eq 3" }
                 软著撰写
                 {/if}</h2>
             <div class="mail-tools tooltip-demo m-t-md">
 
                 <div class=" pull-right tooltip-demo">
-                    <a href="javascript:ggg()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i
+                    <a href="javascript:ggg()" class="btn btn-white btn-sm" data-toggle="tooltip"
+                       data-placement="top"><i
                             class="fa fa-times"></i> 关闭</a>
                 </div>
                 <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye" style="margin-left: 3px"></i> </button>-->
@@ -99,7 +100,7 @@
             <form id="form" class="form-horizontal" method="post">
                 <input type="hidden" name="type" value={$type}>
                 <input type="hidden" name="id" value={$info.id}>
-            {if condition="$type eq 1"}
+                {if condition="$type eq 1"}
                 <div class="form-group">
 
                     <div class="col-lg-1 text-right control-label">
@@ -144,7 +145,7 @@
                         <div class="imggroup">
                             {volist name="$info.proudct_img" id="vo"}
                             <a href="{$vo}" class="front_cover">
-                                <img  width="200px" height="200px"  src="{$vo}" class="img-auto front_cover_img" alt="">
+                                <img width="200px" height="200px" src="{$vo}" class="img-auto front_cover_img" alt="">
                             </a>
                             {/volist}
                         </div>
@@ -155,7 +156,7 @@
                 <br>
 
 
-                {elseif condition="$type eq 2"  }
+                {elseif condition="$type eq 2" }
 
                 <div class="form-group">
 
@@ -196,8 +197,7 @@
                 </div>
 
 
-
-                {elseif condition="$type eq 3"  }
+                {elseif condition="$type eq 3" }
 
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
@@ -236,15 +236,20 @@
                         <label>创建日期:</label>
                     </div>
                     <div class="col-lg-2">
-                        <input readonly=ture type="text" class="form-control form_title" value="{$info.create_time|date='Y-m-d H:i',###}">
+                        <input readonly=ture type="text" class="form-control form_title"
+                               value="{$info.create_time|date='Y-m-d H:i',###}">
                     </div>
                     <div class="col-lg-1 text-right control-label">
                         <label>审核日期:</label>
                     </div>
                     <div class="col-lg-2">
 
+                        {if condition='$info.end_time==null'}
 
-                        <input readonly=ture type="text" class="form-control form_title" value="{if condition='$info.end_time==null'}空{else/}{$info.end_time|date='Y-m-d H:i',###}{/if}">
+                        <input readonly=ture type="text" class="form-control form_title" value="空">{else/}
+                        <input readonly=ture type="text" class="form-control form_title"
+                               value=" {$info.end_time|date='Y-m-d H:i',###}">
+                        {/if}
                     </div>
 
                     <div class="col-lg-1 text-right control-label">
@@ -275,38 +280,38 @@
                 </div>
 
 
-            {if condition="$info.status eq 2"}
-            <br>
-            <br>
-            <div class="form-group">
-                <div class="col-lg-1 text-right control-label">
-                    <label>园区回复:</label>
+                {if condition="$info.status eq 2"}
+                <br>
+                <br>
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>园区回复:</label>
+
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea readonly=ture class="form-control form_title"
+                                  name="chinese_description">{$info.reply}</textarea>
+                    </div>
+
+                    <br>
 
                 </div>
-                <div class="col-lg-10">
-                    <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.reply}</textarea>
-                </div>
+
+                {elseif condition="$info.status eq 0" }
 
                 <br>
 
-            </div>
-
-            {elseif condition="$info.status eq 0" }
-
-            <br>
-
-            <br>
-            <div class="form-group">
-                <div class="col-lg-11 col-lg-offset-1 text-left">
-                    <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$info.id}"
-                       class="btn-sm btn-primary" style="color:#fff">审核</a>
+                <br>
+                <div class="form-group">
+                    <div class="col-lg-11 col-lg-offset-1 text-left">
+                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$info.id}"
+                           class="btn-sm btn-primary" style="color:#fff">审核</a>
+                    </div>
                 </div>
-            </div>
-            {elseif condition="$info.status eq 1" }
-            审核成功
+                {elseif condition="$info.status eq 1" }
+                审核成功
 
-            {/if}
-
+                {/if}
 
 
             </form>
@@ -396,10 +401,10 @@
     function check(pass) {
         var reply = $("textarea[name='reply']").val();
         var id = $("input[name='id']").val();
-        var type =$("input[name='type']").val();
-        console.log('re'+reply+'  id'+id+'   type'+type)
+        var type = $("input[name='type']").val();
+        console.log('re' + reply + '  id' + id + '   type' + type)
         $.ajax({
-            data: {id: id, reply:reply,pass:pass,type:type},
+            data: {id: id, reply: reply, pass: pass, type: type},
             type: "POST",
             url: "{:Url('Copyright/check')}",
             success: function (data) {
