@@ -58,9 +58,9 @@
     <div v-else>
         <div class="active-item" :style="'background-image: url('+ baseInfo.front_cover +')'">
             <div class="my-icon-flag my-icon-hot" v-if="state(baseInfo.status,baseInfo.start_time) == 'hot'" ><span>HOT</span></div>
-            <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'cancel'"><span>活动已结束</span></div>
-            <div class="my-icon-fillet" v-if="state(info.status,info.start_time) == 'noSignUp'"><span>报名已结束</span></div>
-            <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'end'"><span>活动取消</span></div>
+            <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'end'"><span>活动已结束</span></div>
+            <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'noSignUp'"><span>报名已结束</span></div>
+            <div class="my-icon-fillet" v-if="state(baseInfo.status,baseInfo.start_time) == 'cancel'"><span>活动取消</span></div>
             <div class="my-icon-flag "  v-if="state(baseInfo.status,baseInfo.start_time) == 'un'" ><span>预</span></div>
             <!--<div class="active-info">-->
                 <!--<div class="active-detail-title"><span v-html="titleWarp(baseInfo.name)"></span></div>-->
@@ -86,8 +86,8 @@
         </div>
         <div class="btn-box">
             <div class="btn btn-block btn-end" v-if="baseInfo.status == 0" >活动已取消</div>
-            <div class="btn btn-block btn-end" v-else-if="state(info.status,info.start_time)==='noSignUp'" >报名已结束</div>
-            <div class="btn btn-block btn-end" v-else-if="state(info.status,info.start_time)==='end'" >活动已结束</div>
+            <div class="btn btn-block btn-end" v-else-if="state(baseInfo.status,baseInfo.start_time)==='noSignUp'" >报名已结束</div>
+            <div class="btn btn-block btn-end" v-else-if="state(baseInfo.status,baseInfo.start_time)==='end'" >活动已结束</div>
             <div class="btn btn-block btn-joined" v-else-if="baseInfo.is_sign === 'yes'">已报名</div>
             <div class="btn btn-block btn-end" v-else-if="baseInfo.status == 1" >活动暂未开始</div>
             <div class="btn btn-block btn-end" v-else-if="baseInfo.activity_number && count == baseInfo.activity_number " >人数已满</div>
@@ -135,7 +135,7 @@
         },
         methods: {
             state(status ,time){
-                if(status && time){
+                if(status!==undefined && time!==undefined){
                     if(status == 0){
                         return 'cancel'
                     }
