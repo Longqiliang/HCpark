@@ -3915,6 +3915,7 @@ class Service extends Base
                 'build_block' => "C",
             ];
             $list2 = $parkRoom->where($map2)->distinct(true)->field('floor')->order('floor desc')->select();
+            $floor2 =array();
             foreach ($list2 as $k => $v) {
                 $floor2[$k] = $v['floor'];
             }
