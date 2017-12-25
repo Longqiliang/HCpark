@@ -242,7 +242,9 @@
                         <label>审核日期:</label>
                     </div>
                     <div class="col-lg-2">
-                        <input readonly=ture type="text" class="form-control form_title" value="{$info.end_time|date='Y-m-d H:i',###}">
+
+
+                        <input readonly=ture type="text" class="form-control form_title" value="{if condition='$info.end_time==null'}空{else/}{$info.end_time|date='Y-m-d H:i',###}{/if}">
                     </div>
 
                     <div class="col-lg-1 text-right control-label">
