@@ -43,13 +43,13 @@ class Roomrent extends Base
             $data['price'] = $room['price'];
 
         }
-        $userid =session('userId');
-        $user = WechatUser::where('userid',$userid)->find();
-        $userinfo=[
-            'name'=>$user['name'],
-            'mobile'=>$user['mobile']
+        $userid = session('userId');
+        $user = WechatUser::where('userid', $userid)->find();
+        $userinfo = [
+            'name' => $user['name'],
+            'mobile' => $user['mobile']
         ];
-        $this->assign('user',json_encode($userinfo));
+        $this->assign('user', json_encode($userinfo));
         $this->assign('info', json_encode($data));
 
         return $this->fetch();
@@ -203,14 +203,14 @@ class Roomrent extends Base
          ];
          $list1 = ["$parkName" => $list];
          $this->assign('type', $type);*/
-        $userid =session('userId');
-        $user = WechatUser::where('userid',$userid)->find();
-        $userinfo=[
-            'name'=>$user['name'],
-            'mobile'=>$user['mobile'],
-            'park_id'=>$user['park_id'],
+        $userid = session('userId');
+        $user = WechatUser::where('userid', $userid)->find();
+        $userinfo = [
+            'name' => $user['name'],
+            'mobile' => $user['mobile'],
+            'park_id' => $user['park_id'],
         ];
-        $this->assign('user',json_encode($userinfo));
+        $this->assign('user', json_encode($userinfo));
 
         $list1 = $this->rentlist();
         //return json_encode($list1);
@@ -226,23 +226,20 @@ class Roomrent extends Base
      */
     public function rentlist()
     {
-         $park_id = session('park_id');
-        if($park_id==3){
+        $park_id = session('park_id');
+        if ($park_id == 3) {
             $setArr = [
                 '3' => ['A', 'B'],
                 '80' => ['A', 'B', 'C', 'D']
             ];
-
-        }else{
+        } else {
             $setArr = [
                 '80' => ['A', 'B', 'C', 'D'],
                 '3' => ['A', 'B']
-
             ];
-
         }
-
         $newData = [];
+        $roomArray = [[]];
         $parkRoom = new ParkRoom();
         $park = new Park();
         $parkRent = new ParkRent();
@@ -262,7 +259,7 @@ class Roomrent extends Base
                 }
                 //每层楼房间数目
                 foreach ($floor as $k => $v) {
-                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number,'manage' => 1])->order("room asc")->select();
+                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number, 'manage' => 1])->order("room asc")->select();
                     //判断房间是否出租
                     foreach ($roomList as $k1 => $v1) {
                         //分园区，希垦没有已约的状态
