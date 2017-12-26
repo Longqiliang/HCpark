@@ -38,10 +38,11 @@ class Patent extends  Admin
     //专利申请详情页
     public function show()
     {   $patent = new PatentModel();
+        $park_id = session('user_auth')['park_id'];
         if (IS_POST) {
              //审核
             $data=input('');
-             $res = $patent->check($data);
+             $res = $patent->check($data,$park_id);
              if($res){
                  return $this->success('审核成功','patent/index');
 
