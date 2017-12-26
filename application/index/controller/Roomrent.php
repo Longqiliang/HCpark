@@ -239,7 +239,7 @@ class Roomrent extends Base
             ];
         }
         $newData = [];
-        $roomArray = [];
+        $roomArray = [[]];
         $parkRoom = new ParkRoom();
         $park = new Park();
         $parkRent = new ParkRent();
