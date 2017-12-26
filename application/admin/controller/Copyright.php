@@ -171,7 +171,7 @@ class Copyright extends Admin
                 $message = [
                     "title" => "版权登记提示",
                     "description" => "您的".$name."申请园区审核失败，请您核对信息后重新提交。",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/22/can_check/yes/type/'.$type.'/id/' . $id,
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/22/can_check/no/type/'.$type.'/id/' . $id,
                 ];
 
                 if(!empty($reply)){
