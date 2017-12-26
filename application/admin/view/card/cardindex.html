@@ -40,7 +40,7 @@
                             <thead>
                             <tr>
                                 <th><input class="i-checks check-all" type="checkbox"></th>
-                                <th>标签</th>
+                                <th>内容</th>
                                 <th>用户名</th>
                                 <th>创建时间</th>
                                <!-- <th>状态</th>-->
@@ -52,7 +52,7 @@
                             {volist name="list" id="vo"}
                             <tr>
                                 <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                <td>{$vo.type_name}</td>
+                                <td>{$vo.content|strip_tags|mb_substr=0,20}</td>
                                 <td>{$vo.username}</td>
                                 <td>{$vo.create_time}</td>
                                 <!--<td>{$vo.status_text}</td>-->
