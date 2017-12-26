@@ -12,6 +12,7 @@ use app\common\model\CopyrightArt;
 use app\common\model\CopyrightSoft;
 use app\common\model\CopyrightSoftwrite;
 use app\common\behavior\MyPaginate;
+use app\common\behavior\Service;
 
 
 class Copyright extends Admin
@@ -96,10 +97,6 @@ class Copyright extends Admin
     }
 
 
-
-
-
-
     //删除
     public function del()
     {
@@ -131,24 +128,57 @@ class Copyright extends Admin
         $type = input('type');
         $is_pass = input('pass');
         $reply = input('reply');
+        $parkid  =session("user_auth")['park_id'];
+       $service = new Service();
         if($is_pass==2&&empty($reply)){
             return $this->error("审核失败时，园区回复一定要填");
         }
+        $name ="";
         if ($type == 1) {
             //艺术作品
+            $name="艺术作品";
             $mode = new CopyrightArt();
         } elseif ($type == 2) {
             //软著登记
+            $name="软著登记";
             $mode = new CopyrightSoft();
         } elseif ($type == 3) {
             //软著撰写
+            $name="软著撰写";
             $mode = new CopyrightSoftwrite();
         }
         $status = $is_pass == 1 ? 1 : 2;
 
         $res = $mode->where('id', $id)->update(['status' => $status, 'end_time' => time(), 'reply' => $reply]);
-
+        $info =$mode->where('id',$id)->find();
         if ($res) {
+
+            if($status==1){
+
+                $message = [
+                    "title" => "版权登记提示",
+                    "description" => "您的".$name."申请园区已确认，请您携带相关材料前往希垦科技园A幢2楼园区知识产权服务中心办理。",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/22/can_check/yes/type/'.$type.'/id/' . $id,
+                ];
+                //推送给用户
+               $re = $service->commonSend(4, $message, $info['userid'], 22,$parkid);
+
+            }else{
+
+                $message = [
+                    "title" => "版权登记提示",
+                    "description" => "您的".$name."申请园区审核失败，请您核对信息后重新提交。",
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/22/can_check/yes/type/'.$type.'/id/' . $id,
+                ];
+
+                if(!empty($reply)){
+                    $message['description'] .= '备注：'.$reply;
+                }
+                //推送给用户
+               $re = $service->commonSend(4, $message,  $info['userid'], 22,$parkid);
+
+
+            }
             return $this->success('成功');
         } else {
             return $this->error('失败');
