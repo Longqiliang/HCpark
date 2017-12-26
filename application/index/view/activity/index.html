@@ -39,6 +39,7 @@
     <a href="/index/personal/myactivity" class="my-activity">我的活动</a>
     <div class="active-item" :style="'background-image: url('+ item.front_cover +')'" @click="jumpTo(item.id)" v-for="item in baseInfo">
         <div class="my-icon-flag my-icon-hot" v-if="state(item.status,item.start_time) == 'hot'" ><span>HOT</span></div>
+        <div class="my-icon-fillet" v-if="state(item.status,item.start_time) == 'noSignUp'"><span>报名已结束</span></div>
         <div class="my-icon-fillet" v-if="state(item.status,item.start_time) == 'end'"><span>活动已结束</span></div>
         <div class="my-icon-flag "  v-if="state(item.status,item.start_time) == 'un'" ><span>预</span></div>
         <div class="active-info">
@@ -108,13 +109,18 @@
         },
         methods: {
             state(status ,time){
-                if(status && time){
+                if(status!==undefined && time!==undefined){
+                    if(status == 0){
+                        return 'cancel'
+                    }
                     if(time*1000 > Date.parse(new Date())){
                         if(status == 1){
                             return 'un'
                         }else if(status == 2){
                             return 'hot'
                         }
+                    }else if(Date.parse(new Date()) < (time*1000+ 24*60*60*1000)){
+                        return 'noSignUp'
                     }else{
                         return 'end'
                     }

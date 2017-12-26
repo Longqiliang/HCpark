@@ -69,8 +69,9 @@
                         </div>
                     </div>
                     <div class="state">
-                        <span class="end" v-if="c.status==1">已回复</span>
-                        <span class="ing" v-else>未回复</span>
+                        <span class="ing" :class="{'end':companyStatus(c.app_id,c.status)}" >{{c.status_text}}</span>
+                        <!--<span class="end" v-if="c.status==1">已回复</span>-->
+                        <!--<span class="ing" v-else>未回复</span>-->
                     </div>
                 </a>
                 <img src="/index/images/service/card/icon-default.jpg" v-if="companyShow.length===0" class="no-list">
@@ -208,21 +209,40 @@
                 }
             },
             companyStatus(appid,status){
-                var s = {};
+//                var s = {};
                 if(appid===12){
-                    if(status === 2){
-                        s={status : false ,text : '未回复'}
-                    }else{
-                        s={status : true ,text : '已回复'}
-                    }
-                    return status===2?true:false
+//                    if(status === 2){
+//                        s={status : false ,text : '未回复'}
+//                    }else{
+//                        s={status : true ,text : '已回复'}
+//                    }
+                    return status===1?true:false
+                }else if(appid===21){
+//                    if(status==-1){
+//                        s={status : false ,text : '未审核'}
+//                    }else if(status==1){
+//                        s={status : false ,text : '审核成功'}
+//                    }else if(status==2){
+//                        s={status : false ,text : '审核失败'}
+//                    }
+                    return status===1?true:false
+                }else if(appid===22){
+//                    if(status==-1){
+//                        s={status : false ,text : '已删除'}
+//                    }else if(status==0){
+//                        s={status : false ,text : '未联系'}
+//                    }else if(status==1){
+//                        s={status : false ,text : '已联系'}
+//                    }
+                    return status===1?true:false
                 }else{
-                    if(status === 2){
-                        s={status : false ,text : '未回复'}
-                    }else{
-                        s={status : true ,text : '已回复'}
-                    }
-                    return s
+//                    if(status === 2){
+//                        s={status : false ,text : '未回复'}
+//                    }else{
+//                        s={status : true ,text : '已回复'}
+//                    }
+                    return status===1?true:false
+//                    return s
                 }
             },
             tabChange(key){

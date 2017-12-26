@@ -60,10 +60,9 @@ class CopyrightSoft extends  Model
         $userid = session('userId');
         $map=[
             'userid'=>$userid,
-            'status'=>array('neq',-1),
             'park_id'=>$park_id
             ];
-        $list =$this->where($map)->field('software_name as name,id,status,create_time,end_time,contact_staff,contact_number,2 as type ')->select();
+        $list =$this->where($map)->field('software_name as name,id,status,create_time,end_time,contact_staff,contact_number,2 as type ')->order('create_time desc')->select();
 
         return $list;
 

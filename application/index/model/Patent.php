@@ -23,6 +23,7 @@ class Patent extends Model
         'create_time' => NOW_TIME,
         'status' => 0,
     ];
+
     //接口参数校验
     public function _checkData($type, $data)
     {
@@ -72,8 +73,8 @@ class Patent extends Model
     {
         $userid = session('userId');
         $park_id = session('park_id');
-        $patent = $this->where(['create_user' => $userid, 'park_id' => $park_id])->select();
-        $info=array();
+        $patent = $this->where(['create_user' => $userid, 'park_id' => $park_id])->order('create_time desc')->select();
+        $info = array();
         foreach ($patent as $k => $v) {
             $info[$k] = [
                 'id' => $v['id'],
@@ -183,8 +184,8 @@ class Patent extends Model
                     "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/' . $pantent['type'] . '/id/' . $pantent['id']
                 ];
                 //点击查看详情
-                if(!empty($pantent['reply'])){
-                    $message['description'] = $message['description']."备注：".$pantent['reply']."点击查看详情";
+                if (!empty($pantent['reply'])) {
+                    $message['description'] = $message['description'] . "备注：" . $pantent['reply'] . "点击查看详情";
                 }
 
                 //审核失败推用户
@@ -196,7 +197,7 @@ class Patent extends Model
                 $message = [
                     "title" => "专利申请提示",
                     "description" => "您有一条新的专利申请服务待处理，点击查看详情",
-                    "url" => 'https://' . $_SERVER['HTTP_HOST'] .'/index/service/historyDetail/appid/21/can_check/no/id/' . $pantent['id']
+                    "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/21/can_check/no/id/' . $pantent['id']
                 ];
                 //推送给运营
                 $service->commonSend(1, $message, '', 21);
