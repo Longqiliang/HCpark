@@ -109,19 +109,17 @@ class Enterprise extends Base{
     public function rentlist()
     {
         $park_id = session('park_id');
-        if($park_id==3){
+        if ($park_id == 3) {
             $setArr = [
                 '3' => ['A', 'B'],
+                '80' => ['A', 'B', 'C', 'D']
             ];
-
-        }else{
+        } else {
             $setArr = [
                 '80' => ['A', 'B', 'C', 'D'],
-
+                '3' => ['A', 'B']
             ];
-
         }
-
         $newData = [];
         $parkRoom = new ParkRoom();
         $park = new Park();
@@ -142,18 +140,15 @@ class Enterprise extends Base{
                 }
                 //每层楼房间数目
                 foreach ($floor as $k => $v) {
-                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number])->order("room asc")->select();
+                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number, 'manage' => 1])->order("room asc")->select();
                     //判断房间是否出租
                     foreach ($roomList as $k1 => $v1) {
-                        $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                        if (!$res) {
-                            $status = 0;
-                            $roomsId = 0;
-                        } else {
-                            $rent = PeopleRent::where(['rent_id'=> $res['id'],'status'=>array('neq',-1)])->select();
+                        //分园区，希垦没有已约的状态
+                        if ($v1['manage'] == 1 && $v1['company_id'] == 0) {
+                            $rent = PeopleRent::where(['room_id' => $v1['id'], 'status' => array('neq', -1)])->select();
                             if ($rent) {
 
-                                if ($res['park_id'] == 3) {
+                                if ($v1['park_id'] == 3) {
                                     $status = 1;
                                 } else {
                                     $status = 2;
@@ -161,7 +156,10 @@ class Enterprise extends Base{
                             } else {
                                 $status = 1;
                             }
-                            $roomsId = $res['room_id'];
+                            $roomsId = $v1['id'];
+                        } else {
+                            $status = 0;
+                            $roomsId = 0;
                         }
                         $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
                         $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
@@ -172,11 +170,10 @@ class Enterprise extends Base{
                     $newArr[$k]['rooms'] = $roomArray[$k];
                 }
                 //rentList 找出所有出租信息
-                $map1 = ['park_id' => $number, "build_block" => $element, 'status' => 0, 'manage' => 0];
-                $rentList = $parkRent->where($map1)->order('id desc')->limit(6)->select();
+                $map1 = ['park_id' => $number, "build_block" => $element, 'status' => 1, 'manage' => 1, 'company_id' => ['eq', 0]];
+                $rentList = $parkRoom->where($map1)->order('id desc')->limit(6)->select();
                 if ($rentList) {
                     foreach ($rentList as $k => $v) {
-                        $room = ParkRoom::where('id', $v['room_id'])->find();
                         $data[$k] = [
                             'img' => json_decode($v['imgs']),
                             'panorama' => $v['panorama'],
@@ -184,7 +181,7 @@ class Enterprise extends Base{
                             'price' => $v['price'] . "元/㎡·天",
                             'name' => $parkInfo['name'],
                             'id' => $v['id'],
-                            'room' => $room['build_block'] . "幢" . $room['room'] . "室"
+                            'room' => $v['build_block'] . "幢" . $v['room'] . "室"
                         ];
                         if (floatval($v['price']) == 0) {
                             $data[$k]['price'] = $v['price'];
@@ -198,7 +195,7 @@ class Enterprise extends Base{
             }
         }
 
-        return $newData;
+        return ($newData);
 
 
     }
