@@ -12,9 +12,9 @@ use app\common\model\ParkIntention;
 use app\common\model\ParkRent;
 use app\common\model\ParkRoom;
 use app\common\model\PeopleRent;
-use app\index\model\WechatUser;
 use app\index\model\Park;
 use think\Db;
+use app\index\model\WechatUser;
 use think\Image;
 use app\index\controller\Service;
 
@@ -24,30 +24,23 @@ class Roomrent extends Base
     public function rent()
     {
         $roomId = input("room_id");
-        $rentId = input("rent_id");
-        if ($roomId) {
-            $roomInfo = ParkRent::where('room_id', $roomId)->find();
-            $room = ParkRoom::where('id', $roomId)->find();
-        } else {
-            $roomInfo = ParkRent::where('id', $rentId)->find();
-            $room = ParkRoom::where('id', $roomInfo['room_id'])->find();
-        }
-        $parkId = $roomInfo['park_id'];
+        $room = ParkRoom::where('id', $roomId)->find();
+        $parkId = $room['park_id'];
         $park = Park::where('id', $parkId)->find();
         $data = [
             'position' => $room['build_block'] . $room['room'] . "室",
-            'area' => $roomInfo['area'] . "㎡",
-            'price' => $roomInfo['price'] . "元/㎡·天",
+            'area' => $room['area'] . "㎡",
+            'price' => $room['price'] . "元/㎡·天",
             'park' => $park['name'],
             'address' => $park['address'],
             'moblie' => $park['business_phone'],
-            'img' => json_decode($roomInfo['img']),
-            'imgs' => json_decode($roomInfo['imgs']),
-            'panorama' => $roomInfo['panorama'],
-            'rent_id' => $roomInfo['id'],
+            'img' => json_decode($room['img']),
+            'imgs' => json_decode($room['imgs']),
+            'panorama' => $room['panorama'],
+            'rent_id' => $room['id'],
         ];
-        if (floatval($roomInfo['price']) == 0) {
-            $data['price'] = $roomInfo['price'];
+        if (floatval($room['price']) == 0) {
+            $data['price'] = $room['price'];
 
         }
 
@@ -69,94 +62,11 @@ class Roomrent extends Base
 //            $data['imgs'] = $b;
 //        }
 
-        /* if ($data['img']) {
-             foreach ($data['img'] as $k1 => $v1) {
-                 if (is_file(PUBLIC_PATH . $v1)) {
-                     $path = str_replace(".", "_s.", $v1);
-                     $image = Image::open(PUBLIC_PATH . $v1);
-                     $image->thumb(355, 188)->save(PUBLIC_PATH . $path);
-                     $data['imgs'][$k1] = $path;
-                 } else {
-                     $data['imgs'][$k1] = $data['img'][$k1];
-                 }
-             }
-         }*/
-
-        $userid =session('userId');
-        $user = WechatUser::where('userid',$userid)->find();
-        $userinfo=[
-            'name'=>$user['name'],
-            'mobile'=>$user['mobile']
-        ];
-        $this->assign('user',json_encode($userinfo));
         $this->assign('info', json_encode($data));
 
         return $this->fetch();
     }
 
-    /*租房详细列表*/
-    /*public function rentList()
-    {
-        $data = [];
-        $data1 = [];
-        $type = input('type');
-        $parkId = session("park_id");
-        $map = ['park_id' => $parkId, "build_block" => "A"];
-        $parkInfo = Park::where('id', $parkId)->find();
-        $parkRent = new ParkRent();
-        $list = $parkRent->where($map)->order('id desc')->limit(6)->select();
-        foreach ($list as $k => $v) {
-            $room = ParkRoom::where('id', $v['room_id'])->find();
-            $data[$k] = [
-                'img' => json_decode($v['img']),
-                'panorama' => $v['panorama'],
-                'area' => $v['area'] . "㎡",
-                'price' => $v['price'] . "元/㎡·天",
-                'name' => $parkInfo['name'],
-                'id' => $v['id'],
-                'room' => $room['build_block'] . "幢" . $room['room'] . "室"
-            ];
-            if ($data[$k]['img']) {
-                foreach ($data[$k]['img'] as $k1 => $v1) {
-                    $path = str_replace(".", "_s.", $v1);
-                    $image = Image::open(PUBLIC_PATH . $v1);
-                    $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                    $data[$k]['img'][$k1] = $path;
-                }
-            }
-        }
-        $map1 = ['park_id' => $parkId, "build_block" => "B"];
-        $list1 = $parkRent->where($map1)->order('id desc')->limit(6)->select();
-        foreach ($list1 as $k => $v) {
-            $room = ParkRoom::where('id', $v['room_id'])->find();
-            $data1[$k] = [
-                'img' => json_decode($v['img']),
-                'panorama' => $v['panorama'],
-                'area' => $v['area'] . "㎡",
-                'price' => $v['price'] . "元/㎡·天",
-                'name' => $parkInfo['name'],
-                'id' => $v['id'],
-                'room' => $room['build_block'] . "幢" . $room['room'] . "室"
-            ];
-            if ($data[$k]['img']) {
-                foreach ($data[$k]['img'] as $k1 => $v1) {
-                    if (is_file(PUBLIC_PATH . $v1)) {
-                        $path = str_replace(".", "_s.", $v1);
-                        $image = Image::open(PUBLIC_PATH . $v1);
-                        $image->thumb(170, 120)->save(PUBLIC_PATH . $path);
-                        $data[$k]['img'][$k1] = $path;
-                    }
-                }
-            }
-        }
-        $parkName = $parkInfo['name'];
-        $resArr = array_merge(["$parkName A幢" => $data], ["$parkName B幢" => $data1]);
-        $this->assign("type", $type);
-        $this->assign('list', json_encode($resArr));
-
-
-        return $this->fetch();
-    }*/
 
     /*楼盘列表下拉刷新*/
     public function moreList()
@@ -168,14 +78,13 @@ class Roomrent extends Base
         }
         $parkName = input('name');
         $park = new Park();
-        $parkId = $park->where(['name'=>['like',"%$parkName%"]])->find();
-        $map = ['park_id' => $parkId['id'], 'build_block' => $build];
+        $parkId = $park->where(['name' => ['like', "%$parkName%"]])->find();
+        $map = ['park_id' => $parkId['id'], 'build_block' => $build, 'manage' => 1, 'company_id' => ['eq', 0]];
         $parkInfo = Park::where('id', $parkId)->find();
-        $parkRent = new ParkRent();
-        $list = $parkRent->where($map)->order('id desc')->limit($len, 6)->select();
+        $parkRoom = new ParkRoom();
+        $list = $parkRoom->where($map)->order('id desc')->limit($len, 6)->select();
         if ($list) {
             foreach ($list as $k => $v) {
-                $room = ParkRoom::where('id', $v['room_id'])->find();
                 $data[$k] = [
                     'img' => json_decode($v['imgs']),
                     'panorama' => $v['panorama'],
@@ -183,7 +92,7 @@ class Roomrent extends Base
                     'price' => $v['price'] . "元/㎡·天",
                     'name' => $parkInfo['name'],
                     'id' => $v['id'],
-                    'room' => $room['build_block'] . "幢" . $room['room'] . "室"
+                    'room' => $v['build_block'] . "幢" . $v['room'] . "室"
                 ];
                 if (floatval($v['price']) == 0) {
                     $data[$k]['price'] = $v['price'];
@@ -314,6 +223,7 @@ class Roomrent extends Base
             'park_id'=>$user['park_id'],
         ];
         $this->assign('user',json_encode($userinfo));
+
         $list1 = $this->rentlist();
         //return json_encode($list1);
         //echo json_encode($list1);
@@ -367,15 +277,12 @@ class Roomrent extends Base
                     $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number])->order("room asc")->select();
                     //判断房间是否出租
                     foreach ($roomList as $k1 => $v1) {
-                        $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                        if (!$res) {
-                            $status = 0;
-                            $roomsId = 0;
-                        } else {
-                            $rent = PeopleRent::where(['rent_id'=> $res['id'],'status'=>array('neq',-1)])->select();
+                        //分园区，希垦没有已约的状态
+                        if ($v1['manage'] == 1 && $v1['company_id'] == 0) {
+                            $rent = PeopleRent::where(['room_id' => $v1['id'], 'status' => array('neq', -1)])->select();
                             if ($rent) {
 
-                                if ($res['park_id'] == 3) {
+                                if ($v1['park_id'] == 3) {
                                     $status = 1;
                                 } else {
                                     $status = 2;
@@ -383,7 +290,10 @@ class Roomrent extends Base
                             } else {
                                 $status = 1;
                             }
-                            $roomsId = $res['room_id'];
+                            $roomsId = $v1['id'];
+                        } else {
+                            $status = 0;
+                            $roomsId = 0;
                         }
                         $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
                         $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
@@ -394,11 +304,10 @@ class Roomrent extends Base
                     $newArr[$k]['rooms'] = $roomArray[$k];
                 }
                 //rentList 找出所有出租信息
-                $map1 = ['park_id' => $number, "build_block" => $element, 'status' => 0, 'manage' => 0];
-                $rentList = $parkRent->where($map1)->order('id desc')->limit(6)->select();
+                $map1 = ['park_id' => $number, "build_block" => $element, 'status' => 1, 'manage' => 1, 'company_id' => ['eq', 0]];
+                $rentList = $parkRoom->where($map1)->order('id desc')->limit(6)->select();
                 if ($rentList) {
                     foreach ($rentList as $k => $v) {
-                        $room = ParkRoom::where('id', $v['room_id'])->find();
                         $data[$k] = [
                             'img' => json_decode($v['imgs']),
                             'panorama' => $v['panorama'],
@@ -406,7 +315,7 @@ class Roomrent extends Base
                             'price' => $v['price'] . "元/㎡·天",
                             'name' => $parkInfo['name'],
                             'id' => $v['id'],
-                            'room' => $room['build_block'] . "幢" . $room['room'] . "室"
+                            'room' => $v['build_block'] . "幢" . $v['room'] . "室"
                         ];
                         if (floatval($v['price']) == 0) {
                             $data[$k]['price'] = $v['price'];
@@ -420,7 +329,7 @@ class Roomrent extends Base
             }
         }
 
-        return $newData;
+        return ($newData);
 
 
     }
