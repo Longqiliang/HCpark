@@ -115,18 +115,12 @@ class Enterprise extends Base{
         if($park_id==3){
             $setArr = [
                 '3' => ['A', 'B'],
-                '80' => ['A', 'B', 'C', 'D']
             ];
-
         }else{
             $setArr = [
                 '80' => ['A', 'B', 'C', 'D'],
-                '3' => ['A', 'B']
-
             ];
-
         }
-
         $newData = [];
         $parkRoom = new ParkRoom();
         $park = new Park();
@@ -202,7 +196,7 @@ class Enterprise extends Base{
             }
         }
 
-        return ($newData);
+        return $newData;
 
 
     }
