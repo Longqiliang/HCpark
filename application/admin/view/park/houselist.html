@@ -1334,12 +1334,12 @@
        //图片上传
        uploadPicture($("#room-modal"));
        //增加房间信息
-        $('#addRoom').click(function () {
+        $('#room-modal').on('click','#addRoom',function () {
             var park = "{$park_id}";
-            var area = $('#area').val();
-            var floor = $("[name='add_floor']").select().val();
-            var room = $("[name='add_room']").val();
             var build = $('#house').select().val();
+            var area = $('#area').val();
+            var floor = $('#room-modal').find('.add_floor[data-key='+build+']').select().val();
+            var room = $("[name='add_room']").val();
             var price = $('#price').val();
             var panorama = $("#panorama").val();
             var imgsSrc=[];
