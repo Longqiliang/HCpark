@@ -11,7 +11,7 @@ namespace app\common\model;
 
 use org\PhpZip;
 use think\Model;
-use app\index\controller\Service;
+use app\common\behavior\Service;
 use PhpOffice\PhpWord\PhpWord;
 
 class Patent extends Model
@@ -68,7 +68,7 @@ class Patent extends Model
     }
 
 
-    public function check($data)
+    public function check($data,$park_id)
     {
         if (empty($data)) {
             return false;
@@ -87,7 +87,7 @@ class Patent extends Model
         $re = $info->save();
         if ($re) {
             //推送
-            $this->sendMessage($data['type'], $data['id']);
+            $this->sendMessage($data['type'], $data['id'],$park_id);
             return true;
         } else {
 
@@ -96,7 +96,7 @@ class Patent extends Model
     }
 
     //审核三种情况的推送（1。审核成功推用户  2。审核失败推用户  3。修改成功推运营     ）
-    public function sendMessage($type, $id)
+    public function sendMessage($type, $id,$park_id)
     {
         $pantent = $this->get($id);
         $service = new Service();
@@ -108,7 +108,7 @@ class Patent extends Model
                     "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetailCompany/appid/21/can_check/no/type/' . $pantent['type'] . '/id/' . $pantent['id']
                 ];
                 //审核成功推用户
-                $service->commonSend(4, $message, $pantent['create_user'], 21);
+                $service->commonSend(4, $message, $pantent['create_user'], 21,$park_id);
 
                 break;
             case 2:
@@ -123,7 +123,7 @@ class Patent extends Model
                 }
 
                 //审核失败推用户
-                $service->commonSend(4, $message, $pantent['create_user'], 21);
+                $service->commonSend(4, $message, $pantent['create_user'], 21,$park_id);
                 break;
             case 3:
 
@@ -134,7 +134,7 @@ class Patent extends Model
                     "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/21/can_check/no/id/' . $pantent['id']
                 ];
                 //推送给运营
-                $service->commonSend(1, $message, '', 21);
+                $service->commonSend(1, $message, '', 21,$park_id);
                 break;
         }
     }
