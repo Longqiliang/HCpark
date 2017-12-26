@@ -38,7 +38,7 @@ class ParkRoom extends Model{
                 }
                 //每层楼房间数目
                 foreach ($floor as $k => $v) {
-                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0 ,'park_id' => $number])->order("room asc")->select();
+                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0 ,'park_id' => $number,'manage' => 1])->order("room asc")->select();
                     //判断房间是否出租
                     foreach ($roomList as $k1 => $v1) {
                         //分园区，希垦没有已约的状态
