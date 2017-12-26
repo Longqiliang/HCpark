@@ -66,7 +66,7 @@ class CardDetail extends Base
         $this->assign('list',$result);
         //return json_encode($result);
 
-        return $this->fetch();
+        return $this->fetch('card_detail/getDetail');
     }
 
     /**
