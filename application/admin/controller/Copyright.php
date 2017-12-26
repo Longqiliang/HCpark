@@ -56,7 +56,10 @@ class Copyright extends Admin
              $mode = new CopyrightSoftwrite();
          }
           $data = $mode->where('id',$id)->find();
-
+         if ($type == 1) {
+             //艺术作品
+             $data['product_img']=json_decode($data['product_img']);
+         }
           switch ($data['status']){
               case 0:$data['status_text']="未审核"; break;
               case 1:$data['status_text']="审核成功"; break;
