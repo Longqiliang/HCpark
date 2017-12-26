@@ -179,7 +179,7 @@ class Copyright extends Admin
 
 
             }
-            return $this->success('成功');
+            return $this->success('成功','copyright/index');
         } else {
             return $this->error('失败');
         }
