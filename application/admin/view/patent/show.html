@@ -106,7 +106,7 @@
                     <div class="col-lg-1 text-right control-label">
                         <label>专利名称:</label>
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-3">
                         <input type="text" readonly="readonly" placeholder="联系人" class="form-control form_title"
                                name="name" value="{$info.patent_name}">
 
@@ -160,7 +160,8 @@
                         <label>查询日期:</label>
                     </div>
                     <div class="col-lg-2">
-                        <input readonly=ture type="text" class="form-control form_title" value="{$info.create_time|date='Y-m-d H:i',###}">
+                        <input readonly=ture type="text" class="form-control form_title"
+                               value="{$info.create_time|date='Y-m-d H:i',###}">
                     </div>
 
 
@@ -168,7 +169,12 @@
                         <label>审核日期:</label>
                     </div>
                     <div class="col-lg-2">
-                        <input readonly=ture type="text" class="form-control form_title" value="{if condition='$info.end_time !=null'}{$info.end_time|date='Y-m-d H:i',###}{else/}空{/if}">
+
+                        {if condition='$info.end_time !=null'}
+                        <input readonly=ture type="text" class="form-control form_title"
+                               value="{$info.end_time|date='Y-m-d H:i',###}">
+                        {else/} <input readonly=ture type="text" class="form-control form_title" value="空">{/if}
+
                     </div>
 
                     <div class="col-lg-1 text-right control-label">
@@ -217,7 +223,7 @@
                         <div class="imggroup">
                             {volist name="$info.id_card" id="vo"}
 
-                                <img width="200px" height="200px" src="{$vo}" class="img" alt="">
+                            <img width="200px" height="200px" src="{$vo}" class="img" alt="">
                             {/volist}
                         </div>
                     </div>
@@ -249,21 +255,19 @@
                     <br>
                     {notempty name="$info.product_img" }
 
-                        <div class="imggroup">
-                            {volist name="$info.product_img" id="vo" key='k'}
-                            <div class="col-lg-3">
-                           <img width="200px" height="200px" src="{$vo}" class="img" alt="">
+                    <div class="imggroup">
+                        {volist name="$info.product_img" id="vo" key='k'}
+                        <div class="col-lg-3">
+                            <img width="200px" height="200px" src="{$vo}" class="img" alt="">
                             ({$info.img_text[$k-1]})
-                            </div>
-                                {/volist}
                         </div>
+                        {/volist}
+                    </div>
 
                     {/notempty}
 
                 </div>
                 {/if}
-
-
 
 
                 {eq name="$info.status" value="2"}
@@ -311,10 +315,10 @@
                 </div>
                 <div class="modal-body">
 
-                            <div class="form-group"><label class="col-sm-2 control-label">回复内容</label>
-                                <div class="col-sm-10"><textarea name="reply" class="form-control"
-                                                                 placeholder="审核不通过必填"></textarea></div>
-                            </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">回复内容</label>
+                        <div class="col-sm-10"><textarea name="reply" class="form-control"
+                                                         placeholder="审核不通过必填"></textarea></div>
+                    </div>
 
                     <input type="hidden" name="id">
                     <!-- 富文本框<div class="mail-text h-200">
@@ -325,7 +329,7 @@
 
                 <div class="modal-footer">
                     <a class="btn btn-primary " onclick="check(1)">通过</a>
-                    <a class="btn btn-primary " onclick="check(2)">不通过</a>
+                    <a class="btn btn-danger " onclick="check(2)">不通过</a>
                     <input type="hidden" name="id" value="">
                 </div>
             </form>
@@ -351,14 +355,13 @@
     highlight_subnav("{:Url('patent/index')}");
 
 
-//    $('.mail-box').eq(0).viewer({
-//        url: 'src'
-//    })
-//    $('.imggroup').eq(1).viewer({
-//        url: 'src'
-//    })
+    //    $('.mail-box').eq(0).viewer({
+    //        url: 'src'
+    //    })
+    //    $('.imggroup').eq(1).viewer({
+    //        url: 'src'
+    //    })
     var viewer = new Viewer(document.getElementsByClassName('mail-box')[0]);
-
     $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
@@ -367,9 +370,6 @@
         $(".check-all").on("ifChanged", function () {
             $("tbody").find(".ids").iCheck("toggle");
         });
-
-
-
         //绑定模态框展示的方法
         $("#remark-modal").on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
@@ -377,8 +377,6 @@
             var recipient = button.data('text');
             var modal = $(this);
             modal.find('.modal-body').html(recipient);
-
-
         })
     });
 
@@ -386,7 +384,7 @@
         var reply = $("textarea[name='reply']").val();
         var id = $("input[name='id']").val();
         $.ajax({
-            data: {id: id, reply: reply,type:type},
+            data: {id: id, reply: reply, type: type},
             type: "POST",
             url: "{:Url('Patent/show')}",
             success: function (data) {
@@ -401,10 +399,6 @@
             }
         });
     }
-
-
-
-
 
 
 </script>

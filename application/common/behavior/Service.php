@@ -237,4 +237,94 @@ class Service
     }
 
 
+    /**推个人中心，推送人员选择公共方法
+     *$type =1  该园区运营人员
+     *$type =2  该园区物业管理
+     *$type =3  该园区运营人员+物业管理
+     *$type =4  该用户
+     *
+     * $message=[
+     *   "title" => "物业保修提示",
+     *   "description" => date('m月d', $data['create_time']) . "\n服务类型：" . $data['type_text'] . "\n服务地点：" . $data['address'] . "\n联系人员：" . $data['name'] . "\n联系电话：" . $data['mobile'],
+     *   "url" => '']
+     *
+     *retur  true/false
+     */
+    public function commonSend($type, $message, $userid = "", $appid = 0, $park_id)
+    {
+        $wechatUser = new WechatUser();
+        $useridlist = "";
+
+        //该园区运营的department——id
+        switch ($park_id) {
+            case  3 :
+                $department_id = 76;
+                $propertyDepartment = 86;
+                break;
+            case  80 :
+                $department_id = 88;
+                $propertyDepartment = 90;
+                break;
+            default:
+                $department_id = 76;
+                $propertyDepartment = 86;
+                break;
+        }
+        switch ($type) {
+            //运营
+            case 1 :
+                $user = $wechatUser->where(['department' => $department_id, 'status' => 1])->select();
+                foreach ($user as $value) {
+                    if (isset($value->operational->appids)) {
+                        $appids = empty($value->operational->appids) ? array() : json_decode($value->operational->appids);
+                        if (in_array($appid, $appids)) {
+                            $useridlist .= '|' . $value['userid'];
+                        }
+                    }
+                }
+                break;
+            //物业
+            case 2 :
+                $user = $wechatUser->where(['department' => $propertyDepartment, 'park_id' => $park_id])->select();
+                foreach ($user as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
+            case 3:
+                //该园区运营团队
+                $user1 = $wechatUser->where(['department' => $department_id, 'status' => 1])->select();
+                foreach ($user1 as $value) {
+                    if (isset($value->operational->appids)) {
+                        $appids = empty($value->operational->appids) ? array() : json_decode($value->operational->appids);
+                        if (in_array($appid, $appids)) {
+                            $useridlist .= '|' . $value['userid'];
+                        }
+                    }
+                }
+                //该园区物业管理
+                $user2 = $wechatUser->where(['department' => $propertyDepartment, 'park_id' => $park_id, 'status' => 1])->select();
+                foreach ($user2 as $value2) {
+                    $useridlist .= '|' . $value2['userid'];
+                }
+                break;
+
+            case 4:
+                $useridlist = $userid;
+                break;
+        }
+        if (!empty($useridlist)) {
+            $res = $this->sendPersonalMessage($message, $useridlist);
+        } else {
+            return true;
+        }
+        if ($res['errcode'] == 0) {
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+
+
+
 }

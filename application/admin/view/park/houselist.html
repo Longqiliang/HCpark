@@ -356,6 +356,9 @@
         -webkit-transform: translateY(-50%);
         transform: translateY(-50%);
     }
+    #house option{
+        display: none;
+    }
     @media (max-width: 1650px){
         .table-cell-tit{
             text-align: right;
@@ -1132,7 +1135,7 @@
                    build = $('#checkPark').select().val(),
                    target = $(event.relatedTarget);
            console.log(build);
-            modal.find("#house").find("option[value="+build+"]").prop("selected",true);
+            modal.find("#house").find("option[value="+build+"]").prop("selected",true).show().siblings("option").hide();
             modal.find('.add_floor').hide().siblings("[data-key="+build+"]").show();
        });
        $("#update-modal").on('show.bs.modal', function (event) {
