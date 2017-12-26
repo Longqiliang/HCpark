@@ -826,6 +826,8 @@ class Park extends Admin
                     $peopleArr = $peoplerent->where(['room_id' => $info['id'],'status' => 1])->select();
                     if (!empty($peopleArr)) {
                         $info['people'] = $peopleArr;
+                    }else{
+                        $info['people'] = [];
                     }
                 } else {
                     $info['status'] = 1;
