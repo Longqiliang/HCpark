@@ -43,25 +43,13 @@ class Roomrent extends Base
             $data['price'] = $room['price'];
 
         }
-
-//        $a = array();
-//        if ($data['img']) {
-//            foreach ($data['img'] as $v) {
-//                $v = "//" . $_SERVER['HTTP_HOST'] . $v;
-//                array_push($a, $v);
-//            }
-//            $data['img'] = $a;
-//        }
-//
-//        $b = array();
-//        if ($data['imgs']) {
-//            foreach ($data['imgs'] as $v2) {
-//                $v2 = "//" . $_SERVER['HTTP_HOST'] . $v2;
-//                array_push($b, $v2);
-//            }
-//            $data['imgs'] = $b;
-//        }
-
+        $userid =session('userId');
+        $user = WechatUser::where('userid',$userid)->find();
+        $userinfo=[
+            'name'=>$user['name'],
+            'mobile'=>$user['mobile']
+        ];
+        $this->assign('user',json_encode($userinfo));
         $this->assign('info', json_encode($data));
 
         return $this->fetch();
