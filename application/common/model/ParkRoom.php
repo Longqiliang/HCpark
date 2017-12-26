@@ -19,6 +19,7 @@ class ParkRoom extends Model{
             '3' => ['A','B'],
             '80' => ['A','B','C','D']
         ];
+        $roomArray = [[]];
         $newData = [];
         $parkRoom = new ParkRoom();
         $park = new Park();
