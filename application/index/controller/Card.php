@@ -147,7 +147,7 @@ class Card extends Base
         } else {
             $this->assign('list',$list);
             //return json_encode($list);
-            return $this->fetch();
+            return $this->fetch('card/getList');
         }
 
     }
@@ -181,7 +181,7 @@ class Card extends Base
             $this->assign('cardType',json_encode($cType));
 
 
-            return $this->fetch();
+            return $this->fetch('card/setCard');
         }
     }
 

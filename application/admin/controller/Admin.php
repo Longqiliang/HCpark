@@ -255,7 +255,7 @@ class Admin extends Controller
                         $menus[$key]['child'][$key2]['title'] = $childvalue['title'] . "(" . $count3 . ")";
                     } elseif ($childvalue['title'] == "专利申请") {
                         $menus[$key]['child'][$key2]['title'] = $childvalue['title'] . "(" . $count4 . ")";
-                    } elseif ($childvalue['title'] == "版权申请") {
+                    } elseif ($childvalue['title'] == "版权登记") {
                         $menus[$key]['child'][$key2]['title'] = $childvalue['title'] . "(" . $count5 . ")";
                     }
                 }

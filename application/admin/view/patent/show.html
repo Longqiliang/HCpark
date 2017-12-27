@@ -277,7 +277,7 @@
 
                     </div>
                     <br>
-                    <textarea readonly=ture class="form-control form_title" name="reply">{$info.reply}</textarea>
+                    <textarea readonly=ture class="  form-control form_title"  style="max-width:60% " name="reply">{$info.reply}</textarea>
                 </div>
                 {/eq}
 
@@ -288,7 +288,7 @@
                 {if condition="$info.status eq 0"}
                 <div class="form-group">
                     <div class="col-lg-11 col-lg-offset-1 text-left">
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="check(this)" data-id="{$info.id}"
+                        <a data-toggle="modal" title="修改" href="#modal-form"  data-id="{$info.id}"
                            class="btn-sm btn-primary" style="color:#fff">审核</a>
                     </div>
                 </div>

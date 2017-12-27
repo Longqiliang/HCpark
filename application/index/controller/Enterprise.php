@@ -121,6 +121,7 @@ class Enterprise extends Base{
                 '80' => ['A', 'B', 'C', 'D'],
             ];
         }
+        $roomArray = [[]];
         $newData = [];
         $parkRoom = new ParkRoom();
         $park = new Park();
