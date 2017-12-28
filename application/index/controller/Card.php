@@ -203,7 +203,9 @@ class Card extends Base
             }
             $error_message = $this->deleteComment($id);
             if (!$error_message) {
-                throw new Exception("评论删除时失败-" . $error_message);
+                if ($error_message !== 0){
+                    throw new Exception("评论删除时失败-" . $error_message);
+                }
             }
             Db::commit();
         } catch (Exception $ex) {
