@@ -57,8 +57,8 @@ class Card extends Base
         }
         $list2 = $this->myComments();
         $this->assign('empty','<img class="empty" src="/index/images/service/card/icon-default.jpg">');
-        $this->assign('list',$list);
-        $this->assign('list2',$list2);
+        $this->assign('list',json_encode($list));
+        $this->assign('list2',json_encode($list2));
 
         return $this->fetch("personal/mycard");
 
