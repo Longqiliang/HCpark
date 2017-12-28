@@ -272,7 +272,20 @@ class Card extends Base
 
 
     }
+    /**
+     *删除评论
+     */
+    public function delete(){
+        $id = input('id');
+        $res = Db::name("comments")->where(['id' => $id])->delete();
+        if ($res){
 
+            return $this->success();
+        }else{
+
+            return $this->error();
+        }
+    }
 
 
 
