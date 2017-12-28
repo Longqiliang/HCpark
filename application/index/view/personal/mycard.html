@@ -171,7 +171,7 @@
                     </div>
                     <a :href="openHref(list.id)"></a>
                 </div>
-                <div class="delete" @click="deleteDom($event,list.id)">
+                <div class="delete" @click="deleteDom($event,list.id,list.id)">
                     删除
                 </div>
             </div>
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="delete" @click="deleteDom($event,list.id)">
+                <div class="delete" @click="deleteDom($event,list.id,list.aid)">
                     删除
                 </div>
             </div>
@@ -301,7 +301,7 @@
                 }
 
             },
-            deleteDom:function (event,id) {
+            deleteDom:function (event,id,aid) {
                 var _this = this;
                 if(_this.type == 1){
                     _this.$http.post('/index/Card/deteleCard',{'id':id},{emulateJSON:true}).then(function (res) {
@@ -323,7 +323,7 @@
                         });
                     })
                 }else{
-                    _this.$http.post('/index/Card/delete',{'id':id},{emulateJSON:true}).then(function (res) {
+                    _this.$http.post('/index/Card/delete',{'id':id,'aid':aid},{emulateJSON:true}).then(function (res) {
                         var data = res.data;
                         if(data.code == 1){
                             $(event.target).parents('.group-list').remove();

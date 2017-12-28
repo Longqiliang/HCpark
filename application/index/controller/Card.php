@@ -268,19 +268,18 @@ class Card extends Base
      */
     public function deleteComment($id){
 
-        $res = Db::name('comments')->where(['aid' => $id])->delete();
-        Db::name('card')->where(['id' => $id])->setInc('view',"-$res");
-
-        return $res ;
+        return  Db::name('comments')->where(['aid' => $id])->delete();
 
     }
     /**
      *删除评论
      */
     public function delete(){
+        $card_model = new CardModel();
         $id = input('id');
+        $aid = input('aid');
         $res = Db::name("comments")->where(['id' => $id])->delete();
-        Db::name('card')->where(['id' => $id])->setInc('view',-1);
+        $card_model->where(['id' => $aid])->setDec("comments",1);
         if ($res){
 
             return $this->success();
