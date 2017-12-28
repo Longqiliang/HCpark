@@ -635,7 +635,7 @@ class Service extends Base
         $map = [
             'user_id' => $user_id,
             'status' => array('neq', -1),
-            'park_id' => $p
+            'park_id' => $park_id
         ];
         $list = $service->where($map)->order('create_time desc')->select();
 
