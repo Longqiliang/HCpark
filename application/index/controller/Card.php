@@ -268,8 +268,10 @@ class Card extends Base
      */
     public function deleteComment($id){
 
-        return Db::name('comments')->where(['aid' => $id])->delete();
+        $res = Db::name('comments')->where(['aid' => $id])->delete();
+        Db::name('card')->where(['id' => $id])->setInc('view',"-$res");
 
+        return $res ;
 
     }
     /**
@@ -278,6 +280,7 @@ class Card extends Base
     public function delete(){
         $id = input('id');
         $res = Db::name("comments")->where(['id' => $id])->delete();
+        Db::name('card')->where(['id' => $id])->setInc('view',-1);
         if ($res){
 
             return $this->success();
