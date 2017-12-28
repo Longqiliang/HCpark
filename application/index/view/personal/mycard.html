@@ -287,27 +287,47 @@
 
             },
             deleteDom:function (event,id) {
-                console.log(id)
                 var _this = this;
-
-                _this.$http.post('/index/Card/deteleCard',{'id':id},{emulateJSON:true}).then(function (res) {
-                    var data = res.data;
-                    if(data.success){
-                        $(event.target).parents('.group-list').remove();
-                        _this.len --;
+                if(_this.type == 1){
+                    _this.$http.post('/index/Card/deteleCard',{'id':id},{emulateJSON:true}).then(function (res) {
+                        var data = res.data;
+                        if(data.success){
+                            $(event.target).parents('.group-list').remove();
+                            _this.len --;
+                            _this.$toast({
+                                message: '删除成功！',
+                                position: 'bottom',
+                                duration: 2000
+                            });
+                        }
+                    },function () {
                         _this.$toast({
-                            message: '删除成功！',
+                            message: '删除失败！',
                             position: 'bottom',
                             duration: 2000
                         });
-                    }
-                },function () {
-                    _this.$toast({
-                        message: '删除失败！',
-                        position: 'bottom',
-                        duration: 2000
-                    });
-                })
+                    })
+                }else{
+                    _this.$http.post('/index/Card/delete',{'id':id},{emulateJSON:true}).then(function (res) {
+                        var data = res.data;
+                        if(data.code == 1){
+                            $(event.target).parents('.group-list').remove();
+                            _this.len --;
+                            _this.$toast({
+                                message: '删除成功！',
+                                position: 'bottom',
+                                duration: 2000
+                            });
+                        }
+                    },function () {
+                        _this.$toast({
+                            message: '删除失败！',
+                            position: 'bottom',
+                            duration: 2000
+                        });
+                    })
+                }
+
 
             }
         }
