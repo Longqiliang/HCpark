@@ -53,8 +53,8 @@
                                 <td>{$vo.interest}</td>
                                 <td>{$vo.create_time}</td>
                                 <td>
-                                    <a href="{:Url('Card/typeEdit?id='.$vo['id'])}">修改</a>
-                                    <a href="{:Url('Card/typeDel?id='.$vo['id'])}" class="confirm ajax-del">删除</a>
+                                    <a href="{:Url('Card/typeEdit?id='.$vo['id'])}" class="btn-sm btn-success">修改</a>
+                                    <a href="{:Url('Card/typeDel?id='.$vo['id'])}" class="confirm ajax-del btn-sm btn-primary">删除</a>
                                 </td>
                             </tr>
                             {/volist}
