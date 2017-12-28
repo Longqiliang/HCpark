@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>我的发布</title>
+<title>我的论坛</title>
 <link type="text/css" rel="stylesheet" href="/index/css/card/card.css">
 <link type="text/css" rel="stylesheet" href="/index/css/common/tip.css">
 <style type="text/css">
@@ -63,11 +63,18 @@
         right: 100px !important;
     }
     .post{
-        padding: 10px 0 10px 10px;
+        padding: 10px 10px;
         background: #f1f1f1;
         font-size: 14px;
         border-radius: 4px;
         margin-top: 10px;
+    }
+    .post>div>span:last-child{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        word-break: break-all;
     }
     .main-body{
         width: calc(100% - 110px) !important;
