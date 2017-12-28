@@ -6,7 +6,7 @@
 <link type="text/css" rel="stylesheet" href="/index/css/common/tip.css">
 <style type="text/css">
     body{
-        background: #f5f5f5;
+        background: #f6f6f6;
     }
     .header{
         width: 100%;
@@ -40,27 +40,71 @@
     .body{
         margin-top: 51px;
     }
-    .list>.empty{
-        width: 100%;
-        margin-top: 16vw;
-    }
     .group-list{
-        position: relative;
         background: #fff;
+        padding: 0;
+        overflow: hidden;
     }
-    .group-list:last-child{
-        border-bottom: 0;
-    }
+    /*.group-list:last-child{*/
+        /*border-bottom: 0;*/
+    /*}*/
     .group-list a{
-        width: 100%;
+        width: calc(100% - 80px);
         height: 100%;
         position: absolute;
         top: 0;
         left: 0;
         z-index: 2;
     }
+    .swipe-body{
+        width: calc(100% + 80px);
+        position: relative;
+        -webkit-transition:all 0.3s;
+        transition:all 0.3s;
+    }
+    .post{
+        padding: 10px 0 10px 10px;
+        background: #f1f1f1;
+        font-size: 14px;
+        border-radius: 4px;
+        margin-top: 10px;
+    }
+    .main-body{
+        width: calc(100% - 110px) !important;
+        padding: 15px 15px;
+    }
+    .delete{
+        width: 80px;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        text-align: center;
+        background: red;
+        color: #fff;
+        font-size: 16px;
+        display: -webkit-box;
+        -webkit-box-pack: center;
+        -webkit-box-align: center;
+    }
+    .swipeleft{
+        transform:translateX(-80px);
+        -webkit-transform:translateX(-80px);
+    }
     .tip{
         color: #999;
+    }
+    .loading-more{
+        display: flex;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+    }
+    .loading-more div {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 5px;
     }
 </style>
 {/block}
@@ -69,230 +113,387 @@
 <div id="app">
     <div class="header">
         <ul>
-            <li class="active"><span>我的帖子</span></li>
-            <li><span>我的评论</span></li>
+            <li class="active" @click="choose($event)">
+                <span>我的帖子</span>
+            </li>
+            <li @click="choose($event)">
+                <span>我的评论</span>
+            </li>
         </ul>
     </div>
-    <div class="body" id="body_1">
-        <div class="list">
-            {volist name="list" id="vo" empty="$empty"}
-            <div class="group-list">
-                <div class="list-head">
-                    <img src="{$vo.header}" />
-                    <div class="time-name">
-                        <p>{$vo.name}</p>
-                        <p>{$vo.create_time}</p>
-                        {eq name="vo.is_top" value="1"}
-                        <img src="/index/images/card/top.png" />
-                        {/eq}
+    <div class="body" id="body_1"
+         v-infinite-scroll="loadMore"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="40">
+        <div class="group-list" v-for="list in cards">
+            <div class="swipe-body">
+                <div class="main-body">
+                    <div class="list-head">
+                        <img :src="list.header" />
+                        <div class="time-name">
+                            <p>{{list.name}}</p>
+                            <p>{{list.create_time}}</p>
+
+                            <img v-if="list.is_top == 1" src="/index/images/card/top.png" />
+                        </div>
                     </div>
+                    <div class="list-body">
+                        <p>{{list.content}}</p>
+                        <div class="img-box">
+                            <ul>
+                                <li v-for="item in list.list_img">
+                                    <img :src="item">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="type-box">
+                            <span class="color_1 type" v-for="(items,key) in list.type">#{{items}}#</span>
+
+                            <span class="comments">{{list.comments}}</span>
+
+                            <span class="zan like" v-if="list.like == 0">{{list.likes}}</span>
+                            <span class="zan_1 like" v-else>{{list.likes}}</span>
+                        </div>
+                    </div>
+                    <a :href="openHref(list.id)"></a>
                 </div>
-                <div class="list-body">
-                    <p>{$vo.content}</p>
-                    <div class="img-box">
-                        <ul>
-                            {volist name="vo.list_img" id="image"}
-                            <li>
-                                <img src="{$image}">
-                            </li>
-                            {/volist}
-                        </ul>
-                    </div>
-                    <div class="type-box">
-                        {volist name="vo.type" id="typelist"}
-                        <span class="color_{$key} type">#{$typelist}#</span>
-                        {/volist}
-                        <span class="comments">{$vo.comments}</span>
-                        {eq name="vo.like" value="0"}
-                        <span class="zan like">{$vo.likes}</span>
-                        {else/}
-                        <span class="zan_1 like">{$vo.likes}</span>
-                        {/eq}
-                    </div>
+                <div class="delete" @click="deleteDom($event,list.id)">
+                    删除
                 </div>
-                <a href="{:Url('CardDetail/getDetail?id='.$vo.id)}"></a>
             </div>
-            {/volist}
         </div>
     </div>
-    <div class="body" id="body_2" style="display: none;">
-        <div class="list">
-            {volist name="list2" id="vo"}
-            <div class="group-list">
-                <div class="list-head">
-                    <img src="{$vo->header}">
-                    <div class="time-name">
-                        <p>{$vo->user_name}</p>
-                        <p>{$vo->create_time}</p>
+    <div class="body" id="body_2" style="display: none;"
+         v-infinite-scroll="loadMore"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="40">
+        <div class="group-list" v-for="list in comments">
+            <div class="swipe-body">
+                <div class="main-body">
+                    <div class="list-head">
+                        <img :src="list.header">
+                        <div class="time-name">
+                            <p>{{list.name}}</p>
+                            <p>{{list.create_time}}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="list-body">
-                    <p>{$vo->content}</p>
-                    <div class="post">
-                        <div>
-                            <span>{$vo->card_name}：</span>
-                            <span>{$vo->card_content}</span>
+                    <div class="list-body">
+                        <p>{{list.content}}</p>
+                        <div class="post">
+                            <div>
+                                <span>{{list.card_name}}：</span>
+                                <span>{{list.card_content}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="delete" @click="deleteDom($event,list.id)">
+                    删除
+                </div>
             </div>
-            {/volist}
+
         </div>
     </div>
-    <div class="tip"></div>
-    <div class="loading hidden">
-        <div class="typing_loader"></div>
+    <!--<div class="tip"></div>-->
+    <!--<div class="loading hidden">-->
+        <!--<div class="typing_loader"></div>-->
+    <!--</div>-->
+    <div class="loading-more">
+        <div v-if="loadOver || len < 6" v-show="len > 0">{{texts}}</div>
+        <div v-else  v-show="loading" >
+            <mt-spinner :type="3" color="#999"></mt-spinner>
+            正在加载中...
+        </div>
     </div>
 </div>
 {/block}
 
 {block name="script"}
 <script>
-    $(function () {
-        var length = $("#body_1").find('.group-list').length;
-        var scrollNow = true;
-        var array = [0,0];
-        if(length >= 6){
-            $(".tip").text('上拉加载更多');
-        }else{
-            $(".tip").text('已加载全部内容~');
-            $(window).off('scroll');
-        }
-        loadMore();
-        $(".header").find('li').on('click',function () {
-            var index = $(this).index() + 1;
-            $(this).addClass('active').siblings().removeClass('active');
-            $("#body_"+index).show().siblings('.body').hide();
-            if(array[index-1] != 1){
-                scrollNow = true;
-                $(".tip").text('上拉加载更多');
-                $(window).scrollTop(0);
-            }else{
-                $('.tip').show().text('已加载全部内容~');
-                $(window).off('scroll');
-            }
-            loadMore();
-        });
-        function loadMore() {
-            $(window).off('scroll').on('scroll',function () {
-                var index = $(".header").find('li.active').index() + 1;
-                var dh = $(document).height();
-                var end = $(window).height() + $(window).scrollTop();
-                if (dh == end && scrollNow) {
-                    var len = $("#body_"+index).find('.group-list').length;
-                    scrollNow = false;
-                    if(index == 1){
-                        $.ajax({
-                            type:'post',
-                            url:'{:Url("Card/getMoreUserCard")}',
-                            data:{'len':len},
-                            beforeSend: function(XMLHttpRequest){
-                                $('.tip').hide();
-                                $('.loading').toggleClass('hidden');
-                            },
-                            success:function (data) {
-                                if(data.code == 1){
-                                    $('.loading').toggleClass('hidden');
-                                    if(data.data.length < 6){
-                                        $('.tip').show().text('已加载全部内容~');
-                                        $(window).off('scroll');
-                                        array[index-1] = 1;
-                                    }else{
-                                        scrollNow = true;
-                                        $('.tip').show().text('上拉加载更多');
-                                    }
-                                    $.each(data.data,function (key,value) {
-                                        var html =
-                                            '<div class="group-list">'+
-                                            '<div class="list-head">'+
-                                            '<img src="'+value.header+'"/>'+
-                                            '<div class="time-name">'+
-                                            '<p>'+value.name+'</p>'+
-                                            '<p>'+value.create_time+'</p>';
-                                        if(value.is_top == 1){
-                                            html += '<img src="/index/images/card/top.png" />';
-                                        }
-                                        html +=
-                                            '</div></div>'+
-                                            '<div class="list-body">'+
-                                            '<p>'+value.content+'</p>'+
-                                            '<div class="img-box">'+
-                                            '<ul>';
-                                        $.each(value.list_img,function (key,data) {
-                                            html += '<li><img src="'+data+'"/></li>';
-                                        });
-                                        html +=
-                                            '</ul></div>'+
-                                            '<div class="type-box">';
-                                        $.each(value.type,function (key,data) {
-                                            html += '<span class="color_'+key+' type">#'+data+'#</span>';
-                                        });
-                                        html+='<span class="comments">'+value.comments+'</span>';
-                                        if(value.like == 0){
-                                            var islike = '<span class="zan like">';
-                                        }else{
-                                            var islike = '<span class="zan_1 like">';
-                                        }
-                                        html +=
-                                            islike+value.likes+'</span></div></div>'+
-                                            '<a href="/index/CardDetail/getDetail/id='+value.id+'"></a>'+
-                                            '</div>';
-                                        $("#body_1>.list").append(html);
-                                    })
-                                }
-                            }
-                        })
-                    }else{
-                        $.ajax({
-                            type:'post',
-                            url:'{:Url("Card/myComments")}',
-                            data:{'len':len},
-                            beforeSend: function(XMLHttpRequest){
-                                $('.tip').hide();
-                                $('.loading').toggleClass('hidden');
-                            },
-                            success:function (data) {
-                                if(data.code == 1){
-                                    $('.loading').toggleClass('hidden');
-                                    if(data.data.length < 6){
-                                        $('.tip').show().text('已加载全部内容~');
-                                        $(window).off('scroll');
-                                        array[index-1] = 1;
-                                    }else{
-                                        scrollNow = true;
-                                        $('.tip').show().text('上拉加载更多');
-                                    }
-                                    $.each(data.data,function (key,value) {
-                                        var html =
-                                            '<div class="group-list">'+
-                                            '<div class="list-head">'+
-                                            '<img src="'+value.header+'">'+
-                                            '<div class="time-name">'+
-                                            '<p>'+value.user_name+'</p>'+
-                                            '<p>'+value.create_time+'</p>'+
-                                            '</div>'+
-                                            '</div>'+
-                                            '<div class="list-body">'+
-                                            '<p>'+value.content+'</p>'+
-                                            '<div class="post">'+
-                                            '<div>'+
-                                            '<span>'+value.card_name+'</span>'+
-                                            '<span>'+value.card_content+'</span>'+
-                                            '</div>'+
-                                            '</div>'+
-                                            '</div>'+
-                                            '</div>';
-                                        $("#body_2>.list").append(html);
-                                    })
-                                }
-                            }
-                        })
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            cards:{$list},
+            comments:{$list2},
+            loading:false,
+            loadOver:true,
+            texts:'已加载全部~',
+            len:{$list}.length,
+            expansion:null,
+            type:1
+        },
+        mounted:function(){
+            var $this=this;														//将$this保存 区分以下触发事件的this
+            var container = document.querySelectorAll('.swipe-body');
+            for(var i = 0; i < container.length; i++){                          //为每个特定DOM元素绑定touchstart touchmove时间监听 判断滑动方向
+                var x,  X;
+                container[i].addEventListener('touchstart', function(event) {   //记录初始触控点横坐标
+                    x = event.changedTouches[0].pageX;
+                });
+                container[i].addEventListener('touchmove', function(event){
+                    X = event.changedTouches[0].pageX;
+                    if($this.expansion){                                       //判断是否展开，如果展开则收起
+                        $this.expansion.className = "swipe-body";
                     }
+                    if(X - x > 10){                                             //右滑
+                        this.className = "swipe-body";                                    //右滑收起
+                    }
+                    if(x - X > 10){                                                         //左滑
+                        this.className = "swipe-body swipeleft";                           //左滑展开
+                        $this.expansion = this;
+                    }
+                });
+            }
+        },
+        methods:{
+            openHref:function (id) {
+                return '/index/card_detail/getDetail/id/'+id;
+            },
+            choose:function (event) {
+                this.loadOver = true;
+                this.loading = false;
+                if(event.target.tagName == 'LI'){
+                    event = $(event.target);
+                }else{
+                    event = $(event.target).parent();
                 }
-            })
-        }
+                var index = event.index() + 1;
+                event.addClass('active').siblings().removeClass('active');
+                $("#body_"+index).show().siblings('.body').hide();
+                $(window).scrollTop(0);
+                this.len = $("#body_"+index).find('.group-list').length;
+                this.type = index;
+            },
+            loadMore:function () {
+                var _this = this;
+                _this.loading = true;
+                _this.loadOver = false;
+                if(_this.type == 1){
+                    _this.$http.post('/index/Card/getMoreUserCard',{'len':_this.len},{emulateJSON:true}).then(function (res) {
+                        var data = res.data;
+                        if(data.code == 1){
+                            if(data.data.length == 6){
+                                _this.loading = false;
+                            }else{
+                                _this.loadOver = true;
+                                _this.loading = true;
+                            }
+                            $.each(data.data,function (key,value) {
+                                _this.cards.push(value)
+                            });
+                            _this.len = _this.cards.length;
+                        }
+                    },function () {
+                        _this.loadOver = true;
+                        _this.loading = true;
+                    })
+                }else{
+                    _this.$http.post('/index/Card/myComments',{'len':_this.len},{emulateJSON:true}).then(function (res) {
+                        var data = res.data;
+                        if(data.code == 1){
+                            if(data.data.length == 6){
+                                _this.loading = false;
+                            }else{
+                                _this.loadOver = true;
+                                _this.loading = true;
+                            }
+                            $.each(data.data,function (key,value) {
+                                _this.comments.push(value)
+                            });
+                            _this.len = _this.comments.length;
+                        }
+                    },function () {
+                        _this.loadOver = true;
+                        _this.loading = true;
+                    })
+                }
 
+            },
+            deleteDom:function (event,id) {
+                console.log(id)
+                var _this = this;
+
+                _this.$http.post('/index/Card/deteleCard',{'id':id},{emulateJSON:true}).then(function (res) {
+                    var data = res.data;
+                    if(data.success){
+                        $(event.target).parents('.group-list').remove();
+                        _this.len --;
+                        _this.$toast({
+                            message: '删除成功！',
+                            position: 'bottom',
+                            duration: 2000
+                        });
+                    }
+                },function () {
+                    _this.$toast({
+                        message: '删除失败！',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                })
+
+            }
+        }
     });
+//    $(function () {
+//        var length = $("#body_1").find('.group-list').length;
+//        var scrollNow = true;
+//        var array = [0,0];
+//        if(length >= 6){
+//            $(".tip").text('上拉加载更多');
+//        }else if(length == 0){
+//            $(".tip").hide();
+//            $(window).off('scroll');
+//        }
+//        else{
+//            $(".tip").text('已加载全部内容~');
+//            $(window).off('scroll');
+//        }
+//        loadMore();
+//        $(".header").find('li').on('click',function () {
+//            var index = $(this).index() + 1;
+//            $(this).addClass('active').siblings().removeClass('active');
+//            $("#body_"+index).show().siblings('.body').hide();
+//            var len = $("#body_"+index).find('.group-list').length;
+//            if(len == 0){
+//                $(".tip").hide();
+//            }else{
+//                if(array[index-1] != 1){
+//                    scrollNow = true;
+//                    $(".tip").text('上拉加载更多');
+//                    $(window).scrollTop(0);
+//                }else{
+//                    $('.tip').show().text('已加载全部内容~');
+//                    $(window).off('scroll');
+//                }
+//                loadMore();
+//            }
+//
+//        });
+//        function loadMore() {
+//            $(window).off('scroll').on('scroll',function () {
+//                var index = $(".header").find('li.active').index() + 1;
+//                var dh = $(document).height();
+//                var end = $(window).height() + $(window).scrollTop();
+//                if (dh == end && scrollNow) {
+//                    var len = $("#body_"+index).find('.group-list').length;
+//                    scrollNow = false;
+//                    if(index == 1){
+//                        $.ajax({
+//                            type:'post',
+//                            url:'{:Url("Card/getMoreUserCard")}',
+//                            data:{'len':len},
+//                            beforeSend: function(XMLHttpRequest){
+//                                $('.tip').hide();
+//                                $('.loading').toggleClass('hidden');
+//                            },
+//                            success:function (data) {
+//                                if(data.code == 1){
+//                                    $('.loading').toggleClass('hidden');
+//                                    if(data.data.length < 6){
+//                                        $('.tip').show().text('已加载全部内容~');
+//                                        $(window).off('scroll');
+//                                        array[index-1] = 1;
+//                                    }else{
+//                                        scrollNow = true;
+//                                        $('.tip').show().text('上拉加载更多');
+//                                    }
+//                                    $.each(data.data,function (key,value) {
+//                                        var html =
+//                                            '<div class="group-list">'+
+//                                            '<div class="swipe-body">'+
+//                                            '<div class="main-body">'+
+//                                            '<div class="list-head">'+
+//                                            '<img src="'+value.header+'"/>'+
+//                                            '<div class="time-name">'+
+//                                            '<p>'+value.name+'</p>'+
+//                                            '<p>'+value.create_time+'</p>';
+//                                        if(value.is_top == 1){
+//                                            html += '<img src="/index/images/card/top.png" />';
+//                                        }
+//                                        html +=
+//                                            '</div></div>'+
+//                                            '<div class="list-body">'+
+//                                            '<p>'+value.content+'</p>'+
+//                                            '<div class="img-box">'+
+//                                            '<ul>';
+//                                        $.each(value.list_img,function (key,data) {
+//                                            html += '<li><img src="'+data+'"/></li>';
+//                                        });
+//                                        html +=
+//                                            '</ul></div>'+
+//                                            '<div class="type-box">';
+//                                        $.each(value.type,function (key,data) {
+//                                            html += '<span class="color_'+key+' type">#'+data+'#</span>';
+//                                        });
+//                                        html+='<span class="comments">'+value.comments+'</span>';
+//                                        if(value.like == 0){
+//                                            var islike = '<span class="zan like">';
+//                                        }else{
+//                                            var islike = '<span class="zan_1 like">';
+//                                        }
+//                                        html +=
+//                                            islike+value.likes+'</span></div></div>'+
+//                                            '<a href="/index/CardDetail/getDetail/id='+value.id+'"></a>'+
+//                                            '</div>'+
+//                                            '<div class="delete" @click="delete('+value.id+')">删除</div>'+
+//                                            '</div></div>';
+//                                        $("#body_1>.list").append(html);
+//                                    })
+//                                }
+//                            }
+//                        })
+//                    }else{
+//                        $.ajax({
+//                            type:'post',
+//                            url:'{:Url("Card/myComments")}',
+//                            data:{'len':len},
+//                            beforeSend: function(XMLHttpRequest){
+//                                $('.tip').hide();
+//                                $('.loading').toggleClass('hidden');
+//                            },
+//                            success:function (data) {
+//                                if(data.code == 1){
+//                                    $('.loading').toggleClass('hidden');
+//                                    if(data.data.length < 6){
+//                                        $('.tip').show().text('已加载全部内容~');
+//                                        $(window).off('scroll');
+//                                        array[index-1] = 1;
+//                                    }else{
+//                                        scrollNow = true;
+//                                        $('.tip').show().text('上拉加载更多');
+//                                    }
+//                                    $.each(data.data,function (key,value) {
+//                                        var html =
+//                                            '<div class="group-list">'+
+//                                            '<div class="list-head">'+
+//                                            '<img src="'+value.header+'">'+
+//                                            '<div class="time-name">'+
+//                                            '<p>'+value.user_name+'</p>'+
+//                                            '<p>'+value.create_time+'</p>'+
+//                                            '</div>'+
+//                                            '</div>'+
+//                                            '<div class="list-body">'+
+//                                            '<p>'+value.content+'</p>'+
+//                                            '<div class="post">'+
+//                                            '<div>'+
+//                                            '<span>'+value.card_name+'</span>'+
+//                                            '<span>'+value.card_content+'</span>'+
+//                                            '</div>'+
+//                                            '</div>'+
+//                                            '</div>'+
+//                                            '</div>';
+//                                        $("#body_2>.list").append(html);
+//                                    })
+//                                }
+//                            }
+//                        })
+//                    }
+//                }
+//            })
+//        }
+
+//    });
 </script>
 
 {/block}
