@@ -126,7 +126,7 @@
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="40">
         <div class="group-list" v-for="list in cards">
-            <div class="swipe-body">
+            <div class="swipe-body" v-leftslide>
                 <div class="main-body">
                     <div class="list-head">
                         <img :src="list.header" />
@@ -168,7 +168,7 @@
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="40">
         <div class="group-list" v-for="list in comments">
-            <div class="swipe-body">
+            <div class="swipe-body" v-leftslide>
                 <div class="main-body">
                     <div class="list-head">
                         <img :src="list.header">
@@ -221,29 +221,6 @@
             len:{$list}.length,
             expansion:null,
             type:1
-        },
-        mounted:function(){
-            var $this=this;														//将$this保存 区分以下触发事件的this
-            var container = document.querySelectorAll('.swipe-body');
-            for(var i = 0; i < container.length; i++){                          //为每个特定DOM元素绑定touchstart touchmove时间监听 判断滑动方向
-                var x,  X;
-                container[i].addEventListener('touchstart', function(event) {   //记录初始触控点横坐标
-                    x = event.changedTouches[0].pageX;
-                });
-                container[i].addEventListener('touchmove', function(event){
-                    X = event.changedTouches[0].pageX;
-                    if($this.expansion){                                       //判断是否展开，如果展开则收起
-                        $this.expansion.className = "swipe-body";
-                    }
-                    if(X - x > 10){                                             //右滑
-                        this.className = "swipe-body";                                    //右滑收起
-                    }
-                    if(x - X > 10){                                                         //左滑
-                        this.className = "swipe-body swipeleft";                           //左滑展开
-                        $this.expansion = this;
-                    }
-                });
-            }
         },
         methods:{
             openHref:function (id) {
@@ -335,165 +312,25 @@
             }
         }
     });
-//    $(function () {
-//        var length = $("#body_1").find('.group-list').length;
-//        var scrollNow = true;
-//        var array = [0,0];
-//        if(length >= 6){
-//            $(".tip").text('上拉加载更多');
-//        }else if(length == 0){
-//            $(".tip").hide();
-//            $(window).off('scroll');
-//        }
-//        else{
-//            $(".tip").text('已加载全部内容~');
-//            $(window).off('scroll');
-//        }
-//        loadMore();
-//        $(".header").find('li').on('click',function () {
-//            var index = $(this).index() + 1;
-//            $(this).addClass('active').siblings().removeClass('active');
-//            $("#body_"+index).show().siblings('.body').hide();
-//            var len = $("#body_"+index).find('.group-list').length;
-//            if(len == 0){
-//                $(".tip").hide();
-//            }else{
-//                if(array[index-1] != 1){
-//                    scrollNow = true;
-//                    $(".tip").text('上拉加载更多');
-//                    $(window).scrollTop(0);
-//                }else{
-//                    $('.tip').show().text('已加载全部内容~');
-//                    $(window).off('scroll');
-//                }
-//                loadMore();
-//            }
-//
-//        });
-//        function loadMore() {
-//            $(window).off('scroll').on('scroll',function () {
-//                var index = $(".header").find('li.active').index() + 1;
-//                var dh = $(document).height();
-//                var end = $(window).height() + $(window).scrollTop();
-//                if (dh == end && scrollNow) {
-//                    var len = $("#body_"+index).find('.group-list').length;
-//                    scrollNow = false;
-//                    if(index == 1){
-//                        $.ajax({
-//                            type:'post',
-//                            url:'{:Url("Card/getMoreUserCard")}',
-//                            data:{'len':len},
-//                            beforeSend: function(XMLHttpRequest){
-//                                $('.tip').hide();
-//                                $('.loading').toggleClass('hidden');
-//                            },
-//                            success:function (data) {
-//                                if(data.code == 1){
-//                                    $('.loading').toggleClass('hidden');
-//                                    if(data.data.length < 6){
-//                                        $('.tip').show().text('已加载全部内容~');
-//                                        $(window).off('scroll');
-//                                        array[index-1] = 1;
-//                                    }else{
-//                                        scrollNow = true;
-//                                        $('.tip').show().text('上拉加载更多');
-//                                    }
-//                                    $.each(data.data,function (key,value) {
-//                                        var html =
-//                                            '<div class="group-list">'+
-//                                            '<div class="swipe-body">'+
-//                                            '<div class="main-body">'+
-//                                            '<div class="list-head">'+
-//                                            '<img src="'+value.header+'"/>'+
-//                                            '<div class="time-name">'+
-//                                            '<p>'+value.name+'</p>'+
-//                                            '<p>'+value.create_time+'</p>';
-//                                        if(value.is_top == 1){
-//                                            html += '<img src="/index/images/card/top.png" />';
-//                                        }
-//                                        html +=
-//                                            '</div></div>'+
-//                                            '<div class="list-body">'+
-//                                            '<p>'+value.content+'</p>'+
-//                                            '<div class="img-box">'+
-//                                            '<ul>';
-//                                        $.each(value.list_img,function (key,data) {
-//                                            html += '<li><img src="'+data+'"/></li>';
-//                                        });
-//                                        html +=
-//                                            '</ul></div>'+
-//                                            '<div class="type-box">';
-//                                        $.each(value.type,function (key,data) {
-//                                            html += '<span class="color_'+key+' type">#'+data+'#</span>';
-//                                        });
-//                                        html+='<span class="comments">'+value.comments+'</span>';
-//                                        if(value.like == 0){
-//                                            var islike = '<span class="zan like">';
-//                                        }else{
-//                                            var islike = '<span class="zan_1 like">';
-//                                        }
-//                                        html +=
-//                                            islike+value.likes+'</span></div></div>'+
-//                                            '<a href="/index/CardDetail/getDetail/id='+value.id+'"></a>'+
-//                                            '</div>'+
-//                                            '<div class="delete" @click="delete('+value.id+')">删除</div>'+
-//                                            '</div></div>';
-//                                        $("#body_1>.list").append(html);
-//                                    })
-//                                }
-//                            }
-//                        })
-//                    }else{
-//                        $.ajax({
-//                            type:'post',
-//                            url:'{:Url("Card/myComments")}',
-//                            data:{'len':len},
-//                            beforeSend: function(XMLHttpRequest){
-//                                $('.tip').hide();
-//                                $('.loading').toggleClass('hidden');
-//                            },
-//                            success:function (data) {
-//                                if(data.code == 1){
-//                                    $('.loading').toggleClass('hidden');
-//                                    if(data.data.length < 6){
-//                                        $('.tip').show().text('已加载全部内容~');
-//                                        $(window).off('scroll');
-//                                        array[index-1] = 1;
-//                                    }else{
-//                                        scrollNow = true;
-//                                        $('.tip').show().text('上拉加载更多');
-//                                    }
-//                                    $.each(data.data,function (key,value) {
-//                                        var html =
-//                                            '<div class="group-list">'+
-//                                            '<div class="list-head">'+
-//                                            '<img src="'+value.header+'">'+
-//                                            '<div class="time-name">'+
-//                                            '<p>'+value.user_name+'</p>'+
-//                                            '<p>'+value.create_time+'</p>'+
-//                                            '</div>'+
-//                                            '</div>'+
-//                                            '<div class="list-body">'+
-//                                            '<p>'+value.content+'</p>'+
-//                                            '<div class="post">'+
-//                                            '<div>'+
-//                                            '<span>'+value.card_name+'</span>'+
-//                                            '<span>'+value.card_content+'</span>'+
-//                                            '</div>'+
-//                                            '</div>'+
-//                                            '</div>'+
-//                                            '</div>';
-//                                        $("#body_2>.list").append(html);
-//                                    })
-//                                }
-//                            }
-//                        })
-//                    }
-//                }
-//            })
-//        }
-
-//    });
+    Vue.directive('leftslide',function (event) {
+        var x,  X;
+        event.addEventListener('touchstart', function(event) {   //记录初始触控点横坐标
+            x = event.changedTouches[0].pageX;
+        });
+        event.addEventListener('touchmove', function(event){
+            X = event.changedTouches[0].pageX;
+            if(vm.expansion){                                       //判断是否展开，如果展开则收起
+                vm.expansion.className = "swipe-body";
+            }
+            if(X - x > 10){                                             //右滑
+                this.className = "swipe-body";                                    //右滑收起
+            }
+            if(x - X > 10){                                                         //左滑
+                this.className = "swipe-body swipeleft";                           //左滑展开
+                vm.expansion = this;
+            }
+        });
+    })
 </script>
 
 {/block}
