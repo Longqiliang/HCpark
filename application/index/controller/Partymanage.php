@@ -516,7 +516,6 @@ class Partymanage extends Base
     public function merchantsRecord()
     {
         $user_id = session('user_id');
-
         $mCompany = new MerchantsCompany();
         $mRecord = new MerchantsRecord();
         if (IS_POST) {
@@ -561,13 +560,13 @@ class Partymanage extends Base
         $mPlan = new MerchantsPlan();
         $mCompany = new MerchantsCompany();
         $mRecord = new MerchantsRecord();
-
         //年
         if (empty($month)) {
             $begindate = mktime(0, 0, 0, 1, 1, $year);
             $enddate = mktime(0, 0, 0, 1, 1, $year + 1) - 1;
 
-        } //月
+        }
+        //月
         else {
             $begindate = mktime(0, 0, 0, $month, 1, $year);
             $enddate = mktime(0, 0, 0, $month + 1, 1, $year) - 1;
@@ -679,12 +678,28 @@ class Partymanage extends Base
         $id = input('id');
         $mDiary = new MerchantsDiary();
         $weuser = new WechatUser();
-        //
         if (IS_POST) {
             $data = input('');
             $data['user_id'] = $user_id;
+            $data['work_today']=empty( $data['work_today'])?'[]': json_encode($data['work_today']);
+            $data['arrange_tomorrow']=empty( $data['arrange_tomorrow'])?'[]': json_encode($data['arrange_tomorrow']);
             $data['create_time'] = empty(input('create_time')) ? mktime(0, 0, 0, date('m'), date('d'), date('Y')) : input('create_time') / 1000;
-            $reult = $mDiary->save($data);
+            //以前的日志不能修改
+            //如果修改（create_time！=null）：1.今日修改（今日填写） 2：以前补写
+            if($data['create_time']==mktime(0, 0, 0, date('m'), date('d'))){
+                 if(isset($data['id'])){
+                 //今日新增
+                     $data['is_supplement']=2;
+                     $reult = $mDiary->save($data);
+                 }else{
+                     //今日修改
+                     $reult = $mDiary->update([$data,'id'=>$data['id']]);
+                 }
+                }else{
+                //以前补写
+                $data['is_supplement']=1;
+                $reult = $mDiary->save($data);
+            }
             if ($reult) {
                 return $this->success("yes");
             } else {
@@ -704,9 +719,11 @@ class Partymanage extends Base
                     'user_name' => isset($info->user->name) ? $info->user->name : "",
                    /* 'img' => json_decode($info['img']),*/
                     'user_id' => $info['user_id'],
-                    'work_today' => $info['work_today'],
-                    'arrange_tomorrow' => $info['arrange_tomorrow'],
+                    'work_today' => json_decode($info['work_today']),
+                    'arrange_tomorrow' => json_decode($info['arrange_tomorrow']),
                     'feed_back' => $info['feed_back'],
+                    'supplement' =>$info['supplement'],
+                     'is_supplement'=>$info['is_supplement'],
                     'create_time' => $info['create_time'] * 1000];
             }
             $list = $mDiary->where('user_id', $user_id)->select();
