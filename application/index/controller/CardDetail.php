@@ -44,7 +44,9 @@ class CardDetail extends Base
 
             return sendErrorMessage("无法获取帖子内容", "70010");
         }
-        $result['list_img'] = json_decode($result['list_img']);
+        if (isset( $result['list_img'])){
+            $result['list_img'] = json_decode($result['list_img']);
+        }
         $result['name'] = isset($result->getUserHeader->name) ? $result->getUserHeader->name : "";
         $result['header'] = isset($result->getUserHeader->avatar) ? $result->getUserHeader->avatar : '';
 

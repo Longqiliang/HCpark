@@ -52,10 +52,14 @@
 .list-body{
     width: 100%;
 }
-.list-body p{
+.list-body>p{
     padding-top: 10px;
     font-size: 15px;
     line-height: 1.5;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
     word-break: break-all;
 }
 .list-body ul{

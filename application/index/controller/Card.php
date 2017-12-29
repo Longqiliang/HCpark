@@ -203,7 +203,9 @@ class Card extends Base
             }
             $error_message = $this->deleteComment($id);
             if (!$error_message) {
-                throw new Exception("评论删除时失败-" . $error_message);
+                if ($error_message !== 0){
+                    throw new Exception("评论删除时失败-" . $error_message);
+                }
             }
             Db::commit();
         } catch (Exception $ex) {
@@ -266,11 +268,26 @@ class Card extends Base
      */
     public function deleteComment($id){
 
-        return Db::name('comments')->where(['aid' => $id])->delete();
-
+        return  Db::name('comments')->where(['aid' => $id])->delete();
 
     }
+    /**
+     *删除评论
+     */
+    public function delete(){
+        $card_model = new CardModel();
+        $id = input('id');
+        $aid = input('aid');
+        $res = Db::name("comments")->where(['id' => $id])->delete();
+        $card_model->where(['id' => $aid])->setDec("comments",1);
+        if ($res){
 
+            return $this->success();
+        }else{
+
+            return $this->error();
+        }
+    }
 
 
 

@@ -57,17 +57,17 @@
                                 <td>{$vo.create_time}</td>
                                 <!--<td>{$vo.status_text}</td>-->
                                 <td>{eq name="$vo.is_top" value="1"}
-                                    <a href="javascripy:void(0);">置顶</a>
+                                    <a href="javascripy:void(0);" class="btn-sm btn-primary">置顶</a>
                                     {/eq}</td>
                                 <td>
                                     {eq name="$vo.is_top" value="1"}
-                                    <a href="javascript:setTop('{$vo.id}',0)" >取消置顶</a>
+                                    <a href="javascript:setTop('{$vo.id}',0)" class="btn-sm btn-success">取消置顶</a>
                                     {else／}
-                                    <a href="javascript:setTop('{$vo.id}',1)" >置顶</a>
+                                    <a href="javascript:setTop('{$vo.id}',1)" class="btn-sm btn-success">置顶</a>
                                     {/eq}
-                                    <a class="confirm" href="{:Url('Card/preview?id='.$vo['id'])}">查看</a>
-                                    <a class="confirm ajax-del" href="{:Url('Card/delete?id='.$vo['id'])}">删除</a>
-                                    <a class="confirm" href="{:Url('Card/comments?id='.$vo['id'])}">评论列表</a>
+                                    <a class="confirm btn-sm btn-success" href="{:Url('Card/preview?id='.$vo['id'])}" >查看</a>
+                                    <a class="confirm ajax-del btn-sm btn-info" href="{:Url('Card/delete?id='.$vo['id'])}" >删除</a>
+                                    <a class="confirm  btn-sm btn-primary" href="{:Url('Card/comments?id='.$vo['id'])}">评论列表</a>
                                 </td>
                             </tr>
                             {/volist}
