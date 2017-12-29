@@ -6,21 +6,15 @@
 <link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
 <link rel="stylesheet" href="/index/css/common/rem.css">
 <style>
-    .foot{
+    .foot .input-box{
+        width:100vw;
         display: -webkit-flex;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
     }
-    .foot .input-box{
-        width:80vw;
-        height:auto;
-        padding-left: 3.2vw;
-    }
     .foot .input-box input{
-        margin:0;
-        box-sizing: border-box;
-        width:100%;
+        width:92vw
     }
 </style>
 
@@ -72,6 +66,23 @@
         </div>
         <div class="send" @click="send({$news.id},{$news.type})">发送</div>
     </div>
+    <div class="foot">
+        <div class="input-box" @click="toggleMask">
+            <input type="text" placeholder="说说你的感想！" disabled="disabled">
+        </div>
+        <!--<div class="send" @click="send({$news->id},{$news->type})">发送</div>-->
+    </div>
+    <div class="comment-view" v-show="isShowMask">
+        <div class="comment-mask-mask" @click="toggleMask"></div>
+        <div class="comment-view-content">
+            <div class="comment-title">请输入评论内容</div>
+            <textarea class="comment-textarea" placeholder="请输入评论..." v-model="content"></textarea>
+            <div class="comment-btn-box">
+                <div class="my-btn-default my-btn-center" @click="toggleMask">取消</div>
+                <div class="my-btn-default my-btn-success" @click="send({$news->id},{$news->type})">确认</div>
+            </div>
+        </div>
+    </div>
 </div>
 <div>
 
@@ -91,7 +102,9 @@
             collection:{},
             value:'',
             id:{$id},
-            content:''
+            content:'',
+            isShowMask:false,
+
         },
         created(){
             console.log(this.documents)
@@ -100,33 +113,40 @@
             }
         },
         methods:{
+            toggleMask(){
+                var _this  =this;
+                _this.isShowMask=!_this.isShowMask;
+                _this.commentValue=''
+            },
             send:function (id,type) {
-                console.log(this.content)
-                if(this.isSend){
-                    this.$toast({message:'提交中，请勿重复提交',position:'bottom',duration:1000});
+                var _this = this;
+                console.log(_this.content)
+                if(_this.isSend){
+                    _this.$toast({message:'提交中，请勿重复提交',position:'bottom',duration:1000});
                     return ;
-                }else if(this.content == '' || !this.content){
-                    this.$toast({message:'评论不能为空！',position:'bottom',duration:1000});
+                }else if(_this.content == '' || !_this.content){
+                    _this.$toast({message:'评论不能为空！',position:'bottom',duration:1000});
                 } else {
-                    this.isSend=true;
-                    this.$http.post('{:Url("Base/addComments")}',{type:type,id:id,content:this.content}).then(function (res) {
+                    _this.isSend=true;
+                    _this.$http.post('{:Url("Base/addComments")}',{type:type,id:id,content:_this.content}).then(function (res) {
                         console.log(res.data);
+                        _this.toggleMask();
                         if(res.data.code==1){
-                            this.$toast({
+                            _this.$toast({
                                 message: res.data.msg,
                                 position: 'bottom',
                                 duration: 1000
                             });
-                            this.isSend = false;
-                            this.documents.unshift(res.data.data);
-                            this.content=''
-                            this.count+=1
+                            _this.isSend = false;
+                            _this.documents.unshift(res.data.data);
+                            _this.content=''
+                            _this.count+=1
                         }else{
-                            this.isSend = false;
+                            _this.isSend = false;
                         }
                     },function (res) {
-                        this.$toast({message:'发送失败，请重新发送',position:'bottom',duration:1000});
-                        this.isSend = false;
+                        _this.$toast({message:'发送失败，请重新发送',position:'bottom',duration:1000});
+                        _this.isSend = false;
                         console.log(res.data)
                     })
                 }

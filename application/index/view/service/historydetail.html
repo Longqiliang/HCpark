@@ -4,11 +4,16 @@
 <title>服务记录</title>
 <link rel="stylesheet" href="/index/css/service/detail.css">
 <link rel="stylesheet" href="/index/css/service/historyDetail.css">
+<style>
+    .app_item{
+        padding-bottom: 1rem;
+    }
+</style>
 {/block}
 
 {block name="body"}
 <div id="app">
-    <div v-if="appid==1">
+    <div v-if="appid==1" class="app_item">
         <div class="card">
             <div class="card-tit">缴费信息</div>
             <div class="card-cell">
@@ -84,7 +89,7 @@
             </div>
         </div>
     </div>
-    <div v-if="appid==2">
+    <div v-if="appid==2" class="app_item">
         <div class="card">
             <div class="card-tit">物业报修</div>
             <div class="card-cell">
@@ -157,7 +162,7 @@
             </div>
         </div>
     </div>
-    <div v-if="appid==3">
+    <div v-if="appid==3" class="app_item">
         <div class="water-view">
             <div class="water-header">
                 <div class="water-header-bg" :class="{green:info.status==1,blue:info.status==3,orange:info.status==0,red:info.status==2}"></div>
@@ -212,7 +217,7 @@
             </div>
         </div>
     </div>
-    <div v-if="appid==4">
+    <div v-if="appid==4" class="app_item">
         <div class="card">
             <div class="card-tit">室内保洁</div>
             <div class="card-cell">
@@ -240,7 +245,7 @@
                 <span><a :href="'tel:'+info.mobile">{{info.mobile}}</a></span>
             </div>
             <div class="card-cell">
-                <span>审核进度</span>
+                <span>服务状态</span>
                 <span>{{status(info.status)}}</span>
             </div>
             <div class="remark" v-if="info.status!=0 && info.check_remark">
@@ -260,7 +265,7 @@
             </div>
         </div>
     </div>
-    <div v-if="appid==6 || appid==7">
+    <div v-if="appid==6 || appid==7" class="app_item">
         <div class="card">
             <div class="card-tit">车主信息</div>
             <div class="card-cell" v-if="appid==6">
@@ -304,8 +309,12 @@
                 <span>审核进度</span>
                 <span>{{status(info.status)}}</span>
             </div>
-            <div class="card-cell" v-if="info.type==1">
+            <div class="card-cell" v-if="info.type==1 && appid==6">
                 <span>车卡押金</span>
+                <span>{{info.carpark_deposit}}</span>
+            </div>
+            <div class="card-cell" v-if="info.type==1 && appid==7">
+                <span>充电柱押金</span>
                 <span>{{info.carpark_deposit}}</span>
             </div>
             <div class="card-cell" v-if="appid==6">
@@ -342,7 +351,7 @@
             </div>
         </div>
     </div>
-    <div v-if="appid==8">
+    <div v-if="appid==8" class="app_item">
         <div class="card">
             <div class="card-tit">设备服务</div>
             <div class="card-cell">
@@ -441,6 +450,9 @@ Vue.filter('orderTime', function(time) {
 var app = new Vue({
     el:'#app',
     mounted(){
+        if(this.info){
+            document.title=this.baseData.title;
+        }
     },
     created(){
         var _this = this;
@@ -491,6 +503,38 @@ var app = new Vue({
             dataUrl:[],
             imgName:[]
         },
+    },
+    computed:{
+        baseData:function () {
+            var info={};
+            switch (parseInt(this.appid)){
+                case 1:
+                    info.title='缴费详情';
+                    break;
+                case 2:
+                    info.title='报修详情';
+                    break;
+                case 3:
+                    info.title='送水详情';
+                    break;
+                case 4:
+                    info.title='保洁详情';
+                    break;
+                case 6:
+                    info.title='办卡详情';
+                    break;
+                case 7:
+                    info.title='电柱详情';
+                    break;
+                case 8:
+                    info.title='设备详情';
+                    break;
+                case 12:
+                    info.title='商标详情';
+                    break;
+            }
+            return info;
+        }
     },
     methods:{
         //            微信jssdk - 图片预览

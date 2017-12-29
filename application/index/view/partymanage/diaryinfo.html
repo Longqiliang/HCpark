@@ -26,7 +26,33 @@
     .my-baseInfo>li:last-child{width:45%;}
     .my-title{padding:1.2rem 0;}
     input{font-size:1.5rem;}
-    textarea{box-sizing:border-box;padding:1rem;width:100%;border:1px solid #f1f1f1;border-radius:5px;font-size:1.5rem;line-height:1.5;}
+    .diary_list,.feedback{box-sizing:border-box;padding:1rem;width:100%;border:1px solid #f1f1f1;border-radius:5px;font-size:1.5rem;line-height:1.5;}
+    ul.diary_list{
+        list-style: ;
+    }
+    .diary_list>li{
+        font-size: 1.5rem;
+        display: flex;
+        padding:0.5rem;
+
+    }
+    .diary_list>li>span{
+        /*line-height: 4.5rem;*/
+        width: 2rem;
+    }
+    .diary_list>li>textarea{
+        box-sizing: border-box;
+        flex:1;
+        height:4.5rem;
+        line-height:1.5;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .diary_list_new{
+        align-items: center;
+        justify-content: center;
+        color: #3094F8;
+        font-size: 1.6rem;
+    }
     .card-upload{display:flex;align-items:center;}
     .card-upload>div:not(:last-child){margin-right:1rem;}
     .card-area .group-area{margin:5vw 0 0 0;width:100%;height:21.3vw;}
@@ -86,11 +112,25 @@
             </li>
         </ul>
         <div class="my-title">今日工作</div>
-        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入今日工作内容':'暂无内容'" v-model="baseInfo.work_today" :readonly="!isWrite"></textarea>
+        <ul class="diary_list">
+            <li>
+                <span>1</span>
+                <textarea name="" cols="30" rows="10"></textarea>
+            </li>
+            <li>
+                <span>1</span>
+                <textarea name=""cols="30" rows="10"></textarea>
+            </li>
+            <li>
+                <span>1</span>
+                <textarea name="" cols="30" rows="10"></textarea>
+            </li>
+            <li class="diary_list_new"><b> + </b> 新建今日工作</li>
+        </ul>
         <div class="my-title">明日安排</div>
         <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入明日安排内容':'暂无内容'" v-model="baseInfo.arrange_tomorrow" :readonly="!isWrite"></textarea>
         <div class="my-title">问题反馈</div>
-        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入反馈内容':'暂无内容'" v-model="baseInfo.feed_back" :readonly="!isWrite"></textarea>
+        <textarea class="feedback" cols="30" rows="10" :placeholder="isWrite==true?'请输入反馈内容':'暂无内容'" v-model="baseInfo.feed_back" :readonly="!isWrite"></textarea>
         <!--<div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img.length">图片</span></div>-->
         <!--<div class="imgBox">-->
             <!--<div class="card-upload" v-if="isWrite">-->
