@@ -20,45 +20,45 @@
     position: absolute;
     top:0;
     left:2.6666667vw;
-    width:2.8rem;
-    height:1.8rem;
-    line-height: 1.8rem;
+    width:30px;
+    height:18px;
+    line-height: 18px;
     text-align: center;
     color: #fff;
     background-color: #FCC44B;
-    font-size: 1.4rem;
+    font-size: 12px;
 }
 .my-icon-flag>span{
     position: relative;
     z-index: 10;
-    bottom:-0.3rem;
+    bottom:-3px;
 }
 .my-icon-flag:after,.my-icon-flag:before{
     content: '';
     display: block;
     position: absolute;
-    bottom: -0.8rem;
+    bottom: -8px;
     left: 0;
     width: 0;
     height: 0;
 }
 .my-icon-flag:after{
-    border-top: 0.8rem solid  #FCC44B;
-    border-right: 2.8rem solid transparent;
+    border-top: 8px solid  #FCC44B;
+    border-right: 30px solid transparent;
 }
 .my-icon-flag:before{
-    border-top: 0.8rem solid  #FCC44B;
-    border-left: 2.8rem solid transparent;
+    border-top: 8px solid  #FCC44B;
+    border-left: 30px solid transparent;
 }
 .my-icon-flag.my-icon-hot{
     background-color: #F97878;
-    font-size: 1.2rem;
+    font-size: 12px;
 }
 .my-icon-flag.my-icon-hot:after{
-    border-top: 0.8rem solid  #F97878;
+    border-top:8px solid  #F97878;
 }
 .my-icon-flag.my-icon-hot:before{
-    border-top: 0.8rem solid  #F97878;
+    border-top: 8px solid  #F97878;
 }
 .my-icon-fillet{
     position: absolute;
