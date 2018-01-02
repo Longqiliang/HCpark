@@ -274,6 +274,7 @@
             toggleModal:function () {
                 this.modalShow = !this.modalShow;
                 console.log(this.modalShow )
+                this.baseInfo.supplement=''
             },
             delDiary(type,key){
                 console.log(type,key)
@@ -301,12 +302,15 @@
                 //领导不能写日志判断
                 if(the.isBoss=='yes'){
                     the.isWrite=false
-                }else if(!the.todayDiary.length && !the.isSameDay(time1,time2)){
+                    the.canRepair = false;
+                }else if(!the.todayDiary.length && !the.isSameDay(time1,time2) && the.baseInfo.is_supplement!==1){
                     the.isWrite=false;
                     the.canRepair = true;
                 }else if(the.isSameDay(time1,time2)){
-                    the.isWrite=true
+                    the.isWrite=true;
+                    the.canRepair = false;
                 }else{
+                    the.canRepair = false;
                     the.isWrite=false;
                 }
             },
@@ -482,6 +486,19 @@
                     if(!the.todayDiary && !the.tomorrowPlay && !the.baseInfo.feed_back){
                         the.$toast('写点什么吧~');
                         return
+                    }else{
+                        for(var i=0;i<the.todayDiary.length;i++){
+                            if(the.todayDiary[i]==''){
+                                the.$toast('今日计划未填写完整~');
+                                return
+                            }
+                        }
+                        for(var i=0;i<the.tomorrowPlay.length;i++){
+                            if(the.tomorrowPlay[i]==''){
+                                the.$toast('明日安排未填写完整~');
+                                return
+                            }
+                        }
                     }
                 }else{
                     if(!the.baseInfo.supplement){
