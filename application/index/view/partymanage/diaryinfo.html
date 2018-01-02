@@ -440,9 +440,9 @@
                 });
 
                 the.isSubmit=true;
-                var data = JSON.parse(JSON.stringify(the.baseInfo.feed_back));
+                var data = JSON.parse(JSON.stringify(the.baseInfo));
                 data.work_today=the.todayDiary;
-                data.arrange_tomorrow=the.tomorrowPlay
+                data.arrange_tomorrow=the.tomorrowPlay;
                 the.$http.post('/index/partymanage/diaryInfo',data).then(function (res) {
                     if(res.data.code){
                         the.isSubmit=false;
