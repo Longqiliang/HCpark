@@ -732,10 +732,15 @@ class Partymanage extends Base
             $list = $mDiary->where('user_id', $user_id)->select();
             $time = array();
             foreach ($list as $value) {
-                array_push($time, $value['create_time'] * 1000);
+               $map=[
+                   'is_supplement'=>$value['is_supplement'],
+                   'create_time'=>$value['create_time'] * 1000
+               ];
+
+                array_push($time, $map);
             }
             //当前日志详情
-            // echo json_encode($diary);
+             echo json_encode($diary);
             $this->assign('info', json_encode($diary));
             echo json_encode($diary);
             //该用户总共写的日志
