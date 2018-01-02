@@ -115,22 +115,34 @@
             </li>
         </ul>
         <div class="my-title">今日工作</div>
-        <ul class="diary_list">
-            <li  v-for="(item,key) in todayDiary" :key="'list'+key">
+        <ul class="diary_list" v-if="isWrite">
+            <li v-for="(item,key) in todayDiary" :key="'list'+key">
                 <span v-text="key+1"></span>
                 <textarea v-model="todayDiary[key]"></textarea>
                 <span class="iconfont hc-delete"  @click="delDiary(1,key)"></span>
             </li>
             <li class="diary_list_new iconfont hc-jia" @click="addNewDiary(1)" key="newD">新建今日工作</li>
         </ul>
+        <ul class="diary_list" v-if="!isWrite">
+            <li v-for="(item,key) in todayDiary" :key="'list'+key">
+                <span v-text="key+1">1</span>
+                {{todayDiary[key]}}
+            </li>
+        </ul>
         <div class="my-title">明日安排</div>
-        <ul class="diary_list">
+        <ul class="diary_list"  v-if="isWrite" >
             <li v-for="(item,key) in tomorrowPlay" :key="'list1'+key">
                 <span v-text="key+1">1</span>
                 <textarea v-model="tomorrowPlay[key]"></textarea>
                 <span class="iconfont hc-delete" @click="delDiary(2,key)"></span>
             </li>
-            <li class="diary_list_new iconfont hc-jia"  @click="addNewDiary(2)" key="newD">新建明日安排</li>
+            <li class="diary_list_new iconfont hc-jia" @click="addNewDiary(2)" key="newD">新建明日安排</li>
+        </ul>
+        <ul class="diary_list" v-if="!isWrite">
+            <li v-for="(item,key) in tomorrowPlay" :key="'list'+key">
+                <span v-text="key+1">1</span>
+                {{tomorrowPlay[key]}}
+            </li>
         </ul>
         <div class="my-title">问题反馈</div>
         <textarea class="feedback" cols="30" rows="10" :placeholder="isWrite==true?'请输入反馈内容':'暂无内容'" v-model="baseInfo.feed_back" :readonly="!isWrite"></textarea>
@@ -219,13 +231,13 @@
             localStorage.setItem('active',3);
 
             //领导不能写日志判断
-            the.canWrite();
             if(!the.baseInfo.create_time){
                 the.date=Date.parse(new Date())
             }else{
                 the.date=the.baseInfo.create_time;
             }
             the.initData(the.baseInfo.create_time);
+            the.canWrite(new Date(),the.date);
             the.todayDiary = the.baseInfo.work_today || [];
             the.tomorrowPlay = the.baseInfo.arrange_tomorrow || [];
         },
@@ -252,15 +264,18 @@
                     _this.tomorrowPlay.push('');
                 }
             },
-            canWrite(){
+            canWrite(time1,time2){
+                console.log(time1,time2)
                 var the=this;
                 //领导不能写日志判断
                 if(the.isBoss=='yes'){
                     the.isWrite=false
-                }else if(the.baseInfo.work_today || the.baseInfo.arrange_tomorrow || the.baseInfo.feed_back){
-                    the.isWrite=false
-                }else{
+                }else if(!the.todayDiary && !the.isSameDay(time1,time2)){
                     the.isWrite=true;
+                }else if(the.isSameDay(time1,time2)){
+                    the.isWrite=true
+                }else{
+                    the.isWrite=false;
                 }
             },
             toShow(){
@@ -268,17 +283,16 @@
             },
             //生成月份数据 初始传null
             initData: function(cur) {
-                var
-                        date,
+                var date,
                         _this = this;
                 if (cur) {
                     date = new Date(cur);
-                    date=new Date(date.setDate(1));
+                    date = new Date(date.setDate(1));
                 } else {
                     var now=new Date();
                     var d = new Date(_this.formatDate(now.getFullYear() , now.getMonth()+1 , now.getDate()));
                     d.setDate(41);
-                    date = new Date(_this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                    date = new Date(_this.formatDate(d.getFullYear(),d.getMonth(),1));
                 }
                 _this.currentDay = date.getDate();
                 _this.currentYear = date.getFullYear();
@@ -312,6 +326,21 @@
                     if(new Date(d).getMonth()==_this.currentMonth-1){
                         _this.days.push(dayobject);
                     }
+                }
+            },
+            isSameDay(time1,time2){
+                var dataTime=new Date(time1);
+                var year1=dataTime.getFullYear(),month1=dataTime.getMonth(),day1=dataTime.getDate();
+                var dataTime1=new Date(time2);
+                var year2=dataTime1.getFullYear(),month2=dataTime1.getMonth(),day2=dataTime1.getDate();
+                console.log(time1,time2)
+                console.log(year1,year2,month1,month2,day1,day2)
+                if(year1==year2&&month1==month2&&day1==day2) {
+                    console.log('IS SAME DAY: TRUE')
+                    return true
+                }else{
+                    console.log('IS SAME DAY: FALSE')
+                    return false
                 }
             },
             //是否已写日志判断
@@ -351,13 +380,17 @@
                     var data = JSON.parse(res.data);
                     _this.isSubmit=false;
                     _this.$indicator.close();
-                    _this.date = data.create_time;
-                    _this.baseInfo.create_time = data.create_time;
+                    if(data.create_time){
+                        var str = data.create_time + '';
+                        if(str<13){
+                            _this.date = data.create_time * 1000
+                        }
+                    }
+                    _this.baseInfo = data;
                     _this.todayDiary = data.work_today;
                     _this.tomorrowPlay = data.arrange_tomorrow;
-                    _this.baseInfo.feed_back = data.feed_back;
-//                    _this.baseInfo.img=data.img ? data.img : [];
-                    _this.canWrite();
+
+                    _this.canWrite(new Date(),_this.date);
                 },function (res) {
                     _this.$toast('请求失败，请退出页面重试')
                     _this.isSubmit=false;
@@ -407,13 +440,9 @@
                 });
 
                 the.isSubmit=true;
-                var data={
-                    work_today:the.todayDiary,
-                    arrange_tomorrow:the.tomorrowPlay,
-                    feed_back:the.baseInfo.feed_back,
-                    user_id:the.baseInfo.user_id,
-                    create_time:the.baseInfo.create_time
-                };
+                var data = JSON.parse(JSON.stringify(the.baseInfo.feed_back));
+                data.work_today=the.todayDiary;
+                data.arrange_tomorrow=the.tomorrowPlay
                 the.$http.post('/index/partymanage/diaryInfo',data).then(function (res) {
                     if(res.data.code){
                         the.isSubmit=false;
@@ -436,7 +465,7 @@
                             if(the.nowDateIndex){
                                 the.days[the.nowDateIndex].isChecked=true;
                             }else{
-                               window.history.back();
+//                               window.history.back();
                             }
                         });
                     }else{

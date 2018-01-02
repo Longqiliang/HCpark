@@ -726,6 +726,8 @@ class Partymanage extends Base
                     'supplement' => $info['supplement'],
                     'is_supplement' => $info['is_supplement'],
                     'create_time' => $info['create_time'] * 1000];
+            }else{
+
             }
             $list = $mDiary->where('user_id', $user_id)->select();
             $time = array();
@@ -735,6 +737,7 @@ class Partymanage extends Base
             //当前日志详情
             // echo json_encode($diary);
             $this->assign('info', json_encode($diary));
+            echo json_encode($diary);
             //该用户总共写的日志
             $this->assign('list', json_encode($time));
             return $this->fetch();
@@ -766,7 +769,8 @@ class Partymanage extends Base
             $info['create_time'] = $begindate * 1000;
         } else {
             $info['img'] = json_decode($info['img']);
-            $info['create_time'] = $info['create_time'] * 1000;
+            $info['arrange_tomorrow'] = json_decode($info['arrange_tomorrow']);
+            $info['work_today'] = json_decode($info['work_today']);
         }
 
         return json_encode($info);
