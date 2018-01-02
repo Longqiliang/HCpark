@@ -10,6 +10,14 @@
     .my-log .my-icon-suc{background-image:url(/index/images/partymanage/suc.png)}
     .my-log .my-icon-ing{background-image:url(/index/images/partymanage/ing.png)}
     .my-log .my-icon-err{background-image:url(/index/images/partymanage/err.png)}
+    .my-log .my-icon-repair{
+        background: #69B9F9;
+        text-align: center;
+        line-height: 2.2rem;
+        font-size: 1.5rem;
+        color: #fff;
+        border-radius: 50%;
+    }
     .my-log .my-list{padding:0;flex-grow:1;display:-webkit-flex;display:flex;flex-direction:column;justify-content:space-between}
     .my-log .my-list>div:first-child{color:#333;font-size:1.5rem;line-height:2.2rem;display:-webkit-flex;display:flex}
     .my-log .my-list>div:first-child>span:first-child{margin-right:1.5rem;width:7rem}
@@ -27,7 +35,8 @@
         <ul>
             <li v-for="item in diaryList" >
                 <div>
-                    <span class="my-icon my-icon-suc"></span>
+                    <span class="my-icon my-icon-repair" v-if="item.is_supplement===1">补</span>
+                    <span class="my-icon my-icon-suc" v-else></span>
                     <div class="my-list">
                         <div><span>工作日志</span><span>{{item.content}}</span></div>
                         <div><span>创建日期：</span><span>{{item.create_time*1000 | timeToString}}</span></div>
