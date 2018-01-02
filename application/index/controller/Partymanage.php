@@ -776,12 +776,12 @@ class Partymanage extends Base
 
         if (!$info) {
             $info['user_id'] = $user_id;
-            $info['user_name']=$user_name;
+            $info['user_name']=$user_name['name'];
             $info['create_time'] = $begindate * 1000;
         } else {
             $info['arrange_tomorrow'] = json_decode($info['arrange_tomorrow']);
             $info['work_today'] = json_decode($info['work_today']);
-            $info['user_name'] = $user_name;
+            $info['user_name'] = $user_name['name'];
         }
 
         return json_encode($info);
