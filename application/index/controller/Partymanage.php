@@ -22,6 +22,7 @@ use app\index\model\News;
 use think\Image;
 use app\common\model\PartyNews;
 use app\common\model\ParkRent;
+use app\index\model\WechatUser as WechatModel;
 
 class Partymanage extends Base
 {
@@ -749,13 +750,15 @@ class Partymanage extends Base
         }
 
     }
-
     public function changeDiary()
     {
         $user_id = input('user_id');
         $time = input('time') / 1000;
         $mDiary = new MerchantsDiary();
         $date_str = date('Y-m-d', $time);
+        $wechat = new WechatModel();
+        $user_name = $wechat->where('user_id',$user_id)->find();
+
         //封装成数组
         $arr = explode("-", $date_str);
         //参数赋值
@@ -769,12 +772,16 @@ class Partymanage extends Base
         $map['user_id'] = $user_id;
         $map['create_time'] = array('between', array($begindate, $enddate));
         $info = $mDiary->where($map)->find();
+
+
         if (!$info) {
             $info['user_id'] = $user_id;
+            $info['user_name']=$user_name;
             $info['create_time'] = $begindate * 1000;
         } else {
             $info['arrange_tomorrow'] = json_decode($info['arrange_tomorrow']);
             $info['work_today'] = json_decode($info['work_today']);
+            $info['user_name'] = $user_name;
         }
 
         return json_encode($info);
