@@ -27,31 +27,36 @@
     .my-title{padding:1.2rem 0;}
     input{font-size:1.5rem;}
     .diary_list,.feedback{box-sizing:border-box;padding:1rem;width:100%;border:1px solid #f1f1f1;border-radius:5px;font-size:1.5rem;line-height:1.5;}
-    ul.diary_list{
-        list-style: ;
-    }
     .diary_list>li{
         font-size: 1.5rem;
         display: flex;
-        padding:0.5rem;
+        padding:0.5rem 0;
 
     }
     .diary_list>li>span{
-        /*line-height: 4.5rem;*/
         width: 2rem;
+        text-align: center;
     }
     .diary_list>li>textarea{
         box-sizing: border-box;
         flex:1;
         height:4.5rem;
+        font-size: 1.5rem;
         line-height:1.5;
         border-bottom: 1px solid #f1f1f1;
+        border-radius: 0;
     }
     .diary_list_new{
+        color: #3094F8;
+        font-size: 2rem;
+        line-height: 3rem;
+        display: flex;
         align-items: center;
         justify-content: center;
-        color: #3094F8;
-        font-size: 1.6rem;
+    }
+    .diary_list_new:before{
+        margin-right: 5px;
+        font-weight: bold;
     }
     .card-upload{display:flex;align-items:center;}
     .card-upload>div:not(:last-child){margin-right:1rem;}
@@ -103,32 +108,30 @@
         </ul>
     </div>
     <div class="my-box">
-     <ul class="my-baseInfo">
+        <ul class="my-baseInfo">
             <li>姓名：<span>{{baseInfo.user_name}}</span></li>
             <li>日期：
-                <!--<span v-if="baseInfo.create_time">{{baseInfo.create_time | timeToString}}</span>-->
-                <!--<span v-else>{{ Date.parse( new Date() ) | timeToString}}</span>-->
                 <span>{{ date | timeToString}}</span>
             </li>
         </ul>
         <div class="my-title">今日工作</div>
         <ul class="diary_list">
-            <li>
-                <span>1</span>
-                <textarea name="" cols="30" rows="10"></textarea>
+            <li  v-for="(item,key) in todayDiary" :key="'list'+key">
+                <span v-text="key+1"></span>
+                <textarea v-model="todayDiary[key]"></textarea>
+                <span class="iconfont hc-delete"  @click="delDiary(1,key)"></span>
             </li>
-            <li>
-                <span>1</span>
-                <textarea name=""cols="30" rows="10"></textarea>
-            </li>
-            <li>
-                <span>1</span>
-                <textarea name="" cols="30" rows="10"></textarea>
-            </li>
-            <li class="diary_list_new"><b> + </b> 新建今日工作</li>
+            <li class="diary_list_new iconfont hc-jia" @click="addNewDiary(1)" key="newD">新建今日工作</li>
         </ul>
         <div class="my-title">明日安排</div>
-        <textarea cols="30" rows="10" :placeholder="isWrite==true?'请输入明日安排内容':'暂无内容'" v-model="baseInfo.arrange_tomorrow" :readonly="!isWrite"></textarea>
+        <ul class="diary_list">
+            <li v-for="(item,key) in tomorrowPlay" :key="'list1'+key">
+                <span v-text="key+1">1</span>
+                <textarea v-model="tomorrowPlay[key]"></textarea>
+                <span class="iconfont hc-delete" @click="delDiary(2,key)"></span>
+            </li>
+            <li class="diary_list_new iconfont hc-jia"  @click="addNewDiary(2)" key="newD">新建明日安排</li>
+        </ul>
         <div class="my-title">问题反馈</div>
         <textarea class="feedback" cols="30" rows="10" :placeholder="isWrite==true?'请输入反馈内容':'暂无内容'" v-model="baseInfo.feed_back" :readonly="!isWrite"></textarea>
         <!--<div class="my-title"><span v-if="isWrite">上传图片：</span><span v-if="baseInfo.img.length">图片</span></div>-->
@@ -176,6 +179,7 @@
     var app=new Vue({
         el:'#app',
         data:{
+            testStr:'',
             //权限判断
             isBoss:'{$is_boss}',
             //是否能编辑
@@ -184,6 +188,8 @@
             isShow:false,
             isSubmit:false,
             baseInfo:{$info},
+            todayDiary:[],
+            tomorrowPlay:[],
             //点击日历后记录的index
             nowDateIndex:'',
             date:'',
@@ -220,13 +226,32 @@
                 the.date=the.baseInfo.create_time;
             }
             the.initData(the.baseInfo.create_time);
-
+            the.todayDiary = the.baseInfo.work_today || [];
+            the.tomorrowPlay = the.baseInfo.arrange_tomorrow || [];
         },
         mounted(){
         },
         updated(){
         },
         methods:{
+            delDiary(type,key){
+                console.log(type,key)
+                var _this = this ;
+                if(type===1){
+                    _this.todayDiary.splice(key,1);
+                }else{
+                    _this.tomorrowPlay.splice(key,1);
+                }
+            },
+            addNewDiary(type){
+                var _this = this ;
+//
+                if(type===1){
+                    this.todayDiary.push('');
+                }else{
+                    _this.tomorrowPlay.push('');
+                }
+            },
             canWrite(){
                 var the=this;
                 //领导不能写日志判断
@@ -238,53 +263,54 @@
                     the.isWrite=true;
                 }
             },
-
             toShow(){
                     this.isShow=!this.isShow
             },
             //生成月份数据 初始传null
             initData: function(cur) {
-                var date;
+                var
+                        date,
+                        _this = this;
                 if (cur) {
                     date = new Date(cur);
                     date=new Date(date.setDate(1));
                 } else {
                     var now=new Date();
-                    var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , now.getDate()));
+                    var d = new Date(_this.formatDate(now.getFullYear() , now.getMonth()+1 , now.getDate()));
                     d.setDate(41);
-                    date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                    date = new Date(_this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
                 }
-                this.currentDay = date.getDate();
-                this.currentYear = date.getFullYear();
-                this.currentMonth = date.getMonth() + 1;
-                this.currentWeek = date.getDay(); // 1...6,0
+                _this.currentDay = date.getDate();
+                _this.currentYear = date.getFullYear();
+                _this.currentMonth = date.getMonth() + 1;
+                _this.currentWeek = date.getDay(); // 1...6,0
 
-                var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay);
-                this.days.length = 0;
+                var str = _this.formatDate(_this.currentYear , _this.currentMonth, _this.currentDay);
+                _this.days.length = 0;
                 // 今天是周日，放在第一行第7个位置，前面6个
                 //初始化本周
-                for (var i = this.currentWeek; i >= 0; i--) {
+                for (var i = _this.currentWeek; i >= 0; i--) {
                     var d = new Date(str);
                     d=d.setDate(d.getDate() - i);
 //                    console.log(new Date(d))
-                    if(new Date(d).getMonth()!=this.currentMonth-1){
+                    if(new Date(d).getMonth()!=_this.currentMonth-1){
                         var dayobject={day:''}
                     }else{
                         var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
                         dayobject.day=d;
-                        dayobject.isChecked=this.isChecked(d);
+                        dayobject.isChecked=_this.isChecked(d);
                     }
-                    this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
+                    _this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
                 }
                 //其他周
-                for (var i = 1; i <= 41 - this.currentWeek; i++) {
+                for (var i = 1; i <= 41 - _this.currentWeek; i++) {
                     var d = new Date(str);
                     d= d.setDate(d.getDate() + i);
                     var dayobject={};
                     dayobject.day=d;
-                    dayobject.isChecked=this.isChecked(d);
-                    if(new Date(d).getMonth()==this.currentMonth-1){
-                        this.days.push(dayobject);
+                    dayobject.isChecked=_this.isChecked(d);
+                    if(new Date(d).getMonth()==_this.currentMonth-1){
+                        _this.days.push(dayobject);
                     }
                 }
             },
@@ -302,39 +328,40 @@
                 return false
             },
             toCheck:function (key) {
-                if(!this.days[key].day){
+                var _this = this;
+                if(!_this.days[key].day){
                     return;
                 }
-                if(this.isSubmit){
-                    this.$toast('提交中，请稍等')
+                if(_this.isSubmit){
+                    _this.$toast('提交中，请稍等')
                     return
                 }
-                this.$indicator.open({
+                _this.$indicator.open({
                     text: '加载中...',
                     spinnerType: 'triple-bounce'
                 });
-                this.nowDateIndex=key;
-                this.isSubmit=true;
-                var time=new Date(this.days[key].day).setHours(0,0,0,0);
+                _this.nowDateIndex=key;
+                _this.isSubmit=true;
+                var time=new Date(_this.days[key].day).setHours(0,0,0,0);
                 var data={
                     time:time,
-                    user_id:this.baseInfo.user_id
+                    user_id:_this.baseInfo.user_id
                 };
-                this.$http.post('/index/partymanage/changeDiary',data).then(function (res) {
-                    var data=JSON.parse(res.data);
-                    this.isSubmit=false;
-                    this.$indicator.close();
-                    this.date=data.create_time;
-                    this.baseInfo.create_time=data.create_time;
-                    this.baseInfo.work_today=data.work_today;
-                    this.baseInfo.arrange_tomorrow=data.arrange_tomorrow;
-                    this.baseInfo.feed_back=data.feed_back;
-//                    this.baseInfo.img=data.img ? data.img : [];
-                    this.canWrite();
+                _this.$http.post('/index/partymanage/changeDiary',data).then(function (res) {
+                    var data = JSON.parse(res.data);
+                    _this.isSubmit=false;
+                    _this.$indicator.close();
+                    _this.date = data.create_time;
+                    _this.baseInfo.create_time = data.create_time;
+                    _this.todayDiary = data.work_today;
+                    _this.tomorrowPlay = data.arrange_tomorrow;
+                    _this.baseInfo.feed_back = data.feed_back;
+//                    _this.baseInfo.img=data.img ? data.img : [];
+                    _this.canWrite();
                 },function (res) {
-                    this.$toast('请求失败，请退出页面重试')
-                    this.isSubmit=false;
-                    this.$indicator.close();
+                    _this.$toast('请求失败，请退出页面重试')
+                    _this.isSubmit=false;
+                    _this.$indicator.close();
                 })
             },
             pickPre: function(year, month) {
@@ -369,10 +396,11 @@
                 if(the.isSubmit){
                     the.$toast('提交中，请稍等')
                     return
-                }else if(!the.baseInfo.work_today && !the.baseInfo.arrange_tomorrow && !the.baseInfo.feed_back){
-                    the.$toast('请至少填写一项内容')
+                }else if(!the.todayDiary && !the.tomorrowPlay && !the.baseInfo.feed_back){
+                    the.$toast('写点什么吧~');
                     return
                 }
+
                 the.$indicator.open({
                     text: '提交中...',
                     spinnerType: 'triple-bounce'
@@ -380,9 +408,8 @@
 
                 the.isSubmit=true;
                 var data={
-//                    img:JSON.stringify(the.imgList),
-                    work_today:the.baseInfo.work_today,
-                    arrange_tomorrow:the.baseInfo.arrange_tomorrow,
+                    work_today:the.todayDiary,
+                    arrange_tomorrow:the.tomorrowPlay,
                     feed_back:the.baseInfo.feed_back,
                     user_id:the.baseInfo.user_id,
                     create_time:the.baseInfo.create_time
