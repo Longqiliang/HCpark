@@ -690,17 +690,17 @@ class Partymanage extends Base
                     //今日新增
                     $data['is_supplement'] = 2;
                     $data['park_id']=$park_id;
-                    $reult = $mDiary->save($data);
+                    $reult = $mDiary->allowField(true)->save($data);
 
                 } else {
                     //今日修改
-                    $reult = $mDiary->update([$data, 'id' => $data['id']]);
+                    $reult = $mDiary->allowField(true)->isUpdate(true)->save($data);
                 }
             } else {
                 //以前补写
                 $data['is_supplement'] = 1;
                 $data['park_id']=$park_id;
-                $reult = $mDiary->save($data);
+                $reult = $mDiary->allowField(true)->save($data);
             }
             if ($reult) {
                 return $this->success("yes");
@@ -713,6 +713,7 @@ class Partymanage extends Base
             $this->assign('is_boss', $is_boss);
             $diary['user_id'] = $user_id;
             $diary['user_name'] = $user['name'];
+
             //领导或者个人查看日志
             if (!empty($id)) {
                 $info = $mDiary->where('id', $id)->find();
