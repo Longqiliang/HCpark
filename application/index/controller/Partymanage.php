@@ -773,7 +773,6 @@ class Partymanage extends Base
             $info['user_id'] = $user_id;
             $info['create_time'] = $begindate * 1000;
         } else {
-            $info['img'] = json_decode($info['img']);
             $info['arrange_tomorrow'] = json_decode($info['arrange_tomorrow']);
             $info['work_today'] = json_decode($info['work_today']);
         }
