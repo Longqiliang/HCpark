@@ -757,7 +757,7 @@ class Partymanage extends Base
         $mDiary = new MerchantsDiary();
         $date_str = date('Y-m-d', $time);
         $wechat = new WechatModel();
-        $user_name = $wechat->where('user_id',$user_id)->find();
+        $user_name = $wechat->where('userid',$user_id)->find();
 
         //封装成数组
         $arr = explode("-", $date_str);
