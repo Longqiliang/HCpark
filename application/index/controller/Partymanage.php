@@ -159,9 +159,9 @@ class Partymanage extends Base
     public function contract()
     {
         $type = input('type');
-        $data[0] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 1,'status'=>0])->count();
-        $data[1] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 2,'status'=>0])->count();
-        $data[2] = CompanyContract::where(["park_id" => session("park_id"), 'type' => ['>', 2],'status'=>0])->count();
+        $data[0] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 1, 'status' => 0])->count();
+        $data[1] = CompanyContract::where(["park_id" => session("park_id"), 'type' => 2, 'status' => 0])->count();
+        $data[2] = CompanyContract::where(["park_id" => session("park_id"), 'type' => ['>', 2], 'status' => 0])->count();
         $contract[0] = $data[0] + $data[1] + $data[2];
         $contract[1] = $data[0];
         $contract[2] = $data[1];
@@ -184,7 +184,7 @@ class Partymanage extends Base
     {
         $id = input('id');
         $type = input("type");
-        $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type,'status'=>0])
+        $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type, 'status' => 0])
             ->order("create_time desc")
             ->limit(7)
             ->select();
@@ -211,7 +211,7 @@ class Partymanage extends Base
     {
         $type = input("type");
         $len = input("length");
-        $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type,'status'=>0])
+        $list = CompanyContract::where(["park_id" => session("park_id"), 'type' => $type, 'status' => 0])
             ->order("create_time desc")
             ->limit($len, 7)
             ->select();
@@ -237,19 +237,19 @@ class Partymanage extends Base
             'number' => $manageInfo['number'],
             'create_time' => $manageInfo['create_time'],
         ];
-        $a=array();
-        foreach ($info['img'] as $v){
-            $v= "http://".$_SERVER['HTTP_HOST'].$v;
-            array_push($a,$v);
+        $a = array();
+        foreach ($info['img'] as $v) {
+            $v = "http://" . $_SERVER['HTTP_HOST'] . $v;
+            array_push($a, $v);
         }
-        $info['img']=$a;
+        $info['img'] = $a;
 
-        $b=array();
-        foreach ($info['imgs'] as $v2){
-            $v2 = "http://".$_SERVER['HTTP_HOST'].$v2;
-            array_push($b,$v2);
+        $b = array();
+        foreach ($info['imgs'] as $v2) {
+            $v2 = "http://" . $_SERVER['HTTP_HOST'] . $v2;
+            array_push($b, $v2);
         }
-        $info['imgs']=$b;
+        $info['imgs'] = $b;
         $this->assign('info', json_encode($info));
 
         return $this->fetch();
@@ -283,8 +283,8 @@ class Partymanage extends Base
             } else {
                 //echo json_encode($all_company);
                 foreach ($all_company as $value) {
-                    $user_park =isset($value->user->park_id)?$value->user->park_id:1;
-                    if ($value['status'] == 1 &&$user_park == $park_id) {
+                    $user_park = isset($value->user->park_id) ? $value->user->park_id : 1;
+                    if ($value['status'] == 1 && $user_park == $park_id) {
                         array_push($doing, $value);
 
                     } else if ($value['status'] == 2 && $user_park == $park_id) {
@@ -389,7 +389,6 @@ class Partymanage extends Base
         $this->assign('is_boss', $is_boss);
         //领导权限
         if ($user['tagid'] == 1) {
-
             //个人统计
             if ($park_id == 1) {
                 $map = [
@@ -407,8 +406,7 @@ class Partymanage extends Base
                 array_push($merchantUserid, $value['userid']);
             }
             $data = [
-                'user_id' => array('in', $merchantUserid)
-
+                 'user_id' => array('in', $merchantUserid)
             ];
             //工作日志
             $diaryList = $mDiary->where($data)->order('create_time desc')->select();
@@ -432,7 +430,8 @@ class Partymanage extends Base
 
         return $this->fetch();
     }
-     //招商统计图表所需数据格式
+
+    //招商统计图表所需数据格式
     public function merchantsComment($mCompany, $type)
     {
         $data = [
@@ -564,9 +563,7 @@ class Partymanage extends Base
         if (empty($month)) {
             $begindate = mktime(0, 0, 0, 1, 1, $year);
             $enddate = mktime(0, 0, 0, 1, 1, $year + 1) - 1;
-
-        }
-        //月
+        } //月
         else {
             $begindate = mktime(0, 0, 0, $month, 1, $year);
             $enddate = mktime(0, 0, 0, $month + 1, 1, $year) - 1;
@@ -628,7 +625,7 @@ class Partymanage extends Base
             'finish_area' => $finish_area,
             'records' => $myRecord,
             'diary' => $myDiary,
-            'userid'=> $user_id
+            'userid' => $user_id
         ];
         return $data;
     }
@@ -636,8 +633,8 @@ class Partymanage extends Base
     //招商个人统计
     public function statisticsInfo()
     {
-        $id =input('userid');
-        $userid = isset($id)?$id:session('userId');
+        $id = input('userid');
+        $userid = isset($id) ? $id : session('userId');
         if (IS_POST) {
             $year = input('year');
             $month = input('month');
@@ -675,29 +672,33 @@ class Partymanage extends Base
     public function diaryInfo()
     {
         $user_id = empty(input('user_id')) ? session('userId') : input('user_id');
+        $park_id = session('park_id');
         $id = input('id');
         $mDiary = new MerchantsDiary();
         $weuser = new WechatUser();
         if (IS_POST) {
             $data = input('');
             $data['user_id'] = $user_id;
-            $data['work_today']=empty( $data['work_today'])?'[]': json_encode($data['work_today']);
-            $data['arrange_tomorrow']=empty( $data['arrange_tomorrow'])?'[]': json_encode($data['arrange_tomorrow']);
+            $data['work_today'] = empty($data['work_today']) ? '[]' : json_encode($data['work_today']);
+            $data['arrange_tomorrow'] = empty($data['arrange_tomorrow']) ? '[]' : json_encode($data['arrange_tomorrow']);
             $data['create_time'] = empty(input('create_time')) ? mktime(0, 0, 0, date('m'), date('d'), date('Y')) : input('create_time') / 1000;
             //以前的日志不能修改
             //如果修改（create_time！=null）：1.今日修改（今日填写） 2：以前补写
-            if($data['create_time']==mktime(0, 0, 0, date('m'), date('d'))){
-                 if(isset($data['id'])){
-                 //今日新增
-                     $data['is_supplement']=2;
-                     $reult = $mDiary->save($data);
-                 }else{
-                     //今日修改
-                     $reult = $mDiary->update([$data,'id'=>$data['id']]);
-                 }
-                }else{
+            if ($data['create_time'] == mktime(0, 0, 0, date('m'), date('d'))) {
+                if (!isset($data['id'])) {
+                    //今日新增
+                    $data['is_supplement'] = 2;
+                    $data['park_id']=$park_id;
+                    $reult = $mDiary->save($data);
+
+                } else {
+                    //今日修改
+                    $reult = $mDiary->update([$data, 'id' => $data['id']]);
+                }
+            } else {
                 //以前补写
-                $data['is_supplement']=1;
+                $data['is_supplement'] = 1;
+                $data['park_id']=$park_id;
                 $reult = $mDiary->save($data);
             }
             if ($reult) {
@@ -717,13 +718,13 @@ class Partymanage extends Base
                 $diary = [
                     'id' => $info['id'],
                     'user_name' => isset($info->user->name) ? $info->user->name : "",
-                   /* 'img' => json_decode($info['img']),*/
+                    /* 'img' => json_decode($info['img']),*/
                     'user_id' => $info['user_id'],
                     'work_today' => json_decode($info['work_today']),
                     'arrange_tomorrow' => json_decode($info['arrange_tomorrow']),
                     'feed_back' => $info['feed_back'],
-                    'supplement' =>$info['supplement'],
-                     'is_supplement'=>$info['is_supplement'],
+                    'supplement' => $info['supplement'],
+                    'is_supplement' => $info['is_supplement'],
                     'create_time' => $info['create_time'] * 1000];
             }
             $list = $mDiary->where('user_id', $user_id)->select();
@@ -960,12 +961,13 @@ class Partymanage extends Base
 
 
     }
+
     /*公司其他合同列表*/
     public function otherList()
     {
-        $data = [] ;
+        $data = [];
         $id = input('id');
-        $map = ['department_id' => $id,'type'=>3];
+        $map = ['department_id' => $id, 'type' => 3];
         $list = CompanyContract::where($map)->order('id  desc')->select();
         foreach ($list as $k => $v) {
             $data[$k] = [
@@ -974,15 +976,15 @@ class Partymanage extends Base
             ];
         }
         $this->assign("id", $id);
-        $this->assign('list',json_encode($data));
+        $this->assign('list', json_encode($data));
 
         return $this->fetch();
     }
 
     //微信js-sdk调试
-    public  function   wxjssdk()
+    public function wxjssdk()
     {
-        $url=input('url');
+        $url = input('url');
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('parkmanage'));
 
@@ -993,16 +995,10 @@ class Partymanage extends Base
 
             return "获取signature失败" . $weObj->errCode . '|' . $weObj->errMsg;;
         }
-        $signature['imgurl']='http://xk.0519ztnet.com/';
+        $signature['imgurl'] = 'http://xk.0519ztnet.com/';
 
         return json_encode($signature);
     }
-
-
-
-
-
-
 
 
 }
