@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>反馈详情</title>
+<title>回复详情</title>
 <link rel="stylesheet" href="/index/css/common/rem.css">
 <style type="text/css">
     *,ul,li,p{
@@ -252,7 +252,7 @@
 {block name="script"}
 <script>
     $(function(){
-        $("title").html("意见反馈");
+        $("title").html("回复详情");
         $(".foot").on('click',function () {
             var reply = $('.reply_box>.content-box').val();
             if(!reply){
