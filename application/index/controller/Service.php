@@ -498,8 +498,6 @@ class Service extends Base
                 "description" => "您有新充电柱缴费需要审核，请点击查看",
                 "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/7/can_check/yes/id/' . $PillarService->getLastInsID()
             ];
-
-
             /* $new = [
                  "title" => $message['title'],
                  "message" => $message['description'],
@@ -511,12 +509,11 @@ class Service extends Base
                  'status' => 0
              ];
              $savemessage = $personalMessage->save($new);*/
-
             //推送给运营
             $reult = $this->commonSend(1, $message, '', 7);
             if ($reult) {
                 $msg = "您的缴费信息正在核对中;核对完成后,将在个人中心中予以反馈;请耐心等待,确认成功后;请您在2小时内到希垦科技园A座201领取钥匙";
-                $this->success('成功' . json_encode($PillarService->id,'',$msg));
+                $this->success('成功' .$PillarService->id,'',$msg);
             } else {
                 return $this->error("推送失败");
             }
