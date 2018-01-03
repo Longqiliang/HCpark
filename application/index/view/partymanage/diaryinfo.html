@@ -4,66 +4,40 @@
 <title>工作日志</title>
 <link rel="stylesheet" href="/static/viewer/viewer.min.css">
 <style>
-    #app{padding-bottom:2rem;}
-    .my-box{padding:0 1.2rem;font-size:1.5rem;}
-    .month{width:100%;height:5.5rem;background:#f8f7fc;}
-    .month ul{display:flex;margin:0;padding:0;height:100%;justify-content:space-around;align-items:center;}
-    .month ul>li{vertical-align:middle;line-height:5.5rem;}
-    .year-month{color:#333;font-size:1.8rem;}
-    .month .arrow{padding:0 3rem;color:#666;}
-    .month ul li{color:#333;text-transform:uppercase;letter-spacing:3px;font-size:20px;}
-    .weekdays{display:flex;margin:0;padding:10px 0;background-color:#f8f7fc;color:#333;font-size:1.5rem;flex-wrap:wrap;justify-content:space-around;}
-    .weekdays li{display:inline-block;width:13.6%;text-align:center;}
-    .days{display:flex;margin:0;padding-bottom:10px;background:#f8f7fc;flex-wrap:wrap;}
-    .days li{position:relative;display:inline-flex;width:14.2857143vw;height:13.2857143vw;color:#000;list-style-type:none;text-align:center;font-size:1.5rem;justify-content:center;align-items:center;}
-    .days li .active{padding:6px 10px;border-radius:50%;background:#00B8EC;color:#fff;}
-    .days li.other-month{color:#dcdcdc;}
-    .days li>span{display:block;width:3.4rem;height:3.4rem;border-radius:100%;line-height:3.4rem;}
-    .isBespeak span{background-color:#e8e8e8;color:#999;}
-    .isChecked{position:absolute;top:5px;right:5px;display:block;width:5px;height:5px;border-radius:5px;background:#69B9F9;}
-    .isRepair{position: absolute;top:5px;right:5px;display:block;color:#69B9F9;font-size: 0.8rem;font-weight: normal}
-    .my-baseInfo{display:-webkit-flex;display:flex;padding:1.2rem 0;border-bottom:1px solid #f1f1f1;justify-content:space-between;align-items:center;}
-    .my-baseInfo>li:first-child{width:55%;}
-    .my-baseInfo>li:last-child{width:45%;}
-    .my-title{padding:1.2rem 0;}
-    input{font-size:1.5rem;}
-    .diary_list,.feedback{box-sizing:border-box;padding:1rem;width:100%;border:1px solid #f1f1f1;border-radius:5px;font-size:1.5rem;line-height:1.5;}
-    .diary_list>li{
-        font-size: 1.5rem;
-        display: flex;
-        padding:0.5rem 0;
-
-    }
-    .diary_list>li>span{
-        width: 2rem;
-        text-align: center;
-    }
-    .diary_list>li>textarea{
-        box-sizing: border-box;
-        flex:1;
-        height:4.5rem;
-        font-size: 1.5rem;
-        line-height:1.5;
-        border-bottom: 1px solid #f1f1f1;
-        border-radius: 0;
-    }
-    .diary_list_new{
-        color: #3094F8;
-        font-size: 2rem;
-        line-height: 3rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .diary_list_new:before{
-        margin-right: 5px;
-        font-weight: bold;
-    }
-    .hide{display:none!important;}
-    .toSubmit{display:block;margin:0 auto;margin-top:4rem;margin-bottom:2rem;width:93.6vw;height:4rem;outline:0;border:none;border-radius:5px;background:#69B9F9;color:#fff;text-align:center;font-size:1.8rem;line-height:4rem;}
-
-
-    /*modal框*/
+    #app{padding-bottom:2rem}
+    .my-box{padding:0 1.2rem;font-size:1.5rem}
+    .month{width:100%;height:5.5rem;background:#f8f7fc}
+    .month ul{display:flex;margin:0;padding:0;height:100%;justify-content:space-around;align-items:center}
+    .month ul>li{vertical-align:middle;line-height:5.5rem}
+    .year-month{color:#333;font-size:1.8rem}
+    .month .arrow{padding:0 3rem;color:#666}
+    .month ul li{color:#333;text-transform:uppercase;letter-spacing:3px;font-size:20px}
+    .weekdays{display:flex;margin:0;padding:10px 0;background-color:#f8f7fc;color:#333;font-size:1.5rem;flex-wrap:wrap;justify-content:space-around}
+    .weekdays li{display:inline-block;width:13.6%;text-align:center}
+    .days{display:flex;margin:0;padding-bottom:10px;background:#f8f7fc;flex-wrap:wrap}
+    .days li{position:relative;display:inline-flex;width:14.2857143vw;height:13.2857143vw;color:#000;list-style-type:none;text-align:center;font-size:1.5rem;justify-content:center;align-items:center}
+    .days li .active{padding:6px 10px;border-radius:50%;background:#00B8EC;color:#fff}
+    .days li.other-month{color:#dcdcdc}
+    .days li>span{display:block;width:3.4rem;height:3.4rem;border-radius:100%;line-height:3.4rem}
+    .isBespeak span{background-color:#e8e8e8;color:#999}
+    .isChecked{position:absolute;top:5px;right:5px;display:block;width:5px;height:5px;border-radius:5px;background:#69B9F9}
+    .isRepair{position:absolute;top:5px;right:5px;display:block;color:#69B9F9;font-weight:400;font-size:.8rem}
+    .li_disable{background-color: #f1f1f1}
+    .my-baseInfo{display:-webkit-flex;display:flex;padding:1.2rem 0;border-bottom:1px solid #f1f1f1;justify-content:space-between;align-items:center}
+    .my-baseInfo>li:first-child{width:55%}
+    .my-baseInfo>li:last-child{width:45%}
+    .my-title{padding:1.2rem 0}
+    .my-title-flex{display:-webkit-flex;display:flex;align-items:center;justify-content:space-between}
+    input{font-size:1.5rem}
+    .diary_list,.feedback{box-sizing:border-box;padding:1rem;width:100%;border:1px solid #f1f1f1;border-radius:5px;font-size:1.5rem;line-height:1.5}
+    .diary_list>li{display:flex;padding:.5rem 0;font-size:1.5rem}
+    .diary_list>li>span{width:2rem;text-align:center}
+    .diary_list>li>textarea{box-sizing:border-box;height:4.5rem;border-bottom:1px solid #f1f1f1;border-radius:0;font-size:1.5rem;line-height:1.5;flex:1}
+    .diary_list_new{display:flex;color:#3094F8;font-size:2rem;line-height:3rem;align-items:center;justify-content:center}
+    .diary_list_new:before{margin-right:5px;font-weight:700}
+    .diary_list_show{overflow:scroll;max-height:20rem}
+    .hide{display:none!important}
+    .toSubmit{display:block;margin:0 auto;margin-top:4rem;margin-bottom:2rem;width:93.6vw;height:4rem;outline:0;border:none;border-radius:5px;background:#69B9F9;color:#fff;text-align:center;font-size:1.8rem;line-height:4rem}
     .modal-box{position:fixed;top:0;left:0;z-index:9;display:none;width:100%;height:100vh;background:rgba(0,0,0,.4)}
     .modal-box.show{display:block!important}
     .modal-box .modal{position:relative;margin:20vh auto 0;padding:10px 0;width:calc(100% - 36px);border-radius:10px;background:#fff}
@@ -74,19 +48,17 @@
     .name-mobile span:first-child{float:left;width:62px}
     .name-mobile input{text-align:right;font-size:1.5rem}
     .remark p{font-size:1.5rem}
-    .remark textarea{margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);height:18vh;border:1px solid #e5e5e5;border-radius:5px}
+    .remark textarea{box-sizing:border-box;margin:10px 7px;padding:5px 10px;width:calc(100% - 14px);height:18vh;border:1px solid #e5e5e5;border-radius:5px}
     .my-cancel{position:absolute;top:-50px;right:0}
     .my-cancel>span:first-child{display:inline-block;display:-webkit-flex;width:28px;height:28px;border:1px solid #fff;border-radius:15px;-webkit-align-items:center;-webkit-justify-content:center}
     .my-cancel i::before{width:20px;height:20px;color:#fff}
     .my-cancel>span:last-child{position:relative;left:50%;display:inline-block;width:0;height:22px;border-right:1px solid #fff}
     .rent-btn-box{padding:3.5rem 4.8vw;width:100%}
     .btn{height:5rem}
-    .btn-box{padding:4vw 4.8vw;width:100%;display: flex;justify-content: space-between;align-items: center;box-sizing: border-box}
+    .btn-box{display:flex;box-sizing:border-box;padding:4vw 4.8vw;width:100%;justify-content:space-between;align-items:center}
     .btn{height:10.67vw;border:none;border-radius:5px;color:#fff;text-align:center;font-size:1.5rem}
     .btn-block{width:100%}
-    .btn-block:not(:last-child){
-        margin-right: 1rem;
-    }
+    .btn-block:not(:last-child){margin-right:1rem}
     .btn-green{background-color:#fcc44b;color:#fff;font-size:1.5rem}
     .table-view-cell.group-cell{border-bottom:none}
     .btn-primary{background-color:#7DB8F2}
@@ -121,7 +93,7 @@
         </ul>
         <!-- 日期 -->
         <ul class="days">
-            <li  v-for="(dayobject,key) in days" @click="toCheck(key)" >
+            <li  v-for="(dayobject,key) in days" @click="toCheck(key)" :class="{'li_disable':dayobject.canCheck===false}">
                 <span>{{dayobject.day == '' ? '': new Date(dayobject.day).getDate() }}</span>
                 <i class="isChecked" v-if="dayobject.isChecked && !dayobject.isRepair"></i>
                 <b class="isRepair" v-else-if="dayobject.isRepair">补</b>
@@ -144,7 +116,7 @@
             </li>
             <li class="diary_list_new iconfont hc-jia" @click="addNewDiary(1)" key="newD">新建今日工作</li>
         </ul>
-        <ul class="diary_list" v-if="!isWrite">
+        <ul class="diary_list diary_list_show" v-if="!isWrite">
             <li v-for="(item,key) in todayDiary" :key="'list'+key">
                 <span v-text="key+1+'.'"></span>
                 {{todayDiary[key]}}
@@ -160,7 +132,7 @@
             </li>
             <li class="diary_list_new iconfont hc-jia" @click="addNewDiary(2)" key="newD">新建明日安排</li>
         </ul>
-        <ul class="diary_list" v-if="!isWrite">
+        <ul class="diary_list diary_list_show" v-if="!isWrite">
             <li v-for="(item,key) in tomorrowPlay" :key="'list'+key">
                 <span v-text="key+1+'.'"></span>
                 {{tomorrowPlay[key]}}
@@ -168,21 +140,21 @@
             <li v-if='!tomorrowPlay.length'>空</li>
         </ul>
         <div class="my-title">问题反馈</div>
-        <ul class="diary_list" v-if="!isWrite">
+        <ul class="diary_list diary_list_show" v-if="!isWrite">
             <li v-if='!baseInfo.feed_back'>空</li>
             <li v-text="baseInfo.feed_back" v-else></li>
         </ul>
         <textarea class="feedback" v-if="isWrite" cols="30" rows="10" placeholder="请输入反馈内容" v-model="baseInfo.feed_back"></textarea>
         <div v-if="baseInfo.is_supplement===1">
-            <div class="my-title">补写</div>
-            <ul class="diary_list">
+            <div class="my-title my-title-flex"><span>补写内容</span><span>{{baseInfo.update_time | timeToString}}</span></div>
+            <ul class="diary_list diary_list_show">
                 <li v-text="baseInfo.supplement"></li>
             </ul>
         </div>
     </div>
     <div class="modal-box" :class="{show:modalShow}">
         <div class="modal">
-            <p>补写</p>
+            <p>补写日志</p>
             <div class="remark">
                 <p>补写内容</p>
                 <textarea v-model="supplement"></textarea>
@@ -206,17 +178,25 @@
 <script>
     Vue.filter('timeToString', function(time) {
         if(time){
-            var newTime = new Date(time);
-            var m = newTime.getMonth()+1,
-                    dt=newTime.getDate(),
-                    y=newTime.getFullYear();
-            if(dt<10){
-                dt='0'+dt;
+            if(!isNaN(time)){
+                if(String(time).length<13){
+                    time = time*1000
+                }
+                var newTime = new Date(time);
+                var m = newTime.getMonth()+1,
+                        dt=newTime.getDate(),
+                        y=newTime.getFullYear();
+                if(dt<10){
+                    dt='0'+dt;
+                }
+                if(m<10){
+                    m='0'+m;
+                }
+                return y+'-'+m+'-'+dt
+            }else{
+                return time
             }
-            if(m<10){
-                m='0'+m;
-            }
-            return y+'-'+m+'-'+dt
+
         }
     });
     var app=new Vue({
@@ -255,7 +235,6 @@
         },
         created(){
             var the=this;
-            //领导不能写日志判断
             if(!the.baseInfo.create_time){
                 the.date=Date.parse(new Date())
             }else{
@@ -295,7 +274,6 @@
             },
             canWrite(time1,time2){
                 var the=this;
-                console.log(the.todayDiary.length,the.isSameDay(time1,time2))
 
                 //领导不能写日志判断
                 if(the.isBoss=='yes'){
@@ -318,7 +296,13 @@
             //生成月份数据 初始传null
             initData: function(cur) {
                 var date,
-                        _this = this;
+                        _this = this,
+                        nowTime = new Date();
+                nowTime.setHours(23);
+                nowTime.setMinutes(59);
+                nowTime.setSeconds(59);
+                //当天结束时间时间戳
+                nowTime = Date.parse(nowTime);
                 if (cur) {
                     date = new Date(cur);
                     date = new Date(date.setDate(1));
@@ -348,6 +332,7 @@
                         var res = _this.isChecked(d);
                         dayobject.isChecked = res.isChecked;
                         dayobject.isRepair = res.isRepair;
+                        dayobject.canCheck = d > nowTime ? false : true;
                     }
                     _this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
                 }
@@ -360,6 +345,7 @@
                     var res = _this.isChecked(d);
                     dayobject.isChecked = res.isChecked;
                     dayobject.isRepair = res.isRepair;
+                    dayobject.canCheck = d > nowTime ? false : true;
                     if(new Date(d).getMonth()==_this.currentMonth-1){
                         _this.days.push(dayobject);
                     }
@@ -371,10 +357,8 @@
                 var dataTime1=new Date(time2);
                 var year2=dataTime1.getFullYear(),month2=dataTime1.getMonth(),day2=dataTime1.getDate();
                 if(year1==year2&&month1==month2&&day1==day2) {
-                    console.log('IS SAME DAY: TRUE')
                     return true
                 }else{
-                    console.log('IS SAME DAY: FALSE')
                     return false
                 }
             },
@@ -403,7 +387,7 @@
             },
             toCheck:function (key) {
                 var _this = this;
-                if(!_this.days[key].day){
+                if(!_this.days[key].day || !_this.days[key].canCheck){
                     return;
                 }
                 if(_this.isSubmit){
@@ -434,7 +418,6 @@
                         }else{
                             _this.date = data.create_time
                         }
-                        console.log(data.create_time)
                     }
 //                    数据替换
                     _this.baseInfo = data;
@@ -481,11 +464,11 @@
                     the.$toast('提交中，请稍等')
                     return
                 }
-//                console.log('是否为补写:'+the.canRepair)
+
                 if( !the.canRepair){
-                    console.log('正常写日志的验证');
+//                    console.log('正常写日志的验证');
                     if(!the.todayDiary.length && !the.tomorrowPlay.length && !the.baseInfo.feed_back){
-                        console.log('啥都没写的验证');
+//                        console.log('啥都没写的验证');
                         the.$toast('写点什么吧~');
                         return
                     }else{
@@ -503,7 +486,7 @@
                         }
                     }
                 }else{
-                    console.log('补写日志的验证');
+//                    console.log('补写日志的验证');
                     if(!the.supplement){
                         the.$toast('写点什么吧~');
                         return
@@ -538,27 +521,43 @@
                             type:"success",
                             confirmButtonColor: "#69B9F9"
                         },function () {
-                           the.isWrite=false;
-                            the.checkedList.push(the.baseInfo.create_time);
-                            if(the.nowDateIndex){
+//                            日历中加入标记
+                            var newDate = {create_time:the.baseInfo.create_time};
+                            if(the.canRepair){
+                                newDate.is_supplement=1
+                            }else{
+                                newDate.is_supplement=2
+                            }
+                            the.checkedList.push(newDate);
+                            if(the.nowDateIndex!==''){
                                 the.days[the.nowDateIndex].isChecked=true;
                                 if(the.canRepair){
+                                    the.isWrite=false;
                                     the.toggleModal();
                                     the.canRepair=false;
                                     the.baseInfo.is_supplement=1;
+                                    the.baseInfo.update_time=res.data.data;
                                     the.days[the.nowDateIndex].isRepair=true;
                                 }
                             }else{
-                               window.history.back();
+                                for(var i=0;i<the.days.length;i++){
+                                    if(the.isSameDay(the.days[i].day,the.date)){
+                                        the.nowDateIndex=i;
+                                        break;
+                                    }
+                                }
+                                the.days[the.nowDateIndex].isChecked=true;
                             }
                         });
                     }else{
+                        the.$indicator.close();
+                        the.isSubmit=false;
                         the.$toast('请求失败，请重试')
                     }
                 },function (res) {
+                    the.$indicator.close();
                     the.$toast('请求失败，请退出页面重试')
                     the.isSubmit=false;
-                    the.$indicator.close();
                 })
             },
         }
