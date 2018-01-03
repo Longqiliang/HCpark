@@ -79,6 +79,7 @@
                 <tr>
                     <th></th>
                     <th>id</th>
+                    <th>日志日期</th>
                     <th>招商人员</th>
                     <th>是否补写</th>
                     <th>创建时间</th>
@@ -95,6 +96,12 @@
                         {$vo.id}
                     </td>
                     <td>
+
+                        {$vo.create_time|| time_format="Y-m-d"}
+
+                    </td>
+
+                    <td>
                         {$vo.user_name}
                     </td>
                     <td>
@@ -106,7 +113,8 @@
                     </td>
 
                     <td>
-                        {$vo.create_time|| time_format="Y-m-d"}
+                        {$vo.update_time}
+
                     </td>
                     <td>
                         <a data-toggle="modal" href="#modal-form" class="btn-sm btn-success" onclick="show(this)" data-work-today='{$vo.work_today}'  data-arrange-tomorrow="{$vo.arrange_tomorrow}"  data-feed-back="{$vo.feed_back}" data-supplement="{$vo.supplement}"  >查看详情</a>
