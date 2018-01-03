@@ -13,6 +13,11 @@ use think\Model;
 
 class MerchantsDiary extends  Model
 {
+    protected $insert=[
+
+        'update_time'=>NOW_TIME
+
+    ];
 
     protected  $type=[
 
