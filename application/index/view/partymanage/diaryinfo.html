@@ -21,7 +21,7 @@
     .days li>span{display:block;width:3.4rem;height:3.4rem;border-radius:100%;line-height:3.4rem;}
     .isBespeak span{background-color:#e8e8e8;color:#999;}
     .isChecked{position:absolute;top:5px;right:5px;display:block;width:5px;height:5px;border-radius:5px;background:#69B9F9;}
-    .isRepair{position: absolute;top:5px;right:5px;display:block;color:#69B9F9;font-size: 0.8rem}
+    .isRepair{position: absolute;top:5px;right:5px;display:block;color:#69B9F9;font-size: 0.8rem;font-weight: normal}
     .my-baseInfo{display:-webkit-flex;display:flex;padding:1.2rem 0;border-bottom:1px solid #f1f1f1;justify-content:space-between;align-items:center;}
     .my-baseInfo>li:first-child{width:55%;}
     .my-baseInfo>li:last-child{width:45%;}
@@ -124,7 +124,7 @@
             <li  v-for="(dayobject,key) in days" @click="toCheck(key)" >
                 <span>{{dayobject.day == '' ? '': new Date(dayobject.day).getDate() }}</span>
                 <i class="isChecked" v-if="dayobject.isChecked && !dayobject.isRepair"></i>
-                <a class="isRepair" v-else-if="dayobject.isRepair">补</a>
+                <b class="isRepair" v-else-if="dayobject.isRepair">补</b>
             </li>
         </ul>
     </div>
@@ -138,7 +138,7 @@
         <div class="my-title">今日工作</div>
         <ul class="diary_list" v-if="isWrite">
             <li v-for="(item,key) in todayDiary" :key="'list'+key">
-                <span v-text="key+1"></span>
+                <span v-text="key+1+'.'"></span>
                 <textarea v-model="todayDiary[key]"></textarea>
                 <span class="iconfont hc-delete"  @click="delDiary(1,key)"></span>
             </li>
@@ -146,7 +146,7 @@
         </ul>
         <ul class="diary_list" v-if="!isWrite">
             <li v-for="(item,key) in todayDiary" :key="'list'+key">
-                <span v-text="key+1">1</span>
+                <span v-text="key+1+'.'"></span>
                 {{todayDiary[key]}}
             </li>
             <li v-if='!todayDiary.length'>空</li>
@@ -154,7 +154,7 @@
         <div class="my-title">明日安排</div>
         <ul class="diary_list"  v-if="isWrite" >
             <li v-for="(item,key) in tomorrowPlay" :key="'list1'+key">
-                <span v-text="key+1">1</span>
+                <span v-text="key+1+'.'"></span>
                 <textarea v-model="tomorrowPlay[key]"></textarea>
                 <span class="iconfont hc-delete" @click="delDiary(2,key)"></span>
             </li>
@@ -162,7 +162,7 @@
         </ul>
         <ul class="diary_list" v-if="!isWrite">
             <li v-for="(item,key) in tomorrowPlay" :key="'list'+key">
-                <span v-text="key+1">1</span>
+                <span v-text="key+1+'.'"></span>
                 {{tomorrowPlay[key]}}
             </li>
             <li v-if='!tomorrowPlay.length'>空</li>
@@ -185,7 +185,7 @@
             <p>补写</p>
             <div class="remark">
                 <p>补写内容</p>
-                <textarea v-model="baseInfo.supplement"></textarea>
+                <textarea v-model="supplement"></textarea>
             </div>
             <div class="table-view-cell group-cell btn-box">
                 <button class="group-btn btn-block btn-warning btn" @click="toggleModal">
@@ -226,6 +226,7 @@
             modalShow:false,
             testStr:'',
             canRepair:false,
+            supplement:'',
             //权限判断
             isBoss:'{$is_boss}',
             //是否能编辑
@@ -261,9 +262,9 @@
                 the.date=the.baseInfo.create_time;
             }
             the.initData(the.baseInfo.create_time);
-            the.canWrite(new Date(),the.date);
             the.todayDiary = the.baseInfo.work_today || [];
             the.tomorrowPlay = the.baseInfo.arrange_tomorrow || [];
+            the.canWrite(new Date(),the.date);
         },
         mounted(){
         },
@@ -273,8 +274,7 @@
             //        模态框控制
             toggleModal:function () {
                 this.modalShow = !this.modalShow;
-                console.log(this.modalShow )
-                this.baseInfo.supplement=''
+                this.supplement=''
             },
             delDiary(type,key){
                 console.log(type,key)
@@ -297,18 +297,18 @@
             canWrite(time1,time2){
                 console.log('canWrite',time1,time2)
                 var the=this;
-                console.log(!the.todayDiary.length,the.isSameDay(time1,time2))
+                console.log(the.todayDiary.length,the.isSameDay(time1,time2))
 
                 //领导不能写日志判断
                 if(the.isBoss=='yes'){
                     the.isWrite=false
                     the.canRepair = false;
-                }else if(!the.todayDiary.length && !the.isSameDay(time1,time2) && the.baseInfo.is_supplement!==1){
-                    the.isWrite=false;
-                    the.canRepair = true;
                 }else if(the.isSameDay(time1,time2)){
                     the.isWrite=true;
                     the.canRepair = false;
+                }else if(the.todayDiary.length ===0 && the.baseInfo.is_supplement!==1){
+                    the.isWrite=false;
+                    the.canRepair = true;
                 }else{
                     the.canRepair = false;
                     the.isWrite=false;
@@ -482,8 +482,11 @@
                     the.$toast('提交中，请稍等')
                     return
                 }
+                console.log(the.canRepair)
                 if( !the.canRepair){
-                    if(!the.todayDiary && !the.tomorrowPlay && !the.baseInfo.feed_back){
+                    console.log('正常写日志的验证')
+                    if(!the.todayDiary.length && !the.tomorrowPlay.length && !the.baseInfo.feed_back){
+                        console.log('啥都没写的验证')
                         the.$toast('写点什么吧~');
                         return
                     }else{
@@ -501,9 +504,12 @@
                         }
                     }
                 }else{
-                    if(!the.baseInfo.supplement){
+                    console.log('补写日志的验证')
+                    if(!the.supplement){
                         the.$toast('写点什么吧~');
                         return
+                    }else{
+                        the.baseInfo.supplement=the.supplement
                     }
                 }
 
