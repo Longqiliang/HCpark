@@ -407,7 +407,7 @@ class Partymanage extends Base
                 array_push($merchantUserid, $value['userid']);
             }
             $data = [
-                 'user_id' => array('in', $merchantUserid)
+                'user_id' => array('in', $merchantUserid)
             ];
             //工作日志
             $diaryList = $mDiary->where($data)->order('create_time desc')->select();
@@ -689,7 +689,7 @@ class Partymanage extends Base
                 if (!isset($data['id'])) {
                     //今日新增
                     $data['is_supplement'] = 2;
-                    $data['park_id']=$park_id;
+                    $data['park_id'] = $park_id;
                     $reult = $mDiary->allowField(true)->save($data);
 
                 } else {
@@ -699,7 +699,7 @@ class Partymanage extends Base
             } else {
                 //以前补写
                 $data['is_supplement'] = 1;
-                $data['park_id']=$park_id;
+                $data['park_id'] = $park_id;
                 $reult = $mDiary->allowField(true)->save($data);
             }
             if ($reult) {
@@ -728,21 +728,21 @@ class Partymanage extends Base
                     'supplement' => $info['supplement'],
                     'is_supplement' => $info['is_supplement'],
                     'create_time' => $info['create_time'] * 1000];
-            }else{
+            } else {
 
             }
             $list = $mDiary->where('user_id', $user_id)->select();
             $time = array();
             foreach ($list as $value) {
-               $map=[
-                   'is_supplement'=>$value['is_supplement'],
-                   'create_time'=>$value['create_time'] * 1000
-               ];
+                $map = [
+                    'is_supplement' => $value['is_supplement'],
+                    'create_time' => $value['create_time'] * 1000
+                ];
 
                 array_push($time, $map);
             }
             //当前日志详情
-             //echo json_encode($diary);
+            //echo json_encode($diary);
             $this->assign('info', json_encode($diary));
             //echo json_encode($diary);
             //该用户总共写的日志
@@ -751,6 +751,7 @@ class Partymanage extends Base
         }
 
     }
+
     public function changeDiary()
     {
         $user_id = input('user_id');
@@ -758,7 +759,7 @@ class Partymanage extends Base
         $mDiary = new MerchantsDiary();
         $date_str = date('Y-m-d', $time);
         $wechat = new WechatModel();
-        $user_name = $wechat->where('userid',$user_id)->find();
+        $user_name = $wechat->where('userid', $user_id)->find();
 
         //封装成数组
         $arr = explode("-", $date_str);
@@ -777,12 +778,13 @@ class Partymanage extends Base
 
         if (!$info) {
             $info['user_id'] = $user_id;
-            $info['user_name']=$user_name['name'];
+            $info['user_name'] = $user_name['name'];
             $info['create_time'] = $begindate * 1000;
         } else {
             $info['arrange_tomorrow'] = json_decode($info['arrange_tomorrow']);
             $info['work_today'] = json_decode($info['work_today']);
             $info['user_name'] = $user_name['name'];
+            $info['create_time'] = $info['create_time'] * 1000;
         }
 
         return json_encode($info);
