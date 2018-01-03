@@ -702,7 +702,7 @@ class Partymanage extends Base
                 $data['park_id'] = $park_id;
                 $reult = $mDiary->allowField(true)->save($data);
             }
-            if ($reult) {
+            if ($reult||$reult==0) {
                 return $this->success("yes", '', time() * 1000);
             } else {
                 return $this->error("no");
