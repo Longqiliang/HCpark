@@ -703,7 +703,7 @@ class Partymanage extends Base
                 $reult = $mDiary->allowField(true)->save($data);
             }
             if ($reult) {
-                return $this->success("yes",'',time()*1000);
+                return $this->success("yes", '', time() * 1000);
             } else {
                 return $this->error("no");
             }
@@ -727,7 +727,10 @@ class Partymanage extends Base
                     'feed_back' => $info['feed_back'],
                     'supplement' => $info['supplement'],
                     'is_supplement' => $info['is_supplement'],
-                    'create_time' => $info['create_time'] * 1000];
+                    'create_time' => $info['create_time'] * 1000,
+                    'update_time' => $info['update_time'] * 1000,
+                ];
+
             } else {
 
             }
@@ -736,9 +739,9 @@ class Partymanage extends Base
             foreach ($list as $value) {
                 $map = [
                     'is_supplement' => $value['is_supplement'],
-                    'create_time' => $value['create_time'] * 1000
+                    'create_time' => $value['create_time'] * 1000,
+                    'update_time' => $value['update_time'] * 1000
                 ];
-
                 array_push($time, $map);
             }
             //当前日志详情
