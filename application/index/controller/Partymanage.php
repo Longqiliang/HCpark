@@ -693,6 +693,8 @@ class Partymanage extends Base
                     $reult = $mDiary->allowField(true)->save($data);
 
                 } else {
+
+                    unset($data['update_time']);
                     //今日修改
                     $reult = $mDiary->allowField(true)->isUpdate(true)->save($data);
                 }
