@@ -3870,11 +3870,13 @@ class Service extends Base
         }
         foreach ($floor as $k => $v) {
             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
-            foreach ($roomList as $k1 => $v1) {
-                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                $roomArray[$k][$k1] = $v1['room'];
+            if (count($roomList)){
+                foreach ($roomList as $k1 => $v1) {
+                    $roomArray[$k][$k1] = $v1['room'];
+                }
+            }else{
+                $roomArray[$k][$k1] = [] ;
             }
-
         }
         foreach ($floor as $k => $v) {
             $newArr[$k]['name'] = $v . "楼";
@@ -3891,15 +3893,18 @@ class Service extends Base
         }
         foreach ($floor1 as $k => $v) {
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
-            foreach ($roomList1 as $k1 => $v1) {
-                $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                $roomArray1[$k][$k1] = $v1['room'];
+            if (count($roomList1)){
+                foreach ($roomList1 as $k1 => $v1) {
+                    $roomArray1[$k][$k1] = $v1['room'];
+                }
+            }else{
+                $roomArray1[$k][$k1] = [];
             }
+
         }
         foreach ($floor1 as $k => $v) {
             $newArr1[$k]['name'] = $v . "楼";
             $newArr1[$k][$v . "楼"] = $roomArray1[$k];
-            //$newArr1[$k]['rooms'] = $roomArray1[$k];
         }
         $list = [
             "A幢" => $newArr,
@@ -3919,10 +3924,14 @@ class Service extends Base
             $roomArray2=array();
             foreach ($floor2 as $k => $v) {
                 $roomList2 = $parkRoom->where(['floor' => $v, 'build_block' => "C", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
-                foreach ($roomList2 as $k1 => $v1) {
-                    $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                    $roomArray2[$k][$k1] = $v1['room'];
+                if (count($roomList2)){
+                    foreach ($roomList2 as $k1 => $v1) {
+                        $roomArray2[$k][$k1] = $v1['room'];
+                    }
+                }else{
+                    $roomArray2[$k][$k1] = [];
                 }
+
             }
             $newArr2=array();
             foreach ($floor2 as $k => $v) {
@@ -3943,9 +3952,12 @@ class Service extends Base
             $floor3 =array();
             foreach ($floor3 as $k => $v) {
                 $roomList3 = $parkRoom->where(['floor' => $v, 'build_block' => "D", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
-                foreach ($roomList3 as $k1 => $v1) {
-                    $res = ParkRent::where(['room_id' => $v1['id'], 'manage' => 0, 'status' => 0])->find();
-                    $roomArray3[$k][$k1] = $v1['room'];
+                if (count($roomList3)){
+                    foreach ($roomList3 as $k1 => $v1) {
+                        $roomArray3[$k][$k1] = $v1['room'];
+                    }
+                }else{
+                    $roomArray3[$k][$k1] = [];
                 }
             }
 
