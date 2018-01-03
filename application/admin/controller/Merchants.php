@@ -119,7 +119,7 @@ class Merchants extends Admin
         foreach ($list as $value) {
             $value['merchants_date'] = !empty($value['merchants_date']) ? date('Y-m-d', $value['merchants_date']) : "";
             $value['create_time'] = !empty($value['create_time']) ? date('Y-m-d', $value['create_time']) : "";
-            $value['status_text']= $value['status']==1?"招商中":"已招商";
+            $value['status_text'] = $value['status'] == 1 ? "招商中" : "已招商";
         }
         $this->assign('list', $list);
         return $this->fetch();
@@ -164,182 +164,197 @@ class Merchants extends Admin
             $diary = $value->merchantsDiary;
             $diarylist = array();
             $Company = $value->merchantsCompany;
-            $companylist=array();
+            $companylist = array();
             foreach ($diary as $value2) {
                 if ($value2['create_time'] > $startThismonth && $value['create_time'] < $endThismonth) {
                     array_push($diarylist, $value2);
                 }
             }
             foreach ($Company as $value3) {
-                if ($value3['update_time'] > $startThismonth && $value['update_time'] < $endThismonth &&!empty($value3['update_time'])) {
+                if ($value3['update_time'] > $startThismonth && $value['update_time'] < $endThismonth && !empty($value3['update_time'])) {
                     array_push($companylist, $value3);
                 }
 
             }
             unset($value['merchantsDiary']);
             unset($value['merchantsCompany']);
-            $value['diary_num']=count($diarylist);
-            $value['company_num']=count($companylist);
+            $value['diary_num'] = count($diarylist);
+            $value['company_num'] = count($companylist);
         }
-            $this->assign('search', $search);
-            $this->assign('list', $user);
-            return $this->fetch();
-        }
-
-        //用户招商计划
-        public
-        function merchantsPlan()
-        {
-            $mPlan = new  MerchantsPlan();
-            $weuser = new WechatUser();
-            $user_id = input('user_id');
-            $user = $weuser->where('userid', $user_id)->find();
-            //echo json_encode($user['name']);
-            $this->assign('name', $user['name']);
-            $this->assign('userid', $user['userid']);
-
-            $list = $mPlan->where('user_id', $user_id)->order('time desc')->paginate();
-            foreach ($list as $value) {
-                $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
-                $value['time'] = date('Y-m', $value['time']);
-            }
-
-            $this->assign('list', $list);
-            return $this->fetch();
-        }
-
-        //用户工作日志
-        public
-        function showDiary()
-        {
-            $mDiary = new  MerchantsDiary();
-            $user_id = input('user_id');
-            $list = $mDiary->where('user_id', $user_id)->order('create_time desc')->paginate();
-            foreach ($list as $value) {
-                $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
-            }
-            $this->assign('list', $list);
-            return $this->fetch();
-        }
-
-        //招商人员指定招商计划 编辑和修改
-        public
-        function editPlan()
-        {
-            $id = input('id');
-            $data = input('');
-
-            $mPlan = new MerchantsPlan();
-            //新增
-            if (empty($id)) {
-                $data['time'] = strtotime($data['time']);
-
-                $is = $this->is_timestamp($data['time']);
-                if (!$is) {
-                    $this->error('招商时间格式不正确');
-                }
-                $map = [
-                    'user_id' => $data['user_id'],
-                    'time' => $data['time']
-
-                ];
-                $is_has = $mPlan->where($map)->select();
-                if (count($is_has) > 0) {
-
-                    return $this->error('当前时间已经计划');
-                }
-                $info = $mPlan->allowField(true)->save($data);
-            } //编辑
-            else {
-                unset($data['id']);
-                $data['time'] = strtotime($data['time']);
-                $is = $this->is_timestamp($data['time']);
-                if ($is) {
-                    $info = $mPlan->allowField(true)->save($data, ['id' => $id]);
-                } else {
-                    $this->error('招商时间格式不正确');
-                }
-
-            }
-            if ($info) {
-                return $this->success("成功");
-            } else {
-
-                return $this->error('失败', '', $mPlan->getError());
-            }
-
-        }
-
-        //删除招商公司
-        public
-        function deleteCompany()
-        {
-            $ids = input('ids/a');
-            $mCompany = new MerchantsCompany();
-
-            $result = $mCompany->where('id', 'in', $ids)->update(['status' => -1]);
-            if ($result) {
-                return $this->success('删除成功');
-            } elseif (!$result) {
-                return $this->error('删除失败');
-            }
-
-        }
-
-        //删除工作日志
-        public
-        function deleteDiary()
-        {
-            $ids = input('ids/a');
-            $mDiary = new MerchantsDiary();
-
-            $result = $mDiary->where('id', 'in', $ids)->delete();
-            if ($result) {
-                return $this->success('删除成功');
-            } elseif (!$result) {
-                return $this->error('删除失败');
-            }
-
-        }
-
-        //删除招商日志
-        public
-        function deleteRecord()
-        {
-            $ids = input('ids/a');
-            $mRecord = new MerchantsRecord();
-
-            $result = $mRecord->where('id', 'in', $ids)->delete();
-            if ($result) {
-                return $this->success('删除成功');
-            } elseif (!$result) {
-                return $this->error('删除失败');
-            }
-
-        }
-
-        //删除招商指标
-        public
-        function deletePlan()
-        {
-            $ids = input('ids/a');
-            $mPlan = new MerchantsPlan();
-
-            $result = $mPlan->where('id', 'in', $ids)->delete();
-            if ($result) {
-                return $this->success('删除成功');
-            } elseif (!$result) {
-                return $this->error('删除失败');
-            }
-
-        }
-
-        //判断是不是时间戳
-        public
-        function is_timestamp($timestamp)
-        {
-            if (strtotime(date('d-m-Y H:i:s', $timestamp)) === $timestamp) {
-                return $timestamp;
-            } else return false;
-        }
+        $this->assign('search', $search);
+        $this->assign('list', $user);
+        return $this->fetch();
     }
+
+    //用户招商计划
+    public
+    function merchantsPlan()
+    {
+        $mPlan = new  MerchantsPlan();
+        $weuser = new WechatUser();
+        $user_id = input('user_id');
+        $user = $weuser->where('userid', $user_id)->find();
+        //echo json_encode($user['name']);
+        $this->assign('name', $user['name']);
+        $this->assign('userid', $user['userid']);
+
+        $list = $mPlan->where('user_id', $user_id)->order('time desc')->paginate();
+        foreach ($list as $value) {
+            $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+            $value['time'] = date('Y-m', $value['time']);
+        }
+
+        $this->assign('list', $list);
+        return $this->fetch();
+    }
+
+    //用户工作日志
+    public function showDiary()
+    {
+        $mDiary = new  MerchantsDiary();
+        $user_id = input('user_id');
+        $parkid = session("user_auth")['park_id'];
+        $list = $mDiary->where(['user_id' => $user_id, 'park_id' => $parkid])->order('create_time desc')->paginate();
+        foreach ($list as $value) {
+            $value['user_name'] = isset($value->user->name) ? $value->user->name : "";
+            $work_today = '';
+            $arrange_tomorrow = '';
+            if (is_array(json_decode($value['work_today']))) {
+                foreach (json_decode($value['work_today']) as $value1) {
+                    $work_today .= $value1 . '   ';
+                }
+            }
+
+
+            if (is_array(json_decode($value['arrange_tomorrow']))) {
+                foreach (json_decode($value['arrange_tomorrow']) as $value2) {
+                    $arrange_tomorrow .= $value2 . '  ';
+                }
+            }
+            $value['work_today'] = $work_today;
+            $value['arrange_tomorrow'] = $arrange_tomorrow;
+        }
+        $this->assign('list', $list);
+        return $this->fetch();
+    }
+
+    //招商人员指定招商计划 编辑和修改
+    public function editPlan()
+    {
+        $id = input('id');
+        $data = input('');
+
+        $mPlan = new MerchantsPlan();
+        //新增
+        if (empty($id)) {
+            $data['time'] = strtotime($data['time']);
+
+            $is = $this->is_timestamp($data['time']);
+            if (!$is) {
+                $this->error('招商时间格式不正确');
+            }
+            $map = [
+                'user_id' => $data['user_id'],
+                'time' => $data['time']
+
+            ];
+            $is_has = $mPlan->where($map)->select();
+            if (count($is_has) > 0) {
+
+                return $this->error('当前时间已经计划');
+            }
+            $info = $mPlan->allowField(true)->save($data);
+        } //编辑
+        else {
+            unset($data['id']);
+            $data['time'] = strtotime($data['time']);
+            $is = $this->is_timestamp($data['time']);
+            if ($is) {
+                $info = $mPlan->allowField(true)->save($data, ['id' => $id]);
+            } else {
+                $this->error('招商时间格式不正确');
+            }
+
+        }
+        if ($info) {
+            return $this->success("成功");
+        } else {
+
+            return $this->error('失败', '', $mPlan->getError());
+        }
+
+    }
+
+    //删除招商公司
+    public
+    function deleteCompany()
+    {
+        $ids = input('ids/a');
+        $mCompany = new MerchantsCompany();
+
+        $result = $mCompany->where('id', 'in', $ids)->update(['status' => -1]);
+        if ($result) {
+            return $this->success('删除成功');
+        } elseif (!$result) {
+            return $this->error('删除失败');
+        }
+
+    }
+
+    //删除工作日志
+    public
+    function deleteDiary()
+    {
+        $ids = input('ids/a');
+        $mDiary = new MerchantsDiary();
+
+        $result = $mDiary->where('id', 'in', $ids)->delete();
+        if ($result) {
+            return $this->success('删除成功');
+        } elseif (!$result) {
+            return $this->error('删除失败');
+        }
+
+    }
+
+    //删除招商日志
+    public
+    function deleteRecord()
+    {
+        $ids = input('ids/a');
+        $mRecord = new MerchantsRecord();
+
+        $result = $mRecord->where('id', 'in', $ids)->delete();
+        if ($result) {
+            return $this->success('删除成功');
+        } elseif (!$result) {
+            return $this->error('删除失败');
+        }
+
+    }
+
+    //删除招商指标
+    public
+    function deletePlan()
+    {
+        $ids = input('ids/a');
+        $mPlan = new MerchantsPlan();
+
+        $result = $mPlan->where('id', 'in', $ids)->delete();
+        if ($result) {
+            return $this->success('删除成功');
+        } elseif (!$result) {
+            return $this->error('删除失败');
+        }
+
+    }
+
+    //判断是不是时间戳
+    public
+    function is_timestamp($timestamp)
+    {
+        if (strtotime(date('d-m-Y H:i:s', $timestamp)) === $timestamp) {
+            return $timestamp;
+        } else return false;
+    }
+}

@@ -20,8 +20,6 @@
             display: none;
         }
     }
-
-
 </style>
 {/block}
 
@@ -54,30 +52,35 @@
                             <h3 class="modal-title text-center"  name="dialog-title">招商人员工作日志详情</h3>
                         </div>
                         <div class="modal-body">
-
-                            <div class="form-group"><label class="col-sm-2 control-label">日志内容</label>
-                                <div class="col-sm-10"><textarea readonly type="text" placeholder="日志内容" class="form-control" required="" name="content"></textarea></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">今日工作</label>
+                                <div class="col-sm-10"><textarea readonly type="text" placeholder="" class="form-control" required="" name="work_today"></textarea></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">明日安排</label>
+                                <div class="col-sm-10"><textarea readonly type="text" placeholder="" class="form-control" required="" name="arrange_tomorrow"></textarea></div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">意见反馈</label>
+                                <div class="col-sm-10"><textarea readonly type="text" placeholder="" class="form-control" required="" name="feed_back"></textarea></div>
+                            </div>
+                                <div class="form-group"><label class="col-sm-2 control-label">补写内容</label>
+                                    <div class="col-sm-10"><textarea readonly type="text" placeholder="" class="form-control" required="" name="supplement"></textarea></div>
                             </div>
                             <!-- 富文本框<div class="mail-text h-200">
                                  <div class="summernote"></div>
                                  <div class="clearfix"></div>
                              </div>-->
                         </div>
-
-
                     </form>
                 </div>
             </div>
         </div>
         <div class="mail-box">
             <table class="table table-hover table-mail">
-
                 <thead>
                 <tr>
                     <th></th>
                     <th>id</th>
                     <th>招商人员</th>
-                    <th>内容</th>
+                    <th>是否补写</th>
                     <th>创建时间</th>
                     <th>操作</th>
                 </tr>
@@ -95,14 +98,18 @@
                         {$vo.user_name}
                     </td>
                     <td>
-                        {$vo.content||msubstr=###,0,15,'utf-8',false }
+                       {if condition="$vo.is_supplement==1"}
+                        <span class="txt-success">是</span>
+                        {else/}
+                        <span class="txt-danger">否</span>
+                        {/if}
                     </td>
 
                     <td>
                         {$vo.create_time|| time_format="Y-m-d"}
                     </td>
                     <td>
-                        <a data-toggle="modal" href="#modal-form" class="btn-sm btn-success" onclick="show(this)" data-content="{$vo.content}" >查看详情</a>
+                        <a data-toggle="modal" href="#modal-form" class="btn-sm btn-success" onclick="show(this)" data-work-today='{$vo.work_today}'  data-arrange-tomorrow="{$vo.arrange_tomorrow}"  data-feed-back="{$vo.feed_back}" data-supplement="{$vo.supplement}"  >查看详情</a>
                         <a class="btn-sm btn-info" onclick="delItem('{$vo.id}','{:Url('deleteDiary')}')">删除</a>
                     </td>
                 </tr>
@@ -134,7 +141,10 @@
         });
     });
     function show(a) {
-        $("textarea[name='content']").val($(a).attr('data-content'));
+        $("textarea[name='work_today']").val($(a).attr('data-work-today'));
+        $("textarea[name='arrange_tomorrow']").val($(a).attr('data-arrange-tomorrow'));
+        $("textarea[name='feed_back']").val($(a).attr('data-feed-back'));
+        $("textarea[name='supplement']").val($(a).attr('data-supplement'));
     }
     highlight_subnav("{:Url('merchants/user')}");
 </script>
