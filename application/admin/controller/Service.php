@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 use EasyWeChat\Foundation\Application;
+use app\common\model\ParkRoom;
 
 class Service
 {
@@ -26,5 +27,13 @@ class Service
         $response->send();
 
 
+    }
+
+
+    public  function  test(){
+
+        $ParkRoom = new ParkRoom();
+        $re = $ParkRoom->getFloorInfo(3);
+        echo json_encode($re);
     }
 }
