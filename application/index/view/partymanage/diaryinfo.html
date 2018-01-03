@@ -31,8 +31,8 @@
     input{font-size:1.5rem}
     .diary_list,.feedback{box-sizing:border-box;padding:1rem;width:100%;border:1px solid #f1f1f1;border-radius:5px;font-size:1.5rem;line-height:1.5}
     .diary_list>li{display:flex;padding:.5rem 0;font-size:1.5rem}
-    .diary_list>li>span{width:2rem;text-align:center}
-    .diary_list>li>textarea{box-sizing:border-box;height:4.5rem;border-bottom:1px solid #f1f1f1;border-radius:0;font-size:1.5rem;line-height:1.5;flex:1}
+    .diary_list>li>span{width:2rem;text-align:center;font-size: 1.5rem;line-height: 2rem}
+    .diary_list>li>textarea{box-sizing:border-box;height:4.5rem;border-bottom:1px solid #f1f1f1;border-radius:0;font-size: 1.5rem;line-height:2rem;flex:1}
     .diary_list_new{display:flex;color:#3094F8;font-size:2rem;line-height:3rem;align-items:center;justify-content:center}
     .diary_list_new:before{margin-right:5px;font-weight:700}
     .diary_list_show{overflow:scroll;max-height:20rem}
@@ -279,10 +279,12 @@
                 if(the.isBoss=='yes'){
                     the.isWrite=false
                     the.canRepair = false;
+//                    当天可修改
                 }else if(the.isSameDay(time1,time2)){
                     the.isWrite=true;
                     the.canRepair = false;
-                }else if(the.todayDiary.length ===0 && the.baseInfo.is_supplement!==1){
+//                    啥都没写过的要补写
+                }else if(the.todayDiary.length ===0 && the.tomorrowPlay.length ===0 && !the.baseInfo.feed_back && the.baseInfo.is_supplement!==1){
                     the.isWrite=false;
                     the.canRepair = true;
                 }else{
@@ -351,6 +353,7 @@
                     }
                 }
             },
+            //是否同一天
             isSameDay(time1,time2){
                 var dataTime=new Date(time1);
                 var year1=dataTime.getFullYear(),month1=dataTime.getMonth(),day1=dataTime.getDate();
@@ -385,6 +388,7 @@
                 }
                 return false
             },
+//            日历点击方法
             toCheck:function (key) {
                 var _this = this;
                 if(!_this.days[key].day || !_this.days[key].canCheck){
