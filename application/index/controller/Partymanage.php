@@ -703,7 +703,7 @@ class Partymanage extends Base
                 $reult = $mDiary->allowField(true)->save($data);
             }
             if ($reult) {
-                return $this->success("yes");
+                return $this->success("yes",'',time()*1000);
             } else {
                 return $this->error("no");
             }
