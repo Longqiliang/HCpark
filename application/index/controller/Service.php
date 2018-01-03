@@ -3875,7 +3875,7 @@ class Service extends Base
                     $roomArray[$k][$k1] = $v1['room'];
                 }
             }else{
-                $roomArray[$k][$k1] = [] ;
+                $roomArray[$k][$k1] = '' ;
             }
         }
         foreach ($floor as $k => $v) {
@@ -3898,7 +3898,7 @@ class Service extends Base
                     $roomArray1[$k][$k1] = $v1['room'];
                 }
             }else{
-                $roomArray1[$k][$k1] = [];
+                $roomArray1[$k][$k1] = '';
             }
 
         }
@@ -3929,7 +3929,7 @@ class Service extends Base
                         $roomArray2[$k][$k1] = $v1['room'];
                     }
                 }else{
-                    $roomArray2[$k][$k1] = [];
+                    $roomArray2[$k][$k1] = '';
                 }
 
             }
@@ -3957,7 +3957,7 @@ class Service extends Base
                         $roomArray3[$k][$k1] = $v1['room'];
                     }
                 }else{
-                    $roomArray3[$k][$k1] = [];
+                    $roomArray3[$k][$k1] = '';
                 }
             }
 
