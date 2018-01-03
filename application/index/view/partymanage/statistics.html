@@ -1,7 +1,7 @@
 {extend name="public/common"}
 
 {block name="style"}
-<title>园区统计</title>
+<title>园区概览</title>
 <link rel="stylesheet" href="/index/css/personal/message.css">
 <link rel="stylesheet" href="/index/css/partymanage/statistics.css">
 <style>
@@ -71,8 +71,8 @@ var app = new Vue({
             var res=this.res,i=this.nowPark;
             return{
                 id:'area',
-                title:res.area_total+'km²',
-                label: '{c|{c}}km²\n{d|{d}%}',
+                title:res.area_total+'㎡',
+                label: '{c|{c}}㎡\n{d|{d}%}',
                 color:['#57cc98','#ffa71a'],
                 legend:['已租面积','空置面积'],
                 data:[
