@@ -277,7 +277,6 @@
                 this.supplement=''
             },
             delDiary(type,key){
-                console.log(type,key)
                 var _this = this ;
                 if(type===1){
                     _this.todayDiary.splice(key,1);
@@ -295,7 +294,6 @@
                 }
             },
             canWrite(time1,time2){
-                console.log('canWrite',time1,time2)
                 var the=this;
                 console.log(the.todayDiary.length,the.isSameDay(time1,time2))
 
@@ -372,8 +370,6 @@
                 var year1=dataTime.getFullYear(),month1=dataTime.getMonth(),day1=dataTime.getDate();
                 var dataTime1=new Date(time2);
                 var year2=dataTime1.getFullYear(),month2=dataTime1.getMonth(),day2=dataTime1.getDate();
-                console.log('isSameDay',time1,time2)
-                console.log(year1,year2,month1,month2,day1,day2)
                 if(year1==year2&&month1==month2&&day1==day2) {
                     console.log('IS SAME DAY: TRUE')
                     return true
@@ -430,14 +426,17 @@
                     _this.isSubmit=false;
                     _this.$indicator.close();
                     if(data.create_time){
+//                        接收的时间戳有没有乘1000判断
                         var str = data.create_time + '';
                         if(str.length<13){
-                            _this.date = data.create_time * 1000
+                            _this.date = data.create_time * 1000;
+                            data.create_time *= 1000
                         }else{
                             _this.date = data.create_time
                         }
                         console.log(data.create_time)
                     }
+//                    数据替换
                     _this.baseInfo = data;
                     _this.todayDiary = data.work_today || [];
                     _this.tomorrowPlay = data.arrange_tomorrow || [];
@@ -482,11 +481,11 @@
                     the.$toast('提交中，请稍等')
                     return
                 }
-                console.log(the.canRepair)
+//                console.log('是否为补写:'+the.canRepair)
                 if( !the.canRepair){
-                    console.log('正常写日志的验证')
+                    console.log('正常写日志的验证');
                     if(!the.todayDiary.length && !the.tomorrowPlay.length && !the.baseInfo.feed_back){
-                        console.log('啥都没写的验证')
+                        console.log('啥都没写的验证');
                         the.$toast('写点什么吧~');
                         return
                     }else{
@@ -504,7 +503,7 @@
                         }
                     }
                 }else{
-                    console.log('补写日志的验证')
+                    console.log('补写日志的验证');
                     if(!the.supplement){
                         the.$toast('写点什么吧~');
                         return
@@ -519,11 +518,15 @@
                 });
 
                 the.isSubmit=true;
-                var data = JSON.parse(JSON.stringify(the.baseInfo));
+                var data = JSON.parse(JSON.stringify(the.baseInfo)),
+                     str = data.create_time + '';
                 data.work_today=the.todayDiary || [];
                 data.arrange_tomorrow=the.tomorrowPlay || [];
                 if(data.user_name){
                     delete data.user_name
+                }
+                if(str.length<13){
+                    data.create_time *= 1000
                 }
                 the.$http.post('/index/partymanage/diaryInfo',data).then(function (res) {
                     if(res.data.code){
@@ -537,7 +540,6 @@
                         },function () {
                            the.isWrite=false;
                             the.checkedList.push(the.baseInfo.create_time);
-
                             if(the.nowDateIndex){
                                 the.days[the.nowDateIndex].isChecked=true;
                                 if(the.canRepair){
