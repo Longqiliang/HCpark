@@ -742,9 +742,9 @@ class Partymanage extends Base
                 array_push($time, $map);
             }
             //当前日志详情
-             echo json_encode($diary);
+             //echo json_encode($diary);
             $this->assign('info', json_encode($diary));
-            echo json_encode($diary);
+            //echo json_encode($diary);
             //该用户总共写的日志
             $this->assign('list', json_encode($time));
             return $this->fetch();
