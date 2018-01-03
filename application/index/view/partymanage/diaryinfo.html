@@ -464,7 +464,6 @@
                     the.$toast('提交中，请稍等')
                     return
                 }
-
                 if( !the.canRepair){
 //                    console.log('正常写日志的验证');
                     if(!the.todayDiary.length && !the.tomorrowPlay.length && !the.baseInfo.feed_back){
@@ -474,7 +473,7 @@
                     }else{
                         for(var i=0;i<the.todayDiary.length;i++){
                             if(the.todayDiary[i]==''){
-                                the.$toast('今日计划未填写完整~');
+                                the.$toast('今日工作未填写完整~');
                                 return
                             }
                         }
