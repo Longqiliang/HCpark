@@ -3856,6 +3856,7 @@ class Service extends Base
         $floor1 = [];
         $newArr = [];
         $newArr1 = [];
+        $roomArray = [];
         $parkId = session('park_id');
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRoom = new ParkRoom();
