@@ -20,7 +20,7 @@ class MerchantsDiary extends  Model
     ];
 
     protected  $type=[
-
+        'update_time'=>'strtotime',
         'create_time'=>'strtotime'
     ];
 
