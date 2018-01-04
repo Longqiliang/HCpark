@@ -40,29 +40,34 @@ class ParkRoom extends Model{
                 //每层楼房间数目
                 foreach ($floor as $k => $v) {
                     $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0 ,'park_id' => $number,'manage' => 1])->order("room asc")->select();
-                    //判断房间是否出租
-                    foreach ($roomList as $k1 => $v1) {
-                        //分园区，希垦没有已约的状态
-                        if ($v1['manage'] == 1 && $v1['company_id'] == 0) {
-                            $rent = PeopleRent::where(['room_id' => $v1['id'], 'status' => array('neq', -1)])->select();
-                            if ($rent) {
+                    if (count($roomList)){
+//判断房间是否出租
+                        foreach ($roomList as $k1 => $v1) {
+                            //分园区，希垦没有已约的状态
+                            if ($v1['manage'] == 1 && $v1['company_id'] == 0) {
+                                $rent = PeopleRent::where(['room_id' => $v1['id'], 'status' => array('neq', -1)])->select();
+                                if ($rent) {
 
-                                if ($v1['park_id'] == 3) {
-                                    $status = 1;
+                                    if ($v1['park_id'] == 3) {
+                                        $status = 1;
+                                    } else {
+                                        $status = 2;
+                                    }
                                 } else {
-                                    $status = 2;
+                                    $status = 1;
                                 }
+                                $roomsId = $v1['id'];
                             } else {
-                                $status = 1;
+                                $status = 0;
+                                $roomsId = 0;
                             }
-                            $roomsId = $v1['id'];
-                        } else {
-                            $status = 0;
-                            $roomsId = 0;
+                            $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
+                            $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
                         }
-                        $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
-                        $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
+                    }else{
+                        $roomArray[$k][$k1] = [];
                     }
+
                 }
                 foreach ($floor as $k => $v) {
                     $newArr[$k]['floor'] = $v;
