@@ -216,15 +216,7 @@
 
                 <br>
                 <br>
-                <div class="form-group">
-                    <div class="col-lg-1 text-right control-label">
-                        <label>回复内容:</label>
-                    </div>
-                    <div class="col-lg-9">
-                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.reply}</textarea>
-                    </div>
 
-                </div>
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>上传图片:</label>
@@ -247,7 +239,15 @@
                 <br>
                 {eq name="$info.status" value="1"}
 
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>回复内容:</label>
+                    </div>
+                    <div class="col-lg-9">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.reply}</textarea>
+                    </div>
 
+                </div>
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>回复图片:</label>
