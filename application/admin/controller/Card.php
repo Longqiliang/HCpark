@@ -129,7 +129,6 @@ class Card extends Admin
             $res = $commentModel->where($map1)->find();
             if ($res) {
                 $map['aid'] = $id;
-                $map['table'] = 'card';
                 $result = $commentModel->where($map)->update($save_data);
                 if (!$result) {
                     throw new Exception($commentModel->getError());
