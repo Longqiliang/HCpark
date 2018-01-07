@@ -902,10 +902,11 @@ class Park extends Admin
         if ($company){
             $data['company'] = $company;
             $data['type'] = input('type');
-            $like = mb_substr($company, 0, 6);
+            $like = mb_substr($company, 0, 8);
             $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
             if ($info) {
                 $data['company_id'] = $info['id'];
+                //$data['company'] = $info['name'];
             } else {
                 $data['company_id'] = 0;
             }
