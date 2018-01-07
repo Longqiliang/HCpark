@@ -254,15 +254,15 @@
 
                     </div>
                     <br>
-                    {notempty name="$info.back_img" }
-                    <div class="col-lg-5">
+                    {volist name = '$info.back_img' id= 'li'}
+                    <div class="col-sm-6 col-md-4 col-lg-2">
                         <div class="imggroup">
-                            <a href="{$info.back_img}" class="front_cover">
-                                <img   width="200px" height="200px"  src="{$info.back_img}" class="img-auto front_cover_img" alt="">
+                            <a href="{$li}" class="front_cover">
+                                <img   width="200px" height="200px"  src="{$li}" class="img-auto front_cover_img" alt="">
                             </a>
                         </div>
                     </div>
-                    {/notempty}
+                    {/volist}
                 </div>
                 {/eq}
 
@@ -455,6 +455,7 @@
             updateAlert('请添加回复信息~', 'info');
             return;
         }
+        back_img=JSON.stringify(back_img);
         isSubmit = true;
         $.ajax({
             data: {id: id, back_img: back_img,reply : reply},
