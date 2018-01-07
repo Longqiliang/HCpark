@@ -120,9 +120,9 @@
                     date = new Date(cur);
                 } else {
                     var now=new Date();
-                    var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1));
+                    var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() + 1 , 1));
                     d.setDate(41);
-                    date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                    date = new Date(this.formatDate(d.getFullYear(),d.getMonth(),1));
                 }
                 this.currentDay = date.getDate();
                 this.currentYear = date.getFullYear();
@@ -136,7 +136,6 @@
                 for (var i = this.currentWeek; i >= 0; i--) {
                     var d = new Date(str);
                     d=d.setDate(d.getDate() - i);
-//                    console.log(new Date(d))
                     if(new Date(d).getMonth()!=this.currentMonth-1){
                         var dayobject={day:''}
                     }else{
@@ -188,7 +187,6 @@
                     }else{
                         this.checkedList.push(String(the.day))
                     }
-                    console.log(this.checkedList)
                 }
             },
             removeChecked: function (arr, val) {
@@ -212,7 +210,6 @@
                     this.$http.post('/index/service/changeMonth',{ month : this.currentMonth-1 }).then(function (res) {
                         this.$indicator.close();
                         this.isSubmit=false;
-                        console.log(JSON.parse(res.data))
                         this.bespeakList=JSON.parse(res.data);
                         var d = new Date(this.formatDate(year , month , 1));
                         d.setDate(0);
@@ -263,7 +260,6 @@
                 var the=this;
                 if(!the.isSubmit){
                     if(the.checkedList.length>0){
-                        console.log(the.checkedList);
                         var checkedText='您选择预约的时间为：';
                         for(var i=0;i<the.checkedList.length;i++){
                             var time=new Date(parseInt(the.checkedList[i]));
@@ -330,7 +326,6 @@
                                 },function (res) {
                                     the.$indicator.close();
                                     the.isSubmit=false;
-                                    console.log(res)
                                 })
                             }else{
 
@@ -341,7 +336,6 @@
                     }else{
                         the.$indicator.close();
                         the.isSubmit=false;
-                        console.log(the.checkedList)
                         the.$toast("请选择预约日期")
                     }
                 }else{
