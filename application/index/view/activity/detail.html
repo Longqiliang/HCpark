@@ -32,6 +32,9 @@
         display: block;
         margin: 0 auto;
     }
+    .table-row-header>span,.table-row-block-header>span{
+        color: #666;
+    }
 </style>
 {/block}
 
@@ -70,15 +73,15 @@
         <div class="table-box">
             <div class="table-row-box table-show-box">
                 <div class="table-row">
-                    <span class="table-row-header">开始时间：{{baseInfo.start_time | timeToString}}</span>
+                    <span class="table-row-header"><span>开始时间：</span>{{baseInfo.start_time | timeToString}}</span>
                 </div>
                 <div class="table-row">
-                    <span class="table-row-header">活动地点：{{baseInfo.activity_address}}</span>
+                    <span class="table-row-header"><span>活动地点：</span>{{baseInfo.activity_address}}</span>
                 </div>
                 <div class="table-row">
-                    <span class="table-row-header">活动人数：{{baseInfo.activity_number ? (count+'/'+baseInfo.activity_number):'不限'}}</span>
+                    <span class="table-row-header"><span>活动人数：</span>{{baseInfo.activity_number ? (count+'/'+baseInfo.activity_number):'不限'}}</span>
                 </div>
-                <div class="table-row-block-header">活动介绍：</div>
+                <div class="table-row-block-header"><span>活动介绍：</span></div>
                 <div class="table-row-block" style="padding-bottom: 2rem">
                     <div class="textarea-box" v-html="baseInfo.activity_description"></div>
                 </div>
