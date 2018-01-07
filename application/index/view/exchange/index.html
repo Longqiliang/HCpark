@@ -19,7 +19,7 @@
     <div class="goods-box">
         <ul class="goods-list">
             <li  v-for="product in baseData.product">
-                <div class="goods-list-left">
+                <div class="goods-list-left" @click="jumpTo(1,product.id,product.price,product.left)">
                     <img :src="product.front_cover" class="goods-ticket" alt="">
                     <div class="goods-rest">
                         <b>{{product.title}}</b>
@@ -27,7 +27,8 @@
                     </div>
                 </div>
                 <!--product.price-->
-                <div class="goods-exchange" :class="{'can-exchange' : product.price <= baseData.score && product.left > 0}"  @click="jumpTo(1,product.id,product.price,product.left)">立即兑换</div>
+                <div class="goods-exchange can-exchange" v-if="product.price <= baseData.score && product.left > 0" @click="jumpTo(1,product.id,product.price,product.left)">立即兑换</div>
+                <div class="goods-exchange" v-else>立即兑换</div>
             </li>
         </ul>
     </div>
@@ -45,9 +46,9 @@
         methods: {
             jumpTo(urlID,id,price,left){
                 if(urlID===1){
-                    if(price <= this.baseData.score && left > 0){
+//                    if(price <= this.baseData.score && left > 0){
                         window.location.href="/index/exchange/productinfo/product_id/" + id
-                    }
+//                    }
                 }else{
                     window.location.href="/index/exchange/record/"
                 }
