@@ -21,6 +21,7 @@ class ParkRoom extends Model{
         ];
         $roomArray = [[]];
         $newData = [];
+        $parkFloor = new ParkFloor();
         $parkRoom = new ParkRoom();
         $park = new Park();
         foreach($setArr as $k=>$v){
@@ -31,17 +32,17 @@ class ParkRoom extends Model{
                 $element = $v1;
                 $newArr = [];
                 $floor = [] ;
-                $map = ['park_id'=>$number,'build_block' => $element,'del' => 0 ];
+                $map = ['park_id'=>$number,'build' => $element];
                 //获取楼层信息
-                $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
+                $list = $parkFloor->where($map)->distinct(true)->field('fid')->order('fid asc')->select();
                 foreach ($list as $k => $v) {
-                    $floor[$k] = $v['floor'];
+                    $floor[$k] = $v['fid'];
                 }
                 //每层楼房间数目
                 foreach ($floor as $k => $v) {
                     $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0 ,'park_id' => $number,'manage' => 1])->order("room asc")->select();
                     if (count($roomList)){
-//判断房间是否出租
+                        //判断房间是否出租
                         foreach ($roomList as $k1 => $v1) {
                             //分园区，希垦没有已约的状态
                             if ($v1['manage'] == 1 && $v1['company_id'] == 0) {
@@ -65,7 +66,7 @@ class ParkRoom extends Model{
                             $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
                         }
                     }else{
-                        $roomArray[$k][$k1] = [];
+                        $roomArray[$k] = [];
                     }
 
                 }
@@ -76,6 +77,7 @@ class ParkRoom extends Model{
                 $newData[$parkInfo['name']][$element.'幢'] = $newArr;
             }
         }
+
         return $newData;
     }
 

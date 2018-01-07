@@ -41,6 +41,7 @@ use app\index\model\CopyrightArt;
 use app\index\model\CopyrightSoft;
 use app\index\model\CopyrightSoftwrite;
 use app\index\model\ExchangePoint;
+use app\common\model\ParkFloor;
 
 //企业服务
 class Service extends Base
@@ -3857,16 +3858,17 @@ class Service extends Base
         $newArr = [];
         $newArr1 = [];
         $roomArray = [];
+        $parkFloor = new ParkFloor();
         $parkId = session('park_id');
         $parkInfo = Park::where('id', $parkId)->find();
         $parkRoom = new ParkRoom();
         $map = [
             'park_id' => $parkId,
-            'build_block' => "A",
+            'build' => "A",
         ];
-        $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
+        $list = $parkFloor->where($map)->distinct(true)->field('fid')->order('fid asc')->select();
         foreach ($list as $k => $v) {
-            $floor[$k] = $v['floor'];
+            $floor[$k] = $v['fid'];
         }
         foreach ($floor as $k => $v) {
             $roomList = $parkRoom->where(['floor' => $v, 'build_block' => "A", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
@@ -3875,7 +3877,7 @@ class Service extends Base
                     $roomArray[$k][$k1] = $v1['room'];
                 }
             }else{
-                $roomArray[$k][$k1] = '' ;
+                $roomArray[$k] = '' ;
             }
         }
         foreach ($floor as $k => $v) {
@@ -3885,11 +3887,11 @@ class Service extends Base
         }
         $map1 = [
             'park_id' => $parkId,
-            'build_block' => "B",
+            'build' => "B",
         ];
-        $list1 = $parkRoom->where($map1)->distinct(true)->field('floor')->order('floor desc')->select();
+        $list1 = $parkFloor->where($map1)->distinct(true)->field('fid')->order('fid asc')->select();
         foreach ($list1 as $k => $v) {
-            $floor1[$k] = $v['floor'];
+            $floor1[$k] = $v['fid'];
         }
         foreach ($floor1 as $k => $v) {
             $roomList1 = $parkRoom->where(['floor' => $v, 'build_block' => "B", 'del' => 0, 'park_id' => $parkId])->order("room asc")->select();
@@ -3898,7 +3900,7 @@ class Service extends Base
                     $roomArray1[$k][$k1] = $v1['room'];
                 }
             }else{
-                $roomArray1[$k][$k1] = '';
+                $roomArray1[$k] = '';
             }
 
         }
@@ -3913,12 +3915,12 @@ class Service extends Base
         if ($parkId == 80) {
             $map2 = [
                 'park_id' => $parkId,
-                'build_block' => "C",
+                'build' => "C",
             ];
-            $list2 = $parkRoom->where($map2)->distinct(true)->field('floor')->order('floor desc')->select();
+            $list2 = $parkFloor->where($map2)->distinct(true)->field('fid')->order('fid asc')->select();
             $floor2 =array();
             foreach ($list2 as $k => $v) {
-                $floor2[$k] = $v['floor'];
+                $floor2[$k] = $v['fid'];
             }
 
             $roomArray2=array();
@@ -3929,7 +3931,7 @@ class Service extends Base
                         $roomArray2[$k][$k1] = $v1['room'];
                     }
                 }else{
-                    $roomArray2[$k][$k1] = '';
+                    $roomArray2[$k] = '';
                 }
 
             }
@@ -3942,12 +3944,13 @@ class Service extends Base
 
             $map3 = [
                 'park_id' => $parkId,
-                'build_block' => "D",
+                'build' => "D",
             ];
-            $list3 = $parkRoom->where($map3)->distinct(true)->field('floor')->order('floor desc')->select();
+            $list3 = $parkFloor->where($map3)->distinct(true)->field('fid')->order('fid asc')->select();
+
 
             foreach ($list3 as $k => $v) {
-                $floor3[$k] = $v['floor'];
+                $floor3[$k] = $v['fid'];
             }
             $floor3 =array();
             foreach ($floor3 as $k => $v) {
@@ -3957,7 +3960,7 @@ class Service extends Base
                         $roomArray3[$k][$k1] = $v1['room'];
                     }
                 }else{
-                    $roomArray3[$k][$k1] = '';
+                    $roomArray3[$k] = '';
                 }
             }
 
