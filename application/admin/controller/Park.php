@@ -884,7 +884,7 @@ class Park extends Admin
         $parkRoom = new ParkRoom();
         $map = ['build_block' => $build, 'park_id' => $parkId, 'room' => $room];
         $company = input('company');
-        if (!empty($data['img'])){
+        if (!empty($datas['img'])){
             $data = [
                 'img' => json_encode($datas['img']),
                 'imgs' =>json_encode($datas['imgs']),
@@ -897,6 +897,8 @@ class Park extends Admin
                 'panorama' =>input('panorama'),
                 'price' => input('price'),
                 'area' => input('area'),
+                'img' => "",
+                'imgs' =>"",
             ];
         }
         if ($company){
