@@ -68,7 +68,30 @@
     .list_type {
         width: 80px
     }
+    .del{
+        position: absolute;
+        right:4px;
+        top:6px;
+        color: #666;
+    }
+    .parent{
+        position:relative ;
+    }
+    #sortable { list-style-type: none; margin: 0 0 10px 0; padding: 0; }
+    #sortable li { margin: 0 ; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; display: block}
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+    .select{
+        display: inline-block;
+        height: 32px;
+    }
+    .img-item{
+        width:100%;
+        position: relative;
+        padding:25px 10px 10px 10px;
+        margin-bottom: 10px;
+        background: #f1f1f1;
 
+    }
 
 </style>
 {/block}
@@ -193,6 +216,7 @@
 
                 <br>
                 <br>
+
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>上传图片:</label>
@@ -214,21 +238,31 @@
                 <br>
                 <br>
                 {eq name="$info.status" value="1"}
+
+                <div class="form-group">
+                    <div class="col-lg-1 text-right control-label">
+                        <label>回复内容:</label>
+                    </div>
+                    <div class="col-lg-9">
+                        <textarea readonly=ture class="form-control form_title" name="chinese_description">{$info.reply}</textarea>
+                    </div>
+
+                </div>
                 <div class="form-group">
                     <div class="col-lg-1 text-right control-label">
                         <label>回复图片:</label>
 
                     </div>
                     <br>
-                    {notempty name="$info.back_img" }
-                    <div class="col-lg-5">
+                    {volist name = '$info.back_img' id= 'li'}
+                    <div class="col-sm-6 col-md-4 col-lg-2">
                         <div class="imggroup">
-                            <a href="{$info.back_img}" class="front_cover">
-                                <img   width="200px" height="200px"  src="{$info.back_img}" class="img-auto front_cover_img" alt="">
+                            <a href="{$li}" class="front_cover">
+                                <img   width="200px" height="200px"  src="{$li}" class="img-auto front_cover_img" alt="">
                             </a>
                         </div>
                     </div>
-                    {/notempty}
+                    {/volist}
                 </div>
                 {/eq}
 
@@ -239,8 +273,8 @@
                 {if condition="$info.status eq 0"}
                 <div class="form-group">
                     <div class="col-lg-11 col-lg-offset-1 text-left">
-                        <a data-toggle="modal" title="修改" href="#modal-form" onclick="edit(this)" data-id="{$info.id}"
-                           class="btn-sm btn-primary" style="color:#fff">回复</a>
+                        <a data-toggle="modal" title="修改" href="#modal-form" data-id="{$info.id}"
+                           class="btn-sm btn-primary">回复</a>
                     </div>
                 </div>
                 {/if}
@@ -258,23 +292,30 @@
 <div id="modal-form" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="form-horizontal" method="post" action="{:Url('Trademark/reply')}">
+            <!--<form class="form-horizontal" method="post" action="{:Url('Trademark/reply')}">-->
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span
                             aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h3 class="modal-title text-center" name="dialog-title">回复</h3>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group"><label class="col-sm-2 control-label">回复图片:</label>
-                        <div class="col-sm-10">
-                            <input id="input-file" type="file" class="file">
-                            <sapn>
-
-                                <img width="200px" height="200px" class="front_cover_img" name="back_img" id="back_img"
-                                     src=""/>
-
-                            </sapn>
-                        </div>
+                    <label class="col-sm-2 control-label">回复内容:</label>
+                    <div class="col-sm-10">
+                        <textarea name="reply" class="reply-content" id="" cols="30" rows="10" style="width: 100%;"></textarea>
+                    </div>
+                    <label class="col-sm-2 control-label">回复图片:</label>
+                    <div class="col-sm-10">
+                        <input id="input-file" type="file" class="file input-file" multiple>
+                    </div>
+                    <div class="col-md-12 column clear"  id="sortable">
+                        <!--<div class="col-md-2">-->
+                        <!--<div class="img-item">-->
+                        <!--<a class="front_cover">-->
+                        <!--<img src="" alt="" style='width: 100%;height: 300px;' class="img parent" name="back_img" id="back_img">-->
+                        <!--</a>-->
+                        <!--<div class="del"><span class="glyphicon glyphicon-remove"></span></div>-->
+                        <!--</div>-->
+                        <!--</div>-->
                     </div>
                     <input type="hidden" name="id">
                     <input type="hidden" name="back_img">
@@ -282,13 +323,14 @@
                          <div class="summernote"></div>
                          <div class="clearfix"></div>
                      </div>-->
+                    <div style="clear: both"></div>
                 </div>
 
                 <div class="modal-footer">
                     <a class="btn btn-primary " onclick="reply()">保存</a>
                     <input type="hidden" name="id" value="">
                 </div>
-            </form>
+            <!--</form>-->
         </div>
     </div>
 </div>
@@ -304,18 +346,14 @@
 <script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
 <script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
+<script src="/admin/js/jquery-ui-1.10.4.min.js"></script>
 <script>
     highlight_subnav("{:Url('trademark/index')}");
+    var
+            isSubmit = false,
+            imageArray = new Array() ;
+
     $(document).ready(function () {
-        $('.i-checks').iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green',
-        });
-        $(".check-all").on("ifChanged", function () {
-            $("tbody").find(".ids").iCheck("toggle");
-        });
-
-
         $('.summernote').summernote({
             lang: 'zh-CN',
             height: 300,
@@ -330,23 +368,101 @@
         //绑定模态框展示的方法
         $("#remark-modal").on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
-            console.log(button);
             var recipient = button.data('text');
             var modal = $(this);
             modal.find('.modal-body').html(recipient);
-
-
         })
+
+
+        $(function() {
+            $( "#sortable" ).sortable();
+            $( "#sortable" ).disableSelection();
+        });
+        imageArray = new Array() ;
     });
+    (function () {
+        addImgBox()
+    })();
+    $(".input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png','jpg','gif','png','jpeg'],
+        maxFileSize: 1024 * 200,
+        maxFilesNum : 3,//上传最大的文件数量
+    }).on("filebatchselected", function(event, files) {
+        if(isSubmit){
+            updateAlert('上传中，请稍等~', 'info');
+            return;
+        }
+        if(imageArray.length>2){
+            updateAlert('最多上传三张图片~', 'info');
+            return ;
+        }
+        isSubmit=true
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        isSubmit = false;
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            var html =
+                    '<div class="col-md-6">'+
+                    '<div class="img-item">'+
+                    '<a class="front_cover" href="'+response.data+'">'+
+                    '<img src="'+response.data+'" alt="" style="width: 100%;height: 300px;" class="img parent">'+
+                    '</a>'+
+                    '<div class="del" onclick="delImg(this)"><span class="glyphicon glyphicon-remove"></span></div>'+
+                    '</div>'+
+                    '</div>';
+            $('#sortable').append(html);
+            imageArray.push(response.data);
+            addImgBox()
+
+        } else {
+            updateAlert(response.msg, 'info');
+        }
+    });
+    function delImg(_this) {
+        var theEl=$(_this).parent().parent();
+        var index = theEl.index();
+        imageArray.splice(index,1)
+        console.log(imageArray)
+        theEl.remove();
+    }
+    function addImgBox() {
+        $(".front_cover").imgbox({
+            overlayShow: false,
+            hideOnContentClick: true,
+            slideshow: false,
+            theme: 'dark',
+            alignment: 'center',       // Position - may be auto OR center.
+            allowMultiple: false,
+        });
+    }
 
     function reply() {
-        var back_img = $("input[name='back_img']").val();
-        var id = $("input[name='id']").val();
+        if(isSubmit){
+            updateAlert('上传中，请稍等~', 'info');
+            return;
+        }
+        var
+                back_img = imageArray,
+                id = $("input[name='id']").val(),
+                reply = $('.reply-content').val();
+        console.log($('.reply-content'))
+        console.log(reply);
+        if(back_img.length===0 && reply===''){
+            updateAlert('请添加回复信息~', 'info');
+            return;
+        }
+        back_img=JSON.stringify(back_img);
+        isSubmit = true;
         $.ajax({
-            data: {id: id, back_img: back_img},
+            data: {id: id, back_img: back_img,reply : reply},
             type: "POST",
             url: "{:Url('Trademark/reply')}",
             success: function (data) {
+                isSubmit = false;
                 if (data.code == 1) {
                     updateAlert(data.msg + ' 页面即将自动跳转~', 'success');
                     setTimeout(function () {
@@ -355,6 +471,10 @@
                 } else {
                     updateAlert(data.msg, 'info');
                 }
+            },
+            error:function (data) {
+                isSubmit = false;
+                updateAlert('网络错误，请联系网络管理员', 'info');
             }
         });
     }
@@ -374,32 +494,6 @@
             }
         });
     }
-
-    $("#input-file").fileinput({
-
-        showPreview: false,
-        language: 'zh', //设置语言
-        uploadUrl: '{:Url("/admin/Upload/picture")}', //上传的地址
-        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
-        maxFileSize: 1024 * 200,
-    }).on("filebatchselected", function (event, files) {
-        $(this).fileinput("upload");
-    }).on('fileuploaded', function (event, data, previewId, index) {
-        var response = $.parseJSON(data.response);
-        console.log(response);
-
-        if (response.code == 1) {
-
-            $("input[name='back_img']").val(response.data);
-            console.log($("input[name='img']").val());
-            var pic = document.getElementById("back_img");
-            pic.src = response.data;
-
-        } else {
-
-            updateAlert(response.msg, 'warning');
-        }
-    });
 
     $(".front_cover").imgbox({
         overlayShow: false,

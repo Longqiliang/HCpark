@@ -884,20 +884,29 @@ class Park extends Admin
         $parkRoom = new ParkRoom();
         $map = ['build_block' => $build, 'park_id' => $parkId, 'room' => $room];
         $company = input('company');
-        $data = [
-            'img' => json_encode($datas['img']),
-            'imgs' =>json_encode($datas['imgs']),
-            'panorama' =>input('panorama'),
-            'price' => input('price'),
-            'area' => input('area'),
-        ];
+        if (!empty($data['img'])){
+            $data = [
+                'img' => json_encode($datas['img']),
+                'imgs' =>json_encode($datas['imgs']),
+                'panorama' =>input('panorama'),
+                'price' => input('price'),
+                'area' => input('area'),
+            ];
+        }else{
+            $data = [
+                'panorama' =>input('panorama'),
+                'price' => input('price'),
+                'area' => input('area'),
+            ];
+        }
         if ($company){
             $data['company'] = $company;
             $data['type'] = input('type');
-            $like = mb_substr($company, 0, 6);
+            $like = mb_substr($company, 0, 8);
             $info = WechatDepartment::where(['name' => ['like', "%$like%"]])->find();
             if ($info) {
                 $data['company_id'] = $info['id'];
+                //$data['company'] = $info['name'];
             } else {
                 $data['company_id'] = 0;
             }

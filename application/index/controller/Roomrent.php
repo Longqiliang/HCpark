@@ -285,7 +285,7 @@ class Roomrent extends Base
                             $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
                         }
                     }else{
-                        $roomArray[$k][$k1] = [];
+                        $roomArray[$k] = [];
                     }
 
                 }
@@ -614,5 +614,89 @@ class Roomrent extends Base
 
     }
 
+    /**
+     * 测试数据
+     * @return string
+     */
+    public function test(){
+        $park_id = session('park_id');
+        if ($park_id == 3) {
+            $setArr = [
+                '3' => ['A', 'B'],
+                '80' => ['A', 'B', 'C', 'D']
+            ];
+        } else {
+            $setArr = [
+                '80' => ['A', 'B', 'C', 'D'],
+                '3' => ['A', 'B']
+            ];
+        }
+        $newData = [];
+        $roomArray = [[]];
+        $parkRoom = new ParkRoom();
+        $park = new Park();
+        $parkRent = new ParkRent();
+        foreach ($setArr as $k => $v) {
+            $number = $k;
+            $parkInfo = $park->where(['id' => $number])->find();
+            $newData[$parkInfo['name']] = [];
+            foreach ($v as $k1 => $v1) {
+                $element = $v1;
+                $newArr = [];
+                $floor = [];
+                $map = ['park_id' => $number, 'build_block' => $element, 'del' => 0];
+                //获取楼层信息
+                $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
+                foreach ($list as $k => $v) {
+                    $floor[$k] = $v['floor'];
+                }
+                //每层楼房间数目
+                foreach ($floor as $k => $v) {
+                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number, 'manage' => 1])->order("room asc")->select();
+                    //判断房间是否出租
+                    if (count($roomList)){
+                        foreach ($roomList as $k1 => $v1) {
+                            //分园区，希垦没有已约的状态
+                            if ($v1['manage'] == 1 && $v1['company_id'] == 0) {
+                                $rent = PeopleRent::where(['room_id' => $v1['id'], 'status' => array('neq', -1)])->select();
+                                if ($rent) {
 
+                                    if ($v1['park_id'] == 3) {
+                                        $status = 1;
+                                    } else {
+                                        $status = 2;
+                                    }
+                                } else {
+                                    $status = 1;
+                                }
+                                $roomsId = $v1['id'];
+                            } else {
+                                $status = 0;
+                                $roomsId = 0;
+                            }
+                            $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
+                            $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
+                        }
+                    }else{
+                        $roomArray[$k] = [];
+                    }
+
+
+
+                }
+                foreach ($floor as $k => $v) {
+                    $newArr[$k]['floor'] = $v;
+                    if (isset($roomArray[$k])){
+                        $newArr[$k]['rooms'] = $roomArray[$k];
+                    }else{
+                        $newArr[$k]['rooms'] = [];
+                    }
+                }
+
+                $newData[$parkInfo['name']][$element . '幢'] = ['houselist' => $newArr];
+            }
+        }
+
+        return json_encode($newData);
+    }
 }

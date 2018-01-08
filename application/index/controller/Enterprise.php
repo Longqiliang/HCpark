@@ -6,6 +6,7 @@
  * Time: 14:09
  */
 namespace app\index\controller;
+use app\common\model\ParkFloor;
 use app\index\model\ParkCompany;
 use app\index\model\ParkProduct;
 use app\common\behavior\Service;
@@ -126,6 +127,7 @@ class Enterprise extends Base{
         $parkRoom = new ParkRoom();
         $park = new Park();
         $parkRent = new ParkRent();
+        $parkFloor = new ParkFloor();
         foreach ($setArr as $k => $v) {
             $number = $k;
             $parkInfo = $park->where(['id' => $number])->find();
@@ -134,11 +136,11 @@ class Enterprise extends Base{
                 $element = $v1;
                 $newArr = [];
                 $floor = [];
-                $map = ['park_id' => $number, 'build_block' => $element, 'del' => 0];
+                $map = ['park_id' => $number, 'build' => $element];
                 //获取楼层信息
-                $list = $parkRoom->where($map)->distinct(true)->field('floor')->order('floor desc')->select();
+                $list = $parkFloor->where($map)->distinct(true)->field('fid')->order('fid asc')->select();
                 foreach ($list as $k => $v) {
-                    $floor[$k] = $v['floor'];
+                    $floor[$k] = $v['fid'];
                 }
                 //每层楼房间数目
                 foreach ($floor as $k => $v) {
@@ -168,7 +170,7 @@ class Enterprise extends Base{
                             $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
                         }
                     }else{
-                        $roomArray[$k][$k1] = [] ;
+                        $roomArray[$k] = [] ;
                     }
 
                 }

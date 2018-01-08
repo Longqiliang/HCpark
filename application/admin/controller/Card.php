@@ -129,7 +129,6 @@ class Card extends Admin
             $res = $commentModel->where($map1)->find();
             if ($res) {
                 $map['aid'] = $id;
-                $map['table'] = 'card';
                 $result = $commentModel->where($map)->update($save_data);
                 if (!$result) {
                     throw new Exception($commentModel->getError());
@@ -140,7 +139,7 @@ class Card extends Admin
             Db::rollback();
             Log::error("[帖子删除失败] error_message:" . $ex->getMessage());
 
-            return $this->error('删除失败', Url('Card/cardindex'));
+            return $this->error('删除失败', Url('Card/cardindex'),$ex->getMessage());
         }
 
         return $this->success('删除成功', Url('Card/cardindex'));
