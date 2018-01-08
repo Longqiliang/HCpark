@@ -891,7 +891,6 @@
             {{ if img && img.length && img != 0}}
             {{each img as item}}
             <div class="upload-img">
-                <span class="glyphicon glyphicon-remove icon-del"></span>
                 <img src="{{item}}" >
             </div>
             {{/each}}
@@ -1003,7 +1002,7 @@
     <button type="button" class="btn btn-primary" data-status="addCompany">添加企业</button>
     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
     {{ else if status == 3}}
-    <button type="button" class="btn btn-warning"  data-status="delete">删除</button>
+    <button type="button" class="btn btn-success"  data-status="delete">下架</button>
     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
     {{ else if status == 4}}
     <span class="content-float">提示：点击保存修改房间信息</span>
@@ -1178,7 +1177,6 @@
                            pagination: '#pagination',
                            paginationType : 'fraction',
                        });
-
                        //图片上传
                        uploadPicture(modal);
                    }else{
@@ -1657,19 +1655,20 @@
                                }
                            })
                        });
-               var imgBox = el.find(".upload-img-box");
-               el.off('click','.icon-del');
-               el.on('click','.icon-del',function() {
-                   var delNumber = $(this).parent().parent().index(),
-                   src = imgBox.attr("data-src").split(',');
-                    src.splice(delNumber,1);
-                    var newSrc = src.join(',');
-                   imgBox.attr("data-src",newSrc);
-                   $(this).parent().remove();
 
-               });
+
            });
-
+           //图片删除
+           var imgBox = el.find(".upload-img-box");
+           el.off('click','.icon-del');
+           el.on('click','.icon-del',function() {
+               var delNumber = $(this).parent().parent().index(),
+                       src = imgBox.attr("data-src").split(',');
+               src.splice(delNumber,1);
+               var newSrc = src.join(',');
+               imgBox.attr("data-src",newSrc);
+               $(this).parent().remove();
+           });
        }
    })
 
