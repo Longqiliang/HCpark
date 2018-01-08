@@ -1,0 +1,78 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>活动中心</title>
+<link rel="stylesheet" href="/index/css/service/detail.css">
+<style>
+    body{
+        height: 100vh;
+    }
+    #app{
+        box-sizing: border-box;
+        padding-top: 1px;
+    }
+    .not-open{
+        color: #D2D1D1;
+    }
+    .img-card-box.after:after,.img-card-box.before:before{
+        display: none;
+    }
+    .img-marking .marking-info{
+        width:65vw;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="img-card">
+        <a>
+            <div class="img-card-box before">
+                <img src="/index/images/service/activity/index-tea.png" class="img-responsive">
+                <div class="img-marking"><span class="marking-info">喝茶预约</span></div>
+            </div>
+            <!--<div class="img-card-info">前往办理</div>-->
+            <div class="img-card-info not-open">暂未开放</div>
+        </a>
+    </div>
+    <div class="img-card">
+        <a>
+            <div class="img-card-box after">
+                <img src="/index/images/service/activity/index-place.png"  class="img-responsive">
+                <div class="img-marking"><span class="marking-info">场地预约</span></div>
+            </div>
+            <!--<div class="img-card-info">前往办理</div>-->
+            <div class="img-card-info not-open">暂未开放</div>
+        </a>
+    </div>
+    <!--<div class="footer">-->
+        <!--<div class="circle-show-box">-->
+
+            <!--<div class="card-record circle-out">-->
+                <!--<div class="circle-inner " @click="goHistory">活动记录</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var data = {$info};
+    console.log(data);
+    var vm = new Vue({
+        el:'#app',
+        data:data,
+        methods:{
+            jump:function (e) {
+//                var app_id = this.app_id;
+//                window.location.href = "/index/service/"+e+"?app_id="+app_id;
+            },
+            goHistory:function(){
+//                window.location.href='/index/service/history/id/'+this.app_id;
+            }
+        }
+    })
+</script>
+
+{/block}
