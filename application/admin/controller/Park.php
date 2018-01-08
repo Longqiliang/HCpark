@@ -723,7 +723,8 @@ class Park extends Admin
                 'build_block' => $data['build_block'],
                 'room' => $data['room'],
                 'park_id' => $parkid,
-                'del' => 0
+                'del' => 0,
+                'floor' => $data['floor'],
             ];
             $roomId = ParkRoom::where($maps)->find();
             if ($roomId) {
