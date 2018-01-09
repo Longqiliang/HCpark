@@ -867,11 +867,13 @@ class Partymanage extends Base
             }
         }*/
         //return  dump($info);
-      // echo json_encode($manageInfo);
-        $this->assign('info', json_encode($info));
-
-
-        return $this->fetch();
+       //echo json_encode($info);
+       if($manageInfo) {
+           $this->assign('info', json_encode($info));
+           return $this->fetch();
+       }else{
+           return $this->fetch('/index/defaultpage');
+       }
     }
 
     /*公司缴费记录*/
@@ -990,6 +992,11 @@ class Partymanage extends Base
         $resArr1 = ["$parkName" => $resArr];*/
         $parkRoom = new ParkRoom();
         $resArr1 = $parkRoom->companyRoom();
+        rsort($resArr1["希垦科技园"]["A幢"]);
+
+        //echo json_encode($resArr1);
+
+
 
         $this->assign('list', json_encode($resArr1));
 
