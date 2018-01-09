@@ -1,0 +1,30 @@
+{extend name="public/common"}
+
+{block name="style"}
+<style>
+    body{
+        background-color: #F5F5F5;
+    }
+    .no-list {
+        width: 100%;
+        display: block;
+        margin: 20% auto 0;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<div id="app">
+    <img src="/index/images/service/card/icon-default.jpg" class="no-list">
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {},
+        methods: {}
+    })
+</script>
+{/block}

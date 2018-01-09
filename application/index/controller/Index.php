@@ -169,4 +169,10 @@ class Index extends Controller
         return $this->fetch();
 
     }
+
+    //缺省页
+    public function defaultpage()
+    {
+        return $this->fetch();
+    }
 }
