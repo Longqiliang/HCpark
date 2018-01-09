@@ -833,7 +833,8 @@ class Partymanage extends Base
         $map = [
             'type' => $type,
             'department_id' => $departmentId,
-        ];
+            'status'=>['neq',-1]
+            ];
         $manageInfo = CompanyContract::where($map)->find();
         $info = [
             'extra' => $manageInfo['remark'],
@@ -866,7 +867,7 @@ class Partymanage extends Base
             }
         }*/
         //return  dump($info);
-       //echo json_encode($info);
+      // echo json_encode($manageInfo);
         $this->assign('info', json_encode($info));
 
 
