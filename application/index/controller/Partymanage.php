@@ -842,7 +842,7 @@ class Partymanage extends Base
             'number' => $manageInfo['number'],
             'create_time' => $manageInfo['create_time'],
         ];
-        $a = array();
+        /*$a = array();
         foreach ($info['img'] as $v) {
             $v = "http://" . $_SERVER['HTTP_HOST'] . $v;
             array_push($a, $v);
@@ -854,7 +854,7 @@ class Partymanage extends Base
             $v2 = "http://" . $_SERVER['HTTP_HOST'] . $v2;
             array_push($b, $v2);
         }
-        $info['imgs'] = $b;
+        $info['imgs'] = $b;*/
         /*if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
                 if (is_file(PUBLIC_PATH . $v1)) {
@@ -866,6 +866,7 @@ class Partymanage extends Base
             }
         }*/
         //return  dump($info);
+       //echo json_encode($info);
         $this->assign('info', json_encode($info));
 
 
