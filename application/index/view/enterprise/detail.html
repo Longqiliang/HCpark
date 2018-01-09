@@ -42,7 +42,9 @@
     .my-header-info>li a{
         color: #333;
     }
-
+    .my-header-info>li a.can_call{
+        color: #59b7f4;
+    }
     /*tab*/
     .my-nav{
         display: -webkit-flex;
@@ -67,14 +69,35 @@
         display: none;
     }
     .my-content>.profile, .my-content>.contact{
-        padding:1.7rem 5.06666666vw;
+        padding:1.7rem 5.06666666vw 6.7rem;
     }
-    .my-content>.profile>p,.my-content>.contact>p{
+    .my-content>.profile>p,.my-content>.contact p{
         overflow: hidden;
         font-size: 1.4rem;
         line-height: 2.0rem;
         color: #666;
         /*text-indent:2em;*/
+    }
+    .my-content>.contact .call_btn{
+        position: fixed;
+        bottom:0;
+        left:0;
+        height:5rem;
+        width:100%;
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .my-content>.contact .call_btn>a{
+        width:90%;
+        height:4rem;
+        text-align: center;
+        color: #fff;
+        background-color: #69b9f9;
+        line-height:4rem;
+        font-size: 1.5rem;
+        border-radius: 5px;
     }
     .my-content .contentShow{
         display: block;
@@ -130,7 +153,7 @@
         <ul class="my-header-info">
             <li>{{baseData.name}}</li>
             <li>电话：
-                <a :href="'tel:'+baseData.mobile" v-if="baseData.mobile">{{baseData.mobile}}</a>
+                <a :href="'tel:'+baseData.mobile" class="can_call" v-if="baseData.mobile">{{baseData.mobile}}</a>
                 <a v-else>暂无</a>
             </li>
         </ul>
@@ -169,7 +192,11 @@
                 </li>
             </ul>
         </li>
-        <li class="contact" :class="{'contentShow':isActive==3}" v-html="baseData.about_us">
+        <li class="contact" :class="{'contentShow':isActive==3}">
+            <div  v-html="baseData.about_us"></div>
+            <div class="call_btn">
+                <a :href="'tel:'+baseData.mobile">联系我们</a>
+            </div>
         </li>
     </ul>
 </div>
@@ -188,7 +215,6 @@ var app = new Vue({
     },
 //    emulateJSON: true,
     mounted(){
-        console.log(this.baseData)
         this.addBase()
     },
     methods:{
@@ -199,7 +225,6 @@ var app = new Vue({
             this.isActive=value;
         },
         jumpTo(id){
-            console.log(1)
             window.location.href='/index/enterprise/product/id/'+id
         }
     }

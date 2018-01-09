@@ -3,7 +3,7 @@
 
 </style>
 {block name="style"}
-<title>企业搜索</title>
+<title>园区企业</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
     .header{  background-color: #fff;  position: fixed;  top:0;  left: 0;  z-index: 100;  width:100vw;  }
@@ -27,13 +27,14 @@
     .search.isClick>.searchBox>.searchText>.searchText_c{display:none}
     .search.isClick .searchInput{background:#f0eff5;display:inline-block;font-size:1.4rem;height:3.2rem;width:61.33vw}
     .search.isClick>.unBtn{display:block;padding:0;box-sizing:border-box;width:3.8rem;height:2.8rem;line-height:2.8rem;border-radius:5px;border:1px solid #5d9cec;color:#5d9cec;text-align:center;font-size:1.4rem}
-    .searchList{min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:absolute;top:0;left:0;z-index: 120}
+    .searchList{min-height:100vh;width:100%;position:absolute;top:0;left:0;z-index: 120}
     .searchList.company-list{padding:0}
     .searchList.company-list>li{margin-bottom:0;border-bottom:1px solid #f1f1f1}
     .searchList.bgWhite{background-color:rgba(255,255,255,1)}
     .searchList>li:first-child{margin-top:4.8rem}
     .company-list{box-sizing:border-box;width:100%;position:absolute;top:0;left:0;padding:5.2rem 3.7vw .4rem 3.7vw}
     .company-list>li{margin-bottom:.8rem;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;align-items:center;background-color:#fff}
+    .company-list>li.company-list-bg{margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:absolute;top:0;left:0;z-index: 121}
     .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
     .company-list .company-logo{margin-right:1.4rem}
     .company-info>li{width:65vw;line-height:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -62,8 +63,8 @@
     <div  v-show="!isHouseList">
         <div class="search" :class="{isClick:inputStatus}" >
             <div class="searchBox" @click="isClick">
-                <div class="searchText"><span class="searchText_c">请在此搜索企业</span></div>
-                <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" placeholder="请输入企业名" v-focus="inputStatus">
+                <div class="searchText"><span class="searchText_c">请在此输入企业名称</span></div>
+                <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" placeholder="请在此输入企业名称" v-focus="inputStatus">
             </div>
             <div class="unBtn" @click="isCancel">取消</div>
         </div>
@@ -83,6 +84,7 @@
         </ul>
         <!--搜索列表-->
         <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
+            <li class="company-list-bg" v-if="searchList.length===0" @click="isCancel"></li>
             <li v-for="item in searchList" @click="jumpTo(item.id)">
                 <div class="company-logo">
                     <img :src="item.img" alt="logo" v-if="item.img">
