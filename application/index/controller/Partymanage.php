@@ -842,7 +842,19 @@ class Partymanage extends Base
             'number' => $manageInfo['number'],
             'create_time' => $manageInfo['create_time'],
         ];
+        $a = array();
+        foreach ($info['img'] as $v) {
+            $v = "http://" . $_SERVER['HTTP_HOST'] . $v;
+            array_push($a, $v);
+        }
+        $info['img'] = $a;
 
+        $b = array();
+        foreach ($info['imgs'] as $v2) {
+            $v2 = "http://" . $_SERVER['HTTP_HOST'] . $v2;
+            array_push($b, $v2);
+        }
+        $info['imgs'] = $b;
         /*if ($info['img']) {
             foreach ($info['img'] as $k1 => $v1) {
                 if (is_file(PUBLIC_PATH . $v1)) {
