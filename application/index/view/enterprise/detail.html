@@ -210,21 +210,28 @@ var app = new Vue({
     el:'#app',
     data:{
         isActive:0,
-        text:'<a>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores corporis culpa deserunt dolorum eum illum itaque, iure labore mollitia nam obcaecati odio placeat praesentium quaerat quibusdam quidem quos suscipit veritatis.</a>',
         baseData:{$info},
         imgPath:'/index/images/feedback/indexbg.jpg',
         baseApi:'{:Url("Enterprise/detail")}'
     },
 //    emulateJSON: true,
     mounted(){
-        this.addBase()
+        this.addBase();
+
     },
     methods:{
         addBase(){
-            this.isActive=parseInt(window.location.href.split('/c/')[1]);
+            var activeByurl = parseInt(window.location.href.split('/c/')[1]),
+                    activeItem = window.sessionStorage.getItem('activeItem');
+            if(activeItem!==null){
+                this.isActive = parseInt(activeItem);
+            }else{
+                this.isActive = activeByurl;
+            }
         },
         changeTab(value){
             this.isActive=value;
+            window.sessionStorage.setItem('activeItem',value)
         },
         jumpTo(id){
             window.location.href='/index/enterprise/product/id/'+id
