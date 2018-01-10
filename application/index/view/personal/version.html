@@ -110,13 +110,21 @@
     </ul>
 </div>
 {/block}
-
 {block name="script"}
 <script>
         var app = new Vue({
         el: '#app',
         data: {
             versionData:[
+                {
+                    number:'版本号：V1.3.3',
+                    date:'上线时间：2018-01-15',
+                    info:[
+                        {title:'1.园区企业频道搜索功能优化；'},
+                        {title:'2.园区管理频道和我要租房频道楼盘表样式统一；'},
+                        {title:'3.意见回复页面样式调整；'},
+                    ]
+                },
                 {
                     number:'版本号：V1.3.2',
                     date:'上线时间：2018-1-3',
