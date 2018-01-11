@@ -321,7 +321,9 @@
             </div>
             <div class="modal-body">
                 <input type="file" name="file_data" class="input file">
+                <a class="front_cover"  id='front_cover' href="">
                 <img src="" alt="" id="set_img" class="imgs">
+                </a>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="pushImg()">上传</button>
@@ -436,6 +438,7 @@
         var response = $.parseJSON(data.response);
         if (response.code == 1) {
             $("#set_img").attr('src', response.data);
+            $("#front_cover").attr('href', response.data);
             $("input[name='front_cover']").val(response.data);
             //$(".img1").attr('src',response.data);
         } else {
@@ -453,7 +456,9 @@
     function setImg(id, img) {
         $("input[name='set_id']").val(id);
         $("#set_img").attr('src', img);
+        $("#front_cover").attr('href', img);
         $("input[name='front_cover']").val(img);
+
     }
     function pushImg() {
         var id = $("input[name='set_id']").val();
