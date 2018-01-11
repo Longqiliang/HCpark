@@ -31,8 +31,8 @@
                 <img src="/index/images/service/activity/index-tea.png" class="img-responsive">
                 <div class="img-marking"><span class="marking-info">喝茶预约</span></div>
             </div>
-            <!--<div class="img-card-info">前往办理</div>-->
-            <div class="img-card-info not-open">暂未开放</div>
+            <div class="img-card-info" @click="jump(1)">查看详情</div>
+            <!--<div class="img-card-info not-open">暂未开放</div>-->
         </a>
     </div>
     <div class="img-card">
@@ -41,8 +41,8 @@
                 <img src="/index/images/service/activity/index-place.png"  class="img-responsive">
                 <div class="img-marking"><span class="marking-info">场地预约</span></div>
             </div>
-            <!--<div class="img-card-info">前往办理</div>-->
-            <div class="img-card-info not-open">暂未开放</div>
+            <div class="img-card-info" @click="jump(2)">查看详情</div>
+            <!--<div class="img-card-info not-open">暂未开放</div>-->
         </a>
     </div>
     <!--<div class="footer">-->
@@ -66,9 +66,10 @@
         methods:{
             jump:function (e) {
 //                var app_id = this.app_id;
-//                window.location.href = "/index/service/"+e+"?app_id="+app_id;
+                window.location.href = "/index/service/bespeakActivity/type/"+e;
             },
             goHistory:function(){
+                console.log(22222)
 //                window.location.href='/index/service/history/id/'+this.app_id;
             }
         }
