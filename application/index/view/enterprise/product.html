@@ -5,14 +5,19 @@
 <title>{$info.name}</title>
 <link rel="stylesheet" type="text/css" href="/index/css/declaration/detail.css"/>
 <link rel="stylesheet" href="/index/css/common/rem.css">
+<style>
+    .content-info *{
+        max-width: 100%;
+    }
+</style>
 {/block}
 
 {block name="body"}
 <div id="comment">
-    <div class="header">
-        <h2>{$info.name}</h2>
-    </div>
-    <section>
+    <!--<div class="header">-->
+        <!--<h2>{$info.name}</h2>-->
+    <!--</div>-->
+    <section class="content-info">
         {$info.content}
     </section>
 
@@ -24,5 +29,51 @@
 {/block}
 
 {block name="script"}
-
+<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+    var app = new Vue({
+        el:'#comment',
+        data:{
+        },
+        mounted(){
+            this.imgPreview();
+        },
+        methods:{
+//        文章图片点击预览
+            imgPreview(){
+                var _this = this,
+                        imgs = document.getElementsByClassName('content-info')[0].getElementsByTagName('img') || [],
+                        imgsSrc = [],
+                        url = window.location.href,
+                        data ={
+                            url:url
+                        };
+                if(imgs.length===0){
+                    return;
+                }
+                _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                    var data = JSON.parse(res.data);
+                    wx.config({
+                        debug: false,
+                        appId: data.appid,
+                        timestamp:data.timestamp ,
+                        nonceStr: data.noncestr,
+                        signature: data.signature,
+                        jsApiList: ['previewImage']
+                    });
+                    for(var i = 0;i < imgs.length;i++){
+                        imgsSrc[i] = imgs[i].src;
+                        imgs[i].onclick=function () {
+                            wx.previewImage({
+                                current: this.src,
+                                urls: imgsSrc
+                            });
+                        }
+                    }
+                },function () {
+                });
+            }
+        }
+    })
+</script>
 {/block}
