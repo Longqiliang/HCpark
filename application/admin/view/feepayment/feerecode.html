@@ -3,6 +3,7 @@
 {block name="style"}
 <link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 <link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<!--<link rel="stylesheet" href="/public/static/viewer/viewer.min.css">-->
 <style>
     .mail-box .mail-ontact {
         width: 150px;
@@ -66,6 +67,12 @@
         margin-top: 20px;
         max-width: 540px;
         max-height: 400px;
+    }
+    .imgbox-dark .imgbox-bg-wrap{
+        z-index: 9998!important;
+    }
+    .imgbox-wrap{
+        z-index: 9999!important;
     }
 </style>
 {/block}
@@ -343,6 +350,7 @@
 <script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
 <script src="/static/js/jQuery-imgBox/jquery.imgbox.js"></script>
 <script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<!--<script src="/public/static/viewer/viewer.min.js"> </script>-->
 <script>
     $(document).ready(function () {
         $('.i-checks').iCheck({
