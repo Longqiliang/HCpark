@@ -196,7 +196,7 @@
         </li>
         <li class="contact" :class="{'contentShow':isActive==3}">
             <div  v-html="baseData.about_us"></div>
-            <div class="call_btn">
+            <div class="call_btn" v-if="baseData.mobile">
                 <a :href="'tel:'+baseData.mobile">联系我们</a>
             </div>
         </li>
@@ -205,6 +205,7 @@
 {/block}
 
 {block name="script"}
+<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
 var app = new Vue({
     el:'#app',
@@ -217,17 +218,53 @@ var app = new Vue({
 //    emulateJSON: true,
     mounted(){
         this.addBase();
-
+        this.imgPreview();
     },
     methods:{
         addBase(){
-            var activeByurl = parseInt(window.location.href.split('/c/')[1]),
+            var activeByurl = window.location.href.split('/c/')[1] || '',
                     activeItem = window.sessionStorage.getItem('activeItem');
             if(activeItem!==null){
                 this.isActive = parseInt(activeItem);
+            }else if(activeByurl!==''){
+                this.isActive = parseInt(activeByurl)
             }else{
-                this.isActive = activeByurl;
+                this.isActive = 0;
             }
+        },
+//        文章图片点击预览
+        imgPreview(){
+            var _this = this,
+                    imgs = document.getElementsByClassName('profile')[0].getElementsByTagName('img') || [],
+                    imgsSrc = [],
+                    href =window.location.href,
+                    data ={
+                        url:href
+                    };
+            if(imgs.length===0){
+                return;
+            }
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                wx.config({
+                    debug: false,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+                for(var i = 0;i < imgs.length;i++){
+                    imgsSrc[i] = imgs[i].src;
+                    imgs[i].onclick=function () {
+                        wx.previewImage({
+                            current: this.src,
+                            urls: imgsSrc
+                        });
+                    }
+                }
+            },function () {
+            });
         },
         changeTab(value){
             this.isActive=value;
