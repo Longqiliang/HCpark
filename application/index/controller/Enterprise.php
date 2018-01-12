@@ -71,7 +71,7 @@ class Enterprise extends Base
             $userinfo['top_company'] =$top_company;
         } elseif ($data['type'] == 2) {
 
-            $result = array_udiff($top, [$data['department']]);
+            $result = array_udiff($top, [$data['department']],"myfunction");
 
             $userinfo['top_company'] = json_encode($result);
 

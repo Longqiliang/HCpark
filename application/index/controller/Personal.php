@@ -1460,7 +1460,7 @@ class Personal extends Base
                 if(count($top_company)==1){
                     $map['Top_company']='['.$department.']';
                 }else{
-                    $result=array_udiff($top_company,[$userinfo['department']]);
+                    $result=array_udiff($top_company,[$userinfo['department']],"myfunction");
                     array_unshift($result,$department);
                     $map['top_company']= json_encode(array_unique($result));
                 }

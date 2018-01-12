@@ -14,6 +14,7 @@ function think_ucenter_md5($str, $key = 'ThinkUCenter'){
     return '' === $str ? '' : md5(sha1($str) . $key);
 }
 
+
 /**
  * 系统加密方法
  * @param string $data 要加密的字符串
@@ -396,4 +397,22 @@ function reduce_pic($file, $path)
     imagepng($dst_im, $path); //输出压缩后的图片
     imagedestroy($dst_im);
     imagedestroy($src_im);
+}
+
+
+/**
+ * array_udiff 返回交集
+ * @param array $a 数组ā
+ * @param array $b  数组b
+ * @param int $expire  过期时间 (单位:秒)
+ * @return string
+ */
+
+function myfunction($a,$b)
+{
+    if ($a===$b)
+    {
+        return 0;
+    }
+    return ($a>$b)?1:-1;
 }
