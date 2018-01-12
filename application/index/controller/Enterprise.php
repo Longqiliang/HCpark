@@ -5,7 +5,9 @@
  * Date: 2017/8/14
  * Time: 14:09
  */
+
 namespace app\index\controller;
+
 use app\common\model\ParkFloor;
 use app\index\model\ParkCompany;
 use app\index\model\ParkProduct;
@@ -14,97 +16,159 @@ use app\index\model\ParkRoom;
 use app\common\model\ParkRent;
 use app\common\model\PeopleRent;
 use app\common\model\Park;
+use app\index\model\WechatUser;
+use MongoDB\Driver\WriteError;
+
 //园区企业
-class Enterprise extends Base{
+class Enterprise extends Base
+{
+
 
     //企业列表
-    public function index() {
+    public function index()
+    {
 
-        $park_id=session('park_id');
-        $service =new Service();
+        $park_id = session('park_id');
+        $user_id = session('userId');
+        $user = new WechatUser();
+        $service = new Service();
         $parkcompany = new ParkCompany();
-        $list = $parkcompany->where(['park_id'=>$park_id,'company_id'=>['notin',[78,91]]])->select();
-        $data =$this->rentlist();
-        $this->assign('room',json_encode($data));
-        $this->assign('list',json_encode($list));
+        $userinfo = $user->where('userid', $user_id)->find();
+        $userinfo['top_company'] = json_decode($userinfo['top_company']);
+       $top = array_reverse($userinfo['top_company']);
+        $list = $parkcompany->where(['park_id' => $park_id, 'company_id' => ['notin', [78, 91]]])->select();
+        $data = $this->rentlist();
+        $this->assign('room', json_encode($data));
+        $this->assign('list', json_encode($list));
+        $this->assign('top_company', json_encode($top));
         return $this->fetch();
     }
 
+    public function TopCompany()
+    {
+        $user = new WechatUser();
+        $userinfo = $user->select();
+        echo json_encode($userinfo);
+        foreach ($userinfo as $value) {
+            $top_company = json_encode([$value['department']]);
+            $user->where('userid', $value['userid'])->update(['top_company' => $top_company]);
+        }
+
+    }
+
+    public function editTopCompany()
+    {
+        $data = input('');
+        $userid = session('userId');
+        $user = new WechatUser();
+        $userinfo = $user->where('userid', $userid)->find();
+        $userinfo['top_company'] = json_decode($userinfo['top_company']);
+        //新增置顶企业
+        if ($data['type'] == 1) {
+            array_push($userinfo['top_company'], $data['department']);
+            $userinfo['top_company'] = json_encode($userinfo['top_company']);
+
+        } elseif ($data['type'] == 2) {
+
+            $result = array_udiff($userinfo['top_company'], [$data['department']]);
+
+            $userinfo['top_company'] = json_encode($result);
+
+        } else {
+            return $this->error('参数缺失');
+        }
+        $re = $userinfo->save();
+
+        if ($re) {
+
+            return $this->success('成功');
+        } else {
+
+            return $this->error('失败');
+        }
+
+
+    }
+
+
     //引导页
-    public function info() {
+    public function info()
+    {
 
         $id = input('id');
-        $CompanyProduct= new ParkProduct();
-        $map=[
-         'company_id'=>$id,
-         'type'=>'1',
-         'status'=>0
+        $CompanyProduct = new ParkProduct();
+        $map = [
+            'company_id' => $id,
+            'type' => '1',
+            'status' => 0
         ];
         //企业产品
-        $product =  $CompanyProduct->where($map)->select();
+        $product = $CompanyProduct->where($map)->select();
         //企业服务
-         $map['type']=2;
-         $service =  $CompanyProduct->where($map)->select();
-         $this->assign('product_num',count($product));
-         $this->assign('service_num',count($service));
-         $this->assign('id',$id);
-         return $this->fetch();
+        $map['type'] = 2;
+        $service = $CompanyProduct->where($map)->select();
+        $this->assign('product_num', count($product));
+        $this->assign('service_num', count($service));
+        $this->assign('id', $id);
+        return $this->fetch();
     }
 
     //企业详情
-    public function detail(){
+    public function detail()
+    {
         $id = input('id');
-        $parkcompany= new ParkCompany();
-        $CompanyProduct= new ParkProduct();
-        $map=[
-            'company_id'=>$id,
-            'type'=>1,
-            'status'=>0
+        $parkcompany = new ParkCompany();
+        $CompanyProduct = new ParkProduct();
+        $map = [
+            'company_id' => $id,
+            'type' => 1,
+            'status' => 0
 
         ];
         //企业产品
-        $product =  $CompanyProduct->where($map)->select();
+        $product = $CompanyProduct->where($map)->select();
         //企业服务
-        $map['type']=2;
-        $service =  $CompanyProduct->where($map)->select();
-         foreach ($service as $v){
-             $v['content']=preg_replace("/<(.*?)>/","",$v['content']);
-         }
-        foreach ($product as $v){
-            $v['content']=preg_replace("/<(.*?)>/","",$v['content']);
+        $map['type'] = 2;
+        $service = $CompanyProduct->where($map)->select();
+        foreach ($service as $v) {
+            $v['content'] = preg_replace("/<(.*?)>/", "", $v['content']);
         }
-        $info = $parkcompany->where('id',$id)->find();
+        foreach ($product as $v) {
+            $v['content'] = preg_replace("/<(.*?)>/", "", $v['content']);
+        }
+        $info = $parkcompany->where('id', $id)->find();
 
-       $result=[
+        $result = [
 
-           'present'=>$info['present'],
-           'about_us'=>$info['about_us'],
-           'name'=>$info['name'],
-           'mobile'=>$info['mobile'],
-           'img'=>$info['img'],
-           'service_num'=>count($service),
-           'product_num'=>count($product),
-           'service'=>$service,
-           'product'=>$product
+            'present' => $info['present'],
+            'about_us' => $info['about_us'],
+            'name' => $info['name'],
+            'mobile' => $info['mobile'],
+            'img' => $info['img'],
+            'service_num' => count($service),
+            'product_num' => count($product),
+            'service' => $service,
+            'product' => $product
 
 
-       ];
+        ];
 
-        $this->assign('info',json_encode($result));
+        $this->assign('info', json_encode($result));
         return $this->fetch();
 
     }
 
-  //企业服务或者企业产品
-     public  function  product(){
-        $id=input('id');
-        $product=new ParkProduct();
-        $info=  $product->where('id',$id)->find();
-        $data['name']=$info['name'];
-       $data['content']=$info['content'];
-        $this->assign('info',$data);
+    //企业服务或者企业产品
+    public function product()
+    {
+        $id = input('id');
+        $product = new ParkProduct();
+        $info = $product->where('id', $id)->find();
+        $data['name'] = $info['name'];
+        $data['content'] = $info['content'];
+        $this->assign('info', $data);
         return $this->fetch();
-     }
+    }
 
 
     /**
@@ -113,11 +177,11 @@ class Enterprise extends Base{
     public function rentlist()
     {
         $park_id = session('park_id');
-        if($park_id==3){
+        if ($park_id == 3) {
             $setArr = [
                 '3' => ['A', 'B'],
             ];
-        }else{
+        } else {
             $setArr = [
                 '80' => ['A', 'B', 'C', 'D'],
             ];
@@ -144,8 +208,8 @@ class Enterprise extends Base{
                 }
                 //每层楼房间数目
                 foreach ($floor as $k => $v) {
-                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number,'manage' => 1])->order("room asc")->select();
-                    if (count($roomList)){
+                    $roomList = $parkRoom->where(['floor' => $v, 'build_block' => $element, 'del' => 0, 'park_id' => $number, 'manage' => 1])->order("room asc")->select();
+                    if (count($roomList)) {
                         //判断房间是否出租
                         foreach ($roomList as $k1 => $v1) {
                             //分园区，希垦没有已约的状态
@@ -169,8 +233,8 @@ class Enterprise extends Base{
                             $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
                             $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
                         }
-                    }else{
-                        $roomArray[$k] = [] ;
+                    } else {
+                        $roomArray[$k] = [];
                     }
 
                 }

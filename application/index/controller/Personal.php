@@ -420,9 +420,7 @@ class Personal extends Base
                     }
                 }
             }
-
             $cpmpany = $park_company->where('company_id', $userlist[0]['department'])->find();
-
             $this->assign('company_code', $cpmpany['company_code']);
             $this->assign('userlist', json_encode($userlist));
 
@@ -1451,6 +1449,33 @@ class Personal extends Base
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $wechat = new TPWechat(config('party'));
         $user = new WechatUser();
+        //园区企业置顶操作
+        $userinfo = $user->where(['userid' => $userId])->find();
+        //不换园区（只改变默认的那个部门）
+        if($park_id==$userinfo['park_id']){
+            $top_company=json_decode( $userinfo['top_company']);
+            //原来的默认部门还在数组中
+            if(in_array($userinfo['department'],$top_company)){
+                //当前就他一个默认部门的情况
+                if(count($top_company)==1){
+                    $map['Top_company']='['.$department.']';
+                }else{
+                    $result=array_udiff($top_company,[$userinfo['department']]);
+                    array_unshift($result,$department);
+                    $map['top_company']= json_encode(array_unique($result));
+                }
+
+            }else{
+                array_unshift($top_company,$department);
+                $map['top_company']=json_encode(array_unique($top_company));
+
+            }
+
+        }
+        //换园区
+        else{
+            $map['top_company']=json_encode([$department]);
+        }
         $map['manage'] = 0;
         $map['water_status'] = 0;
         $map['fee_status']=0;
