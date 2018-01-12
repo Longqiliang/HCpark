@@ -62,15 +62,16 @@ class Enterprise extends Base
         $userid = session('userId');
         $user = new WechatUser();
         $userinfo = $user->where('userid', $userid)->find();
-        $userinfo['top_company'] = json_decode($userinfo['top_company']);
+        $top = json_decode($userinfo['top_company']);
         //新增置顶企业
         if ($data['type'] == 1) {
-            array_push($userinfo['top_company'], $data['department']);
-            $userinfo['top_company'] = json_encode($userinfo['top_company']);
+            array_push($top, $data['department']);
 
+            $top_company = json_encode($top);
+            $userinfo['top_company'] =$top_company;
         } elseif ($data['type'] == 2) {
 
-            $result = array_udiff($userinfo['top_company'], [$data['department']]);
+            $result = array_udiff($top, [$data['department']]);
 
             $userinfo['top_company'] = json_encode($result);
 
@@ -84,7 +85,7 @@ class Enterprise extends Base
             return $this->success('成功');
         } else {
 
-            return $this->error('失败');
+            return '11'.$user->getError();
         }
 
 
