@@ -6,6 +6,7 @@
 <title>园区企业</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
+
     .header{  background-color: #fff;  position: fixed;  top:0;  left: 0;  z-index: 100;  width:100vw;  }
     .list{padding-top: 14.67vw;}
     .houses-list-box{
@@ -16,7 +17,7 @@
         box-sizing: border-box;
         width:100%;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;position:fixed;
         top:0;
-        left:0;z-index:999}
+        left:0;z-index:300}
     .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center}
     .search>.unBtn{display:none}
     .search>.searchBox>.searchInput{display:none}
@@ -29,29 +30,122 @@
     .search.isClick>.unBtn{display:block;padding:0;box-sizing:border-box;width:3.8rem;height:2.8rem;line-height:2.8rem;border-radius:5px;border:1px solid #5d9cec;color:#5d9cec;text-align:center;font-size:1.4rem}
     .searchList{min-height:100vh;width:100%;position:absolute;top:0;left:0;z-index: 120}
     .searchList.company-list{padding:0}
-    .searchList.company-list>li{margin-bottom:0;border-bottom:1px solid #f1f1f1}
+    .searchList.company-list>li{margin-bottom:0;}
+    .searchList.company-list .li-content {border-bottom:1px solid #f1f1f1}
     .searchList.bgWhite{background-color:rgba(255,255,255,1)}
     .searchList>li:first-child{margin-top:4.8rem}
-    .company-list{box-sizing:border-box;width:100%;position:absolute;top:0;left:0;padding:5.2rem 3.7vw .4rem 3.7vw}
-    .company-list>li{margin-bottom:.8rem;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;align-items:center;background-color:#fff}
-    .company-list>li.company-list-bg{margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:absolute;top:0;left:0;z-index: 121}
+    .list-position{
+        position:absolute;top:0;left:0;padding:5.2rem 2.133vw .4rem 2.133vw;
+        width:100%;
+        box-sizing:border-box;
+    }
+    .company-list{box-sizing:border-box;width:100%;}
+    .company-list .li-content{box-sizing:border-box;width:100%;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;background-color:#fff}
+    .company-list .li-content.company-list-bg{margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:absolute;top:0;left:0;z-index: 121}
     .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
     .company-list .company-logo{margin-right:1.4rem}
+    .company-info{
+        position: relative;
+    }
     .company-info>li{width:65vw;line-height:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .company-info>li:first-child{font-size:1.6rem;font-weight:700;color:#333}
-    .company-info>li:last-child{font-size:1.2rem;color:#999}
+    .company-info>li.company-info-mobile{font-size:1.2rem;color:#999}
     .hidden{display:none}
     .overflow{height:100vh;overflow:hidden}
 
 
     .header-icon{
         position: fixed;
-        top:7rem;
-        right:0;
-        z-index: 1000;
+        top:4rem;
+        left:0;
+        z-index: 400;
+        height:8vw;
+        transform: rotate(180deg);
+        transform-origin:50% 50%;
+        -ms-transform: rotate(180deg); 		/* IE 9 */
+        -ms-transform-origin:50% 50%; 		/* IE 9 */
+        -webkit-transform: rotate(180deg);	/* Safari 和 Chrome */
+        -webkit-transform-origin:50% 50%;	/* Safari 和 Chrome */
+        -moz-transform: rotate(180deg);		/* Firefox */
+        -moz-transform-origin:50% 50%;		/* Firefox */
+        -o-transform: rotate(180deg);		/* Opera */
+        -o-transform-origin:50% 50%;		/* Opera */
     }
     .header-icon.index_down{
         z-index: 100;
+
+    }
+    /*#app{*/
+        /*position: fixed;*/
+        /*top:0;*/
+        /*left:0;*/
+        /*width:100%;*/
+        /*height:100vh;*/
+        /*overflow: scroll;*/
+        /*background-color: #f0eff5;*/
+    /*}*/
+    #app .my-icon-flag{
+        position: absolute;
+        top:-0.8rem;
+        right:-2.6666667vw;
+        width:30px;
+        height:18px;
+        /*line-height: 18px;*/
+        vertical-align: baseline;
+        text-align: center;
+        color: #C9C8CC;
+        background-color: #F0EFF5;
+        font-size: 12px;
+        z-index: 100;
+        overflow:visible;
+    }
+    #app .my-icon-flag>span{
+        position: relative;
+        z-index: 10;
+        bottom:-3px;
+    }
+    #app .my-icon-flag:after,.my-icon-flag:before{
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 0;
+        height: 0;
+    }
+    #app .my-icon-flag:after{
+        border-top: 8px solid  #F0EFF5;
+        border-right: 30px solid transparent;
+    }
+    #app .my-icon-flag:before{
+        border-top: 8px solid  #F0EFF5;
+        border-left: 30px solid transparent;
+    }
+
+    .mint-cell-wrapper{
+        justify-content: flex-start;
+        padding: 0;
+        line-height: normal;
+        min-height: auto;
+    }
+    .mint-cell-value{
+        width: 100%;
+
+    }
+    .mint-cell{
+        height:100%;
+        background-color: inherit;
+        margin-bottom: .8rem;
+    }
+    .searchList .mint-cell{
+        margin-bottom: 0;
+    }
+    .mint-cell-swipe-button{
+        line-height: normal;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
     }
 </style>
 
@@ -60,45 +154,95 @@
 {block name="body"}
 <div id="app">
     <i class="header-icon" @click="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list',inputStatus?'index_down':'' ]"></i>
-    <div  v-show="!isHouseList">
+    <div  v-if="!isHouseList">
         <div class="search" :class="{isClick:inputStatus}" >
             <div class="searchBox" @click="isClick">
                 <div class="searchText"><span class="searchText_c">请在此输入企业名称</span></div>
-                <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" placeholder="请在此输入企业名称" v-focus="inputStatus">
+                <input type="text" v-model="inputValue" class="searchInput" placeholder="请在此输入企业名称" v-focus="isFocus">
             </div>
             <div class="unBtn" @click="isCancel">取消</div>
         </div>
         <!--公司列表-->
-        <ul class="company-list" :class="{overflow:inputStatus}">
-            <li v-for="item in companyList" @click="jumpTo(item.id)">
-                <div class="company-logo">
-                    <img :src="item.img" alt="logo" v-if="item.img">
-                    <img src="/index/images/index/icon-no.png" alt="logo" v-else>
-                </div>
-                <ul class="company-info">
-                    <li>{{item.name}}</li>
-                    <li v-if="item.mobile">联系电话：{{item.mobile}}</li>
-                    <li v-else>联系电话：暂无</li>
-                </ul>
-            </li>
-        </ul>
+        <div  :class="{overflow:inputStatus}" class="list-position">
+            <ul class="company-list">
+                <li v-for="item in topList">
+                    <mt-cell-swipe
+                            :right="[{content: '取消置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(false,item.id)}]">
+                        <div class="li-content"  @click="jumpTo(item.id)">
+                            <div class="company-logo">
+                                <img :src="item.img" alt="logo" v-if="item.img">
+                                <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+                            </div>
+                            <ul class="company-info">
+                                <li>{{item.name}}</li>
+                                <li class="company-info-mobile" v-if="item.mobile">联系电话：{{item.mobile}}</li>
+                                <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                                <li class="my-icon-flag my-icon-hot">置顶</li>
+                            </ul>
+                        </div>
+                    </mt-cell-swipe>
+                </li>
+            </ul>
+            <ul class="company-list">
+                <li v-for="item in noTopList">
+                    <mt-cell-swipe
+                            :right="[{content: '置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(true,item.id)}]">
+                        <div class="li-content"  @click="jumpTo(item.id)">
+                            <div class="company-logo">
+                                <img :src="item.img" alt="logo" v-if="item.img">
+                                <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+                            </div>
+                            <ul class="company-info">
+                                <li>{{item.name}}</li>
+                                <li v-if="item.mobile" class="company-info-mobile">联系电话：{{item.mobile}}</li>
+                                <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                            </ul>
+                        </div>
+                    </mt-cell-swipe>
+                </li>
+            </ul>
+        </div>
         <!--搜索列表-->
-        <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
-            <li class="company-list-bg" v-if="searchList.length===0" @click="isCancel"></li>
-            <li v-for="item in searchList" @click="jumpTo(item.id)">
-                <div class="company-logo">
-                    <img :src="item.img" alt="logo" v-if="item.img">
-                    <img src="/index/images/index/icon-no.png" alt="logo" v-else>
-                </div>
-                <ul class="company-info">
-                    <li>{{item.name}}</li>
-                    <li v-if="item.mobile!=null">联系电话：{{item.mobile}}</li>
-                    <li v-else>联系电话：暂无</li>
-                </ul>
+        <ul class="searchList company-list list-position" :class="{bgWhite:inputValue}" v-if="inputStatus">
+            <li class="" v-if="inputValue===''" @click="isCancel">
+                <div class="li-content company-list-bg"></div>
+            </li>
+            <li v-for="item in searchTopList">
+                <mt-cell-swipe
+                        :right="[{content: '取消置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(false,item.id)}]">
+                    <div class="li-content"  @click="jumpTo(item.id)">
+                        <div class="company-logo">
+                            <img :src="item.img" alt="logo" v-if="item.img">
+                            <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+                        </div>
+                        <ul class="company-info">
+                            <li>{{item.name}}</li>
+                            <li class="company-info-mobile" v-if="item.mobile">联系电话：{{item.mobile}}</li>
+                            <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                            <li class="my-icon-flag my-icon-hot">置顶</li>
+                        </ul>
+                    </div>
+                </mt-cell-swipe>
+            </li>
+            <li v-for="item in searchNoTopList">
+                <mt-cell-swipe
+                        :right="[{content: '置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(true,item.id)}]">
+                    <div class="li-content"  @click="jumpTo(item.id)">
+                        <div class="company-logo">
+                            <img :src="item.img" alt="logo" v-if="item.img">
+                            <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+                        </div>
+                        <ul class="company-info">
+                            <li>{{item.name}}</li>
+                            <li v-if="item.mobile" class="company-info-mobile">联系电话：{{item.mobile}}</li>
+                            <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                        </ul>
+                    </div>
+                </mt-cell-swipe>
             </li>
         </ul>
     </div>
-    <div class=""  v-show="isHouseList">
+    <div class=""  v-if="isHouseList">
         <div class="header">
             <h2 @click="checkPark" class="header-tit">
                 <span v-html="showPark"></span> <i class="allow-down"></i>
@@ -161,7 +305,6 @@
         }
     });
     var list = {$room};
-    //console.log(list);
     var values = [];
     for(var i in list){
         values.push(list[i]);
@@ -169,12 +312,14 @@
     var app= new Vue({
         el:'#app',
         data:{
+            isSubmit:false,
             roomList:{$room},
             inputStatus:false,
+            isFocus:false,
             inputValue:'',
             companyList:{$list},
             searchList:[],
-
+            topCompany:{$top_company},
             //楼盘表
             isHouseList:false,
             list:list,
@@ -222,12 +367,80 @@
             });
         },
         computed:{
+            searchTopList(){
+                //                搜索
+                if(this.inputValue!==''){
+                    var list = this.topList,
+                            reg=new RegExp(this.inputValue),
+                            regList=[];
+                    for(let i=0;i<list.length;i++){
+                        if(reg.test(list[i].name)){
+                            regList.push(list[i])
+                        }
+                    };
+                    return regList;
+                }else{
+                    return [] ;
+                }
+            },
+            searchNoTopList(){
+                //                搜索
+                if(this.inputValue!==''){
+                    var list = this.noTopList,
+                            reg=new RegExp(this.inputValue),
+                            regList=[];
+                    for(let i=0;i<list.length;i++){
+                        if(reg.test(list[i].name)){
+                            regList.push(list[i])
+                        }
+                    };
+                    return regList;
+                }else{
+                    return [] ;
+                }
+            },
+            topList:function () {
+                var _this = this;
+                if(_this.topCompany.length===0){
+                    return []
+                }
+                var list = [];
+                for(var i=0;i<_this.topCompany.length;i++){
+                    for(var o=0;o<_this.companyList.length;o++){
+                        if(_this.topCompany[i] == _this.companyList[o].id){
+//                            _this.companyList[o].isTop = true
+                            list.push(_this.companyList[o]);
+                            break
+                        }
+                    }
+                }
+                return list
+            },
+            noTopList:function () {
+                var _this = this;
+                if(_this.topCompany.length===0){
+                    return _this.companyList
+                }
+                var list = [];
+                for(var i=0;i<_this.companyList.length;i++){
+                    var isTop =false;
+                    for(var o=0;o<_this.topCompany.length;o++){
+                        if(_this.topCompany[o] == _this.companyList[i].id){
+                            isTop = true;
+                            break
+                        }
+                    }
+                    if(!isTop){
+                        list.push(_this.companyList[i]);
+                    }
+                }
+                return list;
+            },
             showhouseList:function () {
                 var _this = this;
                 for(var obj in _this.list){
                     for(var arr in _this.list[obj]){
                         if(_this.parkName.index == obj && _this.parkName.txt == arr){
-                            // console.log(_this.list[obj][arr].houselist);
                             return _this.list[obj][arr].houselist;
                         }
                     }
@@ -238,7 +451,6 @@
                 for(var obj in _this.list){
                     for(var arr in _this.list[obj]){
                         if(_this.parkName.index == obj && _this.parkName.txt == arr){
-                            //console.log(_this.list[obj][arr].rentlist);
                             return _this.list[obj][arr].rentlist;
                         }
                     }
@@ -254,6 +466,57 @@
             }
         },
         methods:{
+            toggleTop(isTop,id){
+                var _this = this;
+                this.isFocus = false;
+                if(_this.isSubmit){
+                    _this.$toast({
+                        message:"提交中，请勿重复操作~",
+                        duration:1000
+                    });
+                    return;
+                }
+                var data={
+                    department:id,
+                    type:isTop?1:2
+                };
+                _this.$indicator.open({
+                    text: '提交中',
+                    spinnerType: 'triple-bounce'
+                });
+                _this.$http.post('index/enterprise/editTopCompany',data).then(function (res) {
+                    _this.isSubmit = false;
+                    _this.$indicator.close();
+                    if(res.data.code===1){
+                        _this.$toast({
+                            message:"提交成功~",
+                            duration:1000
+                        });
+                        if(!isTop){
+                            for(var i=0;i<_this.topCompany.length;i++){
+                                if(id == _this.topCompany[i]){
+                                    _this.topCompany.splice(i,1);
+                                    break
+                                }
+                            }
+                        }else{
+                            _this.topCompany.unshift(id);
+                        }
+                    }else{
+                        _this.$toast({
+                            message:"提交失败，请重试！",
+                            duration:1000
+                        });
+                    }
+                },function (){
+                    _this.isSubmit = false;
+                    _this.$indicator.close();
+                    _this.$toast({
+                        message:"网络错误，请重试！",
+                        duration:1000
+                    });
+                });
+            },
             classBar:function (type) {
                 if(type == '0') return '';
                 if(type == '1') return 'selectable';
@@ -276,8 +539,6 @@
             },
             onParkChange:function (picker,values) {
                 var _this = this;
-//                console.log(values);
-//                console.log(picker)
                 _this.parkPicker =  picker;
                 if(values[0]){
                     picker.setSlotValues(1,Object.keys(_this.list[values[0]]));
@@ -307,25 +568,13 @@
             },
             isClick:function () {
                 this.inputStatus=true;
+                this.isFocus = true;
             },
             isCancel:function () {
                 this.inputStatus=false;
-                this.inputValue='',
-                        this.searchList=[]
+                this.isFocus = false;
+                this.inputValue='';
             },
-            toSearch:function () {
-                let reg=new RegExp(this.inputValue);
-                this.searchList=[];
-                if(!this.inputValue){
-                    this.searchList=[];
-                }else{
-                    for(let i=0;i<this.companyList.length;i++){
-                        if(reg.test(this.companyList[i].name)){
-                            this.searchList.push(this.companyList[i])
-                        }
-                    }
-                }
-            }
         }
     });
 
