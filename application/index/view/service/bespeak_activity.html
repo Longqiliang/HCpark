@@ -1,0 +1,221 @@
+{extend name="public/common"}
+
+{block name="style"}
+<title>活动预约</title>
+<!--<link rel="stylesheet" href="/static/swiper/swiper.min.css">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+<style>
+    #app{
+        color: #333;
+    }
+    .swiper-container.my-banner {
+        width: 100%;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    .my-banner .swiper-slide {
+        background-position: center;
+        background-size: cover;
+        width: 80vw;
+        height: 53.3vw;
+    }
+    .my-text{
+        font-size: 1.6rem;
+        padding: 1.2rem 1.2rem 0;
+    }
+    .my-carousel{
+        height:3rem;
+        line-height: 3rem;
+        font-size: 1.4rem;
+        padding-right: 1.2rem;
+        padding-left: 3rem;
+        border-bottom: 1px solid #f1f1f1;
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .my-carousel:before{
+        content: '';
+        display: block;
+        position: absolute;
+        top:0;
+        left:0;
+        width:3rem;
+        height:3rem;
+        background: url("/index/images/service/activity/bespeakTea/icon-horn.png") no-repeat center center;
+        background-size: 1.7rem 1.7rem;
+    }
+    .my-wrapper{
+        box-sizing: border-box;
+        /*flex: 1;*/
+        height:100%;
+        width:100%;
+        overflow: hidden;
+        position: relative;
+    }
+    .my-wrapper>div{
+        display: inline-block;
+        /*overflow: hidden;*/
+        position: absolute;
+        left:0;
+        top:0;
+    }
+    .table-row-box {
+        margin-bottom: 1rem;
+        padding: 0 1.2rem;
+        font-size: 1.6rem;
+    }
+    .table-row {
+        display: flex;
+    }
+
+    .table-row {
+        box-sizing: border-box;
+        padding: 1rem 0;
+    }
+    .table-row a{
+        color: #69b9f9;
+    }
+
+    .table-row:not(:last-child) {
+        border-bottom: 1px solid #f1f1f1
+    }
+    .wrapper{font-size: 0.85rem; color: #333; white-space: nowrap; overflow: hidden;width: 300px;}
+    .inner{ width:1000px;overflow:hidden;}
+    .inner p{ display:inline-block;}
+</style>
+{/block}
+
+{block name="body"}
+
+<div id="app">
+    <div class="swiper-container my-banner">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="(img,index) in imgs" :style="'background-image:url('+img+')'" @click="loadImg(img,imgs)"></div>
+        </div>
+    </div>
+    <div class="my-carousel">
+        <div class="my-wrapper">
+            <div class="my-slide" id="slider" >&nbsp;&nbsp;农历年前试营业期间喝茶和场地预约均为免费。&nbsp;&nbsp;</div>
+        </div>
+    </div>
+    <div class="my-text">
+        风尘俱静，禅味悠长。有宁静致远的格局，有身心寂静的归宿。一年四季，不同味道，希垦文化活动中心陪伴您一起走，欢迎大家来陈水堂木作艺术馆品茗赏花赏画！
+    </div>
+    <!--<div id="scrollobj" onmouseover="javascript:_stop();" onmouseout="javascript:_start();">这里是要滚动的内容 </div>-->
+
+    <div class="table-row-box">
+        <div class="table-row">
+            <span class="table-row-header">营业时间：</span>
+            <span>9:00AM - 5:00PM</span>
+        </div>
+        <div class="table-row">
+            <span class="table-row-header">联系电话：</span>
+            <div>
+                <a href="tel:0571-88106006">0571-88106006(店内)</a><br>
+                <a href="tel:18158182062">18158182062(王先生)</a>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<!--<script src="/static/swiper/swiper.min.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+    <script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+//    var slider = document.getElementById('slider');
+    var slider = document.getElementById('slider'),
+            sliderW = slider.offsetWidth,
+            wrapperW = document.getElementsByClassName('my-wrapper')[0].offsetWidth;
+    slider.style.left='0px';
+//    if(wrapperW<sliderW){
+        slider.innerHTML+=(slider.innerHTML);
+        var myInterval = setInterval(function () {
+            var slider = document.getElementById('slider');
+            var left  =  slider.style.left;
+            console.log(-sliderW,parseInt(left))
+            if(-sliderW>parseInt(left)){
+                slider.style.left = '-1px';
+            }else{
+                slider.style.left = parseInt(left)-1+'px';
+            }
+        },30);
+//    }
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            info:{$info},
+            imgs:[
+                '/index/images/service/activity/bespeakTea/teaBanner1.jpg',
+                '/index/images/service/activity/bespeakTea/teaBanner2.jpg',
+                '/index/images/service/activity/bespeakTea/teaBanner3.jpg',
+                '/index/images/service/activity/bespeakTea/teaBanner4.jpg',
+                '/index/images/service/activity/bespeakTea/teaBanner5.jpg',
+            ]
+        },
+        created(){
+
+            var _this = this,
+                    test =window.location.href,
+                    data ={
+                        url:test
+                    };
+            _this.$http.post('/index/Partymanage/wxjssdk',data).then(function (res) {
+                var data = JSON.parse(res.data);
+                wx.config({
+                    debug: false,
+                    appId: data.appid,
+                    timestamp:data.timestamp ,
+                    nonceStr: data.noncestr,
+                    signature: data.signature,
+                    jsApiList: ['previewImage']
+                });
+            },function () {
+
+            })
+
+        },
+
+        mounted(){
+            if(this.info.type == 1){
+                document.title = '喝茶预约'
+            }else if(this.info.type == 2){
+                document.title = '场地预约'
+            }
+            var banner = new Swiper('.my-banner', {
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                coverflow: {
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows : true
+                }
+            });
+        },
+        methods: {
+            loadImg(src,imglist) {
+                var urls=[];
+                var current=window.location.protocol+'//'+window.location.host+src;
+                for(var i in imglist){
+                    urls[i]=window.location.protocol+'//'+window.location.host+imglist[i];
+                }
+                wx.previewImage({
+                    current: current,
+                    urls: urls
+                });
+            },
+        }
+    });
+
+
+
+</script>
+
+{/block}
