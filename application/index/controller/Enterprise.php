@@ -95,7 +95,7 @@ class Enterprise extends Base
         $department = input('department');
         $parkRoom = new ParkRoom();
         $data =$this->rentlist();
-        $info = $parkRoom->where(['manage'=>1])->order('id desc')->find();
+        $info = $parkRoom->where(['manage'=>1,'company_id'=>$department])->order('id desc')->find();
         $map=['department_id'=>$department,'park_id'=>$info['park_id'],'build_block'=>$info['build_block']];
         $this->assign('room',json_encode($data));
         $this->assign('info',json_encode($map));
