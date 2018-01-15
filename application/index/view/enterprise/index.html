@@ -55,21 +55,25 @@
 
 
     .header-icon{
+        transition: all 0.5s;
         position: fixed;
         top:4rem;
-        left:0;
+        right:0;
         z-index: 400;
         height:8vw;
-        transform: rotate(180deg);
-        transform-origin:50% 50%;
-        -ms-transform: rotate(180deg); 		/* IE 9 */
-        -ms-transform-origin:50% 50%; 		/* IE 9 */
-        -webkit-transform: rotate(180deg);	/* Safari 和 Chrome */
-        -webkit-transform-origin:50% 50%;	/* Safari 和 Chrome */
-        -moz-transform: rotate(180deg);		/* Firefox */
-        -moz-transform-origin:50% 50%;		/* Firefox */
-        -o-transform: rotate(180deg);		/* Opera */
-        -o-transform-origin:50% 50%;		/* Opera */
+        /*transform: rotate(180deg);*/
+        /*transform-origin:50% 50%;*/
+        /*-ms-transform: rotate(180deg); 		!* IE 9 *!*/
+        /*-ms-transform-origin:50% 50%; 		!* IE 9 *!*/
+        /*-webkit-transform: rotate(180deg);	!* Safari 和 Chrome *!*/
+        /*-webkit-transform-origin:50% 50%;	!* Safari 和 Chrome *!*/
+        /*-moz-transform: rotate(180deg);		!* Firefox *!*/
+        /*-moz-transform-origin:50% 50%;		!* Firefox *!*/
+        /*-o-transform: rotate(180deg);		!* Opera *!*/
+        /*-o-transform-origin:50% 50%;		!* Opera *!*/
+    }
+    .header-icon.showHeaderIcon{
+        right:-11.2vw;
     }
     .header-icon.index_down{
         z-index: 100;
@@ -147,13 +151,18 @@
         align-items: center;
         padding: 0 20px;
     }
+
+    .houses-list-item span{
+        position: relative;
+    }
+
 </style>
 
 {/block}
 
 {block name="body"}
 <div id="app">
-    <i class="header-icon" @click="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list',inputStatus?'index_down':'' ]"></i>
+    <i class="header-icon" @click="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list',inputStatus?'index_down':'',!isShowHeaderIcon?'showHeaderIcon':'' ]"></i>
     <div  v-if="!isHouseList">
         <div class="search" :class="{isClick:inputStatus}" >
             <div class="searchBox" @click="isClick">
@@ -295,6 +304,7 @@
 
 {block name="script"}
 <script>
+
     Vue.directive('focus', {
         // When the bound element is inserted into the DOM...
         update: function (el,value) {
@@ -320,6 +330,8 @@
             companyList:{$list},
             searchList:[],
             topCompany:{$top_company},
+            isShowHeaderIcon:true,
+            interval:'',
             //楼盘表
             isHouseList:false,
             list:list,
@@ -359,6 +371,20 @@
         },
         mounted(){
             var _this = this;
+            _this.interval = setTimeout(function () {
+                        _this.isShowHeaderIcon = false
+                    },2000);
+//            头部楼盘表切换按钮定时隐藏，滑动显示
+            window.onscroll = function(){
+                _this.isShowHeaderIcon = true;
+                if(_this.interval){
+                    clearInterval(_this.interval);
+                }
+                clearInterval(_this.interval);
+                _this.interval = setTimeout(function () {
+                    _this.isShowHeaderIcon = false
+                },2000)
+            };
             _this.$nextTick(function() {
                 setTimeout(function() {
                     _this.slots[0].defaultIndex = 0;
@@ -490,7 +516,7 @@
                     _this.$indicator.close();
                     if(res.data.code===1){
                         _this.$toast({
-                            message:"提交成功~",
+                            message:"操作成功~",
                             duration:1000
                         });
                         if(!isTop){
@@ -527,8 +553,12 @@
             parkToggle:function () {
                 var _this = this;
                 _this.isHouseList =!_this.isHouseList;
-
                 window.sessionStorage.setItem('isHouseList',JSON.stringify(_this.isHouseList));
+//                重置隐藏切换按钮的定时器
+                if(_this.interval){clearInterval(_this.interval)};
+                _this.interval = setTimeout(function () {
+                    _this.isShowHeaderIcon = false
+                },2000)
             },
             cancelPark:function () {
                 this.popupVisible = false;
