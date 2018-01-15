@@ -484,7 +484,8 @@
                     text: '提交中',
                     spinnerType: 'triple-bounce'
                 });
-                _this.$http.post('index/enterprise/editTopCompany',data).then(function (res) {
+                _this.$http.post("{:Url('Enterprise/editTopCompany')}",data).then(function (res) {
+                    console.log(res)
                     _this.isSubmit = false;
                     _this.$indicator.close();
                     if(res.data.code===1){
@@ -508,7 +509,8 @@
                             duration:1000
                         });
                     }
-                },function (){
+                },function (res){
+                    console.log(res)
                     _this.isSubmit = false;
                     _this.$indicator.close();
                     _this.$toast({
