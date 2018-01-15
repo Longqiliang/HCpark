@@ -1458,7 +1458,7 @@ class Personal extends Base
             if(in_array($userinfo['department'],$top_company)){
                 //当前就他一个默认部门的情况
                 if(count($top_company)==1){
-                    $map['Top_company']=json_encode([$department]);
+                    $map['top_company']=json_encode([$department]);
                 }else{
                     $result=array_udiff($top_company,[$userinfo['department']],"myfunction");
                     array_unshift($result,$department);
