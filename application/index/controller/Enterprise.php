@@ -90,6 +90,17 @@ class Enterprise extends Base
 
 
     }
+    //从企业页面进入楼盘表并自动定位企业房间位置
+    public  function floorList(){
+        $department = input('department');
+        $data =$this->rentlist();
+        $this->assign('room',$data);
+        $this->assign('department_id',$department);
+        $this->fetch();
+    }
+
+
+
 
 
     //引导页
