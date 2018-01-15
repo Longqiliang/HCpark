@@ -1,0 +1,328 @@
+{extend name="public/common"}
+<style>
+
+</style>
+{block name="style"}
+<title>园区企业</title>
+<link rel="stylesheet" href="/index/css/roomrent/index.css">
+<style>
+    .header {
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        width: 100vw;
+    }
+    .houses-list-item span{
+        position: relative;
+        z-index: 1;
+    }
+    .houses-list-item span.houses-mark{
+        z-index: 10;
+    }
+    .houses-mask{
+        position: fixed;
+        top:0;
+        left:0;
+        height:100%;
+        width:100%;
+        background-color: rgba(0,0,0,.4);
+        -webkit-transition: all 200ms;
+        -moz-transition: all 200ms;
+        -ms-transition: all 200ms;
+        -o-transition: all 200ms;
+        transition: all 200ms;
+        z-index: 5;
+    }
+    .houses-mask-hidden{
+        background-color: rgba(0,0,0,0);
+    }
+    .houses-list-box{
+        padding-top: 23.47vw;
+    }
+</style>
+
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="header">
+        <h2 @click="checkPark" class="header-tit">
+            <span v-html="showPark"></span> <i class="allow-down"></i>
+        </h2>
+        <div class="houses-icon-box">
+            <template v-if="parkName.index =='人工智能产业园'">
+                <span class="mar-sm"><i class="houses-icon icon-rentable"></i>空置</span>
+                <span class="mar-sm"><i class="houses-icon icon-reserve"></i>预订</span>
+                <span class="mar-sm"><i class="houses-icon icon-renewable"></i>已租</span>
+            </template>
+            <template v-else>
+                <span ><i class="houses-icon icon-rentable"></i>可租</span>
+                <span ><i class="houses-icon icon-renewable"></i>已租</span>
+                <!--<span ><i class="houses-icon icon-renewable"></i>已租</span>-->
+            </template>
+        </div>
+        <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
+            <div class="picker-toolbar">
+                <span class="mint-datetime-action mint-datetime-cancel" @click="cancelPark">取消</span>
+                <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
+            </div>
+            <mt-picker :slots="slots" @change="onParkChange" ></mt-picker>
+        </mt-popup>
+    </div>
+    <div class="houses-mask" v-show="isShowMask>=2" :class="{'houses-mask-hidden':(isShowMask == 3)}" @click="closeMask"></div>
+    <div class="houses-list-box">
+        <div class="houses-list" v-for="item of showhouseList" >
+            <div class="houses-list-tit">
+                {{item.floor}}楼
+            </div>
+            <div class="houses-list-item">
+                <template v-if="parkName.index =='人工智能产业园' && parkName.txt =='A幢' && item.floor == '2'">
+             <span  :class="classBar(item.rooms[0].empty,item.rooms[0].id)" @click="jump(item.rooms[0].room_id,item.rooms[0].empty)" class="room-lg">
+               运营中心
+            </span>
+                </template>
+                <template v-else>
+             <span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jump(rooms.room_id || rooms.id,rooms.empty)">
+                {{rooms.room}}
+            </span>
+                </template>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    var list = {$room};
+    var values = [];
+    for(var i in list){
+        values.push(list[i]);
+    }
+//    滚动
+    function elementPosition(obj) {
+        var curleft = 0, curtop = 0;
+        if (obj.offsetParent) {
+            curleft = obj.offsetLeft;
+            curtop = obj.offsetTop;
+            while (obj = obj.offsetParent) {
+                curleft += obj.offsetLeft;
+                curtop += obj.offsetTop;
+            }
+        }
+        return { x: curleft, y: curtop };
+    }
+    function ScrollToControl(el)
+    {
+        var elem = document.querySelector(el).parentNode.parentNode;
+        var scrollPos = elementPosition(elem).y;
+        scrollPos = scrollPos - document.documentElement.scrollTop;
+        var remainder = scrollPos % 50;
+        var repeatTimes = (scrollPos - remainder) / 50;
+        ScrollSmoothly(scrollPos,repeatTimes);
+        window.scrollBy(0,remainder);
+    }
+    var repeatCount = 0;
+    var cTimeout;
+    var timeoutIntervals = new Array();
+    var timeoutIntervalSpeed;
+    function ScrollSmoothly(scrollPos,repeatTimes)
+    {
+        if(repeatCount < repeatTimes)
+        {
+            window.scrollBy(0,50);
+        }
+        else
+        {
+            repeatCount = 0;
+            clearTimeout(cTimeout);
+            return;
+        }
+        repeatCount++;
+        cTimeout = setTimeout("ScrollSmoothly('"+scrollPos+"','"+repeatTimes+"')",10);
+    }
+    var app= new Vue({
+        el:'#app',
+        data:{
+            //是否显示遮罩
+            isShowMask:false,
+            //基础信息
+            roomList:{$room},
+            nowPlace:{
+                index:'希垦科技园',
+                txt:'B幢'
+            },
+            baseInfo:{$info},
+            //楼盘表
+            isHouseList:false,
+            list:list,
+            popupVisible:false,
+            parkPicker:'',
+            name:Object.keys(list),
+            parkName:{
+                index:Object.keys(list)[0],
+                txt:Object.keys(values[0])[0]
+            },
+            parkTxt:{
+                index:Object.keys(list)[0],
+                txt:Object.keys(values[0])[0]
+            },
+            slots: [
+                {
+                    defaultIndex: 1,
+                    values: Object.keys(list)
+                },{
+                    defaultIndex: 1,
+                    values:Object.keys(Object.values(list)[0])
+                }
+            ],
+        },
+        created(){
+//            切换到企业所在楼盘表
+            if(this.baseInfo.park_id==3){
+                this.parkName.index = '希垦科技园'
+            }else if(this.baseInfo.park_id==80){
+                this.parkName.index = '人工智能产业园'
+            }
+            this.parkName.txt = this.baseInfo.build_block+'幢'
+
+            var isHouseList = window.sessionStorage.getItem('isHouseList');
+            if(isHouseList!==null){
+                this.isHouseList = JSON.parse(isHouseList);
+                if(this.isHouseList){
+                   var parkName =  window.sessionStorage.getItem('parkName');
+                    if(parkName!==null){
+                        this.parkName = JSON.parse(parkName);
+//                        window.sessionStorage.clear('parkName')
+                    }
+                }
+            }
+        },
+        mounted(){
+            var _this = this;
+            var mark = document.querySelector('.houses-mark');
+            if(mark){
+                _this.isShowMask = 2;
+                ScrollToControl('.houses-mark');
+            }
+            _this.$nextTick(function() {
+                setTimeout(function() {
+                    _this.slots[0].defaultIndex = 0;
+                }, 100);
+            });
+        },
+        computed:{
+            showhouseList:function () {
+                var _this = this;
+                for(var obj in _this.list){
+                    for(var arr in _this.list[obj]){
+                        if(_this.parkName.index == obj && _this.parkName.txt == arr){
+                            return _this.list[obj][arr].houselist;
+                        }
+                    }
+                }
+            },
+            showrentList:function () {
+                var _this = this;
+                for(var obj in _this.list){
+                    for(var arr in _this.list[obj]){
+                        if(_this.parkName.index == obj && _this.parkName.txt == arr){
+                            return _this.list[obj][arr].rentlist;
+                        }
+                    }
+                }
+            },
+            showPark:function () {
+                var _this = this;
+                return _this.parkName.index + _this.parkName.txt;
+            },
+            showState:function () {
+                var _this = this;
+                _this.parkName
+            }
+        },
+        methods:{
+            scrollTo(el){
+
+            },
+            closeMask(){
+                var _this = this;
+                _this.isShowMask = 3;
+                setTimeout(function () {
+                    _this.isShowMask = 1;
+                },200)
+            },
+            classBar:function (type,id) {
+                var className = '';
+                if(id === parseInt(this.baseInfo.department_id)){
+                    className += 'houses-mark'
+                }
+                if(type == '0') className += '';
+                if(type == '1') className += ' selectable';
+                if(type == '2') className += ' reserve-able';
+                return className
+            },
+            parkToggle:function () {
+                var _this = this;
+                _this.isHouseList =!_this.isHouseList;
+
+                window.sessionStorage.setItem('isHouseList',JSON.stringify(_this.isHouseList));
+            },
+            cancelPark:function () {
+                this.popupVisible = false;
+            },
+            selectPark:function () {
+                var _this = this;
+                _this.popupVisible = false;
+                _this.parkName = _this.parkTxt;
+                _this.loading = false;
+            },
+            onParkChange:function (picker,values) {
+                var _this = this;
+                _this.parkPicker =  picker;
+                if(values[0]){
+                    picker.setSlotValues(1,Object.keys(_this.list[values[0]]));
+                }
+                _this.parkTxt ={
+                    index:values[0],
+                    txt:values[1]
+                };
+            },
+            checkPark:function () {
+                var _this =this;
+                _this.popupVisible = true;
+//                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
+            },
+            jump:function (id,empty) {
+                if(!id){ return;}
+                window.sessionStorage.setItem('isHouseList',JSON.stringify(true));
+                window.sessionStorage.setItem('parkName',JSON.stringify(this.parkName ))
+                if(!empty){
+                    window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
+                    return;
+                }
+                window.location.href = "/index/roomrent/rent?room_id="+id;
+            },
+            jumpTo(id){
+//                window.location.href="/index/enterprise/info/id/"+id;
+                window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
+            },
+            isClick:function () {
+                this.inputStatus=true;
+                this.isFocus = true;
+            },
+            isCancel:function () {
+                this.inputStatus=false;
+                this.isFocus = false;
+                this.inputValue='';
+            },
+        }
+    });
+
+
+</script>
+{/block}

@@ -98,7 +98,7 @@ class Enterprise extends Base
         $info = $parkRoom->where(['manage'=>1])->order('id desc')->find();
         $map=['department_id'=>$department,'park_id'=>$info['park_id'],'build_block'=>$info['build_block']];
         $this->assign('room',json_encode($data));
-        $this->assign('info',$map);
+        $this->assign('info',json_encode($map));
        return $this->fetch();
     }
 

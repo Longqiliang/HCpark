@@ -4,23 +4,25 @@
 <title>企业信息</title>
 <style>
     .my-header{
-        padding:2.15rem 5.73333333333vw;
+        padding:1.5rem 4vw;
         display: -webkit-flex;
         display: flex;
-        align-items: center;
+        /*align-items: center;*/
         border-bottom: 0.8rem solid  #f1f1f1;
     }
     .my-header-img{
-        width:15.733333333vw;
-        margin-right: 5.733333333vw;
+        width:16vw;
+        margin-right: 4vw;
     }
     .my-header-img>img{
-        width:59px;
-        height:59px;
+        width:16vw;
+        height:16vw;
         border-radius: 3px;
     }
     .my-header-info{
-        width:67vw;
+        box-sizing: border-box;
+        /*flex:1;*/
+        width:72vw;
         display: -webkit-flex;
         display: flex;
         flex-direction: column;
@@ -29,15 +31,17 @@
     .my-header-info>li:first-child{
         font-size: 1.6rem;
         color: #333;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        /*overflow: hidden;*/
+        /*text-overflow: ellipsis;*/
+        /*white-space: nowrap;*/
 
     }
     .my-header-info>li:last-child{
         color: #333;
         font-size: 1.2rem;
-        margin-top: 1.4rem;
+        margin-top: 1rem;
+        word-wrap: break-word;
+        word-break: break-all;
     }
     .my-header-info>li a{
         color: #333;
@@ -142,6 +146,30 @@
     .my-content>li *{
         max-width: 100%!important;
     }
+
+
+    .header-icon {
+        width: 11.2vw;
+        top:4rem;
+        right: 0;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        transition: all 0.5s;
+        position: fixed;
+        z-index: 400;
+        height:8vw;
+        background-image: url(/index/images/roomrent/icon-list.png);
+
+    }
+    .header-icon.showHeaderIcon{
+        right:-11.2vw;
+    }
+    .header-icon.index_down{
+        z-index: 100;
+
+    }
 </style>
 {/block}
 
@@ -154,12 +182,13 @@
         </div>
         <ul class="my-header-info">
             <li>{{baseData.name}}</li>
-            <li>电话：
-                <a :href="'tel:'+baseData.mobile" class="can_call" v-if="baseData.mobile">{{baseData.mobile}}</a>
+            <li>网址：
+                <a :href="baseData.site" class="can_call" v-if="baseData.site">{{baseData.site}}</a>
                 <a v-else>暂无</a>
             </li>
         </ul>
     </div>
+    <i class="header-icon" @click="toFloorList"></i>
     <ul class="my-nav">
         <li :class="{active:isActive==0}" @click="changeTab(0)">企业介绍</li>
         <li :class="{active:isActive==1}" @click="changeTab(1)" v-if="baseData.service!=''">企业服务</li>
@@ -272,6 +301,9 @@ var app = new Vue({
         },
         jumpTo(id){
             window.location.href='/index/enterprise/product/id/'+id
+        },
+        toFloorList(){
+            window.location.href = '/index/enterprise/floorList/department/'+this.baseData.department_id
         }
     }
 })
