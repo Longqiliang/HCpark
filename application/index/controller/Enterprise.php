@@ -163,7 +163,8 @@ class Enterprise extends Base
             'product_num' => count($product),
             'service' => $service,
             'product' => $product,
-            'department_id'=>$id
+            'department_id'=>$id,
+            'site'=>$info['site']
         ];
 
         $this->assign('info', json_encode($result));
