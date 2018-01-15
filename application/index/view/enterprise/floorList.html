@@ -208,6 +208,11 @@
             if(mark){
                 _this.isShowMask = 2;
                 ScrollToControl('.houses-mark');
+            }else{
+                _this.$toast({
+                    message:"未找到该公司对应楼盘位置",
+                    duration:3000
+                });
             }
             _this.$nextTick(function() {
                 setTimeout(function() {
