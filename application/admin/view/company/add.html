@@ -210,10 +210,11 @@
         var phone = $("[name='phone']").val();
         var contents =$('#summernote').summernote('code');
         var presents =$('.summernote').summernote('code');
+        var site = $("[name='site']").val();
         $.ajax({
             type:"POST",
             url:"{:Url('Company/changeinfo')}",
-            data:{id:'{$companyInfo.id}',img:image,mobile:phone,images:'{$companyInfo.img}',about_us:contents,present:presents,type:compantType},
+            data:{id:'{$companyInfo.id}',img:image,mobile:phone,site:site,images:'{$companyInfo.img}',about_us:contents,present:presents,type:compantType},
             success:function (data) {
                 if(data.code==1){
                     updateAlert(data.msg+ ' 页面即将自动跳转~','success');
