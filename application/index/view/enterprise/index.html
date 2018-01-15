@@ -35,13 +35,13 @@
     .searchList.bgWhite{background-color:rgba(255,255,255,1)}
     .searchList>li:first-child{margin-top:4.8rem}
     .list-position{
-        position:absolute;top:0;left:0;padding:5.2rem 2.133vw .4rem 2.133vw;
+        position:relative;top:0;left:0;padding:5.2rem 2.133vw .4rem 2.133vw;
         width:100%;
         box-sizing:border-box;
     }
     .company-list{box-sizing:border-box;width:100%;}
     .company-list .li-content{box-sizing:border-box;width:100%;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;background-color:#fff}
-    .company-list .li-content.company-list-bg{margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:absolute;top:0;left:0;z-index: 121}
+    .company-list-bg{margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:fixed;top:0;left:0;z-index: 121}
     .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
     .company-list .company-logo{margin-right:1.4rem}
     .company-info{
@@ -155,13 +155,43 @@
     .houses-list-item span{
         position: relative;
     }
+    .guide-mask{
+        box-sizing: border-box;
+        position: fixed;
+        top:0;
+        left:0;
+        height:100%;
+        width:100%;
+        padding-top: 10rem;
+        background-color: rgba(0,0,0,.6);
+        z-index: 99999;
+    }
+    .guide-mask>img{
+        display: block;
+        margin:0 auto;
+    }
+    .guide-mask>.icon-item{
+
+        width:96vw;
+    }
+    .guide-mask>.icon-arrow{
+        width:13.33333vw;
+        margin:2rem auto;
+    }
+    .guide-mask>.icon-text{
+        width:85.33333vw;
+    }
+    .guide-mask>.icon-readed{
+        width:22.93333vw;
+        margin-top:4rem;
+    }
 
 </style>
 
 {/block}
 
 {block name="body"}
-<div id="app">
+<div id="app" :class="{'overflow':isShowGuide}">
     <i class="header-icon" @click="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list',inputStatus?'index_down':'',!isShowHeaderIcon?'showHeaderIcon':'' ]"></i>
     <div  v-if="!isHouseList">
         <div class="search" :class="{isClick:inputStatus}" >
@@ -172,7 +202,7 @@
             <div class="unBtn" @click="isCancel">取消</div>
         </div>
         <!--公司列表-->
-        <div  :class="{overflow:inputStatus}" class="list-position">
+        <div  :class="{overflow:inputStatus}" class="list-position" v-if="inputValue===''">
             <ul class="company-list">
                 <li v-for="item in topList">
                     <mt-cell-swipe
@@ -212,10 +242,10 @@
             </ul>
         </div>
         <!--搜索列表-->
-        <ul class="searchList company-list list-position" :class="{bgWhite:inputValue}" v-if="inputStatus">
-            <li class="" v-if="inputValue===''" @click="isCancel">
-                <div class="li-content company-list-bg"></div>
-            </li>
+        <div class="company-list-bg" v-if="inputValue==='' && inputStatus" @click="isCancel">
+            <div class="li-content "></div>
+        </div>
+        <ul class="searchList company-list list-position" :class="{bgWhite:inputValue}" v-if="inputStatus && inputValue!==''">
             <li v-for="item in searchTopList">
                 <mt-cell-swipe
                         :right="[{content: '取消置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(false,item.id)}]">
@@ -299,12 +329,17 @@
             </div>
         </div>
     </div>
+    <div class="guide-mask" v-if="isShowGuide">
+        <img src="/index/images/enterprise/icon-item.png" alt="" class="icon-item">
+        <img src="/index/images/enterprise/icon-arrow.png" alt="" class="icon-arrow">
+        <img src="/index/images/enterprise/icon-text.png" alt="" class="icon-text">
+        <img src="/index/images/enterprise/icon-readed.png" alt="" class="icon-readed" @click="isShowGuide = false">
+    </div>
 </div>
 {/block}
 
 {block name="script"}
 <script>
-
     Vue.directive('focus', {
         // When the bound element is inserted into the DOM...
         update: function (el,value) {
@@ -332,6 +367,7 @@
             topCompany:{$top_company},
             isShowHeaderIcon:true,
             interval:'',
+            isShowGuide:false,
             //楼盘表
             isHouseList:false,
             list:list,
@@ -358,6 +394,7 @@
         },
         created(){
             var isHouseList = window.sessionStorage.getItem('isHouseList');
+
             if(isHouseList!==null){
                 this.isHouseList = JSON.parse(isHouseList);
                 if(this.isHouseList){
@@ -371,6 +408,12 @@
         },
         mounted(){
             var _this = this;
+            var canShowGuide = window.localStorage.getItem('canShowGuide');
+            console.log(canShowGuide)
+            if(canShowGuide===null){
+                window.localStorage.setItem('canShowGuide','no');
+                this.isShowGuide=true
+            }
             _this.interval = setTimeout(function () {
                         _this.isShowHeaderIcon = false
                     },2000);

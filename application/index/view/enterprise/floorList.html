@@ -114,7 +114,21 @@
                 curtop += obj.offsetTop;
             }
         }
+        console.log(curleft,curtop)
+        var headerH = document.querySelector('.header').clientHeight;
+        console.log(headerH);
+        if(curtop>headerH){
+            curtop-=headerH
+        }
+        console.log(curleft,curtop)
         return { x: curleft, y: curtop };
+    }
+    function ScrollTo(el)
+    {
+        var elem = document.querySelector(el).parentNode.parentNode;
+        var scrollPos = elementPosition(elem).y;
+        console.log(scrollPos)
+        window.scrollTo(0,scrollPos);
     }
     function ScrollToControl(el)
     {
@@ -251,9 +265,6 @@
             }
         },
         methods:{
-            scrollTo(el){
-
-            },
             closeMask(){
                 var _this = this;
                 _this.isShowMask = 3;
