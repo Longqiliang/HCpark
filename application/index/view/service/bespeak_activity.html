@@ -83,6 +83,136 @@
     .wrapper{font-size: 0.85rem; color: #333; white-space: nowrap; overflow: hidden;width: 300px;}
     .inner{ width:1000px;overflow:hidden;}
     .inner p{ display:inline-block;}
+
+
+    .my-btn{
+        display: block;
+        margin:0 auto;
+        width:93.6vw;
+        height:4rem;
+        line-height: 4rem;
+        background-color: #69B8FA;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 1.6rem;
+        text-align: center;
+        margin-top: 5rem;
+    }
+    .my-mask{
+        display: none;
+        position: fixed;
+        top:0;
+        right:0;
+        bottom: 0;
+        left:0;
+        z-index: 995;
+    }
+    .my-mask-back{
+        position: absolute;
+        top:0;
+        right:0;
+        bottom: 0;
+        left:0;
+        z-index: 996;
+        background-color: rgba(0,0,0,0.3);
+    }
+    .my-mask-content{
+        width:79.2vw;
+        background-color: #f9f9f9;
+        position: absolute;
+        top:50%;
+        left:50%;
+        -webkit-transform: translate(-50%,-60%);
+        -moz-transform: translate(-50%,-60%);
+        -ms-transform: translate(-50%,-60%);
+        -o-transform: translate(-50%,-60%);
+        transform: translate(-50%,-60%);
+        transform: translate(-50%,-60%);
+        z-index: 999;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .my-mask-content>h3{
+        padding:1.7rem 0;
+        margin:0;
+        text-align: center;
+        color: #333;
+        font-size:1.8rem;
+    }
+    .my-phone-list>li{
+        width:53vw;
+        margin:0 auto;
+        padding-bottom: 2rem;
+        color: #333;
+        font-size: 1.5rem;
+    }
+    .my-radio+span{
+        position: relative;
+        line-height: 1.5rem;
+        padding-left: 3rem;
+    }
+    .my-radio+span>b{
+        content: '';
+        display: flex;
+        box-sizing: border-box;
+        height:1.5rem;
+        width:1.5rem;
+        border-radius: 50%;
+        border:1px solid #979797;
+        position: absolute;
+        left:0;
+        justify-content: center;
+        align-items: center;
+    }
+    .my-radio+span>b:before{
+        content: '';
+        display: inline-block;
+        box-sizing: border-box;
+        height:1rem;
+        width:1rem;
+        border-radius: 50%;
+        border:1px solid #979797;
+    }
+    .my-radio:checked+span>b{
+        border-color: #1F85EB;
+    }
+    .my-radio:checked+span>b:before{
+        border:none;
+        background-color: #1F85EB;
+    }
+
+
+    .my-btn-group{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top:1px solid #dcdcdc;
+    }
+    .my-btn-group>li{
+        height:4.8rem;
+        line-height: 4.8rem;
+        font-size: 1.8rem;
+        color: #1F85EB;
+        text-align: center;
+        width:50%;
+        box-sizing: border-box;
+    }
+    .my-btn-group>li>a{
+        display: block;
+        height:100%;
+        width:100%;
+        color: #1F85EB;
+    }
+    .my-btn-group>li:not(:last-child){
+        border-right: 1px solid #dcdcdc;
+    }
+
+
+
+    .my-show{
+        display: block;
+    }
 </style>
 {/block}
 
@@ -100,21 +230,29 @@
         </div>
     </div>
     <div class="my-text">
-        风尘俱静，禅味悠长。有宁静致远的格局，有身心寂静的归宿。一年四季，不同味道，希垦文化活动中心陪伴您一起走，欢迎大家来陈水堂木作艺术馆品茗赏花赏画！
+        风尘俱静，禅味悠长。有宁静致远的格局，有身心寂静的归宿。一年四季，不同味道，希垦文化活动中心陪伴您一起走，欢迎大家来陈水堂木作艺术馆品茗赏花赏画！营业时间：9:00AM - 5:00PM
     </div>
     <!--<div id="scrollobj" onmouseover="javascript:_stop();" onmouseout="javascript:_start();">这里是要滚动的内容 </div>-->
 
-    <div class="table-row-box">
-        <div class="table-row">
-            <span class="table-row-header">营业时间：</span>
-            <span>9:00AM - 5:00PM</span>
-        </div>
-        <div class="table-row">
-            <span class="table-row-header">联系电话：</span>
-            <div>
-                <a href="tel:0571-88106006">0571-88106006(店内)</a><br>
-                <a href="tel:18158182062">18158182062(王先生)</a>
-            </div>
+    <!--href="tel:18968056059"-->
+    <a  class="my-btn" @click="showMask()">电话预约</a>
+    <!--遮罩-->
+    <div class="my-mask" :class="{'my-show':isShow}">
+        <div class="my-mask-back" @click="showMask()"></div>
+        <div class="my-mask-content">
+            <h3>拨打电话</h3>
+            <ul class="my-phone-list">
+                <li v-for="(tel,index) in tels">
+                    <label :for="'tel'+index" @click="changeTelIndex(index)">
+                        <input type="radio" :id="'tel'+index" class="my-radio" name="tel" :value="index" hidden>
+                        <span><b></b>{{tel.label}}</span>
+                    </label>
+                </li>
+            </ul>
+            <ul class="my-btn-group">
+                <li @click="showMask()">取消</li>
+                <li><a :href="'tel:'+tels[telIndex].value">确定</a></li>
+            </ul>
         </div>
     </div>
 </div>
@@ -135,7 +273,6 @@
         var myInterval = setInterval(function () {
             var slider = document.getElementById('slider');
             var left  =  slider.style.left;
-            console.log(-sliderW,parseInt(left))
             if(-sliderW>parseInt(left)){
                 slider.style.left = '-1px';
             }else{
@@ -148,6 +285,12 @@
         el: '#app',
         data: {
             info:{$info},
+            isShow:false,
+            telIndex:0,
+            tels:[
+                {value:'0571-88106006', label:'0571-88106006(店内)'},
+                {value:'18158182062', label:'18158182062(王先生)'},
+            ],
             imgs:[
                 '/index/images/service/activity/bespeakTea/teaBanner1.jpg',
                 '/index/images/service/activity/bespeakTea/teaBanner2.jpg',
@@ -157,7 +300,6 @@
             ]
         },
         created(){
-
             var _this = this,
                     test =window.location.href,
                     data ={
@@ -180,6 +322,7 @@
         },
 
         mounted(){
+            document.getElementsByClassName('my-radio')[0].checked='checked';
             if(this.info.type == 1){
                 document.title = '喝茶预约'
             }else if(this.info.type == 2){
@@ -200,6 +343,12 @@
             });
         },
         methods: {
+            changeTelIndex(index){
+                this.telIndex=index
+            },
+            showMask(){
+                this.isShow=!this.isShow
+            },
             loadImg(src,imglist) {
                 var urls=[];
                 var current=window.location.protocol+'//'+window.location.host+src;
