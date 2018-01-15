@@ -34,8 +34,8 @@ class Enterprise extends Base
         $service = new Service();
         $parkcompany = new ParkCompany();
         $userinfo = $user->where('userid', $user_id)->find();
-        $userinfo['top_company'] = json_decode($userinfo['top_company']);
-       $top = array_reverse($userinfo['top_company']);
+        $userinfo['top_company'] = is_array(json_decode($userinfo['top_company']))?json_decode($userinfo['top_company']):[];
+        $top = array_reverse($userinfo['top_company']);
         $list = $parkcompany->where(['park_id' => $park_id, 'company_id' => ['notin', [78, 91]]])->select();
         $data = $this->rentlist();
         $this->assign('room', json_encode($data));
@@ -62,7 +62,7 @@ class Enterprise extends Base
         $userid = session('userId');
         $user = new WechatUser();
         $userinfo = $user->where('userid', $userid)->find();
-        $top = json_decode($userinfo['top_company']);
+        $top =  is_array(json_decode($userinfo['top_company']))?json_decode($userinfo['top_company']):[];
         //新增置顶企业
         if ($data['type'] == 1) {
             array_push($top, $data['department']);
