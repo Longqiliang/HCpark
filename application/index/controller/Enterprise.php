@@ -85,7 +85,7 @@ class Enterprise extends Base
             return $this->success('成功');
         } else {
 
-            return '11'.$user->getError();
+            return $this->error('11'.$user->getError());
         }
 
 
@@ -96,7 +96,7 @@ class Enterprise extends Base
         $data =$this->rentlist();
         $this->assign('room',$data);
         $this->assign('department_id',$department);
-        $this->fetch();
+       return $this->fetch();
     }
 
 
