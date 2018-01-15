@@ -94,7 +94,7 @@ class Enterprise extends Base
     public  function floorList(){
         $department = input('department');
         $data =$this->rentlist();
-        $this->assign('room',$data);
+        $this->assign('room',json_encode($data));
         $this->assign('department_id',$department);
        return $this->fetch();
     }
@@ -151,7 +151,6 @@ class Enterprise extends Base
         $info = $parkcompany->where('id', $id)->find();
 
         $result = [
-
             'present' => $info['present'],
             'about_us' => $info['about_us'],
             'name' => $info['name'],
@@ -160,9 +159,8 @@ class Enterprise extends Base
             'service_num' => count($service),
             'product_num' => count($product),
             'service' => $service,
-            'product' => $product
-
-
+            'product' => $product,
+            'department_id'=>$id
         ];
 
         $this->assign('info', json_encode($result));
