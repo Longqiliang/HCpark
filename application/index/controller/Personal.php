@@ -1413,7 +1413,7 @@ class Personal extends Base
         $gender = input('gender');
         $park_company = new ParkCompany();
         //echo $userId;
-        $department = input('departmentId');
+        $department = (int)input('departmentId');
         $room = input('room');
         //return $department;
         if (empty($department)) {
@@ -1453,12 +1453,12 @@ class Personal extends Base
         $userinfo = $user->where(['userid' => $userId])->find();
         //不换园区（只改变默认的那个部门）
         if($park_id==$userinfo['park_id']){
-            $top_company=json_decode( $userinfo['top_company']);
+            $top_company=json_decode($userinfo['top_company']);
             //原来的默认部门还在数组中
             if(in_array($userinfo['department'],$top_company)){
                 //当前就他一个默认部门的情况
                 if(count($top_company)==1){
-                    $map['Top_company']='['.$department.']';
+                    $map['Top_company']=json_encode([$department]);
                 }else{
                     $result=array_udiff($top_company,[$userinfo['department']],"myfunction");
                     array_unshift($result,$department);
