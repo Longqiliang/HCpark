@@ -3977,7 +3977,13 @@ class Service extends Base
         //echo json_encode($list);
 
     }
-
+//    预约喝茶
+    public function bespeakActivity()
+    {
+        $data = input('');
+        $this->assign('info',json_encode($data));
+        return $this->fetch('bespeak_activity');
+    }
 
 }
 
