@@ -83,6 +83,41 @@
                         </div>
 
 
+                        <div class="col-md-2 column"><h3>公众号名称</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <input type="text" class="form-control" name="wechat_name" value="{$companyInfo.wechat_name}"/>
+                            <sapn style="height:40px;display: block">
+                            </sapn>
+                        </div>
+
+
+                        <div class="col-md-2 column">
+                            <h3>公众号头像</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <input type="file" class="file input-file2"><br>
+                            <sapn>
+                                <a class="front_cover2" href="{$companyInfo.wechat_img}">
+                                    <img class="front_cover_img2" src="{$companyInfo.wechat_img}" width="100px"/>
+                                </a>
+                            </sapn>
+                        </div>
+
+
+                        <div class="col-md-2 column"><h3>公众号描述</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <textarea type="text" class="form-control" name="wechat_description" >{$companyInfo.wechat_description}</textarea>
+                            <sapn style="height:40px;display: block">
+                            </sapn>
+                        </div>
+
+
+
+
+
+
                         <div class="col-md-2 column"><h3>公众号网址</h3>
                         </div>
                         <div class="col-md-10 column">
@@ -131,7 +166,8 @@
         </div>
     </div>
 </div>
-<input type="hidden" name="front_cover" value="">
+<input type="hidden" name="front_cover" value="{$companyInfo.img}">
+<input type="hidden" name="wechat_img" value="{$companyInfo.wechat_img}">
 {/block}
 
 {block name="script"}
@@ -227,6 +263,31 @@
         }
     });
 
+
+    $(".input-file2").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/picture")}', //上传的地址
+        allowedFileExtensions: ['png', 'jpg', 'gif', 'png', 'jpeg'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function (event, files) {
+        if (files[0].size / 1024 > 500) {
+            updateAlert('图片大小不能大于500kb哦~', 'info');
+            return
+        }
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function (event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if (response.code == 1) {
+            $("input[name='wechat_img']").val(response.data);
+            $('.front_cover_img2').attr('src', response.data);
+            $('.front_cover2').attr('href', response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+
     $(".front_cover").imgbox({
         overlayShow: false,
         hideOnContentClick: true,
@@ -240,16 +301,18 @@
         var compantType = $("[name = 'company_type']").val();
         var sizeType = $("[name = 'size_type']").val();
         var image = $("input[name='front_cover']").val();
+        var wechat_img = $("input[name='wechat_img']").val();
         var phone = $("[name='phone']").val();
         var whechat_number = $("[name='wechat-number']").val();
         var contents = $('#summernote').summernote('code');
         var presents = $('.summernote').summernote('code');
         var url = $("[name='site']").val();
         var protocol = $("[name='site-protocol']").val();
-
+        var wechat_name =$("[name='wechat_name']").val();
+        var wechat_description =$("textarea[name='wechat_description']").val();
 
         var urlReg = /^https?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
-        console.log(protocol)
+        console.log(wechat_description)
         var site = protocol + '://' + url;
         if (!urlReg.test(site)) {
             updateAlert('所填写的官网网址：'+site+'，格式不正确', 'error');
@@ -270,7 +333,10 @@
                 present: presents,
                 type: compantType,
                 size_type:sizeType,
-                wechat_number:whechat_number
+                wechat_number:whechat_number,
+                wechat_img:wechat_img,
+                wechat_name:wechat_name,
+                wechat_description:wechat_description
             },
             success: function (data) {
                 if (data.code == 1) {
