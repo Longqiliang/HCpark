@@ -31,24 +31,25 @@
     .searchList{min-height:100vh;width:100%;position:absolute;top:0;left:0;z-index: 120}
     .searchList.company-list{padding:0}
     .searchList.company-list>li{margin-bottom:0;}
-    .searchList.company-list .li-content {border-bottom:1px solid #f1f1f1}
+    /*.searchList.company-list .li-content {border-bottom:1px solid #f1f1f1}*/
     .searchList.bgWhite{background-color:rgba(255,255,255,1)}
     .searchList>li:first-child{margin-top:4.8rem}
     .list-position{
-        position:relative;top:0;left:0;padding:5.2rem 2.133vw .4rem 2.133vw;
+        position:relative;top:0;left:0;padding:4.8rem 0 .4rem 0;
         width:100%;
         box-sizing:border-box;
+        background-color: #fff;
     }
     .company-list{box-sizing:border-box;width:100%;}
-    .company-list .li-content{box-sizing:border-box;width:100%;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;background-color:#fff}
+    .company-list .li-content{box-sizing:border-box;width:100%;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;background-color:#fff;border-bottom: 1px solid #e8e8e8}
     .company-list-bg{display:none;margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:fixed;top:0;left:0;z-index: 121}
     .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
     .company-list .company-logo{margin-right:1.4rem}
     .company-info{
         position: relative;
     }
-    .company-info>li{width:65vw;line-height:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .company-info>li:first-child{font-size:1.6rem;font-weight:700;color:#333}
+    .company-info>li{width:68vw;line-height:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .company-info>li:first-child{font-size:1.6rem;color:#333}
     .company-info>li.company-info-mobile{font-size:1.2rem;color:#999}
     .hidden{display:none}
     .overflow{height:100vh;overflow:hidden}
@@ -139,7 +140,7 @@
     .mint-cell{
         height:100%;
         background-color: inherit;
-        margin-bottom: .8rem;
+        padding-left: 2.4vw;
     }
     .searchList .mint-cell{
         margin-bottom: 0;
@@ -217,8 +218,7 @@
                             </div>
                             <ul class="company-info">
                                 <li>{{item.name}}</li>
-                                <li class="company-info-mobile" v-if="item.mobile">联系电话：{{item.mobile}}</li>
-                                <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                                <li class="company-info-mobile" v-if="item.site">{{hidProtocol(item.site)}}</li>
                                 <li class="my-icon-flag my-icon-hot">置顶</li>
                             </ul>
                         </div>
@@ -228,7 +228,7 @@
             <ul class="company-list">
                 <li v-for="item in noTopList">
                     <mt-cell-swipe
-                            :right="[{content: '置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(true,item.id)}]">
+                            :right="[{content: '置顶',style: {  background: '#FCC44B', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(true,item.id)}]">
                         <div class="li-content"  @click="jumpTo(item.id)">
                             <div class="company-logo">
                                 <img :src="item.img" alt="logo" v-if="item.img">
@@ -236,8 +236,7 @@
                             </div>
                             <ul class="company-info">
                                 <li>{{item.name}}</li>
-                                <li v-if="item.mobile" class="company-info-mobile">联系电话：{{item.mobile}}</li>
-                                <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                                <li v-if="item.site" class="company-info-mobile">{{hidProtocol(item.site)}}</li>
                             </ul>
                         </div>
                     </mt-cell-swipe>
@@ -259,8 +258,7 @@
                         </div>
                         <ul class="company-info">
                             <li>{{item.name}}</li>
-                            <li class="company-info-mobile" v-if="item.mobile">联系电话：{{item.mobile}}</li>
-                            <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                            <li class="company-info-mobile" v-if="item.site">{{hidProtocol(item.site)}}</li>
                             <li class="my-icon-flag my-icon-hot">置顶</li>
                         </ul>
                     </div>
@@ -268,7 +266,7 @@
             </li>
             <li v-for="item in searchNoTopList">
                 <mt-cell-swipe
-                        :right="[{content: '置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(true,item.id)}]">
+                        :right="[{content: '置顶',style: {  background: '#FCC44B', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(true,item.id)}]">
                     <div class="li-content"  @click="jumpTo(item.id)">
                         <div class="company-logo">
                             <img :src="item.img" alt="logo" v-if="item.img">
@@ -276,8 +274,7 @@
                         </div>
                         <ul class="company-info">
                             <li>{{item.name}}</li>
-                            <li v-if="item.mobile" class="company-info-mobile">联系电话：{{item.mobile}}</li>
-                            <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                            <li v-if="item.site" class="company-info-mobile">{{hidProtocol(item.site)}}</li>
                         </ul>
                     </div>
                 </mt-cell-swipe>
@@ -412,7 +409,6 @@
         mounted(){
             var _this = this;
             var canShowGuide = window.localStorage.getItem('canShowGuide');
-            console.log(canShowGuide)
             if(canShowGuide===null){
                 window.localStorage.setItem('canShowGuide','no');
                 this.isShowGuide=true
@@ -538,6 +534,16 @@
             }
         },
         methods:{
+            hidProtocol(url){
+                var url = url || '',
+                        start=url.indexOf('://');
+                if(start !== -1){
+                    url = url.substring(start+3,url.length);
+                    return url;
+                }else{
+                    return url;
+                }
+            },
             toggleTop(isTop,id){
                 var _this = this;
                 this.isFocus = false;
@@ -557,7 +563,6 @@
                     spinnerType: 'triple-bounce'
                 });
                 _this.$http.post("{:Url('Enterprise/editTopCompany')}",data).then(function (res) {
-                    console.log(res)
                     _this.isSubmit = false;
                     _this.$indicator.close();
                     if(res.data.code===1){
@@ -582,7 +587,6 @@
                         });
                     }
                 },function (res){
-                    console.log(res)
                     _this.isSubmit = false;
                     _this.$indicator.close();
                     _this.$toast({
