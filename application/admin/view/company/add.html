@@ -73,8 +73,8 @@
                         </div>
                         <div class="col-md-10 column" style="padding-bottom: 40px;display: flex;align-items: center" >
                             <select name="site-protocol" class="form-control col-md-4" style="width: auto">
-                                <option value="http">http</option>
-                                <option value="https">https</option>
+                                <option value="http" {eq name="$protocol" value="http" } selected {/eq}>http</option>
+                                <option value="https" {eq name="$protocol" value="https" } selected {/eq}>https</option>
                             </select>
                             <span style="font-size: 16px">&nbsp;://&nbsp;</span>
                             <input type="text" class="form-control" style="flex: 1" class="col-md-8" name="site" value="{$companyInfo.site}" placeholder = "请输入" />
