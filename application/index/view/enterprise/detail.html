@@ -46,7 +46,7 @@
     .my-header-info>li a{
         color: #333;
     }
-    .my-header-info>li a.can_call{
+    .my-header-info>li a.can_click{
         color: #59b7f4;
     }
     /*tab*/
@@ -183,7 +183,7 @@
         <ul class="my-header-info">
             <li>{{baseData.name}}</li>
             <li>网址：
-                <a class="" v-if="baseData.site">{{baseData.site}}</a>
+                <a class="can_click" @click="location.href=baseData.site" v-if="baseData.site">{{hidProtocol(baseData.site)}}</a>
                 <a v-else>暂无</a>
             </li>
         </ul>
@@ -250,6 +250,16 @@ var app = new Vue({
         this.imgPreview();
     },
     methods:{
+        hidProtocol(url){
+            var url = url || '',
+                    start=url.indexOf('://');
+            if(start !== -1){
+                url = url.substring(start+3,url.length-1);
+                return url;
+            }else{
+                return url;
+            }
+        },
         addBase(){
             var activeByurl = window.location.href.split('/c/')[1] || '',
                     activeItem = window.sessionStorage.getItem('activeItem');

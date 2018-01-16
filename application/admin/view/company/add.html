@@ -71,10 +71,13 @@
                         </div>
                         <div class="col-md-2 column"><h3>官网网址</h3>
                         </div>
-                        <div class="col-md-10 column">
-                            <input type="text" class="form-control" name="site" value="{$companyInfo.site}" placeholder = "请带http协议头一起输入" />
-                            <sapn style="height:40px;display: block">
-                            </sapn>
+                        <div class="col-md-10 column" style="padding-bottom: 40px;display: flex;align-items: center" >
+                            <select name="site-protocol" class="form-control col-md-4" style="width: auto">
+                                <option value="http">http</option>
+                                <option value="https">https</option>
+                            </select>
+                            <span style="font-size: 16px">&nbsp;://&nbsp;</span>
+                            <input type="text" class="form-control" style="flex: 1" class="col-md-8" name="site" value="{$companyInfo.site}" placeholder = "请输入" />
                         </div>
 
 
@@ -216,11 +219,13 @@
         var phone = $("[name='phone']").val();
         var contents = $('#summernote').summernote('code');
         var presents = $('.summernote').summernote('code');
-        var site = $("[name='site']").val();
-        var uri = /^https?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
-        if (!uri.test(site)) {
-
-            updateAlert('所填写的官网网址格式不正确，请检查是否缺少协议（例：http）头', 'error');
+        var url = $("[name='site']").val();
+        var protocol = $("[name='site-protocol']").val();
+        var urlReg = /^https?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
+        console.log(protocol)
+        var site = protocol + '://' + url;
+        if (!urlReg.test(site)) {
+            updateAlert('所填写的官网网址：'+site+'，格式不正确', 'error');
             return;
         };
 
