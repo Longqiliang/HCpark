@@ -76,7 +76,7 @@ class Index extends Controller
                     'create_time' => time(),
                     'park_id' => $park_id,
                     'status'=>0,
-                    'top_company'=>'['.$department.']',
+                    'top_company'=>json_encode([(int)$department]),
                     'type'=>2
                 ];
                 $point->save($map);
