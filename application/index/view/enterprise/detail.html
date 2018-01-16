@@ -254,7 +254,7 @@ var app = new Vue({
             var url = url || '',
                     start=url.indexOf('://');
             if(start !== -1){
-                url = url.substring(start+3,url.length-1);
+                url = url.substring(start+3,url.length);
                 return url;
             }else{
                 return url;
