@@ -15,8 +15,6 @@ class Company extends Admin
 {
     /*企业详细列表*/
     public function index (){
-
-
         $company_type=input('company_type')==null?-1:input('company_type');
         //echo  $company_type;
         //dump($type);
@@ -50,6 +48,18 @@ class Company extends Admin
     public  function add(){
         $id = input('id');
         $companyInfo = ParkCompany::get($id);
+        $is_https= substr_count($companyInfo['site'], 'https');
+        $is_http= substr_count($companyInfo['site'], 'http');
+        $a ='http';
+        if($is_https==1){
+            $companyInfo['site']= str_replace("https://","",$companyInfo['site']);
+            $a ='https';
+        }
+        if($is_http==1){
+            $companyInfo['site']= str_replace("http://","",$companyInfo['site']);
+        }
+
+        $this->assign('protocol',$a);
         $this->assign('companyInfo',$companyInfo);
 
         return $this->fetch();
@@ -111,7 +121,6 @@ class Company extends Admin
 
             return $this->error("修改失败");
         }
-
     }
     /*园区产品或服务的添加*/
     public function edit(){
@@ -127,7 +136,6 @@ class Company extends Admin
 
             $this->error($parkcompany->getError());
         }
-
     }
     /*修改企业信息*/
     public function changeinfo(){
@@ -144,7 +152,6 @@ class Company extends Admin
 
             return $this->error("修改失败");
         }
-
     }
     /*产品服务列表*/
     public function product(){
