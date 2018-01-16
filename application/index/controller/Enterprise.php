@@ -95,11 +95,13 @@ class Enterprise extends Base
         $department = input('department');
         $parkRoom = new ParkRoom();
         $data =$this->rentlist();
+
         $info = $parkRoom->where(['manage'=>1,'company_id'=>$department])->order('id desc')->find();
         $map=['department_id'=>$department,'park_id'=>$info['park_id'],'build_block'=>$info['build_block']];
+       // echo json_encode($data);
         $this->assign('room',json_encode($data));
         $this->assign('info',json_encode($map));
-       return $this->fetch();
+        return $this->fetch();
     }
 
 
@@ -244,7 +246,7 @@ class Enterprise extends Base
                                 $status = 0;
                                 $roomsId = 0;
                             }
-                            $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId];
+                            $roomArray[$k][$k1] = ['room' => $v1['room'], 'empty' => $status, 'id' => $v1['company_id'], 'room_id' => $roomsId,'panorama'=>$v1['panorama']];
                             $roomArray[$k] = array_slice($roomArray[$k], 0, $k1 + 1);
                         }
                     } else {
