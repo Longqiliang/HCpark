@@ -1453,7 +1453,7 @@ class Personal extends Base
         $userinfo = $user->where(['userid' => $userId])->find();
         //不换园区（只改变默认的那个部门）
         if($park_id==$userinfo['park_id']){
-            $top_company=json_decode($userinfo['top_company']);
+            $top_company=is_array(json_decode($userinfo['top_company']))?json_decode($userinfo['top_company']):[];
             //原来的默认部门还在数组中
             if(in_array($userinfo['department'],$top_company)){
                 //当前就他一个默认部门的情况
