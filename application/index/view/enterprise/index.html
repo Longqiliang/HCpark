@@ -41,7 +41,7 @@
     }
     .company-list{box-sizing:border-box;width:100%;}
     .company-list .li-content{box-sizing:border-box;width:100%;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;background-color:#fff}
-    .company-list-bg{margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:fixed;top:0;left:0;z-index: 121}
+    .company-list-bg{display:none;margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:fixed;top:0;left:0;z-index: 121}
     .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
     .company-list .company-logo{margin-right:1.4rem}
     .company-info{
@@ -156,6 +156,7 @@
         position: relative;
     }
     .guide-mask{
+        display: none;
         box-sizing: border-box;
         position: fixed;
         top:0;
@@ -185,7 +186,9 @@
         width:22.93333vw;
         margin-top:4rem;
     }
-
+    .my-show{
+        display: block;
+    }
 </style>
 
 {/block}
@@ -242,7 +245,7 @@
             </ul>
         </div>
         <!--搜索列表-->
-        <div class="company-list-bg" v-if="inputValue==='' && inputStatus" @click="isCancel">
+        <div class="company-list-bg"  :class="{'my-show':(inputValue==='' && inputStatus)}"  @click="isCancel">
             <div class="li-content "></div>
         </div>
         <ul class="searchList company-list list-position" :class="{bgWhite:inputValue}" v-if="inputStatus && inputValue!==''">
@@ -329,7 +332,7 @@
             </div>
         </div>
     </div>
-    <div class="guide-mask" v-if="isShowGuide">
+    <div class="guide-mask" :class="{'my-show':isShowGuide}">
         <img src="/index/images/enterprise/icon-item.png" alt="" class="icon-item">
         <img src="/index/images/enterprise/icon-arrow.png" alt="" class="icon-arrow">
         <img src="/index/images/enterprise/icon-text.png" alt="" class="icon-text">
