@@ -53,8 +53,20 @@
                         <div class="col-md-10 column">
                             <select name="company_type" id="" class="company col-md-4">
                                 {volist name="Think.config.company_type" id="vo"}
-                                <option value="{$key}" {eq name="$companyInfo.type" value="$key" } selected {
-                                /eq}>{$vo}</option>
+                                <option value="{$key}" {eq name="$companyInfo.type" value="$key" } selected {/eq}>{$vo}</option>
+                                {/volist}
+                            </select>
+
+                        </div>
+                        <div class="col-md-12 column">
+                            <br>
+                        </div>
+                        <div class="col-md-2 column"><h3>企业大小</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <select name="size_type"  class="company col-md-4">
+                                {volist name="Think.config.company_size_type" id="vo"}
+                                <option value="{$key}" {eq name="companyInfo.size_type" value="$key" } selected {/eq}>{$vo}</option>
                                 {/volist}
                             </select>
 
@@ -69,6 +81,17 @@
                             <sapn style="height:40px;display: block">
                             </sapn>
                         </div>
+
+
+                        <div class="col-md-2 column"><h3>公众号网址</h3>
+                        </div>
+                        <div class="col-md-10 column">
+                            <input type="text" class="form-control" name="wechat-number" value="{$companyInfo.wechat_number}"/>
+                            <sapn style="height:40px;display: block">
+                            </sapn>
+                        </div>
+
+
                         <div class="col-md-2 column"><h3>官网网址</h3>
                         </div>
                         <div class="col-md-10 column" style="padding-bottom: 40px;display: flex;align-items: center" >
@@ -215,12 +238,16 @@
     /*添加企业信息*/
     function companyMobile() {
         var compantType = $("[name = 'company_type']").val();
+        var sizeType = $("[name = 'size_type']").val();
         var image = $("input[name='front_cover']").val();
         var phone = $("[name='phone']").val();
+        var whechat_number = $("[name='wechat-number']").val();
         var contents = $('#summernote').summernote('code');
         var presents = $('.summernote').summernote('code');
         var url = $("[name='site']").val();
         var protocol = $("[name='site-protocol']").val();
+
+
         var urlReg = /^https?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
         console.log(protocol)
         var site = protocol + '://' + url;
@@ -241,7 +268,9 @@
                 images: '{$companyInfo.img}',
                 about_us: contents,
                 present: presents,
-                type: compantType
+                type: compantType,
+                size_type:sizeType,
+                wechat_number:whechat_number
             },
             success: function (data) {
                 if (data.code == 1) {
