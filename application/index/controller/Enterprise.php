@@ -167,9 +167,6 @@ class Enterprise extends Base
             'product' => $product,
             'department_id'=>$id,
             'site'=>$info['site'],
-            'wechat_name'=>$info['wechat_name'],
-            'wechat_img'=>$info['wechat_img'],
-            'wechat_description'=>$info['wechat_description'],
             'wechat_number'=>$info['wechat_number'],
 
         ];
