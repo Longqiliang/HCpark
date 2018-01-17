@@ -61,7 +61,7 @@
                         <div class="col-md-12 column">
                             <br>
                         </div>
-                        <div class="col-md-2 column"><h3>企业大小</h3>
+                        <div class="col-md-2 column"><h3>企业规模</h3>
                         </div>
                         <div class="col-md-10 column">
                             <select name="size_type"  class="company col-md-4">
@@ -319,7 +319,7 @@
             return;
         };
 
-        if(wechat_name!=null||wechat_description!=null||whechat_number!=null||wechat_img!=null){
+        if(wechat_name!=''||wechat_description!=''||whechat_number!=''||wechat_img!=''){
 
             if(wechat_name==''){
                 updateAlert('公众号的名称未填', 'error');
