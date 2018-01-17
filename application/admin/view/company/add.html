@@ -318,25 +318,25 @@
             updateAlert('所填写的官网网址：'+site+'，格式不正确', 'error');
             return;
         };
+
         if(wechat_name!=null||wechat_description!=null||whechat_number!=null||wechat_img!=null){
-            if(wechat_name==null){
+
+            if(wechat_name==''){
                 updateAlert('公众号的名称未填', 'error');
                 return;
             }
-            if(wechat_description==null){
+            if(wechat_description==''){
                 updateAlert('公众号的描述未填', 'error');
                 return;
             }
-            if(whechat_number==null){
+            if(whechat_number==''){
                 updateAlert('公众号的地址未填', 'error');
                 return;
             }
-            if(wechat_img==null){
-                updateAlert('公众号的照片未填', 'error');
+            if(wechat_img==''){
+                updateAlert('公众号的头像未填', 'error');
                 return;
             }
-
-
         }
 
         $.ajax({
