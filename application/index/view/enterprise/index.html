@@ -15,7 +15,7 @@
     body{background-color:#f1f1f1}
     .search{background:#f0eff5;
         box-sizing: border-box;
-        width:100%;padding:.8rem 2.133vw;border-bottom:1px solid #f0eff5;position:fixed;
+        width:100%;padding:.8rem 2.133vw;position:fixed;
         top:0;
         left:0;z-index:300}
     .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center}
@@ -34,8 +34,45 @@
     /*.searchList.company-list .li-content {border-bottom:1px solid #f1f1f1}*/
     .searchList.bgWhite{background-color:rgba(255,255,255,1)}
     .searchList>li:first-child{margin-top:4.8rem}
+
+    .screen-box{
+        position: fixed;
+        top:4.8rem;
+        left:0;
+        box-sizing: border-box;
+        width:100%;
+        height:4rem;
+        line-height: 4rem;
+        border-top: 1px solid #e8e8e8;
+        border-bottom: 1px solid #e8e8e8;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background-color: #f0eff5;
+        z-index: 101;
+    }
+    .screen-box>li:not(:nth-child(2)){
+        flex:1;
+        width:50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding:0 2.4vw;
+    }
+    .screen-box>li:nth-child(2){
+        width:1px;
+        height:100%;
+        background-color: #e8e8e8;
+    }
+    .screen-box>li>span{
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
     .list-position{
-        position:relative;top:0;left:0;padding:4.8rem 0 .4rem 0;
+        position:relative;top:0;left:0;padding:8.8rem 0 0 0;
         width:100%;
         box-sizing:border-box;
         background-color: #fff;
@@ -139,8 +176,11 @@
     }
     .mint-cell{
         height:100%;
-        background-color: inherit;
+        background-color: #fff;
         padding-left: 2.4vw;
+    }
+    .mint-cell:last-child{
+        background: none;
     }
     .searchList .mint-cell{
         margin-bottom: 0;
@@ -190,6 +230,23 @@
     .my-show{
         display: block;
     }
+
+    #app .topItem{
+        background:#f0eff5;
+    }
+    .company-null{
+        position: absolute;
+        top:0;
+        left:0;
+        height: 100vh;
+        width:100vw;
+        background-color: #F5F5F5;
+    }
+    .company-null>img{
+        text-align: center;
+        width:100%;
+        margin-top: 8.8rem;
+    }
 </style>
 
 {/block}
@@ -207,26 +264,53 @@
         </div>
         <!--公司列表-->
         <div  :class="{overflow:inputStatus}" class="list-position" v-if="inputValue===''">
+            <!--筛选-->
+            <ul class="screen-box" >
+                <li @click="toggleTypeScreen(true)"><span>{{typeScreen.slots[0].values[typeScreen.sureIndex].text}}</span><i class="allow-down"></i></li>
+                <li></li>
+                <li @click="toggleScaleScreen(true)"><span>{{scaleScreen.slots[0].values[scaleScreen.sureIndex].text}}</span><i class="allow-down"></i></li>
+            </ul>
+            <!--类型筛选弹选择出框-->
+            <mt-popup  position="bottom"  v-model="typeScreen.isShow" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="toggleTypeScreen(false)">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="sureTypeScreen">确定</span>
+                </div>
+                <mt-picker :slots="typeScreen.slots" value-key="text" @change="typeScreenChange"></mt-picker>
+            </mt-popup>
+            <!--规模筛选弹选择出框-->
+            <mt-popup  position="bottom"  v-model="scaleScreen.isShow" class="mint-popup">
+                <div class="picker-toolbar">
+                    <span class="mint-datetime-action mint-datetime-cancel" @click="toggleScaleScreen(false)">取消</span>
+                    <span class="mint-datetime-action mint-datetime-confirm" @click="sureScaleScreen">确定</span>
+                </div>
+                <mt-picker :slots="scaleScreen.slots" value-key="text" @change="scaleScreenChange"></mt-picker>
+            </mt-popup>
+            <!--置顶企业列表-->
+            <div class="company-null" v-if="topScreenList.length===0 && noTopScreenList.length===0">
+                <img src="/index/images/enterprise/null.jpg" alt="">
+            </div>
             <ul class="company-list">
-                <li v-for="item in topList">
+                <li v-for="item in topScreenList" class="topItem">
                     <mt-cell-swipe
                             :right="[{content: '取消置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(false,item.id)}]">
-                        <div class="li-content"  @click="jumpTo(item.id)">
+                        <div class="li-content topItem"  @click="jumpTo(item.id)">
                             <div class="company-logo">
                                 <img :src="item.img" alt="logo" v-if="item.img">
                                 <img src="/index/images/index/icon-no.png" alt="logo" v-else>
                             </div>
                             <ul class="company-info">
                                 <li>{{item.name}}</li>
-                                <li class="company-info-mobile" v-if="item.site">{{hidProtocol(item.site)}}</li>
-                                <li class="my-icon-flag my-icon-hot">置顶</li>
+                                <li class="company-info-mobile" v-if="item.mobile">联系电话：{{item.mobile}}</li>
+                                <li class="company-info-mobile" v-else>联系电话：暂无</li>
                             </ul>
                         </div>
                     </mt-cell-swipe>
                 </li>
             </ul>
+            <!--未置顶企业列表-->
             <ul class="company-list">
-                <li v-for="item in noTopList">
+                <li v-for="item in noTopScreenList">
                     <mt-cell-swipe
                             :right="[{content: '置顶',style: {  background: '#FCC44B', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(true,item.id)}]">
                         <div class="li-content"  @click="jumpTo(item.id)">
@@ -236,7 +320,8 @@
                             </div>
                             <ul class="company-info">
                                 <li>{{item.name}}</li>
-                                <li v-if="item.site" class="company-info-mobile">{{hidProtocol(item.site)}}</li>
+                                <li v-if="item.mobile" class="company-info-mobile">联系电话：{{item.mobile}}</li>
+                                <li class="company-info-mobile" v-else>联系电话：暂无</li>
                             </ul>
                         </div>
                     </mt-cell-swipe>
@@ -248,18 +333,18 @@
             <div class="li-content "></div>
         </div>
         <ul class="searchList company-list list-position" :class="{bgWhite:inputValue}" v-if="inputStatus && inputValue!==''">
-            <li v-for="item in searchTopList">
+            <li v-for="item in searchTopList" class="topItem">
                 <mt-cell-swipe
                         :right="[{content: '取消置顶',style: {  background: '#C8C7CD', color: '#fff' ,fontSize:'1.6rem' },handler: () => toggleTop(false,item.id)}]">
-                    <div class="li-content"  @click="jumpTo(item.id)">
+                    <div class="li-content topItem"  @click="jumpTo(item.id)">
                         <div class="company-logo">
                             <img :src="item.img" alt="logo" v-if="item.img">
                             <img src="/index/images/index/icon-no.png" alt="logo" v-else>
                         </div>
                         <ul class="company-info">
                             <li>{{item.name}}</li>
-                            <li class="company-info-mobile" v-if="item.site">{{hidProtocol(item.site)}}</li>
-                            <li class="my-icon-flag my-icon-hot">置顶</li>
+                            <li class="company-info-mobile" v-if="item.mobile">联系电话：{{item.mobile}}</li>
+                            <li class="company-info-mobile" v-else>联系电话：暂无</li>
                         </ul>
                     </div>
                 </mt-cell-swipe>
@@ -274,7 +359,8 @@
                         </div>
                         <ul class="company-info">
                             <li>{{item.name}}</li>
-                            <li v-if="item.site" class="company-info-mobile">{{hidProtocol(item.site)}}</li>
+                            <li v-if="item.mobile" class="company-info-mobile">联系电话：{{item.mobile}}</li>
+                            <li class="company-info-mobile" v-else>联系电话：暂无</li>
                         </ul>
                     </div>
                 </mt-cell-swipe>
@@ -368,6 +454,55 @@
             isShowHeaderIcon:true,
             interval:'',
             isShowGuide:false,
+            //筛选
+            scaleScreen:{
+                isShow:false,
+                slots: [
+                    {
+                        defaultIndex: 1,
+                        values: [
+                            {text:'全部规模',index:0,value:''},
+                            {text:'微型企业',index:1,value:0},
+                            {text:'小型企业',index:2,value:1},
+                            {text:'中型企业',index:3,value:2},
+                        ],
+                    }
+                ],
+                sureIndex:0,
+                index:0
+            },
+            typeScreen:{
+                isShow:false,
+                slots: [
+                    {
+                        defaultIndex: 1,
+                        values: [
+                            {text:'全部类别',index:0,value:''},
+                            {text:'农、牧、林、渔业',index:1,value:''},
+                            {text:'采矿和采石',index:2,value:''},
+                            {text:'制造业',index:3,value:''},
+                            {text:'电、煤气、蒸汽和空调供应',index:4,value:''},
+                            {text:'供水；污水处理、废物管理和补救',index:5,value:''},
+                            {text:'建筑业',index:6,value:''},
+                            {text:'批发和零售业；汽车和摩托车修理',index:7,value:''},
+                            {text:'运输与存储',index:8,value:''},
+                            {text:'食宿服务',index:9,value:'0'},
+                            {text:'信息和通信',index:10,value:'2'},
+                            {text:'金融和保险',index:11,value:''},
+                            {text:'房地产',index:12,value:''},
+                            {text:'专业、科学和技术',index:13,value:''},
+                            {text:'行政和辅助',index:14,value:'1'},
+                            {text:'公共管理与国防；强制性社会保障',index:15,value:''},
+                            {text:'教育',index:16,value:''},
+                            {text:'人体健康和社会工作',index:17,value:''},
+                            {text:'艺术、娱乐和文娱',index:18,value:''},
+                            {text:'其他服务',index:19,value:''},
+                        ],
+                    }
+                ],
+                sureIndex:0,
+                index:0
+            },
             //楼盘表
             isHouseList:false,
             list:list,
@@ -401,8 +536,15 @@
                    var parkName =  window.sessionStorage.getItem('parkName');
                     if(parkName!==null){
                         this.parkName = JSON.parse(parkName);
-//                        window.sessionStorage.clear('parkName')
                     }
+                }
+            }else if(!this.isHouseList){
+                console.log('企业列表')
+                var companyScreen =  window.sessionStorage.getItem('companyScreen');
+                if(companyScreen!==null){
+                    companyScreen = JSON.parse(companyScreen);
+                    this.scaleScreen.sureIndex = companyScreen.scaleScreenIndex ;
+                    this.typeScreen.sureIndex = companyScreen.typeScreenIndex ;
                 }
             }
         },
@@ -430,11 +572,96 @@
             _this.$nextTick(function() {
                 setTimeout(function() {
                     _this.slots[0].defaultIndex = 0;
-//                        _this.slots[1].defaultIndex = 0;
+                    _this.scaleScreen.slots[0].defaultIndex = 0;
+                    _this.typeScreen.slots[0].defaultIndex = 0;
                 }, 100);
             });
         },
         computed:{
+            topScreenList(){
+                var list = this.topList,
+                        scaleItem =this.scaleScreen.slots[0].values[this.scaleScreen.sureIndex],
+                        scaleValue = scaleItem.value,
+                        typeItem = this.typeScreen.slots[0].values[this.typeScreen.sureIndex],
+                        typeValue = typeItem.value;
+                /**规模筛选**/
+                if(scaleValue === ''){
+                    if(scaleItem.index===0){
+                        list = list;
+                    }else{
+//                        value为空且index不未0的选项，后端暂未定义该类型，仅作显示
+                        list = [];
+                    }
+                }else {
+                    var newList = [];
+                    for(var i in list){
+                        if(list[i].size_type == scaleValue){
+                            newList.push(list[i])
+                        }
+                    }
+                    list = newList;
+                }
+                /**类型筛选**/
+                if(typeValue === ''){
+                    if(typeItem.index===0){
+                        list = list;
+                    }else{
+//                        value为空且index不未0的选项，后端暂未定义该类型，仅作显示
+                        list = [];
+                    }
+                }else {
+                    var newList = [];
+                    for(var i in list){
+                        if(list[i].type == typeValue){
+                            newList.push(list[i])
+                        }
+                    }
+                    list = newList;
+                }
+                return list
+            },
+            noTopScreenList(){
+                var list = this.noTopList;
+                        scaleItem =this.scaleScreen.slots[0].values[this.scaleScreen.sureIndex],
+                        scaleValue = scaleItem.value,
+                        typeItem = this.typeScreen.slots[0].values[this.typeScreen.sureIndex],
+                        typeValue = typeItem.value;
+                /**规模筛选**/
+                if(scaleValue === ''){
+                    if(scaleItem.index===0){
+                        list = list;
+                    }else{
+//                        value为空且index不未0的选项，后端暂未定义该类型，仅作显示
+                        list = [];
+                    }
+                }else {
+                    var newList = [];
+                    for(var i in list){
+                        if(list[i].size_type == scaleValue){
+                            newList.push(list[i])
+                        }
+                    }
+                    list = newList;
+                }
+                /**类型筛选**/
+                if(typeValue === ''){
+                    if(typeItem.index===0){
+                        list = list;
+                    }else{
+//                        value为空且index不未0的选项，后端暂未定义该类型，仅作显示
+                        list = [];
+                    }
+                }else {
+                    var newList = [];
+                    for(var i in list){
+                        if(list[i].type == typeValue){
+                            newList.push(list[i])
+                        }
+                    }
+                    list = newList;
+                }
+                return list
+            },
             searchTopList(){
                 //                搜索
                 if(this.inputValue!==''){
@@ -534,6 +761,48 @@
             }
         },
         methods:{
+//            规模筛选
+            toggleScaleScreen(isOpen){
+                var _this = this;
+                if(isOpen){
+                    _this.scaleScreen.isShow=true
+                }else{
+                    _this.scaleScreen.isShow=false
+                }
+            },
+            sureScaleScreen(){
+                var _this = this;
+                _this.scaleScreen.sureIndex=_this.scaleScreen.index;
+                _this.toggleScaleScreen(false);
+            },
+            scaleScreenChange(picker,values){
+                var _this = this;
+                if(values[0]){
+                    _this.scaleScreen.index = values[0].index;
+                }
+
+            },
+//            类型筛选
+            toggleTypeScreen(isOpen){
+                var _this = this;
+                if(isOpen){
+                    _this.typeScreen.isShow=true
+                }else{
+                    _this.typeScreen.isShow=false
+                }
+            },
+            sureTypeScreen(){
+                var _this = this;
+                _this.typeScreen.sureIndex=_this.typeScreen.index;
+                _this.toggleTypeScreen(false);
+            },
+            typeScreenChange(picker,values){
+                var _this = this;
+                if(values[0]){
+                    _this.typeScreen.index = values[0].index;
+                }
+
+            },
             hidProtocol(url){
                 var url = url || '',
                         start=url.indexOf('://');
@@ -635,6 +904,7 @@
                 _this.popupVisible = true;
 //                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
+            /**楼盘表的跳转**/
             jump:function (id,empty) {
                 if(!id){ return;}
                 window.sessionStorage.setItem('parkName',JSON.stringify(this.parkName ))
@@ -644,9 +914,16 @@
                 }
                 window.location.href = "/index/roomrent/rent?room_id="+id;
             },
+            /**企业列表的跳转**/
             jumpTo(id){
+                var companyScreen = {
+                    scaleScreenIndex : this.scaleScreen.sureIndex,
+                    typeScreenIndex : this.typeScreen.sureIndex
+                };
+                sessionStorage.setItem('companyScreen',JSON.stringify(companyScreen));
 //                window.location.href="/index/enterprise/info/id/"+id;
                 window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
+
             },
             isClick:function () {
                 this.inputStatus=true;

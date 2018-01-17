@@ -3,6 +3,9 @@
 {block name="style"}
 <title>企业信息</title>
 <style>
+    body{
+        /*background-color: #f1f1f1;*/
+    }
     .my-header{
         padding:1.5rem 4vw;
         display: -webkit-flex;
@@ -72,10 +75,13 @@
     .my-content>li{
         display: none;
     }
-    .my-content>.profile, .my-content>.contact{
+    .my-content>.profile>div.profile-content, .my-content>.contact{
         padding:1.7rem 5.06666666vw 6.7rem;
     }
-    .my-content>.profile>p,.my-content>.contact p{
+    .my-content>.profile *{
+        max-width: 100%;
+    }
+    .my-content>.profile p,.my-content>.contact p{
         overflow: hidden;
         font-size: 1.4rem;
         line-height: 2.0rem;
@@ -149,27 +155,110 @@
 
 
     .header-icon {
-        width: 11.2vw;
-        top:4rem;
-        right: 0;
+        box-sizing: border-box;
+        width: 16.53vw;
+        height: 9.94vw;
+        line-height: 7.73vw;
+        font-size: 1.2rem;
+        /*padding-left: 8vw;*/
+        text-align: center;
         -webkit-transform: translateY(-50%);
         transform: translateY(-50%);
-        background-repeat: no-repeat;
-        background-size: 100%;
+        background:  url('/index/images/enterprise/icon-vr.png') no-repeat;
+        background-size: cover;
         transition: all 0.5s;
         position: fixed;
+        top:4rem;
+        right: 0;
         z-index: 400;
-        height:8vw;
-        background-image: url(/index/images/roomrent/icon-list.png);
-
     }
     .header-icon.showHeaderIcon{
         right:-11.2vw;
     }
     .header-icon.index_down{
         z-index: 100;
-
     }
+
+    .wechat-concerns{
+        width:100%;
+        height:22.1rem;
+        background-color: #f1f1f1;
+    }
+    .wechat-concerns>.concerns-title{
+        box-sizing: border-box;
+        width:100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.6rem 1.4rem 1.3rem 1.4rem;
+    }
+    .wechat-concerns>.concerns-title>span{
+        padding:0 0.7rem;
+        font-size: 1.7rem;
+        color: #858585;
+    }
+    .wechat-concerns>.concerns-title:before,.wechat-concerns>.concerns-title:after{
+        content: '';
+        display: block;
+        flex:1;
+        border-top:1px dashed #DDDDDD;
+    }
+    .concerns-box{
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:1.4rem 3.2vw;
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+        background-color: #fff;
+        margin-bottom: 7.4rem;
+    }
+    .concerns-box>div{
+        /*flex:none;*/
+        width: 16.7vw;
+        height:16.7vw;
+        background: url("") no-repeat center;
+        background-size: cover;
+        border-radius: 50%;
+    }
+    .concerns-box>ul{
+        width:54.8vw;
+        box-sizing: border-box;
+        padding:0 2.66666vw;
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+    }
+    .concerns-box>ul>li.concerns-box-title{
+        width:100%;
+        color: #333;
+        font-size: 1.6rem;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+    .concerns-box>ul>li.concerns-box-info{
+        width:100%;
+        color: #666;
+        font-size: 1.3rem;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+    .concerns-box>a{
+        /*flex: none;*/
+        width: 16.7vw;
+        height:9.6vw;
+        border-radius: 4px;
+        border:1px solid #09BB07;
+        text-align: center;
+        line-height: 9.6vw;
+        color: #09BB07;
+        font-size: 1.6rem;
+    }
+
+
 </style>
 {/block}
 
@@ -188,7 +277,7 @@
             </li>
         </ul>
     </div>
-    <i class="header-icon" @click="toFloorList"></i>
+    <div class=" header-icon " @click="toFloorList"></div>
     <ul class="my-nav">
         <li :class="{active:isActive==0}" @click="changeTab(0)">企业介绍</li>
         <li :class="{active:isActive==1}" @click="changeTab(1)" v-if="baseData.service!=''">企业服务</li>
@@ -196,8 +285,19 @@
         <li :class="{active:isActive==3}" @click="changeTab(3)">联系我们</li>
     </ul>
     <ul class="my-content">
-        <li class="profile" :class="{'contentShow':isActive==0}" v-html="baseData.present">
-
+        <li class="profile" :class="{'contentShow':isActive==0}">
+            <div v-html="baseData.present" v-if="baseData.present" class="profile-content"></div>
+            <div class="wechat-concerns" v-if="baseData.wechat_number">
+                <div class="concerns-title"><span>微信公众号</span></div>
+                <div class="concerns-box">
+                    <div :style="{'backgroundImage':'url('+baseData.wechat_img+')'}"></div>
+                    <ul>
+                        <li class="concerns-box-title" v-text="baseData.wechat_name">杭州之图网络科技有限公司杭州之图网络科技有限公司</li>
+                        <li class="concerns-box-info" v-text="baseData.wechat_description">有限的时间哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈有限的时间哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</li>
+                    </ul>
+                    <a :href="baseData.wechat_number">关注</a>
+                </div>
+            </div>
         </li>
         <li class="service" :class="{'contentShow':isActive==1}" v-if="baseData.service!=''">
             <ul>

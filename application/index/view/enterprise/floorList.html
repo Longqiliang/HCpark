@@ -38,8 +38,9 @@
     .houses-mask-hidden{
         background-color: rgba(0,0,0,0);
     }
-    .houses-list-box{
-        padding-top: 23.47vw;
+    .header{
+        position: relative;
+        z-index: 5;
     }
 </style>
 
@@ -48,21 +49,24 @@
 {block name="body"}
 <div id="app">
     <div class="header">
-        <h2 @click="checkPark" class="header-tit">
-            <span v-html="showPark"></span> <i class="allow-down"></i>
-        </h2>
-        <div class="houses-icon-box">
-            <template v-if="parkName.index =='人工智能产业园'">
-                <span class="mar-sm"><i class="houses-icon icon-rentable"></i>空置</span>
-                <span class="mar-sm"><i class="houses-icon icon-reserve"></i>预订</span>
-                <span class="mar-sm"><i class="houses-icon icon-renewable"></i>已租</span>
-            </template>
-            <template v-else>
-                <span ><i class="houses-icon icon-rentable"></i>可租</span>
-                <span ><i class="houses-icon icon-renewable"></i>已租</span>
+        <!--<h2 @click="checkPark" class="header-tit">-->
+            <!--<span v-html="showPark"></span> <i class="allow-down"></i>-->
+        <!--</h2>-->
+        <!--<div class="houses-icon-box" >-->
+            <!--<template v-if="parkName.index =='人工智能产业园'">-->
+                <!--<span class="mar-sm"><i class="houses-icon icon-rentable"></i>空置</span>-->
+                <!--<span class="mar-sm"><i class="houses-icon icon-reserve"></i>预订</span>-->
+                <!--<span class="mar-sm"><i class="houses-icon icon-renewable"></i>已租</span>-->
+            <!--</template>-->
+            <!--<template v-else>-->
+                <!--<span ><i class="houses-icon icon-rentable"></i>可租</span>-->
                 <!--<span ><i class="houses-icon icon-renewable"></i>已租</span>-->
-            </template>
-        </div>
+                <!--&lt;!&ndash;<span ><i class="houses-icon icon-renewable"></i>已租</span>&ndash;&gt;-->
+            <!--</template>-->
+        <!--</div>-->
+        <h2 class="header-tit">
+            <span v-html="showPark"></span>
+        </h2>
         <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="cancelPark">取消</span>
@@ -79,14 +83,16 @@
             </div>
             <div class="houses-list-item">
                 <template v-if="parkName.index =='人工智能产业园' && parkName.txt =='A幢' && item.floor == '2'">
-             <span  :class="classBar(item.rooms[0].empty,item.rooms[0].id)" @click="jump(item.rooms[0].room_id,item.rooms[0].empty)" class="room-lg">
-               运营中心
-            </span>
+                     <!--<span  :class="classBar(item.rooms[0].empty,item.rooms[0].id)" @click="jump(item.rooms[0].room_id,item.rooms[0].empty)" class="room-lg">-->
+                     <span  :class="classBar(item.rooms[0].empty,item.rooms[0].id)" @click="jumpToVr(item.rooms[0].panorama)" class="room-lg">
+                       运营中心
+                    </span>
                 </template>
                 <template v-else>
-             <span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jump(rooms.room_id || rooms.id,rooms.empty)">
-                {{rooms.room}}
-            </span>
+                     <!--<span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jump(rooms.room_id || rooms.id,rooms.empty)">-->
+                     <span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jumpToVr(item.panorama)">
+                        {{rooms.room}}
+                    </span>
                 </template>
 
             </div>
@@ -115,11 +121,7 @@
             }
         }
         console.log(curleft,curtop)
-        var headerH = document.querySelector('.header').clientHeight;
-        console.log(headerH);
-//        if(curtop>headerH){
-            curtop-=headerH
-//        }
+//       houses-mask
         console.log(curleft,curtop)
         return { x: curleft, y: curtop };
     }
@@ -201,8 +203,10 @@
                 this.parkName.index = '希垦科技园'
             }else if(this.baseInfo.park_id==80){
                 this.parkName.index = '人工智能产业园'
+            }else{
+                this.parkName.index = Object.keys(list)[0]
             }
-            this.parkName.txt = this.baseInfo.build_block+'幢'
+            this.parkName.txt = this.baseInfo.build_block?this.baseInfo.build_block:Object.keys(values[0])[0];
 
             var isHouseList = window.sessionStorage.getItem('isHouseList');
             if(isHouseList!==null){
@@ -277,9 +281,9 @@
                 if(id === parseInt(this.baseInfo.department_id)){
                     className += 'houses-mark'
                 }
-                if(type == '0') className += '';
-                if(type == '1') className += ' selectable';
-                if(type == '2') className += ' reserve-able';
+//                if(type == '0') className += '';
+//                if(type == '1') className += ' selectable';
+//                if(type == '2') className += ' reserve-able';
                 return className
             },
             parkToggle:function () {
@@ -312,6 +316,17 @@
                 var _this =this;
                 _this.popupVisible = true;
 //                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
+            },
+            jumpToVr(path){
+                var _this = this;
+                if(path){
+                    window.location.href=path
+                }else{
+                    _this.$toast({
+                        message:"该房间暂未添加全景图~",
+                        duration:1000
+                    });
+                }
             },
             jump:function (id,empty) {
                 if(!id){ return;}
