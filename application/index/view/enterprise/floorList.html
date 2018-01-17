@@ -64,8 +64,8 @@
                 <!--&lt;!&ndash;<span ><i class="houses-icon icon-renewable"></i>已租</span>&ndash;&gt;-->
             <!--</template>-->
         <!--</div>-->
-        <h2 class="header-tit">
-            <span v-html="showPark"></span>
+        <h2 class="header-tit"  @click="checkPark" >
+            <span v-html="showPark"></span><i class="allow-down"></i>
         </h2>
         <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
             <div class="picker-toolbar">
@@ -90,7 +90,7 @@
                 </template>
                 <template v-else>
                      <!--<span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jump(rooms.room_id || rooms.id,rooms.empty)">-->
-                     <span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jumpToVr(item.panorama)">
+                     <span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jumpToVr(rooms.panorama)">
                         {{rooms.room}}
                     </span>
                 </template>
@@ -206,19 +206,23 @@
             }else{
                 this.parkName.index = Object.keys(list)[0]
             }
-            this.parkName.txt = this.baseInfo.build_block?this.baseInfo.build_block:Object.keys(values[0])[0];
-
-            var isHouseList = window.sessionStorage.getItem('isHouseList');
-            if(isHouseList!==null){
-                this.isHouseList = JSON.parse(isHouseList);
-                if(this.isHouseList){
-                   var parkName =  window.sessionStorage.getItem('parkName');
-                    if(parkName!==null){
-                        this.parkName = JSON.parse(parkName);
-//                        window.sessionStorage.clear('parkName')
-                    }
-                }
+            if(this.baseInfo.build_block){
+                this.parkName.txt = this.baseInfo.build_block +'幢'
+            }else{
+                this.parkName.txt = Object.keys(values[0])[0];
             }
+
+//            var isHouseList = window.sessionStorage.getItem('isHouseList');
+//            if(isHouseList!==null){
+//                this.isHouseList = JSON.parse(isHouseList);
+//                if(this.isHouseList){
+//                   var parkName =  window.sessionStorage.getItem('parkName');
+//                    if(parkName!==null){
+//                        this.parkName = JSON.parse(parkName);
+////                        window.sessionStorage.clear('parkName')
+//                    }
+//                }
+//            }
         },
         mounted(){
             var _this = this;
@@ -319,6 +323,7 @@
             },
             jumpToVr(path){
                 var _this = this;
+                console.log(path)
                 if(path){
                     window.location.href=path
                 }else{
