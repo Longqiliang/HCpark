@@ -10,12 +10,12 @@
         padding:1.5rem 4vw;
         display: -webkit-flex;
         display: flex;
-        /*align-items: center;*/
+        align-items: center;
         border-bottom: 0.8rem solid  #f1f1f1;
+        background: #fff;
     }
     .my-header-img{
         width:16vw;
-        margin-right: 4vw;
     }
     .my-header-img>img{
         width:16vw;
@@ -24,33 +24,50 @@
     }
     .my-header-info{
         box-sizing: border-box;
-        /*flex:1;*/
-        width:72vw;
+        flex:1;
+        width:55.3vw;
         display: -webkit-flex;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        padding:0 4vw
     }
     .my-header-info>li:first-child{
         font-size: 1.6rem;
         color: #333;
-        /*overflow: hidden;*/
-        /*text-overflow: ellipsis;*/
-        /*white-space: nowrap;*/
-
     }
     .my-header-info>li:last-child{
         color: #333;
         font-size: 1.2rem;
         margin-top: 1rem;
-        word-wrap: break-word;
-        word-break: break-all;
+        display: flex;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
     }
     .my-header-info>li a{
         color: #333;
     }
     .my-header-info>li a.can_click{
+        flex:1;
+        box-sizing: border-box;
+        display: inline-block;
         color: #59b7f4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-spacing: normal;
+    }
+    .concerns-btn{
+        flex:none;
+        box-sizing: border-box;
+        width: 16.5vw;
+        height:9.06vw;
+        border-radius: 4px;
+        border:1px solid #09BB07;
+        text-align: center;
+        line-height: 9.06vw;
+        color: #09BB07;
+        font-size: 1.6rem;
     }
     /*tab*/
     .my-nav{
@@ -61,6 +78,7 @@
         font-size: 1.5rem;
         height:5rem;
         border-bottom: 2px solid #f1f1f1;
+        background-color: #ffffff;
     }
     .my-nav>li{
         margin-bottom: -2px;
@@ -76,17 +94,11 @@
         display: none;
     }
     .my-content>.profile>div.profile-content, .my-content>.contact{
-        padding:1.7rem 5.06666666vw 6.7rem;
+        padding:1.2rem;
+        font-size: 1.4rem;
     }
     .my-content>.profile *{
         max-width: 100%;
-    }
-    .my-content>.profile p,.my-content>.contact p{
-        overflow: hidden;
-        font-size: 1.4rem;
-        line-height: 2.0rem;
-        color: #666;
-        /*text-indent:2em;*/
     }
     .my-content>.contact .call_btn{
         position: fixed;
@@ -138,7 +150,6 @@
         font-size: 1.4rem;
         color: #666;
     }
-
     .my-content-info>li:last-child{
         width:100%;
         display: -webkit-box;
@@ -168,7 +179,7 @@
         background-size: cover;
         transition: all 0.5s;
         position: fixed;
-        top:4rem;
+        top:28vw;
         right: 0;
         z-index: 400;
     }
@@ -209,7 +220,6 @@
         align-items: center;
         justify-content: space-between;
         padding:1.4rem 3.2vw;
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
         background-color: #fff;
         margin-bottom: 7.4rem;
     }
@@ -246,17 +256,7 @@
         -webkit-line-clamp: 2;
         overflow: hidden;
     }
-    .concerns-box>a{
-        /*flex: none;*/
-        width: 16.7vw;
-        height:9.6vw;
-        border-radius: 4px;
-        border:1px solid #09BB07;
-        text-align: center;
-        line-height: 9.6vw;
-        color: #09BB07;
-        font-size: 1.6rem;
-    }
+
 
 
 </style>
@@ -276,6 +276,7 @@
                 <a v-else>暂无</a>
             </li>
         </ul>
+        <a :href="baseData.wechat_number" class="concerns-btn">关注</a>
     </div>
     <div class=" header-icon " @click="toFloorList"></div>
     <ul class="my-nav">
@@ -287,17 +288,16 @@
     <ul class="my-content">
         <li class="profile" :class="{'contentShow':isActive==0}">
             <div v-html="baseData.present" v-if="baseData.present" class="profile-content"></div>
-            <div class="wechat-concerns" v-if="baseData.wechat_number">
-                <div class="concerns-title"><span>微信公众号</span></div>
-                <div class="concerns-box">
-                    <div :style="{'backgroundImage':'url('+baseData.wechat_img+')'}"></div>
-                    <ul>
-                        <li class="concerns-box-title" v-text="baseData.wechat_name">杭州之图网络科技有限公司杭州之图网络科技有限公司</li>
-                        <li class="concerns-box-info" v-text="baseData.wechat_description">有限的时间哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈有限的时间哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</li>
-                    </ul>
-                    <a :href="baseData.wechat_number">关注</a>
-                </div>
-            </div>
+            <!--<div class="wechat-concerns" v-if="baseData.wechat_number">-->
+                <!--<div class="concerns-title"><span>微信公众号</span></div>-->
+                <!--<div class="concerns-box">-->
+                    <!--<div :style="{'backgroundImage':'url('+baseData.wechat_img+')'}"></div>-->
+                    <!--<ul>-->
+                        <!--<li class="concerns-box-title" v-text="baseData.wechat_name"></li>-->
+                        <!--<li class="concerns-box-info" v-text="baseData.wechat_description"></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
         </li>
         <li class="service" :class="{'contentShow':isActive==1}" v-if="baseData.service!=''">
             <ul>

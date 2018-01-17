@@ -13,12 +13,12 @@
         padding-top: 23.47vw;
     }
     body{background-color:#f1f1f1}
-    .search{background:#EFEFEF;
+    .search{background:#fff;
         box-sizing: border-box;
         width:100%;padding:.8rem 2.133vw;position:fixed;
         top:0;
         left:0;z-index:300}
-    .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#fff;text-align:center}
+    .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#efefef;text-align:center}
     .search>.unBtn{display:none}
     .search>.searchBox>.searchInput{display:none}
     .search>.searchBox>.searchText{display:inline-block;font-size:1.4rem;color:#999;padding-left:2rem;min-width:1px;line-height:3.2rem;height:3.2rem;background:url(/index/images/enterprise/search.png) 0 50% no-repeat;background-size:1.4rem 1.4rem}
@@ -41,8 +41,8 @@
         left:0;
         box-sizing: border-box;
         width:100%;
-        height:4rem;
-        line-height: 4rem;
+        height:3.6rem;
+        line-height: 3.6rem;
         border-top: 1px solid #e8e8e8;
         border-bottom: 1px solid #e8e8e8;
         display: -webkit-flex;
@@ -50,7 +50,7 @@
         align-items: center;
         justify-content: center;
         font-size: 1.5rem;
-        background-color: #EFEFEF;
+        background-color: #fff;
         z-index: 101;
     }
     .screen-box>li:not(:nth-child(2)){
@@ -72,7 +72,7 @@
         white-space: nowrap;
     }
     .list-position{
-        position:relative;top:0;left:0;padding:8.8rem 0 0 0;
+        position:relative;top:0;left:0;padding:8.4rem 0 0 0;
         width:100%;
         box-sizing:border-box;
         background-color: #fff;
@@ -266,9 +266,9 @@
         <div  :class="{overflow:inputStatus}" class="list-position" v-if="inputValue===''">
             <!--筛选-->
             <ul class="screen-box" >
-                <li @click="toggleTypeScreen(true)"><span>{{typeScreen.slots[0].values[typeScreen.sureIndex].text}}</span><i class="allow-down"></i></li>
+                <li @click="toggleTypeScreen(true)"><span>{{typeScreen.sureIndex===0?'企业类别':typeScreen.slots[0].values[typeScreen.sureIndex].text}}</span><i class="allow-down"></i></li>
                 <li></li>
-                <li @click="toggleScaleScreen(true)"><span>{{scaleScreen.slots[0].values[scaleScreen.sureIndex].text}}</span><i class="allow-down"></i></li>
+                <li @click="toggleScaleScreen(true)"><span>{{scaleScreen.sureIndex===0?'企业规模':scaleScreen.slots[0].values[scaleScreen.sureIndex].text}}</span><i class="allow-down"></i></li>
             </ul>
             <!--类型筛选弹选择出框-->
             <mt-popup  position="bottom"  v-model="typeScreen.isShow" class="mint-popup">
