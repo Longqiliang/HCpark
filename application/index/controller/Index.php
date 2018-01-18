@@ -69,6 +69,7 @@ class Index extends Controller
                 $point = new  ExchangePoint();
                 $server = new  Service();
                 $park_id = $server->findParkid($department);
+                $department = (int)$department;
                 $map = [
                     'userid' => $mobile,
                     'content' => '注册登录',
@@ -76,7 +77,7 @@ class Index extends Controller
                     'create_time' => time(),
                     'park_id' => $park_id,
                     'status'=>0,
-                    'top_company'=>json_encode([(int)$department]),
+                    'top_company'=>json_encode([$department]),
                     'type'=>2
                 ];
                 $point->save($map);
