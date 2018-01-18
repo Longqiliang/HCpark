@@ -59,7 +59,7 @@ class Index extends Controller
                 $tableUser['department'] = $department;
                 $tableUser['company_address'] = input('room');
                 unset($tableUser['enable']);
-                unset($tableUser['userid']);
+                //unset($tableUser['userid']);
                 $is_user = $wechatUser->where('userid', $mobile)->find();
                 if ($is_user) {
                     $tableUser['status'] = 1;
@@ -74,7 +74,6 @@ class Index extends Controller
                     $point = new  ExchangePoint();
                     $server = new  Service();
                     $park_id = $server->findParkid($department);
-
                     $map = [
                         'userid' => $mobile,
                         'content' => '注册登录',
