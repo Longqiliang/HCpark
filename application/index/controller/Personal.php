@@ -1477,7 +1477,7 @@ class Personal extends Base
             $map['top_company']=json_encode([$department]);
         }
         //不换部门（只换房间）
-        if($department!=$userinfo['departmnet']){
+        if($department!=$userinfo['department']){
             $map['manage'] = 0;
             $map['water_status'] = 0;
             $map['fee_status']=0;
