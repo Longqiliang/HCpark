@@ -52,40 +52,40 @@ class Index extends Controller
             $result = $weObj->createUser($newUser);
 //            var_dump($weObj->errCode.'||'.$weObj->errMsg);
 //            var_dump($result);
-            $tableUser = $newUser;
-            $tableUser['department'] = $department;
-            $tableUser['company_address'] = input('room');
-            unset($tableUser['enable']);
-            unset($tableUser['userid']);
-            $is_user = $wechatUser->where('userid', $mobile)->find();
-            if ($is_user) {
-                $tableUser['status'] = 1;
-                $wechatUser->save(['status' => 1, 'company_address' => input('room')], ['userid' => $mobile]);
-            } else {
-                //注册后获得1个积分，重复注册不会重复获得；
-                $tableUser['score'] = 2;
-                $department2 = json_encode([(int)$department]);
-                $tableUser['top_company']=$department2;
-                $wechatUser->save($tableUser);
-                //并记录
-                $point = new  ExchangePoint();
-                $server = new  Service();
-                $park_id = $server->findParkid($department);
 
-                $map = [
-                    'userid' => $mobile,
-                    'content' => '注册登录',
-                    'score' => 2,
-                    'create_time' => time(),
-                    'park_id' => $park_id,
-                    'status'=>0,
-                    'type'=>2
-                ];
-                $point->save($map);
-
-            }
             if ($result && $result['errcode'] == 0) {
                 // 跳转到微信插件二维码
+                $tableUser = $newUser;
+                $tableUser['department'] = $department;
+                $tableUser['company_address'] = input('room');
+                unset($tableUser['enable']);
+                unset($tableUser['userid']);
+                $is_user = $wechatUser->where('userid', $mobile)->find();
+                if ($is_user) {
+                    $tableUser['status'] = 1;
+                    $wechatUser->save(['status' => 1, 'company_address' => input('room')], ['userid' => $mobile]);
+                } else {
+                    //注册后获得1个积分，重复注册不会重复获得；
+                    $tableUser['score'] = 2;
+                    $department2 = json_encode([(int)$department]);
+                    $tableUser['top_company']=$department2;
+                    $wechatUser->save($tableUser);
+                    //并记录
+                    $point = new  ExchangePoint();
+                    $server = new  Service();
+                    $park_id = $server->findParkid($department);
+
+                    $map = [
+                        'userid' => $mobile,
+                        'content' => '注册登录',
+                        'score' => 2,
+                        'create_time' => time(),
+                        'park_id' => $park_id,
+                        'status'=>0,
+                        'type'=>2
+                    ];
+                    $point->save($map);
+                }
                 return $this->success('恭喜您，注册成功！');
             } else {
                 if ($weObj->errCode == 60104) {
