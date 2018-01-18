@@ -64,12 +64,14 @@ class Index extends Controller
             } else {
                 //注册后获得1个积分，重复注册不会重复获得；
                 $tableUser['score'] = 2;
+                $department2 = json_encode([(int)$department]);
+                $tableUser['top_company']=$department2;
                 $wechatUser->save($tableUser);
                 //并记录
                 $point = new  ExchangePoint();
                 $server = new  Service();
                 $park_id = $server->findParkid($department);
-                $department = (int)$department;
+
                 $map = [
                     'userid' => $mobile,
                     'content' => '注册登录',
@@ -77,7 +79,6 @@ class Index extends Controller
                     'create_time' => time(),
                     'park_id' => $park_id,
                     'status'=>0,
-                    'top_company'=>json_encode([$department]),
                     'type'=>2
                 ];
                 $point->save($map);
