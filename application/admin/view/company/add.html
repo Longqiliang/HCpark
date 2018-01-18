@@ -244,7 +244,7 @@
         var sizeType = $("[name = 'size_type']").val();
         var image = $("input[name='front_cover']").val();
         var phone = $("[name='phone']").val();
-        var whechat_number = $("[name='wechat-number']").val();
+        var wechat_number = $("[name='wechat-number']").val();
         var contents = $('#summernote').summernote('code');
         var presents = $('.summernote').summernote('code');
         var url = $("[name='site']").val();
@@ -252,7 +252,6 @@
 
 
         var urlReg = /^https?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
-        console.log(wechat_description)
         var site = protocol + '://' + url;
         if (!urlReg.test(site)) {
             updateAlert('所填写的官网网址：'+site+'，格式不正确', 'error');
@@ -272,7 +271,7 @@
                 present: presents,
                 type: compantType,
                 size_type:sizeType,
-                wechat_number:whechat_number,
+                wechat_number:wechat_number,
             },
             success: function (data) {
                 if (data.code == 1) {
