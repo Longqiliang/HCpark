@@ -47,14 +47,15 @@
     .search-mask-close:after,.search-mask-close:before{content:'';display:block;width:0;height:2rem;border-left:2px solid #fff;position:absolute;left:50%;top:50%}
     .search-mask-close:after{-webkit-transform:rotate(45deg) translate(-50%,-50%);-moz-transform:rotate(45deg) translate(-50%,-50%);-ms-transform:rotate(45deg) translate(-50%,-50%);-o-transform:rotate(45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(45deg)}
     .search-mask-close:before{-webkit-transform:rotate(-45deg) translate(-50%,-50%);-moz-transform:rotate(-45deg) translate(-50%,-50%);-ms-transform:rotate(-45deg) translate(-50%,-50%);-o-transform:rotate(-45deg) translate(-50%,-50%);transform:translate(-50%,-50%) rotate(-45deg)}
-    .input-ft-right{text-align:right;float:right;color:#999;font-size:1.5rem}
+    .input-ft-right{text-align:right;float:right;color:#999!important;font-size:1.5rem;}
+    #app input[disabled]{color:#999;background-color: #fff;-webkit-text-fill-color:#999;-webkit-opacity:1;opacity: 1;  }
     .btn-gray{background-color:#c3c3c3}
     .my-mask{position:fixed;top:0;right:0;bottom:0;left:0;z-index:999}
     .my-mask-back{position:absolute;top:0;right:0;bottom:0;left:0;z-index:996;background-color:rgba(0,0,0,.3)}
     .my-mask-content{width:79.2vw;background-color:#f9f9f9;position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%,-60%);-moz-transform:translate(-50%,-60%);-ms-transform:translate(-50%,-60%);-o-transform:translate(-50%,-60%);transform:translate(-50%,-60%);transform:translate(-50%,-60%);z-index:999;border-radius:10px;overflow:hidden}
     .my-mask-content>h3{padding:1.7rem 0;margin:0;text-align:center;color:#333;font-size:1.8rem}
     .my-mask-input{padding:1.2rem 2rem}
-    .my-mask-input>input{display:block;box-sizing:border-box;width:100%;height:3.5rem;padding:1.5rem .5rem;border:1px solid #dcdcdc;border-radius:5px;text-align:center;font-size:1.4rem}
+    .my-mask-input>input{display:block;box-sizing:border-box;width:100%;height:3.5rem;padding:1.5rem .5rem;border:1px solid #dcdcdc;border-radius:5px;text-align:center;font-size:1.4rem;background-color: #fff}
     .my-mask-input>span{display:block;width:100%;text-align:center;color:#999;line-height:2rem;font-size:1.2rem}
     .my-phone-list>li{width:53vw;margin:0 auto;padding-bottom:2rem;color:#333;font-size:1.5rem}
     .my-radio+span{position:relative;line-height:1.5rem;padding-left:3rem}
@@ -90,11 +91,11 @@
     </ul>
     <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg">
     <ul class="list default-list">
-        <li><a href="javascript:;"><p>姓名 <input type="text" class="input-ft-right" v-model="personName" @input="()=>isChanged=true" placeholder="请输入姓名" :readonly="!showBtn"> </p></a></li>
+        <li><a href="javascript:;"><p>姓名 <input type="text" class="input-ft-right" v-model="personName" @input="()=>isChanged=true" placeholder="请输入姓名" :disabled="!showBtn"> </p></a></li>
         <li @click="toggleGender"><a :class="{'item-pull-right':showBtn}"><p>性别 <span class="ft-right park-txt">{{gender.now}}</span></p></a></li>
         <li><a href="javascript:;"><p>电话 <span class="ft-right">{{info.mobile}}</span></p></a></li>
-        <li><a ><p>身份证号 <input type="text" class="input-ft-right" v-model="idNumber" @input="()=>isChanged=true"  placeholder="请输入身份证号码" :readonly="!showBtn"></p></a></li>
-        <li><a ><p>车牌号 <input type="text" class="input-ft-right" v-model="plateNumber" @input="()=>isChanged=true"  placeholder="请输入车牌号码" :readonly="!showBtn"></p></a></li>
+        <li><a ><p>身份证号 <input type="text" class="input-ft-right" v-model="idNumber" @input="()=>isChanged=true"  placeholder="请输入身份证号码" :disabled="!showBtn"></p></a></li>
+        <li><a ><p>车牌号 <input type="text" class="input-ft-right" v-model="plateNumber" @input="()=>isChanged=true"  placeholder="请输入车牌号码" :disabled="!showBtn"></p></a></li>
         <li><a :class="{'item-pull-right':(showBtn && info.can_change==='yes')}" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.park_name"></span></p></a></li>
         <li @click="toggleMark"><a :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>公司 <span class="ft-right">{{nowCompany.depart_name}}</span></p></a></li>
         <li v-if="nowCompany.department_id!=78 && nowCompany.department_id!=91"><a @click="togglePopup" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>办公地点 <span class="ft-right">{{nowRoom}}</span></p></a></li>
