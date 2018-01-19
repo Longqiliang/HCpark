@@ -253,8 +253,7 @@
 
 {block name="body"}
 <div id="app" :class="{'overflow':isShowGuide}">
-    <i class="header-icon" @click="parkToggle" :class="[isHouseList ? 'icon-tab' : 'icon-list',inputStatus?'index_down':'',!isShowHeaderIcon?'showHeaderIcon':'' ]"></i>
-    <div  v-if="!isHouseList">
+    <div  v-if="true">
         <div class="search" :class="{isClick:inputStatus}" >
             <div class="searchBox" @click="isClick">
                 <div class="searchText"><span class="searchText_c">请在此输入企业名称</span></div>
@@ -367,54 +366,6 @@
             </li>
         </ul>
     </div>
-    <div class=""  v-if="isHouseList">
-        <div class="header">
-            <h2 @click="checkPark" class="header-tit">
-                <span v-html="showPark"></span> <i class="allow-down"></i>
-            </h2>
-            <div class="houses-icon-box" v-show="isHouseList">
-                <template v-if="parkName.index =='人工智能产业园'">
-                    <span class="mar-sm"><i class="houses-icon icon-rentable"></i>空置</span>
-                    <span class="mar-sm"><i class="houses-icon icon-reserve"></i>预订</span>
-                    <span class="mar-sm"><i class="houses-icon icon-renewable"></i>已租</span>
-                </template>
-                <template v-else>
-                    <span ><i class="houses-icon icon-rentable"></i>可租</span>
-                    <span ><i class="houses-icon icon-renewable"></i>已租</span>
-                    <!--<span ><i class="houses-icon icon-renewable"></i>已租</span>-->
-                </template>
-
-            </div>
-            <mt-popup  position="bottom"  v-model="popupVisible" class="mint-popup">
-                <div class="picker-toolbar">
-                    <span class="mint-datetime-action mint-datetime-cancel" @click="cancelPark">取消</span>
-                    <span class="mint-datetime-action mint-datetime-confirm" @click="selectPark">确定</span>
-                </div>
-                <mt-picker :slots="slots" @change="onParkChange" ></mt-picker>
-            </mt-popup>
-        </div>
-        <div class="houses-list-box">
-            <div class="houses-list" v-for="item of showhouseList" >
-                <div class="houses-list-tit">
-                    {{item.floor}}楼
-                </div>
-                <div class="houses-list-item">
-                    <template v-if="parkName.index =='人工智能产业园' && parkName.txt =='A幢' && item.floor == '2'">
-                 <span  :class="classBar(item.rooms[0].empty)" @click="jump(item.rooms[0].room_id,item.rooms[0].empty)" class="room-lg">
-                   运营中心
-                </span>
-                    </template>
-                    <template v-else>
-                 <span v-for="rooms of item.rooms" :class="classBar(rooms.empty)" @click="jump(rooms.room_id || rooms.id,rooms.empty)">
-                    {{rooms.room}}
-                </span>
-                    </template>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
     <div class="guide-mask" :class="{'my-show':isShowGuide}">
         <img src="/index/images/enterprise/icon-item.png" alt="" class="icon-item">
         <img src="/index/images/enterprise/icon-arrow.png" alt="" class="icon-arrow">
@@ -435,26 +386,18 @@
             }
         }
     });
-    var list = {$room};
-    var values = [];
-    for(var i in list){
-        values.push(list[i]);
-    }
     var app= new Vue({
         el:'#app',
         data:{
             isSubmit:false,
-            roomList:{$room},
             inputStatus:false,
             isFocus:false,
             inputValue:'',
             companyList:{$list},
             searchList:[],
             topCompany:{$top_company},
-            isShowHeaderIcon:true,
-            interval:'',
             isShowGuide:false,
-            //筛选
+            /**筛选**/
             scaleScreen:{
                 isShow:false,
                 slots: [
@@ -503,81 +446,32 @@
                 sureIndex:0,
                 index:0
             },
-            //楼盘表
-            isHouseList:false,
-            list:list,
-            popupVisible:false,
-            parkPicker:'',
-            name:Object.keys(list),
-            parkName:{
-                index:Object.keys(list)[0],
-                txt:Object.keys(values[0])[0]
-            },
-            parkTxt:{
-                index:Object.keys(list)[0],
-                txt:Object.keys(values[0])[0]
-            },
-            slots: [
-                {
-                    defaultIndex: 1,
-                    values: Object.keys(list)
-                },{
-                    defaultIndex: 1,
-                    values:Object.keys(Object.values(list)[0])
-                }
-            ],
         },
         created(){
-            var isHouseList = window.sessionStorage.getItem('isHouseList');
-
-            if(isHouseList!==null){
-                this.isHouseList = JSON.parse(isHouseList);
-                if(this.isHouseList){
-                   var parkName =  window.sessionStorage.getItem('parkName');
-                    if(parkName!==null){
-                        this.parkName = JSON.parse(parkName);
-                    }
-                }
-            }else if(!this.isHouseList){
-                console.log('企业列表')
-                var companyScreen =  window.sessionStorage.getItem('companyScreen');
-                if(companyScreen!==null){
-                    companyScreen = JSON.parse(companyScreen);
-                    this.scaleScreen.sureIndex = companyScreen.scaleScreenIndex ;
-                    this.typeScreen.sureIndex = companyScreen.typeScreenIndex ;
-                }
+            var companyScreen =  window.sessionStorage.getItem('companyScreen');
+            if(companyScreen!==null){
+                companyScreen = JSON.parse(companyScreen);
+                this.scaleScreen.sureIndex = companyScreen.scaleScreenIndex ;
+                this.typeScreen.sureIndex = companyScreen.typeScreenIndex ;
             }
         },
         mounted(){
             var _this = this;
+            /**是否显示引导**/
             var canShowGuide = window.localStorage.getItem('canShowGuide');
             if(canShowGuide===null){
                 window.localStorage.setItem('canShowGuide','no');
                 this.isShowGuide=true
             }
-            _this.interval = setTimeout(function () {
-                        _this.isShowHeaderIcon = false
-                    },2000);
-//            头部楼盘表切换按钮定时隐藏，滑动显示
-            window.onscroll = function(){
-                _this.isShowHeaderIcon = true;
-                if(_this.interval){
-                    clearInterval(_this.interval);
-                }
-                clearInterval(_this.interval);
-                _this.interval = setTimeout(function () {
-                    _this.isShowHeaderIcon = false
-                },2000)
-            };
             _this.$nextTick(function() {
                 setTimeout(function() {
-                    _this.slots[0].defaultIndex = 0;
                     _this.scaleScreen.slots[0].defaultIndex = 0;
                     _this.typeScreen.slots[0].defaultIndex = 0;
                 }, 100);
             });
         },
         computed:{
+            /**筛选后数据**/
             topScreenList(){
                 var list = this.topList,
                         scaleItem =this.scaleScreen.slots[0].values[this.scaleScreen.sureIndex],
@@ -662,6 +556,7 @@
                 }
                 return list
             },
+            /**搜索后数据**/
             searchTopList(){
                 //                搜索
                 if(this.inputValue!==''){
@@ -694,6 +589,7 @@
                     return [] ;
                 }
             },
+            /**过滤出基础数据**/
             topList:function () {
                 var _this = this;
                 if(_this.topCompany.length===0){
@@ -731,37 +627,9 @@
                 }
                 return list;
             },
-            showhouseList:function () {
-                var _this = this;
-                for(var obj in _this.list){
-                    for(var arr in _this.list[obj]){
-                        if(_this.parkName.index == obj && _this.parkName.txt == arr){
-                            return _this.list[obj][arr].houselist;
-                        }
-                    }
-                }
-            },
-            showrentList:function () {
-                var _this = this;
-                for(var obj in _this.list){
-                    for(var arr in _this.list[obj]){
-                        if(_this.parkName.index == obj && _this.parkName.txt == arr){
-                            return _this.list[obj][arr].rentlist;
-                        }
-                    }
-                }
-            },
-            showPark:function () {
-                var _this = this;
-                return _this.parkName.index + _this.parkName.txt;
-            },
-            showState:function () {
-                var _this = this;
-                _this.parkName
-            }
         },
         methods:{
-//            规模筛选
+            /**规模筛选**/
             toggleScaleScreen(isOpen){
                 var _this = this;
                 if(isOpen){
@@ -782,7 +650,7 @@
                 }
 
             },
-//            类型筛选
+            /**类型筛选*/
             toggleTypeScreen(isOpen){
                 var _this = this;
                 if(isOpen){
@@ -803,6 +671,7 @@
                 }
 
             },
+            /**网址隐藏协议**/
             hidProtocol(url){
                 var url = url || '',
                         start=url.indexOf('://');
@@ -813,6 +682,7 @@
                     return url;
                 }
             },
+            /**置顶**/
             toggleTop(isTop,id){
                 var _this = this;
                 this.isFocus = false;
@@ -863,56 +733,6 @@
                         duration:1000
                     });
                 });
-            },
-            classBar:function (type) {
-                if(type == '0') return '';
-                if(type == '1') return 'selectable';
-                if(type == '2') return 'reserve-able';
-            },
-            parkToggle:function () {
-                var _this = this;
-                _this.isHouseList =!_this.isHouseList;
-                window.sessionStorage.setItem('isHouseList',JSON.stringify(_this.isHouseList));
-//                重置隐藏切换按钮的定时器
-                if(_this.interval){clearInterval(_this.interval)};
-                _this.interval = setTimeout(function () {
-                    _this.isShowHeaderIcon = false
-                },2000)
-            },
-            cancelPark:function () {
-                this.popupVisible = false;
-            },
-            selectPark:function () {
-                var _this = this;
-                _this.popupVisible = false;
-                _this.parkName = _this.parkTxt;
-                _this.loading = false;
-            },
-            onParkChange:function (picker,values) {
-                var _this = this;
-                _this.parkPicker =  picker;
-                if(values[0]){
-                    picker.setSlotValues(1,Object.keys(_this.list[values[0]]));
-                }
-                _this.parkTxt ={
-                    index:values[0],
-                    txt:values[1]
-                };
-            },
-            checkPark:function () {
-                var _this =this;
-                _this.popupVisible = true;
-//                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
-            },
-            /**楼盘表的跳转**/
-            jump:function (id,empty) {
-                if(!id){ return;}
-                window.sessionStorage.setItem('parkName',JSON.stringify(this.parkName ))
-                if(!empty){
-                    window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
-                    return;
-                }
-                window.location.href = "/index/roomrent/rent?room_id="+id;
             },
             /**企业列表的跳转**/
             jumpTo(id){

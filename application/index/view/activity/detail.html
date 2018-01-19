@@ -35,6 +35,98 @@
     .table-row-header>span,.table-row-block-header>span{
         color: #666;
     }
+    #app{
+        padding-bottom: 5rem;
+    }
+    .btn-box{
+        width:100vw;
+        position: fixed;
+        bottom:-5rem;
+        left:0;
+        background-color: #fff;
+        transition:all 500ms;
+    }
+    .btn-box-hidden{
+        bottom:0;
+    }
+    .textarea-box *{
+        max-width: 100%;
+    }
+
+
+
+    /*报名*/
+    #signin{
+        position: fixed;
+        bottom:0;
+        left:0;
+        width: 100%;
+        overflow: hidden;
+        z-index: 10;
+    }
+    #signin .table-box-title{
+        box-sizing: border-box;
+        padding:1.2rem 4vw;
+        text-align: center;
+        font-size: 1.8rem;
+        border-bottom: 1px solid #f1f1f1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .sign-up-bg{
+        height:100vh;
+        width:100vw;
+        background-color: rgba(0,0,0,.0);
+        transition:all 200ms;
+        z-index: 5;
+    }
+    .sign-up-bg.isShow{
+        background-color: rgba(0,0,0,.4);
+    }
+
+    #signin .sign-up-box{
+        position: absolute;
+        left:0;
+        bottom: -100%;
+        transition:all 300ms;
+    }
+    #signin .sign-up-box.isShow{
+        bottom:0;
+    }
+    #signin .textarea-box{
+        color: #666;
+        height:5rem;
+    }
+    #signin .table-row-header{
+        width:6rem;
+        color: #666;
+    }
+    #signin .table-row-block-header{
+        color: #666;
+    }
+    #signin .table-row-input{
+        flex:1;
+    }
+    #signin textarea{
+        height:6rem;
+    }
+    #signin .active-know{
+        display: block;
+        color: #999;
+        font-size: 1.3rem;
+        text-align: center;
+        line-height: 2;
+        margin: 0.6rem 0;
+    }
+    #signin .active-know>a{
+        color: #69B9F9;
+    }
+    #signin .btn-box{
+        position: static;
+        padding:1.2rem 1.2rem 0 ;
+    }
+    #signin .btn{height:4rem;line-height:4rem;  border-radius:5px;font-size:1.5rem}
 </style>
 {/block}
 
@@ -87,14 +179,53 @@
                 </div>
             </div>
         </div>
-        <div class="btn-box">
+        <div class="btn-box"  :class="{'btn-box-hidden':isShowBtn}">
             <div class="btn btn-block btn-end" v-if="baseInfo.status == 0" >活动已取消</div>
             <div class="btn btn-block btn-end" v-else-if="baseInfo.status == 1" >活动暂未开始</div>
             <div class="btn btn-block btn-end" v-else-if="state(baseInfo.status,baseInfo.start_time)==='noSignUp'" >报名已结束</div>
             <div class="btn btn-block btn-end" v-else-if="state(baseInfo.status,baseInfo.start_time)==='end'" >活动已结束</div>
-            <div class="btn btn-block btn-joined" v-else-if="baseInfo.is_sign === 'yes'">已报名</div>
+            <div class="btn btn-block btn-end" v-else-if="baseInfo.is_sign === 'yes'">已报名</div>
             <div class="btn btn-block btn-end" v-else-if="baseInfo.activity_number && count == baseInfo.activity_number " >人数已满</div>
-            <div class="btn btn-block btn-success" @click="jumpTo(baseInfo.id)" v-else>我要报名</div>
+            <div class="btn btn-block btn-success" @click="toggleSignUpMask" v-else>我要报名</div>
+        </div>
+    </div>
+
+    <div id="signin" v-if="isShowMask">
+        <div class="sign-up-bg" :class="{'isShow':isShowedMask}" @click="toggleSignUpMask"></div>
+        <div class="sign-up-box"  :class="{'isShow':isShowedMask}" >
+            <div class="sign-up-info">
+                <div class="table-box">
+                    <div class="table-box-title"><span class="iconfont hc-cha" @click="toggleSignUpMask"></span><span>填写报名信息</span><span></span></div>
+                    <div class="table-row-box">
+                        <div class="table-row">
+                            <span class="table-row-header">姓名</span>
+                            <input type="text" class="table-row-input" placeholder="请输入姓名" v-model="subData.name">
+                        </div>
+                        <div class="table-row">
+                            <span class="table-row-header">电话</span>
+                            <input type="text" class="table-row-input" placeholder="请输入电话" v-model="subData.mobile">
+                        </div>
+                        <div class="table-row">
+                            <span class="table-row-header">企业</span>
+                            <input type="text" class="table-row-input" placeholder="请输入企业" v-model="subData.department">
+                        </div>
+                        <div class="table-row-block">
+                            <div class="table-row-block-header">备注信息</div>
+                            <textarea name="" id="" cols="30" rows="10" placeholder="请输入备注信息..." v-model="subData.remark"></textarea>
+                        </div>
+                        <!--<div class="table-row-block">-->
+                            <!--<div class="table-row-block-header">报名须知</div>-->
+                            <!--<div class="textarea-box" v-html="baseInfo.registration_required"></div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+                <div class="btn-box">
+                    <div class="btn btn-block btn-success" @click="ajaxPost">提交</div>
+                </div>
+                <div class="active-know">
+                    提交表示您已阅读<a :href="'/index/activity/needKnow/id/'+baseInfo.id">《报名须知》</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -128,28 +259,71 @@
     var app = new Vue({
         el: '#app',
         data: {
+            userInfo:{$user},
             count:{$count},
-            baseInfo:{$info}
+            baseInfo:{$info},
+            interval:'',
+            isShowBtn:true,
+            isShowMask:false,
+            isShowedMask:false,
+            subData:{
+                name:'',
+                mobile:'',
+                department:'',
+                remark:'',
+                activity_id:''
+            }
         },
         created(){
             if(this.baseInfo.status==0 || this.baseInfo.status == -1){
                 document.body.style.background = '#f5f5f5';
             }
+            Object.assign(this.subData,this.userInfo);
+            this.subData.activity_id = this.baseInfo.id;
+        },
+        mounted(){
+            //            头部楼盘表切换按钮定时隐藏，滑动显示
+            var _this = this;
+            window.onscroll = function(){
+                _this.isShowBtn = false;
+                if(_this.interval){
+                    clearInterval(_this.interval);
+                }
+                clearInterval(_this.interval);
+                _this.interval = setTimeout(function () {
+                    _this.isShowBtn = true
+                },500)
+            };
         },
         methods: {
+            toggleSignUpMask(){
+                var _this = this;
+                if(_this.isShowMask){
+                    console.log(_this.isShowMask)
+                    _this.isShowedMask = false;
+                    setTimeout(function () {
+                        _this.isShowMask = false;
+                    },300)
+                }else{
+                    console.log(_this.isShowMask)
+                    _this.isShowMask =true
+                    setTimeout(function () {
+                        _this.isShowedMask = true;
+                    },20)
+                }
+            },
             state(status ,time){
                 if(status!==undefined && time!==undefined){
                     if(status == 0){
                         return 'cancel'
-                    }else if(status == 2){
-                        return 'hot'
+                    }else if(status == 1){
+                        return 'un'
                     }
                     if(time*1000 > Date.parse(new Date())){
-                        if(status == 1){
-                            return 'un'
+                        if(status == 2){
+                            return 'hot'
                         }
                     }else if(Date.parse(new Date()) < (time*1000+ 24*60*60*1000)){
-                        console.log(Date.parse(new Date()),(time*1000+ 24*60*60*1000))
                         return 'noSignUp'
                     }else{
                         return 'end'
@@ -173,6 +347,75 @@
                     title = title.join('')
                 }
                 return title;
+            },
+            ajaxPost(){
+                var _this = this;
+                if(_this.subData.name===''){
+                    _this.$toast({
+                        message: '请输入姓名~',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }else if(!_this.subData.mobile){
+                    _this.$toast({
+                        message: '请输入电话~',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }else if(!_this.subData.department){
+                    _this.$toast({
+                        message: '请输入企业~',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }
+                if(_this.isSubmit){
+                    _this.$toast({
+                        message: '提交中···',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }
+                _this.isSubmit = true;
+                _this.$http.post('/index/activity/signUp',_this.subData).then(function (res) {
+                    _this.isSubmit = false;
+                    if(res.data.code===1){
+                        swal({
+                            title: '',
+                            text: '报名成功！',
+                            type:'success',
+                            confirmButtonColor: "#69B9F9",
+                            confirmButtonText: "确定"
+                        },function () {
+                            window.location.href='/index/activity/index'
+                        });
+                    }else{
+                        swal({
+                            title: '',
+                            text: res.data.msg,
+                            type:'error',
+                            confirmButtonColor: "#69B9F9",
+                            confirmButtonText: "确定"
+                        },function () {
+
+                        });
+                    }
+                },function (res) {
+                    _this.isSubmit = false;
+                    swal({
+                        title: '',
+                        text: '提交失败，请重试！',
+                        type:'error',
+                        confirmButtonColor: "#69B9F9",
+                        confirmButtonText: "确定"
+                    },function () {
+
+                    });
+                })
             },
         }
     })

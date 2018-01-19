@@ -30,7 +30,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding:0 4vw
+        padding:0 3vw
     }
     .my-header-info>li:first-child{
         font-size: 1.6rem;
@@ -60,12 +60,12 @@
     .concerns-btn{
         flex:none;
         box-sizing: border-box;
-        width: 16.5vw;
-        height:9.06vw;
+        width: 6rem;
+        height:3.3rem;
         border-radius: 4px;
         border:1px solid #09BB07;
         text-align: center;
-        line-height: 9.06vw;
+        line-height: 3.3rem;
         color: #09BB07;
         font-size: 1.6rem;
     }
@@ -165,31 +165,20 @@
     }
 
 
+
+
     .header-icon {
-        box-sizing: border-box;
-        width: 16.53vw;
-        height: 9.94vw;
-        line-height: 7.73vw;
-        font-size: 1.2rem;
-        /*padding-left: 8vw;*/
-        text-align: center;
+        position: fixed;
+        top: 18rem;
+        right: 0;
+        height: 8vw;
+        background: url(/index/images/roomrent/icon-list.png) no-repeat center;
+        width: 11.2vw;
         -webkit-transform: translateY(-50%);
         transform: translateY(-50%);
-        background:  url('/index/images/enterprise/icon-vr.png') no-repeat;
-        background-size: cover;
-        transition: all 0.5s;
-        position: fixed;
-        top:28vw;
-        right: 0;
-        z-index: 400;
+        background-size: 100%;
+        z-index: 3;
     }
-    .header-icon.showHeaderIcon{
-        right:-11.2vw;
-    }
-    .header-icon.index_down{
-        z-index: 100;
-    }
-
     .wechat-concerns{
         width:100%;
         height:22.1rem;
@@ -276,9 +265,9 @@
                 <a v-else>暂无</a>
             </li>
         </ul>
-        <a :href="baseData.wechat_number" class="concerns-btn" v-if="baseData.wechat_number">关注</a>
+        <a :href="baseData.wechat_number" class="concerns-btn" v-if="baseData.wechat_number">公众号</a>
     </div>
-    <div class=" header-icon " @click="toFloorList"></div>
+    <div class=" header-icon icon-tab" @click="toFloorList"></div>
     <ul class="my-nav">
         <li :class="{active:isActive==0}" @click="changeTab(0)">企业介绍</li>
         <li :class="{active:isActive==1}" @click="changeTab(1)" v-if="baseData.service!=''">企业服务</li>
@@ -288,16 +277,6 @@
     <ul class="my-content">
         <li class="profile" :class="{'contentShow':isActive==0}">
             <div v-html="baseData.present" v-if="baseData.present" class="profile-content"></div>
-            <!--<div class="wechat-concerns" v-if="baseData.wechat_number">-->
-                <!--<div class="concerns-title"><span>微信公众号</span></div>-->
-                <!--<div class="concerns-box">-->
-                    <!--<div :style="{'backgroundImage':'url('+baseData.wechat_img+')'}"></div>-->
-                    <!--<ul>-->
-                        <!--<li class="concerns-box-title" v-text="baseData.wechat_name"></li>-->
-                        <!--<li class="concerns-box-info" v-text="baseData.wechat_description"></li>-->
-                    <!--</ul>-->
-                <!--</div>-->
-            <!--</div>-->
         </li>
         <li class="service" :class="{'contentShow':isActive==1}" v-if="baseData.service!=''">
             <ul>

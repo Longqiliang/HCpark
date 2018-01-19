@@ -35,6 +35,15 @@ class Activity extends Base
 
         $count = ActivityComment::where(['activity_id'=>$data['id'],'status'=>['in',[1]]])->count();
 
+        $userid =  session('userId');
+        $user = WechatUser::where('userid',$userid)->find();
+        $userInfo = ActivityModel::where('id',$data['id'])->find();
+        $map=[
+            'name'=>$user['name'],
+            'department'=>isset($user->departmentName->name)?$user->departmentName->name:"",
+            'mobile'=>$user['mobile'],
+        ];
+        $this->assign('user',json_encode($map));
         $this->assign('count',$count);
         $this->assign('info',json_encode($info));
         return $this->fetch();
@@ -82,10 +91,17 @@ class Activity extends Base
              'status'=>$info['status']
          ];
          $this->assign('user',json_encode($map));
-
         }
 
         return $this->fetch('sign_up');
+    }
+    public function needKnow()
+    {   $data = input('');
+        $activity = new ActivityModel();
+        $Comment  =  new ActivityComment();
+        $activityInfo = $activity->where('id',$data['id'])->find();
+        $this->assign('info',json_encode($activityInfo['registration_required']));
+        return $this->fetch('need_know');
     }
 
 
