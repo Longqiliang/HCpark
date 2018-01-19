@@ -1451,6 +1451,7 @@ class Personal extends Base
         $user = new WechatUser();
         //园区企业置顶操作
         $userinfo = $user->where(['userid' => $userId])->find();
+        if($department!=$userinfo['department']){
         //不换园区（只改变默认的那个部门）
         if($park_id==$userinfo['park_id']){
             $top_company=is_array(json_decode($userinfo['top_company']))?json_decode($userinfo['top_company']):[];
@@ -1460,7 +1461,7 @@ class Personal extends Base
                 if(count($top_company)==1){
                     $map['top_company']=json_encode([$department]);
                 }else{
-                    $result=array_udiff($top_company,[$userinfo['department']],"myfunction");
+                    $result=array_udiff($top_company,[(int)$userinfo['department']],"myfunction");
                     array_unshift($result,$department);
                     $map['top_company']= json_encode(array_unique($result));
                 }
@@ -1477,7 +1478,6 @@ class Personal extends Base
             $map['top_company']=json_encode([$department]);
         }
         //不换部门（只换房间）
-        if($department!=$userinfo['department']){
             $map['manage'] = 0;
             $map['water_status'] = 0;
             $map['fee_status']=0;
