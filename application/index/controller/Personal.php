@@ -47,7 +47,6 @@ use app\index\model\ActivityComment;
 use app\index\model\Activity;
 
 
-
 class Personal extends Base
 {
     public function index()
@@ -113,7 +112,6 @@ class Personal extends Base
                 $people_card = $car[0]["people_card"];
             }
         }
-
         $office = !empty($info['company_address']) ? $info['company_address'] : "";
         //从送水地点中取 办公地址
         $water = WaterService::where(['userid' => $user_id, 'park_id' => $info['park_id']])->order("create_time desc")->select();
@@ -123,21 +121,17 @@ class Personal extends Base
                 $office = $water[1];
             }
         }
-
         if ($can_change == "no") {
             //希垦所有的企业
             $departmentXK = WechatDepartment::where(['parentid' => ['in', [4, 73, 74]]])->select();
             //滨江人工智能产业园所有企业
             $departmentBj = WechatDepartment::where(['parentid' => ['in', [92, 80]], 'id' => ['neq', 1]])->select();
-
         } else {
             //希垦所有的企业
             $departmentXK = WechatDepartment::where('parentid', 4)->select();
             //滨江人工智能产业园所有企业
             $departmentBj = WechatDepartment::where('parentid', 92)->select();
-
         }
-
         $park_xk = ['park_id' => 3, 'park_name' => '希垦科技园', 'departmentlist' => array()];
         $park_bj = ['park_id' => 80, 'park_name' => '人工智能产业园', 'departmentlist' => array()];
         $xk = $this->departmentData($departmentXK, $park_xk);
@@ -174,6 +168,11 @@ class Personal extends Base
             $parkArr[$k] = $v['id'];
         }*/
         //echo  json_encode($data['department']);
+        $input = '';
+        if (IS_POST) {
+            $input = input('');
+        }
+        $this->assign('input', $input);
         $this->assign('info', json_encode($data));
         return $this->fetch();
     }
@@ -437,28 +436,27 @@ class Personal extends Base
             $length = input('length');
             $type = input('type');
             $news_type = input('news_type');
-            if(!empty($news_type)) {
+            if (!empty($news_type)) {
                 if ($type == 2) {
-                    $news = DB::query("select * from tb_news  where status =0  and type=? order by  create_time DESC  limit ?,?", [$news_type,(int)$length, 6]);
+                    $news = DB::query("select * from tb_news  where status =0  and type=? order by  create_time DESC  limit ?,?", [$news_type, (int)$length, 6]);
                     $a = $news;
                     return $this->success('success', '', json_encode($news));
                 } elseif ($type == 1) {
-                    $news = DB::query("select * from tb_news  where status >0  and type=? order by  create_time DESC limit ?,?", [$news_type,(int)$length, 6]);
+                    $news = DB::query("select * from tb_news  where status >0  and type=? order by  create_time DESC limit ?,?", [$news_type, (int)$length, 6]);
+                    $a = $news;
+                    return $this->success('success', '', json_encode($news));
+                }
+            } else {
+                if ($type == 2) {
+                    $news = DB::query("select * from tb_news  where status =0  and type<=3 order by  create_time DESC  limit ?,?", [(int)$length, 6]);
+                    $a = $news;
+                    return $this->success('success', '', json_encode($news));
+                } elseif ($type == 1) {
+                    $news = DB::query("select * from tb_news  where status >0  and type<=3 order by  create_time DESC limit ?,?", [(int)$length, 6]);
                     $a = $news;
                     return $this->success('success', '', json_encode($news));
                 }
             }
-              else{
-                  if ($type == 2) {
-                      $news = DB::query("select * from tb_news  where status =0  and type<=3 order by  create_time DESC  limit ?,?", [(int)$length, 6]);
-                      $a = $news;
-                      return $this->success('success', '', json_encode($news));
-                  } elseif ($type == 1) {
-                      $news = DB::query("select * from tb_news  where status >0  and type<=3 order by  create_time DESC limit ?,?", [(int)$length, 6]);
-                      $a = $news;
-                      return $this->success('success', '', json_encode($news));
-                  }
-              }
         } else {
             //未审核
             $uncheck = DB::query("select * from tb_news where status =0  and type<=3 order by  create_time DESC  limit 6");
@@ -1123,8 +1121,8 @@ class Personal extends Base
                 return array();
                 break;
             case 3:
-                $list2 = Patent::where([ 'create_user' => $userid])->select();
-                int_to_string($list2, $map = array('type' => array(1 => '发明专利', 2 => '实用型专利', 3 => '外观设计'), 'status' => array(-1 =>'已删除',0 => '审核中', 1 => '审核成功', 2 => '审核失败')));
+                $list2 = Patent::where(['create_user' => $userid])->select();
+                int_to_string($list2, $map = array('type' => array(1 => '发明专利', 2 => '实用型专利', 3 => '外观设计'), 'status' => array(-1 => '已删除', 0 => '审核中', 1 => '审核成功', 2 => '审核失败')));
                 foreach ($list2 as $value) {
                     $map = [
                         'service_name' => isset($value['type_text']) ? $value['type_text'] : "",
@@ -1312,24 +1310,21 @@ class Personal extends Base
     }
 
     //我的活动
-    public  function  myActivity(){
-     $userid = session('userId');
-     $park_id = session('park_id');
-     $comment = new ActivityComment();
-     $activity = new Activity();
-     $CommentList = $comment->where(['userid'=>$userid,'status'=>['neq',-1],'park_id'=>$park_id])->select();
-     foreach ($CommentList as $value){
-        $activityinfo['activity'] =  isset($value->activity)?$value->activity:"";
-     }
-     $this->assign('list',json_encode($CommentList));
+    public function myActivity()
+    {
+        $userid = session('userId');
+        $park_id = session('park_id');
+        $comment = new ActivityComment();
+        $activity = new Activity();
+        $CommentList = $comment->where(['userid' => $userid, 'status' => ['neq', -1], 'park_id' => $park_id])->select();
+        foreach ($CommentList as $value) {
+            $activityinfo['activity'] = isset($value->activity) ? $value->activity : "";
+        }
+        $this->assign('list', json_encode($CommentList));
 
-    return $this->fetch();
+        return $this->fetch();
 
     }
-
-
-
-
 
 
     /*我的收藏下拉刷新*/
@@ -1451,36 +1446,35 @@ class Personal extends Base
         $user = new WechatUser();
         //园区企业置顶操作
         $userinfo = $user->where(['userid' => $userId])->find();
-        if($department!=$userinfo['department']){
-        //不换园区（只改变默认的那个部门）
-        if($park_id==$userinfo['park_id']){
-            $top_company=is_array(json_decode($userinfo['top_company']))?json_decode($userinfo['top_company']):[];
-            //原来的默认部门还在数组中
-            if(in_array($userinfo['department'],$top_company)){
-                //当前就他一个默认部门的情况
-                if(count($top_company)==1){
-                    $map['top_company']=json_encode([$department]);
-                }else{
-                    $result=array_udiff($top_company,[(int)$userinfo['department']],"myfunction");
-                    array_unshift($result,$department);
-                    $map['top_company']= json_encode(array_unique($result));
+        if ($department != $userinfo['department']) {
+            //不换园区（只改变默认的那个部门）
+            if ($park_id == $userinfo['park_id']) {
+                $top_company = is_array(json_decode($userinfo['top_company'])) ? json_decode($userinfo['top_company']) : [];
+                //原来的默认部门还在数组中
+                if (in_array($userinfo['department'], $top_company)) {
+                    //当前就他一个默认部门的情况
+                    if (count($top_company) == 1) {
+                        $map['top_company'] = json_encode([$department]);
+                    } else {
+                        $result = array_udiff($top_company, [(int)$userinfo['department']], "myfunction");
+                        array_unshift($result, $department);
+                        $map['top_company'] = json_encode(array_unique($result));
+                    }
+
+                } else {
+                    array_unshift($top_company, $department);
+                    $map['top_company'] = json_encode(array_unique($top_company));
+
                 }
 
-            }else{
-                array_unshift($top_company,$department);
-                $map['top_company']=json_encode(array_unique($top_company));
-
+            } //换园区
+            else {
+                $map['top_company'] = json_encode([$department]);
             }
-
-        }
-        //换园区
-        else{
-            $map['top_company']=json_encode([$department]);
-        }
-        //不换部门（只换房间）
+            //不换部门（只换房间）
             $map['manage'] = 0;
             $map['water_status'] = 0;
-            $map['fee_status']=0;
+            $map['fee_status'] = 0;
         }
         $result = $user->where(['userid' => $userId])->update($map);
         $res = $wechat->updateUser($data);
@@ -1493,6 +1487,16 @@ class Personal extends Base
 
             $this->error("修改失败");
         }
+    }
+
+    //企业列表
+    public function companyList()
+    {
+        $park_id = input('park_id');
+        $parkcompany = new ParkCompany();
+        $list = $parkcompany->where(['park_id' => $park_id, 'company_id' => ['notin', [78, 91]]])->select();
+        $this->assign('list', json_encode($list));
+        return $this->fetch();
     }
 
     //验证
@@ -1509,7 +1513,6 @@ class Personal extends Base
             $this->error("验证码错误！");
         }
     }
-
 
 
     public function version()
