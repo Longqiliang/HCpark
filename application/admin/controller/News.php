@@ -258,7 +258,7 @@ class News extends Admin
     /*推送*/
     public function send($id)
     {
-
+        $parkid = session('user_auth')['park_id'];
         $news = NewsModel::get(input('id'));
         if ($id) {
             $news = NewsModel::get($id);
@@ -284,7 +284,8 @@ class News extends Admin
                 ]
             ];
             $userId = '';
-            $userList = WechatUser::select();
+            //新闻只推送给该园区的用户
+            $userList = WechatUser::where('park_id',$parkid)->select();
             foreach ($userList as $user) {
                 $userId .= $user['userid'] . '|';
             }
