@@ -1139,7 +1139,7 @@ class Personal extends Base
                 break;
         }
     }
-
+    //版权
     public function getCopyRight($type)
     {
         $appid = 22;
@@ -1496,7 +1496,7 @@ class Personal extends Base
         $parkcompany = new ParkCompany();
         $list = $parkcompany->where(['park_id' => $park_id, 'company_id' => ['notin', [78, 91]]])->select();
         $this->assign('list', json_encode($list));
-        return $this->fetch();
+        return $this->fetch('company_choose');
     }
 
     //验证
