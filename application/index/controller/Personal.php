@@ -168,11 +168,6 @@ class Personal extends Base
             $parkArr[$k] = $v['id'];
         }*/
         //echo  json_encode($data['department']);
-        $input = '';
-        if (IS_POST) {
-            $input = input('');
-        }
-        $this->assign('input', $input);
         $this->assign('info', json_encode($data));
         return $this->fetch();
     }
@@ -1506,6 +1501,10 @@ class Personal extends Base
         $park_company = new ParkCompany();
         $company = $park_company->where('company_id', $department)->find();
         if ($company['company_code'] == input('company_code')) {
+
+
+
+
             $this->success("验证码成功！");
 
         } else {
