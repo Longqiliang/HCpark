@@ -65,12 +65,13 @@
     top:2.6666667vw;
     left:0;
     text-align: center;
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    border-top-right-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
     background-color: rgba(0,0,0,.4);
     color: #fff;
-    line-height: 2rem;
-    padding:0 0.6rem;
+    line-height: 3rem;
+    padding:0 1rem 0 0.5rem;
+    font-size: 1.3rem;
 }
 .active-item .active-info{
     box-sizing: border-box;
@@ -88,7 +89,7 @@
     display: block;
     font-size: 2rem;
     max-width: 80vw;
-    border-bottom: 2px solid rgba(255,255,255,.4);
+    border-bottom: 1px solid rgba(255,255,255,1);
     padding:0.8rem 0.5rem;
     overflow: hidden;
     white-space: nowrap;
@@ -160,7 +161,6 @@
 
 /*报名*/
 .sign-up-box{
-    padding:0 4vw;
     position: relative;
 }
 .sign-up-box>.active-title>span{
@@ -176,17 +176,14 @@
 .sign-up-info{
     box-sizing: border-box;
     width: 100%;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 10px 0 rgba(0,0,0,.1);
     background-color: #fff;
-    margin-bottom: 1.2rem;
     overflow: hidden;
 }
 
-.btn-box{box-sizing:border-box;padding:4vw 4.8vw;width:100%}
-.btn{height:4rem;line-height:4rem;border:none;border-radius:5px;color:#fff;text-align:center;font-size:1.5rem}
+.btn-box{box-sizing:border-box;width:100%}
+.btn{height:5rem;line-height:5rem;border:none;color:#fff;text-align:center;font-size:1.7rem}
 .btn-block{width:100%}
-.btn-warning{background-color:#fcc44b;color:#fff;font-size:1.5rem}
-.btn-success{background-color:#69B9F9;color:#fff;font-size:1.5rem}
+.btn-warning{background-color:#fcc44b;color:#fff;}
+.btn-success{background-color:#69B9F9;color:#fff;}
 .table-view-cell.group-cell{border-bottom:none}
 .btn-primary{background-color:#7DB8F2}

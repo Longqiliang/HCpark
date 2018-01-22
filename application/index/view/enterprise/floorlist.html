@@ -6,6 +6,9 @@
 <title>园区企业</title>
 <link rel="stylesheet" href="/index/css/roomrent/index.css">
 <style>
+    #app{
+        padding-bottom: 7rem;
+    }
     .header {
         background-color: #fff;
         position: fixed;
@@ -16,18 +19,23 @@
     }
     .houses-list-item span{
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
     .houses-list-item span.houses-mark{
         z-index: 10;
+    }
+    .houses-list-item span.selectable{
+        display: none;
+    }
+    .houses-list-item span.can-jump{
+        z-index: 20;
     }
     .houses-mask{
         position: fixed;
         top:0;
         left:0;
-        height:100%;
-        width:100%;
-        background-color: rgba(0,0,0,.4);
+        height:100vh;
+        width:100vw;
         -webkit-transition: all 200ms;
         -moz-transition: all 200ms;
         -ms-transition: all 200ms;
@@ -35,13 +43,61 @@
         transition: all 200ms;
         z-index: 5;
     }
-    .houses-mask-hidden{
+    .houses-mask-bg{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background-color: rgba(0,0,0,.4);
+        z-index: 6;
+    }
+
+    .overflow-hidden{
+        height:100vh;
+        width:100vw;
+        overflow: hidden;
+    }
+    .chooseMask{
+        position: fixed;
+        top:0;
+        right:0;
+        bottom:0;
+        left:0;
         background-color: rgba(0,0,0,0);
+    }
+    .jump-list{
+        position: absolute;
+        bottom:-6.5rem;
+        box-sizing: border-box;
+        /*height:rem;*/
+        width:6.4rem;
+        border-radius: 3px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        box-shadow: 0 0 4px rgba(0,0,0,0.1);
+        z-index: 40;
+    }
+    .jump-list>li{
+        box-sizing: border-box;
+        line-height: 3rem;
+        height:3rem;
+        width:100%;
+        text-align: center;
+        font-size: 1.4rem;
+    }
+    .jump-list>li:not(:last-child){
+        border-bottom: 1px solid #f1f1f1;
     }
     .header{
         position: relative;
         z-index: 5;
     }
+
+
 </style>
 
 {/block}
@@ -75,7 +131,11 @@
             <mt-picker :slots="slots" @change="onParkChange" ></mt-picker>
         </mt-popup>
     </div>
-    <div class="houses-mask" v-show="isShowMask>=2" :class="{'houses-mask-hidden':(isShowMask == 3)}" @click="closeMask"></div>
+    <div v-if="isShowMask" class="houses-mask"  :class="{'houses-mask-jump':showJumpList}">
+        <div class="houses-mask-bg"  @click="closeMask" >
+        </div>
+    </div>
+    <div class="chooseMask" v-show="showChooseMask" @click="checkedRoom={};showChooseMask=false"></div>
     <div class="houses-list-box">
         <div class="houses-list" v-for="item of showhouseList" >
             <div class="houses-list-tit">
@@ -84,14 +144,22 @@
             <div class="houses-list-item">
                 <template v-if="parkName.index =='人工智能产业园' && parkName.txt =='A幢' && item.floor == '2'">
                      <!--<span  :class="classBar(item.rooms[0].empty,item.rooms[0].id)" @click="jump(item.rooms[0].room_id,item.rooms[0].empty)" class="room-lg">-->
-                     <span  :class="classBar(item.rooms[0].empty,item.rooms[0].id)" @click="jumpToVr(item.rooms[0].panorama)" class="room-lg">
+                     <span  :class="classBar(item.rooms[0].empty,item.rooms[0].id)" @click="jumpChoose(item.rooms[0])" class="room-lg">
                        运营中心
-                    </span>
+                         <ul class="jump-list" v-if="item.rooms[0] === checkedRoom">
+                             <li @click="jumpTo(rooms.id)">查看详情</li>
+                             <li  @click="jumpToVr(rooms.panorama)">查看全景</li>
+                         </ul>
+                     </span>
                 </template>
                 <template v-else>
                      <!--<span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jump(rooms.room_id || rooms.id,rooms.empty)">-->
-                     <span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id)" @click="jumpToVr(rooms.panorama)">
+                     <span v-for="rooms of item.rooms" :class="classBar(rooms.empty,rooms.id,rooms)" :style="{zIndex:checkedRoom===rooms?20:''}" @click="jumpChoose(rooms)">
                         {{rooms.room}}
+                         <ul class="jump-list" v-if="checkedRoom===rooms">
+                             <li @click="jumpTo(rooms.id)">查看详情</li>
+                             <li @click="jumpToVr(rooms.panorama)">查看全景</li>
+                         </ul>
                     </span>
                 </template>
 
@@ -99,6 +167,7 @@
 
         </div>
     </div>
+    <!--<div class="houses-mask "></div>-->
 </div>
 {/block}
 
@@ -165,7 +234,11 @@
         el:'#app',
         data:{
             //是否显示遮罩
-            isShowMask:false,
+            isShowMask:0,//
+            previousMaskState:0,
+            checkedRoom:{},
+            showJumpList:false,
+            showChooseMask:false,
             //基础信息
             roomList:{$room},
             nowPlace:{
@@ -229,7 +302,7 @@
             var _this = this;
             var mark = document.querySelector('.houses-mark');
             if(mark){
-                _this.isShowMask = 2;
+                _this.previousMaskState = _this.isShowMask = 2;
                 ScrollToControl('.houses-mark');
             }else{
                 _this.$toast({
@@ -276,19 +349,21 @@
         methods:{
             closeMask(){
                 var _this = this;
-                _this.isShowMask = 3;
-                setTimeout(function () {
-                    _this.isShowMask = 1;
-                },200)
+                _this.checkedRoom = {};
+                if(_this.showChooseMask){
+                    _this.showChooseMask = false;
+                    return;
+                }
+                    _this.isShowMask = false;
             },
             classBar:function (type,id) {
                 var className = '';
                 if(id === parseInt(this.baseInfo.department_id)){
                     className += 'houses-mark'
                 }
-//                if(type == '0') className += '';
-//                if(type == '1') className += ' selectable';
-//                if(type == '2') className += ' reserve-able';
+                if(type == '0') className += '';
+                if(type == '1') className += ' selectable';
+                if(type == '2') className += ' reserve-able';
                 return className
             },
             parkToggle:function () {
@@ -322,6 +397,30 @@
                 _this.popupVisible = true;
 //                _this.parkPicker.setSlotValue(_this.parkTxt.index, _this.parkTxt.txt);
             },
+
+            jump:function (id,empty) {
+                if(!id){ return;}
+                window.sessionStorage.setItem('isHouseList',JSON.stringify(true));
+                window.sessionStorage.setItem('parkName',JSON.stringify(this.parkName ))
+                if(!empty){
+                    window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
+                    return;
+                }
+                window.location.href = "/index/roomrent/rent?room_id="+id;
+            },
+            jumpChoose(room){
+                var _this = this;
+                _this.showChooseMask = true;
+                if(_this.checkedRoom === room){
+                    _this.checkedRoom = {};
+                    return;
+                }
+                _this.checkedRoom = room;
+            },
+            jumpTo(id){
+//                window.location.href="/index/enterprise/info/id/"+id;
+                window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
+            },
             jumpToVr(path){
                 var _this = this;
                 console.log(path)
@@ -333,20 +432,6 @@
                         duration:1000
                     });
                 }
-            },
-            jump:function (id,empty) {
-                if(!id){ return;}
-                window.sessionStorage.setItem('isHouseList',JSON.stringify(true));
-                window.sessionStorage.setItem('parkName',JSON.stringify(this.parkName ))
-                if(!empty){
-                    window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
-                    return;
-                }
-                window.location.href = "/index/roomrent/rent?room_id="+id;
-            },
-            jumpTo(id){
-//                window.location.href="/index/enterprise/info/id/"+id;
-                window.location.href="/index/enterprise/detail/c/"+0+'/id/'+id;
             },
             isClick:function () {
                 this.inputStatus=true;
