@@ -1,0 +1,363 @@
+{extend name="public/common"}
+<style>
+
+</style>
+{block name="style"}
+<title>企业选择</title>
+<link rel="stylesheet" href="/index/css/roomrent/index.css">
+<style>
+    body{background-color:#f1f1f1}
+    .search{background:#fff;
+        box-sizing: border-box;
+        width:100%;padding:.8rem 2.133vw;
+        border-bottom: 1px solid #e8e8e8;
+        position:fixed;
+        top:0;
+        left:0;z-index:300}
+    .search>.searchBox{border-radius:.3rem;height:3.2rem;background:#efefef;text-align:center}
+    .search>.unBtn{display:none}
+    .search>.searchBox>.searchInput{display:none}
+    .search>.searchBox>.searchText{display:inline-block;font-size:1.4rem;color:#999;padding-left:2rem;min-width:1px;line-height:3.2rem;height:3.2rem;background:url(/index/images/enterprise/search.png) 0 50% no-repeat;background-size:1.4rem 1.4rem}
+    .search.isClick{background:#fff;border-bottom:1px solid #f1f1f1;display:flex;align-items:center;justify-content:space-between}
+    .search.isClick>.searchBox{background:#EFEFEF;padding-left:2.66vw;width:78vw;display:flex;align-items:center}
+    .search.isClick>.searchBox>.searchText{display:inline-block}
+    .search.isClick>.searchBox>.searchText>.searchText_c{display:none}
+    .search.isClick .searchInput{background:#EFEFEF;display:inline-block;font-size:1.4rem;height:3.2rem;width:61.33vw}
+    .search.isClick>.unBtn{display:block;padding:0;box-sizing:border-box;width:3.8rem;height:2.8rem;line-height:2.8rem;border-radius:5px;border:1px solid #5d9cec;color:#5d9cec;text-align:center;font-size:1.4rem}
+    .searchList{min-height:100vh;width:100%;position:absolute;top:0;left:0;z-index: 120}
+    .searchList.company-list{padding:0}
+    .searchList.company-list>li{margin-bottom:0;}
+    .searchList.bgWhite{background-color:rgba(255,255,255,1)}
+    .searchList>li:first-child{margin-top:4.8rem}
+
+    .screen-box{
+        position: fixed;
+        top:4.8rem;
+        left:0;
+        box-sizing: border-box;
+        width:100%;
+        height:3.6rem;
+        line-height: 3.6rem;
+        border-top: 1px solid #e8e8e8;
+        border-bottom: 1px solid #e8e8e8;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background-color: #fff;
+        z-index: 101;
+    }
+    .screen-box>li:not(:nth-child(2)){
+        flex:1;
+        width:50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding:0 2.4vw;
+    }
+    .screen-box>li:nth-child(2){
+        width:1px;
+        height:100%;
+        background-color: #e8e8e8;
+    }
+    .screen-box>li>span{
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+    .list-position{
+        position:relative;top:0;left:0;padding:4.8rem 0 0 0;
+        width:100%;
+        box-sizing:border-box;
+        background-color: #fff;
+    }
+    .company-list{box-sizing:border-box;width:100%;}
+    .company-list>li{
+        box-sizing: border-box;
+        width:100%;
+        padding-left: 2.4vw;
+    }
+    .company-list .li-content{box-sizing:border-box;width:100%;padding:.8rem 3.7333333vw;display:-webkit-flex;display:flex;background-color:#fff;border-bottom: 1px solid #e8e8e8}
+    .company-list-bg{display:none;margin:0;padding:0;min-height:100vh;width:100%;background-color:rgba(0,0,0,.5);position:fixed;top:0;left:0;z-index: 121}
+    .company-logo>img{text-align:center;line-height:59px;display:block;width:59px;height:59px;border-radius:3px}
+    .company-list .company-logo{margin-right:1.4rem}
+    .company-info{
+        position: relative;
+    }
+    .company-info>li{width:68vw;line-height:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .company-info>li:first-child{font-size:1.6rem;color:#333}
+    .company-info>li.company-info-mobile{font-size:1.2rem;color:#999}
+    .overflow{height:100vh;overflow:hidden}
+
+
+    .company-null{
+        position: absolute;
+        top:0;
+        left:0;
+        height: 100vh;
+        width:100vw;
+        background-color: #F5F5F5;
+    }
+    .company-null>img{
+        text-align: center;
+        width:100%;
+        margin-top: 8.8rem;
+    }
+    .my-show{
+        display: block;
+    }
+
+
+    .my-mask{position:fixed;top:0;right:0;bottom:0;left:0;z-index:999}
+    .my-mask-back{position:absolute;top:0;right:0;bottom:0;left:0;z-index:996;background-color:rgba(0,0,0,.3)}
+    .my-mask-content{width:79.2vw;background-color:#f9f9f9;position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%,-60%);-moz-transform:translate(-50%,-60%);-ms-transform:translate(-50%,-60%);-o-transform:translate(-50%,-60%);transform:translate(-50%,-60%);transform:translate(-50%,-60%);z-index:999;border-radius:10px;overflow:hidden}
+    .my-mask-content>h3{padding:1.7rem 0;margin:0;text-align:center;color:#333;font-size:1.8rem}
+    .my-mask-input{padding:1.2rem 2rem}
+    .my-mask-input>input{display:block;box-sizing:border-box;width:100%;height:3.5rem;padding:1.5rem .5rem;border:1px solid #dcdcdc;border-radius:5px;text-align:center;font-size:1.4rem;background-color: #fff}
+    .my-mask-input>span{display:block;width:100%;text-align:center;color:#999;line-height:2rem;font-size:1.2rem}
+
+    .my-btn-group{display:-webkit-flex;display:flex;justify-content:center;align-items:center;border-top:1px solid #dcdcdc}
+    .my-btn-group>li{height:4.8rem;line-height:4.8rem;font-size:1.8rem;color:#1F85EB;text-align:center;width:50%;box-sizing:border-box}
+    .my-btn-group>li>a{display:block;height:100%;width:100%;color:#1F85EB}
+    .my-btn-group>li:not(:last-child){border-right:1px solid #dcdcdc}
+</style>
+
+{/block}
+
+{block name="body"}
+<div id="app">
+    <div class="search" :class="{isClick:inputStatus}" >
+        <div class="searchBox" @click="isClick">
+            <div class="searchText"><span class="searchText_c">请在此输入企业名称</span></div>
+            <input type="text" v-model="inputValue" class="searchInput" placeholder="请在此输入企业名称" v-focus="isFocus">
+        </div>
+        <div class="unBtn" @click="isCancel">取消</div>
+    </div>
+    <!--公司列表-->
+    <div  :class="{overflow:inputStatus}" class="list-position" v-if="inputValue===''">
+        <!--置顶企业列表-->
+        <div class="company-null" v-if="companyList.length === 0">
+            <img src="/index/images/enterprise/null.jpg" alt="">
+        </div>
+        <ul class="company-list">
+            <li v-for="item in companyList" @click="checkCompany(item)">
+                <div class="li-content">
+                    <div class="company-logo">
+                        <img :src="item.img" alt="logo" v-if="item.img">
+                        <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+                    </div>
+                    <ul class="company-info">
+                        <li>{{item.name}}</li>
+                        <li v-if="item.mobile" class="company-info-mobile">联系电话：{{item.mobile}}</li>
+                        <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!--搜索列表-->
+    <div class="company-list-bg"  :class="{'my-show':(inputValue==='' && inputStatus)}"  @click="isCancel">
+        <div class="li-content "></div>
+    </div>
+    <ul class="searchList company-list list-position" :class="{bgWhite:inputValue}" v-if="inputStatus && inputValue!==''">
+        <li v-for="item in searchList" @click="checkCompany(item)">
+            <div class="li-content">
+                <div class="company-logo">
+                    <img :src="item.img" alt="logo" v-if="item.img">
+                    <img src="/index/images/index/icon-no.png" alt="logo" v-else>
+                </div>
+                <ul class="company-info">
+                    <li>{{item.name}}</li>
+                    <li v-if="item.mobile" class="company-info-mobile">联系电话：{{item.mobile}}</li>
+                    <li class="company-info-mobile" v-else>联系电话：暂无</li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+    <div class="my-mask" v-show="isShowCompanyMask">
+        <div class="my-mask-back" @click="showCompanyMask()"></div>
+        <div class="my-mask-content">
+            <h3>企业验证码</h3>
+            <div class="my-mask-input">
+                <input type="tel" placeholder="请输入企业验证码" v-model="company_code" maxlength="6"  v-focus="isShowCompanyMask">
+                <!--<span class="noPower">提示:验证码限6位数字</span>-->
+            </div>
+            <ul class="my-btn-group">
+                <li @click="showCompanyMask()">取消</li>
+                <li @click="companySubmit()">确定</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    Vue.directive('focus', {
+        // When the bound element is inserted into the DOM...
+        update: function (el,value) {
+            // Focus the element
+            if(value.value){
+                el.focus()
+            }
+        }
+    });
+    var app= new Vue({
+        el:'#app',
+        data:{
+            isSubmit:false,
+            inputStatus:false,
+            isFocus:false,
+            inputValue:'',
+            companyList:{$list},
+            //企业验证码
+            isShowCompanyMask:false,
+            company_code:'',
+            isPass:false,
+            nowCompany:{},
+            checkedCompany:{},
+
+        },
+        computed:{
+            /**搜索后数据**/
+            searchList(){
+                //                搜索
+                if(this.inputValue!==''){
+                    var list = this.companyList,
+                            reg=new RegExp(this.inputValue),
+                            regList=[];
+                    for(let i=0;i<list.length;i++){
+                        if(reg.test(list[i].name)){
+                            regList.push(list[i])
+                        }
+                    };
+                    return regList;
+                }else{
+                    return [] ;
+                }
+            },
+        },
+        methods:{
+            isClick:function () {
+                this.inputStatus=true;
+                this.isFocus = true;
+            },
+            isCancel:function () {
+                this.inputStatus=false;
+                this.isFocus = false;
+                this.inputValue='';
+            },
+            //验证码
+            checkCompany(item){
+                this.checkedCompany=item;
+                if(item.company_id!=78 && item.company_id!=91){
+                    this.isPass = false;
+                    this.showCompanyMask();
+                }else{
+                    this.nowCompany = item;
+                }
+            },
+            showCompanyMask(){
+                var _this = this;
+                _this.company_code = '';
+                if(_this.isShowCompanyMask && !_this.isPass){
+                    _this.checkedCompany = '';
+                    _this.isShowCompanyMask = false;
+                    return
+                }
+                _this.isShowCompanyMask=!_this.isShowCompanyMask
+            },
+            companySubmit(){
+                var _this = this;
+                if(!_this.company_code){
+                    this.$toast({
+                        message: '请输入企业验证码',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return
+                }else if(isNaN(_this.company_code) || _this.company_code < 0 || _this.company_code.length < 6){
+                    this.$toast({
+                        message: '企业验证码为六位纯小数',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    setTimeout(function () {
+                        _this.company_code = ''
+                    },1000)
+                    return
+                }
+                var data = {
+                    company_code:_this.company_code,
+                    department:_this.checkedCompany.company_id
+                };
+                _this.postSubmit(data,0, '企业验证成功！',function () {
+                    _this.isPass = true;
+                    _this.company_code = ''
+                    _this.nowCompany = _this.checkedCompany;
+//                    _this.toggleMark();
+                    _this.showCompanyMask();
+                    window.location.href = '/index/personal/personalinfo'
+                });
+            },
+            postSubmit(data,needSuccess,successText,successFun,errorFun){
+                var _this = this;
+                if(_this.isSubmit){
+                    _this.$toast({
+                        message: '提交中···',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                    return ;
+                }
+                _this.isSubmit = true;
+                _this.$http.post("/index/personal/verification",data).then(function (res) {
+                    _this.isSubmit = false;
+                    if(res.data.code===1){
+                        if(needSuccess===1){
+                            _this.$toast({
+                                message: successText,
+                                position: 'bottom',
+                                duration: 2000
+                            });
+                            successFun()
+                        }else{
+                            swal({
+                                title: '',
+                                text: successText,
+                                type:'success',
+                                confirmButtonColor: "#59B7F3",
+                                confirmButtonText: "确定"
+                            },function () {
+                                successFun()
+                            });
+                        }
+
+                    }else{
+                        swal({
+                            title: '',
+                            text: res.data.msg,
+                            type:'error',
+                            confirmButtonColor: "#59B7F3",
+                            confirmButtonText: "确定"
+                        });
+                    }
+
+                },function (res) {
+                    _this.isSubmit = false;
+                    swal({
+                        title: '',
+                        text: '请求失败，请重试！',
+                        type:'error',
+                        confirmButtonColor: "#59B7F3",
+                        confirmButtonText: "确定"
+                    });
+                })
+            },
+        }
+    });
+
+
+</script>
+{/block}
