@@ -194,7 +194,7 @@
 
 {block name="script"}
 <script>
-    Vue.directive('focus', {
+    var app=Vue.directive('focus', {
         // When the bound element is inserted into the DOM...
         update: function (el,value) {
             // Focus the element
@@ -217,7 +217,19 @@
             isPass:false,
             nowCompany:{},
             checkedCompany:{},
-
+        },
+        created(){
+            var infoRecord = window.sessionStorage.getItem('user_info_record');
+            if(infoRecord===null){
+                this.$toast({
+                    message: '未知的错误发生了，请返回后重新修改数据',
+                    position: 'bottom',
+                    duration: 2000
+                });
+                setTimeout(function () {
+                    window.location.href = '/index/personal/personalinfo'
+                },2000)
+            }
         },
         computed:{
             /**搜索后数据**/
@@ -296,9 +308,24 @@
                     _this.isPass = true;
                     _this.company_code = ''
                     _this.nowCompany = _this.checkedCompany;
-//                    _this.toggleMark();
-                    _this.showCompanyMask();
-                    window.location.href = '/index/personal/personalinfo'
+                    var infoRecord = window.sessionStorage.getItem('user_info_record');
+                    if(infoRecord!==null){
+                        infoRecord = JSON.parse(infoRecord);
+                        infoRecord.department = _this.checkedCompany.company_id;
+                        window.sessionStorage.setItem('user_info_record',JSON.stringify(infoRecord));
+                        _this.showCompanyMask();
+                        window.location.href = '/index/personal/personalinfo'
+                    }else{
+                        this.$toast({
+                            message: '未知的错误发生了，请返回后重新修改数据',
+                            position: 'bottom',
+                            duration: 2000
+                        });
+                        setTimeout(function () {
+                            window.location.href = '/index/personal/personalinfo'
+                        },2000)
+                    }
+
                 });
             },
             postSubmit(data,needSuccess,successText,successFun,errorFun){

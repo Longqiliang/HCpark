@@ -82,14 +82,14 @@
     </ul>
     <input type="file" class="hide" id="upImg" accept="image/jpg, image/png, image/gif, image/jpeg">
     <ul class="list default-list">
-        <li><a href="javascript:;"><p>姓名 <input type="text" class="input-ft-right" v-model="personName" @input="()=>isChanged=true" placeholder="请输入姓名" :disabled="!showBtn"> </p></a></li>
+        <li><a href="javascript:;"><p>姓名 <input type="text" class="input-ft-right" v-model="user_name" @input="()=>isChanged=true" placeholder="请输入姓名" :disabled="!showBtn"> </p></a></li>
         <li @click="toggleGender"><a :class="{'item-pull-right':showBtn}"><p>性别 <span class="ft-right park-txt">{{gender.now}}</span></p></a></li>
         <li><a href="javascript:;"><p>电话 <span class="ft-right">{{info.mobile}}</span></p></a></li>
         <li><a ><p>身份证号 <input type="text" class="input-ft-right" v-model="idNumber" @input="()=>isChanged=true"  placeholder="请输入身份证号码" :disabled="!showBtn"></p></a></li>
         <li><a ><p>车牌号 <input type="text" class="input-ft-right" v-model="plateNumber" @input="()=>isChanged=true"  placeholder="请输入车牌号码" :disabled="!showBtn"></p></a></li>
         <li><a :class="{'item-pull-right':(showBtn && info.can_change==='yes')}" @click="showParkPopup"><p>园区 <span class="ft-right park-txt" v-html="nowPark.park_name"></span></p></a></li>
-        <li @click="window.location.href='/index/personal/companyList/park_id/'+nowPark.park_id"><a :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>公司 <span class="ft-right">{{info.department}}</span></p></a></li>
-        <li v-if="info.department_id!=78 && info.department_id!=91"><a @click="togglePopup" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>办公地点 <span class="ft-right">{{nowRoom}}</span></p></a></li>
+        <li @click="toChooseCompany"><a :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>公司 <span class="ft-right">{{nowCompany.depart_name||'游客'}}</span></p></a></li>
+        <li v-if="nowCompany.department_id!=78 && nowCompany.department_id!=91 && nowCompany.department_id"><a @click="togglePopup" :class="{'item-pull-right':(showBtn && info.can_change==='yes')}"><p>办公地点 <span class="ft-right">{{nowRoom}}</span></p></a></li>
         <mt-popup  position="bottom"  v-model="roomVisible" class="mint-popup">
             <div class="picker-toolbar">
                 <span class="mint-datetime-action mint-datetime-cancel" @click="togglePopup">取消</span>
@@ -117,41 +117,6 @@
         <button class="btn btn-primary" @click="()=>showBtn=true" v-show="!showBtn">编辑</button>
         <button class="btn btn-primary" :class="{'btn-gray':!isChanged}" @click="savePark" v-show="showBtn">保存</button>
     </div>
-    <!--企业搜索-->
-    <div class="search_mark" v-show="isShowMark">
-        <div class="search_bg" @click="toggleMark"></div>
-        <div class="search_content">
-            <div class="search_content_box">
-                <div class="search" :class="{isClick:inputStatus}" >
-                    <div class="searchBox" @click="isClick">
-                        <div class="searchText"><span class="searchText_c">请在此搜索企业</span></div>
-                        <input type="text" v-model="inputValue" @input="toSearch" class="searchInput" id="search_input" placeholder="请输入企业名" v-focus="inputStatus">
-                    </div>
-                    <div class="unBtn" @click="isCancel">取消</div>
-                </div>
-                <div class="company-list-box">
-                    <!--公司列表-->
-                    <ul class="company-list" :class="{overflow:inputStatus}">
-                        <li v-for="item in companyList" @click="checkCompany(item)">
-                            {{item.depart_name}}
-                        </li>
-                    </ul>
-                    <!--搜索列表-->
-                    <ul class="searchList company-list" :class="{bgWhite:inputValue}" v-if="inputStatus">
-                        <li v-for="item in searchList" @click="checkCompany(item)">
-                            <ul class="company-info">
-                                {{item.depart_name}}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="search-mask-close" @click="toggleMark">
-                <span></span>
-            </div>
-        </div>
-    </div>
-
 </div>
 {/block}
 
@@ -159,22 +124,13 @@
 <script>
     var info  = {$info};
     var baseData=info.departmentlist;
-    Vue.directive('focus', {
-        // When the bound element is inserted into the DOM...
-        update: function (el,value) {
-            // Focus the element
-            if(value.value){
-                el.focus()
-            }
-        }
-    });
     var vm = new Vue({
         el:'#app',
         data:{
             info:info,
             showBtn:false,
             isChanged:false,
-//            选择性别
+           /** 选择性别**/
             gender:{
                 now:'',
                 check:'',
@@ -186,7 +142,7 @@
                     }
                 ]
             },
-//            选择园区
+            /**选择园区**/
             checkPark:{},
             nowPark:{},
             parkVisible:false,
@@ -197,16 +153,11 @@
                 }
             ],
             isCheckBtn:true,
-            //            搜索框
-            isShowMark:false,
-            inputStatus:false,
-            inputValue:'',
+            /**搜索框**/
             companyList:[],
-            searchList:[],
             nowCompany:{},
-            checkedCompany:{},
 
-//            选折器
+            /**房号选择器**/
             nowRoom:'',
             checkRoom:'',
             roomVisible:false,
@@ -216,33 +167,62 @@
                     values:[]
                 }
             ],
-            //姓名 + 身份证 + 车牌号
-            personName:'',
+            /**姓名 + 身份证 + 车牌号**/
+            user_name:'',
             idNumber:'',
             plateNumber:''
-
         },
         mounted:function () {
-//            初始化信息
+            /**初始化信息**/
             var _this = this;
-            for(var o=0;o<baseData.length;o++){
-                if(_this.info.park_id==baseData[o].park_id){
-                    _this.nowPark=baseData[o];
+            /**点击修改公司时的缓存**/
+            var infoRecord = window.sessionStorage.getItem('user_info_record');
+            if(infoRecord!==null){
+                infoRecord = JSON.parse(infoRecord);
+                this.showBtn = true;
+                this.isChanged = true;
+                for(var o=0;o<baseData.length;o++){
+                    if(infoRecord.park_id == baseData[o].park_id){
+                        _this.nowPark=baseData[o];
+                        _this.companyList = baseData[o].departmentlist
+                        break;
+                    }
                 }
-            }
-            for(var n=0;n<_this.companyList.length;n++){
-                if(_this.info.department_id == _this.companyList[n].department_id){
-                    _this.nowCompany = _this.companyList[n];
-                    _this.roomSlots[0].values = _this.companyList[n].roomlist;
-                    break;
+                for(var n=0;n<_this.companyList.length;n++){
+                    if(infoRecord.department == _this.companyList[n].department_id){
+                        _this.nowCompany = _this.companyList[n];
+                        _this.roomSlots[0].values = _this.companyList[n].roomlist;
+                        _this.nowRoom = _this.companyList[n].roomlist[0]||'';
+                        break;
+                    }
                 }
+                _this.user_name = infoRecord.name;
+                _this.plateNumber = infoRecord.plateNumber;
+                _this.idNumber = infoRecord.idNumber;
+                _this.gender.now = infoRecord.genderNow;
+                window.sessionStorage.clear('user_info_record');
+            }else{
+                for(var o=0;o<baseData.length;o++){
+                    if(_this.info.park_id == baseData[o].park_id){
+                        _this.nowPark=baseData[o];
+                        _this.companyList = baseData[o].departmentlist
+                        break;
+                    }
+                }
+                for(var n=0;n<_this.companyList.length;n++){
+                    if(_this.info.department_id == _this.companyList[n].department_id){
+                        _this.nowCompany = _this.companyList[n];
+                        _this.roomSlots[0].values = _this.companyList[n].roomlist;
+                        break;
+                    }
+                }
+                _this.user_name = this.info.name;
+                _this.plateNumber=_this.info.car_card;
+                _this.idNumber=_this.info.people_card;
+                _this.nowRoom=_this.info.office;
+                _this.gender.now = _this.info.sex;
             }
-            _this.plateNumber=_this.info.car_card;
-            _this.idNumber=_this.info.people_card;
-            _this.nowRoom=_this.info.office;
-            _this.gender.now = _this.info.sex;
-            _this.personName = _this.info.name;
-//            初始化选择器选项位置
+            /**初始化选择器选项位置**/
             _this.$nextTick(function() {
                 setTimeout(function() {
                     _this.slots[0].defaultIndex = 0;
@@ -252,7 +232,21 @@
             });
         },
         methods:{
-            //园区选择
+            /**选择企业**/
+            toChooseCompany(){
+                var data = {
+                    name:this.user_name,
+                    genderNow:this.gender.now,
+                    idNumber:this.idNumber,
+                    plateNumber:this.plateNumber,
+                    park_id:this.nowPark.park_id,
+                    infoDepartment:this.department,
+                    nowRoome:this.nowRoom
+                }
+                window.sessionStorage.setItem('user_info_record',JSON.stringify(data));
+                window.location.href = '/index/personal/companyList/park_id/' + this.nowPark.park_id;
+            },
+            /**园区选择**/
             showParkPopup:function () {
                 if(!this.showBtn){return ;}
                 if(this.info.can_change==='yes'){
@@ -281,51 +275,7 @@
                     _this.checkPark = v[0];
                 }
             },
-            //           公司搜索
-            toggleMark(){
-                if(!this.showBtn){return ;}
-                if(this.info.can_change==='yes') {
-                    this.isShowMark = !this.isShowMark;
-                    this.isCancel()
-                }
-            },
-            checkCompany(item){
-//                var input = document.getElementById("search_input");
-//                input.blur();
-//                console.log();
-                this.toggleMark()
-                this.checkedCompany=item;
-                if(item.department_id!=78 && item.department_id!=91){
-                    this.isPass = false;
-                    this.showCompanyMask();
-                }else{
-                    this.nowCompany = item;
-//                    this.toggleMark()
-                }
-                this.isChanged = true;
-            },
-            isClick:function () {
-                this.inputStatus=true;
-            },
-            isCancel:function () {
-                this.inputStatus=false;
-                this.inputValue='';
-                this.searchList=[]
-            },
-            toSearch:function () {
-                let reg=new RegExp(this.inputValue);
-                this.searchList=[];
-                if(!this.inputValue){
-                    this.searchList=[];
-                }else{
-                    for(let i=0;i<this.companyList.length;i++){
-                        if(reg.test(this.companyList[i].depart_name)){
-                            this.searchList.push(this.companyList[i])
-                        }
-                    }
-                }
-            },
-//            房号选择器
+            /**房号选择器**/
             togglePopup(){
                 if(!this.showBtn){return ;}
                 if(this.info.can_change==='no') {
@@ -365,7 +315,7 @@
                     _this.checkRoom = v[0];
                 }
             },
-            //            性别选择器
+            /**性别选择器**/
             toggleGender(){
                 if(!this.showBtn){return ;}
                 var gender=this.gender;
@@ -415,8 +365,8 @@
                     park_id:_this.nowPark.park_id,
                     departmentId:_this.nowCompany.department_id ||'',
                     room:_this.nowRoom,
-                    gender:_this.gender.now==='男'?'1':'2',
-                    user_name:_this.personName,
+                    gender:_this.gender.now === '男'?'1':'2',
+                    user_name:_this.user_name,
                     car_card:_this.plateNumber,
                     people_card:_this.idNumber
                 };
