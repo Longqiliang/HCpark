@@ -85,7 +85,7 @@ class Index extends Controller
                     ];
                     $point->save($map);
                 }
-                return $this->success('恭喜您，注册成功！');
+                return $this->success('恭喜您，注册成功！', session('requestUri'));
             } else {
                 if ($weObj->errCode == 60104) {
                     // 手机号码已经存在
