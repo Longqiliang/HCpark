@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\model\Park;
+use think\Db;
 use think\Loader;
 use wechat\TPWechat;
 use app\common\model\WechatDepartment;
@@ -11,6 +12,7 @@ use app\index\model\WechatUser;
 use app\common\behavior\Service;
 use app\common\model\CompanyContract;
 use app\common\model\ParkCompany;
+use app\common\model\VisitStatistics;
 
 class Index extends Admin
 {
@@ -43,15 +45,71 @@ class Index extends Admin
             'property' => $contract[2],
             'other' => $contract[3],
         ];
+        //园区统计
+        $visit = new  VisitStatistics();
+        $year = date("Y", time());
+        $month = date("m", time());
+        $day = date("d", time());
+        $t = date('t');                                    // 本月一共有几天
+        $firstTime = mktime(0, 0, 0, $month, 1, $year);     // 创建本月开始时间
+        $lastTime = mktime(23, 59, 59, $month, $t, $year);  // 创建本月结束时间
+        //本月
+        $map = ['date' => ['in', [$firstTime, $lastTime], 'park_id' => $id]];
+        $list = Db::query("select date,SUM(visit_number) as visit_number   from tb_visit_statistics where date between ? and ? and park_id = ? GROUP BY  date ", [$firstTime, $lastTime, 3]);
+
+        // $list = $visit->where($map)->group('date')->select();
+        $dates = [];
+        foreach ($list as $key => $value) {
+            $list[$key]['date'] = (int)$value['date'];
+            $list2 = Db::query("select   user_id ,count(*) number  from tb_visit_statistics where date =? and park_id = ?  group by user_id ", [$value['date'], 3]);
+            $list[$key]['user_number'] = count($list2);
+            array_push($dates, $value['date']);
+        }
+
+        $list3=[];
+        //echo json_encode($list);
+        for ($Time = $firstTime; $Time <= $lastTime; $Time = $Time + 86400) {
+            if (!in_array($Time, $dates)) {
+                $map = [
+                    'date' => $Time,
+                    'visit_number' => 0,
+                    'user_number' => 0
+                ];
+                array_push($list3, $map);
+            }else{
+
+            foreach ($list as  $value){
+
+                if($value['date']==$Time){
+
+                array_push($list3,$value);
+
+                }
+
+            }
+
+            }
+        }
+
+        $lister = [
+            'date' => [],
+            'visit_number' => [],
+            'user_number' => []
+        ];
+        foreach ($list3 as $value) {
+            array_push($lister['date'], date('d', $value['date']));
+            array_push($lister['visit_number'], $value['visit_number']);
+            array_push($lister['user_number'],$value['user_number']);
+
+        }
 
 
-//        return json_encode($array);
+        //echo json_encode($list);
+        //return json_encode($array);
 
         $this->assign('info', json_encode($array));
-//        echo json_encode($list);
-
-
-        $this->assign('list', json_encode($list));
+        //echo json_encode($list);
+        $this->assign('list', json_encode($lister));
         $this->assign('res', json_encode($res));
         return $this->fetch();
     }
@@ -83,7 +141,7 @@ class Index extends Admin
                     'avatar' => $wxUser['avatar'],
                     'department' => $wxUser['department'][0], //只选第一个所属部门
                     'park_id' => $id,
-                    'status' =>1
+                    'status' => 1
                 ];
                 foreach ($localUserList as $localUserkey => $localUser) {
                     if ($localUser['userid'] == $wxUser['userid']) {
@@ -121,11 +179,12 @@ class Index extends Admin
         }
     }
 
-    public  function  syncAll2(){
-    $this->syncDepartment();
-    $this->syncUser();
-    $this->syncTag();
-    return $this->success('成功');
+    public function syncAll2()
+    {
+        $this->syncDepartment();
+        $this->syncUser();
+        $this->syncTag();
+        return $this->success('成功');
 
 
     }
@@ -225,7 +284,7 @@ class Index extends Admin
         //同步园区企业列表
         $deleteId = [];
         $parkCompany = new ParkCompany();
-        $companyList = WechatDepartment::where(['parentid' => ['in',[4,92]]])->select();
+        $companyList = WechatDepartment::where(['parentid' => ['in', [4, 92]]])->select();
         foreach ($companyList as $k => $v) {
             $parkid = $this->findParkid($v['id']);
             $data = [
@@ -286,7 +345,7 @@ class Index extends Admin
             }
         }
 
-       // $this->success('同步标签成功！');
+        // $this->success('同步标签成功！');
     }
 
     //
