@@ -54,56 +54,7 @@ class Index extends Admin
         $firstTime = mktime(0, 0, 0, $month, 1, $year);     // 创建本月开始时间
         $lastTime = mktime(23, 59, 59, $month, $t, $year);  // 创建本月结束时间
         //本月
-        $map = ['date' => ['in', [$firstTime, $lastTime], 'park_id' => $id]];
-        $list = Db::query("select date,SUM(visit_number) as visit_number   from tb_visit_statistics where date between ? and ? and park_id = ? GROUP BY  date ", [$firstTime, $lastTime, 3]);
-
-        // $list = $visit->where($map)->group('date')->select();
-        $dates = [];
-        foreach ($list as $key => $value) {
-            $list[$key]['date'] = (int)$value['date'];
-            $list2 = Db::query("select   user_id ,count(*) number  from tb_visit_statistics where date =? and park_id = ?  group by user_id ", [$value['date'], 3]);
-            $list[$key]['user_number'] = count($list2);
-            array_push($dates, $value['date']);
-        }
-
-        $list3=[];
-        //echo json_encode($list);
-        for ($Time = $firstTime; $Time <= $lastTime; $Time = $Time + 86400) {
-            if (!in_array($Time, $dates)) {
-                $map = [
-                    'date' => $Time,
-                    'visit_number' => 0,
-                    'user_number' => 0
-                ];
-                array_push($list3, $map);
-            }else{
-
-            foreach ($list as  $value){
-
-                if($value['date']==$Time){
-
-                array_push($list3,$value);
-
-                }
-
-            }
-
-            }
-        }
-
-        $lister = [
-            'date' => [],
-            'visit_number' => [],
-            'user_number' => []
-        ];
-        foreach ($list3 as $value) {
-            array_push($lister['date'], date('d', $value['date']));
-            array_push($lister['visit_number'], $value['visit_number']);
-            array_push($lister['user_number'],$value['user_number']);
-
-        }
-
-
+        $lister = $this->changeMonth2($firstTime, $lastTime);
         //echo json_encode($list);
         //return json_encode($array);
 
@@ -113,6 +64,68 @@ class Index extends Admin
         $this->assign('res', json_encode($res));
         return $this->fetch();
     }
+
+    public function changeMonth()
+    {
+        $data = input('');
+        $list = $this->changeMonth2($data['first'], $data['end']);
+        if ($list) {
+            return $this->success('成功', '', json_encode($list));
+        } else {
+            return $this->error('失败');
+        }
+    }
+
+
+    public function changeMonth2($first, $second)
+    {
+
+        $list = Db::query("select date,SUM(visit_number) as visit_number   from tb_visit_statistics where date between ? and ? and park_id = ? GROUP BY  date ", [$first, $second, 3]);
+
+        // $list = $visit->where($map)->group('date')->select();
+        $dates = [];
+        foreach ($list as $key => $value) {
+            $list[$key]['date'] = (int)$value['date'];
+            $list2 = Db::query("select   user_id ,count(*) number  from tb_visit_statistics where date =? and park_id = ?  group by user_id ", [$value['date'], 3]);
+            $list[$key]['user_number'] = count($list2);
+            array_push($dates, $value['date']);
+        }
+        $list3 = [];
+        //echo json_encode($list);
+        for ($Time = $first; $Time <= $second; $Time = $Time + 86400) {
+            if (!in_array($Time, $dates)) {
+                $map = [
+                    'date' => $Time,
+                    'visit_number' => 0,
+                    'user_number' => 0
+                ];
+                array_push($list3, $map);
+            } else {
+
+                foreach ($list as $value) {
+
+                    if ($value['date'] == $Time) {
+
+                        array_push($list3, $value);
+                    }
+                }
+            }
+        }
+        $lister = [
+            'date' => [],
+            'visit_number' => [],
+            'user_number' => []
+        ];
+        foreach ($list3 as $value) {
+            array_push($lister['date'], date('d', $value['date']));
+            array_push($lister['visit_number'], $value['visit_number']);
+            array_push($lister['user_number'], $value['user_number']);
+
+        }
+
+        return $lister;
+    }
+
 
     public function test()
     {
