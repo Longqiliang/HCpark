@@ -20,6 +20,7 @@
 
 {block name="main"}
 <div class="wrapper wrapper-content">
+    <!--------------------园区信息、面积、企业类型、合同统计--------------------->
     <div class="row">
         <div class="col-sm-3">
             <div class="ibox float-e-margins">
@@ -69,28 +70,26 @@
                 </div>
             </div>
         </div>
-
-
+    </div>
+    <!-------------------------------用户信息统计-------------------------------->
+    <div class="row">
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <span class="label label-danger pull-right">总计</span>
                     <h5>用户信息统计</h5>
                 </div>
+                <div class="ibox-title">
+                    <b>当前月：</b><input type="month" class="checked_time">
+                </div>
                 <div class="ibox-content">
-                    <canvas id="donut-chart5" class="chart-holder" width="200" height="80">
+                    <canvas id="line-chart" class="chart-holder" width="200" height="80">
                     </canvas>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
+    <!-----------------------------------同步------------------------------------->
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
@@ -163,7 +162,122 @@
 
 
 <script type="text/javascript">
+    var list = {$list},
+            res = {$res},
+            info = {$info},
+            isSubmit = false;
 
+    var parameters1={
+                data:{
+                    labels: [
+                        "空置面积",
+                        "已租面积"
+                    ],
+                    datasets: [
+                        {
+                            data: [res.area_other, res.area_total],
+                            backgroundColor: [
+                                "#FF6384",
+                                "#36A2EB"
+                            ],
+                            hoverBackgroundColor: [
+                                "#FF6384",
+                                "#36A2EB"
+                            ]
+                        }]
+                }
+            },
+            parameters2={
+                data:{
+                    labels: [
+                        "100平米以下",
+                        "100-300平米",
+                        "300-600平米"
+                    ],
+                    datasets: [
+                        {
+                            data: [res.scale_one, res.type_two, res.type_three],
+                            backgroundColor: [
+                                "#FF6384",
+                                "#36A2EB",
+                                "#712341"
+                            ],
+                            hoverBackgroundColor: [
+                                "#FF6384",
+                                "#36A2EB",
+                                "#712341"
+                            ]
+                        }]
+                }
+            },
+            parameters3={
+                data:{
+                    labels: [
+                        "生活配置类",
+                        "中介服务类",
+                        "科技创新类"
+                    ],
+                    datasets: [
+                        {
+                            data: [res.type_one, res.type_two,res.type_three],
+                            backgroundColor: [
+                                "#FF6384",
+                                "#36A2EB",
+                                "#712341"
+                            ],
+                            hoverBackgroundColor: [
+                                "#FF6384",
+                                "#36A2EB",
+                                "#712341"
+                            ]
+                        }]
+                }
+            },
+            parameters4={
+                data:{
+                    labels: [
+                        "租赁合同",
+                        "物业合同",
+                        "其他合同"
+                    ],
+                    datasets: [
+                        {
+                            data: [info.rent, info.property,info.other],
+                            backgroundColor: [
+                                "#FF6384",
+                                "#36A2EB",
+                                "#712341"
+                            ],
+                            hoverBackgroundColor: [
+                                "#FF6384",
+                                "#36A2EB",
+                                "#712341"
+                            ]
+                        }]
+                }
+            },
+            lineData = {
+                data: {
+                    labels: list['date'],
+                    datasets: [
+                        {
+                            label: '使用次数',
+                            backgroundColor:"#ffbcc3",
+                            borderColor:"#ffbcc3",
+                            fill:false,
+                            data: list['visit_number']
+                        },
+                        {
+                            label: '使用人数',
+                            backgroundColor:"#a7d8eb",
+                            borderColor:"#a7d8eb",
+                            fill:false,
+                            data: list['user_number']
+                        }
+                    ]
+                }
+            };
+    console.log('list',list.date);
 
     /* 插件块关闭操作 */
     $(".title-opt .wm-slide").each(function(){
@@ -190,145 +304,90 @@
             tag.ladda( 'start' );
             $.get('syncTag').then(function () { tag.ladda('stop'); });
         });
-
+        //根据数据和方法画图表
+        drawDoughnut('donut-chart',parameters1);
+        drawDoughnut('donut-chart2',parameters2);
+        drawDoughnut('donut-chart3',parameters3);
+        drawDoughnut('donut-chart4',parameters4);
+        drawLine('line-chart',lineData);
+        //月份选择相关
+        //填入默认月
+        $('.checked_time').val(getNowYearMonth());
+        $('.checked_time').on('change',function () {
+            onMonthChange(this)
+        });
     });
-    var list={$list};
-    var res={$res};
-    var info = {$info};
 
-    var parameters1={
-        data:{
-            labels: [
-                "空置面积",
-                "已租面积"
-            ],
-            datasets: [
-                {
-                    data: [res.area_other, res.area_total],
-                    backgroundColor: [
-                        "#FF6384",
-                        "#36A2EB"
-                    ],
-                    hoverBackgroundColor: [
-                        "#FF6384",
-                        "#36A2EB"
-                    ]
-                }]
+
+
+    function getNowYearMonth() {
+        var time = new Date(),
+                year = time.getFullYear(),
+                month = time.getMonth()+1;
+        if(month<=9){
+            month = '0' + month;
         }
-    },
-    parameters2={
-        data:{
-            labels: [
-                "100平米以下",
-                "100-300平米",
-                "300-600平米"
-            ],
-            datasets: [
-                {
-                    data: [res.scale_one, res.type_two, res.type_three],
-                    backgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#712341"
-                    ],
-                    hoverBackgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#712341"
-                    ]
-                }]
-        }
-    },
-    parameters3={
-        data:{
-            labels: [
-                "生活配置类",
-                "中介服务类",
-                "科技创新类"
-            ],
-            datasets: [
-                {
-                    data: [res.type_one, res.type_two,res.type_three],
-                    backgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#712341"
-                    ],
-                    hoverBackgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#712341"
-                    ]
-                }]
-        }
-    },
-    parameters4={
-        data:{
-            labels: [
-                "租赁合同",
-                "物业合同",
-                "其他合同"
-            ],
-            datasets: [
-                {
-                    data: [info.rent, info.property,info.other],
-                    backgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#712341"
-                    ],
-                    hoverBackgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#712341"
-                    ]
-                }]
-        }
-    },
+        return year + '-' + month;
+    }
+    //月份改变监听的方法
+    function onMonthChange(e){
 
-     data11 = {
-         data: {
-             labels: list['date'],
-             datasets: [
-                 {
-                     label: '使用次数',
-                     backgroundColor:"#ffbcc3",
-                     borderColor:"#ffbcc3",
-                     fill:false,
-                     /*fillColor: 'rgba(255,255,255,0)',
-                     strokeColor: 'rgba(146,109,222,1)',
-                     pointColor: "#FF6384",
-                     pointStrokeColor: 'rgba(146,109,222,1)',*/
-                     data: list['visit_number']
-                 },
-                 {
-                     label: '使用人数',
-                     backgroundColor:"#a7d8eb",
-                     borderColor:"#a7d8eb",
-                     fill:false,
-                     /*fillColor: 'rgba(255,255,255,0)',
-                     strokeColor: 'rgba(87,199,212,1)',
-                     pointColor: "#36A2EB",
-                     pointStrokeColor: 'rgba(87,199,212,1)',*/
-                     data: list['user_number']
-                 }
-             ]
-         }
+        var time = new Date($(e).val()),
+                nowYear = time.getFullYear(),
+                nowMonth = time.getMonth(),
+                dayNum = getMonthDays(nowYear,nowMonth),
+                strTime = parseInt(new Date(nowYear, nowMonth, 1,0,0,0,0).getTime()/1000),
+                endTime = parseInt(new Date(nowYear, nowMonth, dayNum,23,59,59,999).getTime()/1000);
 
+        $.ajax({
+            url:'/admin/index/changeMonth',
+            type:'POST',
+            data:{first:strTime, end:endTime},
+            success:function (res) {
+                if(res.code===1){
+                   var  data = JSON.parse(res.data);
+                    lineData = {
+                        data: {
+                            labels: data['date'],
+                            datasets: [
+                                {
+                                    label: '使用次数',
+                                    backgroundColor:"#ffbcc3",
+                                    borderColor:"#ffbcc3",
+                                    fill:false,
+                                    data: data['visit_number']
+                                },
+                                {
+                                    label: '使用人数',
+                                    backgroundColor:"#a7d8eb",
+                                    borderColor:"#a7d8eb",
+                                    fill:false,
+                                    data: data['user_number']
+                                }
+                            ]
+                        }
+                    };
+                    drawLine('line-chart',lineData)
+                }else{
+                    var msg = res.msg||'请求出错啦，请重试~';
+                    updateAlert(msg, 'warning');
+                }
+            },
+            error:function (res) {
+                var msg = res.msg||'网络错误';
+                updateAlert(msg, 'error');
+            }
+        })
+        console.log(strTime,endTime)
+    }
 
-
-    };
-
-
-    //根据用数据和方法画图标
-    drawDoughnut('donut-chart',parameters1);
-    drawDoughnut('donut-chart2',parameters2);
-    drawDoughnut('donut-chart3',parameters3);
-    drawDoughnut('donut-chart4',parameters4);
-    drawLine('donut-chart5',data11)
-
-
-
+    //获得某月的天数
+    function getMonthDays(nowYear,myMonth){
+        var monthStartDate = new Date(nowYear, myMonth, 1);
+        var monthEndDate = new Date(nowYear, myMonth + 1, 1);
+        var days = (monthEndDate - monthStartDate)/(1000 * 60 * 60 * 24);
+        return days;
+    }
 
     //绘制甜甜圈具体方法
     function drawDoughnut(element,option) {
@@ -347,9 +406,7 @@
         new Chart(document.getElementById(element).getContext("2d"),options)
     }
 
-
-
-    //绘制甜甜圈具体方法
+    //绘制折线图具体方法
     function drawLine(element,option) {
         var options={
             type:'line',
@@ -369,13 +426,6 @@
                     bodyFontSize: 14,
                     titleMarginBottom: 10,
                     position: 'nearest',//tooltips就近显示
-                 /*   callbacks: {
-                        //可自定义tooltips上显示的文字
-                        label(tooltipItem, data) {
-                            return `状态: 在线`;
-                        }
-                    }*/
-
                 },
 
                 },
@@ -390,8 +440,6 @@
             } ;
         new Chart(document.getElementById(element).getContext("2d"),options)
     }
-
-
 
     highlight_subnav("{:Url('Index/index')}");
 </script>
