@@ -180,7 +180,7 @@
         <div class="my-mask-content">
             <h3>企业验证码</h3>
             <div class="my-mask-input">
-                <input type="tel" placeholder="请输入企业验证码" v-model="company_code" maxlength="6"  v-focus="isShowCompanyMask">
+                <input type="tel" placeholder="请输入企业验证码" v-model="company_code" maxlength="6"  v-focus="isCompanyCodeFocus">
                 <!--<span class="noPower">提示:验证码限6位数字</span>-->
             </div>
             <ul class="my-btn-group">
@@ -213,6 +213,7 @@
             companyList:{$list},
             //企业验证码
             isShowCompanyMask:false,
+            isCompanyCodeFocus:false,
             company_code:'',
             isPass:false,
             nowCompany:{},
@@ -260,7 +261,7 @@
                 this.isFocus = false;
                 this.inputValue='';
             },
-            //验证码
+            /**验证码**/
             checkCompany(item){
                 this.checkedCompany=item;
                 if(item.company_id!=78 && item.company_id!=91){
@@ -273,16 +274,21 @@
             showCompanyMask(){
                 var _this = this;
                 _this.company_code = '';
+                _this.isFocus = false;
                 if(_this.isShowCompanyMask && !_this.isPass){
                     _this.checkedCompany = '';
                     _this.isShowCompanyMask = false;
+                    this.isCompanyCodeFocus = false;
                     return
                 }
-                _this.isShowCompanyMask=!_this.isShowCompanyMask
+                _this.isShowCompanyMask = !_this.isShowCompanyMask;
+                _this.isCompanyCodeFocus =  _this.isShowCompanyMask;
             },
             companySubmit(){
                 var _this = this;
+                _this.isCompanyCodeFocus = false;
                 if(!_this.company_code){
+                    _this.isCompanyCodeFocus = true;
                     this.$toast({
                         message: '请输入企业验证码',
                         position: 'bottom',
@@ -296,6 +302,7 @@
                         duration: 2000
                     });
                     setTimeout(function () {
+                        _this.isCompanyCodeFocus = true;
                         _this.company_code = ''
                     },1000)
                     return
