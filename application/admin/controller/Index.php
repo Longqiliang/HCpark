@@ -21,7 +21,6 @@ class Index extends Admin
     {
         //首页所选园区ID
         $id = session('user_auth')['park_id'];
-
         if ($id == '1') {
             //园区统计
             $res = Park::field('id,area_total,area_use,area_other,scale_one,scale_two,scale_three,type_one,type_two,type_three')->find();
@@ -53,11 +52,14 @@ class Index extends Admin
         $t = date('t');                                    // 本月一共有几天
         $firstTime = mktime(0, 0, 0, $month, 1, $year);     // 创建本月开始时间
         $lastTime = mktime(23, 59, 59, $month, $t, $year);  // 创建本月结束时间
-        //本月
+        //本月企业微信使用情况数据
         $lister = $this->changeMonth2($firstTime, $lastTime);
         //echo json_encode($list);
         //return json_encode($array);
-
+        //现注册人数
+        $weObj = new TPWechat(config('party'));
+        $user_list = $weObj->getUserList($id,1,0);
+        $this->assign('number',count($user_list['userlist']));
         $this->assign('info', json_encode($array));
         //echo json_encode($list);
         $this->assign('list', json_encode($lister));
@@ -67,6 +69,7 @@ class Index extends Admin
 
     public function changeMonth()
     {
+
         $data = input('');
         $list = $this->changeMonth2($data['first'], $data['end']);
         if ($list) {
@@ -79,14 +82,14 @@ class Index extends Admin
 
     public function changeMonth2($first, $second)
     {
-
-        $list = Db::query("select date,SUM(visit_number) as visit_number   from tb_visit_statistics where date between ? and ? and park_id = ? GROUP BY  date ", [$first, $second, 3]);
+        $id = session('user_auth')['park_id'];
+        $list = Db::query("select date,SUM(visit_number) as visit_number   from tb_visit_statistics where date between ? and ? and park_id = ? GROUP BY  date ", [$first, $second, $id]);
 
         // $list = $visit->where($map)->group('date')->select();
         $dates = [];
         foreach ($list as $key => $value) {
             $list[$key]['date'] = (int)$value['date'];
-            $list2 = Db::query("select   user_id ,count(*) number  from tb_visit_statistics where date =? and park_id = ?  group by user_id ", [$value['date'], 3]);
+            $list2 = Db::query("select   user_id ,count(*) number  from tb_visit_statistics where date =? and park_id = ?  group by user_id ", [$value['date'], $id]);
             $list[$key]['user_number'] = count($list2);
             array_push($dates, $value['date']);
         }

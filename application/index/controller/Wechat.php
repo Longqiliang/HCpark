@@ -15,6 +15,7 @@ use app\index\model\WechatDepartment;
 use think\Loader;
 use think\Log;
 use wechat\TPWechat;
+use wechat\EasyWechat;
 use think\Controller;
 use app\common\model\ThirdUser as ThirdUserModel;
 use app\common\model\PayLog as PayLogModel;
@@ -23,6 +24,7 @@ use app\index\model\PropertyServer;
 use app\index\model\WaterService;
 use app\index\model\ActivityComment;
 use  app\index\model\Activity;
+use app\index\model\VisitStatistics;
 
 
 class Wechat extends Controller
@@ -31,22 +33,21 @@ class Wechat extends Controller
     {
         phpinfo();
     }
-
     public function callback()
     {
         $weObj = new TPWechat(config('wechat'));
         $weObj->valid();
     }
-
     public function valid()
     {
         $weObj = new TPWechat(config('scan'));
         $weObj->valid();
     }
-
     //监听第一次进入园区简介的监听
     public function listener()
     {
+
+        $visit = new VisitStatistics();
         $user = new WechatUser();
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $data = [
@@ -58,16 +59,36 @@ class Wechat extends Controller
         ];
         $weObj = new TPWechat($data);
         $weObj->valid();//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
-
         $is = "no";;
         $type = $weObj->getRev()->getRevEvent();
         //$weObj->news($new1)->reply();
         //$weObj->getRevFrom();
         //Log::record('log:'.json_encode($weObj->getRev()->getRevEvent()));
+        //进入应用中时
         if ($type['event'] == TPWechat::EVENT_ENTER_AGENT) {
-            //Log::record('log11:'.json_encode($weObj->getRev()));
+            //$data:{"ToUserName":"ww68db00a56b949cff","FromUserName":"15706844655","CreateTime":"1516348065","MsgType":"event","AgentID":"1000023","Event":"enter_agent","EventKey":{}}
+            $data = $weObj->getRev()->getRevData();
+
+            //Log::record('log11:'.json_encode($data['FromUserName']));
             $user_id = $weObj->getRev()->getRevFrom();
             $userInfo = $user->where('userid', $user_id)->find();
+            //今天 0点
+            $Today = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+
+            $map=[
+                'user_id'=> $data['FromUserName'],
+                'date'=>$Today,
+                'agentid'=>$data['AgentID'],
+                'park_id'=>$userInfo['park_id']
+            ];
+            //如果找到自增1
+            $visitToday = $visit->where($map)->setInc('visit_number');
+            if(!$visitToday) {
+                $map['visit_number'] = 1;
+                $visit->save($map);
+            }
+
+
             if ($userInfo['is_first'] == 0) {
                 $is = "yes";
                 $userInfo['is_first'] = 1;
@@ -81,27 +102,26 @@ class Wechat extends Controller
                 'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img0.png',
                 'Url' => 'http://xk.0519ztnet.com/index/Parkprofile/mainPark'
             ];
-
             //希垦园区简介
             $new1 = [
                 'Title' => '希垦科技园区简介',
                 'Description' => '希垦科技园”总建筑面积为3.5万平方米，位于余杭区未来科技城核心区域，于2014年11月正式入驻，在政府大力的政策扶持下，园区将重点引进互联网、电子商务、科技型的企业，以培育高新技术企业和互联网服务平台研发为主要目标，目前去化率已完成94%，形成电子商务企业集聚、初创企业快速成长的良好局面。',
                 'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img2.png',
-                'Url' => 'http://xk.0519ztnet.com/index/Parkprofile/index/park_id/3'
+                'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/3'
             ];
             //人工智能产业园简介
             $new2 = [
                 'Title' => '人工智能产业园简介',
                 'Description' => '人工智能产业园，总用地面积约2.2万平方米，建筑面积近8万平方米。分为A、B、C、D四幢主体合围建筑。本项目将以“营造人工智能产业发展环境，服务人工智能企业创业成长，助推区域经济新发展”为宗旨，深入研究以人工智能为代表的智慧产业发展趋势，围绕人工智能产业发展五大细分产业链，打造人工智能专业孵化器、加速器与倍增器！',
                 'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img3.png',
-                'Url' => 'http://xk.0519ztnet.com/index/Parkprofile/index/park_id/80'
+                'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/80'
             ];
             //互联网产业大厦简介
             $new3 = [
                 'Title' => '互联网产业大厦简介',
                 'Description' => '“浙江互联网产业大厦”位于钱江金融城区，西靠凤起路延伸段及运河东路，南临杭海路，遥望钱塘江景。是智新泽地根据江干区科技产业发展总体规划，与江干区政府在城东钱江金融城区域共同打造的科技平台项目，也是智新泽地在江干区落地发展的第一个科技产业园项目。',
                 'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img1.png',
-                'Url' => 'http://xk.0519ztnet.com/index/Parkprofile/index/park_id/81'
+                'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/81'
             ];
             array_push($news, $new0);
             array_push($news, $new1);
@@ -114,13 +134,16 @@ class Wechat extends Controller
             $weObj->text("欢迎")->reply();
         }
     }
-
     // 自动登入
     public function login()
     {
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('company'));
         $userId = $weObj->getUserId(input('code'), config('company.agentid'));
+        if(!isset($userId['UserId'])){
+            $url='https://' . $_SERVER["SERVER_NAME"] ."/Index/index/recommend/park_id/3.html";
+            $this->redirect($url);//跳转网页；
+        }
         //var_dump($userId);
         //var_dump('errcode:'.$weObj->errCode.',msg:'.$weObj->errMsg);
         $userInfo = $weObj->getUserInfo($userId['UserId']);
@@ -141,17 +164,14 @@ class Wechat extends Controller
         } else {
             $wechatUser->save($data);
         }
-
         session('userId', $userInfo['userid']);
         session('name', $userInfo['name']);
         session('gender', $userInfo['gender']);
         session('avatar', $userInfo['avatar']);
         session('park_id', $park_id);
-
         // 默认跳转到前一页
         $this->redirect(session('requestUri'));
     }
-
     //查找园区id
     public function findParkid($Department)
     {
@@ -172,7 +192,6 @@ class Wechat extends Controller
      */
     public function notify()
     {
-
         //接受成功回调支付信息
         $xml = file_get_contents('php://input');
         $arr = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
@@ -199,7 +218,6 @@ class Wechat extends Controller
 
             //修改用户积分
             if ($res['user_type'] == 1) {
-
                 WechatUser::where('userid', $res['user_id'])->setInc('points', $res['points']);
             } else if ($res['user_type'] == 2) {
 
