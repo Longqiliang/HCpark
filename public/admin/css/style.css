@@ -8440,3 +8440,7 @@ a.under-line:focus,a.under-line:focus{
   max-width: 350px;
   max-height: 350px;
 }
+.my-navbar-text{
+  line-height: 60px;
+  height:60px;
+}
