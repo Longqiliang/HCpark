@@ -94,10 +94,12 @@
         display: none;
     }
     .my-content>.profile>div.profile-content, .my-content>.contact{
+        overflow: hidden;
         padding:1.2rem;
         font-size: 1.4rem;
     }
-    .my-content>.profile *{
+    .my-content>.profile>div.profile-content *, .my-content>.contact *{
+        box-sizing: border-box;
         max-width: 100%;
     }
     .my-content>.contact .call_btn{
