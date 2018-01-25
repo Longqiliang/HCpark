@@ -1005,6 +1005,7 @@ class Personal extends Base
                 return array();
                 break;
             case 3:
+                $can_check = "no";
                 $list2 = TrademarkInquire::where(['status' => ['neq', -1], 'userid' => $userid])->select();
                 foreach ($list2 as $value) {
                     if ($value['status'] == 0) {
@@ -1062,6 +1063,7 @@ class Personal extends Base
                 return array();
                 break;
             case 3:
+                $can_check='no';
                 $list2 = TrademarkAdvisory::where(['status' => ['neq', -1], 'userid' => $userid])->select();
                 foreach ($list2 as $value) {
                     if ($value['status'] == 0) {
@@ -1116,6 +1118,7 @@ class Personal extends Base
                 return array();
                 break;
             case 3:
+                $can_check = "no";
                 $list2 = Patent::where(['create_user' => $userid])->select();
                 int_to_string($list2, $map = array('type' => array(1 => '发明专利', 2 => '实用型专利', 3 => '外观设计'), 'status' => array(-1 => '已删除', 0 => '审核中', 1 => '审核成功', 2 => '审核失败')));
                 foreach ($list2 as $value) {
@@ -1167,6 +1170,7 @@ class Personal extends Base
                 return array();
                 break;
             case 3:
+                $can_check = "no";
                 $copyartlist = $copyart->getCoypright(1);
                 $copysoftwritelist = $copysoftwrite->getCoypright(1);
                 $copysoftlist = $copysoft->getCoypright(1);
@@ -1224,6 +1228,7 @@ class Personal extends Base
         $list7 = $this->getPublicArea($type);
         //根据权限来显示
         $allList = array();
+        $company_list=[];
         switch ($type) {
             case 1:
                 if (in_array(1, $appids)) {
@@ -1258,9 +1263,9 @@ class Personal extends Base
                     $Patent = $this->getPatent($type);
                     //版权登记（园区）
                     $copy = $this->getCopyRight($type);
+                    $company_list = array_merge($Patent, $TrademarkAdvisory, $TrademarkInquire, $copy, $company_list);
+                    $company_list = empty($company_list) ? array() : $company_list;
                 }
-                $company_list = array_merge($Patent, $TrademarkAdvisory, $TrademarkInquire, $copy, $company_list);
-                $company_list = empty($company_list) ? array() : $company_list;
                 $this->assign('company', json_encode($company_list));
                 break;
             case 2:
