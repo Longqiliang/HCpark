@@ -56,10 +56,7 @@ class Index extends Admin
         $lister = $this->changeMonth2($firstTime, $lastTime);
         //echo json_encode($list);
         //return json_encode($array);
-        //现注册人数
-        $weObj = new TPWechat(config('party'));
-        $user_list = $weObj->getUserList($id,1,0);
-        $this->assign('number',count($user_list['userlist']));
+
         $this->assign('info', json_encode($array));
         //echo json_encode($list);
         $this->assign('list', json_encode($lister));

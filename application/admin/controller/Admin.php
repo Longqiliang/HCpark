@@ -16,6 +16,7 @@ use app\common\model\CommunicateUser;
 use app\common\model\ElectricityService;
 use app\common\model\ParkIntention;
 use app\common\model\ParkRoom;
+use wechat\TPWechat;
 use app\common\model\PeopleRent;
 use app\index\model\PropertyServer;
 use org\Auth;
@@ -47,6 +48,7 @@ class Admin extends Controller
     /* 后台控制器初始化 */
     protected function _initialize()
     {
+        $id = session('user_auth')['park_id'];
         $request = Request::instance();
         $this->moduleName = $request->module();
         $this->controllerName = $request->controller();
@@ -94,27 +96,26 @@ class Admin extends Controller
                 }
             }
         }
-
         $this->assign('__MENU__', $this->getMenus());
         // 判断二级菜单位置
         $menu = Menu::where('url', 'like', '%' . $this->controllerName . '/' . $this->actionName . '')->order('id desc')->find();
         if ($menu['level'] == 3) {
             $menu = Menu::find($menu['pid']);
         }
+
+        //现注册人数
+        $weObj = new TPWechat(config('party'));
+        $user_list = $weObj->getUserList($id,1,0);
+        $this->assign('number',count($user_list['userlist']));
+
+
         $this->assign('subMenu', $menu);
         //后台用户名头像用户组显示
         $this->assign('user_auth', session('user_auth'));
 
-        // 未读的消息数据
-//        $subQuery = MessageStatus::field('message_id')->where(['is_view'=>1, 'member_id'=>UID, 'type'=>1])->buildSql();
-//        $unreadMessage = Message::where(['status'=>1, 'type'=>1])->where('receive_id', 'exp', 'in (0, '.UID.') ')
-//            ->where('id', 'exp', "not in $subQuery")->order('id desc')->select();
-//        $this->assign('unreadMessage', $unreadMessage);
-        // 总数
-//        $messageTotal = Message::where(['status'=>1])->count();
+
         $this->assign('messageTotal', 0);
     }
-
     /**
      * 权限检测
      * @param string $rule 检测的规则
@@ -135,7 +136,6 @@ class Admin extends Controller
         }
         return true;
     }
-
     /**
      * 检测是否是需要动态判断的权限
      * @return boolean|null
@@ -150,8 +150,6 @@ class Admin extends Controller
         }
         return null;//不明,需checkRule
     }
-
-
     /**
      * action访问控制,在 **登陆成功** 后执行的第一项权限检测任务
      * @return boolean|null  返回值必须使用 `===` 进行判断
@@ -172,7 +170,6 @@ class Admin extends Controller
         }
         return null;//需要检测节点权限
     }
-
     /**
      * 获取控制器菜单数组,二级菜单元素位于一级菜单的'_child'元素中
      */
