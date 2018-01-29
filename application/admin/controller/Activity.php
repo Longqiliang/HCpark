@@ -249,7 +249,7 @@ class Activity extends Admin
         foreach ($userList as $value) {
             $user .= "|" . $value['userid'];
         }
-        $result = $service->sendNews2(Config('activity'), $map,$user);
+        $result = $service->sendNews2(Config('feature'), $map,$user);
         if ($result['errcode'] == 0) {
             ActivityModel::where('id', input('id'))->update(['is_send' => 1]);
             return $this->success('推送成功', 'Activity/index');
