@@ -352,7 +352,7 @@ class Wechat extends Controller
                        "description" => " 您报名参加的" . $value['name'] . "于" . date('Y.m.d', $value['start_time']) . "（明天）即将开始，请按照活动要求准时参加，点击查看活动详情。",
                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $value['id'],
                    ];
-                   $reult = $this->commonSend(4, $message, $user['userid']);
+                   $reult = $this->sendMessageToFeature($message, $user['userid']);
 
                    ActivityComment::where('id',$user['id'])->update(['is_send'=>1]);
 
@@ -436,7 +436,28 @@ class Wechat extends Controller
         }
 
     }
+    /**
+     * 多彩园区推送
+     * @param $message
+     * @param $useridlist
+     */
+    public function sendMessageToFeature($message,$useridlist){
+        if (empty($useridlist)){
 
+            return false;
+        }
+        $weObj = new TPWechat(Config('feature'));
+        $data = [
+            'touser' => $useridlist,
+            'agentid' => 1000024,
+            'msgtype' => 'text',
+            'text' => [
+                'content' => $message
+            ]
+        ];
+
+        $res = $weObj->sendMessage($data);
+    }
 
 
 }
