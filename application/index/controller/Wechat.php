@@ -343,22 +343,22 @@ class Wechat extends Controller
 
         //activity
         //活动前一天给用户推送
-        $time = time() + 60 * 60 * 24;
-        $activityList = Activity::where(['start_time' => ['lt', $time], 'status' => 2])->select();
-        foreach ($activityList as $value) {
-            $userList = isset($value->user) ? $value->user : array();
-            foreach ($userList as $user) {
-                if ($user['status'] == 1 && $user['is_send'] == 0) {
-                    $message = [
-                        "title" => "活动报名提示",
-                        "description" => " 您报名参加的" . $value['name'] . "于" . date('Y.m.d', $value['start_time']) . "（明天）即将开始，请按照活动要求准时参加，点击查看活动详情。",
-                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $value['id'],
-                    ];
-                    $reult = $this->commonSend(4, $message, $user['userid']);
+        $time = time()+60 * 60 * 24;
+        $activityList =Activity::where(['start_time'=>['lt',$time],'status'=>2])->select();
+        foreach ($activityList as $value){
+            $userList = isset($value->user)?$value->user:array();
+            foreach ($userList as $user){
+               if($user['status']==1&&$user['is_send']==0) {
+                   $message = [
+                       "title" => "活动报名提示",
+                       "description" => " 您报名参加的" . $value['name'] . "于" . date('Y.m.d', $value['start_time']) . "（明天）即将开始，请按照活动要求准时参加，点击查看活动详情。",
+                       "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $value['id'],
+                   ];
+                   $reult = $this->sendMessageToFeature($message, $user['userid']);
 
-                    ActivityComment::where('id', $user['id'])->update(['is_send' => 1]);
+                   ActivityComment::where('id',$user['id'])->update(['is_send'=>1]);
 
-                }
+               }
 
             }
         }
@@ -438,6 +438,27 @@ class Wechat extends Controller
         }
 
     }
+    /**
+     * 多彩园区推送
+     * @param $message
+     * @param $useridlist
+     */
+    public function sendMessageToFeature($message,$useridlist){
+        if (empty($useridlist)){
 
+            return false;
+        }
+        $weObj = new TPWechat(Config('feature'));
+        $data = [
+            'touser' => $useridlist,
+            'agentid' => 1000024,
+            'msgtype' => 'text',
+            'text' => [
+                'content' => $message
+            ]
+        ];
+
+        $res = $weObj->sendMessage($data);
+    }
 
 }

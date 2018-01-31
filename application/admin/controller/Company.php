@@ -182,4 +182,75 @@ class Company extends Admin
         }
     }
 
+    /**
+     * 企业信息导入
+     * @return mixed
+     */
+    public function import(){
+
+        return $this->fetch();
+
+    }
+    public function importIn(){
+        $company_type = config("company_type");
+        $company_size_type = config("company_size_type");
+        $file_name = input('name');
+        $park_company_model = new ParkCompany();
+        /*设置上传路径*/
+        $savePath = ROOT_PATH . '/public/';
+        $inputFileType = \PHPExcel_IOFactory::identify($savePath . $file_name);
+        $objReader = \PHPExcel_IOFactory::createReader($inputFileType);//创建读取类
+        $objReader->setReadDataOnly(true);//设置只读取数据
+        $objPHPExcel = $objReader->load($savePath . $file_name);//读取数据；
+        $cellName = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+        $currSheet = $objPHPExcel->getSheet();//获取当前工作表
+        $columnH = $currSheet->getHighestColumn();//获取最大列标识数
+        $columnCnt = array_search($columnH, $cellName);//获取总列数
+        $rowCnt = $currSheet->getHighestRow();   //获取总行数
+        $data = [];
+        $alert_data = "";
+        for ($row = 2; $row <= $rowCnt; $row++) {
+            for ($colum = 0; $colum <= $columnCnt; $colum++) {
+                $cellId = $cellName[$colum] . $row;
+                $cellValue = $currSheet->getCell($cellId)->getValue();
+                $data[$row][$colum] = $cellValue;
+            }
+        }
+        foreach($data as $key => $value){
+            $result = $this->checkCompanyIsExist($value[0]);
+            if ($result){
+                $update_data = [
+                    'type' => array_keys($company_type,$value[1])[0],
+                    'size_type' => array_keys($company_size_type,$value[2])[0],
+                    'mobile' => $value[3],
+                    'wechat_number' => $value[4],
+                    'site' => $value[5]
+                ];
+                $park_company_model->where(['id' => $result])->update($update_data);
+            }else{
+                $alert_data .= $value[0]."\n";
+            }
+        }
+
+        return $this->success('导入成功','',$alert_data);
+    }
+
+    /**
+     * 检测企业是否存在
+     * @param $name
+     * @return bool
+     */
+    public function checkCompanyIsExist($name){
+        $park_company_model = new ParkCompany();
+        $res = $park_company_model->where(['name' => $name])->find();
+        if ($res){
+
+            return $res['id'];
+        }else{
+
+            return false;
+        }
+
+    }
+
 }

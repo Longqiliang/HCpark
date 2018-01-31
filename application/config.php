@@ -199,7 +199,13 @@ return [
         'agentid' => 1000021
 
     ],
+    'feature' =>[
+        "AppDesc" => "多彩园区",
+        'appid' => 'ww68db00a56b949cff',
+        'appsecret' => 'qn-w9oMr2J1YLRaQ4y6Ebjnr_VcpLiDSspJ7kpVbwFs',
+        'agentid' => 1000024
 
+    ],
 
 
 

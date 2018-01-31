@@ -57,7 +57,7 @@ class Service
     {
         $weObj = new TPWechat($config);
         $data = [
-            'touser' => 15706844655,
+            'touser' => 18867514826,
             'agentid' => $config['agentid'],
             'msgtype' => 'textcard',
             'textcard' => [
@@ -189,7 +189,7 @@ class Service
      */
     public static function sendActivityMessage($message, $toUser)
     {
-        $config = config('activity');
+        $config = config('feature');
 
         $is= substr_count($message['url'], 'https');
         if($is==0){

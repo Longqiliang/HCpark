@@ -1,0 +1,116 @@
+{extend name="base/common"}
+
+{block name="style"}
+<link href="/static/summernote/summernote.css" rel="stylesheet">
+<link href="/static/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<link href="/static/js/jQuery-imgBox/imgbox.css" rel="stylesheet"/>
+<style type="text/css">
+    .note-editor.note-frame { border-radius: 0; border:0; margin-bottom: 0; }
+    .front_cover_img {height: 40px; width: 40px; margin-top: 4px}
+</style>
+{/block}
+
+{block name="page-header"}
+
+{/block}
+{/block}
+
+{block name="main"}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="mail-box-header">
+            <div class="pull-right tooltip-demo">
+                <!--
+                                <a href="{:Url('index')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+                -->
+            </div>
+            <h2>导入企业信息</h2>
+        </div>
+        <div class="mail-box">
+            <form class="form-horizontal" method="post">
+                <div class="mail-body">
+                    <div class="form-group"><label class="col-sm-1 control-label"><h3>导入表格:</h3></label>
+                        <div class="col-sm-11  ">
+                            <input id="input-file" type="file" class="file">
+                        </div>
+                    </div>
+                </div>
+                <div class="mail-body text-right tooltip-demo">
+                    <a href="javascript:void(0)" style="color: #fff" class="btn-sm btn-primary" onclick="uploadFile()">
+                        <i class="fa fa-reply"></i> 添加
+                    </a>&nbsp;
+<!--
+                    <a href="{:Url('manage')}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"><i class="fa fa-times"></i> 关闭</a>
+-->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="fileName">
+{/block}
+
+{block name="script"}
+<script src="/static/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/static/bootstrap-fileinput/themes/fa/fa.js"></script>
+<script src="/static/bootstrap-fileinput/js/locales/zh.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+    });
+
+    $("#input-file").fileinput({
+        showPreview: false,
+        language: 'zh', //设置语言
+        uploadUrl: '{:Url("Upload/file")}', //上传的地址
+        allowedFileExtensions: ['xlsx','xls'],
+        maxFileSize: 1024 * 200,
+    }).on("filebatchselected", function(event, files) {
+        $(this).fileinput("upload");
+    }).on('fileuploaded', function(event, data, previewId, index) {
+        var response = $.parseJSON(data.response);
+        if(response.code == 1) {
+            $("input[name='fileName']").val(response.data);
+        } else {
+            updateAlert(response.msg, 'warning');
+        }
+    });
+
+    function uploadFile() {
+        var fileName = $("input[name='fileName']").val();
+        if(fileName == ''){
+
+            return false;
+        }
+        $.ajax({
+            data:{name:fileName},
+            url:"{:Url('Company/importIn')}",
+            type:"post",
+            success:function (data) {
+                if (data.code == 1){
+                    swal({
+                        title: "未导入的企业名称",
+                        text:data.data,
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定!",
+                        closeOnConfirm: true,
+                        showCancelButton:false,
+                    }, function () {
+                        setTimeout(function () {
+                            location.href = "{:Url('Company/index')}";
+                        },1000);
+                    });
+
+                }else{
+                    updateAlert(data.msg,"info");
+                }
+            }
+        });
+    }
+    highlight_subnav("{:Url('Company/index')}");
+</script>
+{/block}

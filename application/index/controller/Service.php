@@ -1302,7 +1302,7 @@ class Service extends Base
 
 
                 //推送给自己
-                $this->commonSendText(4, $message, session('userId'), 8);
+                $this->sendMessageToFeature($message, session('userId'));
                 return $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
@@ -1518,9 +1518,8 @@ class Service extends Base
                 ];
                 $point->save($map);
 
-
                 //推送给自己
-                $reult = $this->commonSendText(4, $message, session('userId'), 8);
+                $reult = $this->sendMessageToFeature( $message, session('userId'));
                 return $this->success('成功', "", $msg);
             } else {
                 return $this->error("推送失败");
@@ -3029,7 +3028,7 @@ class Service extends Base
                         $point->save($map);
 
                         //推送给自己
-                        $reult = $this->commonSendText(4, $message, $user['userid'], 3);
+                        $reult = $this->sendMessageToFeature($message, $user['userid']);
                         //推送物业，运营 已送达
                         $message = [
                             "title" => "饮水服务提示",
@@ -3188,7 +3187,7 @@ class Service extends Base
                     ];
                     $point->save($map);
                     //推送给自己
-                    $this->commonSendText(4, $message, session('userId'), 8);
+                    $this->sendMessageToFeature($message, session('userId'));
                 } //审核不过
                 else {
                     $record['status'] = 2;
@@ -3276,7 +3275,7 @@ class Service extends Base
 
 
                     //推送给自己
-                    $reult = $this->commonSendText(4, $message, $record['user_id'], 7);
+                    $reult = $this->sendMessageToFeature($message, $record['user_id']);
 
                 } else {
                     if ($record['type'] == 1) {
@@ -3402,7 +3401,7 @@ class Service extends Base
                         ];
                         $point->save($map);
                         //推送给自己
-                        $reult = $this->commonSendText(4, $message, session('userId'), 8);
+                        $reult = $this->sendMessageToFeature( $message, session('userId'));
                     }
 
                     return $this->success("取消成功");
@@ -3985,6 +3984,31 @@ class Service extends Base
         return $this->fetch('bespeak_activity');
     }
 
+    /**
+     * 多彩园区推送
+     * @param $message
+     * @param $useridlist
+     */
+    public function sendMessageToFeature($message,$useridlist){
+        if (empty($useridlist)){
+
+            return false;
+        }
+        $weObj = new TPWechat(Config('feature'));
+        $data = [
+            'touser' => $useridlist,
+            'agentid' => 1000024,
+            'msgtype' => 'text',
+            'text' => [
+                'content' => $message
+            ]
+        ];
+
+        $res = $weObj->sendMessage($data);
+    }
+    /*public function testFeature(){
+        $this->sendMessageToFeature("测试数据",'18867514826');
+    }*/
 }
 
 
