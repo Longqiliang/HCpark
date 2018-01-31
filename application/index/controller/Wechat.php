@@ -33,20 +33,22 @@ class Wechat extends Controller
     {
         phpinfo();
     }
+
     public function callback()
     {
         $weObj = new TPWechat(config('wechat'));
         $weObj->valid();
     }
+
     public function valid()
     {
         $weObj = new TPWechat(config('scan'));
         $weObj->valid();
     }
+
     //监听第一次进入园区简介的监听
     public function listener()
     {
-
         $visit = new VisitStatistics();
         $user = new WechatUser();
         Loader::import('wechat\TPWechat', EXTEND_PATH);
@@ -75,60 +77,60 @@ class Wechat extends Controller
             //今天 0点
             $Today = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
 
-            $map=[
-                'user_id'=> $data['FromUserName'],
-                'date'=>$Today,
-                'agentid'=>$data['AgentID'],
-                'park_id'=>$userInfo['park_id']
+            $map = [
+                'user_id' => $data['FromUserName'],
+                'date' => $Today,
+                'agentid' => $data['AgentID'],
+                'park_id' => $userInfo['park_id']
             ];
             //如果找到自增1
             $visitToday = $visit->where($map)->setInc('visit_number');
-            if(!$visitToday) {
+            if (!$visitToday) {
                 $map['visit_number'] = 1;
                 $visit->save($map);
             }
-
-
-            if ($userInfo['is_first'] == 0) {
-                $is = "yes";
-                $userInfo['is_first'] = 1;
-                $userInfo->save();
-            }
-            $news = array();
-            //智新泽地科技发展有限公司简介
-            $new0 = [
-                'Title' => '浙江智新泽地科技发展有限公司简介',
-                'Description' => '浙江智新泽地科技发展有限公司（下简称“智新泽地”）是一家专业的科技园区运营商和创业创新服务提供商。公司以“营造创业创新环境、服务创业创新发展、培育万家企业成长”为宗旨，致力于为创业者提供一流的创业空间、完善的创业创新服务、快速成长的发展环境。',
-                'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img0.png',
-                'Url' => 'http://xk.0519ztnet.com/index/Parkprofile/mainPark'
-            ];
-            //希垦园区简介
-            $new1 = [
-                'Title' => '希垦科技园区简介',
-                'Description' => '希垦科技园”总建筑面积为3.5万平方米，位于余杭区未来科技城核心区域，于2014年11月正式入驻，在政府大力的政策扶持下，园区将重点引进互联网、电子商务、科技型的企业，以培育高新技术企业和互联网服务平台研发为主要目标，目前去化率已完成94%，形成电子商务企业集聚、初创企业快速成长的良好局面。',
-                'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img2.png',
-                'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/3'
-            ];
-            //人工智能产业园简介
-            $new2 = [
-                'Title' => '人工智能产业园简介',
-                'Description' => '人工智能产业园，总用地面积约2.2万平方米，建筑面积近8万平方米。分为A、B、C、D四幢主体合围建筑。本项目将以“营造人工智能产业发展环境，服务人工智能企业创业成长，助推区域经济新发展”为宗旨，深入研究以人工智能为代表的智慧产业发展趋势，围绕人工智能产业发展五大细分产业链，打造人工智能专业孵化器、加速器与倍增器！',
-                'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img3.png',
-                'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/80'
-            ];
-            //互联网产业大厦简介
-            $new3 = [
-                'Title' => '互联网产业大厦简介',
-                'Description' => '“浙江互联网产业大厦”位于钱江金融城区，西靠凤起路延伸段及运河东路，南临杭海路，遥望钱塘江景。是智新泽地根据江干区科技产业发展总体规划，与江干区政府在城东钱江金融城区域共同打造的科技平台项目，也是智新泽地在江干区落地发展的第一个科技产业园项目。',
-                'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img1.png',
-                'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/81'
-            ];
-            array_push($news, $new0);
-            array_push($news, $new1);
-            array_push($news, $new2);
-            array_push($news, $new3);
-            if ($is == "yes") {
-                $weObj->news($news)->reply();
+            if (1000018 == $data['AgentID']) {
+                if ($userInfo['is_first'] == 0) {
+                    $is = "yes";
+                    $userInfo['is_first'] = 1;
+                    $userInfo->save();
+                }
+                $news = array();
+                //智新泽地科技发展有限公司简介
+                $new0 = [
+                    'Title' => '浙江智新泽地科技发展有限公司简介',
+                    'Description' => '浙江智新泽地科技发展有限公司（下简称“智新泽地”）是一家专业的科技园区运营商和创业创新服务提供商。公司以“营造创业创新环境、服务创业创新发展、培育万家企业成长”为宗旨，致力于为创业者提供一流的创业空间、完善的创业创新服务、快速成长的发展环境。',
+                    'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img0.png',
+                    'Url' => 'http://xk.0519ztnet.com/index/Parkprofile/mainPark'
+                ];
+                //希垦园区简介
+                $new1 = [
+                    'Title' => '希垦科技园区简介',
+                    'Description' => '希垦科技园”总建筑面积为3.5万平方米，位于余杭区未来科技城核心区域，于2014年11月正式入驻，在政府大力的政策扶持下，园区将重点引进互联网、电子商务、科技型的企业，以培育高新技术企业和互联网服务平台研发为主要目标，目前去化率已完成94%，形成电子商务企业集聚、初创企业快速成长的良好局面。',
+                    'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img2.png',
+                    'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/3'
+                ];
+                //人工智能产业园简介
+                $new2 = [
+                    'Title' => '人工智能产业园简介',
+                    'Description' => '人工智能产业园，总用地面积约2.2万平方米，建筑面积近8万平方米。分为A、B、C、D四幢主体合围建筑。本项目将以“营造人工智能产业发展环境，服务人工智能企业创业成长，助推区域经济新发展”为宗旨，深入研究以人工智能为代表的智慧产业发展趋势，围绕人工智能产业发展五大细分产业链，打造人工智能专业孵化器、加速器与倍增器！',
+                    'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img3.png',
+                    'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/80'
+                ];
+                //互联网产业大厦简介
+                $new3 = [
+                    'Title' => '互联网产业大厦简介',
+                    'Description' => '“浙江互联网产业大厦”位于钱江金融城区，西靠凤起路延伸段及运河东路，南临杭海路，遥望钱塘江景。是智新泽地根据江干区科技产业发展总体规划，与江干区政府在城东钱江金融城区域共同打造的科技平台项目，也是智新泽地在江干区落地发展的第一个科技产业园项目。',
+                    'PicUrl' => 'http://xk.0519ztnet.com/index/images/parkprofile/park-img1.png',
+                    'Url' => 'https://xk.0519ztnet.com/index/Parkprofile/index/park_id/81'
+                ];
+                array_push($news, $new0);
+                array_push($news, $new1);
+                array_push($news, $new2);
+                array_push($news, $new3);
+                if ($is == "yes") {
+                    $weObj->news($news)->reply();
+                }
             }
         } elseif ($type['event'] == TPWechat::EVENT_SUBSCRIBE) {
             $weObj->text("欢迎")->reply();
@@ -140,8 +142,8 @@ class Wechat extends Controller
         Loader::import('wechat\TPWechat', EXTEND_PATH);
         $weObj = new TPWechat(config('company'));
         $userId = $weObj->getUserId(input('code'), config('company.agentid'));
-        if(!isset($userId['UserId'])){
-            $url='https://' . $_SERVER["SERVER_NAME"] ."/Index/index/recommend/park_id/3.html";
+        if (!isset($userId['UserId'])) {
+            $url = 'https://' . $_SERVER["SERVER_NAME"] . "/Index/index/recommend/park_id/3.html";
             $this->redirect($url);//跳转网页；
         }
         //var_dump($userId);
@@ -238,65 +240,65 @@ class Wechat extends Controller
     // 判断（维修，物业，饮水 ,费用缴纳）推送定时任务
     public function quartz()
     {
-   /*     $property = new   PropertyServer();
-        $water = new WaterService();
-        $time = time() - 900;
-        //15 分钟后，状态仍为进行中 ，未推给运营的(is_banner=0) 记录要进行推送
-        $propertyBanner = $property->where(['create_time' => array('lt', $time), 'is_banner' => 0, 'status' => 0])->select();
-        $waterBanner = $water->where(['create_time' => array('lt', $time), 'is_banner' => 0, 'status' => 0])->select();
-        foreach ($propertyBanner as $value) {
-            //服务类型 1为空调，2为电梯，3为其他 4 室内保洁
-            $is = 1;
-            switch ($value['type']) {
-                case 1:
-                    $type = "空调维修";
-                    break;
-                case 2:
-                    $type = "电梯维修";
-                    break;
-                case 3:
-                    $type = "其他维修";
-                    break;
-                case 4:
-                    $is = 2;
-                    break;
-            }
-            if ($is == 2) {
-                $message = [
-                    "title" => "保洁服务提示",
-                    "description" => "服务地点：" . $value['address'] . "\n服务时间：" . date('m月d日', $value['clear_time']) . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $value['id']
-                ];
-                $app_id = 4;
-            } else {
-                $message = [
-                    "title" => "物业报修提示",
-                    "description" => "服务类型：" . $type . "\n服务地点：" . $value['address'] . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
-                    "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/yes/id/' . $value['id']
-                ];
-                $app_id = 3;
-            }
-            //推送给运营
-            $reult = $this->commonSend(1, $message, '', $app_id);
-            if ($reult) {
-                $value['is_banner'] = 1;
-                $value->save();
-            }
-        }
-        foreach ($waterBanner as $value) {
-            $message = [
-                "title" => "饮水服务提示",
-                "description" => "送水地点：" . $value['address'] . "\n送水桶数：" . $value['number'] . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
-                "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $value['id']
-            ];
+        /*     $property = new   PropertyServer();
+             $water = new WaterService();
+             $time = time() - 900;
+             //15 分钟后，状态仍为进行中 ，未推给运营的(is_banner=0) 记录要进行推送
+             $propertyBanner = $property->where(['create_time' => array('lt', $time), 'is_banner' => 0, 'status' => 0])->select();
+             $waterBanner = $water->where(['create_time' => array('lt', $time), 'is_banner' => 0, 'status' => 0])->select();
+             foreach ($propertyBanner as $value) {
+                 //服务类型 1为空调，2为电梯，3为其他 4 室内保洁
+                 $is = 1;
+                 switch ($value['type']) {
+                     case 1:
+                         $type = "空调维修";
+                         break;
+                     case 2:
+                         $type = "电梯维修";
+                         break;
+                     case 3:
+                         $type = "其他维修";
+                         break;
+                     case 4:
+                         $is = 2;
+                         break;
+                 }
+                 if ($is == 2) {
+                     $message = [
+                         "title" => "保洁服务提示",
+                         "description" => "服务地点：" . $value['address'] . "\n服务时间：" . date('m月d日', $value['clear_time']) . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
+                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/4/can_check/yes/id/' . $value['id']
+                     ];
+                     $app_id = 4;
+                 } else {
+                     $message = [
+                         "title" => "物业报修提示",
+                         "description" => "服务类型：" . $type . "\n服务地点：" . $value['address'] . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
+                         "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/2/can_check/yes/id/' . $value['id']
+                     ];
+                     $app_id = 3;
+                 }
+                 //推送给运营
+                 $reult = $this->commonSend(1, $message, '', $app_id);
+                 if ($reult) {
+                     $value['is_banner'] = 1;
+                     $value->save();
+                 }
+             }
+             foreach ($waterBanner as $value) {
+                 $message = [
+                     "title" => "饮水服务提示",
+                     "description" => "送水地点：" . $value['address'] . "\n送水桶数：" . $value['number'] . "\n联系人员：" . $value['name'] . "\n联系电话：" . $value['mobile'],
+                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/3/can_check/yes/id/' . $value['id']
+                 ];
 
-            //推送给运营
-            $reult = $this->commonSend(1, $message, '', 3);
-            if ($reult) {
-                $value['is_banner'] = 1;
-                $value->save();
-            }
-        }*/
+                 //推送给运营
+                 $reult = $this->commonSend(1, $message, '', 3);
+                 if ($reult) {
+                     $value['is_banner'] = 1;
+                     $value->save();
+                 }
+             }*/
         //费用缴纳3天内未点击重复推送
         $userId = '';
         $feepayment = new FeePayment();
@@ -309,7 +311,7 @@ class Wechat extends Controller
             $map = $v;
             $info = $feepayment->where($map)->order('id desc')->find();
 
-            if (strtotime($info['create_time']) < $times && $info['onclick'] != 1 && $info['is_banner']==0) {
+            if (strtotime($info['create_time']) < $times && $info['onclick'] != 1 && $info['is_banner'] == 0) {
                 $type = [1 => "水电费", 2 => "物业费", 3 => "房租费", 4 => "公耗费"];
                 $userList = WechatUser::where(['department' => $info['company_id'], 'fee_status' => 1])->select();
                 if ($info['type'] == 4) {
@@ -321,18 +323,18 @@ class Wechat extends Controller
                     "description" => "您的" . $title . "（到期时间：" . $info['expiration_time'] . "）应缴纳" . $info['fee'] . "元",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/feedetail/t/' . $info['type'] . '/id/1',
                 ];
-                $message2=[
+                $message2 = [
                     "title" => $title . "缴纳提示",
-                    "description" => $info['name'].$title."（到期时间：" . $info['expiration_time'] . "）应缴纳" . $info['fee'] . "元,仍未缴纳",
+                    "description" => $info['name'] . $title . "（到期时间：" . $info['expiration_time'] . "）应缴纳" . $info['fee'] . "元,仍未缴纳",
                     "url" => 'http://' . $_SERVER['HTTP_HOST'] . '/index/service/historyDetail/appid/1/can_check/yes/id/' . $info['id']
                 ];
                 foreach ($userList as $k => $v) {
-                    $userId .= '|'.$v;
+                    $userId .= '|' . $v;
                 }
-                if ($userId != ''){
+                if ($userId != '') {
                     $reult = $this->commonSend(4, $message, $userId);
-                    $reult2 = $this->commonSend(1, $message2, '',1);
-                    $info['is_banner']=1;
+                    $reult2 = $this->commonSend(1, $message2, '', 1);
+                    $info['is_banner'] = 1;
                     $info->save();
                 }
 
@@ -341,22 +343,22 @@ class Wechat extends Controller
 
         //activity
         //活动前一天给用户推送
-        $time = time()+60 * 60 * 24;
-        $activityList =Activity::where(['start_time'=>['lt',$time],'status'=>2])->select();
-        foreach ($activityList as $value){
-            $userList = isset($value->user)?$value->user:array();
-            foreach ($userList as $user){
-               if($user['status']==1&&$user['is_send']==0) {
-                   $message = [
-                       "title" => "活动报名提示",
-                       "description" => " 您报名参加的" . $value['name'] . "于" . date('Y.m.d', $value['start_time']) . "（明天）即将开始，请按照活动要求准时参加，点击查看活动详情。",
-                       "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $value['id'],
-                   ];
-                   $reult = $this->commonSend(4, $message, $user['userid']);
+        $time = time() + 60 * 60 * 24;
+        $activityList = Activity::where(['start_time' => ['lt', $time], 'status' => 2])->select();
+        foreach ($activityList as $value) {
+            $userList = isset($value->user) ? $value->user : array();
+            foreach ($userList as $user) {
+                if ($user['status'] == 1 && $user['is_send'] == 0) {
+                    $message = [
+                        "title" => "活动报名提示",
+                        "description" => " 您报名参加的" . $value['name'] . "于" . date('Y.m.d', $value['start_time']) . "（明天）即将开始，请按照活动要求准时参加，点击查看活动详情。",
+                        "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/index/activity/detail/id/' . $value['id'],
+                    ];
+                    $reult = $this->commonSend(4, $message, $user['userid']);
 
-                   ActivityComment::where('id',$user['id'])->update(['is_send'=>1]);
+                    ActivityComment::where('id', $user['id'])->update(['is_send' => 1]);
 
-               }
+                }
 
             }
         }
@@ -368,7 +370,7 @@ class Wechat extends Controller
 
     public function commonSend($type, $message, $userid = "", $appid = 0)
     {
-        $service =new service();
+        $service = new service();
         $wechatUser = new WechatUser();
         $useridlist = "";
         $park_id = 3;
@@ -384,10 +386,10 @@ class Wechat extends Controller
         switch ($type) {
             //运营
             case 1 :
-                $user = $wechatUser->where(['department'=>$department_id,'status'=>1])->select();
+                $user = $wechatUser->where(['department' => $department_id, 'status' => 1])->select();
                 foreach ($user as $value) {
                     if (isset($value->operational->appids)) {
-                        $appids = empty($value->operational->appids)?array():json_decode($value->operational->appids);
+                        $appids = empty($value->operational->appids) ? array() : json_decode($value->operational->appids);
                         if (in_array($appid, $appids)) {
                             $useridlist .= '|' . $value['userid'];
                         }
@@ -436,7 +438,6 @@ class Wechat extends Controller
         }
 
     }
-
 
 
 }
